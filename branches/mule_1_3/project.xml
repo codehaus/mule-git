@@ -20,7 +20,7 @@
         light-weight, event-driven component technology that handles communication with disparate systems transparently
         providing a simple component interface.</description>
     <url>http://www.muleumo.org</url>
-    <issueTrackingUrl>http://jira.muleumo.org</issueTrackingUrl>
+    <issueTrackingUrl>http://jira.symphonysoft.com</issueTrackingUrl>
 <!--    <siteAddress>www.muleumo.org</siteAddress>-->
 <!--    <siteDirectory>/var/www/html/muleumo.org/</siteDirectory>-->
     <distributionSite>dist.codehaus.org</distributionSite>
