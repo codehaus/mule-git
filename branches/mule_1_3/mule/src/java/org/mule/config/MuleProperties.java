@@ -38,6 +38,7 @@ public interface MuleProperties
     String XML_DTD_SYSTEM_PROPERTY = "org.mule.xml.dtd";
     /** Default Ecoding used by the server */
     String MULE_ENCODING_SYSTEM_PROPERTY = "org.mule.encoding";
+    String MULE_OS_ENCODING_SYSTEM_PROPERTY = "org.mule.osEncoding";
 
     // Generic Event properties
     String MULE_EVENT_PROPERTY = PROPERTY_PREFIX + "EVENT";

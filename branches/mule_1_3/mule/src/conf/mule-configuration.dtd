@@ -63,6 +63,10 @@
      Added default encoding to use for general parsing of strings
 -->
 <!ATTLIST mule-environment-properties encoding  		CDATA                 #IMPLIED>
+<!--
+     Added default os encoding to use for general system message formatting and web service and servlet encoding
+-->
+<!ATTLIST mule-environment-properties osEncoding  		CDATA                 #IMPLIED>
 
 <!--
      Default transaction timeout

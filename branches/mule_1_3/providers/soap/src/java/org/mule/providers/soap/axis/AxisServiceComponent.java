@@ -341,6 +341,7 @@ public class AxisServiceComponent implements Initialisable, Callable
             responseMsg = convertExceptionToAxisFault(e, responseMsg);
         }
         response.setProperty(HTTPConstants.HEADER_CONTENT_TYPE, "text/xml");
+        response.write(HttpConstants.CRLF);
         response.write(responseMsg.getSOAPPartAsString());
     }
 
