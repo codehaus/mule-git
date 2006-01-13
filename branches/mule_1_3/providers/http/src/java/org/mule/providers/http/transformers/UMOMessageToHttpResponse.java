@@ -148,7 +148,7 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
             httpMessage.append("X-" + MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY)
                        .append(": ")
                        .append(m.getCorrelationSequence());
-            httpMessage.append(HttpConstants.CRLF);
+            httpMessage.append(HttpConstants.CRLF).append(HttpConstants.CRLF);
         }
         if (m.getReplyTo() != null) {
             httpMessage.append("X-" + MuleProperties.MULE_REPLY_TO_PROPERTY)
