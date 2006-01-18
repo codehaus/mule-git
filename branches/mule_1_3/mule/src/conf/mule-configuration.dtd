@@ -590,6 +590,12 @@ Jndi
 <!ATTLIST endpoint synchronous	(true|false)			#IMPLIED>
 
 <!--
+    encoding
+    explicitly specify the encoding used by this endpoint
+-->
+<!ATTLIST endpoint encoding  		CDATA                 #IMPLIED>
+
+<!--
     remoteSync
     Determines whether when running synchronously, return events are received before
     returning the call. i.e. in jms wait for a replyTo or tcp/http reply on the outputStream.
