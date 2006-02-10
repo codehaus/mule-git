@@ -47,6 +47,7 @@ import java.util.Map;
  * service with a Axis server.
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
+ * @author <a href="mailto:Fujikura?Shigemoto@ogis-ri.co.jp">Shigemoto Fujikura</a>
  * @version $Revision$
  */
 
@@ -115,6 +116,22 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
 
         // The namespace of the service.
         String namespace = Namespaces.makeNamespace(className);
+
+        // this code add a default namespace to service descriptor. the namespace is
+        // obtained from 'wsdlTargetNamespace' value of 'axisOptions' if it's set.
+        // if not, a namespace translated from class name.
+        // Rows 119 to 133 added by Shigemoto Fujikura Feb.10,2006
+        java.util.ArrayList namespaceMappings = new java.util.ArrayList();
+        String targetNamespace = null;
+        if(options != null)
+          targetNamespace = (String)options.get(RPCProvider.OPTION_WSDL_TARGETNAMESPACE);
+
+        if(targetNamespace != null && targetNamespace.length() != 0)
+          namespaceMappings.add(targetNamespace);
+        else
+          namespaceMappings.add(namespace);
+
+        service.getServiceDescription().setNamespaceMappings(namespaceMappings);
 
         /*
          * Now we set up the various options for the SOAPService. We set:
