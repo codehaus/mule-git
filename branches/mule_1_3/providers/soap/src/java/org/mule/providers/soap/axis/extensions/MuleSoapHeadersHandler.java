@@ -31,6 +31,7 @@ import org.mule.umo.UMOEvent;
  * write Mule header properties to a Soap message
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
+ * @author <a href="mailto:h_ozawa@s4.dion.ne.jp">H.Ozawa</a>
  * @version $Revision$
  */
 public class MuleSoapHeadersHandler extends BasicHandler
@@ -49,13 +50,13 @@ public class MuleSoapHeadersHandler extends BasicHandler
                 if (!msgContext.getPastPivot()) {
                     processClientRequest(msgContext, setMustUnderstand);
                     if (logger.isDebugEnabled()) {
-                        logger.debug("After Client Request, Message is:\n"
+                        logger.debug("After Client Request1, Message is:\n"
                                 + msgContext.getRequestMessage().getSOAPPartAsString());
                     }
                 } else {
                     processClientResponse(msgContext);
                     if (logger.isDebugEnabled()) {
-                        logger.debug("After Client Response, Message is:\n"
+                        logger.debug("After Client Response2, Message is:\n"
                                 + msgContext.getRequestMessage().getSOAPPartAsString());
                     }
                 }
@@ -63,13 +64,13 @@ public class MuleSoapHeadersHandler extends BasicHandler
                 if (!msgContext.getPastPivot()) {
                     processServerRequest(msgContext);
                     if (logger.isDebugEnabled()) {
-                        logger.debug("After Server Request, Message is:\n"
+                        logger.debug("After Server Request1, Message is:\n"
                                 + msgContext.getRequestMessage().getSOAPPartAsString());
                     }
                 } else {
                     processServerResponse(msgContext, setMustUnderstand);
                     if (logger.isDebugEnabled()) {
-                        logger.debug("After Server Response, Message is:\n"
+                        logger.debug("After Server Response2, Message is:\n"
                                 + msgContext.getRequestMessage().getSOAPPartAsString());
                     }
                 }
@@ -117,7 +118,7 @@ public class MuleSoapHeadersHandler extends BasicHandler
         if (msg == null) {
             return;
         }
-        SOAPEnvelope env = msg.getSOAPPart().getEnvelope();
+       	SOAPEnvelope env = msg.getSOAPPart().getEnvelope();
         MuleSoapHeaders headers = new MuleSoapHeaders(env.getHeader());
         headers.setAsClientProperties(msgContext);
     }

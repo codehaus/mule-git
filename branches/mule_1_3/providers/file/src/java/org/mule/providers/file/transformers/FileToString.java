@@ -13,6 +13,8 @@
  */
 package org.mule.providers.file.transformers;
 
+import java.io.UnsupportedEncodingException;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,10 +38,18 @@ public class FileToString extends AbstractTransformer
         setReturnClass(String.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         if (src instanceof byte[])
+          if (encoding != null) {
+        	try {
+              return new String((byte[]) src, encoding);
+        	} catch (UnsupportedEncodingException ex){
+        	  return new String((byte[]) src);
+        	}
+          } else {
             return new String((byte[]) src);
+          }
         if (src instanceof String)
             return src.toString();
 

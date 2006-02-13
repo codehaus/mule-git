@@ -75,6 +75,7 @@ import java.util.Properties;
  * </ol>
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
+ * @author <a href="mailto:h_ozawa@s4.dion.ne.jp">Hitoshi Ozawa</a>
  * @version $Revision$
  */
 
@@ -107,7 +108,7 @@ public class AxisServiceComponent implements Initialisable, Callable
     /**
      * Passes the context to the listener
      * 
-     * @param context the context ot process
+     * @param context the context to process
      * @return Object this object can be anything. When the
      *         <code>UMOLifecycleAdapter</code> for the component receives
      *         this object it will first see if the Object is an
@@ -151,7 +152,7 @@ public class AxisServiceComponent implements Initialisable, Callable
 //            if(i > -1) {
 //                uri = uri.substring(0, i);
 //            }
-            uri += context.getMessageAsString();
+            uri += context.getMessageAsString(null);
             UMOEndpointURI endpointUri = new MuleEndpointURI(uri);
             AxisEngine engine = getAxisServer();
             String pathInfo = endpointUri.getPath();
@@ -623,6 +624,7 @@ public class AxisServiceComponent implements Initialisable, Callable
                 response.setProperty(HttpConstants.HEADER_CONTENT_TYPE, contentType);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 responseMsg.writeTo(baos);
+                response.write("\r\n");
                 response.write(baos.toString());
             } catch (SOAPException e) {
                 logException(e);

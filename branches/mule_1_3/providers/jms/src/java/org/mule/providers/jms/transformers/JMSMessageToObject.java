@@ -52,7 +52,7 @@ public class JMSMessageToObject extends AbstractJmsTransformer
         registerSourceType(Message.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         Object result = null;
 

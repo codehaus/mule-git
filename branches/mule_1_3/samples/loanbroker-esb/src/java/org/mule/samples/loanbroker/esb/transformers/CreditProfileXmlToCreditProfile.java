@@ -21,7 +21,7 @@ public class CreditProfileXmlToCreditProfile extends AbstractTransformer {
         setReturnClass(CreditProfile.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException {
+    public Object doTransform(Object src, String encoding) throws TransformerException {
         Document doc = null;
         if(src instanceof Document) {
             doc = (Document)src;

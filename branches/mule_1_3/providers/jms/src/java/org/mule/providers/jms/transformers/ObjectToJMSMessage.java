@@ -43,7 +43,7 @@ public class ObjectToJMSMessage extends AbstractJmsTransformer
      */
     private static transient Log logger = LogFactory.getLog(ObjectToJMSMessage.class);
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         Object result = null;
 

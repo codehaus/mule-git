@@ -35,7 +35,7 @@ public class FileToByteArray extends AbstractTransformer
         setReturnClass(byte[].class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         File file = (File) src;
         byte[] buf = new byte[8 * 1024];
