@@ -109,7 +109,7 @@ public class InboundMessageRouter extends AbstractRouterCollection implements UM
                         if (logger.isDebugEnabled()) {
                             try {
                                 logger.warn("Message fragment is: "
-                                        + StringMessageHelper.truncate(event.getMessageAsString(), 100, true));
+                                        + StringMessageHelper.truncate(event.getMessageAsString(null), 100, true));
                             } catch (UMOException e) {
 
                             }

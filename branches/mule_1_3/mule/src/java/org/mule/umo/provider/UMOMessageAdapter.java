@@ -59,7 +59,7 @@ public interface UMOMessageAdapter extends Serializable {
      * @return String representation of the message payload
      * @throws Exception Implementation may throw an endpoint specific exception
      */
-    String getPayloadAsString() throws Exception;
+    String getPayloadAsString(String encoding) throws Exception;
 
     /**
      * @return all properties on this message

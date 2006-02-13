@@ -46,10 +46,14 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
      * @return String representation of the message payload
      * @throws Exception Implementation may throw an endpoint specific exception
      */
-    public String getPayloadAsString() throws Exception
+    public String getPayloadAsString(String encoding) throws Exception
     {
         if (message instanceof byte[]) {
-            return new String((byte[]) message);
+           if (encoding != null) {
+             return new String((byte[]) message, encoding);
+           } else {
+             return new String((byte[]) message);
+           }
         } else {
             return message.toString();
         }
@@ -63,7 +67,7 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
      */
     public byte[] getPayloadAsBytes() throws Exception
     {
-        return getPayloadAsString().getBytes();
+        return getPayloadAsString(null).getBytes();
     }
 
     /**

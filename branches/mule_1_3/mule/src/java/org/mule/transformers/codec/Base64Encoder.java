@@ -43,7 +43,7 @@ public class Base64Encoder extends AbstractTransformer
      * 
      * @see org.mule.umo.transformer.UMOTransformer#transform(java.lang.Object)
      */
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         byte[] buf;
         if (src instanceof String) {

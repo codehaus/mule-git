@@ -178,6 +178,15 @@ public class StringMessageHelper
         }
     }
 
+    public static String getString(byte[] bytes,String encoding) {
+        try {
+            return new String(bytes, encoding);
+        } catch (UnsupportedEncodingException e) {
+            //We can ignore this as the encoding is validated on start up
+            return null;
+        }
+    }
+    
     private static String getEncoding() {
         //Note that the org.mule.encoding property will not be set by Mule until the MuleManager.initialise
         //method is called, thus if you need to set an encoding other than UTF-8 before the Manager is invoked,

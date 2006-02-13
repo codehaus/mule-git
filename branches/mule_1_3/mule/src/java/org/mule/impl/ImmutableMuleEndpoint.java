@@ -130,6 +130,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     protected Integer remoteSyncTimeout = null;
 
     protected String initialState = INITIAL_STATE_STARTED;
+    
+    protected String endpointEncoding = null;
 
     /**
      * determines if a new connector should be created for this endpoint
@@ -158,6 +160,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                                  UMOTransformer transformer,
                                  String type,
                                  int createConnector,
+                                 String endpointEncoding,
                                  Map properties)
     {
         this.name = name;
@@ -165,6 +168,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         this.connector = connector;
         this.transformer = transformer;
         this.createConnector = createConnector;
+        this.endpointEncoding = endpointEncoding;
         if (transformer != null) {
             getTransformer().setEndpoint(this);
         }
@@ -173,7 +177,6 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         if (properties != null) {
             this.properties = properties;
         }
-
         // Create a default transaction config
         transactionConfig = new MuleTransactionConfig();
         if (properties != null && endpointUri != null) {
@@ -194,6 +197,9 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
         if (this.endpointUri == null) {
             this.endpointUri = source.getEndpointURI();
+        }
+        if (this.endpointEncoding == null) {
+            this.endpointEncoding = source.getEndpointEncoding();
         }
         if (this.connector == null) {
             this.connector = source.getConnector();
@@ -233,6 +239,10 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         return endpointUri;
     }
 
+    public String getEndpointEncoding()
+    {
+    	return endpointEncoding;
+    }
     /*
      * (non-Javadoc)
      * 
@@ -296,6 +306,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                                              transformer,
                                              type,
                                              createConnector,
+                                             endpointEncoding,
                                              (properties == null ? null : new HashMap(properties)));
         clone.setTransactionConfig(transactionConfig);
         clone.setFilter(filter);
@@ -333,7 +344,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                 + transformer + ", name='" + name + "'" + ", type='" + type + "'" + ", properties=" + properties
                 + ", transactionConfig=" + transactionConfig + ", filter=" + filter + ", deleteUnacceptedMessages="
                 + deleteUnacceptedMessages + ", initialised=" + initialised + ", securityFilter=" + securityFilter
-                + ", synchronous=" + synchronous + ", initialState=" + initialState + ", createConnector=" + createConnector + "}";
+                + ", synchronous=" + synchronous + ", initialState=" + initialState + ", createConnector=" + createConnector
+                + ", endpointEncoding=" + endpointEncoding+ "}";
     }
 
     /*

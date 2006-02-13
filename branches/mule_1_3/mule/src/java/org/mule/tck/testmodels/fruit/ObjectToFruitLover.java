@@ -28,7 +28,7 @@ public class ObjectToFruitLover extends AbstractTransformer
         this.registerSourceType(FruitLover.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         if (src instanceof FruitLover) {
             return src;

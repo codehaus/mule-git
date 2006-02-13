@@ -14,6 +14,7 @@
 package org.mule.transformers.codec;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -45,18 +46,30 @@ public class UCDecoder extends AbstractTransformer
      * 
      * @see org.mule.umo.transformer.UMOTransformer#transform(java.lang.Object)
      */
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
-        String data;
+        String data = null;
         if (src instanceof byte[]) {
+          if (encoding != null) {
+        	try {
+              data = new String((byte[]) src, encoding);
+        	} catch (UnsupportedEncodingException ex){
+        	  data = new String((byte[]) src);
+        	}
+          } else {
             data = new String((byte[]) src);
+          }
         } else {
             data = (String) src;
         }
         try {
             byte[] result = decoder.decodeBuffer(data);
             if (getReturnClass().equals(String.class)) {
-                return new String(result);
+                if (encoding != null) {
+                  return new String(result, encoding);
+                } else {
+                  return new String(result);
+                }
             }
             return result;
         } catch (IOException e) {

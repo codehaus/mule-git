@@ -167,6 +167,8 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
 
     protected List initialisationCallbacks = new ArrayList();
 
+    protected String encoding = null;
+    
     /**
      * Default constructor. Initalises common properties for the
      * MuleConfiguration object
@@ -186,6 +188,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
         intecerptorList = descriptor.getInterceptors();
         properties = (HashMap) descriptor.getProperties();
         name = descriptor.getName();
+        encoding = descriptor.getEncoding();
 
         threadingProfile = descriptor.getThreadingProfile();
         poolingProfile = descriptor.getPoolingProfile();
@@ -287,6 +290,11 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
     {
         return intecerptorList;
     }
+    
+    public String getEncoding()
+    {
+    	return encoding;
+    }
 
     /*
      * (non-Javadoc)
@@ -301,6 +309,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
         buffer.append(", send transformer=" + outboundTransformer);
         buffer.append(", inbound endpointUri=" + inboundEndpoint);
         buffer.append(", receive transformer=" + inboundTransformer);
+        buffer.append(", encoding=" + encoding);
         return buffer.toString();
     }
 

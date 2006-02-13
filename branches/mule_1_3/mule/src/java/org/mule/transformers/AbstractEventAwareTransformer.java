@@ -39,7 +39,7 @@ import org.mule.umo.transformer.TransformerException;
 
 public abstract class AbstractEventAwareTransformer extends AbstractTransformer
 {
-    public final Object doTransform(Object src) throws TransformerException
+    public final Object doTransform(Object src, String encoding) throws TransformerException
     {
         UMOEventContext event = RequestContext.getEventContext();
         if (event == null) {
@@ -47,6 +47,6 @@ public abstract class AbstractEventAwareTransformer extends AbstractTransformer
         }
         return transform(src, event);
     }
-
+    
     public abstract Object transform(Object src, UMOEventContext context) throws TransformerException;
 }

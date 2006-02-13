@@ -14,6 +14,8 @@
 */
 package org.mule.transformers.codec;
 
+import java.io.UnsupportedEncodingException;
+
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.SgmlCodec;
@@ -33,10 +35,18 @@ public class SgmlEntityEncoder extends AbstractTransformer
         setReturnClass(String.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
         if(src instanceof byte[]) {
+          if (encoding != null) {
+            try {
+              return SgmlCodec.encodeString(new String((byte[])src, encoding));
+            } catch (UnsupportedEncodingException ex){
+              return SgmlCodec.encodeString(new String((byte[])src));
+            }
+          } else {
             return SgmlCodec.encodeString(new String((byte[])src));
+          }
         } else {
             return SgmlCodec.encodeString(src.toString());
         }

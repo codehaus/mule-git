@@ -80,7 +80,7 @@ public class MuleManagerComponent implements Callable, Initialisable
     public Object onCall(UMOEventContext context) throws Exception
     {
         Object result = null;
-        String xml = context.getMessageAsString();
+        String xml = context.getMessageAsString(null);
         logger.debug("Message received by MuleManagerComponent");
         AdminEvent action = (AdminEvent) remoteTransformer.transform(xml);
         if (AdminEvent.ACTION_INVOKE == action.getAction()) {

@@ -37,7 +37,7 @@ public class ObjectToString extends AbstractTransformer
         setReturnClass(String.class);
     }
 
-    public Object doTransform(Object src) throws TransformerException
+    public Object doTransform(Object src, String encoding) throws TransformerException
     {
 	String output = "";
         if (src instanceof Map) {
