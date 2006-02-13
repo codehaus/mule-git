@@ -128,7 +128,19 @@ public abstract class AbstractReceiverServlet extends HttpServlet
                 response.getOutputStream().write(message.getPayloadAsBytes());
             } else {
                 response.setContentType(contentType);
-                response.getWriter().write(message.getPayloadAsString());
+                String charset = null;
+                int st = contentType.indexOf("charset=");
+                int e1 = 0;
+                int e2 = 0;
+                if (st > 0) {
+                  e1 = contentType.indexOf("\"",st);
+                  e2 = contentType.indexOf(";",st);
+                }
+                if (e2 > 0) {
+                  e1 = e2;
+                }
+                charset = contentType.substring(st,e1);
+                response.getWriter().write(message.getPayloadAsString(charset));
             }
             response.setStatus(HttpServletResponse.SC_OK);
         }
