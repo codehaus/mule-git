@@ -1,8 +1,0 @@
-target
-.classpath
-.project
-test
-bin
-.mule
-ActiveMQ
-mule-integration-tests.iml
