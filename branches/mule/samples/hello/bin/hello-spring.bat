@@ -1,1 +1,0 @@
-call run-with-classpath.bat -builder org.mule.extras.spring.config.SpringConfigurationBuilder -config ../conf/hello-spring-config.xml
