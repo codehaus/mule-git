@@ -7,9 +7,9 @@
  * the LICENSE.txt file.
  * 
  * ------------------------------------------------------------------------------------------------------
- * $Header$
- * $Revision: 2 $
- * $Date: 2005-11-19 17:28:32 +0100 (Sat, 19 Nov 2005) $
+ * $Id$
+ * $Revision$
+ * $Date$
  */
 package org.mule.jbi.engines.agila;
 

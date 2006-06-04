@@ -1,7 +1,5 @@
 /*
- * $Header$
- * $Revision: 2 $
- * $Date: 2005-11-19 17:28:32 +0100 (Sat, 19 Nov 2005) $
+ * $Id$
  * ------------------------------------------------------------------------------------------------------
  *
  * Copyright (c) SymphonySoft Limited. All rights reserved.
@@ -28,7 +26,7 @@ import javax.management.ObjectName;
  * host.
  *
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 2 $
+ * @version $Revision$
  */
 public class JbiConnector extends AbstractServiceEnabledConnector implements ComponentLifeCycle {
 

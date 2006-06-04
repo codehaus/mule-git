@@ -1,7 +1,5 @@
 /* 
-* $Header$
-* $Revision: 3 $
-* $Date: 2005-11-19 17:43:12 +0100 (Sat, 19 Nov 2005) $
+* $Id$
 * ------------------------------------------------------------------------------------------------------
 * 
 * Copyright (c) SymphonySoft Limited. All rights reserved.
@@ -18,7 +16,7 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 
 /**
- * todo document
+ * TODO document
  *
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision: 3 $

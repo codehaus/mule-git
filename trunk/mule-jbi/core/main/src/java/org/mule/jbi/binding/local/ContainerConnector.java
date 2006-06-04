@@ -1,7 +1,5 @@
 /*
- * $Header$
- * $Revision: 3 $
- * $Date: 2005-11-19 17:43:12 +0100 (Sat, 19 Nov 2005) $
+ * $Id$
  * ------------------------------------------------------------------------------------------------------
  *
  * Copyright (c) SymphonySoft Limited. All rights reserved.
@@ -24,7 +22,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
  * host.
  *
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 3 $
+ * @version $Revision$
  */
 public class ContainerConnector extends AbstractServiceEnabledConnector  {
 
