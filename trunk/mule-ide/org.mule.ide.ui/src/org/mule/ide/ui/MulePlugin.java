@@ -1,7 +1,5 @@
 /*
- * $Header$
- * $Revision$
- * $Date$
+ * $Id$
  * ------------------------------------------------------------------------------------------------------
  *
  * Copyright (c) Jesper Steen Møller. All rights reserved.

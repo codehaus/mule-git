@@ -1,7 +1,5 @@
 /*
- * $Header$
- * $Revision$
- * $Date$
+ * $Id$
  */
 package org.mule.ide.ui.model;
 
