@@ -6,13 +6,13 @@
 <mule-configuration id="workflowTestConfig" version="1.0">
     <mule-environment-properties serverUrl=""/>
 
-	<connector name="jbpmConnector" className="org.mule.providers.bpm.ProcessConnector" />
-  
+    <connector name="jbpmConnector" className="org.mule.providers.bpm.ProcessConnector" />
+
     <model name="processModel">
-        <mule-descriptor
-            name="testService"
-            implementation="org.mule.components.simple.NullComponent"
-            inboundEndpoint="bpm://incoming">
+        <mule-descriptor name="testService" implementation="org.mule.components.simple.NullComponent">
+            <inbound-router>
+                <endpoint address="bpm://incoming" />
+            </inbound-router>
         </mule-descriptor>
     </model>
 </mule-configuration>
