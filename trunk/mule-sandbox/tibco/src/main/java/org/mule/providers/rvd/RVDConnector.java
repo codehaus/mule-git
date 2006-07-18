@@ -1,18 +1,18 @@
-// 	RVDConnector.java
-
-// 	Ross Paul, ross.paul@mlb.com, 21 Jun 2006
-// 	Time-stamp: <2006-07-17 16:28:38 rpaul>
 package org.mule.providers.rvd;
 
-import com.tibco.tibrv.*;
-import org.mule.providers.*;
-import org.mule.umo.*;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.config.i18n.*;
+
+import com.tibco.tibrv.Tibrv;
+import com.tibco.tibrv.TibrvRvdTransport;
+import com.tibco.tibrv.TibrvTransport;
 
 
 /**
- * Allows mule to communicate over rendevoooooos!  Endpoint may be specified 
+ * Allows mule to communicate over rendevoooooos!  Endpoint may be specified
  * with: rvd://subjectName.  Or to use certified messaging, specify endpoints
  * with: rvd://subjectName?cmname=yourCMName.
  * The connector is configured by specifiying the service, network, &&|| daemon
@@ -29,7 +29,7 @@ public class RVDConnector extends AbstractServiceEnabledConnector
     private String service;
     private String network;
     private String daemon;
-    
+
     TibrvTransport transport = null;
 
 
@@ -97,7 +97,7 @@ public class RVDConnector extends AbstractServiceEnabledConnector
     public String getNetwork()
     {
         return network;
-    } 
+    }
 
     public String getDaemon()
     {

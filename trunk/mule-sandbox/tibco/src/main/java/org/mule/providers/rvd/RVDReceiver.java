@@ -1,17 +1,22 @@
-// 	Receiver.java
-
-// 	Ross Paul, ross.paul@mlb.com, 22 Jun 2006
-// 	Time-stamp: <2006-07-17 16:22:49 rpaul>
 package org.mule.providers.rvd;
 
-import org.mule.providers.*;
 import org.mule.impl.MuleMessage;
-import org.mule.umo.provider.*;
-import org.mule.umo.*;
+import org.mule.providers.AbstractMessageReceiver;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.*;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.provider.UMOMessageAdapter;
 
-import com.tibco.tibrv.*;
+import com.tibco.tibrv.Tibrv;
+import com.tibco.tibrv.TibrvCmListener;
+import com.tibco.tibrv.TibrvCmTransport;
+import com.tibco.tibrv.TibrvDispatcher;
+import com.tibco.tibrv.TibrvListener;
+import com.tibco.tibrv.TibrvMsg;
+import com.tibco.tibrv.TibrvMsgCallback;
+import com.tibco.tibrv.TibrvRvdTransport;
+import com.tibco.tibrv.TibrvTransport;
 
 /**
  * Receives regular and certified messages from rendezvous.  See RVDConnector
@@ -20,17 +25,17 @@ import com.tibco.tibrv.*;
  * @author <a href="mailto:ross.paul@mlb.com">Ross Paul</a>
  * @version $Revision: 1.3 $
  */
-public class RVDReceiver extends AbstractMessageReceiver 
+public class RVDReceiver extends AbstractMessageReceiver
     implements TibrvMsgCallback
 {
     private TibrvListener listener = null;
     private TibrvCmListener cmListener = null;
     private TibrvCmTransport cmTransport = null;
     private TibrvDispatcher tibrvDispatcher = null;
-    
 
 
-    public RVDReceiver( UMOConnector connector, UMOComponent component, 
+
+    public RVDReceiver( UMOConnector connector, UMOComponent component,
                      UMOEndpoint endpoint ) throws InitialisationException
     {
         super(connector, component, endpoint);
@@ -79,14 +84,14 @@ public class RVDReceiver extends AbstractMessageReceiver
         cmTransport = null;
     }
 
-    
+
     /** forwards the rendezvous messages to the umo */
     public void onMsg( TibrvListener rvListener, TibrvMsg msg )
     {
         try{
             logger.info( "message received on: " + rvListener.getSubject() );
             logger.debug( msg );
-            
+
             UMOMessageAdapter adapter = connector.getMessageAdapter( msg );
             routeMessage( new MuleMessage( adapter ));
         }catch( Exception e ){ handleException( e );}
