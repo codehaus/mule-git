@@ -12,6 +12,21 @@
     <packaging>jar</packaging>
     <name>Tibco Rendezvous Provider</name>
     <description>Allows Mule to communicate with Tibco's Rendezvous message bus</description>
+
+    <repositories>
+        <repository>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus Maven 2.x Snapshots Repository</name>
+            <url>http://snapshots.repository.codehaus.org</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>tibco</groupId>
