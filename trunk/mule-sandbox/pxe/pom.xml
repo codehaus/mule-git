@@ -8,7 +8,7 @@
         <artifactId>mule-extras</artifactId>
         <version>1.3-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-extras-pxe</artifactId>
+    <artifactId>mule-module-pxe</artifactId>
     <packaging>jar</packaging>
     <name>PXE Bpel Component</name>
     <description>Embeds the PXE Bpel Engine inside Mule</description>
