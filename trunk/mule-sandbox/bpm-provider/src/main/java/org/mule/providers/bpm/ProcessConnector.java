@@ -10,15 +10,8 @@
 
 package org.mule.providers.bpm;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.ConnectorException;
 
 /**
  * The BPM provider allows Mule events to initiate and/or advance processes in an
@@ -29,76 +22,57 @@ import org.mule.umo.provider.ConnectorException;
  */
 public class ProcessConnector extends AbstractServiceEnabledConnector {
 
+    protected BPMS bpms;
+    protected boolean localEndpointsOnly = true;
+    protected boolean allowGlobalReceiver = false;
+
+    public static final String PROPERTY_ENDPOINT = "endpoint";
     public static final String PROPERTY_PROCESS_TYPE = "processType";
     public static final String PROPERTY_PROCESS_ID = "processId";
-    public static final String PROPERTY_PROCESS_STARTED = "processStarted";
     public static final String PROPERTY_ACTION = "action";
     public static final String PROPERTY_TRANSITION = "transition";
+    public static final String PROPERTY_PROCESS_STARTED = "started";
     public static final String ACTION_START = "start";
     public static final String ACTION_ADVANCE = "advance";
     public static final String ACTION_UPDATE = "update";
     public static final String ACTION_ABORT = "abort";
     public static final String PROCESS_VARIABLE_INCOMING = "incoming";
     public static final String PROCESS_VARIABLE_DATA = "data";
-    public static final int MULE_CLIENT_TIMEOUT = 1000;
 
-    private MuleJbpmSessionFactory jbpmSessionFactory = null;
+    public static final String PROTOCOL = "bpm";
+    public static final String GLOBAL_RECEIVER = PROTOCOL + "://*";
+
     private MuleClient muleClient = null;
 
     public String getProtocol() {
-        return "bpm";
+        return PROTOCOL;
     }
 
-    public void doInitialise() throws InitialisationException {
-        super.doInitialise();
-        try {
-            // TODO
-        } catch (Exception e) {
-            throw new InitialisationException(new Message(
-                    Messages.INITIALISATION_FAILURE_X, "BPM provider"), e);
-        }
+    public BPMS getBpms() {
+        return bpms;
     }
 
-    protected void doStart() throws UMOException {
-        super.doStart();
-        try {
-            // Create the jBpm session factory (this takes awhile because it verifies
-            // all the Hibernate (ORM) mappings).
-            if (jbpmSessionFactory == null) {
-                jbpmSessionFactory = new MuleJbpmSessionFactory();
-            }
-
-            // Create a client for the Mule server (used to generate events from the
-            // executing processes).
-            if (muleClient == null) {
-                muleClient = new MuleClient(/*initialiseManager*/false);
-            }
-        } catch (Exception e) {
-            throw new ConnectorException(new Message(
-                    Messages.FAILED_TO_START_X, "BPM provider"), this, e);
-        }
-    }
-
-    // TODO
-    protected void doStop() throws UMOException {
-        try {
-            if (jbpmSessionFactory != null) {
-                jbpmSessionFactory.getSessionFactory().close();
-            }
-            super.doStop();
-        } catch (Exception e) {
-            throw new ConnectorException(new Message(Messages.FAILED_TO_STOP_X,
-                    "BPM provider"), this, e);
-        }
-    }
-
-    public MuleJbpmSessionFactory getJbpmSessionFactory() {
-        return jbpmSessionFactory;
+    public void setBpms(BPMS bpms) {
+        this.bpms = bpms;
     }
 
     public MuleClient getMuleClient() {
         return muleClient;
     }
 
-    private static Log log = LogFactory.getLog(ProcessConnector.class);
+    public boolean isLocalEndpointsOnly() {
+        return localEndpointsOnly;
+    }
+
+    public void setLocalEndpointsOnly(boolean localEndpointsOnly) {
+        this.localEndpointsOnly = localEndpointsOnly;
+    }
+
+    public boolean isAllowGlobalReceiver() {
+        return allowGlobalReceiver;
+    }
+
+    public void setAllowGlobalReceiver(boolean allowGlobalReceiver) {
+        this.allowGlobalReceiver = allowGlobalReceiver;
+    }
 }

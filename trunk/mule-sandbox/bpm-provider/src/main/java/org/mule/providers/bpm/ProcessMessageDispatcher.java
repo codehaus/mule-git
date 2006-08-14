@@ -14,16 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jbpm.graph.exe.ProcessInstance;
+import org.mule.config.i18n.Message;
+import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.DispatchException;
+import org.mule.util.PropertiesUtils;
 
 /**
  * Initiates or advances a workflow process from an outgoing Mule event.
@@ -39,106 +39,128 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
         this.connector = (ProcessConnector) endpoint.getConnector();
     }
 
-    public void doDispose() {}
-    protected void doConnect(UMOImmutableEndpoint arg0) throws Exception {}
-    protected void doDisconnect() throws Exception {}
+    /**
+     * Performs a synchronous action on the BPMS.
+     * @return an object representing the new state of the process
+     */
+    public UMOMessage doSend(UMOEvent event) throws Exception {
+        Object process = processAction(event);
 
-    public void doDispatch(UMOEvent event) throws Exception {
-        doSend(event);
+        if (process != null) {
+            return new MuleMessage(process);
+        } else {
+            throw new DispatchException(Message.createStaticMessage("Synchronous process invocation must return the new process state."), event.getMessage(), event.getEndpoint());
+        }
     }
 
     /**
-     * @return id of the new ProcessInstance if a new process is created, otherwise null.
+     * Performs an asynchronous action on the BPMS.
      */
-    public UMOMessage doSend(UMOEvent event) throws Exception {
+    public void doDispatch(UMOEvent event) throws Exception {
+        processAction(event);
+    }
 
-        // Get parameters
-        String processType =
-            (String) event.getProperty(ProcessConnector.PROPERTY_PROCESS_TYPE, /*exhaustiveSearch*/true);
-        long processId =
-            objectToLong(event.getProperty(ProcessConnector.PROPERTY_PROCESS_ID, /*exhaustiveSearch*/true));
+    protected Object processAction(UMOEvent event) throws Exception {
+        // An object representing the new state of the process
+        Object process = null;
 
-        String action =
-            (String) event.getMessage().getProperty(ProcessConnector.PROPERTY_ACTION);
-        String transition =
-            (String) event.getMessage().getProperty(ProcessConnector.PROPERTY_TRANSITION);
+        // Create a map of process variables based on the message properties.
+        Map processVariables = new HashMap();
+        if (event != null) {
+            processVariables.putAll(PropertiesUtils.getMessageProperties(event.getMessage()));
+
+            // Pass the message's payload in as a special process variable.
+            Object payload = event.getTransformedMessage();
+            if (payload != null && !(payload instanceof NullPayload)) {
+                processVariables.put(ProcessConnector.PROCESS_VARIABLE_INCOMING, payload);
+            }
+        }
+
+        // Retrieve the parameters
+        Object processType = event.getProperty(ProcessConnector.PROPERTY_PROCESS_TYPE, /*exhaustiveSearch*/true);
+        processVariables.remove(ProcessConnector.PROPERTY_PROCESS_TYPE);
+
+        Object processId = event.getProperty(ProcessConnector.PROPERTY_PROCESS_ID, /*exhaustiveSearch*/true);
+        processVariables.remove(ProcessConnector.PROPERTY_PROCESS_ID);
+
+        // Default action is "advance"
+        String action = event.getMessage().getStringProperty(ProcessConnector.PROPERTY_ACTION,
+                                                             ProcessConnector.ACTION_ADVANCE);
+        processVariables.remove(ProcessConnector.PROPERTY_ACTION);
+
+        Object transition = event.getMessage().getProperty(ProcessConnector.PROPERTY_TRANSITION);
+        processVariables.remove(ProcessConnector.PROPERTY_TRANSITION);
 
         // Decode the URI, for example:
-        // 		bpm:/testProcess/4561?action=advance
+        //      bpm:/testProcess/4561?action=advance
+        // TODO Replace this with an EndpointBuilder
         String path = event.getEndpoint().getEndpointURI().getPath();
         String[] pathTokens = StringUtils.split(path, "/");
         if (pathTokens.length >= 1) {
             processType = pathTokens[0];
         }
         if (pathTokens.length >= 2) {
-            processId = NumberUtils.toLong(pathTokens[1]);
+            processId = pathTokens[1];
         }
 
-        // Pass the message's payload in as a process variable.
-        Map variables = new HashMap();
-        Object payload = null;
-        if (event != null) {
-            payload = event.getTransformedMessage();
-            if (payload != null && !(payload instanceof NullPayload)) {
-                variables.put(ProcessConnector.PROCESS_VARIABLE_INCOMING, payload);
-            }
-        }
+        ////////////////////////////////////////////////////////////////////////
 
-        // This event is not associated to any existing process so we create a new one.
-        if ((action != null && action.equals(ProcessConnector.ACTION_START))
-                || processId == -1) {
-            ProcessInstance process;
+        // Start a new process.
+        if (processId == null || action.equals(ProcessConnector.ACTION_START)) {
             if (processType != null) {
-                process = JBpmUtil.startProcess(connector.getJbpmSessionFactory(),
-                                                processType, variables);
+                process = connector.getBpms().startProcess(processType, processVariables);
+                if ((process != null) && logger.isInfoEnabled()) {
+                    logger.info("New process started, ID = " + connector.getBpms().getId(process));
+                }
+            } else {
+                throw new IllegalArgumentException("Process type is missing, cannot start a new process.");
             }
-            else throw new IllegalArgumentException("Process type must be specified when starting a new process.");
+        }
 
-                 // Return the id of the newly-created process.
-            UMOMessage message = event.getMessage();
-               message.setLongProperty(ProcessConnector.PROPERTY_PROCESS_ID, process.getId());
-            return message;
-        }
-        else if (action != null && action.equals(ProcessConnector.ACTION_UPDATE)){
-            if (processId != -1) {
-                JBpmUtil.updateProcess(connector.getJbpmSessionFactory(),
-                                        processId, variables);
+        // Don't advance the process, just update the process variables.
+        else if (action.equals(ProcessConnector.ACTION_UPDATE)){
+            if (processId != null) {
+                process = connector.getBpms().updateProcess(processId, processVariables);
+                if ((process != null) && logger.isInfoEnabled()) {
+                    logger.info("Process variables updated, ID = " + connector.getBpms().getId(process));
+                }
+            } else {
+                throw new IllegalArgumentException("Process ID is missing, cannot update process.");
             }
-            else throw new IllegalArgumentException("Process id must be specified when updating an existing process.");
-            return null;
         }
-        // The process instance already exists, so we just need to advance the process
-        // one step.
+
+        // Abort the running process (end abnormally).
+        else if (action.equals(ProcessConnector.ACTION_ABORT)){
+            if (processId != null) {
+                connector.getBpms().abortProcess(processId);
+                process = new NullPayload();
+                logger.info("Process aborted, ID = " + processId);
+            } else {
+                throw new IllegalArgumentException("Process ID is missing, cannot abort process.");
+            }
+        }
+
+        // Advance the already-running process one step.
         else {
-            if (processId != -1) {
-                JBpmUtil.advanceProcess(connector.getJbpmSessionFactory(),
-                                        processId, variables, transition);
+            if (processId != null) {
+                process = connector.getBpms().advanceProcess(processId, transition, processVariables);
+                if ((process != null) && logger.isInfoEnabled()) {
+                    logger.info("Process advanced, ID = " + connector.getBpms().getId(process) + ", new state = " + connector.getBpms().getState(process));
+                }
+            } else {
+                throw new IllegalArgumentException("Process ID is missing, cannot advance process.");
             }
-            else throw new IllegalArgumentException("Process id must be specified when advancing an existing process.");
-            return null;
         }
+
+        return process;
     }
 
     protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception {
-        throw new UnsupportedOperationException("Receive is not implemented by the Workflow provider");
+        throw new UnsupportedOperationException("doReceive() is not implemented by the ProcessMessageDispatcher");
     }
 
-
-    public Object getDelegateSession() throws UMOException {
-        return null;
-    }
-
-    // TODO This method should be in org.mule.util.Utility but for some reason it causes
-    // problems if I reference it from there.
-    public static long objectToLong(Object obj) {
-        if (obj == null) {
-            return -1;
-        } else if (obj instanceof String) {
-            return NumberUtils.toLong((String) obj);
-        } else if (obj instanceof Long) {
-            return ((Long) obj).longValue();
-        } else return -1;
-    }
-
-    private static Log log = LogFactory.getLog(ProcessMessageDispatcher.class);
+    public Object getDelegateSession() throws UMOException { return null; }
+    protected void doConnect(UMOImmutableEndpoint arg0) throws Exception { /*nop*/ }
+    protected void doDisconnect() throws Exception { /*nop*/ }
+    public void doDispose() { /*nop*/ }
 }

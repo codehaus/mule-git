@@ -12,15 +12,13 @@ package org.mule.providers.bpm;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import javax.resource.spi.work.Work;
+
+import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
@@ -30,43 +28,81 @@ import org.mule.umo.provider.UMOConnector;
  *
  * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a>
  */
-public class ProcessMessageReceiver extends AbstractMessageReceiver implements EventRouter {
+public class ProcessMessageReceiver extends AbstractMessageReceiver {
 
-	private ProcessConnector connector = null;
+    private ProcessConnector connector = null;
 
-	public ProcessMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
-			throws InitialisationException {
-		
-		super(connector, component, endpoint);	
-		this.connector = (ProcessConnector) connector;
+    public ProcessMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+            throws InitialisationException {
+        super(connector, component, endpoint);
+        this.connector = (ProcessConnector) connector;
+    }
 
-		// Set a reference back to this object for the jBpm ActionHandler to use for 
-		// generating events.
-		this.connector.getJbpmSessionFactory().setEventRouter(this);
-	}
+    public UMOMessage sendEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
+        logger.debug("Executing process is sending an event (synchronously) to Mule endpoint = " + endpoint);
 
-	protected void doDispose() {
-	}
+        UMOMessage message;
+        if (payload instanceof UMOMessage) {
+            message = (UMOMessage) payload;
+        } else {
+            message = new MuleMessage(connector.getMessageAdapter(payload));
+        }
+        message.addProperties(messageProperties);
 
-	public void doStart() throws UMOException {
-		try {
-		} catch (Exception e) {
-			throw new EndpointException(new Message(Messages.FAILED_TO_START_X,
-					"Workflow receiver"), e);
-		}
-	}
+        if (connector.isLocalEndpointsOnly()) {
+            message.setStringProperty(ProcessConnector.PROPERTY_ENDPOINT, endpoint);
+            return routeMessage(message, /*synchronous*/true);
+        }
+        else {
+            return connector.getMuleClient().send(endpoint, message);
+        }
+    }
 
-	public void doConnect() throws Exception {
-	}
+    public void dispatchEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
+        logger.debug("Executing process is dispatching an event (asynchronously) to Mule endpoint = " + endpoint);
+        try {
+            getWorkManager().scheduleWork(new Worker(endpoint, payload, messageProperties));
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
 
-	public void doDisconnect() throws Exception {
+    private class Worker implements Work {
+        private String endpoint;
+        private Object payload;
+        private Map messageProperties;
 
-	}   
-	
-	public UMOMessage sendEvent(String url, Object payload, Map messageProperties) throws UMOException {
-		log.debug("Executing process has generated a Mule event, url = " + url);
-		return connector.getMuleClient().send(url, payload, messageProperties, ProcessConnector.MULE_CLIENT_TIMEOUT);
-	}
+        public Worker(String endpoint, Object payload, Map messageProperties) {
+            this.endpoint = endpoint;
+            this.payload = payload;
+            this.messageProperties = messageProperties;
+        }
 
-	private static Log log = LogFactory.getLog(ProcessMessageReceiver.class);
+        public void run() {
+            try {
+                UMOMessage message;
+                if (payload instanceof UMOMessage) {
+                    message = (UMOMessage) payload;
+                } else {
+                    message = new MuleMessage(connector.getMessageAdapter(payload));
+                }
+                message.addProperties(messageProperties);
+
+                if (connector.isLocalEndpointsOnly()) {
+                    message.setStringProperty(ProcessConnector.PROPERTY_ENDPOINT, endpoint);
+                    routeMessage(message, /*synchronous*/false);
+                }
+                else {
+                    connector.getMuleClient().dispatch(endpoint, message);
+                }
+            } catch (Exception e) {
+                getConnector().handleException(e);
+            }
+        }
+
+        public void release() { /*nop*/ }
+    }
+
+    public void doConnect() throws Exception { /*nop*/ }
+    public void doDisconnect() throws Exception { /*nop*/ }
 }

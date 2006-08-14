@@ -14,60 +14,59 @@
     <description>Allows Mule events to initiate and/or advance processes in an external or embedded Business Process Management System (BPMS). It also allows executing processes to generate Mule events.</description>
     <dependencies>
         <dependency>
+            <groupId>jbpm</groupId>
+            <artifactId>jbpm</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <!-- Only used if localEndpointsOnly = false -->
+        <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>jbpm</groupId>
-            <artifactId>jbpm</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        <!--
         <dependency>
             <groupId>jbpm</groupId>
             <artifactId>jbpm-identity</artifactId>
             <version>3.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>bsh</groupId>
-            <artifactId>bsh</artifactId>
-            <version>2.0b1</version>
-        </dependency>
+        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
-            <version>3.0.5</version>
+            <version>3.1.3</version>
             <exclusions>
-                <!-- Hibernate depends on an inferior version of commons-collections
+                <!-- Hibernate uses an inferior version of commons-collections
                 <exclusion>
                     <groupId>commons-collections</groupId>
                     <artifactId>commons-collections</artifactId>
-                </exclusion>-->
+                </exclusion>
+                -->
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>bsh</groupId>
+            <artifactId>bsh</artifactId>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
-            <version>0.8.4.5</version>
+            <version>0.9.0.4</version>
         </dependency>
-        <!-- Used for validation of the jPdl schema. -->
+        <!-- Used for validation of the jPdl schema.
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xerces</artifactId>
             <version>2.0.2</version>
         </dependency>
+        -->
 
+        <!-- For unit tests only -->
         <dependency>
-            <groupId>org.mule</groupId>
-            <artifactId>mule-file-provider</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- TODO Use Hypersonic or some other embedded RDBMS for unit tests. -->
-        <dependency>
-            <groupId>oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>10.2.0.2</version>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.7.3.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
