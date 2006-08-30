@@ -18,6 +18,7 @@ public class ThreadPool
         {
             workers[i].setQueue(taskQueue);
             threads[i] = new Thread(workers[i]);
+            threads[i].setDaemon(true);
             threads[i].setName(workers[i].getName());
         }
     }
