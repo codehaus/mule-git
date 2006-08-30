@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+
+<mule-configuration id="smtp" version="1.0">
+	
+	<!--<mule-environment-properties synchronous="true" synchronousEventTimeout="5000">
+       <threading-profile id="default" maxThreadsActive="1" maxThreadsIdle="1" maxBufferSize="1" doThreading="false" poolExhaustedAction="WAIT"/>
+	</mule-environment-properties>-->
+	
+	<connector name="EmailConnector" className="org.mule.providers.email.SmtpConnector">
+		<properties>
+			<property value="stephen.fenech@symphonysoft.com" name="fromAddress"/>
+			<property value="symphonysoft.com" name="hostname"/>
+			<property value="File Received!" name="subject"/>
+			<property value="multipart/mixed" name="contentType"/>
+			<map name="serviceOverrides">
+				<property name="outbound.transformer" value="org.mule.providers.email.transformers.ObjectToMimeMessage"/>
+			</map>
+		</properties>
+	</connector>
+	
+	<endpoint-identifiers>
+		<endpoint-identifier value="vm://smtpinbound" name="ServiceInbound"/>
+		<endpoint-identifier value="smtp://localhost:3025?address=mule@symphonysoft.com" name="ToSmtpServer"/>
+	</endpoint-identifiers>
+
+	
+    <model name="smtp">
+		<mule-descriptor name="Smtp" implementation="emailtests.components.EmailWithAttachmentAPI">
+			<inbound-router>
+				<endpoint address="ServiceInbound"/>
+			</inbound-router>
+			<outbound-router>
+				<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+					<endpoint address="ToSmtpServer"/>
+				</router>
+			</outbound-router>
+		</mule-descriptor>
+    </model>
+</mule-configuration>
