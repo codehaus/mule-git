@@ -59,4 +59,8 @@ public abstract class AbstractServer extends Service {
     public String getProtocol() {
         return setup.getProtocol();
     }
+    
+    public void run() {
+        Thread.currentThread().setName("Greenmail "+this.getProtocol()+" Server");
+    }
 }

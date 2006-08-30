@@ -8,6 +8,7 @@ package com.icegreen.greenmail.smtp;
 import com.icegreen.greenmail.AbstractServer;
 import com.icegreen.greenmail.Managers;
 import com.icegreen.greenmail.util.ServerSetup;
+import com.icegreen.greenmail.util.ThreadPool;
 import com.icegreen.greenmail.smtp.commands.SmtpCommandRegistry;
 import com.icegreen.greenmail.foedus.util.InMemoryWorkspace;
 
@@ -16,13 +17,22 @@ import java.net.SocketException;
 
 public class SmtpServer extends AbstractServer {
     private SmtpHandler smtpHandler = null;
+    private ThreadPool threadPool = null;
+    private int workerThreadCount = 0;
+    private boolean started = false;
 
     public SmtpServer(ServerSetup setup, Managers managers) {
         super(setup, managers);
     }
-
+    
     public void quit() {
-        smtpHandler.quit();
+        if(smtpHandler!=null)
+        {
+            smtpHandler.quit();
+        }
+        if(threadPool!=null){
+            threadPool.shutdown();
+        }
         try {
             if (null != clientSocket) {
                 clientSocket.close();
@@ -40,7 +50,19 @@ public class SmtpServer extends AbstractServer {
     }
 
     public void run() {
-        smtpHandler = new SmtpHandler(new SmtpCommandRegistry(), managers.getSmtpManager(), new InMemoryWorkspace());
+        super.run();
+        synchronized(this)
+        {
+            started = false;
+        }
+        if(workerThreadCount>1)
+        {
+            createThreadPool(workerThreadCount);
+            threadPool.start();
+        }else
+        {
+            smtpHandler = new SmtpHandler(new SmtpCommandRegistry(), managers.getSmtpManager(), new InMemoryWorkspace());
+        }
         try {
             serverSocket = openServerSocket();
         } catch (IOException e) {
@@ -50,7 +72,11 @@ public class SmtpServer extends AbstractServer {
         while (keepOn()) {
             try {
                 clientSocket = serverSocket.accept();
-                smtpHandler.handleConnection(clientSocket);
+                if(threadPool!=null){
+                    threadPool.addTaskObject(clientSocket);
+                }else{
+                    smtpHandler.handleConnection(clientSocket);
+                }
             } catch (SocketException ignored) {
                 //ignored
             } catch (IOException e) {
@@ -59,4 +85,36 @@ public class SmtpServer extends AbstractServer {
             }
         }
     }
+    
+    private void createThreadPool(int threadBound)
+    {
+        SmtpThreadPoolWorker[] workers=new SmtpThreadPoolWorker[threadBound];
+        for(int i=0;i<threadBound;i++)
+        {
+            workers[i]=new SmtpThreadPoolWorker(new SmtpHandler(new SmtpCommandRegistry(), managers.getSmtpManager(), new InMemoryWorkspace()));
+            workers[i].setName(this.getProtocol()+ " Thread Pool Worker "+i);
+        }
+        threadPool=new ThreadPool(workers);
+        
+    }
+
+    public int getWorkerThreadCount()
+    {
+        return this.workerThreadCount;
+    }
+
+    public void setWorkerThreadCount(int workerThreadsCount)
+    {
+        synchronized(this)
+        {
+            if(started==false)
+            {
+                this.workerThreadCount = workerThreadsCount;
+            }else
+            {
+                //TODO maybe throw exception?!?
+            }
+        }
+    }
+   
 }
