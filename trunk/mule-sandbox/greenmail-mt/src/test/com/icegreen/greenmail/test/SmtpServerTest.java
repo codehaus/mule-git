@@ -3,16 +3,17 @@
 */
 package com.icegreen.greenmail.test;
 
-import com.icegreen.greenmail.util.ServerSetup;
-import com.icegreen.greenmail.util.Servers;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import junit.framework.TestCase;
+import com.icegreen.greenmail.util.Servers;
+
+import java.io.ByteArrayOutputStream;
 
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.ByteArrayOutputStream;
+
+import junit.framework.TestCase;
 
 /**
  * @author Wael Chatila

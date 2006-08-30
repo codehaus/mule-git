@@ -6,16 +6,23 @@
  */
 package com.icegreen.greenmail.store;
 
-import com.icegreen.greenmail.mail.MovingMessage;
 import com.icegreen.greenmail.foedus.util.MsgRangeFilter;
 import com.icegreen.greenmail.imap.ImapConstants;
+import com.icegreen.greenmail.mail.MovingMessage;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.mail.Flags;
 import javax.mail.MessagingException;
-import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.SearchTerm;
-import java.util.*;
 
 /**
  * A simple in-memory implementation of {@link Store}, used for testing

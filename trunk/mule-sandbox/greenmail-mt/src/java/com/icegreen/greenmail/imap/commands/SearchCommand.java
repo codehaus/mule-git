@@ -102,6 +102,8 @@ class SearchCommand extends SelectedStateCommand implements UidEnabledCommand {
 
             // Return a search term that matches everything.
             return new SearchTerm() {
+                private static final long serialVersionUID = -7404541949983506277L;
+
                 public boolean match(Message message) {
                     return true;
                 }

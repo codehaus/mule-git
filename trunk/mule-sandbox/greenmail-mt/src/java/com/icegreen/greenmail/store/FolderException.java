@@ -19,6 +19,8 @@ package com.icegreen.greenmail.store;
  */
 public class FolderException extends Exception {
 
+    private static final long serialVersionUID = 8088124583216203257L;
+
     public final static String ALREADY_EXISTS_LOCALLY
             = "Already exists locally";
     public final static String ALREADY_EXISTS_REMOTELY

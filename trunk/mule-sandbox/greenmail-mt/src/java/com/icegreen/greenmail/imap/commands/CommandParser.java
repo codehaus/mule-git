@@ -23,7 +23,6 @@ import java.util.Date;
  * @version $Revision$
  */
 public class CommandParser {
-    private static final char[] EMPTY_CHAR_ARRAY = new char[0];
 
     /**
      * Reads an argument of type "atom" from the request.

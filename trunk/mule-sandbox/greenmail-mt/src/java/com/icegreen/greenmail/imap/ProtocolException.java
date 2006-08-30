@@ -11,7 +11,11 @@ package com.icegreen.greenmail.imap;
  * @version $Revision$
  */
 public class ProtocolException extends Exception {
+
+    private static final long serialVersionUID = 5500496997400033204L;
+
     public ProtocolException(String s) {
         super(s);
     }
+
 }

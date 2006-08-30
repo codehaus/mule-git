@@ -9,7 +9,6 @@ import com.icegreen.greenmail.util.DummySSLServerSocketFactory;
 import com.icegreen.greenmail.util.Service;
 import com.icegreen.greenmail.util.ServerSetup;
 
-import javax.net.ssl.SSLServerSocket;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -41,7 +40,7 @@ public abstract class AbstractServer extends Service {
     protected ServerSocket openServerSocket() throws IOException {
         ServerSocket ret;
         if (setup.isSecure()) {
-            ret = (SSLServerSocket) DummySSLServerSocketFactory.getDefault().createServerSocket(setup.getPort(), 0, bindTo);
+            ret = DummySSLServerSocketFactory.getDefault().createServerSocket(setup.getPort(), 0, bindTo);
         } else {
             ret = new ServerSocket(setup.getPort(), 0, bindTo);
         }

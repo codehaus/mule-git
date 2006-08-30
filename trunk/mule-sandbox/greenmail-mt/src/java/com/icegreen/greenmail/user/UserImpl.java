@@ -13,9 +13,12 @@ import java.io.Serializable;
 
 
 public class UserImpl implements GreenMailUser, Serializable {
-    String email;
-    String login;
-    String password;
+
+    private static final long serialVersionUID = -2583135637846198939L;
+
+    protected String email;
+    protected String login;
+    protected String password;
     private ImapHostManager imapHostManager;
 
     public UserImpl(String email, String login, String password, ImapHostManager imapHostManager) {
@@ -96,7 +99,7 @@ public class UserImpl implements GreenMailUser, Serializable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof UserImpl) || (null == o)) {
+        if (!(o instanceof UserImpl)) {
             return false;
         }
         UserImpl that = (UserImpl) o;
