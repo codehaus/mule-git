@@ -38,6 +38,7 @@ public class Pop3Server extends AbstractServer {
     }
 
     public void run() {
+        super.run();
         pop3Handler = new Pop3Handler(new Pop3CommandRegistry(), managers.getUserManager());
 
         try {

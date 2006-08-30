@@ -41,6 +41,7 @@ public final class ImapServer extends AbstractServer {
     }
 
     public void run() {
+        super.run();
         imapHandler = new ImapHandler(managers.getUserManager(), managers.getImapHostManager());
 
         try {
