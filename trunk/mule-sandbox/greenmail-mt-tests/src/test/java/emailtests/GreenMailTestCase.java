@@ -22,6 +22,7 @@ public class GreenMailTestCase extends TestCase
 
     protected Servers servers;
     protected int messageCount = 5;
+    protected boolean debugSession = false;
 
     protected void tearDown() throws Exception
     {
@@ -34,9 +35,7 @@ public class GreenMailTestCase extends TestCase
 
     public void testSmtpPlainMail() throws Exception
     {
-
         // start all email servers using non-default ports.
-        // servers = new Servers(ServerSetupTest.SMTP);
         servers = new Servers(ServerSetupTest.ALL);
         servers.start();
 
@@ -48,17 +47,16 @@ public class GreenMailTestCase extends TestCase
 
         // Get system properties
         Properties props = System.getProperties();
-        // Properties props=new Properties();
 
         // Setup mail server
         props.put("mail.smtp.host", "localhost");
         props.put("mail.smtp.port", "3025");
         props.put("mail.smtp.ssl", "false");
         props.remove("mail.smtp.socketFactory.class");
+
         // Get session
-        // Session session = Session.getDefaultInstance(props,null);
         Session session = Session.getInstance(props, null);
-        session.setDebug(true);
+        session.setDebug(debugSession);
 
         // Define message
         MimeMessage message = new MimeMessage(session);
@@ -89,12 +87,6 @@ public class GreenMailTestCase extends TestCase
 
     public void testSmtpsPlainMail() throws Exception
     {
-
-        // Use Custom Socket Factory to use Custom Trust Manager since GreenMail has
-        // a self signed RSA key
-        // Security.setProperty(
-        // "ssl.SocketFactory.provider","DummySSLSocketFactory");
-
         // start all email servers using non-default ports.
         servers = new Servers(ServerSetupTest.SMTPS);
         servers.start();
@@ -109,7 +101,6 @@ public class GreenMailTestCase extends TestCase
 
         // Get system properties
         Properties props = System.getProperties();
-        // Properties props=new Properties();
 
         // Setup mail server
         props.put("mail.smtps.host", "localhost");
@@ -119,9 +110,8 @@ public class GreenMailTestCase extends TestCase
         props.setProperty("mail.smtps.socketFactory.fallback", "false");
 
         // Get session
-        // Session session = Session.getDefaultInstance(props,null);
         Session session = Session.getInstance(props, null);
-        session.setDebug(true);
+        session.setDebug(debugSession);
 
         // Define message
         MimeMessage message = new MimeMessage(session);
