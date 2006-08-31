@@ -189,6 +189,7 @@ public class GreenMailUtil {
         props.put("mail.smtps.starttls.enable", Boolean.TRUE);
         if (setup.isSecure()) {
             props.setProperty("mail.smtp.socketFactory.class", DummySSLSocketFactory.class.getName());
+            props.setProperty("mail.smtp.socketFactory.fallback", "false");
         }
         props.setProperty("mail.transport.protocol", setup.getProtocol());
         props.setProperty("mail.smtp.port", String.valueOf(setup.getPort()));
