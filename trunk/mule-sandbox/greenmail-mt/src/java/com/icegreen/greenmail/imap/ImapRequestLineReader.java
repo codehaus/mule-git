@@ -67,7 +67,6 @@ public class ImapRequestLineReader {
             try {
                 next = input.read();
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new ProtocolException("Error reading from stream.");
             }
             if (next == -1) {
@@ -76,7 +75,8 @@ public class ImapRequestLineReader {
 
             nextSeen = true;
             nextChar = (char) next;
-//            System.out.println( "Read '" + nextChar + "'" );
+            // TODO replace with proper logging
+            // System.out.println( "Read '" + nextChar + "'" );
         }
         return nextChar;
     }

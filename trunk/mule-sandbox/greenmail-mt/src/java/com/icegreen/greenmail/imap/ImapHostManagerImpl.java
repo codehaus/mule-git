@@ -219,8 +219,10 @@ public class ImapHostManagerImpl
                                      String mailboxPattern,
                                      boolean subscribedOnly)
             throws FolderException {
-//        System.out.println( "Listing for user: '" + user.getUserName() + "'" +
-//                            " pattern:'" + mailboxPattern + "'" );
+
+        // TODO replace with proper logging
+        // System.out.println( "Listing for user: '" + user.getUserName() + "'" +
+        //                     " pattern:'" + mailboxPattern + "'" );
 
         ArrayList mailboxes = new ArrayList();
         String qualifiedPattern = getQualifiedMailboxName(user, mailboxPattern);

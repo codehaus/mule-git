@@ -67,7 +67,8 @@ public final class ImapRequestHandler {
             return;
         }
 
-//        System.out.println( "Got <tag>: " + tag );
+        // TODO replace with proper logging
+        // System.out.println( "Got <tag>: " + tag );
         response.setTag(tag);
         try {
             commandName = parser.atom(request);
@@ -76,7 +77,8 @@ public final class ImapRequestHandler {
             return;
         }
 
-//        System.out.println( "Got <command>: " + commandName );
+        // TODO replace with proper logging
+        // System.out.println( "Got <command>: " + commandName );
         ImapCommand command = imapCommands.getCommand(commandName);
         if (command == null) {
             response.commandError("Invalid command.");

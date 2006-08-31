@@ -62,7 +62,8 @@ public class Pop3Connection {
     }
 
     public void println(String line) {
-        System.out.println("S: " + line);
+        // TODO replace with proper logging
+        // System.out.println("S: " + line);
         _out.print(line);
         println();
     }
@@ -81,8 +82,8 @@ public class Pop3Connection {
     public String readLine()
             throws IOException {
         String line = _in.readLine();
-        System.out.println("C: " + line);
-
+        // TODO replace with proper logging
+        // System.out.println("C: " + line);
         return line;
     }
 
