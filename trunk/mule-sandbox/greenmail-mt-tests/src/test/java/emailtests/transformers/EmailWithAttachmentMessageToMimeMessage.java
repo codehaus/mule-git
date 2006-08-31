@@ -43,7 +43,7 @@ public class EmailWithAttachmentMessageToMimeMessage extends AbstractEventAwareT
      * @see org.mule.transformers.AbstractEventAwareTransformer#transform(java.lang.Object,
      *      java.lang.String, org.mule.umo.UMOEventContext)
      */
-    // // @Override
+    // @Override
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException
     {
 
@@ -88,14 +88,14 @@ public class EmailWithAttachmentMessageToMimeMessage extends AbstractEventAwareT
             StringBuffer buf = new StringBuffer(256);
             buf.append("Constructing email using:\n");
             buf.append("To: ").append(to);
-            buf.append("From: ").append(from);
-            buf.append("CC: ").append(cc);
-            buf.append("BCC: ").append(bcc);
-            buf.append("Subject: ").append(subject);
-            buf.append("ReplyTo: ").append(replyTo);
-            buf.append("Content type: ").append(contentType);
-            buf.append("Payload type: ").append(src.getClass().getName());
-            buf.append("Custom Headers: ").append(PropertiesUtils.propertiesToString(headers, false));
+            buf.append(" From: ").append(from);
+            buf.append(" CC: ").append(cc);
+            buf.append(" BCC: ").append(bcc);
+            buf.append(" Subject: ").append(subject);
+            buf.append(" ReplyTo: ").append(replyTo);
+            buf.append(" Content type: ").append(contentType);
+            buf.append(" Payload type: ").append(src.getClass().getName());
+            buf.append(" Custom Headers: ").append(PropertiesUtils.propertiesToString(headers, false));
             logger.debug(buf.toString());
         }
 
