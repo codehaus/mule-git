@@ -17,7 +17,7 @@ abstract public class Service extends Thread {
 
     public abstract void quit();
 
-    private boolean keepRunning = false;
+    private volatile boolean keepRunning = false;
 
     //---------
     public void init(Object obj) {

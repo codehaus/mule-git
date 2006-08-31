@@ -27,11 +27,14 @@ public abstract class ThreadPoolWorker implements Runnable
             }
             catch (InterruptedException e)
             {
-                // if shuttingDown is true... this Interrupted Exception has been
+                // if shuttingDown is true then this InterruptedException has been
                 // called for the thread to close
                 if (!shuttingDown)
                 {
-                    e.printStackTrace();
+                    // mark this thread as dead
+                    shuttingDown = true;
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -48,4 +51,5 @@ public abstract class ThreadPoolWorker implements Runnable
     }
 
     public abstract void doWork(Object o);
+
 }

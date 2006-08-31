@@ -148,7 +148,6 @@ public class SmtpManager {
                     throw new RuntimeException(e);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
 

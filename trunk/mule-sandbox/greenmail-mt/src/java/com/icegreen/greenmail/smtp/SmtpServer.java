@@ -76,23 +76,25 @@ public class SmtpServer extends AbstractServer {
                     smtpHandler.handleConnection(clientSocket);
                 }
             } catch (SocketException ignored) {
-                //ignored
+                // ignored
             } catch (IOException e) {
-                e.printStackTrace();
-                break;
+                throw new RuntimeException(e);
             }
         }
     }
     
     private void createThreadPool(int threadBound)
     {
-        SmtpThreadPoolWorker[] workers=new SmtpThreadPoolWorker[threadBound];
-        for(int i=0;i<threadBound;i++)
+        SmtpThreadPoolWorker[] workers = new SmtpThreadPoolWorker[threadBound];
+
+        for (int i = 0; i < threadBound; i++)
         {
-            workers[i]=new SmtpThreadPoolWorker(new SmtpHandler(new SmtpCommandRegistry(), managers.getSmtpManager(), new InMemoryWorkspace()));
-            workers[i].setName(this.getProtocol()+ " Thread Pool Worker "+i);
+            workers[i] = new SmtpThreadPoolWorker(new SmtpHandler(new SmtpCommandRegistry(),
+                managers.getSmtpManager(), new InMemoryWorkspace()));
+            workers[i].setName(this.getProtocol() + " Thread Pool Worker " + i);
         }
-        threadPool=new ThreadPool(workers);
+
+        threadPool = new ThreadPool(workers);
     }
 
     public int getWorkerThreadCount()
@@ -102,12 +104,13 @@ public class SmtpServer extends AbstractServer {
 
     public void setWorkerThreadCount(int workerThreadsCount)
     {
-        if(!started)
+        if (!started)
         {
             this.workerThreadCount = workerThreadsCount;
-        }else
+        }
+        else
         {
-            //TODO maybe throw exception?!?
+            throw new IllegalStateException("Cannot setWorkerThreadCount after start!");
         }
     }
    

@@ -33,13 +33,10 @@ public class DummySSLServerSocketFactory extends SSLServerSocketFactory {
             ks.load(new ByteArrayInputStream(hardCodedKeystore), pass);
             km.init(ks, pass);
             KeyManager[] kma = km.getKeyManagers();
-            sslcontext.init(kma,
-                    new TrustManager[]{new DummyTrustManager()},
-                    null);
+            sslcontext.init(kma, new TrustManager[]{new DummyTrustManager()}, null);
             factory = sslcontext.getServerSocketFactory();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
+            throw new RuntimeException(e);
         }
     }
 

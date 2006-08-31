@@ -42,8 +42,8 @@ public class ThreadPool
         {
             for (int i = 0; i < threadBound; i++)
             {
-                this.workers[i].shutDown();
-                this.threads[i].interrupt();
+                this.workers[i].shutDown(); // mark as shutdown
+                this.threads[i].interrupt(); // wake up from blocking queue
             }
             this.shutDown = true;
         }
