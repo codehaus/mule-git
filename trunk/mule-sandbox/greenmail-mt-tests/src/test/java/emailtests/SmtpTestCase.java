@@ -24,13 +24,12 @@ public class SmtpTestCase extends MailFunctionalTestCase
         }
 
         // wait for max 5s for 1 email to arrive
-        assertTrue(servers.waitForIncomingEmail(500000, messageCount));
+        assertTrue(servers.waitForIncomingEmail(5000, messageCount));
 
         // Retrieve using GreenMail API
         Message[] messages = servers.getReceivedMessages();
+        assertEquals(messageCount, messages.length);
 
-        // TODO what about the following line?
-        // assertEquals(messageCount, messages.length);
         for (int i = 0; i < messageCount; i++)
         {
             String message = servers.util().getBody(messages[i]).trim();
@@ -52,7 +51,7 @@ public class SmtpTestCase extends MailFunctionalTestCase
         }
 
         // wait for max 5s for 1 email to arrive
-        assertTrue(servers.waitForIncomingEmail(500000, messageCount * 2));
+        assertTrue(servers.waitForIncomingEmail(5000, messageCount * 2));
 
         // Retrieve using GreenMail API
         messages = servers.getReceivedMessages();
