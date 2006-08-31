@@ -47,7 +47,7 @@ public class Pop3TestCase extends MailFunctionalTestCase
         // Retrieve using Mule Client
         for (int i = 0; i < messageCount; i++)
         {
-            msg = client.receive("vm://outbound", 1000000000);
+            msg = client.receive("vm://outbound", 30000);
             assertNotNull(msg);
             assertTrue(msg.getPayload() instanceof String);
             result = (String)msg.getPayload();
