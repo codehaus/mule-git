@@ -18,7 +18,7 @@ import java.util.LinkedList;
 public class BlockingFifoQueue extends Object
 {
     protected LinkedList m_queue = new LinkedList();
-    private boolean m_stopped = false;
+    private volatile boolean m_stopped = false;
 
     // =============================================
 
@@ -30,12 +30,12 @@ public class BlockingFifoQueue extends Object
         super();
     }
 
-    public synchronized boolean isStopped()
+    public boolean isStopped()
     {
         return m_stopped;
     }
 
-    public synchronized void shutDownQueue()
+    public void shutDownQueue()
     {
         m_stopped = true;
         notifyAll();
@@ -55,7 +55,7 @@ public class BlockingFifoQueue extends Object
      * will block the callers thread until an element gets added or shutDownQueue()
      * is called @return the next object in the queue. If shutDownQueue() has been
      * called and the queue is empty null will be returned. Use the public function
-     * isStoppedto distinguish this from a null element in the queue
+     * isStopped to distinguish this from a null element in the queue
      */
     public synchronized Object pop() throws InterruptedException
     {
