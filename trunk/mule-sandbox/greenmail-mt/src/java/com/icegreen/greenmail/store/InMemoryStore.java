@@ -424,6 +424,7 @@ public class InMemoryStore
 
         public void store(MimeMessage message) throws Exception {
             Date internalDate = new Date();
+            message.setSentDate(internalDate);
             Flags flags = new Flags();
             appendMessage(message, flags, internalDate);
         }
