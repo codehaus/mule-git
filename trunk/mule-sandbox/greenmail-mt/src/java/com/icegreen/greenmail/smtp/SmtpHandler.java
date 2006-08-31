@@ -56,6 +56,7 @@ class SmtpHandler
             _conn.println("421 Service shutting down and closing transmission channel");
 
         } catch (Exception e) {
+            // TODO really ignore everything here?
         } finally {
             _state.clearMessage();
         }

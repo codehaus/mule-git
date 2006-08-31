@@ -20,11 +20,11 @@ public class SmtpConnection {
     private static final int TIMEOUT_MILLIS = 1000 * 30;
     private InetAddress serverAddress;
 
-
     {
         try {
             serverAddress = InetAddress.getLocalHost();
         } catch (UnknownHostException uhe) {
+            throw new RuntimeException("Could not get localhost!", uhe);
         }
     }
 
@@ -53,6 +53,7 @@ public class SmtpConnection {
      * For testing only
      */
     SmtpConnection() {
+        super();
     }
 
     public void println(String line) {
