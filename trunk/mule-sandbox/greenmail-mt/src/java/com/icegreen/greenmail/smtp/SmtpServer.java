@@ -19,7 +19,7 @@ public class SmtpServer extends AbstractServer {
     private SmtpHandler smtpHandler = null;
     private ThreadPool threadPool = null;
     private int workerThreadCount = 0;
-    private boolean started = false;
+    private volatile boolean started = false;
 
     public SmtpServer(ServerSetup setup, Managers managers) {
         super(setup, managers);
@@ -51,10 +51,8 @@ public class SmtpServer extends AbstractServer {
 
     public void run() {
         super.run();
-        synchronized(this)
-        {
-            started = false;
-        }
+
+        started = false;
         if(workerThreadCount>1)
         {
             createThreadPool(workerThreadCount);
@@ -95,7 +93,6 @@ public class SmtpServer extends AbstractServer {
             workers[i].setName(this.getProtocol()+ " Thread Pool Worker "+i);
         }
         threadPool=new ThreadPool(workers);
-        
     }
 
     public int getWorkerThreadCount()
@@ -105,15 +102,12 @@ public class SmtpServer extends AbstractServer {
 
     public void setWorkerThreadCount(int workerThreadsCount)
     {
-        synchronized(this)
+        if(!started)
         {
-            if(started==false)
-            {
-                this.workerThreadCount = workerThreadsCount;
-            }else
-            {
-                //TODO maybe throw exception?!?
-            }
+            this.workerThreadCount = workerThreadsCount;
+        }else
+        {
+            //TODO maybe throw exception?!?
         }
     }
    
