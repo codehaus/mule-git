@@ -38,7 +38,10 @@ public class BlockingFifoQueue extends Object
     public void shutDownQueue()
     {
         m_stopped = true;
-        notifyAll();
+        synchronized (this)
+        {
+            notifyAll();
+        }
     }
 
     /*
@@ -59,7 +62,7 @@ public class BlockingFifoQueue extends Object
      */
     public synchronized Object pop() throws InterruptedException
     {
-        while (m_queue.size() == 0)
+        while (m_queue.isEmpty())
         {
             if (m_stopped)
             {
