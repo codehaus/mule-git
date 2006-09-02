@@ -14,7 +14,7 @@ public abstract class MailFunctionalTestCase extends FunctionalTestCase
 {
 
     protected Servers servers;
-    protected int messageCount = 5;
+    protected int messageCount = 50;
 
     protected void doPreFunctionalSetUp() throws Exception
     {
