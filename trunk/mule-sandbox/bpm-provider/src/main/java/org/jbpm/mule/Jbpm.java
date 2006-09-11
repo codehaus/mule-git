@@ -16,7 +16,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.mule.providers.bpm.BPMS;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Lifecycle;
-import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 import org.mule.util.NumberUtils;
 
 public class Jbpm implements BPMS, Lifecycle {
@@ -251,7 +251,7 @@ public class Jbpm implements BPMS, Lifecycle {
      */
     public void deployProcess(String processDefinitionFile) throws FileNotFoundException, IOException {
         deployProcessFromStream(
-                ClassUtils.getResourceAsStream(processDefinitionFile, getClass(),
+                IOUtils.getResourceAsStream(processDefinitionFile, getClass(),
                                                /*tryAsFile*/true, /*tryAsUrl*/true));
     }
 
