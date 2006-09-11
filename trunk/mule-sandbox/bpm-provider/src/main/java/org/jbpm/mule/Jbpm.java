@@ -251,8 +251,7 @@ public class Jbpm implements BPMS, Lifecycle {
      */
     public void deployProcess(String processDefinitionFile) throws FileNotFoundException, IOException {
         deployProcessFromStream(
-                IOUtils.getResourceAsStream(processDefinitionFile, getClass(),
-                                               /*tryAsFile*/true, /*tryAsUrl*/true));
+                IOUtils.getResourceAsStream(processDefinitionFile, getClass()));
     }
 
     public void deployProcessFromStream(InputStream processDefinition) throws FileNotFoundException, IOException {

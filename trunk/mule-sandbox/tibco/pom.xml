@@ -4,15 +4,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-<<<<<<< .mine
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
         <version>1.3-SNAPSHOT</version>
-=======
-        <groupId>org.mule</groupId>
-        <artifactId>mule-providers</artifactId>
-        <version>1.3-SNAPSHOT</version>
->>>>>>> .r3017
     </parent>
     <artifactId>mule-transport-tibco</artifactId>
     <packaging>jar</packaging>
