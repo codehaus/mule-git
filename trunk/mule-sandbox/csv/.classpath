@@ -26,11 +26,11 @@
   <classpathentry kind="var" exported="true" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar" sourcepath="M2_REPO/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09-sources.jar"/>
   <classpathentry kind="var" exported="true" path="M2_REPO/org/mule/mule-core/1.3-SNAPSHOT/mule-core-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/mule-core/1.3-SNAPSHOT/mule-core-1.3-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mule/modules/mule-module-builders/1.3-SNAPSHOT/mule-module-builders-1.3-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mule/modules/mule-module-management/1.3-SNAPSHOT/mule-module-management-1.3-SNAPSHOT.jar"/>
-  <classpathentry kind="var" exported="true" path="M2_REPO/org/mule/modules/mule-module-xml/1.3-SNAPSHOT/mule-module-xml-1.3-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mule/tests/mule-tests-core/1.3-SNAPSHOT/mule-tests-core-1.3-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mule/tests/mule-tests-functional/1.3-SNAPSHOT/mule-tests-functional-1.3-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mule/modules/mule-module-builders/1.3-SNAPSHOT/mule-module-builders-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/modules/mule-module-builders/1.3-SNAPSHOT/mule-module-builders-1.3-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mule/modules/mule-module-management/1.3-SNAPSHOT/mule-module-management-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/modules/mule-module-management/1.3-SNAPSHOT/mule-module-management-1.3-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" exported="true" path="M2_REPO/org/mule/modules/mule-module-xml/1.3-SNAPSHOT/mule-module-xml-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/modules/mule-module-xml/1.3-SNAPSHOT/mule-module-xml-1.3-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mule/tests/mule-tests-core/1.3-SNAPSHOT/mule-tests-core-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/tests/mule-tests-core/1.3-SNAPSHOT/mule-tests-core-1.3-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mule/tests/mule-tests-functional/1.3-SNAPSHOT/mule-tests-functional-1.3-SNAPSHOT.jar" sourcepath="M2_REPO/org/mule/tests/mule-tests-functional/1.3-SNAPSHOT/mule-tests-functional-1.3-SNAPSHOT-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/mx4j/mx4j-impl/2.1.1/mx4j-impl-2.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/mx4j/mx4j-jmx/2.1.1/mx4j-jmx-2.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/mx4j/mx4j-remote/2.1.1/mx4j-remote-2.1.1.jar" sourcepath="M2_REPO/mx4j/mx4j-remote/2.1.1/mx4j-remote-2.1.1-sources.jar"/>
