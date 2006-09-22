@@ -1,3 +1,12 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 
 package org.mule.transformers.csv;
 
@@ -5,11 +14,12 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @author WestelinckK Actual implementation to read/parse CSV files.
+ * Actual implementation to read/parse CSV files.
  */
 public class CSVReaderImpl extends AbstractCSVReader
 {
@@ -34,7 +44,7 @@ public class CSVReaderImpl extends AbstractCSVReader
     {
         try
         {
-            ArrayList/* <String[]> */lines = new ArrayList/* <String[]> */();
+            List/* <String[]> */lines = new ArrayList/* <String[]> */();
             String[] line = reader.readNext();
             while (line != null)
             {
@@ -73,4 +83,5 @@ public class CSVReaderImpl extends AbstractCSVReader
         }
         return true;
     }
+
 }

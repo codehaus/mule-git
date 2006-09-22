@@ -1,3 +1,12 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 
 package org.mule.transformers.csv;
 
@@ -9,18 +18,20 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mule.transformers.xml.AbstractXStreamTransformer;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.transformer.TransformerException;
 
 /**
- * @author WestelinckK Transform a CSV string to its XML representation.
+ * Transform a CSV string to its XML representation.
  */
 public class CSVToXML extends AbstractXStreamTransformer
 {
     private static final long serialVersionUID = -6347945833013744970L;
-    private ArrayList fieldNames;
+
+    private List fieldNames;
     private char separator;
 
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException
@@ -82,7 +93,7 @@ public class CSVToXML extends AbstractXStreamTransformer
         this.fieldNames = fieldNames;
     }
 
-    public ArrayList getFieldNames()
+    public List getFieldNames()
     {
         return fieldNames;
     }

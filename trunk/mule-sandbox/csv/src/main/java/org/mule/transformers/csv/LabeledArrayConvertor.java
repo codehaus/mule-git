@@ -1,3 +1,12 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 
 package org.mule.transformers.csv;
 
@@ -7,12 +16,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author WestelinckK This will serialize a String[] to its XML representation. Each
- *         string element will have an attribute containing the label of the field.
- *         If no labels are defined, the behaviour of the super class is used.
+ * This will serialize a String[] to its XML representation. Each string element will
+ * have an attribute containing the label of the field. If no labels are defined, the
+ * behaviour of the super class is used.
  */
 public class LabeledArrayConvertor extends ArrayConverter
 {
@@ -24,7 +33,7 @@ public class LabeledArrayConvertor extends ArrayConverter
         this.labels = labels;
     }
 
-    public LabeledArrayConvertor(Mapper mapper, ArrayList labels)
+    public LabeledArrayConvertor(Mapper mapper, List labels)
     {
         super(mapper);
         if (labels != null)

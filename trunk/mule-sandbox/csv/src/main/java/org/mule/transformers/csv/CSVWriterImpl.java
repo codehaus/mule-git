@@ -1,3 +1,12 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 
 package org.mule.transformers.csv;
 
@@ -7,7 +16,7 @@ import java.io.Writer;
 import java.util.List;
 
 /**
- * @author WestelinckK Actual implementation to write CSV files.
+ * Actual implementation to write CSV files.
  */
 public class CSVWriterImpl extends AbstractCSVWriter
 {
@@ -48,4 +57,5 @@ public class CSVWriterImpl extends AbstractCSVWriter
         writer.writeAll(l);
         writer.close();
     }
+
 }
