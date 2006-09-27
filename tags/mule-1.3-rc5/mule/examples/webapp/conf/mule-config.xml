@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+
+<mule-configuration id="Mule_Samples" version="1.0">
+
+    <mule-environment-properties synchronous="true"/>
+
+    <agents>
+        <agent name="JmxAgent" className="org.mule.management.agents.JmxAgent"/>
+        <agent name="mx4jAgent" className="org.mule.management.agents.Mx4jAgent"/>
+    </agents>
+
+    <model name="samples">
+
+    </model>
+</mule-configuration>
