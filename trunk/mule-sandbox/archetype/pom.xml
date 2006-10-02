@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ 
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.mule.archetype</groupId>
+    <artifactId>embedded</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>maven-plugin</packaging>
+
+    <name>Mule embedded app archetype</name>
+    <description>Maven2 archetype for Mule embedded scenario</description>
+    <url>http://mule.mulesource.org</url>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/mule/trunk/mule-sandbox/archetype</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/mule/trunk/mule-sandbox/archetype</developerConnection>
+        <url>http://svn.mule.codehaus.org/</url>
+    </scm>
+
+    <distributionManagement>
+        <downloadUrl>http://mule.mulesource.org/Download</downloadUrl>
+        <repository>
+            <id>mule-releases</id>
+            <name>Mule Release Repository</name>
+            <url>dav:https://dav.codehaus.org/repository/mule/</url>
+        </repository>
+        <snapshotRepository>
+            <id>mule-snapshots</id>
+            <name>Mule Snapshot Repository</name>
+            <url>dav:https://dav.codehaus.org/snapshots.repository/mule/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+        <site>
+            <id>mule-site</id>
+            <name>Mule Website</name>
+            <url>dav:https://dav.codehaus.org/mule/docs/</url>
+        </site>
+    </distributionManagement>
+
+</project>

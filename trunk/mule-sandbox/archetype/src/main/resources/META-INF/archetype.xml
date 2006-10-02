@@ -1,0 +1,12 @@
+<archetype>
+  <id>embedded</id>
+  <sources>
+    <source>src/main/java/ServerNode.java</source>
+  </sources>
+  <resources>
+    <resource>src/main/resources/mule-config.xml</resource>
+  </resources>
+  <testSources>
+    <source>src/test/java/ServerNodeTest.java</source>
+  </testSources>
+</archetype>
