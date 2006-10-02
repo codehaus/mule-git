@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN" "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
 <mule-configuration id="ESBApp" version="1.0">
 
     <description>
       Mule's configuration file for default embedded-archetype generated application
     </description>
-    
+
     <model name="ESB">
         
        <!-- Mule descriptors goes here... -->
