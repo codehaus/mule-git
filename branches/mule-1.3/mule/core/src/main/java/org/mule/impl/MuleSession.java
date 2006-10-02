@@ -10,10 +10,6 @@
 
 package org.mule.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -39,12 +35,13 @@ import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.security.UMOSecurityContext;
 import org.mule.util.UUID;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * <code>MuleSession</code> manages the interaction and distribution of events
  * for Mule UMOs.
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public final class MuleSession implements UMOSession
@@ -146,8 +143,11 @@ public final class MuleSession implements UMOSession
             logger.debug("Session has received asynchronous event on: " + endpoint);
         }
 
-        UMOEvent event = createOutboundEvent(message, endpoint, RequestContext.getEvent());
+        UMOEvent event = createOutboundEvent(message, endpoint, null);
+
         dispatchEvent(event);
+        RequestContext.writeResponse(event.getMessage());
+        processResponse(event.getMessage());
     }
 
     public UMOMessage sendEvent(UMOMessage message, String endpointName) throws UMOException
@@ -162,7 +162,13 @@ public final class MuleSession implements UMOSession
             throw new EndpointNotFoundException(new Message(Messages.NO_OUTBOUND_ROUTER_SET_ON_X,
                                                             component.getDescriptor().getName()));
         }
-        return router.route(message, this, true);
+        UMOMessage result = router.route(message, this, true);
+        if(result!=null) {
+            RequestContext.writeResponse(result);
+            processResponse(result);
+        }
+
+        return result;
     }
 
     public UMOMessage sendEvent(UMOMessage message, UMOImmutableEndpoint endpoint) throws UMOException
@@ -179,7 +185,7 @@ public final class MuleSession implements UMOSession
             logger.debug("Session has received synchronous event on endpoint: " + endpoint);
         }
 
-        UMOEvent event = createOutboundEvent(message, endpoint, RequestContext.getEvent());
+        UMOEvent event = createOutboundEvent(message, endpoint, null);
         UMOMessage result = sendEvent(event);
 
         // Handles the situation where a response has been received via a remote ReplyTo channel.
@@ -189,7 +195,8 @@ public final class MuleSession implements UMOSession
         }
 
         if(result!=null) {
-            RequestContext.rewriteEvent(result);
+            RequestContext.writeResponse(result);
+            processResponse(result);
         }
 
         return result;
@@ -219,6 +226,7 @@ public final class MuleSession implements UMOSession
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
                 dispatcher.dispatch(event);
+
             } catch (Exception e) {
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
             }
@@ -228,6 +236,9 @@ public final class MuleSession implements UMOSession
                         + ", event is: " + event);
             }
             component.dispatchEvent(event);
+            RequestContext.writeResponse(event.getMessage());
+            processResponse(event.getMessage());
+
         } else {
             throw new DispatchException(new Message(Messages.NO_COMPONENT_FOR_ENDPOINT),
                                         event.getMessage(),
@@ -270,7 +281,12 @@ public final class MuleSession implements UMOSession
                     logger.warn("A session handler could not be obtained, using default.");
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
-                return dispatcher.send(event);
+                UMOMessage response = dispatcher.send(event);
+                RequestContext.writeResponse(response);
+                processResponse(response);
+
+                return response;
+
             } catch (UMOException e) {
                 throw e;
             } catch (Exception e) {
@@ -289,6 +305,18 @@ public final class MuleSession implements UMOSession
                                         event.getMessage(),
                                         event.getEndpoint());
         }
+    }
+
+    /**
+     * Once an event has been processed we need to romove certain properties so that
+     * they not propagated to the next request
+     * @param response The response from the previous request
+     */
+    protected void processResponse(UMOMessage response)
+    {
+        if(response==null) return;
+        response.removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
+        response.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
     }
 
     /*

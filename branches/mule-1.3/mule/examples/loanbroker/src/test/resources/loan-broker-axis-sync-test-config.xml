@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
 <mule-configuration id="Mule_Loan_broker_Synchronous_Sample" version="1.0">
     <description>
@@ -90,6 +90,10 @@
             inboundEndpoint="LenderService"
             implementation="org.mule.samples.loanbroker.DefaultLenderService">
             <outbound-router>
+                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
+                    <filter expectedType="org.mule.samples.loanbroker.LoanQuote"
+                        className="org.mule.routing.filters.PayloadTypeFilter" />
+                </router>
                 <router className="org.mule.routing.outbound.StaticRecipientList">
                     <reply-to address="LoanBrokerQuotes"/>
                     <filter expression="recipients!=null" className="org.mule.routing.filters.MessagePropertyFilter"/>

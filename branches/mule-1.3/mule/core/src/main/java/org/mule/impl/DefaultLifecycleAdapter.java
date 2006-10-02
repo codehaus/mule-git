@@ -20,6 +20,7 @@ import org.mule.model.DynamicEntryPointResolver;
 import org.mule.umo.ComponentException;
 import org.mule.umo.Invocation;
 import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.Disposable;
@@ -36,8 +37,6 @@ import org.mule.umo.model.UMOEntryPointResolver;
  * this can provide additional lifecycle methods triggered by an external
  * source.
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
 {
@@ -182,28 +181,27 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
     public UMOMessage intercept(Invocation invocation) throws UMOException
     {
         // Invoke method
-        Object result = null;
+        Object result;
+        UMOEvent event = RequestContext.getEvent();
 
         try {
             result = entryPoint.invoke(component, RequestContext.getEventContext());
         } catch (Exception e) {
             //should all Exceptions caught here be a ComponentException?!?
-            throw new ComponentException(new Message(Messages.FAILED_TO_INVOKE_X, component.getClass().getName()),invocation.getMessage(),RequestContext.getEvent().getComponent(),e);
+            throw new ComponentException(new Message(Messages.FAILED_TO_INVOKE_X, component.getClass().getName()),
+                    invocation.getMessage(), event.getComponent() ,e);
         }
 
         UMOMessage resultMessage = null;
         if (result == null && entryPoint.isVoid()) {
-            resultMessage = new MuleMessage(RequestContext.getEventContext().getTransformedMessage(),
+            resultMessage = new MuleMessage(event.getTransformedMessage(),
                     RequestContext.getEventContext().getMessage());
         } else if (result != null) {
             if (result instanceof UMOMessage) {
                 resultMessage = (UMOMessage) result;
             } else {
-                resultMessage = new MuleMessage(result, RequestContext.getEventContext().getMessage());
+                resultMessage = new MuleMessage(result, event.getMessage());
             }
-        }
-        if(resultMessage!=null) {
-            resultMessage.removeProperty("method");
         }
         return resultMessage;
     }

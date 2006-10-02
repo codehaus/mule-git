@@ -65,15 +65,19 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
 
         UMOMessage result = null;
         UMOEndpoint endpoint;
+        UMOMessage request;
 
         for (Iterator iterator = list.iterator(); iterator.hasNext();)
         {
             String recipient = (String) iterator.next();
-            endpoint = getRecipientEndpoint(message, recipient);
+            //Make a copy of the message. Question is do we do a proper clone? in which case there
+            //would potentially be multiple messages with the same id...
+            request = new MuleMessage(message.getPayload(), message);
+            endpoint = getRecipientEndpoint(request, recipient);
 
             try {
                 if (synchronous) {
-                    result = send(session, message, endpoint);
+                    result = send(session, request, endpoint);
                     if (result != null) {
                         results.add(result.getPayload());
                     } else {
@@ -82,10 +86,10 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
                         }
                     }
                 } else {
-                    dispatch(session, message, endpoint);
+                    dispatch(session, request, endpoint);
                 }
             } catch (UMOException e) {
-                throw new CouldNotRouteOutboundMessageException(message, endpoint, e);
+                throw new CouldNotRouteOutboundMessageException(request, endpoint, e);
             }
         }
 

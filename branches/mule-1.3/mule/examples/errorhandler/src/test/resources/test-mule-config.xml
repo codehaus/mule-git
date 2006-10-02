@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
 <!-- my local test config -->
 <mule-configuration id="Test_Mule_Properties" version="1.0">
@@ -26,13 +26,13 @@
 
     <connector name="EmailConnector" className="org.mule.providers.email.SmtpConnector">
         <properties>
-            <property name="fromAddress" value="eh@muleumo.org"/>
-            <property name="hostname" value="mail.muleumo.org"/>
-            <!--property name="smtpUsername" value="rossmason1"/>-->
+            <property name="fromAddress" value="eh@lotsofmail.org"/>
+            <property name="hostname" value="mail.lotsofmail.org"/>
+            <!--property name="smtpUsername" value="user"/>-->
             <!--<property name="smtpPassword" value="xxxx"/-->
-            <!--<property name="ccAddresses" value="ross.mason@symphonysoft.com"/>-->
-            <!--<property name="bccAddresses" value="ross.mason@another.com"/>-->
-            <!--<property name="toAddresses" value="ross.mason@yet-another.com"/>-->
+            <!--<property name="ccAddresses" value="someone@somewhere.com"/>-->
+            <!--<property name="bccAddresses" value="someone@somewhere-else.com"/>-->
+            <!--<property name="toAddresses" value="someone@nowhere.com"/>-->
         </properties>
     </connector>
 
@@ -107,7 +107,7 @@
                 </router>
 
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter" transformer="ErrorMessageToException">
-                    <endpoint address="smtp://exceptions@symphonysoft.com" transformers="ErrorMessageToExceptionBean ExceptionBeanToXML StringToEmailMessage"/>
+                    <endpoint address="smtp://exceptions@somewhere.com" transformers="ErrorMessageToExceptionBean ExceptionBeanToXML StringToEmailMessage"/>
                     <filter className="org.mule.routing.filters.PayloadTypeFilter" expectedType="org.mule.umo.lifecycle.FatalException"/>
                 </router>
 
