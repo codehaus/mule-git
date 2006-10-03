@@ -246,7 +246,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>xmlbeans</groupId>
-                    <artifactId>xmlbeans-jsr1.3-SNAPSHOT-api</artifactId>
+                    <artifactId>xmlbeans-jsr173-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>xerces</groupId>
