@@ -28,6 +28,11 @@
 
     <transformers>
         <transformer name="HttpRequestToSoapRequest" className="org.mule.providers.soap.transformers.HttpRequestToSoapRequest"/>
+        <!--
+          If you want you can complete and uncomment the following line to get an example of a custom transformer
+          
+          <transformer name="InsertBlanks" className="<your_groupId_specified_at_creation_time>.transformers.InsertBlankTransformer"/>
+        -->
     </transformers>
 
     <model name="EchoEmbedded">
@@ -52,6 +57,11 @@
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="stream://System.out"/>
+                    <!--
+                      If you've used the custom transformer above test it with the next line instead of the previous one
+                      
+                      <endpoint address="stream://System.out" transformers="InsertBlanks" />
+                    -->
                 </router>
             </outbound-router>
         </mule-descriptor>

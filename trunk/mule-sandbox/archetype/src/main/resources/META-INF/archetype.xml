@@ -2,11 +2,13 @@
   <id>embedded</id>
   <sources>
     <source>src/main/java/ServerNode.java</source>
+    <source>src/main/java/InsertBlankTransformer.java</source>
   </sources>
   <resources>
     <resource>src/main/resources/mule-config.xml</resource>
   </resources>
   <testSources>
     <source>src/test/java/ServerNodeTest.java</source>
+    <source>src/test/java/InsertBlankTransformerTest.java</source>
   </testSources>
 </archetype>

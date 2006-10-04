@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transports-xfire</artifactId>
+            <artifactId>mule-transport-xfire</artifactId>
             <version>1.3</version>
         </dependency>
         <!-- Test dependencies -->

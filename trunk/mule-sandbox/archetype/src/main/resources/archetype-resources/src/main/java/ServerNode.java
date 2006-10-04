@@ -2,7 +2,6 @@ package $package;
 
 import org.mule.config.ConfigurationException;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
-import org.mule.umo.manager.UMOManager;
 
 /**
  * Main class
