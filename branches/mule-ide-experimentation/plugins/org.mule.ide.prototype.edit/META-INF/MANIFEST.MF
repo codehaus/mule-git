@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.mule.ide.prototype.edit; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Activator: org.mule.ide.prototype.mulemodel.provider.MulemodelEditPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: org.mule.ide.prototype.mulemodel.provider
+Require-Bundle: org.eclipse.core.runtime,
+ org.mule.ide.prototype;visibility:=reexport,
+ org.eclipse.wst.common.emf,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.edit;visibility:=reexport
+Eclipse-LazyStart: true
