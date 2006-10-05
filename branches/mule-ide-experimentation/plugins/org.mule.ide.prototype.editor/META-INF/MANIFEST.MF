@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.mule.ide.prototype.editor; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Activator: org.mule.ide.prototype.mulemodel.presentation.MuleEditorPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: org.mule.ide.prototype.mulemodel.presentation
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;visibility:=reexport,
+ org.mule.ide.prototype.edit;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
+ org.eclipse.emf.edit.ui;visibility:=reexport,
+ org.eclipse.ui.ide;visibility:=reexport,
+ org.eclipse.wst.common.emf,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.xml.ui,
+ org.eclipse.ui.workbench.texteditor
+Eclipse-LazyStart: true
