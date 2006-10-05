@@ -122,6 +122,7 @@ public class Jbpm implements BPMS, Lifecycle {
         try {
             ProcessDefinition processDefinition =
                 jbpmContext.getGraphSession().findLatestProcessDefinition((String) processType);
+            if (processDefinition == null) throw new IllegalArgumentException("No process definition found for process " + processType);
 
             processInstance = new ProcessInstance(processDefinition);
 

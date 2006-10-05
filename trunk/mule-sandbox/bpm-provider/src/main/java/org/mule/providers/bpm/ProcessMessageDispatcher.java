@@ -94,7 +94,7 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
         // Decode the URI, for example:
         //      bpm:/testProcess/4561?action=advance
         // TODO Replace this with an EndpointBuilder
-        String path = event.getEndpoint().getEndpointURI().getPath();
+        String path = event.getEndpoint().getEndpointURI().getHost();
         String[] pathTokens = StringUtils.split(path, "/");
         if (pathTokens.length >= 1) {
             processType = pathTokens[0];
