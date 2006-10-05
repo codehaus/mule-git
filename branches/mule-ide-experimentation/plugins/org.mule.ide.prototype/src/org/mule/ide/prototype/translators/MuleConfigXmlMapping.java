@@ -1,0 +1,96 @@
+/*
+ * $Id: StrutsConfigXmlMapping.java,v 1.2 2005/07/21 15:21:00 daniel_rohe Exp $
+ */
+package org.mule.ide.prototype.translators;
+
+/**
+ * The class <code>StrutsConfigXmlMapping</code> provides mapping constants
+ * for working with the Apache Struts configuration file.
+ * 
+ * @author Daniel
+ */
+public class MuleConfigXmlMapping {
+
+	/**
+	 * name of 'mule-configuration' XML element
+	 */
+	public static final String MULE_CONFIG = "mule-configuration"; //$NON-NLS-1$
+
+	/**
+	 * name of 'description' XML element
+	 */
+	public static final String DESCRIPTION = "description"; //$NON-NLS-1$
+
+	/**
+	 * name of 'global-endpoints' XML element
+	 */
+	public static final String GLOBAL_ENDPOINTS = "global-endpoints"; //$NON-NLS-1$
+
+	/**
+	 * name of 'endpoint' XML element
+	 */
+	public static final String ENDPOINT = "endpoint"; //$NON-NLS-1$
+
+	/**
+	 * name of 'global-endpoints/endpoint' XML path
+	 */
+	public static final String GLOBAL_ENDPOINTS_ENDPOINT = "global-endpoints/endpoint"; //$NON-NLS-1$
+
+	/**
+	 * name of 'model' XML element
+	 */
+	public static final String MODEL = "model"; //$NON-NLS-1$
+
+	/**
+	 * name of 'mule-descriptor' XML element
+	 */
+	public static final String MULE_DESCRIPTOR = "mule-descriptor"; //$NON-NLS-1$
+
+	/**
+	 * name of 'model/mule-descriptor' XML element
+	 */
+	public static final String MODEL_MULE_DESCRIPTOR = "model/mule-descriptor"; //$NON-NLS-1$
+
+	/**
+	 * name of 'inbound-router' XML element
+	 */
+	public static final String INBOUND_ROUTER = "inbound-router"; //$NON-NLS-1$
+
+	/**
+	 * name of 'outbound-router' XML element
+	 */
+	public static final String OUTBOUND_ROUTER = "outbound-router"; //$NON-NLS-1$
+
+	/**
+	 * name of 'endpoint/address' XML element
+	 */
+	public static final String ENDPOINT_ADDRESS = "endpoint/address"; //$NON-NLS-1$
+
+	/**
+	 * name of 'type' XML attribute
+	 */
+	public static final String ATTR_TYPE = "type"; //$NON-NLS-1$
+
+	/**
+	 * name of 'address' XML attribute
+	 */
+	public static final String ATTR_ADDRESS = "address"; //$NON-NLS-1$
+
+	/**
+	 * name of 'name' XML attribute
+	 */
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
+
+	/**
+	 * name of 'implementation' XML attribute
+	 */
+	public static final String ATTR_IMPLEMENTATION = "implementation"; //$NON-NLS-1$
+	
+	/**
+	 * Creates a new StrutsConfig XML mapping.
+	 */
+	private MuleConfigXmlMapping() {
+		// do nothing
+	}
+
+}

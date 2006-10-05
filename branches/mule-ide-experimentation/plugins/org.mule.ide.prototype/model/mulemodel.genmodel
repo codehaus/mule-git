@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"
+    modelDirectory="/org.mule.ide.prototype/src" modelPluginID="org.mule.ide.prototype"
+    modelName="Mule" modelPluginClass="org.mule.ide.prototype.mulemodel.MuleModelPlugin"
+    nonNLSMarkers="true" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>mulemodel.ecore</foreignModel>
+  <genPackages prefix="Mule" basePackage="org.mule.ide.prototype" disposableProviderFactory="true"
+      ecorePackage="mulemodel.ecore#/">
+    <genClasses ecoreClass="mulemodel.ecore#//InboundRouterType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mulemodel.ecore#//InboundRouterType/inboundEndpoint"/>
+    </genClasses>
+    <genClasses ecoreClass="mulemodel.ecore#//ComponentType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//ComponentType/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mulemodel.ecore#//ComponentType/outboundRouter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mulemodel.ecore#//ComponentType/interceptors"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mulemodel.ecore#//ComponentType/inboundRouter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//ComponentType/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mulemodel.ecore#//MuleConfig">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mulemodel.ecore#//MuleConfig/globalEndpoints"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mulemodel.ecore#//MuleConfig/components"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//MuleConfig/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//MuleConfig/description"/>
+    </genClasses>
+    <genClasses ecoreClass="mulemodel.ecore#//EndpointType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//EndpointType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//EndpointType/address"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//EndpointType/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mulemodel.ecore#//OutboundRouterType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mulemodel.ecore#//OutboundRouterType/outboundEndpoint"/>
+    </genClasses>
+    <genClasses ecoreClass="mulemodel.ecore#//Interceptor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mulemodel.ecore#//Interceptor/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

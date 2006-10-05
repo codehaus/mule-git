@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+<mule-configuration id="nmtoken" version="1.0">
+	<description>description</description>
+
+	<global-endpoints>
+		<!--  -->
+		<endpoint address="http://localhost:80/her/" name="MyURL" />
+		<endpoint address="jms://qserver/requests" name="QueueThing" />
+	</global-endpoints>
+	<model name="">
+		<mule-descriptor name="Fiskefjæs"
+			implementation="com.fisk.Oily">
+			<inbound-router>
+				<endpoint address="MyURL" />
+			</inbound-router>
+			<outbound-router>
+				<router className="com.net.Fishy">
+					<endpoint address="QueueThing" />
+				</router>
+			</outbound-router>
+
+		</mule-descriptor>
+	</model>
+</mule-configuration>
