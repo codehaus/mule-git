@@ -15,7 +15,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 public class PaletteItem implements IAdaptable {
 	private String name;
-	private ImageDescriptor image;
+	private ImageDescriptor imageDescriptor;
 
 	private FolderItem parent;
 
@@ -43,11 +43,11 @@ public class PaletteItem implements IAdaptable {
 		return null;
 	}
 
-	public ImageDescriptor getImage() {
-		return image;
+	public ImageDescriptor getImageDescriptor() {
+		return imageDescriptor;
 	}
 
-	public void setImage(ImageDescriptor image) {
-		this.image = image;
+	public void setImageDescriptor(ImageDescriptor image) {
+		this.imageDescriptor = image;
 	}
 }

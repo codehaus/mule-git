@@ -117,7 +117,7 @@ public class ToolPalette extends ViewPart {
 			Image image = (Image)fImages.get(obj);
 			if (image == null && obj instanceof PaletteItem) {
 				
-				ImageDescriptor descriptor = ((PaletteItem)obj).getImage();
+				ImageDescriptor descriptor = ((PaletteItem)obj).getImageDescriptor();
 				if (descriptor != null) {
 					image = descriptor.createImage();
 					fImages.put(obj, image);
@@ -246,7 +246,7 @@ public class ToolPalette extends ViewPart {
 	private void showMessage(String message) {
 		MessageDialog.openInformation(
 			viewer.getControl().getShell(),
-			"Sample View",
+			"Mule IDE",
 			message);
 	}
 

@@ -91,7 +91,7 @@ public class PaletteRegistryReader {
 		{
 			ImageDescriptor iDesc = Activator.imageDescriptorFromPlugin(element.getContributor().getName(), icon);
 			if (iDesc != null) {
-				palItem.setImage(iDesc);
+				palItem.setImageDescriptor(iDesc);
 			}
 		}
 	}
