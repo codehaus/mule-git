@@ -18,7 +18,7 @@
     <modules>
         <module>pxe</module>
         <module>greenmail-mt</module>
-        <module>greenmail-mt</module>
+        <module>journal-persistence</module>
     </modules>
 
 </project>
