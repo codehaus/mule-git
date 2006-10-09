@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Palette Plug-in
+Bundle-SymbolicName: org.mule.ide.prototype.palette; singleton:=true
+Bundle-Version: 0.1.0
+Bundle-Activator: org.mule.ide.prototype.palette.Activator
+Bundle-Vendor: MuleSource, Inc.
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-LazyStart: true
