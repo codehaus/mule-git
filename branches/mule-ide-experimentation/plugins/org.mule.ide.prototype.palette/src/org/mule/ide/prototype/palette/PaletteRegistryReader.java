@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * This class reads the plugin manifests and adds each specified gramamr
@@ -25,7 +26,13 @@ public class PaletteRegistryReader {
 	protected static final String pluginId = "org.mule.ide.prototype.palette"; //$NON-NLS-1$
 	protected static final String EXTENSION_POINT_ID = "paletteEntries"; //$NON-NLS-1$
 	protected static final String FOLDER_TAG_NAME = "folder"; //$NON-NLS-1$
+	protected static final String ENDPOINT_TAG_NAME = "endpoint"; //$NON-NLS-1$
+	protected static final String COMPONENT_TAG_NAME = "component"; //$NON-NLS-1$
+	protected static final String FILTER_TAG_NAME = "filter"; //$NON-NLS-1$
 	protected static final String ATT_NAME = "name"; //$NON-NLS-1$
+	protected static final String ATT_CLASS_NAME = "className"; //$NON-NLS-1$
+	protected static final String ATT_SCHEME_PREFIX = "schemePrefix"; //$NON-NLS-1$
+	protected static final String ATT_ICON = "icon"; //$NON-NLS-1$
 
 	private FolderItem rootPaletteItem;
 
@@ -54,21 +61,38 @@ public class PaletteRegistryReader {
 	 * readElement() - parse and deal with extension
 	 */
 	protected void readElement(IConfigurationElement element, IExtensionPoint point, FolderItem parent) {
-		// Only includes folder at this stage 
+		PaletteItem palItem = null;
+		
 		if (element.getName().equals(FOLDER_TAG_NAME)) {
 			FolderItem pi = null;
 			String name = element.getAttribute(ATT_NAME);
 			if (name != null) {
-				try {
-//					String bundleId = element.getNamespace();
-					pi = new FolderItem(name);
-					parent.addChild(pi);
-				}
-				catch (Exception e) {
-//					Log.logException("Problem adding example folders:" + folder, e); //$NON-NLS-1$
-				}
+				palItem = pi = new FolderItem(name);
+				parent.addChild(pi);
 			}
 			visitConfigElements(element.getChildren(), point, pi);
+		} else if (element.getName().equals(FILTER_TAG_NAME)) {
+			String className = element.getAttribute(ATT_CLASS_NAME);
+			if (className != null) {
+				parent.addChild(palItem = new FilterItem(className));
+			}
+		} else if (element.getName().equals(COMPONENT_TAG_NAME)) {
+			String className = element.getAttribute(ATT_CLASS_NAME);
+			if (className != null) {
+				parent.addChild(palItem = new ComponentItem(className));
+			}
+		}
+		
+		// Only includes folder at this stage 
+		String icon = element.getAttribute(ATT_ICON);
+		if (icon != null) icon = icon.trim();
+		
+		if (icon != null && icon.length() > 0)
+		{
+			ImageDescriptor iDesc = Activator.imageDescriptorFromPlugin(element.getContributor().getName(), icon);
+			if (iDesc != null) {
+				palItem.setImage(iDesc);
+			}
 		}
 	}
 

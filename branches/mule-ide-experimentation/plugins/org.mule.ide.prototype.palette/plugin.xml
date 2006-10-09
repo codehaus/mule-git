@@ -38,13 +38,45 @@
          <folder
                folderId="org.mule.ide.prototype.palette.soap"
                icon="icons/mule16.GIF"
-               name="SOAP"/>
+               name="SOAP">
+            <component
+                  className="org.mule.foo.Bar"
+                  icon="icons/mule16.GIF"/>
+            <component
+                  className="org.mule.bar.Foo"
+                  icon="icons/XMLFile.gif"/>
+            <filter
+                  className="org.mule.filters.Foobar"
+                  icon="icons/mule16.GIF"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.folder4"
+               icon="icons/sample.gif"
+               name="REST">
+            <component
+                  className="org.mule.rest.Sleeper"
+                  icon="icons/mule16.GIF">
+               <exampleXml>
+                  <mule-descriptor className="org.mule.rest.Sleeper" inbountEndpoint="http://localhost:80/rest/" />
+               </exampleXml>
+            </component>
+            <component
+                  className="org.mule.rest.Yawner"
+                  icon="icons/mule16.GIF"/>
+         </folder>
 
       </folder>
       <folder
             folderId="org.mule.ide.prototype.palette.queues"
             icon="icons/XMLFile.gif"
-            name="Queues"/>
+            name="Queues">
+         <component
+               className="org.mule.jms.Quux"
+               icon="icons/mule16.GIF"/>
+         <component
+               className="org.mule.jms.Router"
+               icon="icons/mule16.GIF"/>
+      </folder>
    </extension>
 
 </plugin>

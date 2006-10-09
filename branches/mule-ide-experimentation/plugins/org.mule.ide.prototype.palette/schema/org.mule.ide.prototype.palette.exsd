@@ -50,7 +50,7 @@
    <element name="folder">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="folderId"/>
+            <meta.element labelAttribute="name" icon="icon"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -91,6 +91,9 @@
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -262,7 +265,19 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;extension
+  point=&quot;org.mule.ide.prototype.palette.paletteEntries&quot;&gt;
+
+  &lt;folder
+    folderId=&quot;org.mule.ide.prototype.palette.ws&quot;
+      icon=&quot;icons/sample.gif&quot;
+      name=&quot;Web Service Protocols&quot;&gt;
+    &lt;folder
+      folderId=&quot;org.mule.ide.prototype.palette.soap&quot;
+      icon=&quot;icons/mule16.GIF&quot;
+      name=&quot;SOAP&quot;/&gt;
+  &lt;/folder&gt;
+&lt;/extension&gt;
       </documentation>
    </annotation>
 
@@ -271,7 +286,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         For now, these resources are mainly static deifinitions
       </documentation>
    </annotation>
 
@@ -280,7 +295,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         The intended use of the extension point is to supply the user with a wide range examples and templates for use within a Mule configuration.
       </documentation>
    </annotation>
 
@@ -289,7 +304,7 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2006, MuleSource, Inc.
+         Copyright (c) 2006 MuleSource, Inc.
       </documentation>
    </annotation>
 

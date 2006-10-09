@@ -1,6 +1,7 @@
 package org.mule.ide.prototype.palette;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /*
  * The content provider class is responsible for
@@ -14,6 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 
 public class PaletteItem implements IAdaptable {
 	private String name;
+	private ImageDescriptor image;
 
 	private FolderItem parent;
 
@@ -39,5 +41,13 @@ public class PaletteItem implements IAdaptable {
 
 	public Object getAdapter(Class key) {
 		return null;
+	}
+
+	public ImageDescriptor getImage() {
+		return image;
+	}
+
+	public void setImage(ImageDescriptor image) {
+		this.image = image;
 	}
 }

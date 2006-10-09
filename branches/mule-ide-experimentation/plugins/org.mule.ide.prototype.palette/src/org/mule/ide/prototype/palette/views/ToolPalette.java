@@ -1,19 +1,39 @@
 package org.mule.ide.prototype.palette.views;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.core.runtime.IAdaptable;
-import org.mule.ide.prototype.palette.PaletteItem;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.ViewPart;
 import org.mule.ide.prototype.palette.FolderItem;
+import org.mule.ide.prototype.palette.PaletteItem;
 import org.mule.ide.prototype.palette.PaletteRegistryReader;
 
 
@@ -83,37 +103,40 @@ public class ToolPalette extends ViewPart {
 		private void initialize() {
 			PaletteRegistryReader prr = new PaletteRegistryReader(); 
 			prr.readRegistry();
-//			
-//			PaletteItem to1 = new PaletteItem("Leaf 1");
-//			PaletteItem to2 = new PaletteItem("Leaf 2");
-//			PaletteItem to3 = new PaletteItem("Leaf 3");
-//			FolderItem p1 = new FolderItem("Parent 1");
-//			p1.addChild(to1);
-//			p1.addChild(to2);
-//			p1.addChild(to3);
-//			
-//			PaletteItem to4 = new PaletteItem("Leaf 4");
-//			FolderItem p2 = new FolderItem("Parent 2");
-//			p2.addChild(to4);
-//			
-//			FolderItem root = new FolderItem("Root");
-//			root.addChild(p1);
-//			root.addChild(p2);
-//			
-			invisibleRoot = new FolderItem("");
-			invisibleRoot.addChild(prr.getRootPaletteItem());
+			invisibleRoot = prr.getRootPaletteItem();
 		}
 	}
 	class ViewLabelProvider extends LabelProvider {
+		private Map fImages = new HashMap();
 
 		public String getText(Object obj) {
 			return obj.toString();
 		}
 		public Image getImage(Object obj) {
+			
+			Image image = (Image)fImages.get(obj);
+			if (image == null && obj instanceof PaletteItem) {
+				
+				ImageDescriptor descriptor = ((PaletteItem)obj).getImage();
+				if (descriptor != null) {
+					image = descriptor.createImage();
+					fImages.put(obj, image);
+				}
+			}
+			if (image != null) return image;
+
 			String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
 			if (obj instanceof FolderItem)
 			   imageKey = ISharedImages.IMG_OBJ_FOLDER;
 			return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
+		}
+		
+		public void dispose() {
+			Iterator images = fImages.values().iterator();
+			while (images.hasNext()) {
+				Image image = (Image)images.next();
+				image.dispose();
+			}
 		}
 	}
 	class NameSorter extends ViewerSorter {
@@ -130,9 +153,10 @@ public class ToolPalette extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(new ViewContentProvider());
+		viewer.setAutoExpandLevel(1);
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new NameSorter());
 		viewer.setInput(getViewSite());
