@@ -1,7 +1,0 @@
-connector=org.mule.providers.rvd.RVDConnector
-dispatcher.factory=org.mule.providers.rvd.RVDDispatcherFactory
-message.receiver=org.mule.providers.rvd.RVDReceiver
-message.adapter=org.mule.providers.rvd.RVDMessageAdapter
-endpoint.builder=org.mule.impl.endpoint.ResourceNameEndpointBuilder
-inbound.transformer=org.mule.providers.rvd.TibrvMsgToMap
-outbound.transformer=org.mule.providers.rvd.ObjectToTibrvMsg
