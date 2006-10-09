@@ -1,0 +1,85 @@
+<archetype>
+  <id>maven-archetype-mule-transport</id>
+  <variables>
+    <variable>
+      <name>TransportName</name>
+      <description>The protocol name to use for the transport (lower case) i.e. jms or http</description>
+      <defvalue></defvalue>
+    </variable>
+      <variable>
+      <name>TransportDescription</name>
+      <description>A short description of what the transport does...</description>
+      <defvalue></defvalue>
+    </variable>
+    <variable>
+          <name>MessagingType</name>
+          <description>Can the transport only [r]eceive message, [d]ispatch message or [b]oth?</description>
+          <defvalue>b</defvalue>
+    </variable>
+      <variable>
+          <name>PollingReceiver</name>
+          <description>Does the Message Receiver need to poll the underlying resource?</description>
+          <defvalue>false</defvalue>
+    </variable>
+      <variable>
+          <name>Transactions</name>
+          <description>Boolean flag if the transport supports transactions</description>
+          <defvalue>false</defvalue>
+    </variable>
+    </variables>
+  <templates>
+    <template>
+      <file>src/main/resources/META-INF/services/org/mule/providers/csd.vm</file>
+    <output>src/main/resources/META-INF/services/org/mule/providers/${TransportName}</output>
+    </template>
+    <template>
+      <file>src/main/resources/META-INF/services/org/mule/i18n/messages.vm</file>
+    <output>src/main/resources/META-INF/services/org/mule/i18n/${TransportName}-messages.properties</output>
+    </template>
+    <template>
+          <file>pom.vm</file>
+        <output>pom.xml</output>
+    </template>
+    <template>
+      <file>src/main/java/org/mule/providers/Connector.vm</file>
+      <output>src/main/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}Connector.java</output>
+    </template>
+    <template>
+      <file>src/main/java/org/mule/providers/MessageAdapter.vm</file>
+      <output>src/main/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageAdapter.java</output>
+    </template>
+      <template>
+      <file>src/main/java/org/mule/providers/MessageDispatcher.vm</file>
+      <output>src/main/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageDispatcher.java</output>
+    </template>
+      <template>
+      <file>src/main/java/org/mule/providers/MessageDispatcherFactory.vm</file>
+      <output>src/main/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageDispatcherFactory.java</output>
+    </template>
+      <template>
+      <file>src/main/java/org/mule/providers/MessageAdapter.vm</file>
+      <output>src/main/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageAdapter.java</output>
+    </template>
+      <!-- Test Cases -->
+    <template>
+      <file>src/test/java/org/mule/providers/ConnectorFactoryTestCase.vm</file>
+      <output>src/test/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}ConnectorFactoryTestCase.java</output>
+    </template>
+    <template>
+      <file>src/test/java/org/mule/providers/ConnectorTestCase.vm</file>
+      <output>src/test/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}ConnectorTestCase.java</output>
+    </template>
+    <template>
+      <file>src/test/java/org/mule/providers/EndpointsTestCase.vm</file>
+      <output>src/test/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}EndpointsTestCase.java</output>
+    </template>
+    <template>
+      <file>src/test/java/org/mule/providers/MessageAdapterTestCase.vm</file>
+      <output>src/test/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageAdapterTestCase.java</output>
+    </template>
+    <template>
+      <file>src/test/java/org/mule/providers/MessageReceiverTestCase.vm</file>
+      <output>src/test/java/org/mule/providers/${TransportName}/${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}MessageReceiverTestCase.java</output>
+    </template>
+  </templates>
+</archetype>

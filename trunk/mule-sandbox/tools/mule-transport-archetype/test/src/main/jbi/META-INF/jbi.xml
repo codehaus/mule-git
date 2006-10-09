@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- Example jbi.xml for a BC: -->
+<jbi
+    version="1.0"
+    xmlns="http://java.sun.com/xml/ns/jbi">
+
+<!-- identification information about this binding -->
+      	          <component type="service-engine">
+                <identification>
+            <name>Crap</name>
+            <description>Crap</description>
+        </identification>
+        <component-class-name description="The boot strap class" >com.newarchetypeCrapComponent</component-class-name>
+        <component-class-path>
+            <path-element>lib/Crap_rt.jar</path-element>
+            <!--<path-element>lib/another.jar</path-element> -->
+         </component-class-path>
+        <bootstrap-class-name>com.newarchetypeCrapBootstrap</bootstrap-class-name>
+        <bootstrap-class-path>
+           <path-element>lib/Crap_boot.jar</path-element>
+           <!--<path-element>lib/another.jar</path-element> -->
+        </bootstrap-class-path>
+        <!--
+        <shared-library>SunWSDLSharedLibrary</shared-library>
+        <shared-library>anotherSharedLibrary</shared-library>
+        -->
+    </component>
+</jbi>

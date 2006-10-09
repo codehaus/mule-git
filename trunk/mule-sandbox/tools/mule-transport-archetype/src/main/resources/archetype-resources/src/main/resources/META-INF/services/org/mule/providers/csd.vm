@@ -1,0 +1,36 @@
+#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1).toLowerCase()}")
+#set($TransportNameLower = "${TransportName.toLowerCase()}
+
+#This file is the service descriptor for your transport
+#It ties all the implementation classes together so that Mule can
+#construct endpoints for your transport protocol at runtime
+#For a full list of properties that can be set here see -
+#http://mule.codehaus.org/Service+Descriptors
+
+#The connector class for your transport. This is alwas required
+connector=org.mule.providers.${$TransportNameLower}.${$TransportName}Connector
+
+#Used as the Mule internal representation of a message received or sent by 
+#your transport. This is always required.
+message.adapter=org.mule.providers.${$TransportNameLower}.${$TransportName}MessageAdapter
+
+
+#If the transport supports in-only messaging the dispatcher.factory is not needed
+dispatcher.factory=org.mule.providers.${$TransportNameLower}.${$TransportName}MessageDispatcherFactory
+
+#Only required if your transport supports inbound communication
+message.receiver=org.mule.providers.${$TransportNameLower}.${$TransportName}MessageReceiver
+
+#Only required if you transports needs to marshall and unmarshall a message
+#format into something that Mule can use
+#inbound.transformer=org.mule.providers.${$TransportNameLower}.transformers.XxxToYyy
+#outbound.transformer=org.mule.providers.${$TransportNameLower}.transformers.YyyToXxx
+
+#Defines the way in which endpoints for your transport will be constructed
+#Options are (but you can write your own) -
+#org.mule.impl.endpoint.ResourceEndpointBuilder i.e. vm://my.queue
+#org.mule.impl.endpoint.UrlEndpointBuilder i.e. axis:http://localhost:1234/context/Service?params
+#org.mule.impl.endpoint.SocketEndpointBuilder i.e. udp://localhost:2222
+endpoint.builder=org.mule.impl.endpoint.SocketEndpointBuilder
+
+#For more information see - http://mule.codehaus.org/Writing+Mule+Transport+Providers

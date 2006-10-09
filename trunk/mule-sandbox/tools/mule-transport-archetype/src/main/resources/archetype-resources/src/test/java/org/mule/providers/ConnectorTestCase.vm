@@ -1,0 +1,92 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}")
+package org.mule.providers.${TransportName.toLowerCase()};
+
+import org.mule.impl.MuleDescriptor;
+import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.tck.providers.AbstractConnectorTestCase;
+import org.mule.tck.testmodels.fruit.Orange;
+import org.mule.umo.UMOComponent;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.provider.UMOConnector;
+
+public class ${TransportName}ConnectorTestCase extends AbstractConnectorTestCase
+{
+    /**
+     * Create and initialise an instance of your connector here. Do not actually call the
+     * connect method.
+     */
+    public UMOConnector getConnector() throws Exception
+    {
+        //Todo Return an instance of your connector
+        ${TransportName}Connector c = new ${TransportName}Connector();
+        c.setName("Test-${TransportName}");
+        //Set any additional properties on the connector here
+        return null;
+    }
+
+    public String getTestEndpointURI()
+    {
+    	//Todo Return a valid endpoint for you transport here
+        return null;
+    }
+
+    public Object getValidMessage() throws Exception
+    {
+        //Todo Return an valid message for your transport
+        return null;
+    }
+
+    public void testValidListener() throws Exception
+    {
+        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
+        UMOComponent component = getTestComponent(d);
+        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+        endpoint.setEndpointURI(null);
+        endpoint.setConnector(connector);
+
+        try
+        {
+            connector.registerListener(component, endpoint);
+            fail("cannot register with null endpointUri");
+        } catch (Exception e)
+        {
+            /* expected */
+        }
+
+        endpoint.setEndpointURI(null);
+        try
+        {
+            connector.registerListener(component, endpoint);
+            fail("cannot register with empty endpointUri");
+        } catch (Exception e)
+        {
+            /* expected */
+        }
+
+        endpoint.setEndpointURI(new MuleEndpointURI("tcp://localhost:30303"));
+        connector.registerListener(component, endpoint);
+        try
+        {
+            // connector.registerListener(component, endpoint);
+            // fail("cannot register on the same endpointUri");
+        } catch (Exception e)
+        {
+            /* expected */
+        }
+    }
+
+    public void testProperties() throws Exception
+    {
+        //Todo test setting and retrieving any custom properties on the Connector
+    }
+}
