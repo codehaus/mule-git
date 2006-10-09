@@ -16,10 +16,12 @@
 
 
     <modules>
-        <module>pxe</module>
+        <!-- need to migrate to Apache ODE once it stabilizes -->
+        <!--module>pxe</module-->
         <module>greenmail-mt</module>
         <module>greenmail-tests</module>
-        <module>journal-persistence</module>
+        <module>mule-module-journal-persistence</module>
+        <module>mule-module-spring-bootstrap</module>
     </modules>
 
 </project>
