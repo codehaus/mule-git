@@ -39,8 +39,9 @@ of the core Mule distribution, though some modules will graduate to the core.
     </scm>
 
     <modules>
-        <module>bpm-provider</module>
-        <module>greenmail-mt</module>
+        <module>transports</module>
+        <module>modules</module>
+        <module>tools</module>
     </modules>
 </project>
 
