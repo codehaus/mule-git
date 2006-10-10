@@ -1,0 +1,11 @@
+package com.example.service.${serviceName.toLowerCase()}.ejb;
+
+import com.example.service.${serviceName.toLowerCase()}.${serviceName}Service;
+
+import javax.ejb.EJBObject;
+
+/**
+ * Remote interface for the Enterprise Bean: ${serviceName}Service
+ */
+public interface ${serviceName}ServiceEJB extends ${serviceName}Service, EJBObject {
+}

@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${groupId}</groupId>
+    <artifactId>${serviceName}ServiceEjb</artifactId>
+    <packaging>ejb</packaging>
+    <version>${version}</version>
+    <name>${serviceName}ServiceEjb</name>
+    <url>http://www.example.com</url>
+
+    <parent>
+        <groupId>${groupId}</groupId>
+        <artifactId>${artifactId}</artifactId>
+        <version>${version}</version>
+    </parent>
+
+    <build>
+
+        <sourceDirectory>ejbModule</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>ejbModule</directory>
+                <includes>
+                    <include>META-INF/**</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <ejbVersion>2.0</ejbVersion>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${groupId}</groupId>
+            <artifactId>${serviceName}ServiceEjbClient</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
