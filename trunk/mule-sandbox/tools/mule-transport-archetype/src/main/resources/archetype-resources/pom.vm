@@ -2,7 +2,7 @@
  <modelVersion>4.0.0</modelVersion>
    <groupId>${groupId}</groupId>
    <artifactId>${artifactId}</artifactId>
-   <packaging>maven-archetype-mule-transport</packaging>
+   <packaging>jar</packaging>
     <name>Mule ${TransportName} Transport</name>
    <version>${version}</version>
   <description>${TransportDescription}</description>
@@ -12,18 +12,18 @@
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
-            <version>${version}</version>
+            <version>${MuleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-core</artifactId>
-            <version>${version}</version>
+            <version>${MuleVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
+            <version>${MuleVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

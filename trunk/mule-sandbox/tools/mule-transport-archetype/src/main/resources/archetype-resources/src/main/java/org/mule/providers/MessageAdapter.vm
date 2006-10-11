@@ -8,9 +8,7 @@
  * LICENSE.txt file.
  */
 
-
-#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1).toLowerCase()}")
-package org.mule.providers.${TransportName.toLowerCase()};
+package org.mule.providers.${TransportNameLower};
 
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;

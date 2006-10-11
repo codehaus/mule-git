@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * \$Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -12,13 +12,13 @@
 package org.mule.providers.${TransportName.toLowerCase()};
 
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.tck.NamedTestCase;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpointURI;
 
 
-public class ${TransportName}EndpointTestCase extends NamedTestCase
+public class ${TransportName}EndpointTestCase extends AbstractMuleTestCase
 {
-    public void testHostPortUrl() throws Exception
+    public void testValidEndpointURI() throws Exception
     {
         //Todo test creating and asserting Endpoint values i.e.
         /*
@@ -31,6 +31,8 @@ public class ${TransportName}EndpointTestCase extends NamedTestCase
         assertEquals("tcp://localhost:7856", url.getAddress());
         assertEquals(0, url.getParams().size());
         */
+        throw new UnsupportedOperationException("testValidEndpointURI");
+
     }
 
 }

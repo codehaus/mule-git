@@ -13,11 +13,11 @@ package org.mule.providers.${TransportName.toLowerCase()};
 
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.service.ConnectorFactory;
-import org.mule.tck.NamedTestCase;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpoint;
 
 
-public class ${TransportName}ConnectorFactoryTestCase extends NamedTestCase
+public class ${TransportName}ConnectorFactoryTestCase extends AbstractMuleTestCase
 {
     public void testCreateFromFactory() throws Exception
     {
@@ -31,6 +31,6 @@ public class ${TransportName}ConnectorFactoryTestCase extends NamedTestCase
     
     public String getEndpointURI() {
     	//Todo return a valid endpoint URI string for your transport i.e. tcp://localhost:1234
-    	return null;
+    	throw new UnsupportedOperationException("getEndpointURI");
     }
 }

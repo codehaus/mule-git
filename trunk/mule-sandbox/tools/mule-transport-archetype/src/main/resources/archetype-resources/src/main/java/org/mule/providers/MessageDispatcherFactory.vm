@@ -8,11 +8,10 @@
  * LICENSE.txt file.
  */
 
-#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1).toLowerCase()}")
-package org.mule.providers.${TransportName.toLowerCase()};
+package org.mule.providers.${TransportNameLower};
 
 import org.mule.umo.UMOException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 

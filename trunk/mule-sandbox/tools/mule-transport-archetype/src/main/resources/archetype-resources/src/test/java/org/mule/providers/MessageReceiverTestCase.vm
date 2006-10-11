@@ -30,13 +30,17 @@ public class ${TransportName}MessageReceiverTestCase extends AbstractMessageRece
         Mock mockDescriptor = new Mock(UMODescriptor.class);
         mockComponent.expectAndReturn("getDescriptor", mockDescriptor.proxy());
         mockDescriptor.expectAndReturn("getResponseTransformer", null);
-
-        return new ${TransportName}MessageReceiver((AbstractConnector) endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint);
+#if($PollingMessageReceiver)
+        return new ${TransportName}MessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint, new Long(1000));
+#else
+        return new ${TransportName}MessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint);
+#end
     }
 
     public UMOEndpoint getEndpoint() throws Exception
     {
-    	//Todo return a valid UMOendpoint i.e. new MuleEndpoint("tcp://localhost:1234", true)
-        return null;
+    	//Todo return a valid UMOendpoint i.e.
+    	//return new MuleEndpoint("tcp://localhost:1234", true)
+        throw new UnsupportedOperationException("getEndpoint");
     }
 }

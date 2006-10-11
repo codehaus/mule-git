@@ -13,17 +13,17 @@ package org.mule.providers.${TransportName.toLowerCase()};
 
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.umo.MessagingException;
 
 public class ${TransportName}MessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
     public Object getValidMessage() throws Exception
     {
-    	//Todo Create a valid message for your transport i.e.
-    	//return "Hello";
-        return null;
+    	//Todo Create a valid message for your transport
+    	throw new UnsupportedOperationException("getValidMessage");
     }
 
-    public UMOMessageAdapter createAdapter(Object payload) throws Exception
+    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new ${TransportName}MessageAdapter(payload);
     }

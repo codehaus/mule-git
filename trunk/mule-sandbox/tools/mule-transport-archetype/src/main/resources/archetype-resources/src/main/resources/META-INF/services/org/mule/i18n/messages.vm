@@ -1,5 +1,3 @@
-#set($TransportName = "${TransportName.toLowerCase()}
-
 #Add any string messages here that are specific to your transport
 #Messages put here can be translated into other languages
 #Each message should be given a unique numerical id i.e.

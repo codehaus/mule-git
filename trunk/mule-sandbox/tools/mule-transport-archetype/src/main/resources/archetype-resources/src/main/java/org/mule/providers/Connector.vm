@@ -8,8 +8,7 @@
  * LICENSE.txt file.
  */
 
-#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1)}")
-package org.mule.providers.${TransportName.toLowerCase()};
+package org.mule.providers.${TransportNameLower};
 
 import org.mule.providers.AbstractServiceEnabledConnector;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -88,7 +87,7 @@ public class ${TransportName}Connector extends AbstractServiceEnabledConnector
 
     public String getProtocol()
     {
-        return "${TransportName.toLowerCase()}";
+        return "${TransportNameLower}";
     }
 
 

@@ -8,30 +8,15 @@
  * LICENSE.txt file.
  */
 
-#set($TransportName = "${TransportName.substring(0,1).toUpperCase()}${TransportName.substring(1).toLowerCase()}")
-package org.mule.providers.${TransportName.toLowerCase()};
+package org.mule.providers.${TransportNameLower};
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.util.Utility;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 /**
  * <code>${TransportName}MessageDispatcher</code> Todo document
  *
@@ -57,7 +42,7 @@ public class ${TransportName}MessageDispatcher extends AbstractMessageDispatcher
      * Makes a connection to the underlying resource. Where connections are managed by the connector this
      * method may do nothing
      */
-    public void doConnect() throws Exception
+    public void doConnect(UMOImmutableEndpoint endpoint) throws Exception
     {
         //If a resource for this Dispatcher needs a connection established, then this is the
         //place to do it
@@ -100,7 +85,7 @@ public class ${TransportName}MessageDispatcher extends AbstractMessageDispatcher
 
     
 
-    public UMOMessage receive(UMOEndpoint endpoint, long timeout) throws Exception
+    public UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
     {
     	/* IMPLEMENTATION NOTE: 
         Can be used to make arbitary requests to a transport resource. if the timeout is 0 the 

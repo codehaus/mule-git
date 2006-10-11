@@ -27,66 +27,28 @@ public class ${TransportName}ConnectorTestCase extends AbstractConnectorTestCase
      */
     public UMOConnector getConnector() throws Exception
     {
-        //Todo Return an instance of your connector
+        //Return an instance of your connector
         ${TransportName}Connector c = new ${TransportName}Connector();
         c.setName("Test-${TransportName}");
-        //Set any additional properties on the connector here
-        return null;
+        //Todo Set any additional properties on the connector here
+        return c;
     }
 
     public String getTestEndpointURI()
     {
     	//Todo Return a valid endpoint for you transport here
-        return null;
+        throw new UnsupportedOperationException("getTestEndpointURI");
     }
 
     public Object getValidMessage() throws Exception
     {
         //Todo Return an valid message for your transport
-        return null;
+        throw new UnsupportedOperationException("getValidMessage");
     }
 
-    public void testValidListener() throws Exception
-    {
-        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
-        UMOComponent component = getTestComponent(d);
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
-        endpoint.setEndpointURI(null);
-        endpoint.setConnector(connector);
-
-        try
-        {
-            connector.registerListener(component, endpoint);
-            fail("cannot register with null endpointUri");
-        } catch (Exception e)
-        {
-            /* expected */
-        }
-
-        endpoint.setEndpointURI(null);
-        try
-        {
-            connector.registerListener(component, endpoint);
-            fail("cannot register with empty endpointUri");
-        } catch (Exception e)
-        {
-            /* expected */
-        }
-
-        endpoint.setEndpointURI(new MuleEndpointURI("tcp://localhost:30303"));
-        connector.registerListener(component, endpoint);
-        try
-        {
-            // connector.registerListener(component, endpoint);
-            // fail("cannot register on the same endpointUri");
-        } catch (Exception e)
-        {
-            /* expected */
-        }
-    }
 
     public void testProperties() throws Exception
     {
-        //Todo test setting and retrieving any custom properties on the Connector
+        //Todo test setting and retrieving any custom properties on the Connector as necessary
     }
 }
