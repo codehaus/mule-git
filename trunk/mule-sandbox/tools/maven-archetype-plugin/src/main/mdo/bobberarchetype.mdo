@@ -85,7 +85,20 @@
           <required>true</required>
           <type>String</type>
         </field>
+
+     <field>
+          <name>variables</name>
+          <version>1.0.0</version>
+      <description><![CDATA[
+            Variables that depend on their parent]]></description>
+          <association>
+            <type>Variable</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+
       </fields>
+
     </class>
 
      <class xml.tagName="template">

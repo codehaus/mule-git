@@ -40,7 +40,6 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.codehaus.plexus.velocity.VelocityComponent;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -55,6 +54,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -214,37 +215,8 @@ public class BobberArchetype
 
 
         final List variables = archetype.getVariables();
-        for (Iterator iterator = variables.iterator(); iterator.hasNext();) {
-            Variable var = (Variable) iterator.next();
-            String val = System.getProperty(var.getName(), var.getDefvalue());
+        processVariables(variables.iterator(), context, inInteractiveMode);
 
-            if (inInteractiveMode) {
-                StringBuffer message = new StringBuffer();
-                message.append(var.getName()).append(": ")
-                        .append(NEW_LINE)
-                        .append(StringUtils.repeat("*", MESSAGE_LINE_LENGTH))
-                        .append(NEW_LINE)
-                        .append(NEW_LINE)
-                        .append(StringUtils.center(var.getDescription(), MESSAGE_LINE_LENGTH))
-                        .append(NEW_LINE)
-                        .append(StringUtils.leftPad("[default: " + val + "]", MESSAGE_LINE_LENGTH))
-                        .append(NEW_LINE)
-                        .append(StringUtils.repeat("*", MESSAGE_LINE_LENGTH));
-                getLogger().info(message.toString());
-                try {
-                    String answer = inputHandler.readLine();
-                    if (!StringUtils.isEmpty(answer)) {
-                        val = answer;
-                    }
-                } catch (IOException ie) {
-                    throw new ArchetypeTemplateProcessingException(ie);
-                }
-
-
-            }
-
-            context.put(var.getName(), val);
-        }
 
         // ---------------------------------------------------------------------
         // Get Logger and display all parameters used
@@ -331,14 +303,54 @@ public class BobberArchetype
                 // If condition is not specified, assume the template should
                 // be processed.
                 boolean shouldProcess = true;
-                final String condition = template.getDependsOnVar();
+                String condition = template.getDependsOnVar();
+                String requiredValue=null;
+                List options = new ArrayList();
                 if (StringUtils.isNotEmpty(condition)) {
+                    //Crappy logic processing -- for now
+                    boolean not=false;
+                    //Allow very simple matching logic to match templates against variable values
+                    int x = condition.indexOf("!=");
+                    getLogger().debug("Processing Condition : " + condition);                                        
+                    if(x > -1) {
+                        not=true;
+                        requiredValue = condition.substring(x+2).trim();
+                        options = getListOfValues(requiredValue);
+                        condition = condition.substring(0, x).trim();
+                    }
+                    else {
+                        x = condition.indexOf("=");
+                        if(x > -1) {
+                            requiredValue = condition.substring(x+1);
+                            options = getListOfValues(requiredValue);
+                            condition = condition.substring(0, x);
+                        }
+                    }
+                    getLogger().debug("Not Expr: " + not);
+                    getLogger().debug("Condition Value: '" + condition + "'");
+                    getLogger().debug("Required Value: '" + requiredValue + "'");
                     final Variable var = (Variable) findVariable(condition, variables);
                     if (var != null) {
                         final String strValue = (String) context.get(var.getName());
-                        if (!Boolean.valueOf(strValue).booleanValue()) {
-                            shouldProcess = false;
+                        getLogger().debug("Variable Value is: '" + strValue + "'");
+                        if(requiredValue==null)
+                        {
+                            if (!Boolean.valueOf(strValue).booleanValue()) {
+                                shouldProcess = false;
+                            }
+                        } else {
+                            if(!options.contains(strValue))
+                            {
+                                shouldProcess = false;
+                            }
                         }
+
+                    } else {
+                        getLogger().debug("Variable Value is: null");                                                
+                        shouldProcess=false;
+                    }
+                    if(not) {
+                        shouldProcess = !shouldProcess;
                     }
                 }
 
@@ -366,6 +378,67 @@ public class BobberArchetype
 
     }
 
+    protected void processVariables(Iterator variables, VelocityContext context, final boolean interactiveMode) throws ArchetypeTemplateProcessingException
+    {
+        while (variables.hasNext()) {
+            Variable var = (Variable) variables.next();
+            String val = System.getProperty(var.getName(), var.getDefvalue());
+
+            if (interactiveMode) {
+
+                    StringBuffer message = new StringBuffer();
+                    message.append(var.getName()).append(": ")
+                            .append(NEW_LINE)
+                            .append(StringUtils.repeat("*", MESSAGE_LINE_LENGTH))
+                            .append(NEW_LINE)
+                            .append(NEW_LINE)
+                            .append(StringUtils.center(var.getDescription(), MESSAGE_LINE_LENGTH))
+                            .append(NEW_LINE)
+                            .append(StringUtils.leftPad("[default: " + val + "]", MESSAGE_LINE_LENGTH))
+                            .append(NEW_LINE)
+                            .append(StringUtils.repeat("*", MESSAGE_LINE_LENGTH));
+                    getLogger().info(message.toString());
+                    try {
+                        String answer = inputHandler.readLine();
+                        if (!StringUtils.isEmpty(answer)) {
+                            val = answer;
+                        }
+                    } catch (IOException ie) {
+                        throw new ArchetypeTemplateProcessingException(ie);
+                    }
+                    context.put(var.getName(), val);
+            }
+            else
+            {
+                context.put(var.getName(), val);
+            }
+
+            if(val.toLowerCase().equals("false") || val.toLowerCase().equals("n"))
+            {
+                if(var.getVariables() !=null)
+                {
+                    //keep processing the variables picking up the default values
+                    processVariables(var.getVariables().iterator(), context, false);
+
+                }
+            } else if(var.getVariables() !=null)
+            {
+                //keep processing the variables picking up the default values
+                processVariables(var.getVariables().iterator(), context, true);
+
+            }
+        }
+
+    }
+
+    protected List getListOfValues(String s) {
+        List options = new ArrayList();
+        for (StringTokenizer stringTokenizer = new StringTokenizer(s, "|"); stringTokenizer.hasMoreTokens();)
+        {
+            options.add(stringTokenizer.nextToken());
+        }
+        return options;
+    }
 
     protected void processTemplate (Template template, String outputDirectory, VelocityContext context)
             throws ArchetypeTemplateProcessingException {
@@ -379,8 +452,10 @@ public class BobberArchetype
             outFile = new File(outputDirectory, wout.toString());
             getLogger().debug(outFile.getAbsolutePath());
             FileUtils.forceMkdir(outFile.getParentFile());
+            getLogger().debug("Created directory: " + outFile.getParentFile() + ", Dir exists = " + outFile.getParentFile().exists());
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ArchetypeTemplateProcessingException("error evaluating output file name " + template.getOutput(), e);
         }
 
@@ -391,6 +466,7 @@ public class BobberArchetype
 
             String templateLocation = ARCHETYPE_RESOURCES + "/" + template.getFile();
 
+            getLogger().info("Processing Template: " + template.getFile());
             velocity.getEngine().mergeTemplate(templateLocation, context, writer);
             writer.flush();
 
@@ -398,6 +474,7 @@ public class BobberArchetype
             throw new ArchetypeTemplateProcessingException("Error merging velocity templates", e);
         } finally {
             IOUtil.close(writer);
+            getLogger().info("Written Template to: " + outFile + ", file exists = " + outFile.exists());
         }
 
         // Delete archetype-originated folders in case the output path is also templated.
@@ -410,7 +487,8 @@ public class BobberArchetype
                 getLogger().debug("TemplateDir=" + templateDir);
                 getLogger().debug("OutputDir=" + outputDir);
             }
-            if (!templateDir.equals(outputDir)) {
+            if (!outputDir.startsWith(templateDir)) {
+                getLogger().debug("Deleting Template Dir:" + templateDir);
                 FileUtils.forceDelete(templateDir);
             }
         } catch (IOException e) {
@@ -426,10 +504,16 @@ public class BobberArchetype
      * @return variable value or null of not found
      */
     protected Object findVariable (String variableName, List variables) {
+
         for (int i = 0; i < variables.size(); i++) {
             Variable var = (Variable) variables.get(i);
             if (variableName.equals(var.getName())) {
                 return var;
+            } else if(var.getVariables()!=null) {
+                Object o = findVariable(variableName, var.getVariables());
+                if(o!=null) {
+                    return o;
+                }
             }
         }
 
