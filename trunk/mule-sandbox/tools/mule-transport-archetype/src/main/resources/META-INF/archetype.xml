@@ -69,7 +69,7 @@
                 <variable>
                     <name>CustomTransactions</name>
                     <description>Does this transport use a non-JTA Transaction manager? [y] or [n]
-                    (i.e. needs to wrap propietry transaction management)
+                    (i.e. needs to wrap proprietary transaction management)
                     </description>
                     <defvalue>n</defvalue>
                 </variable>

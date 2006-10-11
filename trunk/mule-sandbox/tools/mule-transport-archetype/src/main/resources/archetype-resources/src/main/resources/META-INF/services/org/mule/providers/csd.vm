@@ -11,7 +11,7 @@
 #It ties all the implementation classes together so that Mule can
 #construct endpoints for your transport protocol at runtime
 #For a full list of properties that can be set here see -
-#http://mule.codehaus.org/Service+Descriptors
+#http://mule.mulesource.org/wiki/x/pwI
 
 #The connector class for your transport. This is alwas required
 connector=org.mule.providers.${TransportNameLower}.${TransportName}Connector
@@ -66,4 +66,4 @@ endpoint.builder=org.mule.impl.endpoint.SocketEndpointBuilder
 endpoint.builder=org.mule.providers.${TransportNameLower}.${TransportName}EndpointBuilder
 #end
 
-#For more information see - http://mule.codehaus.org/Writing+Mule+Transport+Providers
+#For more information see - http://mule.mulesource.org/wiki/x/DQ

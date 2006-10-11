@@ -45,24 +45,24 @@ public class ${TransportName}MessageReceiver extends #if( $PollingMessageReceive
 #end
     public void doConnect() throws ConnectException
     {
-    	//Todo the code necessay to Connect to the underlying resource
+        //Todo the code necessay to Connect to the underlying resource
 
-    	/* IMPLEMENTATION NOTE:
-    	Should make a connection to the underlying transport i.e. connect to a socket or
-    	register a soap service. When there is no connection to be made this method should
-    	be used to chack that resources are available. For example the FileMessageReceiver
-    	checks that the directories it will be using are available and readable. The MessageReceiver
-    	should remain in a 'stopped' state even after the doConnect() method is called. This means
-    	that a connection has been made but no events will be received until the start() method is
-    	called. Calling start() on the MessageReceiver will call doConnect() if the receiver hasn't
-    	connected.
-    	*/
+        /* IMPLEMENTATION NOTE:
+        Should make a connection to the underlying transport i.e. connect to a socket or
+        register a soap service. When there is no connection to be made this method should
+        be used to chack that resources are available. For example the FileMessageReceiver
+        checks that the directories it will be using are available and readable. The MessageReceiver
+        should remain in a 'stopped' state even after the doConnect() method is called. This means
+        that a connection has been made but no events will be received until the start() method is
+        called. Calling start() on the MessageReceiver will call doConnect() if the receiver hasn't
+        connected.
+        */
 
         /* IMPLEMENTATION NOTE:
         If you need to spawn any threads such as worker threads for this receiver you can Schedule
         a worker thread with the work manager i.e.
 
-	        getWorkManager().scheduleWork(worker, WorkManager.INDEFINITE, null, null);
+            getWorkManager().scheduleWork(worker, WorkManager.INDEFINITE, null, null);
 
         Where 'worker' implemments javax.resource.spi.work.Work
         */
@@ -88,7 +88,7 @@ public class ${TransportName}MessageReceiver extends #if( $PollingMessageReceive
 
     public void doStart()
     {
-    	//Optional; does not need to be implemented. Delete if not required
+        //Optional; does not need to be implemented. Delete if not required
 
         /* IMPLEMENTATION NOTE:
         Should perform any actions necessary to enable the reciever to start reciving events. This
@@ -102,7 +102,7 @@ public class ${TransportName}MessageReceiver extends #if( $PollingMessageReceive
 
     public void doStop()
     {
-    	//Optional; does not need to be implemented. Delete if not required
+        //Optional; does not need to be implemented. Delete if not required
 
         /* IMPLEMENTATION NOTE:
         Should perform any actions necessary to stop the reciever from receiving events.
@@ -111,7 +111,7 @@ public class ${TransportName}MessageReceiver extends #if( $PollingMessageReceive
 
     public void doDispose()
     {
-    	//Optional; does not need to be implemented. Delete if not required
+        //Optional; does not need to be implemented. Delete if not required
 
         /* IMPLEMENTATION NOTE:
         Is called when the Conector is being dispoed and should clean up any resources. The doStop()
@@ -126,7 +126,7 @@ public class ${TransportName}MessageReceiver extends #if( $PollingMessageReceive
 
         //IMPLEMENTATION NOTE:
         //Once you have read the object it can be passed into Mule by first wrapping
-        //the object with the MEssage adapter for this transport and calling
+        //the object with the Message adapter for this transport and calling
         //routeMessage i.e.
 
         //UMOMessageAdapter adapter = connector.getMessageAdapter(object);
