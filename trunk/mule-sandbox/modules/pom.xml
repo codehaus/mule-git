@@ -21,7 +21,7 @@
         <module>greenmail-mt</module>
         <module>greenmail-mt-tests</module>
         <module>journal-persistence</module>
-        <module>spring-bootstrap</module>
+        <!--module>spring-bootstrap</module-->
     </modules>
 
 </project>

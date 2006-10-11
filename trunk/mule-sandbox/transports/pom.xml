@@ -16,7 +16,7 @@
 
     <modules>
         <module>mqseries</module>
-        <module>bpm</module>
+        <!--module>bpm</module-->
         <!--module>mqe</module-->
     </modules>
 </project>
