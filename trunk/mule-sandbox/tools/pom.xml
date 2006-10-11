@@ -9,7 +9,7 @@
         <version>1.4-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.tools</groupId>
-    <artifactId>mule-sandbox-tools</artifactId>
+    <artifactId>mule-tools</artifactId>
     <packaging>pom</packaging>
     <name>Mule Sandbox Tools</name>
     <description>Tools for Mule that will one day make it into the Mule distribution, or at least onto MuleForge.</description>
