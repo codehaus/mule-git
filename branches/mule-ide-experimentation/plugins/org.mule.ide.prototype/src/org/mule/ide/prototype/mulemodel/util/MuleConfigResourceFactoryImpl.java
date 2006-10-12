@@ -18,6 +18,7 @@ import org.eclipse.wst.common.internal.emf.resource.EMF2DOMRendererFactoryDefaul
 import org.eclipse.wst.common.internal.emf.resource.Renderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResourceFactory;
+import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERendererFactory;
 
 /**
  * The class <code>MuleConfigResourceFactoryImpl</code> provides a resource
@@ -31,7 +32,7 @@ public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 	 * Creates a new <code>StrutsConfigResourceFactoryImpl</code>.
 	 */
 	public MuleConfigResourceFactoryImpl() {
-		super(EMF2DOMRendererFactoryDefaultHandler.INSTANCE
+		super(EMF2DOMSSERendererFactory.INSTANCE
 				.getDefaultRendererFactory());
 	}
 
