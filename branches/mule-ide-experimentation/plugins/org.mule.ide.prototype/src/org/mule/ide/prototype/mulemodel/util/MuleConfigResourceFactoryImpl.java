@@ -32,8 +32,7 @@ public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 	 * Creates a new <code>StrutsConfigResourceFactoryImpl</code>.
 	 */
 	public MuleConfigResourceFactoryImpl() {
-		super(EMF2DOMSSERendererFactory.INSTANCE
-				.getDefaultRendererFactory());
+		super(EMF2DOMSSERendererFactory.INSTANCE);
 	}
 
 	/*
