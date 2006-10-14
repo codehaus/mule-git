@@ -76,7 +76,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -101,22 +100,25 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.wst.common.internal.emf.resource.Renderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERenderer;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
 import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
 
@@ -128,9 +130,8 @@ import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
  * @generated
  */
 public class MuleEditor
-	extends XMLMultiPageEditorPart
+	extends MultiPageEditorPart
 	implements IEditingDomainProvider, IMenuListener, IViewerProvider, IGotoMarker {
-//	implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -154,7 +155,10 @@ public class MuleEditor
 	 */
 	protected ComposedAdapterFactory adapterFactory;
 
-	/**
+	/**			createSourcePage();
+
+			createAndAddDesignPage();
+			addSourcePage();
 	 * This is the content outline page.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -506,7 +510,7 @@ public class MuleEditor
 
 		  // Refresh any actions that may become enabled or disabled.
 		  //
-		  setSelection(getSelection());
+//		  setSelection(getSelection());
 		}
 
 		if (!removedResources.isEmpty()) {
@@ -634,7 +638,7 @@ public class MuleEditor
 	 * This creates a model editor.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated not
+	 * @generated
 	 */
 	public MuleEditor() {
 		super();
@@ -678,7 +682,8 @@ public class MuleEditor
 
 		// Create the editing domain with a special command stack.
 		//
-		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap());
+		StructuredTextEditingDomain sted = new StructuredTextEditingDomain(adapterFactory, commandStack); 
+		editingDomain = sted;
 		
 	    editingDomain.getResourceSet()
         .getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -723,18 +728,6 @@ public class MuleEditor
 				};
 			runnable.run();
 		}
-	}
-
-	/**
-	 * This returns the editing domain as required by the {@link IEditingDomainProvider} interface.
-	 * This is important for implementing the static methods of {@link AdapterFactoryEditingDomain}
-	 * and for supporting {@link org.eclipse.emf.edit.ui.action.CommandAction}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EditingDomain getEditingDomain() {
-		return editingDomain;
 	}
 
 	/**
@@ -828,6 +821,12 @@ public class MuleEditor
 		}
 	}
 
+	private void setSelection(ISelection sel) {
+		if (getSite() != null && getSite().getSelectionProvider() != null) {
+			getSite().getSelectionProvider().setSelection(currentViewer == null ? StructuredSelection.EMPTY : currentViewer.getSelection());
+		}
+	}
+	
 	/**
 	 * This returns the viewer as required by the {@link IViewerProvider} interface.
 	 * <!-- begin-user-doc -->
@@ -859,19 +858,37 @@ public class MuleEditor
 		viewer.addDropSupport(dndOperations, transfers, new EditingDomainViewerDropAdapter(editingDomain, viewer));
 	}
 
-	private EMF2DOMSSERenderer emf2sse = null;  
-
+	private EMF2DOMSSERenderer emf2sse;
+	
 	/**
 	 * This is the method called to load a resource into the editing domain's resource set based on the editor's input.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated not
+	 * @generated
 	 */
 	public void createModel() {
 		// Assumes that the input is a file object.
 		//
-		
 		IFileEditorInput modelFile = (IFileEditorInput)getEditorInput();
+		
+		try {
+			// Load the resource through the editing domain.
+			//
+			Resource emfResource = editingDomain.loadResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()).toString());
+			
+			Renderer aRenderer  = ((TranslatorResource)emfResource).getRenderer();
+			if (aRenderer instanceof EMF2DOMSSERenderer) {
+				if (emf2sse != null) {
+					emf2sse.deRegisterAsModelStateListener();
+					emf2sse.deRegisterAsModelLifecycleListener();
+				}
+				emf2sse = (EMF2DOMSSERenderer)aRenderer;
+			}
+		}
+		catch (Exception exception) {
+			MuleEditorPlugin.INSTANCE.log(exception);
+		}
+		/*
 		URI resourceURI = URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString());;
 		Exception exception = null;
 		Resource resource = null;
@@ -880,7 +897,6 @@ public class MuleEditor
 			//
 			resource = new MuleConfigResourceFactoryImpl().createResource(resourceURI);
 			if (! (resource instanceof TranslatorResource)) throw new RuntimeException("Problem in factory somewhere");
-			emf2sse = (EMF2DOMSSERenderer)((TranslatorResource)resource).getRenderer();
 		}
 		catch (Exception e) {
 			exception = e;
@@ -892,8 +908,7 @@ public class MuleEditor
 			resourceToDiagnosticMap.put(resource,  analyzeResourceProblems(resource, exception));
 		}
 		editingDomain.getResourceSet().eAdapters().add(problemIndicationAdapter);
-		
-		
+		*/
 	}
 
 	/**
@@ -929,10 +944,51 @@ public class MuleEditor
 		}
 	}
 
-	protected StructuredTextEditor getTextEditor() {
-		return null;
+
+	/**
+	 * Creates the source page of the multi-page editor.
+	 */
+	protected void createSourcePage() throws PartInitException {
+		fTextEditor = createTextEditor();
+		fTextEditor.setEditorPart(this);
+
+//		if (fPropertyListener == null) {
+//			fPropertyListener = new PropertyListener();
+//		}
+//		fTextEditor.addPropertyListener(fPropertyListener);
 	}
 
+	/**
+	 * Method createTextEditor.
+	 * 
+	 * @return StructuredTextEditor
+	 */
+	private StructuredTextEditor createTextEditor() {
+		return new StructuredTextEditor();
+	}
+
+	/** The text editor. */
+	private StructuredTextEditor fTextEditor;
+	
+	
+	public class MultiViewerPane extends ViewerPane {
+		public MultiViewerPane(IWorkbenchPage page, IWorkbenchPart part) {
+			super(page, part);
+		}
+		
+		public String disussion = "";
+	
+		public Viewer createViewer(Composite composite) {
+			Tree tree = new Tree(composite, SWT.MULTI);
+			TreeViewer newTreeViewer = new TreeViewer(tree);
+			return newTreeViewer;
+		}
+		public void requestActivation() {
+			super.requestActivation();
+//			setCurrentViewerPane((IWorkbenchPage) page, (IWorkbenchPart)part);
+		}
+	};
+	
 	/**
 	 * This is the method used by the framework to install your own controls.
 	 * <!-- begin-user-doc -->
@@ -940,73 +996,17 @@ public class MuleEditor
 	 * @generated not
 	 */
 	public void createPages() {
-		createModel();
-		super.createPages();
-
-		// Only creates the other pages if there is something that can be edited
+		// Creates the model from the editor input
 		//
-		if (!getEditingDomain().getResourceSet().getResources().isEmpty() &&
-		    !((Resource)getEditingDomain().getResourceSet().getResources().get(0)).getContents().isEmpty()) {
-
-			// Create a page for the selection tree view.
-			//
-			{
-				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MuleEditor.this) {
-						public Viewer createViewer(Composite composite) {
-							Tree tree = new Tree(composite, SWT.MULTI);
-							TreeViewer newTreeViewer = new TreeViewer(tree);
-							return newTreeViewer;
-						}
-						public void requestActivation() {
-							super.requestActivation();
-							setCurrentViewerPane(this);
-						}
-					};
-				viewerPane.createControl(getContainer());
-
-				selectionViewer = (TreeViewer)viewerPane.getViewer();
-				selectionViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-
-				selectionViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-				selectionViewer.setInput(editingDomain.getResourceSet());
-				viewerPane.setTitle(editingDomain.getResourceSet());
-
-				new AdapterFactoryTreeEditor(selectionViewer.getTree(), adapterFactory);
-
-				createContextMenuFor(selectionViewer);
-				int pageIndex = addPage(viewerPane.getControl());
-				setPageText(pageIndex, getString("_UI_SelectionPage_label")); //$NON-NLS-1$
-			}
-			
-			// This is the page for the tree viewer
-			//
-			{
-				ViewerPane viewerPane =
-					new ViewerPane(getSite().getPage(), MuleEditor.this) {
-						public Viewer createViewer(Composite composite) {
-							return new TreeViewer(composite);
-						}
-						public void requestActivation() {
-							super.requestActivation();
-							setCurrentViewerPane(this);
-						}
-					};
-				viewerPane.createControl(getContainer());
-				treeViewer = (TreeViewer)viewerPane.getViewer();
-				treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-				treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-
-				new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
-
-				createContextMenuFor(treeViewer);
-				int pageIndex = addPage(viewerPane.getControl());
-				setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
-			}
-
-			setActivePage(0);
+		createModel();
+		try {
+			createSourcePage();
+	//		createAndAddDesignPage();
+			addSourcePage();
+		} catch (Throwable e) {
+			MuleEditorPlugin.INSTANCE.log(e);
 		}
-
+			
 		// Ensures that this editor will only display the page's tab
 		// area if there are more than one page
 		//
@@ -1023,8 +1023,88 @@ public class MuleEditor
 			 });
 
 		updateProblemIndication();
+	
+		// Only creates the other pages if there is something that can be edited
+		//
+		if (!getEditingDomain().getResourceSet().getResources().isEmpty() &&
+		    !((Resource)getEditingDomain().getResourceSet().getResources().get(0)).getContents().isEmpty()) {
+	
+			// Create a page for the selection tree view.
+			//
+			ViewerPane viewerPane =
+				new MultiViewerPane(getSite().getPage(), MuleEditor.this) ;
+			viewerPane.createControl(getContainer());
+	
+			selectionViewer = (TreeViewer)viewerPane.getViewer();
+			selectionViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
+	
+			selectionViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+			selectionViewer.setInput(editingDomain.getResourceSet());
+			viewerPane.setTitle(editingDomain.getResourceSet());
+	
+			new AdapterFactoryTreeEditor(selectionViewer.getTree(), adapterFactory);
+	
+			createContextMenuFor(selectionViewer);
+			int pageIndex = addPage(viewerPane.getControl());
+			setPageText(pageIndex, getString("_UI_SelectionPage_label")); //$NON-NLS-1$
+		}
+
+
+//		firePropertyChange(PROP_TITLE);
+
+		// Changes to the Text Viewer's document instance should also
+		// force an
+		// input refresh
+//		fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
+
+		
+//		// This is the page for the tree viewer
+//		//
+//		{
+//			ViewerPane viewerPane =
+//				new ViewerPane(getSite().getPage(), MuleEditor.this) {
+//					public Viewer createViewer(Composite composite) {
+//						return new TreeViewer(composite);
+//					}
+//					public void requestActivation() {
+//						super.requestActivation();
+//						setCurrentViewerPane(this);
+//					}
+//				};
+//			viewerPane.createControl(getContainer());
+//			treeViewer = (TreeViewer)viewerPane.getViewer();
+//			treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
+//			treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+//
+//			new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
+//
+//			createContextMenuFor(treeViewer);
+//			int pageIndex = addPage(viewerPane.getControl());
+//			setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
+//		}
+
+		setActivePage(0);
 	}
 
+	/**
+	 * Adds the source page of the multi-page editor.
+	 */
+	private void addSourcePage() throws PartInitException {
+		int sourcePageIndex = addPage(fTextEditor, getEditorInput());
+		setPageText(sourcePageIndex, getString("_UI_XML_label"));
+		// the update's critical, to get viewer selection manager and
+		// highlighting to work
+		fTextEditor.update();
+
+		firePropertyChange(PROP_TITLE);
+
+		// Changes to the Text Viewer's document instance should also
+		// force an
+		// input refresh
+//		fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
+	}
+
+	
 	/**
 	 * If there is just one page in the multi-page editor part,
 	 * this hides the single tab at the bottom.
@@ -1033,7 +1113,7 @@ public class MuleEditor
 	 * @generated
 	 */
 	protected void hideTabs() {
-		if (getPageCount() <= 1) {
+		if (getPageCount() <= 0) {
 			setPageText(0, ""); //$NON-NLS-1$
 			if (getContainer() instanceof CTabFolder) {
 				((CTabFolder)getContainer()).setTabHeight(1);
@@ -1312,10 +1392,10 @@ public class MuleEditor
 	 * This always returns true because it is not currently supported.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated not
 	 */
 	public boolean isSaveAsAllowed() {
-		return true;
+		return fTextEditor != null && fTextEditor.isSaveAsAllowed();
 	}
 
 	/**
@@ -1379,14 +1459,13 @@ public class MuleEditor
 	 * This is called during startup.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated not
 	 */
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
-		super.init(site, editorInput);
 		setSite(site);
 		setInputWithNotify(editorInput);
 		setPartName(editorInput.getName());
-//		site.setSelectionProvider(this);
+		site.setSelectionProvider(new EMFMultiPageSelectionProvider(this));
 		site.getPage().addPartListener(partListener);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 	}
@@ -1404,54 +1483,17 @@ public class MuleEditor
 			getControl(getActivePage()).setFocus();
 		}
 	}
-
-	/**
-	 * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionChangedListeners.add(listener);
-	}
-
-	/**
-	 * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionChangedListeners.remove(listener);
-	}
-
-	/**
-	 * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to return this editor's overall selection.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ISelection getSelection() {
-		return editorSelection;
-	}
-
-	/**
-	 * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to set this editor's overall selection.
-	 * Calling this result will notify the listeners.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSelection(ISelection selection) {
-		editorSelection = selection;
-
-		for (Iterator listeners = selectionChangedListeners.iterator(); listeners.hasNext(); ) {
-			ISelectionChangedListener listener = (ISelectionChangedListener)listeners.next();
-//			listener.selectionChanged(new SelectionChangedEvent(this.getS, selection));
+	
+	public class EMFMultiPageSelectionProvider extends MultiPageSelectionProvider {
+		public EMFMultiPageSelectionProvider(MultiPageEditorPart part) {
+			super(part);
 		}
-		setStatusLineManager(selection);
+		public void setSelection(ISelection selection) {
+			super.setSelection(selection);
+			setStatusLineManager(selection);
+		}		
 	}
-
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1580,5 +1622,39 @@ public class MuleEditor
 	 */
 	protected boolean showOutlineView() {
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.ISaveablePart#isSaveOnCloseNeeded()
+	 */
+	public boolean isSaveOnCloseNeeded() {
+		// overriding super class since it does a lowly isDirty!
+		if (fTextEditor != null)
+			return fTextEditor.isSaveOnCloseNeeded();
+		return isDirty();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
+	 */
+	protected void setInput(IEditorInput input) {
+		// If driven from the Source page, it's "model" may not be up to date
+		// with the input just yet. We'll rely on later notification from the
+		// TextViewer to set us straight
+		super.setInput(input);
+//		if (fDesignViewer != null)
+//			fDesignViewer.setDocument(getDocument());
+		setPartName(input.getName());
+	}
+
+	/**
+	 * @generated
+	 */
+	public EditingDomain getEditingDomain() {
+		return editingDomain;
 	}
 }
