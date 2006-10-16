@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+
+<mule-configuration id="workflowTestConfig" version="1.0">
+    <mule-environment-properties serverUrl=""/>
+
+    <connector name="jbpmConnector" className="org.mule.providers.bpm.ProcessConnector" />
+
+    <model name="processModel">
+        <mule-descriptor name="testService" implementation="org.mule.components.simple.NullComponent">
+            <inbound-router>
+                <endpoint address="bpm://incoming" />
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>
