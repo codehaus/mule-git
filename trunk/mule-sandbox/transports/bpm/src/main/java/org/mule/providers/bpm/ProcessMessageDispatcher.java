@@ -11,9 +11,11 @@
 package org.mule.providers.bpm;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
@@ -23,12 +25,9 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.util.PropertiesUtils;
 
 /**
  * Initiates or advances a workflow process from an outgoing Mule event.
- *
- * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a>
  */
 public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
 
@@ -67,12 +66,23 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
         // Create a map of process variables based on the message properties.
         Map processVariables = new HashMap();
         if (event != null) {
-            processVariables.putAll(PropertiesUtils.getMessageProperties(event.getMessage()));
+            String propertyName;
+            for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();) {
+                propertyName = (String) iterator.next();
+                processVariables.put(propertyName, event.getMessage().getProperty(propertyName));
+            }
 
-            // Pass the message's payload in as a special process variable.
             Object payload = event.getTransformedMessage();
             if (payload != null && !(payload instanceof NullPayload)) {
+                // Store the message's payload as a process variable.
                 processVariables.put(ProcessConnector.PROCESS_VARIABLE_INCOMING, payload);
+
+                // Store the endpoint on which the message was received as a process variable.
+                String originatingEndpoint =
+                    event.getMessage().getStringProperty(MuleProperties.MULE_ORIGINATING_ENDPOINT_PROPERTY, null);
+                if (StringUtils.isNotEmpty(originatingEndpoint)) {
+                    processVariables.put(ProcessConnector.PROCESS_VARIABLE_INCOMING_SOURCE, originatingEndpoint);
+                }
             }
         }
 
@@ -80,7 +90,13 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
         Object processType = event.getProperty(ProcessConnector.PROPERTY_PROCESS_TYPE, /*exhaustiveSearch*/true);
         processVariables.remove(ProcessConnector.PROPERTY_PROCESS_TYPE);
 
-        Object processId = event.getProperty(ProcessConnector.PROPERTY_PROCESS_ID, /*exhaustiveSearch*/true);
+        Object processId;
+        String processIdField = connector.getProcessIdField();
+        if (StringUtils.isNotEmpty(processIdField)) {
+            processId = event.getProperty(processIdField, /*exhaustiveSearch*/false);
+        }
+        // If processId is explicitly set for the message, this overrides the processIdField.
+        processId = event.getProperty(ProcessConnector.PROPERTY_PROCESS_ID, /*exhaustiveSearch*/true);
         processVariables.remove(ProcessConnector.PROPERTY_PROCESS_ID);
 
         // Default action is "advance"

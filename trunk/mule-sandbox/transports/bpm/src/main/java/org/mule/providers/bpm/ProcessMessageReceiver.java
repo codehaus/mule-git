@@ -25,8 +25,6 @@ import org.mule.umo.provider.UMOConnector;
 
 /**
  * Generates an incoming Mule event from an executing workflow process.
- *
- * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a>
  */
 public class ProcessMessageReceiver extends AbstractMessageReceiver {
 

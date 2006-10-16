@@ -17,13 +17,22 @@ import org.mule.providers.AbstractServiceEnabledConnector;
  * The BPM provider allows Mule events to initiate and/or advance processes in an
  * external or embedded Business Process Management System (BPMS). It also allows
  * executing processes to generate Mule events.
- *
- * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a>
  */
 public class ProcessConnector extends AbstractServiceEnabledConnector {
 
+    /** The underlying BPMS */
     protected BPMS bpms;
+
+    /** This field will be used to correlated messages with processes. */
+    protected String processIdField;
+
+    /** If true, a process can only send messages to the outgoing endpoints defined for
+     * its component.  If false, a process can send messages to dynamically-generated
+     * endpoints. */
     protected boolean localEndpointsOnly = true;
+
+    /** The global receiver allows an endpoint of type "bpm://*" without specifying a process name.  This
+     * could be useful for dynamically generating the name of the process to send to/receive from. */
     protected boolean allowGlobalReceiver = false;
 
     public static final String PROPERTY_ENDPOINT = "endpoint";
@@ -37,6 +46,7 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
     public static final String ACTION_UPDATE = "update";
     public static final String ACTION_ABORT = "abort";
     public static final String PROCESS_VARIABLE_INCOMING = "incoming";
+    public static final String PROCESS_VARIABLE_INCOMING_SOURCE = "incomingSource";
     public static final String PROCESS_VARIABLE_DATA = "data";
 
     public static final String PROTOCOL = "bpm";
@@ -74,5 +84,13 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
 
     public void setAllowGlobalReceiver(boolean allowGlobalReceiver) {
         this.allowGlobalReceiver = allowGlobalReceiver;
+    }
+
+    public String getProcessIdField() {
+        return processIdField;
+    }
+
+    public void setProcessIdField(String processIdField) {
+        this.processIdField = processIdField;
     }
 }
