@@ -9,9 +9,9 @@
         <version>1.4-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.modules</groupId>
-    <artifactId>mule-sanbox-modules</artifactId>
+    <artifactId>mule-sandbox-modules</artifactId>
     <packaging>pom</packaging>
-    <name>Mule Sanbox Modules</name>
+    <name>Mule Sandbox Modules</name>
     <description>Modules for Mule that will one day make it into the Mule distribution, or at least onto MuleForge.</description>
 
 
