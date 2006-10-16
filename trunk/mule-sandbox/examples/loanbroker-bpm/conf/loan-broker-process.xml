@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process-definition name="LoanBroker">
+    xmlns="http://jbpm.org/3/jpdl"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jbpm.org/3/jpdl http://jbpm.org/jpdl-3.1.xsd"
+
+    <!-- *******************************************************************
+                        Loan Broker Process Definition
+         ******************************************************************* -->
+
+    <start-state name="customerRequest">
+        <transition to="validateCustomerRequest">
+            <action class="org.jbpm.actions.mule.StoreIncomingData">
+                <variable>customerRequest</variable>
+            </action>
+        </transition>
+    </start-state>
+
+    <state name="validateCustomerRequest">
+        <event type="node-enter">
+            <action class="org.jbpm.actions.mule.ValidateMessageSource">
+                <expectedSource>LoanBrokerRequests</expectedSource>
+            </action>
+            <!-- We could perform additional data validation here
+            <action class="com.mycompany.process.actions.ValidateMessageData" />
+            -->
+        </event>
+        <transition to="sendToCreditAgency" />
+    </state>
+
+    <state name="sendToCreditAgency">
+        <event type="node-enter">
+            <action class="org.jbpm.actions.mule.SendMuleEventAndContinue">
+                <payloadSource>customerRequest.customer</payloadSource>
+                <endpoint>creditGateway</endpoint>
+            </action>
+        </event>
+        <transition to="waitForCreditAgency" />
+    </state>
+
+    <state name="waitForCreditAgency">
+        <timer duedate="4 hours" />
+        <transition to="validateCreditProfile" />
+    </state>
+
+    <state name="validateCreditProfile">
+        <event type="node-enter">
+            <action class="org.jbpm.actions.mule.StoreIncomingData">
+                <variable>creditProfile</variable>
+            </action>
+            <action class="org.jbpm.actions.mule.ValidateMessageSource">
+                <expectedSource>CreditProfiles</expectedSource>
+            </action>
+            <!-- We could perform additional data validation here
+            <action class="com.mycompany.process.actions.ValidateMessageData" />
+            -->
+        </event>
+        <transition to="sendToBank" />
+    </state>
+
+    <decision name="sendToBank">
+        <transition name="sendToBigBank" to="waitForBank">
+            <condition><![CDATA[#{customerRequest.loanAmount >= 20000}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditHistory >= 24}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditScore >= 5}]]></condition>
+            <action class="org.jbpm.actions.mule.SendMuleEventAndContinue">
+                <endpoint>bigBank</endpoint>
+            </action>
+        </transition>
+        <transition name="sendToMediumBank" to="waitForBank">
+            <condition><![CDATA[#{customerRequest.loanAmount >= 10000}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditHistory >= 12}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditScore >= 3}]]></condition>
+            <action class="org.jbpm.actions.mule.SendMuleEventAndContinue">
+                <endpoint>mediumBank</endpoint>
+            </action>
+        </transition>
+        <transition name="sendToSmallBank" to="waitForBank">
+            <condition><![CDATA[#{customerRequest.loanAmount < 10000}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditHistory >= 6}]]></condition>
+            <condition><![CDATA[#{creditProfile.creditScore >= 1}]]></condition>
+            <action class="org.jbpm.actions.mule.SendMuleEventAndContinue">
+                <endpoint>smallBank</endpoint>
+            </action>
+        </transition>
+        <transition to="loanDenied" />
+    </decision>
+
+    <state name="waitForBank">
+        <timer duedate="10 minutes" />
+        <transition to="validateLoanQuote" />
+    </state>
+
+    <state name="validateLoanQuote">
+        <event type="node-enter">
+            <action class="org.jbpm.actions.mule.ValidateMessageSource">
+                <!-- TODO Where from?? -->
+                <expectedSource>LoanQuotes</expectedSource>
+            </action>
+            <!-- We could perform additional data validation here
+            <action class="com.mycompany.process.actions.ValidateMessageData" />
+            -->
+        </event>
+        <transition to="loanApproved">
+            <action class="org.jbpm.actions.mule.SendMuleEventAndContinue">
+                <endpoint>loanQuotes</endpoint>
+            </action>
+        </transition>
+    </state>
+
+    <!-- End Normally -->
+
+    <end-state name="loanApproved" />
+
+    <end-state name="loanDenied" />
+
+    <!-- Error Handling -->
+
+    <task-node name="errorHandling">
+        <task>
+            <!-- Generate a task for the system administrator -->
+        </task>
+        <transition name="abortProcess" to="processAborted" />
+    </task-node>
+
+    <end-state name="processAborted" />
+
+</process-definition>
