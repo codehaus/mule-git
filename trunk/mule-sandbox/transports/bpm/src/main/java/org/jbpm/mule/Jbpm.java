@@ -23,8 +23,6 @@ public class Jbpm implements BPMS, Lifecycle {
     protected static transient Log logger = LogFactory.getLog(Jbpm.class);
 
     protected JbpmConfiguration jbpmConfiguration = null;
-    protected boolean manageJbpmLifecycle = true;
-    protected String hibernateConfig = "jbpm.hibernate.cfg.xml";
 
     /////////////////////////////////////////////////////////////////////////////
     // Lifecycle methods
@@ -41,29 +39,18 @@ public class Jbpm implements BPMS, Lifecycle {
      */
     public Jbpm(JbpmConfiguration jbpmConfiguration) {
         setJbpmConfiguration(jbpmConfiguration);
-        manageJbpmLifecycle = false;
     }
 
-    /**
-     * Create the jBPM/Hibernate session factory (this takes awhile because it verifies all the
-     * Hibernate ORM mappings).
-     */
     public void start() throws UMOException {
-        if (manageJbpmLifecycle && jbpmConfiguration == null) {
-            jbpmConfiguration = JbpmConfiguration.getInstance(hibernateConfig);
-        }
+        // nothing to do
     }
 
     public void stop() throws UMOException {
+        // nothing to do
     }
 
-    /**
-     * Close the jBPM/Hibernate session factory.
-     */
     public void dispose() {
-        if (manageJbpmLifecycle && jbpmConfiguration != null) {
-            jbpmConfiguration.close();
-        }
+        // nothing to do
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -301,22 +288,6 @@ public class Jbpm implements BPMS, Lifecycle {
     /////////////////////////////////////////////////////////////////////////////
     // Getters and setters
     /////////////////////////////////////////////////////////////////////////////
-
-    public String getHibernateConfig() {
-        return hibernateConfig;
-    }
-
-    public void setHibernateConfig(String hibernateConfig) {
-        this.hibernateConfig = hibernateConfig;
-    }
-
-    public boolean isManageJbpmLifecycle() {
-        return manageJbpmLifecycle;
-    }
-
-    public void setManageJbpmLifecycle(boolean manageJbpmLifecycle) {
-        this.manageJbpmLifecycle = manageJbpmLifecycle;
-    }
 
     public JbpmConfiguration getJbpmConfiguration() {
         return jbpmConfiguration;
