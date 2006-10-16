@@ -14,9 +14,57 @@
     <description>Allows Mule events to initiate and/or advance processes in an external or embedded Business Process Management System (BPMS). It also allows executing processes to generate Mule events.</description>
     <dependencies>
         <dependency>
-            <groupId>jbpm</groupId>
+            <groupId>jboss</groupId>
             <artifactId>jbpm</artifactId>
             <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springmodules</groupId>
+            <artifactId>spring-modules-jbpm31</artifactId>
+            <version>0.6</version>
+            <!-- Exclude older Spring version -->
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-dao</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-support</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-orm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-hibernate</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jdbc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Only used if localEndpointsOnly = false -->
         <dependency>
@@ -24,7 +72,7 @@
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
-        <!--
+        <!-- Only needed if using jBpm's identity management instead of an LDAP
         <dependency>
             <groupId>jbpm</groupId>
             <artifactId>jbpm-identity</artifactId>
@@ -44,6 +92,7 @@
                 -->
             </exclusions>
         </dependency>
+        <!-- Only needed for scripting in jBpm -->
         <dependency>
             <groupId>bsh</groupId>
             <artifactId>bsh</artifactId>
@@ -66,7 +115,7 @@
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.7.3.0</version>
+            <version>1.8.0.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
