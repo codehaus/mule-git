@@ -8,10 +8,13 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
+import org.mule.impl.MuleEvent;
 import org.mule.impl.RequestContext;
 import org.mule.providers.bpm.ProcessConnector;
+import org.mule.providers.bpm.ProcessMessageDispatcher;
 import org.mule.providers.bpm.ProcessMessageReceiver;
 import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOMessage;
 
 /**
  * Sends a Mule message to the specified URL
@@ -53,17 +56,19 @@ public class SendMuleEvent extends LoggingActionHandler {
         messageProperties.put(MuleProperties.MULE_CORRELATION_ID_PROPERTY, new Long(executionContext.getProcessInstance().getId()).toString());
         messageProperties.put(ProcessConnector.PROPERTY_PROCESS_STARTED, executionContext.getProcessInstance().getStart());
 
+        // Get a handle to the BPM connector from the current event.
         UMOEvent event = RequestContext.getEvent();
-
         ProcessConnector connector = (ProcessConnector) event.getEndpoint().getConnector();
         if (connector == null) { throw new ConfigurationException(Message.createStaticMessage("Unable to locate connector for the current event.")); }
 
         // Look up a receiver with the name of the process.
         ProcessMessageReceiver receiver =
-            (ProcessMessageReceiver) connector.getReceiver(event.getEndpoint().getEndpointURI().getAddress());
+            (ProcessMessageReceiver) connector.lookupReceiver(event.getEndpoint().getEndpointURI().getAddress());
         if (receiver == null) {
+            // The global receiver allows an endpoint of type "bpm://*" without specifying a process name.  This
+            // could be useful for dynamically generating the name of the process to send to/receive from.
             if (connector.isAllowGlobalReceiver()) {
-                receiver = (ProcessMessageReceiver) connector.getReceiver(ProcessConnector.GLOBAL_RECEIVER);
+                receiver = (ProcessMessageReceiver) connector.lookupReceiver(ProcessConnector.GLOBAL_RECEIVER);
                 if (receiver == null) {
                     throw new ConfigurationException(Message.createStaticMessage("No global process receiver found"));
                 }
@@ -73,8 +78,21 @@ public class SendMuleEvent extends LoggingActionHandler {
         }
 
         if (synchronous) {
-            receiver.sendEvent(endpoint, payloadObject, messageProperties);
-        } else {
+            // Send the process-generated Mule message.
+            UMOMessage response = receiver.sendEvent(endpoint, payloadObject, messageProperties);
+
+            // Look up a dispatcher with the name of the process.
+            ProcessMessageDispatcher dispatcher =
+                (ProcessMessageDispatcher) connector.lookupDispatcher(event.getEndpoint().getEndpointURI().getAddress());
+            if (dispatcher != null) {
+                // Send the response message back to the process.
+                dispatcher.doSend(new MuleEvent(response, event));
+            } else {
+                throw new ConfigurationException(Message.createStaticMessage("No dispatcher found for " + event.getEndpoint().getEndpointURI().getAddress()));
+            }
+        }
+        else {
+            // Dispatch the process-generated Mule message.
             receiver.dispatchEvent(endpoint, payloadObject, messageProperties);
         }
     }
