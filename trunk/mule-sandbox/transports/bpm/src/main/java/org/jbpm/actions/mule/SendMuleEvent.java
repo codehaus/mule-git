@@ -61,39 +61,33 @@ public class SendMuleEvent extends LoggingActionHandler {
         ProcessConnector connector = (ProcessConnector) event.getEndpoint().getConnector();
         if (connector == null) { throw new ConfigurationException(Message.createStaticMessage("Unable to locate connector for the current event.")); }
 
-        // Look up a receiver with the name of the process.
+        String processName = executionContext.getProcessDefinition().getName();
+        long processId = executionContext.getProcessInstance().getId();
+
+        // Look up a receiver which matches this process.
         ProcessMessageReceiver receiver =
-            (ProcessMessageReceiver) connector.lookupReceiver(event.getEndpoint().getEndpointURI().getAddress());
+            connector.lookupReceiver(processName, new Long(processId));
         if (receiver == null) {
-            // The global receiver allows an endpoint of type "bpm://*" without specifying a process name.  This
-            // could be useful for dynamically generating the name of the process to send to/receive from.
-            if (connector.isAllowGlobalReceiver()) {
-                receiver = (ProcessMessageReceiver) connector.lookupReceiver(ProcessConnector.GLOBAL_RECEIVER);
-                if (receiver == null) {
-                    throw new ConfigurationException(Message.createStaticMessage("No global process receiver found"));
-                }
-            } else {
-                throw new ConfigurationException(Message.createStaticMessage("No receiver found for " + event.getEndpoint().getEndpointURI().getAddress()));
-            }
+            throw new ConfigurationException(Message.createStaticMessage("No corresponding receiver found for processName = " + processName + ", processId = " + processId));
         }
 
         if (synchronous) {
-            // Send the process-generated Mule message.
-            UMOMessage response = receiver.sendEvent(endpoint, payloadObject, messageProperties);
+            // Send the process-generated Mule message synchronously.
+            UMOMessage response = receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
 
-            // Look up a dispatcher with the name of the process.
-            ProcessMessageDispatcher dispatcher =
-                (ProcessMessageDispatcher) connector.lookupDispatcher(event.getEndpoint().getEndpointURI().getAddress());
+            // Look up the dispatcher which generated the current event.
+            ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
+                connector.lookupDispatcher(event.getEndpoint().getEndpointURI().getAddress());
             if (dispatcher != null) {
-                // Send the response message back to the process.
+                // Feed the synchronous response message back into the process.
                 dispatcher.doSend(new MuleEvent(response, event));
             } else {
-                throw new ConfigurationException(Message.createStaticMessage("No dispatcher found for " + event.getEndpoint().getEndpointURI().getAddress()));
+                throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
             }
         }
         else {
-            // Dispatch the process-generated Mule message.
-            receiver.dispatchEvent(endpoint, payloadObject, messageProperties);
+            // Dispatch the process-generated Mule message asynchronously.
+            receiver.generateAsynchronousEvent(endpoint, payloadObject, messageProperties);
         }
     }
 }

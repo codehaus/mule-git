@@ -60,4 +60,9 @@ public interface BPMS {
      * @return true if the given process has ended.
      */
     public boolean hasEnded(Object process) throws Exception;
+
+    /**
+     * @return true if the object is a valid process
+     */
+    public boolean isProcess(Object obj) throws Exception;
 }

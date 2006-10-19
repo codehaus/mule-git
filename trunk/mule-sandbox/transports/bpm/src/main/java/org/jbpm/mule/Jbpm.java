@@ -29,7 +29,10 @@ public class Jbpm implements BPMS, Lifecycle {
     /////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates the Mule interface and will instantiate a new jBPM instance.
+     * Creates the Mule wrapper for jBPM.
+     * Note: this method does _not_ instantiate a new jBPM instance.  Your code needs
+     * to set jbpmConfiguration to reference the actual jBPM instance.  This
+     * no-argument constructor is mainly provided for IoC containers to call.
      */
     public Jbpm() { }
 
@@ -56,6 +59,10 @@ public class Jbpm implements BPMS, Lifecycle {
     /////////////////////////////////////////////////////////////////////////////
     // Process status / lookup
     /////////////////////////////////////////////////////////////////////////////
+
+    public boolean isProcess(Object obj) throws Exception {
+        return (obj instanceof ProcessInstance);
+    }
 
     public Object getId(Object process) throws Exception {
         return new Long(((ProcessInstance) process).getId());

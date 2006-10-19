@@ -46,7 +46,10 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
         Object process = processAction(event);
 
         if (process != null) {
-            return new MuleMessage(process);
+            UMOMessage msg = new MuleMessage(process);
+            msg.setProperty(ProcessConnector.PROPERTY_PROCESS_ID,
+                            connector.getBpms().getId(process));
+            return msg;
         } else {
             throw new DispatchException(Message.createStaticMessage("Synchronous process invocation must return the new process state."), event.getMessage(), event.getEndpoint());
         }
@@ -109,14 +112,22 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher {
 
         // Decode the URI, for example:
         //      bpm:/testProcess/4561?action=advance
-        // TODO Replace this with an EndpointBuilder
-        String path = event.getEndpoint().getEndpointURI().getHost();
-        String[] pathTokens = StringUtils.split(path, "/");
-        if (pathTokens.length >= 1) {
-            processType = pathTokens[0];
+        String temp;
+        temp = event.getEndpoint().getEndpointURI().getHost();
+        if (StringUtils.isNotEmpty(temp)) {
+            processType = temp;
         }
-        if (pathTokens.length >= 2) {
-            processId = pathTokens[1];
+        temp = event.getEndpoint().getEndpointURI().getPath();
+        if (StringUtils.isNotEmpty(temp)) {
+            // Strip the leading "/" from the path.
+            if (temp.startsWith("/")) {
+                temp = StringUtils.right(temp, temp.length()-1);
+            }
+            // If there are any remaining "/", we don't know what to do with them.
+            if (temp.indexOf("/") != -1) {
+                throw new IllegalArgumentException("Unexpected format in the path of the URL: " + temp);
+            }
+            processId = temp;
         }
 
         ////////////////////////////////////////////////////////////////////////

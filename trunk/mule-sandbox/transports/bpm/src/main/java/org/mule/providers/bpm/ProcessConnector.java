@@ -12,6 +12,7 @@ package org.mule.providers.bpm;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.util.StringUtils;
 
 /**
  * The BPM provider allows Mule events to initiate and/or advance processes in an
@@ -27,12 +28,14 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
     protected String processIdField;
 
     /** If true, a process can only send messages to the outgoing endpoints defined for
-     * its component.  If false, a process can send messages to dynamically-generated
-     * endpoints. */
+     * the local component.  If false, a process can send messages to any endpoint
+     * on any component. */
     protected boolean localEndpointsOnly = true;
 
-    /** The global receiver allows an endpoint of type "bpm://*" without specifying a process name.  This
-     * could be useful for dynamically generating the name of the process to send to/receive from. */
+    /** The global receiver allows an endpoint of type "bpm://*" to receive any incoming
+     * message to the BPMS, regardless of the process.  If this false, the process name
+     * must be specified for each endpoint, e.g. "bpm://myProcess" and will only receive
+     * messages for the specified process. */
     protected boolean allowGlobalReceiver = false;
 
     public static final String PROPERTY_ENDPOINT = "endpoint";
@@ -57,6 +60,51 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
     public String getProtocol() {
         return PROTOCOL;
     }
+
+    /**
+     * This method looks for a receiver based on the process name and ID.  It searches
+     * iteratively from the narrowest scope (match process name and ID) to the widest
+     * scope (match neither - global receiver) possible.
+     *
+     * @return ProcessMessageReceiver or null if no match is found
+     */
+    public ProcessMessageReceiver lookupReceiver(String processName, Object processId) {
+        ProcessMessageReceiver receiver =
+            (ProcessMessageReceiver) lookupReceiver(toUrl(processName, processId));
+        if (receiver == null) {
+            receiver = (ProcessMessageReceiver) lookupReceiver(toUrl(processName, null));
+        }
+        if (receiver == null) {
+            receiver = (ProcessMessageReceiver) lookupReceiver(toUrl(null, null));
+        }
+        return receiver;
+    }
+
+    /**
+     * Generate a URL based on the process name and ID such as "bpm://myProcess/2342"
+     * If the parameters are missing, and <code>allowGlobalReceiver</code> is true,
+     * the GLOBAL_RECEIVER is returned.
+     */
+    public String toUrl(String processName, Object processId) {
+        String url = getProtocol() + "://";
+        if (StringUtils.isNotEmpty(processName)) {
+            url += processName;
+            if (processId != null) {
+                url += "/" + processId;
+            }
+        }
+        else if (isAllowGlobalReceiver()) {
+            return GLOBAL_RECEIVER;
+        }
+        else {
+            throw new IllegalArgumentException("No valid URL could be created for the given process name and ID.");
+        }
+        return url;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Getters and Setters
+    ////////////////////////////////////////////////////////////////////////////
 
     public BPMS getBpms() {
         return bpms;

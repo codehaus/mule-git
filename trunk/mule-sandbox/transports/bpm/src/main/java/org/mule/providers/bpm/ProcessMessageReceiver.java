@@ -36,9 +36,21 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver {
         this.connector = (ProcessConnector) connector;
     }
 
-    public UMOMessage sendEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
+    public UMOMessage generateSynchronousEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
         logger.debug("Executing process is sending an event (synchronously) to Mule endpoint = " + endpoint);
+        return generateEvent(endpoint, payload, messageProperties, true);
+    }
 
+    public void generateAsynchronousEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
+        logger.debug("Executing process is dispatching an event (asynchronously) to Mule endpoint = " + endpoint);
+        try {
+            getWorkManager().scheduleWork(new Worker(endpoint, payload, messageProperties));
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    protected UMOMessage generateEvent(String endpoint, Object payload, Map messageProperties, boolean synchronous) throws UMOException {
         UMOMessage message;
         if (payload instanceof UMOMessage) {
             message = (UMOMessage) payload;
@@ -49,19 +61,16 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver {
 
         if (connector.isLocalEndpointsOnly()) {
             message.setStringProperty(ProcessConnector.PROPERTY_ENDPOINT, endpoint);
-            return routeMessage(message, /*synchronous*/true);
+            return routeMessage(message, synchronous);
         }
         else {
-            return connector.getMuleClient().send(endpoint, message);
-        }
-    }
-
-    public void dispatchEvent(String endpoint, Object payload, Map messageProperties) throws UMOException {
-        logger.debug("Executing process is dispatching an event (asynchronously) to Mule endpoint = " + endpoint);
-        try {
-            getWorkManager().scheduleWork(new Worker(endpoint, payload, messageProperties));
-        } catch (Exception e) {
-            handleException(e);
+            // TODO This should use the "dynamic://" endpoint instead
+            if (synchronous) {
+                return connector.getMuleClient().send(endpoint, message);
+            } else {
+                connector.getMuleClient().dispatch(endpoint, message);
+                return null;
+            }
         }
     }
 
@@ -78,21 +87,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver {
 
         public void run() {
             try {
-                UMOMessage message;
-                if (payload instanceof UMOMessage) {
-                    message = (UMOMessage) payload;
-                } else {
-                    message = new MuleMessage(connector.getMessageAdapter(payload));
-                }
-                message.addProperties(messageProperties);
-
-                if (connector.isLocalEndpointsOnly()) {
-                    message.setStringProperty(ProcessConnector.PROPERTY_ENDPOINT, endpoint);
-                    routeMessage(message, /*synchronous*/false);
-                }
-                else {
-                    connector.getMuleClient().dispatch(endpoint, message);
-                }
+                generateEvent(endpoint, payload, messageProperties, false);
             } catch (Exception e) {
                 getConnector().handleException(e);
             }
