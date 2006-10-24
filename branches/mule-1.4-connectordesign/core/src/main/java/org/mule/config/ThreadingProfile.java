@@ -120,7 +120,6 @@ public class ThreadingProfile
         this.threadWaitTimeout = tp.getThreadWaitTimeout();
         this.poolExhaustPolicy = tp.getPoolExhaustedAction();
         this.doThreading = tp.isDoThreading();
-        this.threadPriority = tp.getThreadPriority();
         this.rejectedExecutionHandler = tp.getRejectedExecutionHandler();
         this.threadFactory = tp.getThreadFactory();
         this.workManagerFactory = tp.getWorkManagerFactory();
@@ -144,16 +143,6 @@ public class ThreadingProfile
     public long getThreadWaitTimeout()
     {
         return threadWaitTimeout;
-    }
-
-    public int getThreadPriority()
-    {
-        return threadPriority;
-    }
-
-    public void setThreadPriority(int threadPriority)
-    {
-        this.threadPriority = threadPriority;
     }
 
     public int getPoolExhaustedAction()
@@ -291,7 +280,7 @@ public class ThreadingProfile
 
         if (name != null)
         {
-            threadFactory = new NamedThreadFactory(name, threadPriority);
+            threadFactory = new NamedThreadFactory(name);
             pool.setThreadFactory(threadFactory);
         }
 

@@ -227,12 +227,6 @@ public abstract class AbstractConnector
     private boolean useSingleDispatcherThreadPool = false;
 
     /**
-     * The flag determines if the connector is being used on the server side or
-     * client. If true receiver threads will be given a slightly higher priority.
-     */
-    protected boolean serverSide = true;
-
-    /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
@@ -250,7 +244,6 @@ public abstract class AbstractConnector
 
         // Always add the default protocol
         supportedProtocols.add(getProtocol().toLowerCase());
-
     }
 
     /*
@@ -1266,10 +1259,6 @@ public abstract class AbstractConnector
         else
         {
             ThreadingProfile tp = getReceiverThreadingProfile();
-            if (serverSide)
-            {
-                tp.setThreadPriority(Thread.NORM_PRIORITY + 2);
-            }
             wm = tp.createWorkManager(getName() + "." + name + ".receiver");
             if (useSingleReceiverThreadPool)
             {
@@ -1358,28 +1347,6 @@ public abstract class AbstractConnector
     public void setUseSingleDispatcherThreadPool(boolean useSingleDispatcherThreadPool)
     {
         this.useSingleDispatcherThreadPool = useSingleDispatcherThreadPool;
-    }
-
-    /**
-     * The flag determines if the connector is being used on the server side or
-     * client. If true receiver threads will be given a slightly higher priority.
-     * 
-     * @return true if running on the server side (default)
-     */
-    public boolean isServerSide()
-    {
-        return serverSide;
-    }
-
-    /**
-     * The flag determines if the connector is being used on the server side or
-     * client. If true receiver threads will be given a slightly higher priority.
-     * 
-     * @param serverSide true if running on the server side
-     */
-    public void setServerSide(boolean serverSide)
-    {
-        this.serverSide = serverSide;
     }
 
     public UMOSessionHandler getSessionHandler()
