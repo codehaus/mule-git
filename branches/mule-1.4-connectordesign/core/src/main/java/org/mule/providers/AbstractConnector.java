@@ -546,12 +546,6 @@ public abstract class AbstractConnector
 
     public UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        return getDispatcher(endpoint, /* createDispatcherIfNotExists */true);
-    }
-
-    public UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint,
-                                              boolean createDispatcherIfNotExists) throws UMOException
-    {
         checkDisposed();
 
         if (endpoint == null)
@@ -576,7 +570,7 @@ public abstract class AbstractConnector
             String endpointUriKey = endpoint.getEndpointURI().toString();
             UMOMessageDispatcher dispatcher = (UMOMessageDispatcher)dispatchers.get(endpointUriKey);
 
-            if ((dispatcher == null || dispatcher.isDisposed()) && createDispatcherIfNotExists)
+            if (dispatcher == null || dispatcher.isDisposed())
             {
                 dispatcher = createDispatcher(endpoint);
                 dispatchers.put(endpointUriKey, dispatcher);
