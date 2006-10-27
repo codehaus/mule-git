@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
+/*
  * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
+
 package org.mule.ide.prototype.mulemodel.presentation;
 
 
@@ -43,6 +47,7 @@ import org.eclipse.emf.common.ui.editor.ProblemEditorPart;
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
@@ -78,6 +83,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -116,13 +122,16 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
 import org.eclipse.wst.common.internal.emf.resource.Renderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.common.internal.emfworkbench.integration.ProjectResourceSetEditImpl;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERenderer;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
 import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
+import org.w3c.dom.Node;
 
 
 /**
@@ -131,6 +140,7 @@ import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
  * <!-- end-user-doc -->
  * @generated
  */
+
 public class MuleEditor
 	extends MultiPageEditorPart
 	implements IEditingDomainProvider, IMenuListener, IViewerProvider, IGotoMarker {
@@ -1313,6 +1323,10 @@ public class MuleEditor
 						currentViewerPane.setTitle(selectedElement);
 					}
 				}
+			} else if (!selection.isEmpty() && selection instanceof ITreeSelection) {
+				ITreeSelection sel = (ITreeSelection)selection;
+				Object firstObject = sel.getFirstElement();
+				
 			}
 		}
 	}
@@ -1504,7 +1518,34 @@ public class MuleEditor
 		public void setSelection(ISelection selection) {
 			super.setSelection(selection);
 			setStatusLineManager(selection);
-		}		
+			if (! selection.isEmpty() && getActiveEditor() == fTextEditor) {
+				if (selection instanceof ITreeSelection)
+				{
+					ITreeSelection treeSel = (ITreeSelection) selection;
+
+					Object firstElement = treeSel.getFirstElement();
+					if (firstElement instanceof EObject) {
+						EObject selectedElement = (EObject)firstElement;
+						EList adapters = selectedElement.eAdapters();
+						for (Iterator it = adapters.iterator(); it.hasNext(); ) {
+							Object adapter = it.next();
+							if (! (adapter instanceof EMF2DOMAdapter)) continue;
+						
+							EMF2DOMAdapter e2da = (EMF2DOMAdapter)adapter;
+							Node aNode = e2da.getNode();
+							if (aNode instanceof IDOMNode) {
+								IDOMNode idom = (IDOMNode)aNode; 
+								
+								int start = idom.getFirstStructuredDocumentRegion().getStartOffset();
+								int end = idom.getLastStructuredDocumentRegion().getEndOffset();
+								fTextEditor.selectAndReveal(start, end-start);
+							}
+							break;
+						}
+					}
+				}
+ 			}
+		}	
 	}
 	
 	/**
