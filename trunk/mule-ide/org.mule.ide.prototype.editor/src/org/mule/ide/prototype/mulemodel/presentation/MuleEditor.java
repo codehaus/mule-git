@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -66,6 +66,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.util.EditUIMarkerHelper;
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
+import org.eclipse.jem.util.emf.workbench.ProjectResourceSet;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -117,6 +118,7 @@ import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.common.internal.emf.resource.Renderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
+import org.eclipse.wst.common.internal.emfworkbench.integration.ProjectResourceSetEditImpl;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERenderer;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
@@ -652,10 +654,7 @@ public class MuleEditor
 
 		adapterFactory = new ComposedAdapterFactory(factories);
 
-		// Create the command stack that will notify this editor as commands are executed.
-		//
-		BasicCommandStack commandStack = new BasicCommandStack();
-
+		commandStack = new BasicCommandStack();
 		// Add a listener to set the most recent command's affected objects to be the selection of the viewer with focus.
 		//
 		commandStack.addCommandStackListener
@@ -682,12 +681,7 @@ public class MuleEditor
 
 		// Create the editing domain with a special command stack.
 		//
-		StructuredTextEditingDomain sted = new StructuredTextEditingDomain(adapterFactory, commandStack); 
-		editingDomain = sted;
-		
-	    editingDomain.getResourceSet()
-        .getResourceFactoryRegistry().getExtensionToFactoryMap()
-                .put("xml", new MuleConfigResourceFactoryImpl());
+
 	}
 
 	/**
@@ -871,6 +865,23 @@ public class MuleEditor
 		//
 		IFileEditorInput modelFile = (IFileEditorInput)getEditorInput();
 		
+		IProject modelProject = modelFile.getFile().getProject();
+		IProject currentProject = null;
+		
+		if (editingDomain != null && editingDomain.getResourceSet() != null && editingDomain.getResourceSet() instanceof ProjectResourceSet) {
+			currentProject = ((ProjectResourceSet)editingDomain.getResourceSet()).getProject();
+		}
+		
+		if (! modelProject.equals(currentProject)) {
+			ResourceSet projectResourceSet = new ProjectResourceSetEditImpl(modelProject);
+			StructuredTextEditingDomain sted = new StructuredTextEditingDomain(adapterFactory, commandStack, projectResourceSet); 
+			editingDomain = sted;
+			
+		    editingDomain.getResourceSet()
+	        .getResourceFactoryRegistry().getExtensionToFactoryMap()
+	                .put("xml", new MuleConfigResourceFactoryImpl());
+		}
+		
 		try {
 			// Load the resource through the editing domain.
 			//
@@ -969,6 +980,8 @@ public class MuleEditor
 
 	/** The text editor. */
 	private StructuredTextEditor fTextEditor;
+
+	private BasicCommandStack commandStack;
 	
 	
 	public class MultiViewerPane extends ViewerPane {
@@ -1596,7 +1609,6 @@ public class MuleEditor
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 
 		getSite().getPage().removePartListener(partListener);
-
 		adapterFactory.dispose();
 
 		if (getActionBarContributor().getActiveEditor() == this) {
