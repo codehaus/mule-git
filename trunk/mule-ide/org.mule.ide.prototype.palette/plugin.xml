@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
+<!--
+  - $Id$
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  - Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+  -
+  - The software in this package is published under the terms of the MuleSource MPL
+  - license, a copy of which has been included with this distribution in the
+  - LICENSE.txt file.
+ -->
+
 <plugin>
    <extension-point id="org.mule.ide.prototype.palette.paletteEntries" name="paletteFolder" schema="schema/org.mule.ide.prototype.palette.exsd"/>
 
@@ -57,7 +67,7 @@
                   className="org.mule.rest.Sleeper"
                   icon="icons/mule16.GIF">
                <exampleXml>
-                  <mule-descriptor className="org.mule.rest.Sleeper" inbountEndpoint="http://localhost:80/rest/" />
+                  &lt;mule-descriptor className=&quot;org.mule.rest.Sleeper&quot; inbountEndpoint=&quot;http://localhost:80/rest/&quot; /&gt;
                </exampleXml>
             </component>
             <component
