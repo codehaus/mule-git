@@ -1,16 +1,13 @@
-/*****************************************************************************
- * Copyright (c) 2005 StrutsBox.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    StrutsBox - initial API and implementation
- *****************************************************************************/
 /*
- * $Id: StrutsConfigEntityResolver.java,v 1.3 2005/07/21 15:21:01 daniel_rohe Exp $
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
+
 package org.mule.ide.prototype.translators;
 
 import java.io.IOException;

@@ -1,6 +1,13 @@
 /*
- * $Id: StrutsConfigXmlMapping.java,v 1.2 2005/07/21 15:21:00 daniel_rohe Exp $
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
+
 package org.mule.ide.prototype.translators;
 
 /**
