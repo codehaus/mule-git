@@ -1,13 +1,3 @@
-/*****************************************************************************
- * Copyright (c) 2005 StrutsBox.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    StrutsBox - initial API and implementation
- *****************************************************************************/
 /*
  * $Id: StrutsConfigResourceFactoryImpl.java,v 1.3 2005/07/21 15:21:01 daniel_rohe Exp $
  */
@@ -24,7 +14,7 @@ import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERendererFactory;
  * The class <code>MuleConfigResourceFactoryImpl</code> provides a resource
  * factory for the MuleConfig model.
  * 
- * @author Daniel
+ * @author Jesper
  */
 public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 
