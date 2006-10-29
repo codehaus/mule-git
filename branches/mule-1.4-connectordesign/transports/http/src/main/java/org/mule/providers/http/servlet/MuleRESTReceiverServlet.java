@@ -63,19 +63,19 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
                 UMOEndpoint endpoint = getEndpointForURI(httpServletRequest);
                 String timeoutString = httpServletRequest.getParameter("timeout");
                 long to = timeout;
+
                 if (timeoutString != null)
                 {
                     to = Long.parseLong(timeoutString);
                 }
+
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Making request using endpoint: " + endpoint.toString() + " timeout is: "
                                  + to);
                 }
 
-                UMOMessage returnMessage = endpoint.getConnector().getDispatcher(endpoint).receive(endpoint,
-                    to);
-
+                UMOMessage returnMessage = endpoint.receive(to);
                 writeResponse(httpServletResponse, returnMessage);
             }
             else
@@ -145,16 +145,18 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
             UMOEndpoint endpoint = getEndpointForURI(httpServletRequest);
             String timeoutString = httpServletRequest.getParameter("timeout");
             long to = timeout;
+
             if (timeoutString != null)
             {
                 to = new Long(timeoutString).longValue();
             }
+
             if (logger.isDebugEnabled())
             {
                 logger.debug("Making request using endpoint: " + endpoint.toString() + " timeout is: " + to);
             }
 
-            UMOMessage returnMessage = endpoint.getConnector().getDispatcher(endpoint).receive(endpoint, to);
+            UMOMessage returnMessage = endpoint.receive(to);
             if (returnMessage != null)
             {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);

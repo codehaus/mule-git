@@ -76,7 +76,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         receiveTransformer = new HttpClientMethodResponseToObject();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (client == null)
         {
@@ -156,9 +156,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         HttpMethod httpMethod = new GetMethod(endpoint.getEndpointURI().getAddress());
         httpMethod.setDoAuthentication(true);
         if (endpoint.getEndpointURI().getUserInfo() != null
