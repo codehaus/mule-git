@@ -10,6 +10,11 @@
 
 package org.mule.providers.dq;
 
+import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.DataQueue;
+import com.ibm.as400.access.DataQueueEntry;
+import com.ibm.as400.access.RecordFormat;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -19,11 +24,6 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
-
-import com.ibm.as400.access.AS400;
-import com.ibm.as400.access.DataQueue;
-import com.ibm.as400.access.DataQueueEntry;
-import com.ibm.as400.access.RecordFormat;
 
 /**
  * @author m999svm <p/> DQMessageReceiver

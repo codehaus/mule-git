@@ -13,6 +13,7 @@ package org.mule.providers.dq;
 import com.ibm.as400.access.AS400;
 import com.ibm.as400.access.DataQueue;
 import com.mockobjects.dynamic.Mock;
+
 import org.mule.MuleManager;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;

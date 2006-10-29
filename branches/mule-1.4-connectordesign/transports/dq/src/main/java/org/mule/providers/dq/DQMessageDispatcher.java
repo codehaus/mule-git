@@ -19,7 +19,6 @@ import com.ibm.as400.access.RecordFormat;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -95,11 +94,6 @@ public class DQMessageDispatcher extends AbstractMessageDispatcher
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {
         doDispatch(event);
-        return null;
-    }
-
-    public Object getDelegateSession() throws UMOException
-    {
         return null;
     }
 

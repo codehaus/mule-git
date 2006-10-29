@@ -10,13 +10,13 @@
 
 package org.mule.providers.dq.transformers;
 
+import java.util.Iterator;
+
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.mule.providers.dq.DQMessage;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
-
-import java.util.Iterator;
 
 /**
  * <code>DQMessageToXml</code> Will convert a DQMessage to an xml string by
