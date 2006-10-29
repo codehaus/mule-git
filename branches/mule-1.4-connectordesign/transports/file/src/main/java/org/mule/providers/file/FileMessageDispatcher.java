@@ -153,9 +153,8 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
      * @throws Exception
      */
 
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         File file = new File(endpoint.getEndpointURI().getAddress());
         File result = null;
         FilenameFilter filenameFilter = null;
@@ -280,7 +279,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         // no op
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         // no op
     }
