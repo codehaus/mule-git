@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.config.MuleProperties;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.config.MuleProperties;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>

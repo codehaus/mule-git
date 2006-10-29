@@ -10,6 +10,12 @@
 
 package org.mule.providers.soap.xfire;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,8 +29,8 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleDescriptor;
-import org.mule.impl.UMODescriptorAware;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.UMODescriptorAware;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.xfire.transport.MuleLocalChannel;
@@ -42,11 +48,6 @@ import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.util.StringUtils;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * The Xfire service component receives requests for Xfire services it manages and

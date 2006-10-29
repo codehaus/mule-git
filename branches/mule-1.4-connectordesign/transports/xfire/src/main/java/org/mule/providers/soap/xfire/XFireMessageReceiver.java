@@ -10,6 +10,10 @@
 
 package org.mule.providers.soap.xfire;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.codehaus.xfire.service.Service;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.UMOComponent;
@@ -18,10 +22,6 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.MapUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Used to register an Xfire endpoint registered with Mule and associated with a component
