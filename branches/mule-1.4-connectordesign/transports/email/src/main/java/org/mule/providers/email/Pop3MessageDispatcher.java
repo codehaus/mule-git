@@ -24,7 +24,6 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * <code>Pop3MessageDispatcher</code> For Pop3 connections the dispatcher can only
@@ -233,11 +232,6 @@ public class Pop3MessageDispatcher extends AbstractMessageDispatcher
     public Object getDelegateSession() throws UMOException
     {
         return session;
-    }
-
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()
