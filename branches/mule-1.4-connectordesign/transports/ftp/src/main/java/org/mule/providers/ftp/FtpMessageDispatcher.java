@@ -237,11 +237,6 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
-
     private String generateFilename(UMOMessage message, String pattern)
     {
         if (pattern == null)
