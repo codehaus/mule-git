@@ -10,14 +10,14 @@
 
 package org.mule.providers.stream;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.mule.providers.AbstractServiceEnabledConnector;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * <code>StreamConnector</code> can send and receive mule events over IO streams.

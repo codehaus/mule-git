@@ -15,11 +15,9 @@ import java.io.OutputStream;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * <code>StreamMessageDispatcher</code> A simple stream dispatcher that obtains a
@@ -40,16 +38,6 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
     {
         super(endpoint);
         this.connector = (StreamConnector)endpoint.getConnector();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOMessageDispatcher#getDelegateSession()
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     /*
@@ -117,11 +105,6 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
     protected UMOMessage doReceive(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("doReceive");
-    }
-
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()
