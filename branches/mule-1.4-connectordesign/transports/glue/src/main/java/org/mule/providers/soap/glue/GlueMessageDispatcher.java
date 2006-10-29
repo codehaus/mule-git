@@ -42,7 +42,7 @@ public class GlueMessageDispatcher extends AbstractMessageDispatcher
         super(endpoint);
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (proxy == null)
         {
@@ -138,7 +138,7 @@ public class GlueMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         Map props = new HashMap();
         props.putAll(endpoint.getProperties());
