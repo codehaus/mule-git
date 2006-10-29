@@ -18,6 +18,9 @@ import javax.management.MalformedObjectNameException;
  */
 public interface JmxSupport
 {
+    /** Default Mule domain prefix for all instances. */
+    String DEFAULT_JMX_DOMAIN_PREFIX = "Mule";
+
     /**
      * Uses JMX 1.2 and higher standard escape method and semantics.
      * @param name value to escape for JMX compliance
@@ -42,5 +45,5 @@ public interface JmxSupport
      * @return object name for MBeanServer consumption
      * @throws MalformedObjectNameException for invalid names
      */
-    ObjectName getInstance(String name) throws MalformedObjectNameException;
+    ObjectName getObjectName(String name) throws MalformedObjectNameException;
 }
