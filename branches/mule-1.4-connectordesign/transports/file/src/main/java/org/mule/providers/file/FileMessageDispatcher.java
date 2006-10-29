@@ -29,7 +29,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
 
@@ -128,17 +127,6 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
             throw new DispatchException(new Message(Messages.STREAMING_FAILED_NO_STREAM), message, endpoint,
                 e);
         }
-    }
-
-    /**
-     * There is no associated session for a file connector
-     * 
-     * @return
-     * @throws UMOException
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     /**
@@ -253,16 +241,6 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     {
         doDispatch(event);
         return event.getMessage();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     private String generateFilename(UMOMessage message, String pattern)
