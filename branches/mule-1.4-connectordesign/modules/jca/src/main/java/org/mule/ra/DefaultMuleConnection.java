@@ -140,8 +140,7 @@ public class DefaultMuleConnection implements MuleConnection
             UMOEndpoint.ENDPOINT_TYPE_SENDER);
         try
         {
-            UMOMessage message = endpoint.getConnector().getDispatcher(endpoint).receive(endpoint, timeout);
-            return message;
+            return endpoint.receive(timeout);
         }
         catch (Exception e)
         {
