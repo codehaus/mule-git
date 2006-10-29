@@ -13,6 +13,17 @@ package org.mule.providers;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
+import java.beans.ExceptionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.resource.spi.work.WorkEvent;
+import javax.resource.spi.work.WorkListener;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -24,11 +35,14 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.DefaultExceptionStrategy;
+import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -38,6 +52,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.ConnectorException;
+import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOConnectable;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
@@ -46,15 +61,6 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.concurrent.WaitableBoolean;
-
-import javax.resource.spi.work.WorkEvent;
-import javax.resource.spi.work.WorkListener;
-import java.beans.ExceptionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <code>AbstractConnector</code> provides base functionality for all connectors
@@ -1399,4 +1405,43 @@ public abstract class AbstractConnector
             throw new MuleRuntimeException(new Message(Messages.CONNECTOR_CAUSED_ERROR, getName()), e);
         }
     }
+
+
+    // TODO the following methods should probably be lifecycle-enabled;
+    // for now they are only stubs to get the refactoring going.
+
+    public void dispatch(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
+    {
+        try
+        {
+            this.getDispatcher(endpoint).dispatch(event);
+        }
+        catch (UMOException ex)
+        {
+            throw new DispatchException(event.getMessage(), endpoint, ex);
+        }
+    }
+
+    public UMOMessage receive(UMOEndpointURI endpointUri, long timeout) throws Exception
+    {
+        return this.receive(new ImmutableMuleEndpoint(endpointUri.toString(), true), timeout);
+    }
+
+    public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    {
+        return getDispatcher(endpoint).receive(timeout);
+    }
+
+    public UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
+    {
+        try
+        {
+            return this.getDispatcher(endpoint).send(event);
+        }
+        catch (UMOException ex)
+        {
+            throw new DispatchException(event.getMessage(), endpoint, ex);
+        }
+    }
+
 }

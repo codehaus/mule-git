@@ -10,25 +10,23 @@
 
 package org.mule.umo.endpoint;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.provider.UMOMessageDispatching;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * <code>UMOImmutableEndpoint</code> describes a Message endpoint where data is
  * sent or received. An Enpoint is an Resource address (EndpointUri), with associated
  * transformation, transaction and filtering rules.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
-public interface UMOImmutableEndpoint extends Serializable, Cloneable, Initialisable
+public interface UMOImmutableEndpoint extends Serializable, Cloneable, Initialisable, UMOMessageDispatching
 {
     public static final String INITIAL_STATE_STARTED = "started";
     public static final String INITIAL_STATE_STOPPED = "stopped";

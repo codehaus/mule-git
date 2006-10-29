@@ -25,11 +25,8 @@ import java.io.OutputStream;
 /**
  * <code>UMOConnector</code> is the mechanism used to connect to external systems
  * and protocols in order to send and receive data.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
-public interface UMOConnector extends Disposable, Initialisable
+public interface UMOConnector extends Disposable, Initialisable, UMOEndpointMessageDispatching
 {
     public static final int INT_VALUE_NOT_SET = -1;
 

@@ -415,8 +415,7 @@ public final class MuleSession implements UMOSession
     {
         try
         {
-            UMOMessageDispatcher dispatcher = endpoint.getConnector().getDispatcher(endpoint);
-            return dispatcher.receive(endpoint, timeout);
+            return endpoint.receive(timeout);
         }
         catch (Exception e)
         {
