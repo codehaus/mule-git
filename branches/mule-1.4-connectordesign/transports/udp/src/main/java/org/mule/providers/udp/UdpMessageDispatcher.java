@@ -20,10 +20,8 @@ import java.util.Map;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * <code>UdpMessageDispatcher</code> is responsible for dispatching MuleEvents as
@@ -153,16 +151,6 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         }
         UMOMessage message = new MuleMessage(connector.getMessageAdapter(result), (Map)null);
         return message;
-    }
-
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
-
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()
