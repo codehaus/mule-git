@@ -10,9 +10,9 @@
 
 package org.mule.umo.manager;
 
-import org.mule.umo.lifecycle.Lifecycle;
-
 import javax.resource.spi.work.WorkManager;
+
+import org.mule.umo.lifecycle.Lifecycle;
 
 /**
  * <code>UMOWorkManager</code> Extends the stanard WorkManager to add lifecycle

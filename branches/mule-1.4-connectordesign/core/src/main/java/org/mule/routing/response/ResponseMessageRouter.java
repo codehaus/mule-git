@@ -10,6 +10,8 @@
 
 package org.mule.routing.response;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,8 +27,6 @@ import org.mule.umo.routing.RoutingException;
 import org.mule.umo.routing.UMOResponseMessageRouter;
 import org.mule.umo.routing.UMOResponseRouter;
 import org.mule.umo.routing.UMORouter;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <code>ResponseMessageRouter</code> is a router that can be used to control how

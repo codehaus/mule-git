@@ -10,6 +10,8 @@
 
 package org.mule.impl;
 
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.config.MuleProperties;
@@ -17,8 +19,6 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.UMOMessage;
-
-import java.util.Iterator;
 
 /**
  * <code>RequestContext</code> is a thread context where components can get the

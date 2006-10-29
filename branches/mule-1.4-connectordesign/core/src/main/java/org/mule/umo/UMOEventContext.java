@@ -10,11 +10,11 @@
 
 package org.mule.umo;
 
+import java.io.OutputStream;
+
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.OutputStream;
 
 /**
  * <code>UMOEventContext</code> is the context object for the current request.

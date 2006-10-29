@@ -12,9 +12,9 @@ package org.mule.impl;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.mule.impl.message.ExceptionPayload;
+import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.providers.NullPayload;
 
 /**
  * <code>DefaultExceptionStrategy</code> Provides a default exception handling

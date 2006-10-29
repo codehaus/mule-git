@@ -10,14 +10,14 @@
 
 package org.mule.components.simple;
 
+import java.util.Iterator;
+
 import org.mule.impl.UMODescriptorAware;
 import org.mule.routing.inbound.ForwardingConsumer;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.routing.UMOInboundRouter;
-
-import java.util.Iterator;
 
 /**
  * Can be used to bridge inbound requests to an outbound router without any

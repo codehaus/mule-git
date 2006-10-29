@@ -10,6 +10,13 @@
 
 package org.mule.impl;
 
+import java.beans.ExceptionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
@@ -25,13 +32,6 @@ import org.mule.umo.routing.UMOInboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOResponseMessageRouter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.beans.ExceptionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * <code>MuleDescriptor</code> describes all the properties for a Mule UMO. New

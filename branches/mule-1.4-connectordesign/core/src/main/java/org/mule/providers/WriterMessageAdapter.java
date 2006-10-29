@@ -10,11 +10,11 @@
 
 package org.mule.providers;
 
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+
+import org.mule.umo.provider.MessageTypeNotSupportedException;
 
 /**
  * <code>WriterMessageAdapter</code> wraps a java.io.StringWriter and allows meta

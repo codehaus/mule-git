@@ -10,6 +10,10 @@
 
 package org.mule.umo.model;
 
+import java.beans.ExceptionListener;
+import java.util.Iterator;
+import java.util.List;
+
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
@@ -17,10 +21,6 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.umo.lifecycle.UMOLifecycleAdapterFactory;
-
-import java.beans.ExceptionListener;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * The <code>UMOModel</code> encapsulates and manages the runtime behaviour of a

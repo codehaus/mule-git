@@ -12,6 +12,9 @@ package org.mule.routing.inbound;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
+import java.util.Map;
+
 import org.mule.impl.MuleEvent;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.routing.AggregationException;
@@ -19,8 +22,6 @@ import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
-
-import java.util.Map;
 
 /**
  * <code>AbstractEventAggregator</code> will aggregate a set of messages into a

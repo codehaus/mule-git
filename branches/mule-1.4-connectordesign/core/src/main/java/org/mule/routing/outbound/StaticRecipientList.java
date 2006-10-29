@@ -11,10 +11,11 @@
 package org.mule.routing.outbound;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-import org.mule.umo.UMOMessage;
-import org.mule.util.StringUtils;
 
 import java.util.List;
+
+import org.mule.umo.UMOMessage;
+import org.mule.util.StringUtils;
 
 /**
  * <code>StaticRecipientList</code> is used to dispatch a single event to multiple

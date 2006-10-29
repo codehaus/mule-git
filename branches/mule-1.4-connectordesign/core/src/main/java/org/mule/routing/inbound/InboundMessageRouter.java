@@ -11,6 +11,10 @@
 package org.mule.routing.inbound;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.management.stats.RouterStatistics;
@@ -24,9 +28,6 @@ import org.mule.umo.routing.RoutingException;
 import org.mule.umo.routing.UMOInboundMessageRouter;
 import org.mule.umo.routing.UMOInboundRouter;
 import org.mule.util.StringMessageUtils;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * <code>InboundMessageRouter</code> is a collection of routers that will be

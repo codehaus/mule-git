@@ -10,10 +10,10 @@
 
 package org.mule.transformers.wire;
 
-import org.mule.umo.UMOException;
-
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.mule.umo.UMOException;
 
 /**
  * TODO

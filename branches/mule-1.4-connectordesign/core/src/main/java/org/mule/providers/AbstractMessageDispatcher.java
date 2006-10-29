@@ -373,6 +373,11 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return connector;
     }
 
+    public Object getDelegateSession() throws UMOException
+    {
+        return null;
+    }
+
     public UMOImmutableEndpoint getEndpoint()
     {
         return endpoint;

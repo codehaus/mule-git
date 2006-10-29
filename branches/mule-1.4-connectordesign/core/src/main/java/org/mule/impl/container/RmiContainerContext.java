@@ -10,11 +10,11 @@
 
 package org.mule.impl.container;
 
+import javax.naming.NamingException;
+
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.util.ClassUtils;
-
-import javax.naming.NamingException;
 
 /**
  * <code>RmiContainerContext</code> is a container implementaiton that allows RMi

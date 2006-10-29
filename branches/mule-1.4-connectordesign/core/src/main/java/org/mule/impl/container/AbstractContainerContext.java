@@ -10,6 +10,9 @@
 
 package org.mule.impl.container;
 
+import java.io.Reader;
+import java.io.StringReader;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,9 +21,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.manager.UMOContainerContext;
 import org.mule.util.ChainedReader;
-
-import java.io.Reader;
-import java.io.StringReader;
 
 /**
  * <code>AbstractContainerContext</code> provides base container configuration

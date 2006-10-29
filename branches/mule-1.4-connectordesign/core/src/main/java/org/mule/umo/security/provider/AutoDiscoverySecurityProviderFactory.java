@@ -10,6 +10,8 @@
 
 package org.mule.umo.security.provider;
 
+import java.security.Provider;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleRuntimeException;
@@ -17,8 +19,6 @@ import org.mule.config.i18n.CoreMessageConstants;
 import org.mule.config.i18n.Message;
 import org.mule.util.ClassUtils;
 import org.mule.util.SystemUtils;
-
-import java.security.Provider;
 
 /**
  * Automatically discovers the JDK we are running on and returns a corresponding

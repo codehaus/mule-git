@@ -10,11 +10,11 @@
 
 package org.mule.umo.manager;
 
+import java.util.EventObject;
+
 import org.mule.MuleManager;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.util.ClassUtils;
-
-import java.util.EventObject;
 
 /**
  * <code>UMOServerNotification</code> is an event triggered by something happening

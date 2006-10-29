@@ -10,11 +10,11 @@
 
 package org.mule.umo.provider;
 
-import org.mule.umo.UMOEvent;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+
+import org.mule.umo.UMOEvent;
 
 /**
  * The OutputHandler is a strategy class that is set on the StreamMessageAdapter to

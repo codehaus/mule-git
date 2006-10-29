@@ -10,6 +10,10 @@
 
 package org.mule.providers.service;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,10 +38,6 @@ import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.ObjectFactory;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
 
 /**
  * <code>ConnectorServiceDescriptor</code> describes the necessery information for

@@ -10,13 +10,13 @@
 
 package org.mule.umo.endpoint;
 
+import java.util.Map;
+
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.util.Map;
 
 /**
  * <code>UMOEndpoint</code> describes a Provider in the Mule Server. A endpoint is

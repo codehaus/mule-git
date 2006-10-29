@@ -10,13 +10,13 @@
 
 package org.mule.util.file;
 
+import javax.transaction.xa.XAResource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.util.xa.AbstractTransactionContext;
 import org.mule.util.xa.AbstractXAResourceManager;
 import org.mule.util.xa.ResourceManagerException;
-
-import javax.transaction.xa.XAResource;
 
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>

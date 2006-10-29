@@ -10,10 +10,8 @@
 
 package org.mule.transaction;
 
-import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.TransactionException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
@@ -21,8 +19,10 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.mule.MuleManager;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.umo.TransactionException;
 
 /**
  * <p>

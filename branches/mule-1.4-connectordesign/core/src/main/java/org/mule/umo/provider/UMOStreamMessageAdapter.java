@@ -10,11 +10,11 @@
 
 package org.mule.umo.provider;
 
-import org.mule.umo.UMOEvent;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.mule.umo.UMOEvent;
 
 /**
  * A stream message adapter rovides a generic base class for stream based message

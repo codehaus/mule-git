@@ -10,6 +10,12 @@
 
 package org.mule.providers;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -27,12 +33,6 @@ import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.util.BeanUtils;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.PropertiesUtils;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * <code>AbstractServiceEnabledConnector</code> initialises a connector from a

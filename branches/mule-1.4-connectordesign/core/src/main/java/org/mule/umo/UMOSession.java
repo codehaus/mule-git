@@ -10,11 +10,11 @@
 
 package org.mule.umo;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.security.UMOSecurityContext;
-
 import java.io.Serializable;
 import java.util.Iterator;
+
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.security.UMOSecurityContext;
 
 /**
  * <code>UMOSession</code> is the context in which a request is executed. The

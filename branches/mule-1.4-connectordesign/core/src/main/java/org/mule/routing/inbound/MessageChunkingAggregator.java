@@ -10,18 +10,18 @@
 
 package org.mule.routing.inbound;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.mule.impl.MuleMessage;
 import org.mule.routing.AggregationException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * todo document

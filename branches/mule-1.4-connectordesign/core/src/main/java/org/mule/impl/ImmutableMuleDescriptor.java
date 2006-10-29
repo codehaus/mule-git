@@ -10,6 +10,8 @@
 
 package org.mule.impl;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +44,6 @@ import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOResponseMessageRouter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <code>MuleDescriptor</code> describes all the properties for a Mule UMO. New

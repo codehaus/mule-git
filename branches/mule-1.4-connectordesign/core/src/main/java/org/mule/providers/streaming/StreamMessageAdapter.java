@@ -10,15 +10,15 @@
 
 package org.mule.providers.streaming;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Provides a generic base class for stream based message flows in Mule. This adapter

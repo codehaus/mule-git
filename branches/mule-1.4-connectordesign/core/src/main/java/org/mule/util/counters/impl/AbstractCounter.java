@@ -10,11 +10,11 @@
 
 package org.mule.util.counters.impl;
 
-import org.mule.util.counters.Counter;
-import org.mule.util.counters.CounterFactory.Type;
-
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.mule.util.counters.Counter;
+import org.mule.util.counters.CounterFactory.Type;
 
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>

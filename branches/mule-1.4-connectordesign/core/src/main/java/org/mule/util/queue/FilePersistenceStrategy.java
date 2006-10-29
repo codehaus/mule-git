@@ -10,13 +10,6 @@
 
 package org.mule.util.queue;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.MuleManager;
-import org.mule.config.MuleConfiguration;
-import org.mule.util.file.DeleteException;
-import org.safehaus.uuid.UUIDGenerator;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +19,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mule.MuleManager;
+import org.mule.config.MuleConfiguration;
+import org.mule.util.file.DeleteException;
+import org.safehaus.uuid.UUIDGenerator;
 
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>

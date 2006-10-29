@@ -10,9 +10,9 @@
 
 package org.mule.umo.routing;
 
-import org.mule.management.stats.RouterStatistics;
-
 import java.util.List;
+
+import org.mule.management.stats.RouterStatistics;
 
 /**
  * <code>UMORouterCollection</code> defines the interface for a MessageRouter that

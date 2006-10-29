@@ -10,12 +10,12 @@
 
 package org.mule.umo.routing;
 
+import java.util.List;
+
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
-
-import java.util.List;
 
 /**
  * <code>UMOResponseMessageRouter</code> is a router that can be used to control

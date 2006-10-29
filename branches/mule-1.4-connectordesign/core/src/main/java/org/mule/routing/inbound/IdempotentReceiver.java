@@ -10,6 +10,13 @@
 
 package org.mule.routing.inbound;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -17,13 +24,6 @@ import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.routing.RoutingException;
 import org.mule.util.FileUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <code>IdempotentReceiver</code> ensures that only unique messages are received

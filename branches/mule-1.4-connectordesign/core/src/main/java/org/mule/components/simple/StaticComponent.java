@@ -10,13 +10,13 @@
 
 package org.mule.components.simple;
 
+import java.io.IOException;
+
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.IOUtils;
-
-import java.io.IOException;
 
 /**
  * A component that will return a static data object as a result. This is useful for

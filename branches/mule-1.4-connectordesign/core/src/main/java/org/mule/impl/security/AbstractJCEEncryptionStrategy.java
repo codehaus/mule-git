@@ -10,6 +10,13 @@
 
 package org.mule.impl.security;
 
+import java.security.GeneralSecurityException;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.KeySpec;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
@@ -18,13 +25,6 @@ import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.CryptoFailureException;
 import org.mule.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-
-import java.security.GeneralSecurityException;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.KeySpec;
 
 /**
  * A JCE based encryption strategy. It also provides base64 encoding of

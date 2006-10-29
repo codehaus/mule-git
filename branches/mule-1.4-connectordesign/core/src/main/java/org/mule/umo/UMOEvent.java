@@ -10,11 +10,11 @@
 
 package org.mule.umo;
 
+import java.io.OutputStream;
+
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.security.UMOCredentials;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.OutputStream;
 
 /**
  * <code>UMOEvent</code> represents any data event occuring in the Mule

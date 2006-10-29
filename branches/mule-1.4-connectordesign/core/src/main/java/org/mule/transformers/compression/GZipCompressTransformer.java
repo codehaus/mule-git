@@ -10,12 +10,12 @@
 
 package org.mule.transformers.compression;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import org.apache.commons.lang.SerializationUtils;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.compression.GZipCompression;
-
-import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * <code>GZipCompressTransformer</code> is a transformer compressing objects into

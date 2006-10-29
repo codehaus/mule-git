@@ -10,19 +10,19 @@
 
 package org.mule.impl.security;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.util.ObjectFactory;
-import org.mule.util.StringMessageUtils;
+import java.security.GeneralSecurityException;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.KeySpec;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import java.security.GeneralSecurityException;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.KeySpec;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.util.ObjectFactory;
+import org.mule.util.StringMessageUtils;
 
 /**
  * SecretKey based encryption using JCE. Users must specify a key as an array of

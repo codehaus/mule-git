@@ -10,13 +10,13 @@
 
 package org.mule.transformers.codec;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * <code>Base64Encoder</code> transforms strings or byte arrays into Base64 encoded

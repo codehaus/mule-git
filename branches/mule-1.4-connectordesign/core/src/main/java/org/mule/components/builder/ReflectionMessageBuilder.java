@@ -10,13 +10,13 @@
 
 package org.mule.components.builder;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOMessage;
 import org.mule.util.ClassUtils;
-
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Will try and set the result of an invocation as a bean property on the request

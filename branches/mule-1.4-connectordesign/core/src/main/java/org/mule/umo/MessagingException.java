@@ -10,13 +10,13 @@
 
 package org.mule.umo;
 
+import java.util.Map;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.providers.NullPayload;
-
-import java.util.Map;
 
 /**
  * <code>MessagingException</code> is a general message exception thrown when

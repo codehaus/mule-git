@@ -10,11 +10,11 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.manager.UMOServerNotification;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.mule.umo.UMOMessage;
+import org.mule.umo.manager.UMOServerNotification;
 
 /**
  * <code>AdminNotification</code> is used to invoke actions on a remote mule server

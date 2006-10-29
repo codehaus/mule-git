@@ -10,6 +10,12 @@
 
 package org.mule.impl;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.activation.DataHandler;
+
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -17,11 +23,6 @@ import org.mule.providers.DefaultMessageAdapter;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.provider.UMOMessageAdapter;
-
-import javax.activation.DataHandler;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * <code>MuleMessage</code> is a wrapper that contains a payload and properties

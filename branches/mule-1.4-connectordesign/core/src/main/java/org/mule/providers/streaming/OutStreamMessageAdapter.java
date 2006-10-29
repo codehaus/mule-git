@@ -10,13 +10,13 @@
 
 package org.mule.providers.streaming;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.StringMessageUtils;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * <code>StreamMessageAdapter</code> wraps an java.io.OutputStream and allows meta

@@ -10,16 +10,16 @@
 
 package org.mule.management.stats;
 
-import org.mule.management.stats.printers.SimplePrinter;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.mule.management.stats.printers.SimplePrinter;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 /**
  * <code>RouterStatistics</code> todo

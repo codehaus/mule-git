@@ -29,9 +29,9 @@ package org.mule.impl.work;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 
-import org.mule.util.concurrent.Latch;
-
 import javax.resource.spi.work.WorkException;
+
+import org.mule.util.concurrent.Latch;
 
 /**
  * @version $Rev$ $Date$

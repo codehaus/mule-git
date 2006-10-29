@@ -10,6 +10,10 @@
 
 package org.mule.routing.outbound;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -22,10 +26,6 @@ import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutePathNotFoundException;
 import org.mule.umo.routing.RoutingException;
 import org.mule.util.TemplateParser;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
 
 /**
  * The template endpoint router allows endpoints to be alered at runtime based on

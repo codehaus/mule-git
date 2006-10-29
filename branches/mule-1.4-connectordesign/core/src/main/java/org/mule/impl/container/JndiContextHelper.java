@@ -10,12 +10,12 @@
 
 package org.mule.impl.container;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * Common code for initialising the JNDI context.

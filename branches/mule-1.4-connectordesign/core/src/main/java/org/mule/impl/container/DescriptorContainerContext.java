@@ -10,14 +10,14 @@
 
 package org.mule.impl.container;
 
+import java.io.Reader;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.manager.ObjectNotFoundException;
-
-import java.io.Reader;
 
 /**
  * will Load the component form the descriptors' own properties

@@ -10,16 +10,16 @@
 
 package org.mule.impl.endpoint;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.util.Properties;
+
 import org.mule.MuleManager;
 import org.mule.providers.service.ConnectorFactory;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.util.PropertiesUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.util.Properties;
 
 /**
  * <code>UrlEndpointBuilder</code> is the default endpointUri strategy suitable for

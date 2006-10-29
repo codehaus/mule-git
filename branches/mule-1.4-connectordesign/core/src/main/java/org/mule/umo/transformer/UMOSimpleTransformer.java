@@ -10,9 +10,9 @@
 
 package org.mule.umo.transformer;
 
-import org.mule.umo.lifecycle.Initialisable;
-
 import java.io.Serializable;
+
+import org.mule.umo.lifecycle.Initialisable;
 
 /**
  * <code>UMOSimpleTransformer</code> manages the transformation and or translation

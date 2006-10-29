@@ -10,6 +10,10 @@
 
 package org.mule.umo.provider;
 
+import java.beans.ExceptionListener;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
@@ -17,10 +21,6 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
-
-import java.beans.ExceptionListener;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * <code>UMOConnector</code> is the mechanism used to connect to external systems

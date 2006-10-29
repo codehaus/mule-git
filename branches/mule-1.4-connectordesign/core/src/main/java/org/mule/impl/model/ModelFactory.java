@@ -10,15 +10,15 @@
 
 package org.mule.impl.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.mule.providers.service.ConnectorFactory;
 import org.mule.umo.model.UMOModel;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.SpiUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 /**
  * Will locate the model service in META-INF/service using the model type as the key.

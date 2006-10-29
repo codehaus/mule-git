@@ -10,11 +10,11 @@
 
 package org.mule.transformers.codec;
 
+import java.io.UnsupportedEncodingException;
+
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.SgmlCodec;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Encodes a string with SGML entities

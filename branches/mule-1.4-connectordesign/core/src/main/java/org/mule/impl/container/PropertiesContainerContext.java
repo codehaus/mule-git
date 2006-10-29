@@ -10,14 +10,14 @@
 
 package org.mule.impl.container;
 
+import java.io.Reader;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.mule.MuleManager;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.util.TemplateParser;
-
-import java.io.Reader;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Provides a facade for accessing System properties and properties on the

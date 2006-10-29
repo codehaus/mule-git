@@ -10,6 +10,8 @@
 
 package org.mule.impl.internal.admin;
 
+import java.util.Map;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
@@ -25,8 +27,6 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageDispatcher;
-
-import java.util.Map;
 
 /**
  * <code>EndpointAbstractEventLoggerAgent</code> will forward server notifications

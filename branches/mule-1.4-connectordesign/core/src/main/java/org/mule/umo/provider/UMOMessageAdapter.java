@@ -10,12 +10,13 @@
 
 package org.mule.umo.provider;
 
-import org.mule.umo.UMOExceptionPayload;
-
-import javax.activation.DataHandler;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+
+import javax.activation.DataHandler;
+
+import org.mule.umo.UMOExceptionPayload;
 
 /**
  * <code>UMOMessageAdapter</code> provides a common abstraction of different

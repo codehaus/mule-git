@@ -10,6 +10,10 @@
 
 package org.mule.impl.endpoint;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,10 +24,6 @@ import org.mule.providers.service.ConnectorServiceDescriptor;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.util.PropertiesUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Properties;
 
 /**
  * <code>MuleEndpointURI</code> is used to determine how a message is sent of

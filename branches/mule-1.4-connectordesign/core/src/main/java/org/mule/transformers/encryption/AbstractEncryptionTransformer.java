@@ -10,6 +10,8 @@
 
 package org.mule.transformers.encryption;
 
+import java.io.UnsupportedEncodingException;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -18,8 +20,6 @@ import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.CryptoFailureException;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * <code>EncryptionTransformer</code> will transform an array of bytes or string

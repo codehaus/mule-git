@@ -10,10 +10,10 @@
 
 package org.mule.util.queue;
 
+import java.io.IOException;
+
 import org.mule.util.xa.AbstractXAResourceManager;
 import org.mule.util.xa.DefaultXASession;
-
-import java.io.IOException;
 
 /**
  * A Queue session that is used to manage the transaction context of a Queue

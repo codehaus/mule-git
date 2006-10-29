@@ -10,9 +10,9 @@
 
 package org.mule.util.counters;
 
-import org.mule.util.counters.impl.CounterFactoryImpl;
-
 import java.util.Iterator;
+
+import org.mule.util.counters.impl.CounterFactoryImpl;
 
 /**
  * This class is the Counter's factory. It is the main entry point for operations on

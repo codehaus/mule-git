@@ -12,6 +12,11 @@ package org.mule.impl.model;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
+import java.beans.ExceptionListener;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -34,10 +39,6 @@ import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.model.ModelException;
 import org.mule.umo.model.UMOEntryPointResolver;
 import org.mule.umo.model.UMOModel;
-
-import java.beans.ExceptionListener;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * <code>MuleModel</code> is the default implementation of the UMOModel. The model

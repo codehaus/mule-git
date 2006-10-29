@@ -10,14 +10,14 @@
 
 package org.mule.impl.model;
 
+import javax.resource.spi.work.Work;
+
 import org.mule.management.stats.ComponentStatistics;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOImmutableDescriptor;
 import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.util.queue.QueueSession;
-
-import javax.resource.spi.work.Work;
 
 /**
  * <code>MuleProxy</code> is a proxy to a UMO. It is a poolable object that that

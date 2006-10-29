@@ -10,6 +10,14 @@
 
 package org.mule.impl.model.seda;
 
+import java.util.NoSuchElementException;
+
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkEvent;
+import javax.resource.spi.work.WorkException;
+import javax.resource.spi.work.WorkListener;
+import javax.resource.spi.work.WorkManager;
+
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.PoolingProfile;
@@ -31,13 +39,6 @@ import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.ObjectPool;
 import org.mule.util.queue.QueueSession;
-
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkEvent;
-import javax.resource.spi.work.WorkException;
-import javax.resource.spi.work.WorkListener;
-import javax.resource.spi.work.WorkManager;
-import java.util.NoSuchElementException;
 
 /**
  * A Seda component runs inside a Seda Model and is responsible for managing a Seda

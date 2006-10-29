@@ -10,12 +10,12 @@
 
 package org.mule.util.compression;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.util.ClassUtils;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * <code>CompressionHelper</code> a static class that provides facilities for

@@ -10,17 +10,17 @@
 
 package org.mule.routing.inbound;
 
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOEvent;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mule.umo.MessagingException;
+import org.mule.umo.UMOEvent;
 
 /**
  * <code>AbstractEventResequencer</code> is used to receive a set of events,

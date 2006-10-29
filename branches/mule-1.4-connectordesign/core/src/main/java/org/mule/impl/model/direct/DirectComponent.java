@@ -10,6 +10,8 @@
 
 package org.mule.impl.model.direct;
 
+import java.util.List;
+
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.model.AbstractComponent;
@@ -20,8 +22,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.model.UMOModel;
-
-import java.util.List;
 
 /**
  * A direct component invokes the service component directly without any threading or

@@ -10,15 +10,15 @@
 
 package org.mule.routing.inbound;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.mule.transformers.simple.ByteArrayToHexString;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.routing.RoutingException;
 import org.mule.umo.transformer.TransformerException;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * <code>IdempotentSecureHashReceiver</code> ensures that only unique messages are

@@ -10,16 +10,16 @@
 
 package org.mule.umo;
 
+import java.beans.ExceptionListener;
+import java.util.List;
+import java.util.Map;
+
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.routing.UMOInboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOResponseMessageRouter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.beans.ExceptionListener;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <code>UMODescriptor</code> describes all the properties for a Mule UMO. New Mule

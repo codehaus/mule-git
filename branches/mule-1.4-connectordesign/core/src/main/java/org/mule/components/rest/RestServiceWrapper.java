@@ -10,10 +10,14 @@
 
 package org.mule.components.rest;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.util.properties.PropertyExtractor;
-import org.mule.util.properties.MessagePropertyExtractor;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -29,12 +33,8 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.RecoverableException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.mule.util.properties.MessagePropertyExtractor;
+import org.mule.util.properties.PropertyExtractor;
 
 /**
  * This component can used to proxy REST style services as local Mule Components. It

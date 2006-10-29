@@ -10,6 +10,12 @@
 
 package org.mule.transaction.lookup;
 
+import java.util.Map;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.transaction.TransactionManager;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,12 +24,6 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.container.JndiContextHelper;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOTransactionManagerFactory;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
-
-import java.util.Map;
 
 /**
  * A factory performing a JNDI lookup for TransactionManager. <p/> NOTE: Java EE 1.4

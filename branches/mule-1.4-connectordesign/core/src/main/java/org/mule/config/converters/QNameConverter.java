@@ -10,12 +10,12 @@
 
 package org.mule.config.converters;
 
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.Converter;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
-import java.util.StringTokenizer;
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.Converter;
 
 /**
  * <code>TransformerConverter</code> will obtain an endpoint name and convert it to

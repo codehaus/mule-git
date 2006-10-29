@@ -10,9 +10,9 @@
 
 package org.mule.util.properties;
 
-import org.mule.umo.UMOMessage;
-
 import java.util.Map;
+
+import org.mule.umo.UMOMessage;
 
 /**
  * If the message payload is a map this extractor will look up the property value in

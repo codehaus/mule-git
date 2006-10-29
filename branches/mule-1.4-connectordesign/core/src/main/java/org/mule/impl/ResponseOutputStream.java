@@ -10,12 +10,12 @@
 
 package org.mule.impl;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
  * <code>ResponseOutputStream</code> is an output stream associated with the

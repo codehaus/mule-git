@@ -10,6 +10,8 @@
 
 package org.mule.impl.endpoint;
 
+import java.util.Map;
+
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -25,8 +27,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.util.Map;
 
 /**
  * <code>MuleEndpoint</code> describes a Provider in the Mule Server. A endpoint is

@@ -10,10 +10,6 @@
 
 package org.mule.util.file;
 
-import org.apache.commons.io.IOUtils;
-import org.mule.util.xa.AbstractXAResourceManager;
-import org.mule.util.xa.DefaultXASession;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,6 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+
+import org.apache.commons.io.IOUtils;
+import org.mule.util.xa.AbstractXAResourceManager;
+import org.mule.util.xa.DefaultXASession;
 
 /**
  * todo document

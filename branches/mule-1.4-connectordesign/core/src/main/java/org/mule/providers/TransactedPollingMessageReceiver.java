@@ -12,10 +12,10 @@ package org.mule.providers;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 
-import javax.resource.spi.work.Work;
-
 import java.util.Iterator;
 import java.util.List;
+
+import javax.resource.spi.work.Work;
 
 import org.mule.config.ThreadingProfile;
 import org.mule.transaction.TransactionCallback;

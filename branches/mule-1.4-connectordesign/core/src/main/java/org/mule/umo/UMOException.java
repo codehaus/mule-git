@@ -10,18 +10,18 @@
 
 package org.mule.umo;
 
-import org.apache.commons.lang.SystemUtils;
-import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.util.StringUtils;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.commons.lang.SystemUtils;
+import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.util.StringUtils;
 
 /**
  * <code>UMOException</code> is the base exception type for the Mule server any
