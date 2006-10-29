@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.space.UMOSpace;
@@ -104,11 +103,6 @@ public class SpaceMessageDispatcher extends AbstractMessageDispatcher
         }
 
         return new MuleMessage(connector.getMessageAdapter(result));
-    }
-
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     protected void doDispose()

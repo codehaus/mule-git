@@ -12,6 +12,9 @@ package org.mule.impl.space;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -20,9 +23,6 @@ import org.mule.umo.space.UMOSpace;
 import org.mule.umo.space.UMOSpaceEvent;
 import org.mule.umo.space.UMOSpaceEventListener;
 import org.mule.umo.space.UMOSpaceException;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Provides core functionality for all spaces, including listenr management and
