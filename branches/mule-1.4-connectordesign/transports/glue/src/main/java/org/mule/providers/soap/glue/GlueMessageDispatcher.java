@@ -14,19 +14,19 @@ import electric.glue.context.ProxyContext;
 import electric.glue.context.ThreadContext;
 import electric.proxy.IProxy;
 import electric.registry.Registry;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <code>GlueMessageDispatcher</code> will make web services calls using the Glue
@@ -152,11 +152,6 @@ public class GlueMessageDispatcher extends AbstractMessageDispatcher
         {
             throw new ReceiveException(endpoint, timeout, t);
         }
-    }
-
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     protected void doDispose()
