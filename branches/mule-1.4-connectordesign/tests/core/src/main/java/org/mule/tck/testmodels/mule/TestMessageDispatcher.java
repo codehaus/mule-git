@@ -12,7 +12,6 @@ package org.mule.tck.testmodels.mule;
 
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.RoutingException;
@@ -48,11 +47,6 @@ public class TestMessageDispatcher extends AbstractMessageDispatcher
     }
 
     public UMOMessage doReceive(long timeout) throws Exception
-    {
-        return null;
-    }
-
-    public Object getDelegateSession() throws UMOException
     {
         return null;
     }
