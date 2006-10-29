@@ -245,16 +245,6 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
-
-    public UMOConnector getConnector()
-    {
-        return connector;
-    }
-
     /**
      * Well get the output stream (if any) for this type of transport. Typically this
      * will be called only when Streaming is being used on an outbound endpoint
