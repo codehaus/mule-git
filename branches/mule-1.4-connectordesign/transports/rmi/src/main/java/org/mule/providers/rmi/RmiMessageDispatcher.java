@@ -50,12 +50,12 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (RmiConnector)endpoint.getConnector();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (remoteObject == null)
         {
+            // Shouldn't all this be in the connector?
             String rmiPolicyPath = connector.getSecurityPolicy();
-
             System.setProperty("java.security.policy", rmiPolicyPath);
 
             // Set security manager
@@ -96,7 +96,6 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
      */
     protected void doDispatch(UMOEvent event) throws Exception
     {
-
         Object[] arguments = getArgs(event);
         if (invokedMethod == null)
         {
@@ -146,7 +145,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("doReceive");
     }
