@@ -10,6 +10,18 @@
 
 package org.mule.providers.soap.axis;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPEnvelope;
+
 import org.apache.axis.AxisProperties;
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.Message;
@@ -33,7 +45,6 @@ import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -41,17 +52,6 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.BeanUtils;
 import org.mule.util.TemplateParser;
-
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPEnvelope;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * <code>AxisMessageDispatcher</code> is used to make soap requests via the Axis
@@ -496,14 +496,8 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return new MuleMessage(result, props);
     }
 
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
-
     public String parseSoapAction(String soapAction, QName method, UMOEvent event)
     {
-
         UMOEndpointURI endpointURI = event.getEndpoint().getEndpointURI();
         Map properties = new HashMap();
         UMOMessage msg = event.getMessage();

@@ -11,6 +11,14 @@
 package org.mule.providers.soap.axis.extensions;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.axis.AxisFault;
 import org.apache.axis.Message;
 import org.apache.axis.MessageContext;
@@ -43,13 +51,6 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.util.StringUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * todo document
