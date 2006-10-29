@@ -213,7 +213,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         Socket socket = null;
         try
@@ -290,7 +290,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         keepSendSocketOpen = MapUtils.getBooleanValue(endpoint.getProperties(), "keepSendSocketOpen",
             connector.isKeepSendSocketOpen());
