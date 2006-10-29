@@ -10,22 +10,20 @@
 
 package org.mule.providers.rmi;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.TransformerException;
-
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.rmi.RMISecurityManager;
 import java.rmi.Remote;
 import java.util.Collections;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mule.impl.MuleMessage;
+import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.transformer.TransformerException;
 
 /**
  * <code>RmiMessageDispatcher</code> will send transformed mule events over
@@ -148,27 +146,6 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     protected UMOMessage doReceive(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("doReceive");
-    }
-
-    /**
-     * There is no associated session for a RMI connector
-     * 
-     * @return
-     * @throws UMOException
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()
