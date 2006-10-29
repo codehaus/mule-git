@@ -25,10 +25,7 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 /**
- * <code>DQMessageDispatcher</code> //todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>DQMessageDispatcher</code> TODO document
  */
 public class DQMessageDispatcher extends AbstractMessageDispatcher
 {
@@ -118,9 +115,8 @@ public class DQMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         DataQueue dq = new DataQueue(connector.getSystem(), endpoint.getEndpointURI().getAddress());
         DataQueueEntry entry = dq.read((int)timeout);
         if (entry != null)
@@ -138,7 +134,7 @@ public class DQMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         // template method
     }
