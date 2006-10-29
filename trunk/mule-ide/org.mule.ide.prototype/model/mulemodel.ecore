@@ -16,6 +16,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="inboundRouter" upperBound="-1"
         eType="#//InboundRouterType" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" eType="#//Property" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MuleConfig">
     <eStructuralFeatures xsi:type="ecore:EReference" name="globalEndpoints" upperBound="-1"
@@ -24,6 +25,9 @@
         eType="#//ComponentType" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" eType="#//Property" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" eType="#//InterceptorDefinition"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EndpointType">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -31,6 +35,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connector" eType="#//Connector"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OutboundRouterType">
     <eStructuralFeatures xsi:type="ecore:EReference" name="outboundEndpoint" eType="#//EndpointType"
@@ -38,5 +43,22 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Interceptor">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupDefinition" eType="#//InterceptorDefinition"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Connector"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Properties">
+    <eStructuralFeatures xsi:type="ecore:EReference" eType="#//Property" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Property">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TextProperty" eSuperTypes="#//Property">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListProperty" eSuperTypes="#//Property"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MapProperty" eSuperTypes="#//Property">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" eType="#//Properties"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterceptorDefinition"/>
 </ecore:EPackage>
