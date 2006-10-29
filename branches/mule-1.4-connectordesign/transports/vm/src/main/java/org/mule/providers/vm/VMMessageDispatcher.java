@@ -83,18 +83,18 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         if (!connector.isQueueEvents())
         {
             throw new UnsupportedOperationException("Receive only supported on the VM Queue Connector");
         }
-        QueueSession queueSession;
+
         try
         {
-            queueSession = connector.getQueueSession();
+            QueueSession queueSession = connector.getQueueSession();
             Queue queue = queueSession.getQueue(endpoint.getEndpointURI().getAddress());
+
             if (queue == null)
             {
                 if (logger.isDebugEnabled())
@@ -264,7 +264,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (connector.isQueueEvents())
         {
