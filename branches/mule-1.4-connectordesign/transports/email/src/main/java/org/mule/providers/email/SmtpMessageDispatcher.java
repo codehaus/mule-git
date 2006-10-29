@@ -47,7 +47,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (SmtpConnector)endpoint.getConnector();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (transport == null)
         {
@@ -175,7 +175,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("doReceive");
     }

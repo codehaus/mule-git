@@ -46,9 +46,8 @@ public class Pop3MessageDispatcher extends AbstractMessageDispatcher
         this.connector = (Pop3Connector)endpoint.getConnector();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
-
         if (folder == null || !folder.isOpen())
         {
             String inbox = (String)endpoint.getProperty("folder");
@@ -147,9 +146,8 @@ public class Pop3MessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         long t0 = System.currentTimeMillis();
         if (timeout < 0)
         {
