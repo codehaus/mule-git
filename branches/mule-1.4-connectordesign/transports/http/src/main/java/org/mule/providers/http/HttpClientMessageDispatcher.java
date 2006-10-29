@@ -10,6 +10,15 @@
 
 package org.mule.providers.http;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ConnectException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -36,25 +45,14 @@ import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
 import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * <p>
@@ -122,26 +120,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 "Http call returned a status of: " + httpMethod.getStatusCode() + " "
                                 + httpMethod.getStatusText()));
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getDelegateSession()
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     /**
