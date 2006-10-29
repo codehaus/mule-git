@@ -213,8 +213,4 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    public Object getDelegateSession()
-    {
-        return null;
-    }
 }
