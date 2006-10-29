@@ -54,7 +54,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (XmppConnector)endpoint.getConnector();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (xmppConnection == null)
         {
@@ -181,9 +181,8 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         // Should be in the form of xmpp://user:pass@host:[port]/folder
         String to = (String)endpoint.getProperty("folder");
         if (to == null)
