@@ -34,7 +34,6 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -429,16 +428,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         {
             throw new MuleException(new org.mule.config.i18n.Message("jms", 3), e);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOMessageDispatcher#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()
