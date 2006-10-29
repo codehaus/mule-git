@@ -10,12 +10,14 @@
 
 package org.mule.providers.quartz;
 
+import java.util.Date;
+import java.util.Iterator;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.quartz.jobs.DelegatingJob;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
@@ -27,9 +29,6 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-
-import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Can schedule a Job with the Quartz scheduler. The event must contain the Job to
@@ -203,8 +202,4 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         throw new UnsupportedOperationException("doReceive");
     }
 
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
-    }
 }
