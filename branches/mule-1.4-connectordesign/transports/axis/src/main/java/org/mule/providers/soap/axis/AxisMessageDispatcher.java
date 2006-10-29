@@ -75,7 +75,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         AxisProperties.setProperty("axis.doAutoTypes", Boolean.toString(connector.isDoAutoTypes()));
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (service == null)
         {
@@ -422,7 +422,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         Call call = new Call(service);
         String uri = endpoint.getEndpointURI().toString();
