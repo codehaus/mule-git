@@ -10,6 +10,13 @@
 
 package org.mule.extras.spring.events;
 
+import java.beans.ExceptionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -57,13 +64,8 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 
-import java.beans.ExceptionListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArraySet;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 
 /**
  * <code>MuleEventMulticaster</code> is an implementation of a Spring
@@ -108,8 +110,6 @@ import java.util.Set;
  * <p/>
  * </code>
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  * @see MuleEventListener
  * @see MuleSubscriptionEventListener
  * @see ApplicationEventMulticaster
@@ -118,6 +118,7 @@ import java.util.Set;
 public class MuleEventMulticaster implements ApplicationEventMulticaster, ApplicationContextAware
 {
     public static final String EVENT_MULTICASTER_DESCRIPTOR_NAME = "muleEventMulticasterDescriptor";
+
     /**
      * logger used by this class
      */
@@ -126,12 +127,17 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     /**
      * The set of listeners for this Multicaster
      */
-    protected Set listeners = new HashSet();
+    protected final Set listeners = new CopyOnWriteArraySet();
 
     /**
      * Determines whether events will be processed asynchronously
      */
     protected boolean asynchronous = false;
+
+    /**
+     * An ExecutorService for handling asynchronous events
+     */
+    protected ExecutorService asyncPool = null;
 
     /**
      * Any logical endpointUri mappings to register with mule. These allow for
@@ -148,6 +154,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
      * MuleDescriptor for itself at runtime
      */
     protected String[] subscriptions = null;
+
     /**
      * The Spring acpplication context
      */
@@ -171,15 +178,14 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     /**
      * Used to store parsed endpoints
      */
-    // protected Map endpointsCache = new HashMap();
     protected ExceptionListener exceptionListener = new LoggingExceptionListener();
 
     /**
-     * Adds a listener to the the Multicaster. If asynchronous is sset to true, an
+     * Adds a listener to the the Multicaster. If asynchronous is set to true, an
      * <code>AsynchronousMessageListener</code> is used to wrap the listener. This
      * listener will be initialised with a threadpool. The configuration for the
      * threadpool can be set on this multicaster of can be inherited from the
-     * MuleManager configuration, which good for most cases.
+     * MuleManager configuration, which is good for most cases.
      * 
      * @param listener the ApplicationListener to register with this Multicaster
      * @see AsynchronousEventListener
@@ -187,17 +193,14 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
      */
     public void addApplicationListener(ApplicationListener listener)
     {
+        Object listenerToAdd = listener;
+
         if (asynchronous)
         {
-            AsynchronousEventListener aListener = new AsynchronousEventListener(
-                MuleManager.getConfiguration().getDefaultThreadingProfile().createPool("spring-events"),
-                listener);
-            listeners.add(aListener);
+            listenerToAdd = new AsynchronousEventListener(asyncPool, listener);
         }
-        else
-        {
-            listeners.add(listener);
-        }
+
+        listeners.add(listenerToAdd);
     }
 
     /**
@@ -299,10 +302,9 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
             }
         }
 
-        ApplicationListener listener;
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            listener = (ApplicationListener)iterator.next();
+            ApplicationListener listener = (ApplicationListener)iterator.next();
             if (muleEvent != null)
             {
                 // As the asynchronous listener wraps the real listener we need to
@@ -353,7 +355,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
             }
             else
             {
-                // Finally only propogate the Application event if the
+                // Finally only propagate the Application event if the
                 // ApplicationEvent interface is explicitly implemented
                 for (int i = 0; i < listener.getClass().getInterfaces().length; i++)
                 {
@@ -426,6 +428,22 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     public void setAsynchronous(boolean asynchronous)
     {
         this.asynchronous = asynchronous;
+        if (asynchronous)
+        {
+            if (asyncPool == null)
+            {
+                asyncPool = MuleManager.getConfiguration().getDefaultThreadingProfile().createPool(
+                    "spring-events");
+            }
+        }
+        else
+        {
+            if (asyncPool != null)
+            {
+                asyncPool.shutdown();
+                asyncPool = null;
+            }
+        }
     }
 
     /**

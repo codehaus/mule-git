@@ -31,6 +31,8 @@ public class SystemStreamConnector extends StreamConnector
 
     private String promptMessage;
 
+    private String outputMessage;
+
     private long messageDelayTime = 3000;
 
     private boolean firstTime = true;
@@ -86,6 +88,22 @@ public class SystemStreamConnector extends StreamConnector
     public void setPromptMessage(String promptMessage)
     {
         this.promptMessage = promptMessage;
+    }
+
+    /**
+     * @return Returns the outputMessage.
+     */
+    public String getOutputMessage()
+    {
+        return outputMessage;
+    }
+
+    /**
+     * @param outputMessage The outputMessage to set.
+     */
+    public void setOutputMessage(String outputMessage)
+    {
+        this.outputMessage = outputMessage;
     }
 
     /*

@@ -18,13 +18,14 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+import org.mule.util.StringUtils;
 
 /**
  * <code>StreamMessageDispatcher</code> A simple stream dispatcher that obtains a
  * stream from the Stream Connector to write to. This only really useful for testing
  * purposes right now when writing to System.in and System.out. However, it is
  * feesable to set any outputstream on the Stream connector and have that written to.
- * 
+ *
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
@@ -38,11 +39,23 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
     {
         super(endpoint);
         this.connector = (StreamConnector)endpoint.getConnector();
+
+        // apply connector-specific properties
+        if (connector instanceof SystemStreamConnector)
+        {
+            SystemStreamConnector ssc = (SystemStreamConnector) connector;
+
+            String outputMessage = (String) endpoint.getProperties().get("outputMessage");
+            if (outputMessage != null)
+            {
+                ssc.setOutputMessage(outputMessage);
+            }
+        }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOConnector#dispatch(org.mule.umo.UMOEvent)
      */
     protected void doDispatch(UMOEvent event) throws Exception
@@ -67,6 +80,16 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
             throw new DispatchException(new Message("stream", 1, streamName), event.getMessage(),
                 event.getEndpoint());
         }
+
+        if (connector instanceof SystemStreamConnector)
+        {
+            SystemStreamConnector ssc = (SystemStreamConnector) connector;
+            if (StringUtils.isNotBlank(ssc.getOutputMessage()))
+            {
+                out.write(ssc.getOutputMessage().toString().getBytes());
+            }
+        }
+
         Object data = event.getTransformedMessage();
         if (data instanceof byte[])
         {
@@ -81,7 +104,7 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
@@ -92,7 +115,7 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
 
     /**
      * Make a specific request to the underlying transport
-     * 
+     *
      * @param endpoint the endpoint to use when connecting to the resource
      * @param timeout the maximum time the operation should block before returning.
      *            The call should return immediately if there is data available. If
