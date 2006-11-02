@@ -3,6 +3,9 @@
  */
 package org.mule.ide.prototype.palette.views;
 
+import org.mule.ide.prototype.palette.ComponentItem;
+import org.mule.ide.prototype.palette.FolderItem;
+
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -21,31 +24,25 @@ public class ViewDragListener extends DragSourceAdapter {
     }
 
     public void dragStart(DragSourceEvent event) {
-            IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-    System.out.println("dragStart() selection = " + selection);
-    Object object = selection.getFirstElement();
-    System.out.println("dragStart() object = " + object);
+        IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+        Object object = selection.getFirstElement();
 
-    /*
-    if (object instanceof MuleConfigCategory || selection.size() != 1) {
+        if (object instanceof FolderItem || selection.size() != 1) {
             event.doit = false;
-    } else {
+        } else {
             LocalSelectionTransfer.getTransfer().setSelection(selection);
             event.doit = true;
-    }
-    */
+        }
     }
 
     public void dragSetData(DragSourceEvent event) {
-            System.out.println("dragSetData is called");
-            IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-    Object object = selection.getFirstElement();
-    /*
-    if (object instanceof MuleConfigComponent) {
-            MuleConfigComponent component = (MuleConfigComponent)object;
-            event.data = component;
-    }
-    */
+        IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+        Object object = selection.getFirstElement();
+
+        if (object instanceof ComponentItem) {
+        	ComponentItem component = (ComponentItem)object;
+            event.data = component.getName();
+        }
     }
 
     public void dragFinished(DragSourceEvent event) {
