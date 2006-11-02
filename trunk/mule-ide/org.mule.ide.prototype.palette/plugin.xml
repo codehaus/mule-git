@@ -20,7 +20,7 @@
             id="org.mule.ide.prototype.palette">
       </category>
       <view
-            name="Mule Templates"
+            name="Mule Component Palette"
             icon="icons/mule16.GIF"
             category="org.mule.ide.prototype.palette"
             class="org.mule.ide.prototype.palette.views.ToolPalette"
@@ -42,50 +42,131 @@
    <extension
          point="org.mule.ide.prototype.palette.paletteEntries">
       <folder
-            folderId="org.mule.ide.prototype.palette.webProtocols"
-            icon="icons/sample.gif"
-            name="HTTP, etc.">
+            folderId="org.mule.ide.prototype.palette.components"
+            icon="icons/folder.gif"
+            name="Components">
          <folder
-               folderId="org.mule.ide.prototype.palette.soap"
-               icon="icons/mule16.GIF"
-               name="SOAP">
-            <component
-                  className="org.mule.foo.Bar"
-                  icon="icons/mule16.GIF"/>
-            <component
-                  className="org.mule.bar.Foo"
-                  icon="icons/XMLFile.gif"/>
-            <filter
-                  className="org.mule.filters.Foobar"
-                  icon="icons/mule16.GIF"/>
+               folderId="org.mule.ide.prototype.palette.components.Application"
+               icon="icons/folder.gif"
+               name="Application">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.folder4"
-               icon="icons/sample.gif"
-               name="REST">
-            <component
-                  className="org.mule.rest.Sleeper"
-                  icon="icons/mule16.GIF">
-               <exampleXml>
-                  &lt;mule-descriptor className=&quot;org.mule.rest.Sleeper&quot; inbountEndpoint=&quot;http://localhost:80/rest/&quot; /&gt;
-               </exampleXml>
-            </component>
-            <component
-                  className="org.mule.rest.Yawner"
-                  icon="icons/mule16.GIF"/>
+               folderId="org.mule.ide.prototype.palette.components.Database"
+               icon="icons/folder.gif"
+               name="Database">
          </folder>
-
-      </folder>
-      <folder
-            folderId="org.mule.ide.prototype.palette.queues"
-            icon="icons/XMLFile.gif"
-            name="Queues">
-         <component
-               className="org.mule.jms.Quux"
-               icon="icons/mule16.GIF"/>
-         <component
-               className="org.mule.jms.Router"
-               icon="icons/mule16.GIF"/>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Email"
+               icon="icons/folder.gif"
+               name="Email">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.File"
+               icon="icons/folder.gif"
+               name="File">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Java"
+               icon="icons/folder.gif"
+               name="Java">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.JavaSpaces"
+               icon="icons/folder.gif"
+               name="JavaSpaces">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.JBI"
+               icon="icons/folder.gif"
+               name="JBI">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Messaging"
+               icon="icons/folder.gif"
+               name="Messaging">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Network"
+               icon="icons/folder.gif"
+               name="Network">
+               <component
+                     className="org.mule.transports.multicast.MulticastConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.tcp.TcpConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.udp.UdpConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.RMI"
+               icon="icons/folder.gif"
+               name="RMI">
+               <component
+                     className="org.mule.transports.rmi.RmiConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Scheduling"
+               icon="icons/folder.gif"
+               name="Scheduling">
+               <component
+                     className="org.mule.transports.quartz.QuartzConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.SSL"
+               icon="icons/folder.gif"
+               name="SSL">
+         </folder>
+         <folder
+               folderId="org.mule.ide.prototype.palette.components.Web"
+               icon="icons/folder.gif"
+               name="Web">
+            <folder
+                  folderId="org.mule.ide.prototype.palette.components.HTTP"
+                  icon="icons/sample.gif"
+                  name="HTTP">
+               <component
+                     className="org.mule.transports.http.HttpConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.http.HttpsConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+            <folder
+                  folderId="org.mule.ide.prototype.palette.components.J2EE"
+                  icon="icons/sample.gif"
+                  name="J2EE">
+               <component
+                     className="org.mule.transports.http.jetty.JettyConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.http.servlet.ServletConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+            <folder
+                  folderId="org.mule.ide.prototype.palette.components.SOAP"
+                  icon="icons/sample.gif"
+                  name="SOAP">
+               <component
+                     className="org.mule.transports.soap.axis.AxisConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.soap.axis.wsd.AxisWsdlConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.soap.glue.GlueConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.soap.xfire.XFireConnector"
+                     icon="icons/component.gif"/>
+               <component
+                     className="org.mule.transports.soap.xfire.wsdl.XFireConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+         </folder>
       </folder>
    </extension>
 
