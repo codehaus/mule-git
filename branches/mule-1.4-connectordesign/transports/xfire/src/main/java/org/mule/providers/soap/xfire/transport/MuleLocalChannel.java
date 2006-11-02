@@ -49,6 +49,8 @@ import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.StringUtils;
 
+import org.codehaus.xfire.transport.Transport;
+
 /**
  * todo document
  * 
@@ -69,7 +71,7 @@ public class MuleLocalChannel extends AbstractChannel
 
     protected UMOWorkManager workManager;
 
-    public MuleLocalChannel(String uri, MuleLocalTransport transport, Session session)
+    public MuleLocalChannel(String uri, Transport transport, Session session)
     {
         this.session = session;
         setUri(uri);
@@ -196,12 +198,12 @@ public class MuleLocalChannel extends AbstractChannel
         return true;
     }
 
-    UMOWorkManager getWorkManager()
+    public UMOWorkManager getWorkManager()
     {
         return workManager;
     }
-
-    void setWorkManager(UMOWorkManager workManager)
+    
+    public void setWorkManager(UMOWorkManager workManager)
     {
         this.workManager = workManager;
     }
