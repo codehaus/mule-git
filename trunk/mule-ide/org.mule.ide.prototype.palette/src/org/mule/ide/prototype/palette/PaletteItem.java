@@ -25,6 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 public class PaletteItem implements IAdaptable {
 	private String name;
+	private String type;
 	private ImageDescriptor imageDescriptor;
 
 	private FolderItem parent;

@@ -41,10 +41,6 @@
    </extension>
    <extension
          point="org.mule.ide.prototype.palette.paletteEntries">
-      <folder
-            folderId="org.mule.ide.prototype.palette.components"
-            icon="icons/folder.gif"
-            name="Components">
          <folder
                folderId="org.mule.ide.prototype.palette.components.Application"
                icon="icons/folder.gif"
@@ -54,6 +50,9 @@
                folderId="org.mule.ide.prototype.palette.components.Database"
                icon="icons/folder.gif"
                name="Database">
+               <component type="connector"
+                     className="org.mule.transports.jdbc.JdbcConnector"
+                     icon="icons/component.gif"/>
          </folder>
          <folder
                folderId="org.mule.ide.prototype.palette.components.Email"
@@ -84,18 +83,30 @@
                folderId="org.mule.ide.prototype.palette.components.Messaging"
                icon="icons/folder.gif"
                name="Messaging">
+               <component type="connector"
+                     className="org.mule.transports.jms.JmsConnector"
+                     icon="icons/component.gif"/>
+               <component type="filter"
+                     className="org.mule.transports.jms.filter.JmsSelectorFilter"
+                     icon="icons/component.gif"/>
+               <component type="transformer"
+                     className="org.mule.transports.jms.transformer.JmsMessageToObject"
+                     icon="icons/component.gif"/>
+               <component type="transformer"
+                     className="org.mule.transports.jms.transformer.ObjectToJmsMessage"
+                     icon="icons/component.gif"/>
          </folder>
          <folder
                folderId="org.mule.ide.prototype.palette.components.Network"
                icon="icons/folder.gif"
                name="Network">
-               <component
+               <component type="connector"
                      className="org.mule.transports.multicast.MulticastConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.tcp.TcpConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.udp.UdpConnector"
                      icon="icons/component.gif"/>
          </folder>
@@ -111,7 +122,7 @@
                folderId="org.mule.ide.prototype.palette.components.Scheduling"
                icon="icons/folder.gif"
                name="Scheduling">
-               <component
+               <component type="connector"
                      className="org.mule.transports.quartz.QuartzConnector"
                      icon="icons/component.gif"/>
          </folder>
@@ -128,10 +139,10 @@
                   folderId="org.mule.ide.prototype.palette.components.HTTP"
                   icon="icons/sample.gif"
                   name="HTTP">
-               <component
+               <component type="connector"
                      className="org.mule.transports.http.HttpConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.http.HttpsConnector"
                      icon="icons/component.gif"/>
             </folder>
@@ -139,10 +150,10 @@
                   folderId="org.mule.ide.prototype.palette.components.J2EE"
                   icon="icons/sample.gif"
                   name="J2EE">
-               <component
+               <component type="connector"
                      className="org.mule.transports.http.jetty.JettyConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.http.servlet.ServletConnector"
                      icon="icons/component.gif"/>
             </folder>
@@ -150,23 +161,22 @@
                   folderId="org.mule.ide.prototype.palette.components.SOAP"
                   icon="icons/sample.gif"
                   name="SOAP">
-               <component
+               <component type="connector"
                      className="org.mule.transports.soap.axis.AxisConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.soap.axis.wsd.AxisWsdlConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.soap.glue.GlueConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.soap.xfire.XFireConnector"
                      icon="icons/component.gif"/>
-               <component
+               <component type="connector"
                      className="org.mule.transports.soap.xfire.wsdl.XFireConnector"
                      icon="icons/component.gif"/>
             </folder>
-         </folder>
       </folder>
    </extension>
 
