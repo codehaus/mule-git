@@ -48,7 +48,7 @@ public class ServerNotificationManager implements Work, Disposable
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(ServerNotificationManager.class);
+    protected static Log logger = LogFactory.getLog(ServerNotificationManager.class);
 
     public static final String NULL_SUBSCRIPTION = "NULL";
 

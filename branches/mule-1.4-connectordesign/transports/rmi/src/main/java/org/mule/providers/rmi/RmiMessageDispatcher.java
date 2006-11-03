@@ -32,7 +32,7 @@ import org.mule.umo.transformer.TransformerException;
 public class RmiMessageDispatcher extends AbstractMessageDispatcher
 {
 
-    protected static transient Log logger = LogFactory.getLog(RmiMessageDispatcher.class);
+    protected static Log logger = LogFactory.getLog(RmiMessageDispatcher.class);
 
     private RmiConnector connector;
 

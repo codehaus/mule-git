@@ -10,6 +10,10 @@
 
 package org.mule.ra;
 
+import java.util.Map;
+
+import javax.resource.ResourceException;
+
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -29,21 +33,15 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
-
-import javax.resource.ResourceException;
-
-import java.util.Map;
+import org.mule.umo.provider.UMOConnector;
 
 /**
  * <code>MuleConnection</code> TODO
- * 
- * @version $Revision$
  */
 public class DefaultMuleConnection implements MuleConnection
 {
-
-    private MuleCredentials credentials;
-    private UMOManager manager;
+    private final MuleCredentials credentials;
+    private final UMOManager manager;
     private MuleManagedConnection managedConnection;
 
     public DefaultMuleConnection(MuleManagedConnection managedConnection,
@@ -138,6 +136,7 @@ public class DefaultMuleConnection implements MuleConnection
 
         UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(muleEndpoint,
             UMOEndpoint.ENDPOINT_TYPE_SENDER);
+
         try
         {
             return endpoint.receive(timeout);
@@ -161,15 +160,15 @@ public class DefaultMuleConnection implements MuleConnection
         throws UMOException
     {
         UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        UMOConnector connector = endpoint.getConnector();
 
-        if (!endpoint.getConnector().isStarted() && manager.isStarted())
+        if (!connector.isStarted() && manager.isStarted())
         {
-            endpoint.getConnector().startConnector();
+            connector.startConnector();
         }
 
         try
         {
-
             UMOSession session = new MuleSession(message,
                 ((AbstractConnector)endpoint.getConnector()).getSessionHandler());
 
@@ -177,9 +176,8 @@ public class DefaultMuleConnection implements MuleConnection
             {
                 message.setProperty(MuleProperties.MULE_USER_PROPERTY, "Plain " + credentials.getToken());
             }
-            MuleEvent event = new MuleEvent(message, endpoint, session, synchronous);
 
-            return event;
+            return new MuleEvent(message, endpoint, session, synchronous);
         }
         catch (Exception e)
         {

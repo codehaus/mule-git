@@ -14,9 +14,6 @@ import javax.resource.spi.endpoint.MessageEndpointFactory;
 
 /**
  * <code>MuleEndpointKey</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleEndpointKey
 {
@@ -66,12 +63,18 @@ public class MuleEndpointKey
         {
             return true;
         }
+
         if (obj == null)
         {
             return false;
         }
-        MuleEndpointKey o = (MuleEndpointKey)obj;
 
+        if (this.getClass() != obj.getClass())
+        {
+            return false;
+        }
+
+        MuleEndpointKey o = (MuleEndpointKey)obj;
         return o.activationSpec == activationSpec && o.messageEndpointFactory == messageEndpointFactory;
     }
 

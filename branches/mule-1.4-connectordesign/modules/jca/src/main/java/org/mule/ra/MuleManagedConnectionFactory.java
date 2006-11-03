@@ -10,8 +10,13 @@
 
 package org.mule.ra;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
@@ -21,23 +26,14 @@ import javax.resource.spi.ManagedConnectionFactory;
 import javax.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Set;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleManagedConnectionFactory</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
-public class MuleManagedConnectionFactory implements ManagedConnectionFactory, Serializable
+public class MuleManagedConnectionFactory implements ManagedConnectionFactory
 {
     /**
      * Serial version
@@ -56,11 +52,19 @@ public class MuleManagedConnectionFactory implements ManagedConnectionFactory, S
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(MuleManagedConnectionFactory.class);
+    protected transient Log logger = LogFactory.getLog(this.getClass());
 
     public MuleManagedConnectionFactory()
     {
         super();
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        this.logger = LogFactory.getLog(this.getClass());
+        this.changes = new PropertyChangeSupport(this);
+        this.out = null;
     }
 
     public int hashCode()
@@ -68,8 +72,7 @@ public class MuleManagedConnectionFactory implements ManagedConnectionFactory, S
         final int PRIME = 31;
         int result = 1;
         result = PRIME * result + ((password == null) ? 0 : password.hashCode());
-        result = PRIME * result + ((username == null) ? 0 : username.hashCode());
-        return result;
+        return PRIME * result + ((username == null) ? 0 : username.hashCode());
     }
 
     public boolean equals(Object obj)
@@ -132,16 +135,14 @@ public class MuleManagedConnectionFactory implements ManagedConnectionFactory, S
 
     public Object createConnectionFactory(ConnectionManager cxManager) throws ResourceException
     {
-        MuleConnectionFactory cf = null;
         try
         {
-            cf = new DefaultMuleConnectionFactory(this, cxManager, null);
+            return new DefaultMuleConnectionFactory(this, cxManager, null);
         }
         catch (Exception e)
         {
-            throw new ResourceException(e.getMessage());
+            throw new ResourceException(e);
         }
-        return cf;
     }
 
     /**
@@ -173,8 +174,7 @@ public class MuleManagedConnectionFactory implements ManagedConnectionFactory, S
     public ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo cxRequestInfo)
         throws ResourceException
     {
-        MuleManagedConnection mc = new MuleManagedConnection(this, subject, cxRequestInfo);
-        return mc;
+        return new MuleManagedConnection(this, subject, cxRequestInfo);
     }
 
     /**
@@ -266,13 +266,6 @@ public class MuleManagedConnectionFactory implements ManagedConnectionFactory, S
     public void removePropertyChangeListener(PropertyChangeListener lis)
     {
         changes.removePropertyChangeListener(lis);
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        this.changes = new PropertyChangeSupport(this);
-        this.out = null;
     }
 
     /**
