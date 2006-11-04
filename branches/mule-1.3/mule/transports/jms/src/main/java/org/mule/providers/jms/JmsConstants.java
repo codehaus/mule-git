@@ -10,9 +10,15 @@
 
 package org.mule.providers.jms;
 
-// @Immutable
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+// @ThreadSafe
 public class JmsConstants
 {
+
     public static final String JMS_SPECIFICATION_102B = "1.0.2b";
     public static final String JMS_SPECIFICATION_11 = "1.1";
 
@@ -36,5 +42,10 @@ public class JmsConstants
     public static final String DURABLE_PROPERTY = "durable";
     public static final String DURABLE_NAME_PROPERTY = "durableName";
     public static final String CACHE_JMS_SESSIONS_PROPERTY = "cacheJmsSessions";
+
+    public static final Set JMS_PROPERTY_NAMES = Collections.unmodifiableSet(new HashSet(
+        Arrays.asList(new String[]{JMS_SPECIFICATION_102B, JMS_SPECIFICATION_11, JMS_CORRELATION_ID,
+            JMS_DELIVERY_MODE, JMS_DELIVERY_MODE, JMS_DESTINATION, JMS_EXPIRATION, JMS_MESSAGE_ID,
+            JMS_PRIORITY, JMS_REDELIVERED, JMS_REPLY_TO, JMS_TIMESTAMP, JMS_TYPE, JMS_SELECTOR_PROPERTY})));
 
 }

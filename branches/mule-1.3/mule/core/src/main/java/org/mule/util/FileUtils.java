@@ -30,7 +30,7 @@ import org.mule.MuleManager;
  * <code>FileUtils</code> contains useful methods for dealing with files &
  * directories.
  */
-// @Immutable
+// @ThreadSafe
 public class FileUtils extends org.apache.commons.io.FileUtils
 {
 
@@ -134,12 +134,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils
     {
         if (resourceName == null)
         {
+            // no name
             return null;
         }
+
         URL url = IOUtils.getResourceAsUrl(resourceName, callingClass);
+        if (url == null)
+        {
+            // not found
+            return null;
+        }
 
         String resource = URLDecoder.decode(url.toExternalForm(), encoding);
-
         if (resource != null)
         {
             if (resource.startsWith("file:/"))

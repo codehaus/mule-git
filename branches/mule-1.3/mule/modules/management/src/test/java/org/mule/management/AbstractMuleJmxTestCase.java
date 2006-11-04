@@ -7,22 +7,23 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management;
 
-import org.mule.tck.AbstractMuleTestCase;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
 import javax.management.ObjectInstance;
-import java.util.List;
-import java.util.Set;
-import java.util.Iterator;
+import javax.management.ObjectName;
+
+import org.mule.tck.AbstractMuleTestCase;
 
 /**
- * This base test case will create a new <code>MBean Server</code> if necessary, and
- * will clean up any registered MBeans in its <code>tearDown()</code> method.
- *
+ * This base test case will create a new <code>MBean Server</code> if necessary,
+ * and will clean up any registered MBeans in its <code>tearDown()</code> method.
  */
 public class AbstractMuleJmxTestCase extends AbstractMuleTestCase
 {
@@ -32,7 +33,8 @@ public class AbstractMuleJmxTestCase extends AbstractMuleTestCase
     {
         // simulate a running environment with Log4j MBean already registered
         List servers = MBeanServerFactory.findMBeanServer(null);
-        if (servers.size() == 0) {
+        if (servers.size() == 0)
+        {
             MBeanServerFactory.createMBeanServer();
         }
 
@@ -43,7 +45,8 @@ public class AbstractMuleJmxTestCase extends AbstractMuleTestCase
     {
         // unregister all MBeans
         Set objectInstances = mBeanServer.queryMBeans(ObjectName.getInstance("*.*:*"), null);
-        for (Iterator it = objectInstances.iterator(); it.hasNext();) {
+        for (Iterator it = objectInstances.iterator(); it.hasNext();)
+        {
             ObjectInstance instance = (ObjectInstance)it.next();
             mBeanServer.unregisterMBean(instance.getObjectName());
         }

@@ -7,12 +7,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.impl.internal.admin;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.thoughtworks.xstream.XStream;
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
@@ -28,6 +28,7 @@ import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
+import org.mule.transformers.wire.WireFormat;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
@@ -41,20 +42,18 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.XStreamFactory;
 
-import java.lang.Exception;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * <code>MuleManagerComponent</code> is a MuleManager interal server component
- * responsible for receiving remote requests and dispatching them locally.  This allows
- * developer to tunnel requests through http ssl to a Mule instance behind a firewall
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * responsible for receiving remote requests and dispatching them locally. This
+ * allows developer to tunnel requests through http ssl to a Mule instance behind a
+ * firewall
  */
 
 public class MuleManagerComponent implements Callable, Initialisable
@@ -62,39 +61,50 @@ public class MuleManagerComponent implements Callable, Initialisable
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(MuleManagerComponent.class);
+    protected static Log logger = LogFactory.getLog(MuleManagerComponent.class);
 
     public static final String MANAGER_COMPONENT_NAME = "_muleManagerComponent";
     public static final String MANAGER_ENDPOINT_NAME = "_muleManagerEndpoint";
 
-    private XStream xstream = null;
+    /**
+     * Use Serialization by default
+     */
+    protected WireFormat wireFormat;
 
     public void initialise() throws InitialisationException
     {
-    	try {
-    		xstream = new XStreamFactory().getInstance();
-    	} catch (Exception e) {
-            throw new InitialisationException(Message.createStaticMessage("Unable to initialize XStream"), e);
-    	}
+        if (wireFormat == null)
+        {
+            throw new InitialisationException(new Message(Messages.X_IS_NULL, "wireFormat"), this);
+        }
     }
 
     public Object onCall(UMOEventContext context) throws Exception
     {
-        Object result = null;
-        String xml = context.getMessageAsString();
+        Object result;
         logger.debug("Message received by MuleManagerComponent");
-        AdminNotification action = (AdminNotification) xstream.fromXML(xml);
-        if (AdminNotification.ACTION_INVOKE == action.getAction()) {
+        ByteArrayInputStream in = new ByteArrayInputStream(context.getTransformedMessageAsBytes());
+        AdminNotification action = (AdminNotification)wireFormat.read(in);
+        if (AdminNotification.ACTION_INVOKE == action.getAction())
+        {
             result = invokeAction(action, context);
-        } else if (AdminNotification.ACTION_SEND == action.getAction()) {
+        }
+        else if (AdminNotification.ACTION_SEND == action.getAction())
+        {
             result = sendAction(action, context);
-        } else if (AdminNotification.ACTION_DISPATCH == action.getAction()) {
+        }
+        else if (AdminNotification.ACTION_DISPATCH == action.getAction())
+        {
             result = sendAction(action, context);
-        } else if (AdminNotification.ACTION_RECEIVE == action.getAction()) {
+        }
+        else if (AdminNotification.ACTION_RECEIVE == action.getAction())
+        {
             result = receiveAction(action, context);
-        } else {
-            result = handleException(null,
-                    new MuleException(new Message(Messages.EVENT_TYPE_X_NOT_RECOGNISED, "AdminNotification:" + action.getAction())));
+        }
+        else
+        {
+            result = handleException(null, new MuleException(new Message(
+                Messages.EVENT_TYPE_X_NOT_RECOGNISED, "AdminNotification:" + action.getAction())));
         }
         return result;
     }
@@ -104,54 +114,78 @@ public class MuleManagerComponent implements Callable, Initialisable
         String destComponent = null;
         UMOMessage result = null;
         String endpoint = action.getResourceIdentifier();
-        if (action.getResourceIdentifier().startsWith("mule:")) {
+        if (action.getResourceIdentifier().startsWith("mule:"))
+        {
             destComponent = endpoint.substring(endpoint.lastIndexOf("/") + 1);
-        } else {
+        }
+        else
+        {
             destComponent = endpoint;
         }
 
-        if (destComponent != null) {
+        if (destComponent != null)
+        {
             UMOSession session = MuleManager.getInstance().getModel().getComponentSession(destComponent);
             // Need to do this otherise when the event is invoked the
-            // transformer associated with the Mule Admin queue will be invoked, but the
+            // transformer associated with the Mule Admin queue will be invoked, but
+            // the
             // message will not be of expected type
             UMOEndpoint ep = new MuleEndpoint(RequestContext.getEvent().getEndpoint());
             ep.setTransformer(null);
-            UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(), context.isSynchronous());
+            UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(),
+                context.isSynchronous());
             RequestContext.setEvent(event);
 
-            if (context.isSynchronous()) {
+            if (context.isSynchronous())
+            {
                 result = session.getComponent().sendEvent(event);
-                return xstream.toXML(result);
-            } else {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                wireFormat.write(out, result);
+                return out.toByteArray();
+            }
+            else
+            {
                 session.getComponent().dispatchEvent(event);
                 return null;
             }
-        } else {
-            return handleException(result, new MuleException(
-                    new Message(Messages.COULD_NOT_DETERMINE_DESTINATION_COMPONENT_FROM_ENDPOINT_X, endpoint)));
+        }
+        else
+        {
+            return handleException(result, new MuleException(new Message(
+                Messages.COULD_NOT_DETERMINE_DESTINATION_COMPONENT_FROM_ENDPOINT_X, endpoint)));
         }
     }
 
     protected Object sendAction(AdminNotification action, UMOEventContext context) throws UMOException
     {
         UMOMessage result = null;
-        try {
+        try
+        {
             UMOEndpoint endpoint = new MuleEndpoint(action.getResourceIdentifier(), false);
 
-            if (AdminNotification.ACTION_DISPATCH == action.getAction()) {
+            if (AdminNotification.ACTION_DISPATCH == action.getAction())
+            {
                 context.dispatchEvent(action.getMessage(), endpoint);
                 return null;
-            } else {
+            }
+            else
+            {
                 endpoint.setRemoteSync(true);
                 result = context.sendEvent(action.getMessage(), endpoint);
-                if (result == null) {
+                if (result == null)
+                {
                     return null;
-                } else {
-                    return xstream.toXML(result);
+                }
+                else
+                {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    wireFormat.write(out, result);
+                    return out.toByteArray();
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return handleException(result, e);
         }
     }
@@ -159,37 +193,47 @@ public class MuleManagerComponent implements Callable, Initialisable
     protected Object receiveAction(AdminNotification action, UMOEventContext context) throws UMOException
     {
         UMOMessage result = null;
-        try {
+        try
+        {
             UMOEndpointURI endpointUri = new MuleEndpointURI(action.getResourceIdentifier());
-            UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(endpointUri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+            UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(endpointUri,
+                UMOEndpoint.ENDPOINT_TYPE_SENDER);
 
             UMOMessageDispatcher dispatcher = endpoint.getConnector().getDispatcher(endpoint);
             long timeout = MapUtils.getLongValue(action.getProperties(),
-                    MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY,
-                    MuleManager.getConfiguration().getSynchronousEventTimeout());
-
+                MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY, MuleManager.getConfiguration()
+                    .getSynchronousEventTimeout());
 
             UMOEndpointURI ep = new MuleEndpointURI(action.getResourceIdentifier());
             result = dispatcher.receive(ep, timeout);
-            if (result != null) {
+            if (result != null)
+            {
                 // See if there is a default transformer on the connector
-                UMOTransformer trans = ((AbstractConnector) endpoint.getConnector()).getDefaultInboundTransformer();
-                if (trans != null) {
+                UMOTransformer trans = ((AbstractConnector)endpoint.getConnector()).getDefaultInboundTransformer();
+                if (trans != null)
+                {
                     Object payload = trans.transform(result.getPayload());
                     result = new MuleMessage(payload, result);
                 }
-                return xstream.toXML(result);
-            } else {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                wireFormat.write(out, result);
+                return out.toByteArray();
+            }
+            else
+            {
                 return null;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return handleException(result, e);
         }
 
     }
 
-    public static final UMODescriptor getDescriptor(UMOConnector connector, UMOEndpointURI endpointUri)
-            throws UMOException
+    public static final UMODescriptor getDescriptor(UMOConnector connector,
+                                                    UMOEndpointURI endpointUri,
+                                                    WireFormat wireFormat) throws UMOException
     {
         UMOEndpoint endpoint = new MuleEndpoint();
         endpoint.setConnector(connector);
@@ -202,27 +246,49 @@ public class MuleManagerComponent implements Callable, Initialisable
         descriptor.setInboundEndpoint(endpoint);
         descriptor.setImplementation(MuleManagerComponent.class.getName());
         descriptor.setContainerManaged(false);
+        Map props = new HashMap();
+        props.put("wireFormat", wireFormat);
+        descriptor.setProperties(props);
         return descriptor;
     }
 
     /**
-     * Wraps an execption into a MuleMessage with an Exception payload and returns the Xml representation of it
-     * @param result the result of the invocation or null if the exception occurred before or during the invocation
+     * Wraps an execption into a MuleMessage with an Exception payload and returns
+     * the Xml representation of it
+     * 
+     * @param result the result of the invocation or null if the exception occurred
+     *            before or during the invocation
      * @param e the Exception thrown
      * @return an Xml String message result
      */
-    protected String handleException(UMOMessage result, Throwable e) {
+    protected String handleException(UMOMessage result, Throwable e)
+    {
         logger.error("Failed to process admin request: " + e.getMessage(), e);
-        if(result==null) {
+        if (result == null)
+        {
             result = new MuleMessage(new NullPayload(), (Map)null);
         }
         result.setExceptionPayload(new ExceptionPayload(e));
-        try {
-            return xstream.toXML(result);
-        } catch (Exception e1) {
+        try
+        {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            wireFormat.write(out, result);
+            return out.toString(MuleManager.getConfiguration().getEncoding());
+        }
+        catch (Exception e1)
+        {
             logger.error(e.toString(), e);
             return e.getMessage();
         }
     }
 
+    public WireFormat getWireFormat()
+    {
+        return wireFormat;
+    }
+
+    public void setWireFormat(WireFormat wireFormat)
+    {
+        this.wireFormat = wireFormat;
+    }
 }

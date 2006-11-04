@@ -7,25 +7,21 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.jms;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-
-import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.ExceptionListener;
 import javax.jms.TextMessage;
 
-import java.util.Enumeration;
+import org.apache.commons.collections.IteratorUtils;
+import org.mule.tck.providers.AbstractConnectorTestCase;
+import org.mule.umo.provider.UMOConnector;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class JmsConnectorTestCase extends AbstractConnectorTestCase
 {
     private JmsConnector connector;
@@ -37,10 +33,11 @@ public class JmsConnectorTestCase extends AbstractConnectorTestCase
      */
     public UMOConnector getConnector() throws Exception
     {
-        if (connector == null) {
+        if (connector == null)
+        {
             connector = new JmsConnector();
             connector.setName("TestConnector");
-            connector.setSpecification("1.1");
+            connector.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
 
             Mock connectionFactory = new Mock(ConnectionFactory.class);
             Mock connection = new Mock(Connection.class);
@@ -51,7 +48,7 @@ public class JmsConnectorTestCase extends AbstractConnectorTestCase
             connection.expect("stop");
             connection.expect("stop");
             connection.expect("setClientID", "mule.TestConnector");
-            connector.setConnectionFactory((ConnectionFactory) connectionFactory.proxy());
+            connector.setConnectionFactory((ConnectionFactory)connectionFactory.proxy());
             connector.initialise();
         }
         return connector;
@@ -70,8 +67,10 @@ public class JmsConnectorTestCase extends AbstractConnectorTestCase
     public static Object getMessage() throws Exception
     {
         Mock message = new Mock(TextMessage.class);
+
         message.expectAndReturn("getText", "Test JMS Message");
         message.expectAndReturn("getText", "Test JMS Message");
+
         message.expectAndReturn("getJMSCorrelationID", null);
         message.expectAndReturn("getJMSMessageID", "1234567890");
         message.expectAndReturn("getJMSDeliveryMode", new Integer(1));
@@ -82,17 +81,13 @@ public class JmsConnectorTestCase extends AbstractConnectorTestCase
         message.expectAndReturn("getJMSExpiration", new Long(0));
         message.expectAndReturn("getJMSTimestamp", new Long(0));
         message.expectAndReturn("getJMSType", null);
-        message.expectAndReturn("getPropertyNames", new Enumeration() {
-            public boolean hasMoreElements()
-            {
-                return false;
-            }
 
-            public Object nextElement()
-            {
-                return null;
-            }
-        });
+        message.expect("toString");
+
+        message.expectAndReturn("getPropertyNames",
+            IteratorUtils.asEnumeration(IteratorUtils.emptyIterator()));
+
         return message.proxy();
     }
+
 }

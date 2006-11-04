@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.extras.spring.config;
 
 import java.io.IOException;
@@ -17,22 +18,19 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 
 /**
- * <code>MuleApplicationContext</code> is A Simple extension Application
- * context that allows rosurces to be loaded from the Classpath of file system
- * using the MuleBeanDefinitionReader.
- *
+ * <code>MuleApplicationContext</code> is A Simple extension Application context
+ * that allows rosurces to be loaded from the Classpath of file system using the
+ * MuleBeanDefinitionReader.
+ * 
  * @see MuleBeanDefinitionReader
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleApplicationContext extends AbstractXmlApplicationContext
 {
-    private String[] configLocations;
+    private final String[] configLocations;
 
     public MuleApplicationContext(String configLocation)
     {
-        this(new String[] { configLocation });
+        this(new String[]{configLocation});
     }
 
     public MuleApplicationContext(String[] configLocations)
@@ -43,7 +41,8 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
     public MuleApplicationContext(String[] configLocations, boolean refresh) throws BeansException
     {
         this.configLocations = configLocations;
-        if (refresh) {
+        if (refresh)
+        {
             refresh();
         }
     }
@@ -60,20 +59,9 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
 
     protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws IOException
     {
-        XmlBeanDefinitionReader beanDefinitionReader = new MuleBeanDefinitionReader(beanFactory, configLocations.length);
+        XmlBeanDefinitionReader beanDefinitionReader = new MuleBeanDefinitionReader(beanFactory,
+            configLocations.length);
         initBeanDefinitionReader(beanDefinitionReader);
         loadBeanDefinitions(beanDefinitionReader);
-    }
-
-
-    /**
-     * Create the Mule bean factory for this context.
-     *
-     * @return the bean factory for this context
-     * @see org.springframework.beans.factory.support.DefaultListableBeanFactory
-     * @see #getInternalParentBeanFactory
-     */
-    protected DefaultListableBeanFactory createBeanFactory() {
-        return new MuleBeanFactory(getInternalParentBeanFactory());
     }
 }

@@ -10,31 +10,26 @@
 
 package org.mule.test.config;
 
-import org.mule.config.JXPathPropertyExtractor;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.FruitBowl;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.mule.util.properties.JXPathPropertyExtractor;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public class JXPathPropertyExtractorTestCase extends AbstractMuleTestCase{
+public class JXPathPropertyExtractorTestCase extends AbstractMuleTestCase
+{
 
-    public void testWithExpressions() {
+    public void testWithExpressions()
+    {
         Apple apple = new Apple();
         apple.wash();
         FruitBowl payload = new FruitBowl(apple, new Banana());
-        Map props = new HashMap();
-        props.put("Message-Property", "foo");
-        MuleMessage msg = new MuleMessage(payload, props);
+        MuleMessage msg = new MuleMessage(payload);
 
         JXPathPropertyExtractor e = new JXPathPropertyExtractor();
         Object value = e.getProperty("apple/washed", msg);
@@ -42,27 +37,12 @@ public class JXPathPropertyExtractorTestCase extends AbstractMuleTestCase{
         assertTrue(value instanceof Boolean);
         assertTrue(((Boolean)value).booleanValue());
 
-        value = e.getProperty("Message-Property", msg);
+        value = e.getProperty("apple/washed", payload);
         assertNotNull(value);
-        assertEquals("foo", value.toString());
+        assertTrue(value instanceof Boolean);
+        assertTrue(((Boolean)value).booleanValue());
 
         value = e.getProperty("bar", msg);
         assertNull(value);
-
-        List exp = new ArrayList();
-        exp.add("apple/washed");
-        exp.add("apple/bitten");
-        exp.add("Message-Property");
-        exp.add("bar");
-
-        Map values = e.getProperties(exp, msg);
-        assertNotNull(values);
-        assertEquals(Boolean.TRUE, values.get("apple/washed"));
-        assertEquals(Boolean.FALSE, values.get("apple/bitten"));
-        assertEquals("foo", values.get("Message-Property"));
-        assertNull(values.get("bar"));
-
-        assertEquals(4, values.size());
-
     }
 }

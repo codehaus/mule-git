@@ -7,16 +7,16 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.mbeans;
-
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.management.stats.RouterStatistics;
-import org.mule.management.AbstractMuleJmxTestCase;
-
-import javax.management.ObjectName;
 
 import java.util.Set;
 
+import javax.management.ObjectName;
+
+import org.mule.management.AbstractMuleJmxTestCase;
+import org.mule.management.stats.ComponentStatistics;
+import org.mule.management.stats.RouterStatistics;
 
 public class ComponentStatsTestCase extends AbstractMuleJmxTestCase
 {

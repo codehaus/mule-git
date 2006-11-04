@@ -7,39 +7,55 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.routing;
 
 import org.mule.config.MuleProperties;
-import org.mule.config.SimplePropertyExtractor;
+import org.mule.util.properties.MessagePropertyExtractor;
 import org.mule.umo.UMOMessage;
 
 /**
- * <code>CorrelationPropertiesExtractor</code> is a default implementation used
- * for getting the Correlation information from a message. This object is only
- * used when getting a specific property to be set on the message. When reading
- * the property the getProperty(...) or the direct property accessor will be
- * used i.e. message.getCorrelationId() or
+ * <code>CorrelationPropertiesExtractor</code> is a default implementation used for
+ * getting the Correlation information from a message. This object is only used when
+ * getting a specific property to be set on the message. When reading the property
+ * the getProperty(...) or the direct property accessor will be used i.e.
+ * message.getCorrelationId() or
  * message.getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
-public class CorrelationPropertiesExtractor extends SimplePropertyExtractor
+public class CorrelationPropertiesExtractor extends MessagePropertyExtractor
 {
-    public final Object getProperty(String name, UMOMessage message)
+    public final Object getProperty(String name, Object message)
     {
         Object result;
-        if (MuleProperties.MULE_CORRELATION_ID_PROPERTY.equals(name)) {
-            result = getCorrelationId(message);
-        } else if (MuleProperties.MULE_MESSAGE_ID_PROPERTY.equals(name)) {
-            result = getMessageId(message);
-        } else {
-            throw new IllegalArgumentException("Property name: " + name
-                    + " not recognised by the Correlation Property Extractor");
+        UMOMessage msg = null;
+        if (message instanceof UMOMessage)
+        {
+            msg = (UMOMessage)message;
         }
-        if (result == null) {
-            throw new NullPointerException("Property Extractor cannot return a null value. Extractor is: "
-                    + getClass().getName());
+        if (msg != null)
+        {
+            if (MuleProperties.MULE_CORRELATION_ID_PROPERTY.equals(name))
+            {
+                result = getCorrelationId(msg);
+            }
+            else if (MuleProperties.MULE_MESSAGE_ID_PROPERTY.equals(name))
+            {
+                result = getMessageId(msg);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Property name: " + name
+                                                   + " not recognised by the Correlation Property Extractor");
+            }
+            if (result == null)
+            {
+                throw new NullPointerException(
+                    "Property Extractor cannot return a null value. Extractor is: " + getClass().getName());
+            }
+        }
+        else
+        {
+            return super.getProperty(name, message);
         }
         return result;
     }
@@ -52,7 +68,8 @@ public class CorrelationPropertiesExtractor extends SimplePropertyExtractor
     public String getCorrelationId(UMOMessage message)
     {
         String id = message.getCorrelationId();
-        if(id==null) {
+        if (id == null)
+        {
             id = message.getUniqueId();
         }
         return id;

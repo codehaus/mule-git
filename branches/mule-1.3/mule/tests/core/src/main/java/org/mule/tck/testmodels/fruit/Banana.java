@@ -25,7 +25,7 @@ public class Banana implements Fruit
     /**
      * logger used by this class
      */
-    private static transient Log logger = LogFactory.getLog(Banana.class);
+    private static Log logger = LogFactory.getLog(Banana.class);
 
     private boolean peeled = false;
     private boolean bitten = false;
@@ -37,7 +37,8 @@ public class Banana implements Fruit
 
     public void peelEvent(EventObject e)
     {
-        logger.debug("Banana got peel event in peelEvent(EventObject)! Event says: " + e.getSource().toString());
+        logger.debug("Banana got peel event in peelEvent(EventObject)! Event says: "
+                     + e.getSource().toString());
         peel();
     }
 

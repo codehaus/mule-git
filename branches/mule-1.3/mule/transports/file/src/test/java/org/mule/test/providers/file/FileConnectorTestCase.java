@@ -10,7 +10,8 @@
 
 package org.mule.test.providers.file;
 
-import com.mockobjects.dynamic.Mock;
+import java.io.File;
+import java.util.Properties;
 
 import org.mule.MuleManager;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -24,15 +25,10 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.util.FileUtils;
 
-import java.io.File;
-import java.util.Properties;
+import com.mockobjects.dynamic.Mock;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a>
- * @version $Revision$
- */
 public class FileConnectorTestCase extends AbstractConnectorTestCase
 {
     static final long POLLING_FREQUENCY = 1234;
@@ -40,15 +36,25 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
     private File validMessage;
 
-    protected void doSetUp() throws Exception {
+    protected void doSetUp() throws Exception
+    {
         super.doSetUp();
-        //The working directory is deleted on tearDown
-        File dir = new File(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
-        if(!dir.exists()) {
-            dir.mkdirs();
+        // The working directory is deleted on tearDown
+        File tempDir = new File(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
+        if (!tempDir.exists())
+        {
+            tempDir.mkdirs();
         }
-        validMessage = File.createTempFile("simple", ".mule", dir);
+        validMessage = File.createTempFile("simple", ".mule", tempDir);
         assertNotNull(validMessage);
+    }
+
+    protected void doTearDown() throws Exception
+    {
+        // TestConnector dispatches events via the test: protocol to test://test
+        // endpoints, which seems to end up in a directory called "test" :(
+        FileUtils.deleteTree(new File(getTestConnector().getProtocol()));
+        super.doTearDown();
     }
 
     /*
@@ -119,15 +125,14 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testConnectorPollingFrequency() throws Exception
     {
-        FileConnector connector = (FileConnector) getConnector();
+        FileConnector connector = (FileConnector)getConnector();
         connector.setPollingFrequency(POLLING_FREQUENCY);
 
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
         UMOComponent component = getTestComponent(descriptor);
         UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
-        assertEquals("Connector's polling frequency must not be ignored.",
-                     POLLING_FREQUENCY,
-                     ((FileMessageReceiver) receiver).getFrequency());
+        assertEquals("Connector's polling frequency must not be ignored.", POLLING_FREQUENCY,
+            ((FileMessageReceiver)receiver).getFrequency());
     }
 
     /**
@@ -135,7 +140,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testPollingFrequencyEndpointOverride() throws Exception
     {
-        FileConnector connector = (FileConnector) getConnector();
+        FileConnector connector = (FileConnector)getConnector();
         // set some connector-level value which we are about to override
         connector.setPollingFrequency(-1);
 
@@ -148,8 +153,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
         UMOComponent component = getTestComponent(descriptor);
         UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
-        assertEquals("Polling frequency endpoint override must not be ignored.",
-                     POLLING_FREQUENCY_OVERRIDE,
-                     ((FileMessageReceiver) receiver).getFrequency());
+        assertEquals("Polling frequency endpoint override must not be ignored.", POLLING_FREQUENCY_OVERRIDE,
+            ((FileMessageReceiver)receiver).getFrequency());
     }
 }

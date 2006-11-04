@@ -7,7 +7,24 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.ra;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.resource.NotSupportedException;
+import javax.resource.ResourceException;
+import javax.resource.spi.ActivationSpec;
+import javax.resource.spi.BootstrapContext;
+import javax.resource.spi.ResourceAdapter;
+import javax.resource.spi.ResourceAdapterInternalException;
+import javax.resource.spi.endpoint.MessageEndpoint;
+import javax.resource.spi.endpoint.MessageEndpointFactory;
+import javax.transaction.xa.XAResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,49 +44,37 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.ClassUtils;
 
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.ResourceAdapter;
-import javax.resource.spi.ResourceAdapterInternalException;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.transaction.xa.XAResource;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * <code>MuleResourceAdapter</code> TODO
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleResourceAdapter implements ResourceAdapter, Serializable
 {
     /**
      * Serial version
      */
-    private static final long serialVersionUID = 5120977744950180203L;
+    private static final long serialVersionUID = 5727648958127416509L;
 
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(MuleResourceAdapter.class);
+    protected transient Log logger = LogFactory.getLog(this.getClass());
+
+    private transient UMOManager manager;
 
     private BootstrapContext bootstrapContext;
-
     private MuleConnectionRequestInfo info = new MuleConnectionRequestInfo();
-
-    private UMOManager manager;
-
     private Map endpoints = new HashMap();
 
     public MuleResourceAdapter()
     {
         MuleManager.getConfiguration().setModelType("jca");
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+    {
+        ois.defaultReadObject();
+        this.logger = LogFactory.getLog(this.getClass());
+        this.manager = MuleManager.getInstance();
     }
 
     /**
@@ -78,26 +83,38 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     public void start(BootstrapContext bootstrapContext) throws ResourceAdapterInternalException
     {
         this.bootstrapContext = bootstrapContext;
-        if (info.getConfigurations() != null) {
-            if (MuleManager.isInstanciated()) {
-                throw new ResourceAdapterInternalException("A manager is already configured, cannot configure a new one using the configurations set on the Resource Adapter");
-            } else {
+        if (info.getConfigurations() != null)
+        {
+            if (MuleManager.isInstanciated())
+            {
+                throw new ResourceAdapterInternalException(
+                    "A manager is already configured, cannot configure a new one using the configurations set on the Resource Adapter");
+            }
+            else
+            {
                 ConfigurationBuilder builder = null;
-                try {
-                    builder = (ConfigurationBuilder) ClassUtils.instanciateClass(info.getConfigurationBuilder(),
-                                                                                  ClassUtils.NO_ARGS);
+                try
+                {
+                    builder = (ConfigurationBuilder)ClassUtils.instanciateClass(
+                        info.getConfigurationBuilder(), ClassUtils.NO_ARGS);
 
-                } catch (Exception e) {
-                    throw new ResourceAdapterInternalException("Failed to instanciate configurationBuilder class: "
-                            + info.getConfigurationBuilder(), e);
+                }
+                catch (Exception e)
+                {
+                    throw new ResourceAdapterInternalException(
+                        "Failed to instanciate configurationBuilder class: " + info.getConfigurationBuilder(),
+                        e);
                 }
 
-                try {
+                try
+                {
 
                     manager = builder.configure(info.getConfigurations(), null);
-                } catch (ConfigurationException e) {
+                }
+                catch (ConfigurationException e)
+                {
                     throw new ResourceAdapterInternalException("Failed to load configurations: "
-                            + info.getConfigurations(), e);
+                                                               + info.getConfigurations(), e);
                 }
             }
         }
@@ -127,27 +144,31 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
      *      javax.resource.spi.ActivationSpec)
      */
     public void endpointActivation(MessageEndpointFactory endpointFactory, ActivationSpec activationSpec)
-            throws ResourceException
+        throws ResourceException
     {
-        if (activationSpec.getResourceAdapter() != this) {
+        if (activationSpec.getResourceAdapter() != this)
+        {
             throw new ResourceException("ActivationSpec not initialized with this ResourceAdapter instance");
         }
 
-        if (activationSpec.getClass().equals(MuleActivationSpec.class)) {
+        if (activationSpec.getClass().equals(MuleActivationSpec.class))
+        {
 
-            try {
-                UMOEndpointURI uri = new MuleEndpointURI(((MuleActivationSpec) activationSpec).getEndpoint());
-                UMOEndpoint endpoint = ConnectorFactory.createEndpoint(uri, UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+            try
+            {
+                UMOEndpointURI uri = new MuleEndpointURI(((MuleActivationSpec)activationSpec).getEndpoint());
+                UMOEndpoint endpoint = ConnectorFactory.createEndpoint(uri,
+                    UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
 
-                ((AbstractConnector) endpoint.getConnector()).getReceiverThreadingProfile()
-                                                             .setWorkManagerFactory(new ThreadingProfile.WorkManagerFactory() {
-                                                                 public UMOWorkManager createWorkManager(ThreadingProfile profile,
-                                                                                                         String name)
-                                                                 {
-                                                                     return new DelegateWorkManager(bootstrapContext.getWorkManager());
+                ((AbstractConnector)endpoint.getConnector()).getReceiverThreadingProfile()
+                    .setWorkManagerFactory(new ThreadingProfile.WorkManagerFactory()
+                    {
+                        public UMOWorkManager createWorkManager(ThreadingProfile profile, String name)
+                        {
+                            return new DelegateWorkManager(bootstrapContext.getWorkManager());
 
-                                                                 }
-                                                             });
+                        }
+                    });
                 // TODO manage transactions
                 MessageEndpoint messageEndpoint = null;
                 messageEndpoint = endpointFactory.createEndpoint(null);
@@ -158,14 +179,19 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 descriptor.setImplementationInstance(messageEndpoint);
                 MuleManager.getInstance().getModel().registerComponent(descriptor);
 
-                MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec) activationSpec);
+                MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec)activationSpec);
 
                 endpoints.put(key, descriptor);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 logger.error(e.getMessage(), e);
             }
-        } else {
-            throw new NotSupportedException("That type of ActicationSpec not supported: " + activationSpec.getClass());
+        }
+        else
+        {
+            throw new NotSupportedException("That type of ActicationSpec not supported: "
+                                            + activationSpec.getClass());
         }
 
     }
@@ -177,16 +203,21 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     public void endpointDeactivation(MessageEndpointFactory endpointFactory, ActivationSpec activationSpec)
     {
 
-        if (activationSpec.getClass().equals(MuleActivationSpec.class)) {
-            MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec) activationSpec);
-            UMODescriptor descriptor = (UMODescriptor) endpoints.get(key);
-            if (descriptor == null) {
+        if (activationSpec.getClass().equals(MuleActivationSpec.class))
+        {
+            MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec)activationSpec);
+            UMODescriptor descriptor = (UMODescriptor)endpoints.get(key);
+            if (descriptor == null)
+            {
                 logger.warn("No endpoint was registered with key: " + key);
                 return;
             }
-            try {
+            try
+            {
                 manager.getModel().unregisterComponent(descriptor);
-            } catch (UMOException e) {
+            }
+            catch (UMOException e)
+            {
                 logger.error(e.getMessage(), e);
             }
 
@@ -195,14 +226,14 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     }
 
     /**
-     * We only connect to one resource manager per ResourceAdapter instance, so
-     * any ActivationSpec will return the same XAResource.
-     *
+     * We only connect to one resource manager per ResourceAdapter instance, so any
+     * ActivationSpec will return the same XAResource.
+     * 
      * @see javax.resource.spi.ResourceAdapter#getXAResources(javax.resource.spi.ActivationSpec[])
      */
     public XAResource[] getXAResources(ActivationSpec[] activationSpecs) throws ResourceException
     {
-        return new XAResource[] {};
+        return new XAResource[]{};
     }
 
     /**
@@ -273,16 +304,19 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
     public boolean equals(Object o)
     {
-        if (this == o) {
+        if (this == o)
+        {
             return true;
         }
-        if (!(o instanceof MuleResourceAdapter)) {
+        if (!(o instanceof MuleResourceAdapter))
+        {
             return false;
         }
 
-        final MuleResourceAdapter muleResourceAdapter = (MuleResourceAdapter) o;
+        final MuleResourceAdapter muleResourceAdapter = (MuleResourceAdapter)o;
 
-        if (info != null ? !info.equals(muleResourceAdapter.info) : muleResourceAdapter.info != null) {
+        if (info != null ? !info.equals(muleResourceAdapter.info) : muleResourceAdapter.info != null)
+        {
             return false;
         }
 

@@ -7,15 +7,16 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.mbeans;
+
+import java.util.Set;
+
+import javax.management.ObjectName;
 
 import org.mule.impl.MuleDescriptor;
 import org.mule.management.AbstractMuleJmxTestCase;
 import org.mule.umo.manager.UMOManager;
-
-import javax.management.ObjectName;
-import java.util.Set;
-
 
 public class ComponentServiceTestCase extends AbstractMuleJmxTestCase
 {

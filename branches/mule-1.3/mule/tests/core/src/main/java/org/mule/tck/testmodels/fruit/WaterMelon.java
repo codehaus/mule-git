@@ -30,7 +30,7 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
     /**
      * logger used by this class
      */
-    private static transient Log logger = LogFactory.getLog(WaterMelon.class);
+    private static Log logger = LogFactory.getLog(WaterMelon.class);
 
     private boolean bitten = false;
     private Integer seeds = new Integer(100);
@@ -46,9 +46,9 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
     public WaterMelon(HashMap props) throws UMOException
     {
         logger.info("Initialisaing Water melon with hashmap constructor");
-        setBrand((String) props.get("namespace.brand"));
-        setRadius((Double) props.get("another.namespace.radius"));
-        setSeeds((Integer) props.get("seeds"));
+        setBrand((String)props.get("namespace.brand"));
+        setRadius((Double)props.get("another.namespace.radius"));
+        setSeeds((Integer)props.get("seeds"));
         state = "initialised";
     }
 
@@ -64,7 +64,8 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
 
     public void myEventHandler(UMOEvent event) throws UMOException
     {
-        logger.debug("Water Melon received an event in MyEventHandler! Event says: " + event.getMessageAsString());
+        logger.debug("Water Melon received an event in MyEventHandler! Event says: "
+                     + event.getMessageAsString());
         bite();
     }
 
@@ -143,8 +144,9 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
      */
     public boolean equals(Object obj)
     {
-        if (obj instanceof WaterMelon) {
-            WaterMelon melon = (WaterMelon) obj;
+        if (obj instanceof WaterMelon)
+        {
+            WaterMelon melon = (WaterMelon)obj;
             return (getBrand().equals(melon.getBrand()) && getRadius().equals(melon.getRadius())
                     && getSeeds().equals(melon.getSeeds()) && getState().equals(getState()));
         }

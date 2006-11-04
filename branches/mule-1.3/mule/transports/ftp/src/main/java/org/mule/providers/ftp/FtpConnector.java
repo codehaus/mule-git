@@ -10,6 +10,11 @@
 
 package org.mule.providers.ftp;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -29,18 +34,8 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.ConnectorException;
 import org.mule.umo.provider.UMOMessageReceiver;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
 public class FtpConnector extends AbstractServiceEnabledConnector
 {
-
     public static final String PROPERTY_POLLING_FREQUENCY = "pollingFrequency";
     public static final String PROPERTY_FILENAME = "filename";
     public static final String PROPERTY_OUTPUT_PATTERN = "outputPattern";
@@ -67,30 +62,31 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     private Map pools = new HashMap();
 
-
     public String getProtocol()
     {
         return "ftp";
     }
 
-
-
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         long polling = pollingFrequency;
         Map props = endpoint.getProperties();
-        if (props != null) {
+        if (props != null)
+        {
             // Override properties on the endpoint for the specific endpoint
-            String tempPolling = (String) props.get(PROPERTY_POLLING_FREQUENCY);
-            if (tempPolling != null) {
+            String tempPolling = (String)props.get(PROPERTY_POLLING_FREQUENCY);
+            if (tempPolling != null)
+            {
                 polling = Long.parseLong(tempPolling);
             }
         }
-        if (polling <= 0) {
+        if (polling <= 0)
+        {
             polling = 1000;
         }
         logger.debug("set polling frequency to: " + polling);
-        return serviceDescriptor.createMessageReceiver(this, component, endpoint, new Object[] { new Long(polling) });
+        return serviceDescriptor.createMessageReceiver(this, component, endpoint, new Object[]{new Long(
+            polling)});
     }
 
     /**
@@ -112,15 +108,19 @@ public class FtpConnector extends AbstractServiceEnabledConnector
     public FTPClient getFtp(UMOEndpointURI uri) throws Exception
     {
         ObjectPool pool = getFtpPool(uri);
-        return (FTPClient) pool.borrowObject();
+        return (FTPClient)pool.borrowObject();
     }
 
     public void releaseFtp(UMOEndpointURI uri, FTPClient client) throws Exception
     {
-        if(isCreateDispatcherPerRequest()) {
+        if (isCreateDispatcherPerRequest())
+        {
             destroyFtp(uri, client);
-        } else {
-            if (client != null && client.isConnected()) {
+        }
+        else
+        {
+            if (client != null && client.isConnected())
+            {
                 ObjectPool pool = getFtpPool(uri);
                 pool.returnObject(client);
             }
@@ -129,7 +129,8 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     public void destroyFtp(UMOEndpointURI uri, FTPClient client) throws Exception
     {
-        if (client != null && client.isConnected()) {
+        if (client != null && client.isConnected())
+        {
             ObjectPool pool = getFtpPool(uri);
             pool.invalidateObject(client);
         }
@@ -138,10 +139,11 @@ public class FtpConnector extends AbstractServiceEnabledConnector
     protected synchronized ObjectPool getFtpPool(UMOEndpointURI uri)
     {
         String key = uri.getUsername() + ":" + uri.getPassword() + "@" + uri.getHost() + ":" + uri.getPort();
-        ObjectPool pool = (ObjectPool) pools.get(key);
-        if (pool == null) {
+        ObjectPool pool = (ObjectPool)pools.get(key);
+        if (pool == null)
+        {
             pool = new GenericObjectPool(new FtpConnectionFactory(uri));
-            ((GenericObjectPool) pool).setTestOnBorrow(this.validateConnections);
+            ((GenericObjectPool)pool).setTestOnBorrow(this.validateConnections);
             pools.put(key, pool);
         }
         return pool;
@@ -162,23 +164,33 @@ public class FtpConnector extends AbstractServiceEnabledConnector
         public Object makeObject() throws Exception
         {
             FTPClient client = new FTPClient();
-            try {
-                if (uri.getPort() > 0) {
+            try
+            {
+                if (uri.getPort() > 0)
+                {
                     client.connect(uri.getHost(), uri.getPort());
-                } else {
+                }
+                else
+                {
                     client.connect(uri.getHost());
                 }
-                if (!FTPReply.isPositiveCompletion(client.getReplyCode())) {
+                if (!FTPReply.isPositiveCompletion(client.getReplyCode()))
+                {
                     throw new IOException("Ftp error: " + client.getReplyCode());
                 }
-                if (!client.login(uri.getUsername(), uri.getPassword())) {
+                if (!client.login(uri.getUsername(), uri.getPassword()))
+                {
                     throw new IOException("Ftp error: " + client.getReplyCode());
                 }
-                if (!client.setFileType(FTP.BINARY_FILE_TYPE)) {
+                if (!client.setFileType(FTP.BINARY_FILE_TYPE))
+                {
                     throw new IOException("Ftp error. Couldn't set BINARY transfer type.");
                 }
-            } catch (Exception e) {
-                if (client.isConnected()) {
+            }
+            catch (Exception e)
+            {
+                if (client.isConnected())
+                {
                     client.disconnect();
                 }
                 throw e;
@@ -188,43 +200,50 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
         public void destroyObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient) obj;
+            FTPClient client = (FTPClient)obj;
             client.logout();
             client.disconnect();
         }
 
         public boolean validateObject(Object obj)
         {
-            FTPClient client = (FTPClient) obj;
-            try {
+            FTPClient client = (FTPClient)obj;
+            try
+            {
                 client.sendNoOp();
                 return true;
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 return false;
             }
         }
 
         public void activateObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient) obj;
+            FTPClient client = (FTPClient)obj;
             client.setReaderThread(true);
         }
 
         public void passivateObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient) obj;
+            FTPClient client = (FTPClient)obj;
             client.setReaderThread(false);
         }
     }
 
     protected void doStop() throws UMOException
     {
-        try {
-            for (Iterator it = pools.values().iterator(); it.hasNext();) {
-                ObjectPool pool = (ObjectPool) it.next();
+        try
+        {
+            for (Iterator it = pools.values().iterator(); it.hasNext();)
+            {
+                ObjectPool pool = (ObjectPool)it.next();
                 pool.close();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new ConnectorException(new Message(Messages.FAILED_TO_STOP_X, "FTP Connector"), this, e);
         }
     }
@@ -263,6 +282,7 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     /**
      * Getter for FTP passive mode.
+     * 
      * @return true if using FTP passive mode
      */
     public boolean isPassive()
@@ -272,6 +292,7 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     /**
      * Setter for FTP passive mode.
+     * 
      * @param passive passive mode flag
      */
     public void setPassive(final boolean passive)
@@ -280,38 +301,53 @@ public class FtpConnector extends AbstractServiceEnabledConnector
     }
 
     /**
-     * Passive mode is OFF by default. The value is taken from the connector settings.
-     * In case there are any overriding properties set on the endpoint, those will be used.
-     *
-     * @see #setPassive(boolean) 
+     * Passive mode is OFF by default. The value is taken from the connector
+     * settings. In case there are any overriding properties set on the endpoint,
+     * those will be used.
+     * 
+     * @see #setPassive(boolean)
      */
     public void enterActiveOrPassiveMode(FTPClient client, UMOImmutableEndpoint endpoint)
     {
-        // well, no endpoint URI here, as we have to use the most common denominator in API :(
-        final String passiveString = (String) endpoint.getProperty(FtpConnector.PROPERTY_PASSIVE_MODE);
-        if (passiveString == null) {
+        // well, no endpoint URI here, as we have to use the most common denominator
+        // in API :(
+        final String passiveString = (String)endpoint.getProperty(FtpConnector.PROPERTY_PASSIVE_MODE);
+        if (passiveString == null)
+        {
             // try the connector properties then
-            if (isPassive()) {
-                if (logger.isTraceEnabled()) {
+            if (isPassive())
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Entering FTP passive mode");
                 }
                 client.enterLocalPassiveMode();
-            } else {
-                if (logger.isTraceEnabled()) {
+            }
+            else
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Entering FTP active mode");
                 }
                 client.enterLocalActiveMode();
             }
-        } else {
+        }
+        else
+        {
             // override with endpoint's definition
             final boolean passiveMode = Boolean.valueOf(passiveString).booleanValue();
-            if (passiveMode) {
-                if (logger.isTraceEnabled()) {
+            if (passiveMode)
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Entering FTP passive mode (endpoint override)");
                 }
                 client.enterLocalPassiveMode();
-            } else {
-                if (logger.isTraceEnabled()) {
+            }
+            else
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Entering FTP active mode (endpoint override)");
                 }
                 client.enterLocalActiveMode();
@@ -328,14 +364,11 @@ public class FtpConnector extends AbstractServiceEnabledConnector
     }
 
     /**
-     * Whether to test FTP connection on each take from pool.
-     * This takes care of a failed (or restarted) FTP server at the expense of
-     * an additional NOOP command packet being sent, but increases overall availability.
-     * <p/>
-     * Disable to gain slight performance gain or if you are absolutely sure of the
-     * FTP server availability.
-     * <p/>
-     * The default value is <code>true</code>
+     * Whether to test FTP connection on each take from pool. This takes care of a
+     * failed (or restarted) FTP server at the expense of an additional NOOP command
+     * packet being sent, but increases overall availability. <p/> Disable to gain
+     * slight performance gain or if you are absolutely sure of the FTP server
+     * availability. <p/> The default value is <code>true</code>
      */
     public void setValidateConnections(final boolean validateConnections)
     {
@@ -344,7 +377,7 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     /**
      * Getter for FTP transfer type.
-     *
+     * 
      * @return true if using FTP binary type
      */
     public boolean isBinary()
@@ -354,7 +387,7 @@ public class FtpConnector extends AbstractServiceEnabledConnector
 
     /**
      * Setter for FTP transfer type.
-     *
+     * 
      * @param binary binary type flag
      */
     public void setBinary(final boolean binary)
@@ -363,43 +396,55 @@ public class FtpConnector extends AbstractServiceEnabledConnector
     }
 
     /**
-     * Transfer type is BINARY by default. The value is taken from the connector settings.
-     * In case there are any overriding properties set on the endpoint, those will be used.
-     * <p/>
-     * The alternative type is ASCII.
-     * <p/>
-     *
+     * Transfer type is BINARY by default. The value is taken from the connector
+     * settings. In case there are any overriding properties set on the endpoint,
+     * those will be used. <p/> The alternative type is ASCII. <p/>
+     * 
      * @see #setBinary(boolean)
      */
     public void setupFileType(FTPClient client, UMOImmutableEndpoint endpoint) throws Exception
     {
         int type;
 
-        // well, no endpoint URI here, as we have to use the most common denominator in API :(
-        final String binaryTransferString = (String) endpoint.getProperty(FtpConnector.PROPERTY_BINARY_TRANSFER);
-        if (binaryTransferString == null) {
+        // well, no endpoint URI here, as we have to use the most common denominator
+        // in API :(
+        final String binaryTransferString = (String)endpoint.getProperty(FtpConnector.PROPERTY_BINARY_TRANSFER);
+        if (binaryTransferString == null)
+        {
             // try the connector properties then
-            if (isBinary()) {
-                if (logger.isTraceEnabled()) {
+            if (isBinary())
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Using FTP BINARY type");
                 }
                 type = FTP.BINARY_FILE_TYPE;
-            } else {
-                if (logger.isTraceEnabled()) {
+            }
+            else
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Using FTP ASCII type");
                 }
                 type = FTP.ASCII_FILE_TYPE;
             }
-        } else {
+        }
+        else
+        {
             // override with endpoint's definition
             final boolean binaryTransfer = Boolean.valueOf(binaryTransferString).booleanValue();
-            if (binaryTransfer) {
-                if (logger.isTraceEnabled()) {
+            if (binaryTransfer)
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Using FTP BINARY type (endpoint override)");
                 }
                 type = FTP.BINARY_FILE_TYPE;
-            } else {
-                if (logger.isTraceEnabled()) {
+            }
+            else
+            {
+                if (logger.isTraceEnabled())
+                {
                     logger.trace("Using FTP ASCII type (endpoint override)");
                 }
                 type = FTP.ASCII_FILE_TYPE;

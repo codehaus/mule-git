@@ -15,6 +15,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.mule.util.ArrayUtils;
+import org.mule.util.StringUtils;
 
 public class ArrayUtilsTestCase extends TestCase
 {
@@ -30,11 +31,13 @@ public class ArrayUtilsTestCase extends TestCase
         assertSame(a2, a);
 
         // null component type is not allowed
-        try {
+        try
+        {
             ArrayUtils.toArrayOfComponentType(a, null);
             fail();
         }
-        catch (IllegalArgumentException iex) {
+        catch (IllegalArgumentException iex)
+        {
             // ok
         }
 
@@ -45,14 +48,30 @@ public class ArrayUtilsTestCase extends TestCase
         assertSame(a[0], cs[0]);
 
         // incompatible element types are not a good idea either
-        try {
+        try
+        {
             ArrayUtils.toArrayOfComponentType(a, List.class);
             fail();
         }
-        catch (ArrayStoreException asx) {
+        catch (ArrayStoreException asx)
+        {
             // ok
         }
 
+    }
+
+    public void testToStringMaxLength()
+    {
+        Object test = new byte[100];
+        for (int i = 0; i < ((byte[])test).length; i++)
+        {
+            ((byte[])test)[i] = (byte)i;
+        }
+
+        // the String will contain not more than exactly MAX_ARRAY_LENGTH elements
+        String result = ArrayUtils.toString(test, 10);
+        assertTrue(result.endsWith("[..]}"));
+        assertEquals(9, StringUtils.countMatches(result, ","));
     }
 
 }

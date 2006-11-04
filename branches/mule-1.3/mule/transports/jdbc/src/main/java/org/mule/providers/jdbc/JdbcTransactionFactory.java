@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.jdbc;
 
 import org.mule.umo.TransactionException;
@@ -14,8 +15,7 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 
 /**
- * @author Guillaume Nodet
- * @version $Revision$
+ * TODO
  */
 public class JdbcTransactionFactory implements UMOTransactionFactory
 {

@@ -33,7 +33,7 @@ public class TemplateParser
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(TemplateParser.class);
+    protected static Log logger = LogFactory.getLog(TemplateParser.class);
 
     private Pattern pattern = null;
     private int pre = 1;
@@ -80,23 +80,63 @@ public class TemplateParser
      */
     public String parse(Map props, String template)
     {
+        return parse(props, template, null);
+    }
+
+    /**
+     * Matches one or more templates against a Map of key value pairs. If a value for
+     * a template is not found in the map the template is left as is in the return
+     * String
+     * 
+     * @param callback a callback used to resolve the property name
+     * @param template the string containing the template place holders i.e. My name
+     *            is ${name}
+     * @return the parsed String
+     */
+    public String parse(TemplateCallback callback, String template)
+    {
+        return parse(null, template, callback);
+    }
+
+    protected String parse(Map props, String template, TemplateCallback callback)
+    {
         String result = template;
         Matcher m = pattern.matcher(template);
-        String match, propname;
-        Object value;
+
         while (m.find())
         {
-            match = m.group();
-            propname = match.substring(pre, match.length() - post);
-            value = props.get(propname);
+            Object value = null;
+
+            String match = m.group();
+            String propname = match.substring(pre, match.length() - post);
+
+            if (callback != null)
+            {
+                value = callback.match(propname);
+            }
+            else if (props != null)
+            {
+                value = props.get(propname);
+            }
+
             if (value == null)
             {
-                if (logger.isWarnEnabled()) logger.warn("Value " + propname + " not found in context");
+                if (logger.isWarnEnabled())
+                {
+                    logger.warn("Value " + propname + " not found in context");
+                }
             }
             else
             {
-                match = escape(match);
-                result = result.replaceAll(match, value.toString());
+                String matchRegex = escape(match);
+                String valueString = value.toString();
+
+                if (valueString.indexOf('\\') != -1)
+                {
+                    valueString = valueString.replaceAll("\\\\", "\\\\\\\\");
+                }
+
+                result = result.replaceAll(matchRegex, valueString);
             }
         }
         return result;
@@ -191,6 +231,11 @@ public class TemplateParser
     {
         Matcher m = pattern.matcher(value);
         return m.find();
+    }
+
+    public static interface TemplateCallback
+    {
+        public Object match(String token);
     }
 
 }

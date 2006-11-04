@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 
-// @Immutable
+// @ThreadSafe
 /**
  * Mule input/output utilities.
  */
@@ -168,7 +168,7 @@ public class IOUtils extends org.apache.commons.io.IOUtils
         {
             try
             {
-                url = (URL) AccessController.doPrivileged(new PrivilegedAction()
+                url = (URL)AccessController.doPrivileged(new PrivilegedAction()
                 {
                     public Object run()
                     {

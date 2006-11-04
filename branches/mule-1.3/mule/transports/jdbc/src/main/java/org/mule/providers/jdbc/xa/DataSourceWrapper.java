@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.jdbc.xa;
 
 import javax.sql.DataSource;
@@ -18,7 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a> $Revision$
+ * TODO
  */
 public class DataSourceWrapper implements DataSource
 {
@@ -90,8 +91,7 @@ public class DataSourceWrapper implements DataSource
     /*
      * (non-Javadoc)
      * 
-     * @see javax.sql.DataSource#getConnection(java.lang.String,
-     *      java.lang.String)
+     * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
      */
     public Connection getConnection(String username, String password) throws SQLException
     {

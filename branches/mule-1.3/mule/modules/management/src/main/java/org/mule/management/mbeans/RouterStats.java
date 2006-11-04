@@ -7,11 +7,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.mbeans;
 
-import org.mule.management.stats.RouterStatistics;
-
 import java.util.Map;
+
+import org.mule.management.stats.RouterStatistics;
 
 /**
  * <code>RouterStats</code> TODO

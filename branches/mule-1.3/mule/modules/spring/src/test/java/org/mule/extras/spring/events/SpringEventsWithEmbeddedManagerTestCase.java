@@ -7,16 +7,14 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.extras.spring.events;
 
 import org.mule.MuleManager;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class SpringEventsWithEmbeddedManagerTestCase extends SpringEventsTestCase
 {
+
     protected String getConfigResources()
     {
         return "mule-events-app-with-embedded-manager.xml";

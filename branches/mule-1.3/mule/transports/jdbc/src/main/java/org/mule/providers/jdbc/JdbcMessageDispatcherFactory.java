@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.jdbc;
 
 import org.mule.umo.UMOException;
@@ -15,8 +16,7 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
 /**
- * @author Guillaume Nodet
- * @version $Revision$
+ * Creates JdbcMessageDispatchers.
  */
 public class JdbcMessageDispatcherFactory implements UMOMessageDispatcherFactory
 {

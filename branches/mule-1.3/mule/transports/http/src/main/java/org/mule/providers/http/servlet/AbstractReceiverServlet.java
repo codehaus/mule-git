@@ -12,6 +12,7 @@ package org.mule.providers.http.servlet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.httpclient.Header;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpResponse;
 import org.mule.umo.UMOMessage;
@@ -20,12 +21,12 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * A base servlet used to receive requests from a servlet container and route
+ * them into Mule
  */
 
 public abstract class AbstractReceiverServlet extends HttpServlet
@@ -57,25 +58,29 @@ public abstract class AbstractReceiverServlet extends HttpServlet
     public final void init(ServletConfig servletConfig) throws ServletException
     {
         String timeoutString = servletConfig.getInitParameter(REQUEST_TIMEOUT_PROPERTY);
-        if (timeoutString != null) {
+        if (timeoutString != null)
+        {
             timeout = Long.parseLong(timeoutString);
         }
         logger.info("Default request timeout for GET methods is: " + timeout);
 
         String feedbackString = servletConfig.getInitParameter(FEEDBACK_PROPERTY);
-        if (feedbackString != null) {
+        if (feedbackString != null)
+        {
             feedback = Boolean.valueOf(feedbackString).booleanValue();
         }
         logger.info("feedback is set to: " + feedback);
 
         String ct = servletConfig.getInitParameter(DEFAULT_CONTENT_TYPE_PROPERTY);
-        if (ct != null) {
+        if (ct != null)
+        {
             defaultContentType = ct;
         }
         logger.info("Default content type is: " + defaultContentType);
 
         payloadParameterName = servletConfig.getInitParameter(PAYLOAD_PARAMETER_NAME);
-        if (payloadParameterName == null) {
+        if (payloadParameterName == null)
+        {
             payloadParameterName = DEFAULT_PAYLOAD_PARAMETER_NAME;
         }
         logger.info("Using payload param name: " + payloadParameterName);
@@ -93,43 +98,55 @@ public abstract class AbstractReceiverServlet extends HttpServlet
         // nothing to do
     }
 
-    protected void writeResponse(HttpServletResponse servletResponse, UMOMessage message)
-            throws Exception
+    protected void writeResponse(HttpServletResponse servletResponse, UMOMessage message) throws Exception
     {
-        if (message == null) {
+        if (message == null)
+        {
             servletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            if (feedback) {
+            if (feedback)
+            {
                 servletResponse.setStatus(HttpServletResponse.SC_OK);
-                servletResponse.getWriter().write(
-                        "Action was processed successfully. There was no result");
+                servletResponse.getWriter().write("Action was processed successfully. There was no result");
             }
         }
-        else {
+        else
+        {
             HttpResponse httpResponse;
-            
-            if (message.getPayload() instanceof HttpResponse){
+
+            if (message.getPayload() instanceof HttpResponse)
+            {
                 httpResponse = (HttpResponse)message.getPayload();
-            } else {
+            }
+            else
+            {
                 httpResponse = new HttpResponse();
-                httpResponse.setBodyString(message.getAdapter().getPayloadAsString());
+                httpResponse.setBody(new ByteArrayInputStream(message.getAdapter().getPayloadAsBytes()));
+                String ct = message.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, null);
+                if(ct!=null)
+                {
+                    httpResponse.setHeader(new Header(HttpConstants.HEADER_CONTENT_TYPE, ct));
+                }
             }
 
-            String contentType = httpResponse.getFirstHeader(HttpConstants.HEADER_CONTENT_TYPE)
-                    .getValue();
-            if (contentType == null) {
+            String contentType = httpResponse.getFirstHeader(HttpConstants.HEADER_CONTENT_TYPE).getValue();
+            if (contentType == null)
+            {
                 contentType = defaultContentType;
             }
-            if (!contentType.startsWith("text")) {
+            if (!contentType.startsWith("text"))
+            {
                 servletResponse.setContentType(contentType);
                 servletResponse.getOutputStream().write(httpResponse.getBodyBytes());
             }
-            else {
+            else
+            {
 
                 servletResponse.setContentType(contentType);
                 // Encoding: this method will check the charset on the content type
                 servletResponse.getWriter().write(httpResponse.getBodyString());
             }
-            if (!servletResponse.isCommitted()) {
+            if (!servletResponse.isCommitted())
+            {
                 servletResponse.setStatus(httpResponse.getStatusCode());
             }
         }
@@ -140,11 +157,13 @@ public abstract class AbstractReceiverServlet extends HttpServlet
     {
         logger.error("message: " + exception.getMessage(), exception);
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        try {
+        try
+        {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message + ": "
-                    + exception.getMessage());
+                                                                             + exception.getMessage());
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             logger.error("Failed to sendError on response: " + e.getMessage(), e);
         }
     }

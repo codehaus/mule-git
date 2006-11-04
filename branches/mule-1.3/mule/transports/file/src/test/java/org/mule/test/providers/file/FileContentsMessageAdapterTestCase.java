@@ -10,6 +10,9 @@
 
 package org.mule.test.providers.file;
 
+import java.io.File;
+import java.util.Arrays;
+
 import org.apache.commons.io.FileUtils;
 import org.mule.MuleManager;
 import org.mule.providers.file.FileContentsMessageAdapter;
@@ -17,13 +20,6 @@ import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.UMOMessageAdapter;
 
-import java.io.File;
-import java.util.Arrays;
-
-/**
- * @author <a href="mailto:holger@codehaus.org">Holger Hoffstaette</a>
- * @version $Revision$
- */
 public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
     private String validMessageContent = "Yabbadabbadooo!";
@@ -41,7 +37,8 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
 
         // The working directory is deleted on tearDown
         File dir = new File(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
-        if (!dir.exists()) {
+        if (!dir.exists())
+        {
             dir.mkdirs();
         }
 
@@ -66,10 +63,12 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
      */
     public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
     {
-        if (payload.equals(validMessage)) {
+        if (payload.equals(validMessage))
+        {
             return new FileContentsMessageAdapter(messageFile);
         }
-        else {
+        else
+        {
             // properly throw
             return new FileContentsMessageAdapter(payload);
         }
@@ -78,10 +77,12 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
     // overridden to properly check the byte[] by content and not just by reference
     public void doTestMessageEqualsPayload(Object message, Object payload) throws Exception
     {
-        if (message instanceof byte[] && payload instanceof byte[]) {
+        if (message instanceof byte[] && payload instanceof byte[])
+        {
             assertTrue(Arrays.equals((byte[])message, (byte[])payload));
         }
-        else {
+        else
+        {
             fail("message and payload must both be byte[]");
         }
     }

@@ -10,43 +10,76 @@
 
 package org.mule.test.util;
 
-import org.apache.commons.lang.SystemUtils;
-import org.mule.util.StringMessageUtils;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import org.apache.commons.lang.SystemUtils;
+import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
+
 public class StringMessageUtilsTestCase extends TestCase
 {
 
-    public StringMessageUtilsTestCase()
-    {
-        super();
-    }
-
-    public void testGetObjectValue() throws Exception
+    public void testToString() throws Exception
     {
         Object test = "Oscar";
-        Object result = StringMessageUtils.getObjectValue(test);
+        Object result = StringMessageUtils.toString(test);
         assertEquals("Oscar", result);
 
         test = getClass();
-        result = StringMessageUtils.getObjectValue(test);
+        result = StringMessageUtils.toString(test);
         assertEquals(getClass().getName(), result);
 
         test = new TestObject("Ernie");
-        result = StringMessageUtils.getObjectValue(test);
+        result = StringMessageUtils.toString(test);
         assertEquals(test.toString(), result);
 
         test = new AnotherTestObject("Bert");
-        result = StringMessageUtils.getObjectValue(test);
+        result = StringMessageUtils.toString(test);
         assertEquals("Bert", result);
+
+        test = new Object[]{"foo", "bar"};
+        result = StringMessageUtils.toString(test);
+        assertEquals("{foo,bar}", result);
+
+        test = new byte[]{1, 2};
+        result = StringMessageUtils.toString(test);
+        assertEquals("{1,2}", result);
+
+        // create an array that is too long to be printed
+        test = new byte[StringMessageUtils.MAX_ELEMENTS + 100];
+        for (int i = 0; i < ((byte[])test).length; i++)
+        {
+            ((byte[])test)[i] = (byte)i;
+        }
+
+        // the String will contain not more than exactly MAX_ARRAY_LENGTH elements
+        result = StringMessageUtils.toString(test);
+        assertTrue(((String)result).endsWith("[..]}"));
+        assertEquals(StringMessageUtils.MAX_ELEMENTS - 1, StringUtils.countMatches((String)result, ","));
+
+        test = new long[]{5068875495743534L, 457635546759674L};
+        result = StringMessageUtils.toString(test);
+        assertEquals("{5068875495743534,457635546759674}", result);
+
+        test = new double[]{1.1, 2.02};
+        result = StringMessageUtils.toString(test);
+        assertEquals("{1.1,2.02}", result);
+
+        // create a Collection that is too long to be printed
+        test = new ArrayList(100);
+        for (int i = 0; i < 100; i++)
+        {
+            ((Collection)test).add(new Integer(i));
+        }
+
+        // the String will contain not more than exactly MAX_ARRAY_LENGTH elements
+        result = StringMessageUtils.toString(test);
+        assertTrue(((String)result).endsWith("[..]]"));
+        assertEquals(StringMessageUtils.MAX_ELEMENTS - 1, StringUtils.countMatches((String)result, ","));
 
     }
 
@@ -58,12 +91,20 @@ public class StringMessageUtilsTestCase extends TestCase
         result = StringMessageUtils.getFormattedMessage(msg1, null);
         assertEquals(msg1, result);
 
-        result = StringMessageUtils.getFormattedMessage(msg1, new Object[] {});
+        result = StringMessageUtils.getFormattedMessage(msg1, new Object[]{});
         assertEquals(msg1, result);
 
         String msg2 = "There should be a variable {0}, {1} and {2}";
-        result = StringMessageUtils.getFormattedMessage(msg2, new Object[] { "here", "there", "everywhere" });
+        result = StringMessageUtils.getFormattedMessage(msg2, new Object[]{"here", "there", "everywhere"});
         assertEquals("There should be a variable here, there and everywhere", result);
+    }
+
+    public void testBoilerPlateSingleLine()
+    {
+        String plate = StringMessageUtils.getBoilerPlate("Single message.", '*', 12);
+        assertEquals(SystemUtils.LINE_SEPARATOR + "************" + SystemUtils.LINE_SEPARATOR
+                     + "* Single   *" + SystemUtils.LINE_SEPARATOR + "* message. *"
+                     + SystemUtils.LINE_SEPARATOR + "************", plate);
     }
 
     public void testBoilerPlate() throws Exception
@@ -74,9 +115,10 @@ public class StringMessageUtilsTestCase extends TestCase
         msgs.add("Boiler Plate");
 
         String plate = StringMessageUtils.getBoilerPlate(msgs, '*', 12);
-        assertEquals(SystemUtils.LINE_SEPARATOR + "************" + SystemUtils.LINE_SEPARATOR + "* This     *" +
-                     SystemUtils.LINE_SEPARATOR + "* is a     *" + SystemUtils.LINE_SEPARATOR + "* Boiler   *" +
-                     SystemUtils.LINE_SEPARATOR + "* Plate    *" + SystemUtils.LINE_SEPARATOR + "************", plate);
+        assertEquals(SystemUtils.LINE_SEPARATOR + "************" + SystemUtils.LINE_SEPARATOR
+                     + "* This     *" + SystemUtils.LINE_SEPARATOR + "* is a     *"
+                     + SystemUtils.LINE_SEPARATOR + "* Boiler   *" + SystemUtils.LINE_SEPARATOR
+                     + "* Plate    *" + SystemUtils.LINE_SEPARATOR + "************", plate);
 
     }
 
@@ -88,16 +130,18 @@ public class StringMessageUtilsTestCase extends TestCase
         msgs.add("Boiler Plate Message that should get wrapped to the next line if it is working properly");
 
         String plate = StringMessageUtils.getBoilerPlate(msgs, '*', 12);
-        assertEquals(SystemUtils.LINE_SEPARATOR + "************" + SystemUtils.LINE_SEPARATOR +
-                     "* This     *" + SystemUtils.LINE_SEPARATOR + "* is a     *" + SystemUtils.LINE_SEPARATOR +
-                     "* Boiler   *" + SystemUtils.LINE_SEPARATOR + "* Plate    *" + SystemUtils.LINE_SEPARATOR +
-                     "* Message  *" + SystemUtils.LINE_SEPARATOR + "* that     *" + SystemUtils.LINE_SEPARATOR +
-                     "* should   *" + SystemUtils.LINE_SEPARATOR + "* get      *" + SystemUtils.LINE_SEPARATOR +
-                     "* wrapped  *" + SystemUtils.LINE_SEPARATOR + "* to the   *" + SystemUtils.LINE_SEPARATOR +
-                     "* next     *" + SystemUtils.LINE_SEPARATOR + "* line if  *" + SystemUtils.LINE_SEPARATOR +
-                     "* it is    *" + SystemUtils.LINE_SEPARATOR + "* working  *" + SystemUtils.LINE_SEPARATOR +
-                     "* properly *" + SystemUtils.LINE_SEPARATOR + "************",
-                     plate);
+        assertEquals(SystemUtils.LINE_SEPARATOR + "************" + SystemUtils.LINE_SEPARATOR
+                     + "* This     *" + SystemUtils.LINE_SEPARATOR + "* is a     *"
+                     + SystemUtils.LINE_SEPARATOR + "* Boiler   *" + SystemUtils.LINE_SEPARATOR
+                     + "* Plate    *" + SystemUtils.LINE_SEPARATOR + "* Message  *"
+                     + SystemUtils.LINE_SEPARATOR + "* that     *" + SystemUtils.LINE_SEPARATOR
+                     + "* should   *" + SystemUtils.LINE_SEPARATOR + "* get      *"
+                     + SystemUtils.LINE_SEPARATOR + "* wrapped  *" + SystemUtils.LINE_SEPARATOR
+                     + "* to the   *" + SystemUtils.LINE_SEPARATOR + "* next     *"
+                     + SystemUtils.LINE_SEPARATOR + "* line if  *" + SystemUtils.LINE_SEPARATOR
+                     + "* it is    *" + SystemUtils.LINE_SEPARATOR + "* working  *"
+                     + SystemUtils.LINE_SEPARATOR + "* properly *" + SystemUtils.LINE_SEPARATOR
+                     + "************", plate);
     }
 
     public void testTruncate()

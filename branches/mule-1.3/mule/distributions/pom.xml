@@ -17,12 +17,13 @@
         <repository>
             <id>mule-dist-releases</id>
             <name>Mule Distributions Release Repository</name>
-            <url>dav:https://dav.codehaus.org/dist/mule</url>
+            <url>dav:https://dav.codehaus.org/dist/mule/</url>
         </repository>
         <snapshotRepository>
             <id>mule-dist-snapshots</id>
             <name>Mule Distributions Snapshot Repository</name>
-            <url>dav:https://dav.codehaus.org/snapshots.dist/mule</url>
+            <url>dav:https://dav.codehaus.org/snapshots.dist/mule/</url>
+            <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
@@ -215,11 +216,6 @@
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-i18n</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-jaas</artifactId>
             <version>${version}</version>
         </dependency>
@@ -246,11 +242,6 @@
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-picocontainer</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-plexus</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>

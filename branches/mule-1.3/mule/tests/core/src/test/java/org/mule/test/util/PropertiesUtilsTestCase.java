@@ -10,19 +10,14 @@
 
 package org.mule.test.util;
 
-import org.apache.commons.lang.SystemUtils;
-import org.mule.util.MapUtils;
-import org.mule.util.PropertiesUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import org.mule.util.MapUtils;
+import org.mule.util.PropertiesUtils;
+
 public class PropertiesUtilsTestCase extends TestCase
 {
 
@@ -77,42 +72,6 @@ public class PropertiesUtilsTestCase extends TestCase
         assertEquals(14, MapUtils.getIntValue(props, "intProperty", 0));
         assertEquals(999999999, 0, MapUtils.getLongValue(props, "longProperty", 0));
         assertEquals("string", MapUtils.getString(props, "stringProperty", ""));
-    }
-
-    public void testMapNull() throws Exception
-    {
-        Map props = null;
-        assertEquals("{}", PropertiesUtils.propertiesToString(props, false));
-        assertEquals("{}", PropertiesUtils.propertiesToString(props, true));
-    }
-
-    public void testMapEmpty() throws Exception
-    {
-        Map props = new HashMap();
-        assertEquals("{}", PropertiesUtils.propertiesToString(props, false));
-        assertEquals("{}", PropertiesUtils.propertiesToString(props, true));
-    }
-
-    public void testMapSingleElement() throws Exception
-    {
-        Map props = MapUtils.mapWithKeysAndValues(HashMap.class, new Object[]{"foo"},
-                new Object[]{"bar"});
-
-        assertEquals("{foo=bar}", PropertiesUtils.propertiesToString(props, false));
-        assertEquals("{" + SystemUtils.LINE_SEPARATOR + "foo=bar" + SystemUtils.LINE_SEPARATOR + "}",
-                PropertiesUtils.propertiesToString(props, true));
-    }
-
-    public void testMapTwoElements() throws Exception
-    {
-        Map props = MapUtils.mapWithKeysAndValues(HashMap.class, new Object[]{"foo","foozle"},
-                new Object[]{"bar","doozle"});
-
-        assertEquals("{foo=bar, foozle=doozle}", PropertiesUtils.propertiesToString(props, false));
-
-        assertEquals("{" + SystemUtils.LINE_SEPARATOR + "foo=bar" + SystemUtils.LINE_SEPARATOR
-                + "foozle=doozle" + SystemUtils.LINE_SEPARATOR + "}", PropertiesUtils
-                .propertiesToString(props, true));
     }
 
 }

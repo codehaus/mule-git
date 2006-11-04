@@ -7,22 +7,23 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.ra;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.naming.Reference;
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>DefaultMuleConnectionFactory</code> an implementation of the
- * MuleconnectionFactory interface used by clients of this ResourceAdapter to
- * obtain a connection to Mule resources
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * MuleconnectionFactory interface used by clients of this ResourceAdapter to obtain
+ * a connection to Mule resources.
  */
 public class DefaultMuleConnectionFactory implements MuleConnectionFactory
 {
@@ -34,7 +35,7 @@ public class DefaultMuleConnectionFactory implements MuleConnectionFactory
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(DefaultMuleConnectionFactory.class);
+    protected transient Log logger = LogFactory.getLog(this.getClass());
 
     private transient ConnectionManager manager;
     private transient MuleManagedConnectionFactory factory;
@@ -50,6 +51,14 @@ public class DefaultMuleConnectionFactory implements MuleConnectionFactory
         this.info = info;
     }
 
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+    {
+        ois.defaultReadObject();
+        // TODO this is incomplete:
+        // MuleManagedConnectionFactory is Serializable but marked transient?!
+        this.logger = LogFactory.getLog(this.getClass());
+    }
+
     public MuleConnection createConnection() throws ResourceException
     {
         return createConnection(info);
@@ -58,7 +67,7 @@ public class DefaultMuleConnectionFactory implements MuleConnectionFactory
     public MuleConnection createConnection(MuleConnectionRequestInfo info) throws ResourceException
     {
         // TODO try {
-        return (MuleConnection) manager.allocateConnection(factory, info);
+        return (MuleConnection)manager.allocateConnection(factory, info);
         // }
         // catch (ResourceException e) {
         //            

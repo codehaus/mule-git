@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
 <mule-configuration id="test" version="1.0">
 
@@ -39,6 +39,12 @@
             <property name="specification" value="1.1"/>
         </properties>
     </connector>
+	
+	<transformers>
+		<transformer name="jmsmessagetoobject" className="org.mule.providers.jms.transformers.JMSMessageToObject"/>
+		<transformer name="inboundtransformer" className="org.mule.transformers.simple.ByteArrayToString"/>
+		<transformer name="responsetransformer" className="org.mule.transformers.simple.StringToByteArray"/>
+    </transformers>
 
     <model name="model">
         <mule-descriptor name="TcpReceiver"
@@ -48,14 +54,15 @@
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="jms://queue_in" remoteSync="true" />
+                    <endpoint address="jms://queue_in" remoteSync="true" responseTransformers="responsetransformer" />
                 </router>
             </outbound-router>
         </mule-descriptor>
 
         <mule-descriptor name="JMSReplyProvider"
             implementation="org.mule.test.usecases.service.TestReceiver"
-            inboundEndpoint="jms://queue_in" />
+            inboundEndpoint="jms://queue_in" 
+			inboundTransformer="jmsmessagetoobject inboundtransformer"/>
     </model>
 
 </mule-configuration>

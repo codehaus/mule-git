@@ -14,8 +14,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.routing.inbound.EventGroup;
@@ -23,7 +21,7 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.routing.ResponseTimeoutException;
 import org.mule.umo.routing.RoutingException;
-import org.mule.util.PropertiesUtils;
+import org.mule.util.MapUtils;
 import org.mule.util.concurrent.Latch;
 
 /**
@@ -37,11 +35,6 @@ import org.mule.util.concurrent.Latch;
  */
 public abstract class AbstractResponseAggregator extends AbstractResponseRouter
 {
-    /**
-     * logger used by this class
-     */
-    protected transient final Log logger = LogFactory.getLog(getClass());
-
     /**
      * The collection of messages that are ready to be returned to the callee. Keyed
      * by Message ID
@@ -252,8 +245,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
         {
             if (logger.isTraceEnabled())
             {
-                logger.trace("Current responses are: \n"
-                             + PropertiesUtils.propertiesToString(responseEvents, true));
+                logger.trace("Current responses are: \n" + MapUtils.toString(responseEvents, true));
             }
 
             throw new ResponseTimeoutException(new Message(Messages.RESPONSE_TIMED_OUT_X_WAITING_FOR_ID_X,
@@ -264,6 +256,12 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
         {
             // this should never happen, just using it as a safe guard for now
             throw new IllegalStateException("Response Message is null");
+        }
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("remaining locks  : " + locks.keySet());
+            logger.debug("remaining results: " + responseEvents.keySet());
         }
 
         return result;

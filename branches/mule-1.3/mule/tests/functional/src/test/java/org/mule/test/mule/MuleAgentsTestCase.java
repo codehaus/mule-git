@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.test.mule;
 
 import org.mule.management.agents.JmxAgent;
@@ -42,6 +43,7 @@ public class MuleAgentsTestCase extends AbstractMuleTestCase
 
     public void testAgentsRegistrationOrder() throws Exception
     {
+        manager.setId("MuleAgentsTestCase.agentsRegistrationOrder");
         JmxAgent agentFirst = new JmxAgent();
         // If you specified "JmxAgent", it was the first one in the map,
         // but for "jmxAgent" the order was not preserved.

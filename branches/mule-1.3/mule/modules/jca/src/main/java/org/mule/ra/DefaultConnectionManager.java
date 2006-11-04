@@ -7,10 +7,11 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.ra;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionEvent;
@@ -21,11 +22,11 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ManagedConnectionFactory;
 import javax.security.auth.Subject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>DefaultConnectionManager</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class DefaultConnectionManager implements ConnectionManager, ConnectionEventListener
 {
@@ -34,14 +35,25 @@ public class DefaultConnectionManager implements ConnectionManager, ConnectionEv
      */
     private static final long serialVersionUID = 1967602190602154760L;
 
-    private static final Log log = LogFactory.getLog(DefaultConnectionManager.class);
+    private transient Log logger = LogFactory.getLog(this.getClass());
+
+    public DefaultConnectionManager()
+    {
+        super();
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+    {
+        ois.defaultReadObject();
+        this.logger = LogFactory.getLog(this.getClass());
+    }
 
     /**
      * @see javax.resource.spi.ConnectionManager#allocateConnection(javax.resource.spi.ManagedConnectionFactory,
      *      javax.resource.spi.ConnectionRequestInfo)
      */
     public Object allocateConnection(ManagedConnectionFactory connectionFactory, ConnectionRequestInfo info)
-            throws ResourceException
+        throws ResourceException
     {
         Subject subject = null;
         ManagedConnection connection = connectionFactory.createManagedConnection(subject, info);
@@ -54,15 +66,21 @@ public class DefaultConnectionManager implements ConnectionManager, ConnectionEv
      */
     public void connectionClosed(ConnectionEvent event)
     {
-        try {
-            ((ManagedConnection) event.getSource()).cleanup();
-        } catch (ResourceException e) {
-            log.warn("Error occured during the cleanup of a managed connection: ", e);
+        try
+        {
+            ((ManagedConnection)event.getSource()).cleanup();
         }
-        try {
-            ((ManagedConnection) event.getSource()).destroy();
-        } catch (ResourceException e) {
-            log.warn("Error occured during the destruction of a managed connection: ", e);
+        catch (ResourceException e)
+        {
+            logger.warn("Error occured during the cleanup of a managed connection: ", e);
+        }
+        try
+        {
+            ((ManagedConnection)event.getSource()).destroy();
+        }
+        catch (ResourceException e)
+        {
+            logger.warn("Error occured during the destruction of a managed connection: ", e);
         }
     }
 
@@ -95,16 +113,22 @@ public class DefaultConnectionManager implements ConnectionManager, ConnectionEv
      */
     public void connectionErrorOccurred(ConnectionEvent event)
     {
-        log.warn("Managed connection experiened an error: ", event.getException());
-        try {
-            ((ManagedConnection) event.getSource()).cleanup();
-        } catch (ResourceException e) {
-            log.warn("Error occured during the cleanup of a managed connection: ", e);
+        logger.warn("Managed connection experiened an error: ", event.getException());
+        try
+        {
+            ((ManagedConnection)event.getSource()).cleanup();
         }
-        try {
-            ((ManagedConnection) event.getSource()).destroy();
-        } catch (ResourceException e) {
-            log.warn("Error occured during the destruction of a managed connection: ", e);
+        catch (ResourceException e)
+        {
+            logger.warn("Error occured during the cleanup of a managed connection: ", e);
+        }
+        try
+        {
+            ((ManagedConnection)event.getSource()).destroy();
+        }
+        catch (ResourceException e)
+        {
+            logger.warn("Error occured during the destruction of a managed connection: ", e);
         }
     }
 

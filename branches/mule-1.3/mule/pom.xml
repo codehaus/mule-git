@@ -115,6 +115,19 @@
             </releases>
         </repository>
         <!--
+        <repository>
+            <id>sunsite.dk</id>
+            <name>Mirror of http://repo1.maven.org/maven2/</name>
+            <url>http://mirrors.sunsite.dk/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        -->
+        <!--
             I don't think we need to keep this active: java.net is mirrored to
             ibiblio and sateh. It also makes downloads *horribly* slow even with a proxy,
             since their server does not correctly return a 404 for unresolvable artifacts
@@ -141,6 +154,20 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <!-- Local module repository -->
+        <repository>
+            <id>local (Maven 1)</id>
+            <name>Local module repository (lib)</name>
+            <url>file://lib</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <layout>legacy</layout>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -221,6 +248,8 @@
                             <License>MulesSource MPL http://www.mulesource.com/MSPL/</License>
                             <Vendor-Url>${pom.organization.url}</Vendor-Url>
                             <Product-Url>${pom.url}</Product-Url>
+                            <Dtd-Public-Id>-//${pom.organisation.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
+                            <Dtd-System-Id>${pom.url}/dtds</Dtd-System-Id>
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
                             <Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
                         </manifestEntries>
@@ -377,6 +406,7 @@
                         <link>http://jakarta.apache.org/commons/collections/api-3.2/</link>
                         <link>http://jakarta.apache.org/commons/io/api-1.2/</link>
                         <link>http://jakarta.apache.org/commons/lang/api-2.1/</link>
+                        <link>http://jakarta.apache.org/commons/logging/commons-logging-1.0.4/docs/apidocs/</link>
                         <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
                         <link>http://logging.apache.org/log4j/docs/api/</link>
                         <link>http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/</link>

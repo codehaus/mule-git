@@ -14,10 +14,6 @@ import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
 public class FtpMessageAdapter extends AbstractMessageAdapter
 {
     /**
@@ -25,27 +21,30 @@ public class FtpMessageAdapter extends AbstractMessageAdapter
      */
     private static final long serialVersionUID = 7268290145485349941L;
 
-    private byte[] message;
+    private final byte[] message;
 
     public FtpMessageAdapter(Object message) throws MessagingException
     {
-        if (message instanceof byte[]) {
-            this.message = (byte[]) message;
+        if (message instanceof byte[])
+        {
+            this.message = (byte[])message;
         }
-        else {
+        else
+        {
             throw new MessageTypeNotSupportedException(message, getClass());
         }
     }
 
     /**
      * Converts the message implementation into a String representation
-     *
-     * @param encoding The encoding to use when transforming the message (if necessary). The parameter is
-     *                 used when converting from a byte array
+     * 
+     * @param encoding The encoding to use when transforming the message (if
+     *            necessary). The parameter is used when converting from a byte array
      * @return String representation of the message payload
      * @throws Exception Implementation may throw an endpoint specific exception
      */
-    public String getPayloadAsString(String encoding) throws Exception {
+    public String getPayloadAsString(String encoding) throws Exception
+    {
         return new String(message, encoding);
     }
 

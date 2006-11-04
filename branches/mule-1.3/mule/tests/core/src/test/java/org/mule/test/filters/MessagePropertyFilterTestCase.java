@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.test.filters;
 
 import org.mule.impl.MuleMessage;
@@ -72,14 +73,14 @@ public class MessagePropertyFilterTestCase extends AbstractMuleTestCase
         filter.setCaseSensitive(false);
 
         filter = new MessagePropertyFilter("foo2 =null");
-        message.setProperty("foo2", null);
+        message.removeProperty("foo2");
         assertTrue(filter.accept(message));
 
         filter = new MessagePropertyFilter("foo2 =");
         message.setProperty("foo2", "");
         assertTrue(filter.accept(message));
 
-        message.setProperty("foo2", null);
+        message.removeProperty("foo2");
         assertTrue(!filter.accept(message));
     }
 }

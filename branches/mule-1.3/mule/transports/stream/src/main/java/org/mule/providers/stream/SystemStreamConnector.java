@@ -20,9 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * <code>SystemStreamConnector</code> Connects to the System streams in and out by default and add some basic fuctionality for
- * Writing out prompt messages
- *
+ * <code>SystemStreamConnector</code> Connects to the System streams in and out by
+ * default and add some basic fuctionality for Writing out prompt messages
+ * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
@@ -32,9 +32,11 @@ public class SystemStreamConnector extends StreamConnector
 
     private String promptMessage;
 
+    private String outputMessage;
+
     private long messageDelayTime = 3000;
 
-    private boolean firstTime=true;
+    private boolean firstTime = true;
 
     public SystemStreamConnector()
     {
@@ -45,7 +47,7 @@ public class SystemStreamConnector extends StreamConnector
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.providers.stream.StreamConnector#getInputStream()
      */
     public InputStream getInputStream()
@@ -55,7 +57,7 @@ public class SystemStreamConnector extends StreamConnector
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.providers.AbstractConnector#doStart()
      */
     public void doStart()
@@ -65,7 +67,7 @@ public class SystemStreamConnector extends StreamConnector
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.providers.stream.StreamConnector#getOutputStream()
      */
     public OutputStream getOutputStream()
@@ -89,9 +91,25 @@ public class SystemStreamConnector extends StreamConnector
         this.promptMessage = promptMessage;
     }
 
+    /**
+     * @return Returns the outputMessage.
+     */
+    public String getOutputMessage()
+    {
+        return outputMessage;
+    }
+
+    /**
+     * @param outputMessage The outputMessage to set.
+     */
+    public void setOutputMessage(String outputMessage)
+    {
+        this.outputMessage = outputMessage;
+    }
+
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.umo.provider.UMOMessageDispatcher#getConnector()
      */
     public UMOConnector getConnector()
@@ -101,7 +119,7 @@ public class SystemStreamConnector extends StreamConnector
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.umo.provider.UMOMessageDispatcher#getDelegateSession()
      */
     public Object getDelegateSession() throws UMOException
@@ -111,28 +129,34 @@ public class SystemStreamConnector extends StreamConnector
 
     public UMOMessageReceiver registerListener(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
-        if (receivers.size() > 0) {
-            throw new UnsupportedOperationException("You can only register one listener per system stream connector");
+        if (receivers.size() > 0)
+        {
+            throw new UnsupportedOperationException(
+                "You can only register one listener per system stream connector");
         }
         UMOMessageReceiver receiver = super.registerListener(component, endpoint);
         return receiver;
     }
 
-
-    public long getMessageDelayTime() {
-        if(firstTime) {
+    public long getMessageDelayTime()
+    {
+        if (firstTime)
+        {
             return messageDelayTime + 4000;
-        } else {
+        }
+        else
+        {
             return messageDelayTime;
         }
     }
 
-    public void setMessageDelayTime(long messageDelayTime) {
+    public void setMessageDelayTime(long messageDelayTime)
+    {
         this.messageDelayTime = messageDelayTime;
     }
 
-
-    protected void doDispose () {
+    protected void doDispose()
+    {
         // Override as a no-op.
         // The reason is System.in/out shouldn't be closed.
         // It is valid for them to remain open (consider, e.g. tail -F).

@@ -24,8 +24,8 @@ import java.util.Map;
 
 /**
  * <code>ContainerReference</code> maintains a container reference for the
- * MuleXmlConfigurationBuilder that gets wired once the configuration documents
- * have been loaded
+ * MuleXmlConfigurationBuilder that gets wired once the configuration documents have
+ * been loaded
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
@@ -35,7 +35,7 @@ public class ContainerReference
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(ContainerReference.class);
+    protected static Log logger = LogFactory.getLog(ContainerReference.class);
 
     private String propertyName;
     private String containerRef;
@@ -59,21 +59,27 @@ public class ContainerReference
     public void resolveReference(UMOContainerContext ctx) throws ContainerException
     {
         Object comp = ctx.getComponent(new ContainerKeyPair(container, containerRef, required));
-        if(comp==null) return;
-        
-        try {
-            if (object instanceof Map) {
-                ((Map) object).put(propertyName, comp);
-            } else if (object instanceof List) {
-                ((List) object).add(comp);
-            } else {
+        if (comp == null) return;
+
+        try
+        {
+            if (object instanceof Map)
+            {
+                ((Map)object).put(propertyName, comp);
+            }
+            else if (object instanceof List)
+            {
+                ((List)object).add(comp);
+            }
+            else
+            {
                 BeanUtils.setProperty(object, propertyName, comp);
             }
-        } catch (Exception e) {
-            throw new ContainerException(new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X,
-                                                     propertyName,
-                                                     object.getClass().getName(),
-                                                     comp.getClass().getName()));
+        }
+        catch (Exception e)
+        {
+            throw new ContainerException(new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName,
+                object.getClass().getName(), comp.getClass().getName()));
         }
     }
 }

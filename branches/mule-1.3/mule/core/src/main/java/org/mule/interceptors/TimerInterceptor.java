@@ -29,7 +29,7 @@ public class TimerInterceptor implements UMOInterceptor
     /**
      * logger used by this class
      */
-    private static transient Log logger = LogFactory.getLog(TimerInterceptor.class);
+    private static Log logger = LogFactory.getLog(TimerInterceptor.class);
 
     /*
      * (non-Javadoc)
@@ -42,7 +42,7 @@ public class TimerInterceptor implements UMOInterceptor
         UMOMessage result = invocation.execute();
         long executionTime = System.currentTimeMillis() - startTime;
         logger.info(invocation.getDescriptor().getName() + " took " + executionTime + "ms to process event ["
-                + invocation.getEvent().getId() + "]");
+                    + invocation.getEvent().getId() + "]");
         return result;
     }
 }

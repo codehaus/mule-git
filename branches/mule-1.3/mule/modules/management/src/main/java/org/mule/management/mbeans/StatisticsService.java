@@ -7,7 +7,11 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.mbeans;
+
+import java.io.StringWriter;
+import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,9 +20,6 @@ import org.mule.management.stats.AllStatistics;
 import org.mule.management.stats.printers.CSVPrinter;
 import org.mule.management.stats.printers.HtmlTablePrinter;
 import org.mule.umo.manager.UMOManager;
-
-import java.io.StringWriter;
-import java.util.Collection;
 
 /**
  * <code>StatisicsService</code> exposes Mule processing statistics
@@ -36,17 +37,20 @@ public class StatisticsService implements StatisticsServiceMBean
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(StatisticsService.class);
+    protected static Log logger = LogFactory.getLog(StatisticsService.class);
 
     private AllStatistics stats = new AllStatistics();
     private MuleManager manager = null;
 
     public void setManager(UMOManager manager)
     {
-        this.manager = (MuleManager) manager;
-        if (manager == null) {
+        this.manager = (MuleManager)manager;
+        if (manager == null)
+        {
             stats = new AllStatistics();
-        } else {
+        }
+        else
+        {
             stats = this.manager.getStatistics();
         }
 
@@ -95,7 +99,6 @@ public class StatisticsService implements StatisticsServiceMBean
     }
 
     /**
-     *
      * @return
      * @deprecated Use getHtmlSummary
      */
@@ -107,7 +110,8 @@ public class StatisticsService implements StatisticsServiceMBean
         return w.toString();
     }
 
-    public String getHtmlSummary() {
+    public String getHtmlSummary()
+    {
         return printHtmlSummary();
     }
 }

@@ -7,12 +7,13 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.agents;
+
+import javax.management.ObjectName;
 
 import org.mule.config.i18n.Message;
 import org.mule.management.ManagementException;
-
-import javax.management.ObjectName;
 
 /**
  * <code>JmxManagementException</code> is thrown by the Jmx agents if an error

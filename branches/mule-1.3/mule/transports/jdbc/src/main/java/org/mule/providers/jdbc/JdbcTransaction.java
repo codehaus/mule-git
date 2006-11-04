@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.jdbc;
 
 import org.mule.config.i18n.Message;
@@ -22,8 +23,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * @author Guillaume Nodet
- * @version $Revision$
+ * TODO
  */
 public class JdbcTransaction extends AbstractSingleResourceTransaction
 {
@@ -41,16 +41,21 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
      */
     public void bindResource(Object key, Object resource) throws TransactionException
     {
-        if (!(key instanceof DataSource) || !(resource instanceof Connection)) {
-            throw new IllegalTransactionStateException(new Message(Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES,
-                                                                   "javax.sql.DataSource/java.sql.Connection"));
+        if (!(key instanceof DataSource) || !(resource instanceof Connection))
+        {
+            throw new IllegalTransactionStateException(new Message(
+                Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES, "javax.sql.DataSource/java.sql.Connection"));
         }
-        Connection con = (Connection) resource;
-        try {
-            if (con.getAutoCommit()) {
+        Connection con = (Connection)resource;
+        try
+        {
+            if (con.getAutoCommit())
+            {
                 con.setAutoCommit(false);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             throw new TransactionException(new Message(Messages.TX_SET_AUTO_COMMIT_FAILED), e);
         }
         super.bindResource(key, resource);
@@ -73,10 +78,13 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
      */
     protected void doCommit() throws TransactionException
     {
-        try {
-            ((Connection) resource).commit();
-            ((Connection) resource).close();
-        } catch (SQLException e) {
+        try
+        {
+            ((Connection)resource).commit();
+            ((Connection)resource).close();
+        }
+        catch (SQLException e)
+        {
             throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
         }
     }
@@ -88,10 +96,13 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
      */
     protected void doRollback() throws TransactionException
     {
-        try {
-            ((Connection) resource).rollback();
-            ((Connection) resource).close();
-        } catch (SQLException e) {
+        try
+        {
+            ((Connection)resource).rollback();
+            ((Connection)resource).close();
+        }
+        catch (SQLException e)
+        {
             throw new TransactionRollbackException(new Message(Messages.TX_ROLLBACK_FAILED), e);
         }
     }

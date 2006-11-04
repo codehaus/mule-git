@@ -7,11 +7,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
-
 import java.util.Date;
+
+import org.mule.umo.UMOException;
 
 /**
  * <code>MuleServiceMBean</code> is a JMX service interface for the UMOManager

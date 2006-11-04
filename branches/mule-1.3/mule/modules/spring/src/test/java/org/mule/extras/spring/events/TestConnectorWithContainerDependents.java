@@ -7,16 +7,13 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.extras.spring.events;
 
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.umo.lifecycle.InitialisationException;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class TestConnectorWithContainerDependents extends TestConnector
 {
     private Apple containerProp;
@@ -29,8 +26,10 @@ public class TestConnectorWithContainerDependents extends TestConnector
     public void doInitialise() throws InitialisationException
     {
         super.doInitialise();
-        if (containerProp == null) {
-            throw new IllegalStateException("Initialise should not be called before all properties have been set");
+        if (containerProp == null)
+        {
+            throw new IllegalStateException(
+                "Initialise should not be called before all properties have been set");
         }
 
     }
@@ -44,4 +43,5 @@ public class TestConnectorWithContainerDependents extends TestConnector
     {
         this.containerProp = containerProp;
     }
+
 }

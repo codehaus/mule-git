@@ -10,148 +10,213 @@
 
 package org.mule.test.integration.providers.jms.activemq;
 
-import org.activemq.ActiveMQConnectionFactory;
-import org.activemq.broker.impl.BrokerContainerFactoryImpl;
-import org.activemq.store.vm.VMPersistenceAdapter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.impl.RequestContext;
-import org.mule.providers.jms.transformers.AbstractJmsTransformer;
-import org.mule.providers.jms.transformers.JMSMessageToObject;
-import org.mule.providers.jms.transformers.ObjectToJMSMessage;
-import org.mule.tck.AbstractMuleTestCase;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.jms.BytesMessage;
-import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import java.io.File;
-import java.util.Map;
-import java.util.Properties;
+import org.activemq.ActiveMQConnectionFactory;
+import org.activemq.broker.impl.BrokerContainerFactoryImpl;
+import org.activemq.store.vm.VMPersistenceAdapter;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.mule.impl.RequestContext;
+import org.mule.providers.jms.transformers.AbstractJmsTransformer;
+import org.mule.providers.jms.transformers.JMSMessageToObject;
+import org.mule.providers.jms.transformers.ObjectToJMSMessage;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.util.compression.CompressionStrategy;
+import org.mule.util.compression.GZipCompression;
 
 /**
- * <code>JmsTransformersTestCase</code> Tests the JMS transformer impls.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>JmsTransformersTestCase</code> Tests the JMS transformer implementations.
  */
 
 public class JmsTransformersTestCase extends AbstractMuleTestCase
 {
-
+    private static ActiveMQConnectionFactory factory = null;
     private static Session session = null;
-    /**
-     * logger used by this class
-     */
-    private static transient Log logger = LogFactory.getLog(JmsTransformersTestCase.class);
 
-    protected ActiveMQConnectionFactory factory = null;
+    protected void suitePreSetUp() throws Exception
+    {
+        factory = new ActiveMQConnectionFactory();
+        factory.setBrokerContainerFactory(new BrokerContainerFactoryImpl(new VMPersistenceAdapter()));
+        factory.setUseEmbeddedBroker(true);
+        factory.setBrokerURL("vm://localhost");
+        factory.setDoMessageCompression(false);
+        factory.start();
 
+        session = factory.createConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
+    }
 
+    protected void doTearDown() throws Exception
+    {
+        RequestContext.setEvent(null);
+    }
 
-        protected void suitePreSetUp() throws Exception {
-            factory = new ActiveMQConnectionFactory();
-            factory.setBrokerContainerFactory(new BrokerContainerFactoryImpl(new VMPersistenceAdapter()));
-            factory.setUseEmbeddedBroker(true);
-            factory.setBrokerURL("vm://localhost");
-            factory.start();
-
-            session = factory.createConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
-        }
-
-        protected void doTearDown() throws Exception {
-            RequestContext.setEvent(null);
-        }
-
-     protected void suitePostTearDown() throws Exception {
-            try {
-                session.close();
-            } catch (JMSException e) {
-                // TODO shoudln't this be handled?
-            }
-        }
+    protected void suitePostTearDown() throws Exception
+    {
+        session.close();
+        session = null;
+        factory.stop();
+        factory = null;
+    }
 
     public void testTransObjectMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
-        logger.debug("testTransObjectMessage()");
+
         ObjectMessage oMsg = session.createObjectMessage();
-        File f = new File("C:/testdata/tests.txt");
+        File f = new File("/some/random/path");
         oMsg.setObject(f);
-        logger.debug("created object Message");
         AbstractJmsTransformer trans = new JMSMessageToObject();
-        Object result = trans.transform(oMsg, session);
-        logger.debug("transformed object is of type " + result.getClass().getName());
-        assertTrue("Transformed object should be a file", result.getClass().equals(File.class));
-        AbstractJmsTransformer trans2 = new ObjectToJMSMessage();
+        Object result = trans.transform(oMsg);
+        assertTrue("Transformed object should be a File", result.getClass().equals(File.class));
+
+        AbstractJmsTransformer trans2 = new SessionEnabledObjectToJMSMessage(session);
         trans2.setReturnClass(ObjectMessage.class);
-        Object result2 = trans2.transform(f, session);
-        logger.debug("transformed object is of type " + result2.getClass().getName());
+        Object result2 = trans2.transform(f);
         assertTrue("Transformed object should be an object message", result2 instanceof ObjectMessage);
     }
 
     public void testTransTextMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
-        String text = "This is a tests Text Message";
-        logger.debug("testTransTextMessage()");
+
+        String text = "This is a test TextMessage";
         TextMessage tMsg = session.createTextMessage();
         tMsg.setText(text);
-        logger.debug("created Text Message: " + tMsg);
+
         AbstractJmsTransformer trans = new JMSMessageToObject();
-        Object result = trans.transform(tMsg, session);
-        logger.debug("transformed object is of type " + result.getClass().getName());
+        Object result = trans.transform(tMsg);
         assertTrue("Transformed object should be a string", text.equals(result.toString()));
-        AbstractJmsTransformer trans2 = new ObjectToJMSMessage();
+
+        AbstractJmsTransformer trans2 = new SessionEnabledObjectToJMSMessage(session);
         trans2.setReturnClass(TextMessage.class);
-        Object result2 = trans2.transform(text, session);
-        logger.debug("transformed object is of type " + result2.getClass().getName());
-        assertTrue("Transformed object should be an Text message", result2 instanceof TextMessage);
+        Object result2 = trans2.transform(text);
+        assertTrue("Transformed object should be a TextMessage", result2 instanceof TextMessage);
     }
 
     public void testTransMapMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
-        logger.debug("testTransMApMessage()");
+
         Properties p = new Properties();
         p.setProperty("Key1", "Value1");
         p.setProperty("Key2", "Value2");
         p.setProperty("Key3", "Value3");
-        AbstractJmsTransformer trans = new ObjectToJMSMessage();
+
+        AbstractJmsTransformer trans = new SessionEnabledObjectToJMSMessage(session);
         trans.setReturnClass(MapMessage.class);
-        Object result2 = trans.transform(p, session);
-        logger.debug("transformed object is of type " + result2.getClass().getName());
-        assertTrue("Transformed object should be a Map message", result2 instanceof MapMessage);
-        MapMessage mMsg = (MapMessage) result2;
-        logger.debug("created Map Message: " + mMsg);
+        Object result2 = trans.transform(p);
+        assertTrue("Transformed object should be a MapMessage", result2 instanceof MapMessage);
+
+        MapMessage mMsg = (MapMessage)result2;
         AbstractJmsTransformer trans2 = new JMSMessageToObject();
         trans2.setReturnClass(Map.class);
-        Object result = trans2.transform(mMsg, session);
-        logger.debug("transformed object is of type " + result.getClass().getName());
-        assertTrue("Transformed object should be a MAP", result instanceof Map);
+        Object result = trans2.transform(mMsg);
+        assertTrue("Transformed object should be a Map", result instanceof Map);
     }
 
     public void testTransByteMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
-        logger.debug("testTransByteMessage()");
-        String text = "This is a tests Byte Message";
-        AbstractJmsTransformer trans = new ObjectToJMSMessage();
+
+        AbstractJmsTransformer trans = new SessionEnabledObjectToJMSMessage(session);
         trans.setReturnClass(BytesMessage.class);
-        Object result2 = trans.transform(text.getBytes(), session);
-        logger.debug("transformed object is of type " + result2.getClass().getName());
-        assertTrue("Transformed object should be a Bytes message", result2 instanceof BytesMessage);
-        BytesMessage bMsg = (BytesMessage) result2;
+        String text = "This is a test BytesMessage";
+        Object result2 = trans.transform(text.getBytes());
+        assertTrue("Transformed object should be a BytesMessage", result2 instanceof BytesMessage);
+
         AbstractJmsTransformer trans2 = new JMSMessageToObject();
         trans2.setReturnClass(byte[].class);
-        Object result = trans2.transform(bMsg, session);
-        logger.debug("transformed object is of type " + result.getClass().getName());
+        BytesMessage bMsg = (BytesMessage)result2;
+        Object result = trans2.transform(bMsg);
         assertTrue("Transformed object should be a byte[]", result instanceof byte[]);
-        String res = new String((byte[]) result);
-        logger.debug("result message is " + res);
-        assertTrue("source and result messages should be the same", text.equals(res));
+        String res = new String((byte[])result);
+        assertEquals("Source and result should be equal", text, res);
     }
+
+    // The following test is disabled because - belive it or not - ActiveMQ 3.2.4
+    // unconditionally uncompresses BytesMessages for reading, even if it is not
+    // supposed to do so (the layer doing the message reading seems to have no access
+    // to the Broker configuration and seems to assume that compressed data was
+    // compressed by ActiveMQ for more efficient wire transport). This may or may not
+    // be fixed in 4.x.
+    // For more information why this is VERY BAD read:
+    // http://en.wikipedia.org/wiki/Zip_of_death
+    public void _testCompressedBytesMessage() throws Exception
+    {
+        RequestContext.setEvent(getTestEvent("test"));
+
+        // use GZIP
+        CompressionStrategy compressor = new GZipCompression();
+
+        // create compressible data
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for (int i = 0; i < 5000; i++)
+        {
+            baos.write(i);
+        }
+
+        byte[] originalBytes = baos.toByteArray();
+        byte[] compressedBytes = compressor.compressByteArray(originalBytes);
+        assertTrue("Source compressedBytes should be compressed", compressor.isCompressed(compressedBytes));
+
+        // now create a BytesMessage from the compressed byte[]
+        AbstractJmsTransformer trans = new SessionEnabledObjectToJMSMessage(session);
+        trans.setReturnClass(BytesMessage.class);
+        Object result2 = trans.transform(compressedBytes);
+        assertTrue("Transformed object should be a Bytes message", result2 instanceof BytesMessage);
+
+        // check whether the BytesMessage contains the compressed bytes
+        BytesMessage intermediate = (BytesMessage)result2;
+        intermediate.reset();
+        byte[] intermediateBytes = new byte[(int)(intermediate.getBodyLength())];
+        int intermediateSize = intermediate.readBytes(intermediateBytes);
+        assertTrue("Intermediate bytes must be compressed", compressor.isCompressed(intermediateBytes));
+        assertTrue("Intermediate bytes must be equal to compressed source", Arrays.equals(compressedBytes,
+            intermediateBytes));
+        assertEquals("Intermediate bytes and compressed source must have same size", compressedBytes.length,
+            intermediateSize);
+
+        // now test the other way around: getting the byte[] from a manually created
+        // BytesMessage
+        AbstractJmsTransformer trans2 = new JMSMessageToObject();
+        trans2.setReturnClass(byte[].class);
+        BytesMessage bMsg = session.createBytesMessage();
+        bMsg.writeBytes(compressedBytes);
+        Object result = trans2.transform(bMsg);
+        assertTrue("Transformed object should be a byte[]", result instanceof byte[]);
+        assertTrue("Result should be compressed", compressor.isCompressed((byte[])result));
+        assertTrue("Source and result should be equal", Arrays.equals(compressedBytes, (byte[])result));
+    }
+
+    /*
+     * This class overrides getSession() to return the specified test Session;
+     * otherwise we would need a full-fledged JMS connector with dispatchers etc.
+     */
+    public static class SessionEnabledObjectToJMSMessage extends ObjectToJMSMessage
+    {
+        private static final long serialVersionUID = -440672187466417761L;
+        private final Session _session;
+
+        public SessionEnabledObjectToJMSMessage(Session session)
+        {
+            super();
+            _session = session;
+        }
+
+        // @Override
+        protected Session getSession()
+        {
+            return _session;
+        }
+    }
+
 }

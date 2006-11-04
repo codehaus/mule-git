@@ -16,10 +16,8 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
 /**
- * <code>FileMessageDispatcherFactory</code> creaes a dispatcher responsible for writing files to disk
- *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>FileMessageDispatcherFactory</code> creaes a dispatcher responsible for
+ * writing files to disk
  */
 public class FileMessageDispatcherFactory implements UMOMessageDispatcherFactory
 {
@@ -30,7 +28,7 @@ public class FileMessageDispatcherFactory implements UMOMessageDispatcherFactory
      */
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        return new FileMessageDispatcher( endpoint);
+        return new FileMessageDispatcher(endpoint);
     }
 
 }

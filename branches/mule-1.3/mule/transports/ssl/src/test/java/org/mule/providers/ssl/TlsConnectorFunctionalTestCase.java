@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.ssl;
 
 import org.apache.commons.logging.Log;
@@ -26,15 +27,18 @@ public class TlsConnectorFunctionalTestCase extends SslConnectorFunctionalTestCa
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(TlsConnectorFunctionalTestCase.class);
+    protected static Log logger = LogFactory.getLog(TlsConnectorFunctionalTestCase.class);
 
     private int port = 61655;
 
     protected UMOEndpointURI getInDest()
     {
-        try {
+        try
+        {
             return new MuleEndpointURI("tls://localhost:" + port);
-        } catch (MalformedEndpointException e) {
+        }
+        catch (MalformedEndpointException e)
+        {
             fail(e.getMessage());
             return null;
         }

@@ -10,6 +10,10 @@
 
 package org.mule.management.mbeans;
 
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -20,14 +24,10 @@ import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
 
-import javax.management.MBeanRegistration;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 /**
- * <code>ComponentService</code> exposes service information about a Mule
- * Managed component
- *
+ * <code>ComponentService</code> exposes service information about a Mule Managed
+ * component
+ * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
@@ -37,7 +37,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
     /**
      * logger used by this class
      */
-    private static transient Log LOGGER = LogFactory.getLog(ComponentService.class);
+    private static Log LOGGER = LogFactory.getLog(ComponentService.class);
 
     private MBeanServer server;
 
@@ -59,39 +59,45 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
     public int getQueueSize()
     {
         UMOComponent c = getComponent();
-        if(c instanceof SedaComponent) {
+        if (c instanceof SedaComponent)
+        {
             return ((SedaComponent)c).getQueueSize();
-        } else {
+        }
+        else
+        {
             return -1;
         }
     }
 
     /**
-     * Pauses event processing for theComponent. Unlike stop(), a paused
-     * component will still consume messages from the underlying transport, but
-     * those messages will be queued until the component is resumed. <p/> In
-     * order to persist these queued messages you can set the 'recoverableMode'
-     * property on the Muleconfiguration to true. this causes all internal
-     * queues to store their state.
-     *
+     * Pauses event processing for theComponent. Unlike stop(), a paused component
+     * will still consume messages from the underlying transport, but those messages
+     * will be queued until the component is resumed. <p/> In order to persist these
+     * queued messages you can set the 'recoverableMode' property on the
+     * Muleconfiguration to true. this causes all internal queues to store their
+     * state.
+     * 
      * @throws org.mule.umo.UMOException if the component failed to pause.
      * @see org.mule.config.MuleConfiguration
      */
-    public void pause() throws UMOException {
+    public void pause() throws UMOException
+    {
         getComponent().pause();
     }
 
     /**
-     * Resumes the Component that has been paused. If the component is not
-     * paused nothing is executed.
-     *
+     * Resumes the Component that has been paused. If the component is not paused
+     * nothing is executed.
+     * 
      * @throws org.mule.umo.UMOException if the component failed to resume
      */
-    public void resume() throws UMOException {
+    public void resume() throws UMOException
+    {
         getComponent().resume();
     }
 
-    public boolean isPaused() {
+    public boolean isPaused()
+    {
         return getComponent().isPaused();
     }
 
@@ -105,11 +111,13 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
         getComponent().stop();
     }
 
-    public void forceStop() throws UMOException {
+    public void forceStop() throws UMOException
+    {
         getComponent().forceStop();
     }
 
-    public boolean isStopping() {
+    public boolean isStopping()
+    {
         return getComponent().isStopping();
     }
 
@@ -125,7 +133,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.management.mbeans.ComponentServiceMBean#getStatistics()
      */
     public ObjectName getStatistics()
@@ -135,7 +143,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.management.MBeanRegistration#preRegister(javax.management.MBeanServer,
      *      javax.management.ObjectName)
      */
@@ -148,47 +156,55 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.management.MBeanRegistration#postRegister(java.lang.Boolean)
      */
-    public void postRegister(Boolean registrationDone) {
-        try {
-            if (getComponent().getStatistics() != null) {
-                statsName = new ObjectName(objectName.getDomain()
-                        + ":type=org.mule.Statistics,component=" + getName());
+    public void postRegister(Boolean registrationDone)
+    {
+        try
+        {
+            if (getComponent().getStatistics() != null)
+            {
+                statsName = new ObjectName(objectName.getDomain() + ":type=org.mule.Statistics,component="
+                                           + getName());
                 // unregister old version if exists
-                if (this.server.isRegistered(statsName)) {
+                if (this.server.isRegistered(statsName))
+                {
                     this.server.unregisterMBean(statsName);
                 }
 
-                this.server.registerMBean(new ComponentStats(getComponent()
-                        .getStatistics()), this.statsName);
+                this.server.registerMBean(new ComponentStats(getComponent().getStatistics()), this.statsName);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             LOGGER.error("Error post-registering the MBean", e);
         }
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.management.MBeanRegistration#preDeregister()
      */
     public void preDeregister() throws Exception
     {
-        try {
-            if (this.server.isRegistered(statsName)) {
+        try
+        {
+            if (this.server.isRegistered(statsName))
+            {
                 this.server.unregisterMBean(statsName);
             }
-        } catch(Exception ex) {
-            LOGGER.error("Error unregistering ComponentService child " + statsName.getCanonicalName(),
-                        ex);
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error("Error unregistering ComponentService child " + statsName.getCanonicalName(), ex);
         }
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.management.MBeanRegistration#postDeregister()
      */
     public void postDeregister()
@@ -199,14 +215,17 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
     private AbstractComponent getComponent()
     {
         UMOSession session = MuleManager.getInstance().getModel().getComponentSession(getName());
-        if (session == null) {
+        if (session == null)
+        {
             return null;
-        } else {
+        }
+        else
+        {
             return (AbstractComponent)session.getComponent();
         }
     }
 
-    /////// Component stats impl /////////
+    // ///// Component stats impl /////////
 
     /**
      *

@@ -7,23 +7,21 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.extras.spring.events;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionException;
+package org.mule.extras.spring.events;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionException;
+
 /**
  * <code>AsynchronousEventListener</code> will spawn a thread for each Event
  * received. The thread pool passed in the constructor will determine hown many
  * threads can be executed at any time.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class AsynchronousEventListener implements MuleEventListener
@@ -31,17 +29,17 @@ public class AsynchronousEventListener implements MuleEventListener
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(AsynchronousEventListener.class);
+    protected static Log logger = LogFactory.getLog(AsynchronousEventListener.class);
 
     /**
      * The listener to delegate to
      */
-    private ApplicationListener listener;
+    private final ApplicationListener listener;
 
     /**
      * the pool that manages the threads of execution
      */
-    private ExecutorService threadPool;
+    private final ExecutorService threadPool;
 
     public AsynchronousEventListener(ExecutorService threadPool, ApplicationListener listener)
     {
@@ -51,9 +49,12 @@ public class AsynchronousEventListener implements MuleEventListener
 
     public void onApplicationEvent(ApplicationEvent event)
     {
-        try {
+        try
+        {
             threadPool.execute(new Worker(event));
-        } catch (RejectedExecutionException e) {
+        }
+        catch (RejectedExecutionException e)
+        {
             logger.error("Failed to process event: " + event.toString(), e);
         }
     }
@@ -73,7 +74,8 @@ public class AsynchronousEventListener implements MuleEventListener
         }
     }
 
-    public ApplicationListener getListener() {
+    public ApplicationListener getListener()
+    {
         return listener;
     }
 }

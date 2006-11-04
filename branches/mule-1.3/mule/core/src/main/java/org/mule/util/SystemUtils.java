@@ -24,10 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-// @Immutable
+// @ThreadSafe
 public class SystemUtils extends org.apache.commons.lang.SystemUtils
 {
-    protected static transient final Log logger = LogFactory.getLog(SystemUtils.class);
+    protected static final Log logger = LogFactory.getLog(SystemUtils.class);
 
     // bash prepends: declare -x
     // zsh prepends: typeset -x

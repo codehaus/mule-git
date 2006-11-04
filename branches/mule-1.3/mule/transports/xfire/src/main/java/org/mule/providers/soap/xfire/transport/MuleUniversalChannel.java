@@ -10,18 +10,6 @@
 
 package org.mule.providers.soap.xfire.transport;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +28,7 @@ import org.codehaus.xfire.soap.SoapConstants;
 import org.codehaus.xfire.soap.SoapVersion;
 import org.codehaus.xfire.transport.AbstractChannel;
 import org.codehaus.xfire.transport.Channel;
+import org.codehaus.xfire.transport.Transport;
 import org.codehaus.xfire.util.STAXUtils;
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
@@ -56,8 +45,24 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- * TODO explain what this does and how, at least briefly :)
+ * The MuleUniversalChannel is an XFire Channel implementation that uses
+ * a Mule Transport under the covers. It theoretically can use any Mule transport
+ * but only transports that support streaming can be used with XFire.
+ *
+ * This channel is used for making Soap requests using XFire, not receiving them.
+ *
  */
 public class MuleUniversalChannel extends AbstractChannel
 {
@@ -71,7 +76,7 @@ public class MuleUniversalChannel extends AbstractChannel
      */
     protected transient final MuleClient client;
 
-    public MuleUniversalChannel(String uri, MuleUniversalTransport transport)
+    public MuleUniversalChannel(String uri, Transport transport)
     {
         setTransport(transport);
         setUri(uri);

@@ -1,5 +1,5 @@
 /*
- * $Id: FilteringListMessageSplitterTestCase.java 2683 2006-08-11 20:29:08 +0000 (Fri, 11 Aug 2006) aperepel $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.test.routing.outbound;
 
 import org.mule.impl.MuleMessage;
@@ -22,9 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a>
- *
- * $Id: FilteringListMessageSplitterTestCase.java 2683 2006-08-11 20:29:08 +0000 (Fri, 11 Aug 2006) aperepel $
+ * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a> $Id:
+ *         FilteringListMessageSplitterTestCase.java 3589 2006-10-16 16:44:50Z holger $
  */
 public class FilteringListMessageSplitterTestCase extends AbstractMuleTestCase
 {
@@ -47,12 +47,9 @@ public class FilteringListMessageSplitterTestCase extends AbstractMuleTestCase
 
         UMOMessage message = new MuleMessage(payload);
 
-
         UMOMessage result = router.route(message, session, true);
         assertNotNull(result);
 
-        assertEquals("Correlation group size has not been set.",
-                      4,
-                      result.getCorrelationGroupSize());
+        assertEquals("Correlation group size has not been set.", 4, result.getCorrelationGroupSize());
     }
 }

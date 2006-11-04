@@ -14,7 +14,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
-import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * <code>UMOException</code> is the base exception type for the Mule server
- * any other exceptions thrown by Mule code will be based on this exception
+ * <code>UMOException</code> is the base exception type for the Mule server any
+ * other exceptions thrown by Mule code will be based on this exception
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
@@ -52,15 +52,15 @@ public abstract class UMOException extends Exception
      */
     public UMOException(Message message, Throwable cause)
     {
-        super((cause instanceof InvocationTargetException ? ((InvocationTargetException) cause).getTargetException()
-                : cause));
+        super((cause instanceof InvocationTargetException
+                        ? ((InvocationTargetException)cause).getTargetException() : cause));
         setMessage(message);
     }
 
     public UMOException(Throwable cause)
     {
-        super((cause instanceof InvocationTargetException ? ((InvocationTargetException) cause).getTargetException()
-                : cause));
+        super((cause instanceof InvocationTargetException
+                        ? ((InvocationTargetException)cause).getTargetException() : cause));
         setMessage(Message.createStaticMessage(cause.getMessage() + " (" + cause.getClass().getName() + ")"));
         initialise();
     }
@@ -82,7 +82,8 @@ public abstract class UMOException extends Exception
     {
         initialise();
         this.message = message;
-        if (i18nMessage == null) {
+        if (i18nMessage == null)
+        {
             i18nMessage = Message.createStaticMessage(message);
         }
     }
@@ -92,7 +93,8 @@ public abstract class UMOException extends Exception
         return errorCode;
     }
 
-    public Message getI18nMessage() {
+    public Message getI18nMessage()
+    {
         return i18nMessage;
     }
 
@@ -131,12 +133,14 @@ public abstract class UMOException extends Exception
         setExceptionCode(ExceptionHelper.getErrorCode(getClass()));
         String javadoc = ExceptionHelper.getJavaDocUrl(getClass());
         String doc = ExceptionHelper.getDocUrl(getClass());
-        if (javadoc != null) {
-            //info.put(ClassHelper.getClassName(getClass()) + " JavaDoc", javadoc);
+        if (javadoc != null)
+        {
+            // info.put(ClassHelper.getClassName(getClass()) + " JavaDoc", javadoc);
             info.put("JavaDoc", javadoc);
         }
-        if (doc != null) {
-            //info.put(ClassHelper.getClassName(getClass()) + " Other Doc", doc);
+        if (doc != null)
+        {
+            // info.put(ClassHelper.getClassName(getClass()) + " Other Doc", doc);
             info.put("Other Doc", doc);
         }
     }
@@ -144,63 +148,77 @@ public abstract class UMOException extends Exception
     public String getDetailedMessage()
     {
         UMOException e = ExceptionHelper.getRootMuleException(this);
-        if (!e.equals(this)) {
+        if (!e.equals(this))
+        {
             return getMessage();
         }
         StringBuffer buf = new StringBuffer(1024);
-        buf.append(SystemUtils.LINE_SEPARATOR).append(StringMessageUtils.charString('*', 80)).append(SystemUtils.LINE_SEPARATOR);
+        buf.append(SystemUtils.LINE_SEPARATOR).append(StringUtils.repeat('*', 80)).append(
+            SystemUtils.LINE_SEPARATOR);
         buf.append("Message               : ").append(message).append(SystemUtils.LINE_SEPARATOR);
-        buf.append("Type                  : ").append(getClass().getName()).append(SystemUtils.LINE_SEPARATOR);
-        buf.append("Code                  : ").append("MULE_ERROR-").append(getExceptionCode() + getMessageCode()).append(SystemUtils.LINE_SEPARATOR);
-        // buf.append("Msg Code : ").append(getMessageCode()).append(SystemUtils.LINE_SEPARATOR);
+        buf.append("Type                  : ")
+            .append(getClass().getName())
+            .append(SystemUtils.LINE_SEPARATOR);
+        buf.append("Code                  : ").append("MULE_ERROR-").append(
+            getExceptionCode() + getMessageCode()).append(SystemUtils.LINE_SEPARATOR);
+        // buf.append("Msg Code :
+        // ").append(getMessageCode()).append(SystemUtils.LINE_SEPARATOR);
 
         Map info = ExceptionHelper.getExceptionInfo(this);
-        for (Iterator iterator = info.keySet().iterator(); iterator.hasNext();) {
-            String s = (String) iterator.next();
+        for (Iterator iterator = info.keySet().iterator(); iterator.hasNext();)
+        {
+            String s = (String)iterator.next();
             int pad = 22 - s.length();
             buf.append(s);
-            if (pad > 0) {
-                buf.append(StringMessageUtils.charString(' ', pad));
+            if (pad > 0)
+            {
+                buf.append(StringUtils.repeat(' ', pad));
             }
             buf.append(": ");
             buf.append(info.get(s)).append(SystemUtils.LINE_SEPARATOR);
         }
 
         // print exception stack
-        buf.append(StringMessageUtils.charString('*', 80)).append(SystemUtils.LINE_SEPARATOR);
+        buf.append(StringUtils.repeat('*', 80)).append(SystemUtils.LINE_SEPARATOR);
         buf.append(new Message(Messages.EXCEPTION_STACK_IS)).append(SystemUtils.LINE_SEPARATOR);
         buf.append(ExceptionHelper.getExceptionStack(this));
 
-        buf.append(StringMessageUtils.charString('*', 80)).append(SystemUtils.LINE_SEPARATOR);
+        buf.append(StringUtils.repeat('*', 80)).append(SystemUtils.LINE_SEPARATOR);
         buf.append(new Message(Messages.ROOT_STACK_TRACE)).append(SystemUtils.LINE_SEPARATOR);
         Throwable root = ExceptionHelper.getRootException(this);
         StringWriter w = new StringWriter();
         PrintWriter p = new PrintWriter(w);
         root.printStackTrace(p);
         buf.append(w.toString()).append(SystemUtils.LINE_SEPARATOR);
-        buf.append(StringMessageUtils.charString('*', 80)).append(SystemUtils.LINE_SEPARATOR);
+        buf.append(StringUtils.repeat('*', 80)).append(SystemUtils.LINE_SEPARATOR);
 
         return buf.toString();
     }
 
     public boolean equals(Object o)
     {
-        if (this == o) {
+        if (this == o)
+        {
             return true;
         }
-        if (!(o instanceof UMOException)) {
+        if (!(o instanceof UMOException))
+        {
             return false;
         }
 
-        final UMOException umoException = (UMOException) o;
+        final UMOException umoException = (UMOException)o;
 
-        if (errorCode != umoException.errorCode) {
+        if (errorCode != umoException.errorCode)
+        {
             return false;
         }
-        if (i18nMessage != null ? !i18nMessage.equals(umoException.i18nMessage) : umoException.i18nMessage != null) {
+        if (i18nMessage != null
+                        ? !i18nMessage.equals(umoException.i18nMessage) : umoException.i18nMessage != null)
+        {
             return false;
         }
-        if (message != null ? !message.equals(umoException.message) : umoException.message != null) {
+        if (message != null ? !message.equals(umoException.message) : umoException.message != null)
+        {
             return false;
         }
 

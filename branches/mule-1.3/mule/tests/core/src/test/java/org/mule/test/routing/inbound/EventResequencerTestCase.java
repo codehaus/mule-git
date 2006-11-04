@@ -1,5 +1,5 @@
 /*
- * $Id: EventResequencerTestCase.java 2656 2006-08-10 02:35:05Z holger $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.test.routing.inbound;
 
 import com.mockobjects.dynamic.Mock;
@@ -30,13 +31,9 @@ import org.mule.umo.routing.UMOInboundMessageRouter;
 
 import java.util.Comparator;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 2656 $
- */
-
 public class EventResequencerTestCase extends AbstractMuleTestCase
 {
+
     public void testMessageResequencer() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
@@ -53,9 +50,9 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
         UMOMessage message3 = new MuleMessage("test event C");
 
         UMOEndpoint endpoint = getTestEndpoint("Test1Provider", UMOEndpoint.ENDPOINT_TYPE_SENDER);
-        UMOEvent event1 = new MuleEvent(message1, endpoint, (UMOSession) session.proxy(), false);
-        UMOEvent event2 = new MuleEvent(message2, endpoint, (UMOSession) session.proxy(), false);
-        UMOEvent event3 = new MuleEvent(message3, endpoint, (UMOSession) session.proxy(), false);
+        UMOEvent event1 = new MuleEvent(message1, endpoint, (UMOSession)session.proxy(), false);
+        UMOEvent event2 = new MuleEvent(message2, endpoint, (UMOSession)session.proxy(), false);
+        UMOEvent event3 = new MuleEvent(message3, endpoint, (UMOSession)session.proxy(), false);
         assertTrue(router.isMatch(event1));
         assertTrue(router.isMatch(event2));
         assertTrue(router.isMatch(event3));
@@ -99,7 +96,8 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
         protected boolean shouldResequence(EventGroup events)
         {
             eventCount++;
-            if (eventCount == eventthreshold) {
+            if (eventCount == eventthreshold)
+            {
                 eventCount = 0;
                 return true;
             }
@@ -111,9 +109,12 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
     {
         public int compare(Object o1, Object o2)
         {
-            try {
-                return ((UMOEvent) o1).getMessageAsString().compareTo(((UMOEvent) o2).getMessageAsString());
-            } catch (UMOException e) {
+            try
+            {
+                return ((UMOEvent)o1).getMessageAsString().compareTo(((UMOEvent)o2).getMessageAsString());
+            }
+            catch (UMOException e)
+            {
                 throw new IllegalArgumentException(e.getMessage());
             }
 

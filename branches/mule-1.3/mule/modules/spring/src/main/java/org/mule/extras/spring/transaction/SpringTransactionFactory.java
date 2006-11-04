@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.extras.spring.transaction;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
@@ -18,20 +19,17 @@ import org.mule.umo.UMOTransactionFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.jms.connection.JmsResourceHolder;
+import org.springframework.jdbc.datasource.ConnectionHolder;
 
 /**
  * TODO: document this class
- * 
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
  */
 public class SpringTransactionFactory implements UMOTransactionFactory
 {
 
     /**
      * TODO: document this class
-     * 
-     * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
      */
     public class SpringTransaction extends AbstractSingleResourceTransaction
     {
@@ -65,12 +63,18 @@ public class SpringTransactionFactory implements UMOTransactionFactory
         public Object getResource(Object key)
         {
             Object res = TransactionSynchronizationManager.getResource(key);
-            if (res != null) {
-                if (res instanceof org.springframework.jdbc.datasource.ConnectionHolder) {
-                    return ((org.springframework.jdbc.datasource.ConnectionHolder) res).getConnection();
+            if (res != null)
+            {
+                if (!(res instanceof ConnectionHolder))
+                {
+                    if (res instanceof JmsResourceHolder)
+                    {
+                        return ((JmsResourceHolder)res).getConnection();
+                    }
                 }
-                if (res instanceof org.springframework.jms.connection.ConnectionHolder) {
-                    return ((org.springframework.jms.connection.ConnectionHolder) res).getConnection();
+                else
+                {
+                    return ((ConnectionHolder)res).getConnection();
                 }
             }
             return res;
@@ -114,7 +118,7 @@ public class SpringTransactionFactory implements UMOTransactionFactory
     /**
      * @return Returns the manager.
      */
-    public PlatformTransactionManager getManager()
+    synchronized public PlatformTransactionManager getManager()
     {
         return manager;
     }
@@ -122,7 +126,7 @@ public class SpringTransactionFactory implements UMOTransactionFactory
     /**
      * @param manager The manager to set.
      */
-    public void setManager(PlatformTransactionManager manager)
+    synchronized public void setManager(PlatformTransactionManager manager)
     {
         this.manager = manager;
     }

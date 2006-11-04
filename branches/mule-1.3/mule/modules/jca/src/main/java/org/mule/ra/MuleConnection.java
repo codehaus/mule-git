@@ -7,21 +7,19 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.ra;
+
+import java.util.Map;
+
+import javax.resource.ResourceException;
 
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 
-import javax.resource.ResourceException;
-
-import java.util.Map;
-
 /**
- * <code>MuleConnection</code> defines the client connection methods for the
- * JCA cci contract
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>MuleConnection</code> defines the client connection methods for the JCA
+ * CCI contract
  */
 public interface MuleConnection
 {
@@ -34,4 +32,6 @@ public interface MuleConnection
     void close() throws ResourceException;
 
     void associateConnection(MuleManagedConnection newMc) throws ResourceException;
+
+    UMOMessage send(String url, Object payload, Map messageProperties) throws UMOException;
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EventAggregatorTestCase.java 2656 2006-08-10 02:35:05Z holger $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -7,7 +7,11 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.test.routing.inbound;
+
+import java.util.Iterator;
+import java.util.Map;
 
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
@@ -26,15 +30,9 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.UMOInboundMessageRouter;
 
-import java.util.Iterator;
-
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 2656 $
- */
-
 public class EventAggregatorTestCase extends AbstractMuleTestCase
 {
+
     public void testMessageAggregator() throws Exception
     {
         UMOComponent testComponent = getTestComponent(getTestDescriptor("test", Apple.class.getName()));
@@ -68,8 +66,8 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
 
     public static class SimpleEventAggregator extends AbstractEventAggregator
     {
+        private final int eventThreshold;
         private int eventCount = 0;
-        private int eventThreshold = 1;
 
         public SimpleEventAggregator(int eventThreshold)
         {
@@ -79,7 +77,8 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
         protected boolean shouldAggregate(EventGroup events)
         {
             eventCount++;
-            if (eventCount == eventThreshold) {
+            if (eventCount == eventThreshold)
+            {
                 eventCount = 0;
                 return true;
             }
@@ -88,17 +87,27 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
 
         protected UMOMessage aggregateEvents(EventGroup events) throws AggregationException
         {
-            StringBuffer newPayload = new StringBuffer();
-            UMOEvent event = null;
-            for (Iterator iterator = events.iterator(); iterator.hasNext();) {
-                event = (UMOEvent) iterator.next();
-                try {
+            if (events.size() != this.eventThreshold)
+            {
+                throw new IllegalStateException("eventThreshold not yet reached?");
+            }
+
+            StringBuffer newPayload = new StringBuffer(80);
+
+            for (Iterator iterator = events.iterator(); iterator.hasNext();)
+            {
+                UMOEvent event = (UMOEvent)iterator.next();
+                try
+                {
                     newPayload.append(event.getMessageAsString()).append(" ");
-                } catch (UMOException e) {
+                }
+                catch (UMOException e)
+                {
                     throw new AggregationException(events, event.getEndpoint(), e);
                 }
             }
-            return new MuleMessage(newPayload.toString(), event.getMessage());
+
+            return new MuleMessage(newPayload.toString(), (Map)null);
         }
     }
 }

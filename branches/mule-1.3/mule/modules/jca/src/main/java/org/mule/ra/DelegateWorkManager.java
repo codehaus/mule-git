@@ -7,10 +7,8 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.ra;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.manager.UMOWorkManager;
+package org.mule.ra;
 
 import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
@@ -18,15 +16,15 @@ import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkListener;
 import javax.resource.spi.work.WorkManager;
 
+import org.mule.umo.UMOException;
+import org.mule.umo.manager.UMOWorkManager;
+
 /**
  * <code>DelegateWorkManager</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class DelegateWorkManager implements UMOWorkManager
 {
-    private WorkManager workManager;
+    private final WorkManager workManager;
 
     public DelegateWorkManager(WorkManager workManager)
     {
@@ -39,7 +37,7 @@ public class DelegateWorkManager implements UMOWorkManager
     }
 
     public void doWork(Work work, long l, ExecutionContext executionContext, WorkListener workListener)
-            throws WorkException
+        throws WorkException
     {
         workManager.doWork(work, l, executionContext, workListener);
     }
@@ -50,7 +48,7 @@ public class DelegateWorkManager implements UMOWorkManager
     }
 
     public long startWork(Work work, long l, ExecutionContext executionContext, WorkListener workListener)
-            throws WorkException
+        throws WorkException
     {
         return workManager.startWork(work, l, executionContext, workListener);
     }
@@ -61,7 +59,7 @@ public class DelegateWorkManager implements UMOWorkManager
     }
 
     public void scheduleWork(Work work, long l, ExecutionContext executionContext, WorkListener workListener)
-            throws WorkException
+        throws WorkException
     {
         workManager.scheduleWork(work, l, executionContext, workListener);
     }
