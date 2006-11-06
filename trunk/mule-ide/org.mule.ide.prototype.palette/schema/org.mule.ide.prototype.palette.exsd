@@ -15,7 +15,7 @@
          <sequence minOccurs="1" maxOccurs="unbounded">
             <choice>
                <element ref="folder"/>
-               <element ref="component"/>
+               <element ref="connector"/>
                <element ref="filter"/>
                <element ref="endpoint"/>
             </choice>
@@ -127,6 +127,13 @@
             </annotation>
          </attribute>
          <attribute name="className" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="type" type="string">
             <annotation>
                <documentation>
                   
