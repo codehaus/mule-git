@@ -80,6 +80,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -90,10 +91,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -131,6 +135,7 @@ import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERenderer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
 import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
+import org.mule.ide.prototype.palette.ComponentItem;
 import org.w3c.dom.Node;
 
 
@@ -859,7 +864,8 @@ public class MuleEditor
 		int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[] { LocalTransfer.getInstance() };
 		viewer.addDragSupport(dndOperations, transfers, new ViewerDragAdapter(viewer));
-		viewer.addDropSupport(dndOperations, transfers, new EditingDomainViewerDropAdapter(editingDomain, viewer));
+		//viewer.addDropSupport(dndOperations, transfers, new EditingDomainViewerDropAdapter(editingDomain, viewer));
+		viewer.addDropSupport(dndOperations, new Transfer[] {LocalSelectionTransfer.getTransfer(), LocalTransfer.getInstance() }, new PaletteDropListener(editingDomain, viewer));
 	}
 
 	private EMF2DOMSSERenderer emf2sse;
@@ -972,6 +978,8 @@ public class MuleEditor
 	protected void createSourcePage() throws PartInitException {
 		fTextEditor = createTextEditor();
 		fTextEditor.setEditorPart(this);
+		int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+		Transfer[] transfers = new Transfer[] { LocalTransfer.getInstance() };
 
 //		if (fPropertyListener == null) {
 //			fPropertyListener = new PropertyListener();
@@ -1709,5 +1717,58 @@ public class MuleEditor
 	 */
 	public EditingDomain getEditingDomain() {
 		return editingDomain;
+	}
+	
+	class PaletteDropListener extends EditingDomainViewerDropAdapter { //implements DropTargetListener {
+		StructuredViewer viewer;
+		
+		public PaletteDropListener(EditingDomain domain, StructuredViewer viewer) {
+			super(domain, viewer);
+			this.viewer = viewer;
+		}
+		
+		public void dragOver(DropTargetEvent event) {
+			System.out.println("dragOver called");
+			//System.out.println("dragOver: " + event.data.getClass().getName());
+		}
+		
+		public void dragLeave(DropTargetEvent event) {
+		}
+		
+		public void dropAccept(DropTargetEvent event) {
+			//System.out.println("dragAccept: " + event.data.getClass().getName());
+		}
+		
+		public void dragOperationChanged(DropTargetEvent event) {
+		}
+		
+		public void dragEnter(DropTargetEvent event) {
+			System.out.println("dragEnter called");
+			//System.out.println("dragEnter: " + event.data.getClass().getName());
+		}
+		
+		public void drop(DropTargetEvent event) {
+			System.out.println("drop called");
+			if (event.data == null) {
+				System.out.println("data is null");
+			} else if (event.data instanceof org.eclipse.jface.viewers.TreeSelection){
+				TreeSelection selection = (TreeSelection)event.data;
+				Object object = selection.getFirstElement();
+				System.out.println("object: " + object.getClass().getName());
+				System.out.println("object: " + object.toString());
+
+		        if (object instanceof ComponentItem) {
+		        	ComponentItem component = (ComponentItem)object;
+		            String data = component.getName();
+					MessageDialog.openInformation(getSite().getShell(),
+							 "Drop Listener",
+							 "So you want to drop a "+ data + " here? What do you think you are doing!");
+		        } else {
+		        	super.drop(event);
+		        }
+			} else {
+				System.out.println(event.data.getClass().getName());
+			}
+		}
 	}
 }
