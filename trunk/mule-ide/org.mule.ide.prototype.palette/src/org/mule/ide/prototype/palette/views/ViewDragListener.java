@@ -42,6 +42,7 @@ public class ViewDragListener extends DragSourceAdapter {
         if (object instanceof ComponentItem) {
         	ComponentItem component = (ComponentItem)object;
             event.data = component.getName();
+            System.out.println("Setting event.data to " + event.data);
         }
     }
 
