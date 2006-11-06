@@ -10,9 +10,6 @@
 
 package org.mule.providers.gs;
 
-import com.gigaspaces.converter.pojo.Pojo2ExternalEntryConverter;
-import com.j_spaces.core.client.ExternalEntry;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,12 +18,21 @@ import net.jini.core.entry.Entry;
 
 import org.mule.umo.UMOMessage;
 
+import com.gigaspaces.converter.pojo.Pojo2ExternalEntryConverter;
+import com.j_spaces.core.client.ExternalEntry;
+
 public class GigaSpacesEntryConverter
 {
     private final Pojo2ExternalEntryConverter converter = new Pojo2ExternalEntryConverter();
 
-    public ExternalEntry toEntry(Object pojo, UMOMessage msg)
+    public Entry toEntry(Object pojo, UMOMessage msg)
     {
+        if (pojo instanceof Entry)
+        {
+            // nothing to do
+            return (Entry)pojo;
+        }
+
         ExternalEntry result = (ExternalEntry)converter.toEntry(pojo);
 
         int fieldCount = result.m_FieldsNames.length;
