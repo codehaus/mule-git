@@ -20,7 +20,6 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.provider.NoReceiverForEndpointException;
 import org.mule.util.PropertiesUtils;
-import org.mule.MuleManager;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -34,10 +33,6 @@ import java.util.Properties;
 /**
  * Receives Http requests via a Servlet and routes the to listeners with servlet://
  * endpoints
- *
- * There needs to be a ServletConnector configured on the Mule Server, this connector
- * must have the servletUrl property set that matches the Url for the container that this
- * Servlet is hosted in, i.e. something like http://192.168.10.21:8888
  */
 
 public class MuleReceiverServlet extends AbstractReceiverServlet
@@ -51,25 +46,11 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
 
     protected void doInit(ServletConfig servletConfig) throws ServletException
     {
-        String servletConnectorName = servletConfig.getInitParameter(SERVLET_CONNECTOR_NAME_PROPERTY);
-        if(servletConnectorName==null)
+        connector = (ServletConnector)ConnectorFactory.getConnectorByProtocol("servlet");
+        if (connector == null)
         {
-            connector = (ServletConnector)ConnectorFactory.getConnectorByProtocol("servlet");
-            if (connector == null)
-            {
-                throw new ServletException(new Message("http", 9).toString());
-            }
+            throw new ServletException("No servlet connector found using protocol: servlet");
         }
-        else
-        {
-            connector = (ServletConnector)MuleManager.getInstance().lookupConnector(servletConnectorName);
-            if (connector == null)
-            {
-                throw new ServletException(new Message("http", 10, servletConnectorName).toString());
-            }
-        }
-
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -78,7 +59,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         try
         {
             AbstractMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
+            UMOMessage responseMessage = null;
             UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -96,7 +77,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         try
         {
             AbstractMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
+            UMOMessage responseMessage = null;
             UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "POST");
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -164,22 +145,17 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         String name = httpServletRequest.getPathInfo();
         if (name == null)
         {
-            name = httpServletRequest.getServletPath();
+            name = httpServletRequest.getParameter("endpoint");
             if (name == null)
             {
-                name = httpServletRequest.getParameter("endpoint");
+                Properties params = PropertiesUtils.getPropertiesFromQueryString(httpServletRequest.getQueryString());
+                name = params.getProperty("endpoint");
                 if (name == null)
                 {
-                    Properties params = PropertiesUtils.getPropertiesFromQueryString(httpServletRequest.getQueryString());
-                    name = params.getProperty("endpoint");
-                    if (name == null)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
             }
         }
-        
         if (name.startsWith("/"))
         {
             name = name.substring(1);
