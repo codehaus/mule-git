@@ -27,6 +27,7 @@
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Used for the WorkManager API & for the Mule RA -->
         <dependency>
@@ -38,12 +39,6 @@
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <!-- Used for QNames -->
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-qname_1.1_spec</artifactId>
             <version>1.0.1</version>
         </dependency>
 
@@ -123,4 +118,34 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- no build is complete without XML -->
+    <profiles>
+        <profile>
+            <id>java14</id>
+            <activation>
+                <jdk>1.4</jdk>
+            </activation>
+            <dependencies>
+                <!--
+                Sun's 1.4.x JVMs come with a bundled Crimson XML parser.
+                Unfortunately it is very buggy and does not support validation
+                against an XML Schema, so we have to unconditionally include
+                both xml-apis and xerces (in matching versions!) for JDK 1.4.
+                -->
+                <dependency>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                    <version>1.3.03</version>
+                </dependency>
+                <dependency>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                    <version>2.8.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!-- no need for a jdk5 profile since we don't have to exclude anything -->
+    </profiles>
+
 </project>

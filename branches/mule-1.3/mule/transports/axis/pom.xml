@@ -44,11 +44,12 @@
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
-
+        <!-- need to explicitly mark javax.mail as provided -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
