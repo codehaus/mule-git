@@ -89,7 +89,9 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         ThreadingProfile tp = connector.getReceiverThreadingProfile();
         socketListener.setMaxIdleTimeMs((int)tp.getThreadTTL());
         socketListener.setMaxThreads(tp.getMaxThreadsActive());
-        socketListener.setThreadsPriority(tp.getThreadPriority());
+        // thread priorities are evil and gone from ThreadingProfile
+        // (google for priority inversion)
+        // socketListener.setThreadsPriority(tp.getThreadPriority());
 
         httpServer.addListener(socketListener);
 
