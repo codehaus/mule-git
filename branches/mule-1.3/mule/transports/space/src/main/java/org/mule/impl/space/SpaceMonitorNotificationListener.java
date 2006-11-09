@@ -14,9 +14,6 @@ import org.mule.umo.manager.UMOServerNotificationListener;
 
 /**
  * Observer interface for Sapce notifications
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface SpaceMonitorNotificationListener extends UMOServerNotificationListener
 {
