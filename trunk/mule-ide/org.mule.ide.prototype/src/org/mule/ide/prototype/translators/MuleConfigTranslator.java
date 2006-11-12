@@ -119,7 +119,7 @@ public class MuleConfigTranslator extends RootTranslator {
 						.getMuleConfig_Components(), MULE_CONFIG_PACKAGE.getGenericComponent());
 		translator.setChildren(new Translator[] {
 				IDTranslator.INSTANCE,
-				new Translator(MuleConfigXmlMapping.COMMENT,
+				new Translator(MuleConfigXmlMapping.MULE_DESCRIPTOR,
 						MULE_CONFIG_PACKAGE.getAbstractComponent_Comment(),
 						Translator.COMMENT_FEATURE),
 				new Translator(MuleConfigXmlMapping.ATTR_NAME,
@@ -191,7 +191,7 @@ public class MuleConfigTranslator extends RootTranslator {
 						.getMuleConfig_GlobalEndpoints(), OBJECT_MAP);
 		translator.setChildren(new Translator[] {
 				IDTranslator.INSTANCE,
-				new Translator(MuleConfigXmlMapping.COMMENT,
+				new Translator(MuleConfigXmlMapping.ENDPOINT,
 						MULE_CONFIG_PACKAGE.getGlobalEndpoint_Comment(),
 						Translator.COMMENT_FEATURE),
 				new Translator(MuleConfigXmlMapping.ATTR_ADDRESS,
