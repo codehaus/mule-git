@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.OverrideableCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
@@ -90,14 +91,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -127,12 +127,10 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
-import org.eclipse.wst.common.internal.emf.resource.Renderer;
-import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.common.internal.emfworkbench.integration.ProjectResourceSetEditImpl;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERenderer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.mule.ide.prototype.mulemodel.impl.MuleFactoryImpl;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
 import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
 import org.mule.ide.prototype.palette.ComponentItem;
@@ -143,7 +141,7 @@ import org.w3c.dom.Node;
  * This is an example of a Mule model editor.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
- * @generated
+ * @generated NOT
  */
 
 public class MuleEditor
@@ -414,7 +412,8 @@ public class MuleEditor
 										 }
 									 });
 							}
-						}
+						};
+						break;
 					}
 				}
 				else {
@@ -868,8 +867,6 @@ public class MuleEditor
 		viewer.addDropSupport(dndOperations, new Transfer[] {LocalSelectionTransfer.getTransfer(), LocalTransfer.getInstance() }, new PaletteDropListener(editingDomain, viewer));
 	}
 
-	private EMF2DOMSSERenderer emf2sse;
-	
 	/**
 	 * This is the method called to load a resource into the editing domain's resource set based on the editor's input.
 	 * <!-- begin-user-doc -->
@@ -902,15 +899,6 @@ public class MuleEditor
 			// Load the resource through the editing domain.
 			//
 			Resource emfResource = editingDomain.loadResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()).toString());
-			
-			Renderer aRenderer  = ((TranslatorResource)emfResource).getRenderer();
-			if (aRenderer instanceof EMF2DOMSSERenderer) {
-				if (emf2sse != null) {
-					emf2sse.deRegisterAsModelStateListener();
-					emf2sse.deRegisterAsModelLifecycleListener();
-				}
-				emf2sse = (EMF2DOMSSERenderer)aRenderer;
-			}
 		}
 		catch (Exception exception) {
 			MuleEditorPlugin.INSTANCE.log(exception);
@@ -1760,9 +1748,19 @@ public class MuleEditor
 		        if (object instanceof ComponentItem) {
 		        	ComponentItem component = (ComponentItem)object;
 		            String data = component.getName();
-					MessageDialog.openInformation(getSite().getShell(),
-							 "Drop Listener",
-							 "So you want to drop a "+ data + " here? What do you think you are doing!");
+					if (event.item != null) {
+						String dropOn = "";
+						Object item = event.item.getData();
+						dropOn = "" + item;
+						MessageDialog.openInformation(getSite().getShell(),
+								"Drop Listener",
+								"So you want to drop a "+ data + " on a "+ dropOn +"? What do you think you are doing!");
+						if (component.mayDropOn((EObject)item)) {
+							
+							// Really, this should be a Command and we should execute it through the EditingDomain
+							component.performDropOn((EObject)item, MuleFactoryImpl.eINSTANCE);
+						}
+					}
 		        } else {
 		        	super.drop(event);
 		        }

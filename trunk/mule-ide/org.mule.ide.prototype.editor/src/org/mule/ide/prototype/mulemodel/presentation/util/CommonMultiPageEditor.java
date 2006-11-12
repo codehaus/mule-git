@@ -43,7 +43,8 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, IPropertyListener
 {
-  public static int SOURCE_PAGE_INDEX = 1, DESIGN_PAGE_INDEX = 0;
+  public static int SOURCE_PAGE_INDEX = 1;
+  public static int DESIGN_PAGE_INDEX = 0;
   
   protected IContentOutlinePage fOutlinePage;
   protected StructuredTextEditor structuredTextEditor;
