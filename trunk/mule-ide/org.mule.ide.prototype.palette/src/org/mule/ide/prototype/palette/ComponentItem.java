@@ -38,7 +38,7 @@ public class ComponentItem extends PaletteItem {
 			GenericComponent genericComponent = factory.createGenericComponent();
 			genericComponent.setName(this.getName());
 			genericComponent.setClassName(this.getName()); // Not supported in XML
-			genericComponent.setComment("Dropped from the Mule palette on" + new Date());
+			genericComponent.setComment("Dropped from the Mule palette on " + new Date());
 			
 			cfg.getComponents().add(genericComponent);
 		}
