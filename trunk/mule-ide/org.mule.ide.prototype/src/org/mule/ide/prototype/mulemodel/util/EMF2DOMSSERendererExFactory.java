@@ -6,11 +6,11 @@ import org.eclipse.wst.common.internal.emf.resource.RendererFactory;
 /**
  * @author schacher
  */
-public class EMF2DOMSSERendererFactory extends RendererFactory {
+public class EMF2DOMSSERendererExFactory extends RendererFactory {
 
-	public static final EMF2DOMSSERendererFactory INSTANCE = new EMF2DOMSSERendererFactory();
+	public static final EMF2DOMSSERendererExFactory INSTANCE = new EMF2DOMSSERendererExFactory();
 
-	public EMF2DOMSSERendererFactory() {
+	public EMF2DOMSSERendererExFactory() {
 		// Default constructor
 	}
 
