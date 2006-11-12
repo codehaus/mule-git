@@ -69,12 +69,25 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 	 */
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case MulePackage.INBOUND_ROUTER_TYPE: return createInboundRouterType();
-			case MulePackage.COMPONENT_TYPE: return createComponentType();
+			case MulePackage.INBOUND_ROUTER: return createInboundRouter();
 			case MulePackage.MULE_CONFIG: return createMuleConfig();
-			case MulePackage.ENDPOINT_TYPE: return createEndpointType();
-			case MulePackage.OUTBOUND_ROUTER_TYPE: return createOutboundRouterType();
+			case MulePackage.OUTBOUND_ROUTER: return createOutboundRouter();
 			case MulePackage.INTERCEPTOR: return createInterceptor();
+			case MulePackage.CONNECTOR: return createConnector();
+			case MulePackage.PROPERTIES: return createProperties();
+			case MulePackage.TEXT_PROPERTY: return createTextProperty();
+			case MulePackage.LIST_PROPERTY: return createListProperty();
+			case MulePackage.MAP_PROPERTY: return createMapProperty();
+			case MulePackage.INTERCEPTOR_DEFINITION: return createInterceptorDefinition();
+			case MulePackage.BRIDGE_COMPONENT: return createBridgeComponent();
+			case MulePackage.LOCAL_ENDPOINT: return createLocalEndpoint();
+			case MulePackage.GLOBAL_ENDPOINT: return createGlobalEndpoint();
+			case MulePackage.ROUTER: return createRouter();
+			case MulePackage.TRANSFORMER: return createTransformer();
+			case MulePackage.GENERIC_COMPONENT: return createGenericComponent();
+			case MulePackage.GENERIC_FILTER: return createGenericFilter();
+			case MulePackage.BINARY_FILTER: return createBinaryFilter();
+			case MulePackage.XSLT_FILTER: return createXsltFilter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -85,19 +98,9 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InboundRouterType createInboundRouterType() {
-		InboundRouterTypeImpl inboundRouterType = new InboundRouterTypeImpl();
-		return inboundRouterType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ComponentType createComponentType() {
-		ComponentTypeImpl componentType = new ComponentTypeImpl();
-		return componentType;
+	public InboundRouter createInboundRouter() {
+		InboundRouterImpl inboundRouter = new InboundRouterImpl();
+		return inboundRouter;
 	}
 
 	/**
@@ -115,19 +118,9 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EndpointType createEndpointType() {
-		EndpointTypeImpl endpointType = new EndpointTypeImpl();
-		return endpointType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public OutboundRouterType createOutboundRouterType() {
-		OutboundRouterTypeImpl outboundRouterType = new OutboundRouterTypeImpl();
-		return outboundRouterType;
+	public OutboundRouter createOutboundRouter() {
+		OutboundRouterImpl outboundRouter = new OutboundRouterImpl();
+		return outboundRouter;
 	}
 
 	/**
@@ -138,6 +131,156 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 	public Interceptor createInterceptor() {
 		InterceptorImpl interceptor = new InterceptorImpl();
 		return interceptor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Connector createConnector() {
+		ConnectorImpl connector = new ConnectorImpl();
+		return connector;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Properties createProperties() {
+		PropertiesImpl properties = new PropertiesImpl();
+		return properties;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TextProperty createTextProperty() {
+		TextPropertyImpl textProperty = new TextPropertyImpl();
+		return textProperty;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ListProperty createListProperty() {
+		ListPropertyImpl listProperty = new ListPropertyImpl();
+		return listProperty;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MapProperty createMapProperty() {
+		MapPropertyImpl mapProperty = new MapPropertyImpl();
+		return mapProperty;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InterceptorDefinition createInterceptorDefinition() {
+		InterceptorDefinitionImpl interceptorDefinition = new InterceptorDefinitionImpl();
+		return interceptorDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BridgeComponent createBridgeComponent() {
+		BridgeComponentImpl bridgeComponent = new BridgeComponentImpl();
+		return bridgeComponent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalEndpoint createLocalEndpoint() {
+		LocalEndpointImpl localEndpoint = new LocalEndpointImpl();
+		return localEndpoint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GlobalEndpoint createGlobalEndpoint() {
+		GlobalEndpointImpl globalEndpoint = new GlobalEndpointImpl();
+		return globalEndpoint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Router createRouter() {
+		RouterImpl router = new RouterImpl();
+		return router;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Transformer createTransformer() {
+		TransformerImpl transformer = new TransformerImpl();
+		return transformer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GenericComponent createGenericComponent() {
+		GenericComponentImpl genericComponent = new GenericComponentImpl();
+		return genericComponent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GenericFilter createGenericFilter() {
+		GenericFilterImpl genericFilter = new GenericFilterImpl();
+		return genericFilter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BinaryFilter createBinaryFilter() {
+		BinaryFilterImpl binaryFilter = new BinaryFilterImpl();
+		return binaryFilter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XsltFilter createXsltFilter() {
+		XsltFilterImpl xsltFilter = new XsltFilterImpl();
+		return xsltFilter;
 	}
 
 	/**

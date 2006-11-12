@@ -13,17 +13,32 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
-import org.mule.ide.prototype.mulemodel.ComponentType;
-import org.mule.ide.prototype.mulemodel.EndpointType;
-import org.mule.ide.prototype.mulemodel.InboundRouterType;
+import org.mule.ide.prototype.mulemodel.AbstractComponent;
+import org.mule.ide.prototype.mulemodel.AbstractFilter;
+import org.mule.ide.prototype.mulemodel.BinaryFilter;
+import org.mule.ide.prototype.mulemodel.BridgeComponent;
+import org.mule.ide.prototype.mulemodel.Connector;
+import org.mule.ide.prototype.mulemodel.Endpoint;
+import org.mule.ide.prototype.mulemodel.GenericComponent;
+import org.mule.ide.prototype.mulemodel.GenericFilter;
+import org.mule.ide.prototype.mulemodel.GlobalEndpoint;
+import org.mule.ide.prototype.mulemodel.InboundRouter;
 import org.mule.ide.prototype.mulemodel.Interceptor;
+import org.mule.ide.prototype.mulemodel.InterceptorDefinition;
+import org.mule.ide.prototype.mulemodel.ListProperty;
+import org.mule.ide.prototype.mulemodel.LocalEndpoint;
+import org.mule.ide.prototype.mulemodel.MapProperty;
 import org.mule.ide.prototype.mulemodel.MuleConfig;
 import org.mule.ide.prototype.mulemodel.MuleFactory;
 import org.mule.ide.prototype.mulemodel.MulePackage;
-import org.mule.ide.prototype.mulemodel.OutboundRouterType;
+import org.mule.ide.prototype.mulemodel.OutboundRouter;
+import org.mule.ide.prototype.mulemodel.Properties;
+import org.mule.ide.prototype.mulemodel.Property;
+import org.mule.ide.prototype.mulemodel.Router;
+import org.mule.ide.prototype.mulemodel.TextProperty;
+import org.mule.ide.prototype.mulemodel.Transformer;
+import org.mule.ide.prototype.mulemodel.XsltFilter;
 
 /**
  * <!-- begin-user-doc -->
@@ -44,14 +59,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass inboundRouterTypeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass componentTypeEClass = null;
+	private EClass inboundRouterEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -65,14 +73,14 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass endpointTypeEClass = null;
+	private EClass endpointEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass outboundRouterTypeEClass = null;
+	private EClass outboundRouterEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -80,6 +88,132 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	private EClass interceptorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass connectorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass propertiesEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass propertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass textPropertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass listPropertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mapPropertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass interceptorDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass bridgeComponentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass localEndpointEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass globalEndpointEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass routerEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass transformerEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass abstractComponentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass genericComponentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass abstractFilterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass genericFilterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass binaryFilterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xsltFilterEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -154,8 +288,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getInboundRouterType() {
-		return inboundRouterTypeEClass;
+	public EClass getInboundRouter() {
+		return inboundRouterEClass;
 	}
 
 	/**
@@ -163,62 +297,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getInboundRouterType_InboundEndpoint() {
-		return (EReference)inboundRouterTypeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getComponentType() {
-		return componentTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getComponentType_Name() {
-		return (EAttribute)componentTypeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getComponentType_OutboundRouter() {
-		return (EReference)componentTypeEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getComponentType_Interceptors() {
-		return (EReference)componentTypeEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getComponentType_InboundRouter() {
-		return (EReference)componentTypeEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getComponentType_Comment() {
-		return (EAttribute)componentTypeEClass.getEStructuralFeatures().get(4);
+	public EReference getInboundRouter_InboundEndpoint() {
+		return (EReference)inboundRouterEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -236,7 +316,61 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_GlobalEndpoints() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(0);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEndpoint() {
+		return endpointEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEndpoint_Address() {
+		return (EAttribute)endpointEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEndpoint_Connector() {
+		return (EReference)endpointEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOutboundRouter() {
+		return outboundRouterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOutboundRouter_OutboundEndpoint() {
+		return (EReference)outboundRouterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOutboundRouter_OutboundTransformer() {
+		return (EReference)outboundRouterEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -245,7 +379,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Components() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(1);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -254,7 +388,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EAttribute getMuleConfig_Version() {
-		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -263,7 +397,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EAttribute getMuleConfig_Description() {
-		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -271,8 +405,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getEndpointType() {
-		return endpointTypeEClass;
+	public EReference getMuleConfig_Properties() {
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -280,8 +414,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEndpointType_Name() {
-		return (EAttribute)endpointTypeEClass.getEStructuralFeatures().get(0);
+	public EReference getMuleConfig_Interceptors() {
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -289,35 +423,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEndpointType_Address() {
-		return (EAttribute)endpointTypeEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getEndpointType_Comment() {
-		return (EAttribute)endpointTypeEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getOutboundRouterType() {
-		return outboundRouterTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getOutboundRouterType_OutboundEndpoint() {
-		return (EReference)outboundRouterTypeEClass.getEStructuralFeatures().get(0);
+	public EReference getMuleConfig_Connectors() {
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -336,6 +443,321 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 */
 	public EAttribute getInterceptor_Name() {
 		return (EAttribute)interceptorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInterceptor_GroupDefinition() {
+		return (EReference)interceptorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConnector() {
+		return connectorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConnector_Comment() {
+		return (EAttribute)connectorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProperties() {
+		return propertiesEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProperties_Properties() {
+		return (EReference)propertiesEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProperty() {
+		return propertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProperty_Name() {
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTextProperty() {
+		return textPropertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTextProperty_Value() {
+		return (EAttribute)textPropertyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getListProperty() {
+		return listPropertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMapProperty() {
+		return mapPropertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMapProperty_Properties() {
+		return (EReference)mapPropertyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getInterceptorDefinition() {
+		return interceptorDefinitionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getBridgeComponent() {
+		return bridgeComponentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getLocalEndpoint() {
+		return localEndpointEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGlobalEndpoint() {
+		return globalEndpointEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGlobalEndpoint_Name() {
+		return (EAttribute)globalEndpointEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGlobalEndpoint_Comment() {
+		return (EAttribute)globalEndpointEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getRouter() {
+		return routerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRouter_LocalEndpoints() {
+		return (EReference)routerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTransformer() {
+		return transformerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTransformer_ClassName() {
+		return (EAttribute)transformerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAbstractComponent() {
+		return abstractComponentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAbstractComponent_Name() {
+		return (EAttribute)abstractComponentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAbstractComponent_OutboundRouter() {
+		return (EReference)abstractComponentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAbstractComponent_InboundRouter() {
+		return (EReference)abstractComponentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAbstractComponent_Comment() {
+		return (EAttribute)abstractComponentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAbstractComponent_ComponentProperties() {
+		return (EReference)abstractComponentEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGenericComponent() {
+		return genericComponentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGenericComponent_ClassName() {
+		return (EAttribute)genericComponentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getGenericComponent_Interceptors() {
+		return (EReference)genericComponentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAbstractFilter() {
+		return abstractFilterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGenericFilter() {
+		return genericFilterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getBinaryFilter() {
+		return binaryFilterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getXsltFilter() {
+		return xsltFilterEClass;
 	}
 
 	/**
@@ -366,32 +788,81 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		isCreated = true;
 
 		// Create classes and their features
-		inboundRouterTypeEClass = createEClass(INBOUND_ROUTER_TYPE);
-		createEReference(inboundRouterTypeEClass, INBOUND_ROUTER_TYPE__INBOUND_ENDPOINT);
-
-		componentTypeEClass = createEClass(COMPONENT_TYPE);
-		createEAttribute(componentTypeEClass, COMPONENT_TYPE__NAME);
-		createEReference(componentTypeEClass, COMPONENT_TYPE__OUTBOUND_ROUTER);
-		createEReference(componentTypeEClass, COMPONENT_TYPE__INTERCEPTORS);
-		createEReference(componentTypeEClass, COMPONENT_TYPE__INBOUND_ROUTER);
-		createEAttribute(componentTypeEClass, COMPONENT_TYPE__COMMENT);
+		inboundRouterEClass = createEClass(INBOUND_ROUTER);
+		createEReference(inboundRouterEClass, INBOUND_ROUTER__INBOUND_ENDPOINT);
 
 		muleConfigEClass = createEClass(MULE_CONFIG);
-		createEReference(muleConfigEClass, MULE_CONFIG__GLOBAL_ENDPOINTS);
 		createEReference(muleConfigEClass, MULE_CONFIG__COMPONENTS);
 		createEAttribute(muleConfigEClass, MULE_CONFIG__VERSION);
 		createEAttribute(muleConfigEClass, MULE_CONFIG__DESCRIPTION);
+		createEReference(muleConfigEClass, MULE_CONFIG__PROPERTIES);
+		createEReference(muleConfigEClass, MULE_CONFIG__INTERCEPTORS);
+		createEReference(muleConfigEClass, MULE_CONFIG__CONNECTORS);
+		createEReference(muleConfigEClass, MULE_CONFIG__GLOBAL_ENDPOINTS);
 
-		endpointTypeEClass = createEClass(ENDPOINT_TYPE);
-		createEAttribute(endpointTypeEClass, ENDPOINT_TYPE__NAME);
-		createEAttribute(endpointTypeEClass, ENDPOINT_TYPE__ADDRESS);
-		createEAttribute(endpointTypeEClass, ENDPOINT_TYPE__COMMENT);
+		endpointEClass = createEClass(ENDPOINT);
+		createEAttribute(endpointEClass, ENDPOINT__ADDRESS);
+		createEReference(endpointEClass, ENDPOINT__CONNECTOR);
 
-		outboundRouterTypeEClass = createEClass(OUTBOUND_ROUTER_TYPE);
-		createEReference(outboundRouterTypeEClass, OUTBOUND_ROUTER_TYPE__OUTBOUND_ENDPOINT);
+		outboundRouterEClass = createEClass(OUTBOUND_ROUTER);
+		createEReference(outboundRouterEClass, OUTBOUND_ROUTER__OUTBOUND_ENDPOINT);
+		createEReference(outboundRouterEClass, OUTBOUND_ROUTER__OUTBOUND_TRANSFORMER);
 
 		interceptorEClass = createEClass(INTERCEPTOR);
 		createEAttribute(interceptorEClass, INTERCEPTOR__NAME);
+		createEReference(interceptorEClass, INTERCEPTOR__GROUP_DEFINITION);
+
+		connectorEClass = createEClass(CONNECTOR);
+		createEAttribute(connectorEClass, CONNECTOR__COMMENT);
+
+		propertiesEClass = createEClass(PROPERTIES);
+		createEReference(propertiesEClass, PROPERTIES__PROPERTIES);
+
+		propertyEClass = createEClass(PROPERTY);
+		createEAttribute(propertyEClass, PROPERTY__NAME);
+
+		textPropertyEClass = createEClass(TEXT_PROPERTY);
+		createEAttribute(textPropertyEClass, TEXT_PROPERTY__VALUE);
+
+		listPropertyEClass = createEClass(LIST_PROPERTY);
+
+		mapPropertyEClass = createEClass(MAP_PROPERTY);
+		createEReference(mapPropertyEClass, MAP_PROPERTY__PROPERTIES);
+
+		interceptorDefinitionEClass = createEClass(INTERCEPTOR_DEFINITION);
+
+		bridgeComponentEClass = createEClass(BRIDGE_COMPONENT);
+
+		localEndpointEClass = createEClass(LOCAL_ENDPOINT);
+
+		globalEndpointEClass = createEClass(GLOBAL_ENDPOINT);
+		createEAttribute(globalEndpointEClass, GLOBAL_ENDPOINT__NAME);
+		createEAttribute(globalEndpointEClass, GLOBAL_ENDPOINT__COMMENT);
+
+		routerEClass = createEClass(ROUTER);
+		createEReference(routerEClass, ROUTER__LOCAL_ENDPOINTS);
+
+		transformerEClass = createEClass(TRANSFORMER);
+		createEAttribute(transformerEClass, TRANSFORMER__CLASS_NAME);
+
+		abstractComponentEClass = createEClass(ABSTRACT_COMPONENT);
+		createEAttribute(abstractComponentEClass, ABSTRACT_COMPONENT__NAME);
+		createEReference(abstractComponentEClass, ABSTRACT_COMPONENT__OUTBOUND_ROUTER);
+		createEReference(abstractComponentEClass, ABSTRACT_COMPONENT__INBOUND_ROUTER);
+		createEAttribute(abstractComponentEClass, ABSTRACT_COMPONENT__COMMENT);
+		createEReference(abstractComponentEClass, ABSTRACT_COMPONENT__COMPONENT_PROPERTIES);
+
+		genericComponentEClass = createEClass(GENERIC_COMPONENT);
+		createEAttribute(genericComponentEClass, GENERIC_COMPONENT__CLASS_NAME);
+		createEReference(genericComponentEClass, GENERIC_COMPONENT__INTERCEPTORS);
+
+		abstractFilterEClass = createEClass(ABSTRACT_FILTER);
+
+		genericFilterEClass = createEClass(GENERIC_FILTER);
+
+		binaryFilterEClass = createEClass(BINARY_FILTER);
+
+		xsltFilterEClass = createEClass(XSLT_FILTER);
 	}
 
 	/**
@@ -418,34 +889,97 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		setNsURI(eNS_URI);
 
 		// Add supertypes to classes
+		inboundRouterEClass.getESuperTypes().add(this.getRouter());
+		outboundRouterEClass.getESuperTypes().add(this.getRouter());
+		textPropertyEClass.getESuperTypes().add(this.getProperty());
+		listPropertyEClass.getESuperTypes().add(this.getProperty());
+		mapPropertyEClass.getESuperTypes().add(this.getProperty());
+		bridgeComponentEClass.getESuperTypes().add(this.getAbstractComponent());
+		localEndpointEClass.getESuperTypes().add(this.getEndpoint());
+		globalEndpointEClass.getESuperTypes().add(this.getEndpoint());
+		genericComponentEClass.getESuperTypes().add(this.getAbstractComponent());
+		genericFilterEClass.getESuperTypes().add(this.getAbstractFilter());
+		binaryFilterEClass.getESuperTypes().add(this.getAbstractFilter());
+		xsltFilterEClass.getESuperTypes().add(this.getAbstractFilter());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(inboundRouterTypeEClass, InboundRouterType.class, "InboundRouterType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getInboundRouterType_InboundEndpoint(), this.getEndpointType(), null, "inboundEndpoint", null, 0, 1, InboundRouterType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(componentTypeEClass, ComponentType.class, "ComponentType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getComponentType_Name(), ecorePackage.getEString(), "name", null, 1, 1, ComponentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getComponentType_OutboundRouter(), this.getOutboundRouterType(), null, "outboundRouter", null, 0, -1, ComponentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getComponentType_Interceptors(), this.getInterceptor(), null, "interceptors", "", 0, -1, ComponentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEReference(getComponentType_InboundRouter(), this.getInboundRouterType(), null, "inboundRouter", null, 0, -1, ComponentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getComponentType_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, ComponentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(inboundRouterEClass, InboundRouter.class, "InboundRouter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getInboundRouter_InboundEndpoint(), this.getEndpoint(), null, "inboundEndpoint", null, 0, 1, InboundRouter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(muleConfigEClass, MuleConfig.class, "MuleConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getMuleConfig_GlobalEndpoints(), this.getEndpointType(), null, "globalEndpoints", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getMuleConfig_Components(), this.getComponentType(), null, "components", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Components(), this.getAbstractComponent(), null, "components", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getMuleConfig_Version(), ecorePackage.getEString(), "version", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getMuleConfig_Description(), ecorePackage.getEString(), "description", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Properties(), this.getProperties(), null, "properties", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Interceptors(), this.getInterceptorDefinition(), null, "interceptors", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Connectors(), this.getConnector(), null, "connectors", "", 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEReference(getMuleConfig_GlobalEndpoints(), this.getGlobalEndpoint(), null, "globalEndpoints", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(endpointTypeEClass, EndpointType.class, "EndpointType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getEndpointType_Name(), ecorePackage.getEString(), "name", null, 0, 1, EndpointType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getEndpointType_Address(), ecorePackage.getEString(), "address", null, 1, 1, EndpointType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getEndpointType_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, EndpointType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		addEOperation(muleConfigEClass, null, "addComponent"); //$NON-NLS-1$
 
-		initEClass(outboundRouterTypeEClass, OutboundRouterType.class, "OutboundRouterType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getOutboundRouterType_OutboundEndpoint(), this.getEndpointType(), null, "outboundEndpoint", null, 0, 1, OutboundRouterType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(endpointEClass, Endpoint.class, "Endpoint", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getEndpoint_Address(), ecorePackage.getEString(), "address", null, 1, 1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getEndpoint_Connector(), this.getConnector(), null, "connector", null, 0, 1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(outboundRouterEClass, OutboundRouter.class, "OutboundRouter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getOutboundRouter_OutboundEndpoint(), this.getEndpoint(), null, "outboundEndpoint", null, 0, 1, OutboundRouter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getOutboundRouter_OutboundTransformer(), this.getTransformer(), null, "outboundTransformer", null, 0, 1, OutboundRouter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(interceptorEClass, Interceptor.class, "Interceptor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getInterceptor_Name(), ecorePackage.getEString(), "name", null, 1, 1, Interceptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getInterceptor_GroupDefinition(), this.getInterceptorDefinition(), null, "groupDefinition", null, 0, 1, Interceptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getConnector_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(propertiesEClass, Properties.class, "Properties", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getProperties_Properties(), this.getProperty(), null, "properties", null, 0, -1, Properties.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(propertyEClass, Property.class, "Property", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getProperty_Name(), ecorePackage.getEString(), "name", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(textPropertyEClass, TextProperty.class, "TextProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getTextProperty_Value(), ecorePackage.getEString(), "value", null, 0, 1, TextProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(listPropertyEClass, ListProperty.class, "ListProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(mapPropertyEClass, MapProperty.class, "MapProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getMapProperty_Properties(), this.getProperties(), null, "properties", null, 0, 1, MapProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(interceptorDefinitionEClass, InterceptorDefinition.class, "InterceptorDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(bridgeComponentEClass, BridgeComponent.class, "BridgeComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(localEndpointEClass, LocalEndpoint.class, "LocalEndpoint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(globalEndpointEClass, GlobalEndpoint.class, "GlobalEndpoint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getGlobalEndpoint_Name(), ecorePackage.getEString(), "name", null, 0, 1, GlobalEndpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getGlobalEndpoint_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, GlobalEndpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(routerEClass, Router.class, "Router", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getRouter_LocalEndpoints(), this.getLocalEndpoint(), null, "localEndpoints", null, 0, -1, Router.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(transformerEClass, Transformer.class, "Transformer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getTransformer_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(abstractComponentEClass, AbstractComponent.class, "AbstractComponent", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getAbstractComponent_Name(), ecorePackage.getEString(), "name", null, 1, 1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getAbstractComponent_OutboundRouter(), this.getOutboundRouter(), null, "outboundRouter", null, 0, -1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getAbstractComponent_InboundRouter(), this.getInboundRouter(), null, "inboundRouter", null, 0, -1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getAbstractComponent_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getAbstractComponent_ComponentProperties(), this.getProperty(), null, "componentProperties", null, 0, 1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(genericComponentEClass, GenericComponent.class, "GenericComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getGenericComponent_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, GenericComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getGenericComponent_Interceptors(), this.getInterceptor(), null, "interceptors", "", 0, -1, GenericComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+
+		initEClass(abstractFilterEClass, AbstractFilter.class, "AbstractFilter", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(genericFilterEClass, GenericFilter.class, "GenericFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(binaryFilterEClass, BinaryFilter.class, "BinaryFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(xsltFilterEClass, XsltFilter.class, "XsltFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

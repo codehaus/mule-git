@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.Interceptor#getName <em>Name</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.Interceptor#getGroupDefinition <em>Group Definition</em>}</li>
  * </ul>
  * </p>
  *
@@ -60,5 +61,31 @@ public interface Interceptor extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Group Definition</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group Definition</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group Definition</em>' reference.
+	 * @see #setGroupDefinition(InterceptorDefinition)
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getInterceptor_GroupDefinition()
+	 * @model
+	 * @generated
+	 */
+	InterceptorDefinition getGroupDefinition();
+
+	/**
+	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.Interceptor#getGroupDefinition <em>Group Definition</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group Definition</em>' reference.
+	 * @see #getGroupDefinition()
+	 * @generated
+	 */
+	void setGroupDefinition(InterceptorDefinition value);
 
 } // Interceptor

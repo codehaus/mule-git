@@ -79,6 +79,11 @@ public class MuleConfigXmlMapping {
 	public static final String ATTR_TYPE = "type"; //$NON-NLS-1$
 
 	/**
+	 * special name denoting the comment preceding the node '#comment'
+	 */
+	public static final String COMMENT = "#comment"; //$NON-NLS-1$
+
+	/**
 	 * name of 'address' XML attribute
 	 */
 	public static final String ATTR_ADDRESS = "address"; //$NON-NLS-1$

@@ -10,10 +10,9 @@ Export-Package: org.mule.ide.prototype.mulemodel,
  org.mule.ide.prototype.mulemodel.impl,
  org.mule.ide.prototype.mulemodel.util
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.wst.common.emf,
  org.eclipse.emf.ecore.xmi,
- com.ibm.etools.emf.event,
- org.eclipse.wst.xml.core
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.sse.core
 Eclipse-LazyStart: true
 Bundle-Activator: org.mule.ide.prototype.mulemodel.MuleModelPlugin$Implementation

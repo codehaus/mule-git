@@ -13,10 +13,13 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.mule.ide.prototype.mulemodel.Interceptor;
+import org.mule.ide.prototype.mulemodel.InterceptorDefinition;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 
 /**
@@ -27,6 +30,7 @@ import org.mule.ide.prototype.mulemodel.MulePackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorImpl#getGroupDefinition <em>Group Definition</em>}</li>
  * </ul>
  * </p>
  *
@@ -59,6 +63,16 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getGroupDefinition() <em>Group Definition</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGroupDefinition()
+	 * @generated
+	 * @ordered
+	 */
+	protected InterceptorDefinition groupDefinition = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -104,10 +118,51 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public InterceptorDefinition getGroupDefinition() {
+		if (groupDefinition != null && groupDefinition.eIsProxy()) {
+			InternalEObject oldGroupDefinition = (InternalEObject)groupDefinition;
+			groupDefinition = (InterceptorDefinition)eResolveProxy(oldGroupDefinition);
+			if (groupDefinition != oldGroupDefinition) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MulePackage.INTERCEPTOR__GROUP_DEFINITION, oldGroupDefinition, groupDefinition));
+			}
+		}
+		return groupDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InterceptorDefinition basicGetGroupDefinition() {
+		return groupDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setGroupDefinition(InterceptorDefinition newGroupDefinition) {
+		InterceptorDefinition oldGroupDefinition = groupDefinition;
+		groupDefinition = newGroupDefinition;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.INTERCEPTOR__GROUP_DEFINITION, oldGroupDefinition, groupDefinition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MulePackage.INTERCEPTOR__NAME:
 				return getName();
+			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
+				if (resolve) return getGroupDefinition();
+				return basicGetGroupDefinition();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -121,6 +176,9 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 		switch (featureID) {
 			case MulePackage.INTERCEPTOR__NAME:
 				setName((String)newValue);
+				return;
+			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
+				setGroupDefinition((InterceptorDefinition)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -136,6 +194,9 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 			case MulePackage.INTERCEPTOR__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
+				setGroupDefinition((InterceptorDefinition)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -149,6 +210,8 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 		switch (featureID) {
 			case MulePackage.INTERCEPTOR__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
+				return groupDefinition != null;
 		}
 		return super.eIsSet(featureID);
 	}

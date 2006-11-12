@@ -97,15 +97,10 @@ public class MuleSwitch {
 	 */
 	protected Object doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case MulePackage.INBOUND_ROUTER_TYPE: {
-				InboundRouterType inboundRouterType = (InboundRouterType)theEObject;
-				Object result = caseInboundRouterType(inboundRouterType);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case MulePackage.COMPONENT_TYPE: {
-				ComponentType componentType = (ComponentType)theEObject;
-				Object result = caseComponentType(componentType);
+			case MulePackage.INBOUND_ROUTER: {
+				InboundRouter inboundRouter = (InboundRouter)theEObject;
+				Object result = caseInboundRouter(inboundRouter);
+				if (result == null) result = caseRouter(inboundRouter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -115,15 +110,16 @@ public class MuleSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case MulePackage.ENDPOINT_TYPE: {
-				EndpointType endpointType = (EndpointType)theEObject;
-				Object result = caseEndpointType(endpointType);
+			case MulePackage.ENDPOINT: {
+				Endpoint endpoint = (Endpoint)theEObject;
+				Object result = caseEndpoint(endpoint);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case MulePackage.OUTBOUND_ROUTER_TYPE: {
-				OutboundRouterType outboundRouterType = (OutboundRouterType)theEObject;
-				Object result = caseOutboundRouterType(outboundRouterType);
+			case MulePackage.OUTBOUND_ROUTER: {
+				OutboundRouter outboundRouter = (OutboundRouter)theEObject;
+				Object result = caseOutboundRouter(outboundRouter);
+				if (result == null) result = caseRouter(outboundRouter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -133,37 +129,140 @@ public class MuleSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case MulePackage.CONNECTOR: {
+				Connector connector = (Connector)theEObject;
+				Object result = caseConnector(connector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.PROPERTIES: {
+				Properties properties = (Properties)theEObject;
+				Object result = caseProperties(properties);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.PROPERTY: {
+				Property property = (Property)theEObject;
+				Object result = caseProperty(property);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.TEXT_PROPERTY: {
+				TextProperty textProperty = (TextProperty)theEObject;
+				Object result = caseTextProperty(textProperty);
+				if (result == null) result = caseProperty(textProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.LIST_PROPERTY: {
+				ListProperty listProperty = (ListProperty)theEObject;
+				Object result = caseListProperty(listProperty);
+				if (result == null) result = caseProperty(listProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.MAP_PROPERTY: {
+				MapProperty mapProperty = (MapProperty)theEObject;
+				Object result = caseMapProperty(mapProperty);
+				if (result == null) result = caseProperty(mapProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.INTERCEPTOR_DEFINITION: {
+				InterceptorDefinition interceptorDefinition = (InterceptorDefinition)theEObject;
+				Object result = caseInterceptorDefinition(interceptorDefinition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.BRIDGE_COMPONENT: {
+				BridgeComponent bridgeComponent = (BridgeComponent)theEObject;
+				Object result = caseBridgeComponent(bridgeComponent);
+				if (result == null) result = caseAbstractComponent(bridgeComponent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.LOCAL_ENDPOINT: {
+				LocalEndpoint localEndpoint = (LocalEndpoint)theEObject;
+				Object result = caseLocalEndpoint(localEndpoint);
+				if (result == null) result = caseEndpoint(localEndpoint);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.GLOBAL_ENDPOINT: {
+				GlobalEndpoint globalEndpoint = (GlobalEndpoint)theEObject;
+				Object result = caseGlobalEndpoint(globalEndpoint);
+				if (result == null) result = caseEndpoint(globalEndpoint);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.ROUTER: {
+				Router router = (Router)theEObject;
+				Object result = caseRouter(router);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.TRANSFORMER: {
+				Transformer transformer = (Transformer)theEObject;
+				Object result = caseTransformer(transformer);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.ABSTRACT_COMPONENT: {
+				AbstractComponent abstractComponent = (AbstractComponent)theEObject;
+				Object result = caseAbstractComponent(abstractComponent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.GENERIC_COMPONENT: {
+				GenericComponent genericComponent = (GenericComponent)theEObject;
+				Object result = caseGenericComponent(genericComponent);
+				if (result == null) result = caseAbstractComponent(genericComponent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.ABSTRACT_FILTER: {
+				AbstractFilter abstractFilter = (AbstractFilter)theEObject;
+				Object result = caseAbstractFilter(abstractFilter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.GENERIC_FILTER: {
+				GenericFilter genericFilter = (GenericFilter)theEObject;
+				Object result = caseGenericFilter(genericFilter);
+				if (result == null) result = caseAbstractFilter(genericFilter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.BINARY_FILTER: {
+				BinaryFilter binaryFilter = (BinaryFilter)theEObject;
+				Object result = caseBinaryFilter(binaryFilter);
+				if (result == null) result = caseAbstractFilter(binaryFilter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.XSLT_FILTER: {
+				XsltFilter xsltFilter = (XsltFilter)theEObject;
+				Object result = caseXsltFilter(xsltFilter);
+				if (result == null) result = caseAbstractFilter(xsltFilter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Inbound Router Type</em>'.
+	 * Returns the result of interpretting the object as an instance of '<em>Inbound Router</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Inbound Router Type</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>Inbound Router</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseInboundRouterType(InboundRouterType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Component Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Component Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseComponentType(ComponentType object) {
+	public Object caseInboundRouter(InboundRouter object) {
 		return null;
 	}
 
@@ -183,32 +282,32 @@ public class MuleSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Endpoint Type</em>'.
+	 * Returns the result of interpretting the object as an instance of '<em>Endpoint</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Endpoint Type</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>Endpoint</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseEndpointType(EndpointType object) {
+	public Object caseEndpoint(Endpoint object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Outbound Router Type</em>'.
+	 * Returns the result of interpretting the object as an instance of '<em>Outbound Router</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Outbound Router Type</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>Outbound Router</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseOutboundRouterType(OutboundRouterType object) {
+	public Object caseOutboundRouter(OutboundRouter object) {
 		return null;
 	}
 
@@ -224,6 +323,276 @@ public class MuleSwitch {
 	 * @generated
 	 */
 	public Object caseInterceptor(Interceptor object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseConnector(Connector object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Properties</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Properties</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseProperties(Properties object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseProperty(Property object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Text Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Text Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseTextProperty(TextProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>List Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>List Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseListProperty(ListProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Map Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Map Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMapProperty(MapProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Interceptor Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Interceptor Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseInterceptorDefinition(InterceptorDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Bridge Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Bridge Component</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseBridgeComponent(BridgeComponent object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Local Endpoint</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Local Endpoint</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseLocalEndpoint(LocalEndpoint object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Global Endpoint</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Global Endpoint</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseGlobalEndpoint(GlobalEndpoint object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Router</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Router</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseRouter(Router object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Transformer</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Transformer</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseTransformer(Transformer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Abstract Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Abstract Component</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseAbstractComponent(AbstractComponent object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Generic Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Generic Component</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseGenericComponent(GenericComponent object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Abstract Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Abstract Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseAbstractFilter(AbstractFilter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Generic Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Generic Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseGenericFilter(GenericFilter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Binary Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Binary Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseBinaryFilter(BinaryFilter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Xslt Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Xslt Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseXsltFilter(XsltFilter object) {
 		return null;
 	}
 

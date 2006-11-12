@@ -36,22 +36,13 @@ public interface MuleFactory extends EFactory {
 	MuleFactory eINSTANCE = org.mule.ide.prototype.mulemodel.impl.MuleFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Inbound Router Type</em>'.
+	 * Returns a new object of class '<em>Inbound Router</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Inbound Router Type</em>'.
+	 * @return a new object of class '<em>Inbound Router</em>'.
 	 * @generated
 	 */
-	InboundRouterType createInboundRouterType();
-
-	/**
-	 * Returns a new object of class '<em>Component Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Component Type</em>'.
-	 * @generated
-	 */
-	ComponentType createComponentType();
+	InboundRouter createInboundRouter();
 
 	/**
 	 * Returns a new object of class '<em>Config</em>'.
@@ -63,22 +54,13 @@ public interface MuleFactory extends EFactory {
 	MuleConfig createMuleConfig();
 
 	/**
-	 * Returns a new object of class '<em>Endpoint Type</em>'.
+	 * Returns a new object of class '<em>Outbound Router</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Endpoint Type</em>'.
+	 * @return a new object of class '<em>Outbound Router</em>'.
 	 * @generated
 	 */
-	EndpointType createEndpointType();
-
-	/**
-	 * Returns a new object of class '<em>Outbound Router Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Outbound Router Type</em>'.
-	 * @generated
-	 */
-	OutboundRouterType createOutboundRouterType();
+	OutboundRouter createOutboundRouter();
 
 	/**
 	 * Returns a new object of class '<em>Interceptor</em>'.
@@ -88,6 +70,141 @@ public interface MuleFactory extends EFactory {
 	 * @generated
 	 */
 	Interceptor createInterceptor();
+
+	/**
+	 * Returns a new object of class '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Connector</em>'.
+	 * @generated
+	 */
+	Connector createConnector();
+
+	/**
+	 * Returns a new object of class '<em>Properties</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Properties</em>'.
+	 * @generated
+	 */
+	Properties createProperties();
+
+	/**
+	 * Returns a new object of class '<em>Text Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Text Property</em>'.
+	 * @generated
+	 */
+	TextProperty createTextProperty();
+
+	/**
+	 * Returns a new object of class '<em>List Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>List Property</em>'.
+	 * @generated
+	 */
+	ListProperty createListProperty();
+
+	/**
+	 * Returns a new object of class '<em>Map Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Map Property</em>'.
+	 * @generated
+	 */
+	MapProperty createMapProperty();
+
+	/**
+	 * Returns a new object of class '<em>Interceptor Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Interceptor Definition</em>'.
+	 * @generated
+	 */
+	InterceptorDefinition createInterceptorDefinition();
+
+	/**
+	 * Returns a new object of class '<em>Bridge Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Bridge Component</em>'.
+	 * @generated
+	 */
+	BridgeComponent createBridgeComponent();
+
+	/**
+	 * Returns a new object of class '<em>Local Endpoint</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Local Endpoint</em>'.
+	 * @generated
+	 */
+	LocalEndpoint createLocalEndpoint();
+
+	/**
+	 * Returns a new object of class '<em>Global Endpoint</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Global Endpoint</em>'.
+	 * @generated
+	 */
+	GlobalEndpoint createGlobalEndpoint();
+
+	/**
+	 * Returns a new object of class '<em>Router</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Router</em>'.
+	 * @generated
+	 */
+	Router createRouter();
+
+	/**
+	 * Returns a new object of class '<em>Transformer</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Transformer</em>'.
+	 * @generated
+	 */
+	Transformer createTransformer();
+
+	/**
+	 * Returns a new object of class '<em>Generic Component</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Generic Component</em>'.
+	 * @generated
+	 */
+	GenericComponent createGenericComponent();
+
+	/**
+	 * Returns a new object of class '<em>Generic Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Generic Filter</em>'.
+	 * @generated
+	 */
+	GenericFilter createGenericFilter();
+
+	/**
+	 * Returns a new object of class '<em>Binary Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Binary Filter</em>'.
+	 * @generated
+	 */
+	BinaryFilter createBinaryFilter();
+
+	/**
+	 * Returns a new object of class '<em>Xslt Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Xslt Filter</em>'.
+	 * @generated
+	 */
+	XsltFilter createXsltFilter();
 
 	/**
 	 * Returns the package supported by this factory.
