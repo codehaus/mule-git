@@ -11,7 +11,9 @@
 package org.mule.ide.prototype.palette;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.mule.ide.prototype.mulemodel.MuleFactory;
 
 /*
  * The content provider class is responsible for
@@ -60,5 +62,12 @@ public class PaletteItem implements IAdaptable {
 
 	public void setImageDescriptor(ImageDescriptor image) {
 		this.imageDescriptor = image;
+	}
+	
+	public boolean mayDropOn(EObject obj) {
+		return false;
+	}
+	
+	public void performDropOn(EObject obj, MuleFactory factory) {
 	}
 }
