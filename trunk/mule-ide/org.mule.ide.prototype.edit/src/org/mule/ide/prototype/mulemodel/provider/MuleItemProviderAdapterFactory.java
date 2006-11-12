@@ -86,47 +86,25 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.InboundRouterType} instances.
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.InboundRouter} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected InboundRouterTypeItemProvider inboundRouterTypeItemProvider;
+	protected InboundRouterItemProvider inboundRouterItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.InboundRouterType}.
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.InboundRouter}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Adapter createInboundRouterTypeAdapter() {
-		if (inboundRouterTypeItemProvider == null) {
-			inboundRouterTypeItemProvider = new InboundRouterTypeItemProvider(this);
+	public Adapter createInboundRouterAdapter() {
+		if (inboundRouterItemProvider == null) {
+			inboundRouterItemProvider = new InboundRouterItemProvider(this);
 		}
 
-		return inboundRouterTypeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.ComponentType} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ComponentTypeItemProvider componentTypeItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.ComponentType}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Adapter createComponentTypeAdapter() {
-		if (componentTypeItemProvider == null) {
-			componentTypeItemProvider = new ComponentTypeItemProvider(this);
-		}
-
-		return componentTypeItemProvider;
+		return inboundRouterItemProvider;
 	}
 
 	/**
@@ -152,47 +130,25 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.EndpointType} instances.
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.OutboundRouter} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected EndpointTypeItemProvider endpointTypeItemProvider;
+	protected OutboundRouterItemProvider outboundRouterItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.EndpointType}.
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.OutboundRouter}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Adapter createEndpointTypeAdapter() {
-		if (endpointTypeItemProvider == null) {
-			endpointTypeItemProvider = new EndpointTypeItemProvider(this);
+	public Adapter createOutboundRouterAdapter() {
+		if (outboundRouterItemProvider == null) {
+			outboundRouterItemProvider = new OutboundRouterItemProvider(this);
 		}
 
-		return endpointTypeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.OutboundRouterType} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected OutboundRouterTypeItemProvider outboundRouterTypeItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.OutboundRouterType}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Adapter createOutboundRouterTypeAdapter() {
-		if (outboundRouterTypeItemProvider == null) {
-			outboundRouterTypeItemProvider = new OutboundRouterTypeItemProvider(this);
-		}
-
-		return outboundRouterTypeItemProvider;
+		return outboundRouterItemProvider;
 	}
 
 	/**
@@ -215,6 +171,336 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 		}
 
 		return interceptorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.Connector} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConnectorItemProvider connectorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.Connector}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createConnectorAdapter() {
+		if (connectorItemProvider == null) {
+			connectorItemProvider = new ConnectorItemProvider(this);
+		}
+
+		return connectorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.Properties} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PropertiesItemProvider propertiesItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.Properties}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createPropertiesAdapter() {
+		if (propertiesItemProvider == null) {
+			propertiesItemProvider = new PropertiesItemProvider(this);
+		}
+
+		return propertiesItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.TextProperty} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TextPropertyItemProvider textPropertyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.TextProperty}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createTextPropertyAdapter() {
+		if (textPropertyItemProvider == null) {
+			textPropertyItemProvider = new TextPropertyItemProvider(this);
+		}
+
+		return textPropertyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.ListProperty} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ListPropertyItemProvider listPropertyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.ListProperty}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createListPropertyAdapter() {
+		if (listPropertyItemProvider == null) {
+			listPropertyItemProvider = new ListPropertyItemProvider(this);
+		}
+
+		return listPropertyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.MapProperty} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected MapPropertyItemProvider mapPropertyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.MapProperty}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createMapPropertyAdapter() {
+		if (mapPropertyItemProvider == null) {
+			mapPropertyItemProvider = new MapPropertyItemProvider(this);
+		}
+
+		return mapPropertyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected InterceptorDefinitionItemProvider interceptorDefinitionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createInterceptorDefinitionAdapter() {
+		if (interceptorDefinitionItemProvider == null) {
+			interceptorDefinitionItemProvider = new InterceptorDefinitionItemProvider(this);
+		}
+
+		return interceptorDefinitionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.BridgeComponent} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BridgeComponentItemProvider bridgeComponentItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.BridgeComponent}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createBridgeComponentAdapter() {
+		if (bridgeComponentItemProvider == null) {
+			bridgeComponentItemProvider = new BridgeComponentItemProvider(this);
+		}
+
+		return bridgeComponentItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.LocalEndpoint} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected LocalEndpointItemProvider localEndpointItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.LocalEndpoint}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createLocalEndpointAdapter() {
+		if (localEndpointItemProvider == null) {
+			localEndpointItemProvider = new LocalEndpointItemProvider(this);
+		}
+
+		return localEndpointItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.GlobalEndpoint} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GlobalEndpointItemProvider globalEndpointItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.GlobalEndpoint}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createGlobalEndpointAdapter() {
+		if (globalEndpointItemProvider == null) {
+			globalEndpointItemProvider = new GlobalEndpointItemProvider(this);
+		}
+
+		return globalEndpointItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.Router} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected RouterItemProvider routerItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.Router}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createRouterAdapter() {
+		if (routerItemProvider == null) {
+			routerItemProvider = new RouterItemProvider(this);
+		}
+
+		return routerItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.Transformer} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TransformerItemProvider transformerItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.Transformer}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createTransformerAdapter() {
+		if (transformerItemProvider == null) {
+			transformerItemProvider = new TransformerItemProvider(this);
+		}
+
+		return transformerItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.GenericComponent} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GenericComponentItemProvider genericComponentItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.GenericComponent}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createGenericComponentAdapter() {
+		if (genericComponentItemProvider == null) {
+			genericComponentItemProvider = new GenericComponentItemProvider(this);
+		}
+
+		return genericComponentItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.GenericFilter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected GenericFilterItemProvider genericFilterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.GenericFilter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createGenericFilterAdapter() {
+		if (genericFilterItemProvider == null) {
+			genericFilterItemProvider = new GenericFilterItemProvider(this);
+		}
+
+		return genericFilterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.BinaryFilter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BinaryFilterItemProvider binaryFilterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.BinaryFilter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createBinaryFilterAdapter() {
+		if (binaryFilterItemProvider == null) {
+			binaryFilterItemProvider = new BinaryFilterItemProvider(this);
+		}
+
+		return binaryFilterItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.XsltFilter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected XsltFilterItemProvider xsltFilterItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.XsltFilter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createXsltFilterAdapter() {
+		if (xsltFilterItemProvider == null) {
+			xsltFilterItemProvider = new XsltFilterItemProvider(this);
+		}
+
+		return xsltFilterItemProvider;
 	}
 
 	/**
@@ -313,12 +599,25 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 	 * @generated
 	 */
 	public void dispose() {
-		if (inboundRouterTypeItemProvider != null) inboundRouterTypeItemProvider.dispose();
-		if (componentTypeItemProvider != null) componentTypeItemProvider.dispose();
+		if (inboundRouterItemProvider != null) inboundRouterItemProvider.dispose();
 		if (muleConfigItemProvider != null) muleConfigItemProvider.dispose();
-		if (endpointTypeItemProvider != null) endpointTypeItemProvider.dispose();
-		if (outboundRouterTypeItemProvider != null) outboundRouterTypeItemProvider.dispose();
+		if (outboundRouterItemProvider != null) outboundRouterItemProvider.dispose();
 		if (interceptorItemProvider != null) interceptorItemProvider.dispose();
+		if (connectorItemProvider != null) connectorItemProvider.dispose();
+		if (propertiesItemProvider != null) propertiesItemProvider.dispose();
+		if (textPropertyItemProvider != null) textPropertyItemProvider.dispose();
+		if (listPropertyItemProvider != null) listPropertyItemProvider.dispose();
+		if (mapPropertyItemProvider != null) mapPropertyItemProvider.dispose();
+		if (interceptorDefinitionItemProvider != null) interceptorDefinitionItemProvider.dispose();
+		if (bridgeComponentItemProvider != null) bridgeComponentItemProvider.dispose();
+		if (localEndpointItemProvider != null) localEndpointItemProvider.dispose();
+		if (globalEndpointItemProvider != null) globalEndpointItemProvider.dispose();
+		if (routerItemProvider != null) routerItemProvider.dispose();
+		if (transformerItemProvider != null) transformerItemProvider.dispose();
+		if (genericComponentItemProvider != null) genericComponentItemProvider.dispose();
+		if (genericFilterItemProvider != null) genericFilterItemProvider.dispose();
+		if (binaryFilterItemProvider != null) binaryFilterItemProvider.dispose();
+		if (xsltFilterItemProvider != null) xsltFilterItemProvider.dispose();
 	}
 
 }

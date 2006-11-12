@@ -76,6 +76,7 @@ public class MuleConfigItemProvider
 			super.getPropertyDescriptors(object);
 
 			addVersionPropertyDescriptor(object);
+			addDescriptionPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -103,6 +104,28 @@ public class MuleConfigItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Description feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addDescriptionPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_MuleConfig_description_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_MuleConfig_description_feature", "_UI_MuleConfig_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.MULE_CONFIG__DESCRIPTION,
+				 true,
+				 true,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -113,8 +136,11 @@ public class MuleConfigItemProvider
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS);
 			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__COMPONENTS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__PROPERTIES);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__INTERCEPTORS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__CONNECTORS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS);
 		}
 		return childrenFeatures;
 	}
@@ -166,10 +192,14 @@ public class MuleConfigItemProvider
 
 		switch (notification.getFeatureID(MuleConfig.class)) {
 			case MulePackage.MULE_CONFIG__VERSION:
+			case MulePackage.MULE_CONFIG__DESCRIPTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 			case MulePackage.MULE_CONFIG__COMPONENTS:
+			case MulePackage.MULE_CONFIG__PROPERTIES:
+			case MulePackage.MULE_CONFIG__INTERCEPTORS:
+			case MulePackage.MULE_CONFIG__CONNECTORS:
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -188,13 +218,33 @@ public class MuleConfigItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS,
-				 MuleFactory.eINSTANCE.createEndpointType()));
+				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
+				 MuleFactory.eINSTANCE.createBridgeComponent()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
-				 MuleFactory.eINSTANCE.createComponentType()));
+				 MuleFactory.eINSTANCE.createGenericComponent()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__PROPERTIES,
+				 MuleFactory.eINSTANCE.createProperties()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__INTERCEPTORS,
+				 MuleFactory.eINSTANCE.createInterceptorDefinition()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__CONNECTORS,
+				 MuleFactory.eINSTANCE.createConnector()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS,
+				 MuleFactory.eINSTANCE.createGlobalEndpoint()));
 	}
 
 	/**
