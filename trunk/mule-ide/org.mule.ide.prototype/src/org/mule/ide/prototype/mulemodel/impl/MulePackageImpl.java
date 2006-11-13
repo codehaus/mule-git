@@ -316,7 +316,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_GlobalEndpoints() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(5);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Transformers() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(6);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -397,7 +397,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Components() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(0);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -406,7 +406,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EAttribute getMuleConfig_Version() {
-		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -415,7 +415,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EAttribute getMuleConfig_Description() {
-		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)muleConfigEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -424,7 +424,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Properties() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(3);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -433,7 +433,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Interceptors() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(4);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * @generated
 	 */
 	public EReference getMuleConfig_Connectors() {
-		return (EReference)muleConfigEClass.getEStructuralFeatures().get(7);
+		return (EReference)muleConfigEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -702,6 +702,15 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getTransformer_Name() {
+		return (EAttribute)transformerEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getAbstractComponent() {
 		return abstractComponentEClass;
 	}
@@ -846,14 +855,14 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		createEReference(inboundRouterEClass, INBOUND_ROUTER__INBOUND_ENDPOINT);
 
 		muleConfigEClass = createEClass(MULE_CONFIG);
-		createEReference(muleConfigEClass, MULE_CONFIG__COMPONENTS);
 		createEAttribute(muleConfigEClass, MULE_CONFIG__VERSION);
 		createEAttribute(muleConfigEClass, MULE_CONFIG__DESCRIPTION);
 		createEReference(muleConfigEClass, MULE_CONFIG__PROPERTIES);
 		createEReference(muleConfigEClass, MULE_CONFIG__INTERCEPTORS);
-		createEReference(muleConfigEClass, MULE_CONFIG__GLOBAL_ENDPOINTS);
-		createEReference(muleConfigEClass, MULE_CONFIG__TRANSFORMERS);
 		createEReference(muleConfigEClass, MULE_CONFIG__CONNECTORS);
+		createEReference(muleConfigEClass, MULE_CONFIG__TRANSFORMERS);
+		createEReference(muleConfigEClass, MULE_CONFIG__GLOBAL_ENDPOINTS);
+		createEReference(muleConfigEClass, MULE_CONFIG__COMPONENTS);
 
 		endpointEClass = createEClass(ENDPOINT);
 		createEAttribute(endpointEClass, ENDPOINT__ADDRESS);
@@ -867,6 +876,11 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		interceptorEClass = createEClass(INTERCEPTOR);
 		createEAttribute(interceptorEClass, INTERCEPTOR__NAME);
 		createEReference(interceptorEClass, INTERCEPTOR__GROUP_DEFINITION);
+
+		connectorEClass = createEClass(CONNECTOR);
+		createEAttribute(connectorEClass, CONNECTOR__COMMENT);
+		createEAttribute(connectorEClass, CONNECTOR__NAME);
+		createEAttribute(connectorEClass, CONNECTOR__CLASS_NAME);
 
 		propertiesEClass = createEClass(PROPERTIES);
 		createEReference(propertiesEClass, PROPERTIES__PROPERTIES);
@@ -899,6 +913,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		createEAttribute(transformerEClass, TRANSFORMER__CLASS_NAME);
 		createEAttribute(transformerEClass, TRANSFORMER__COMMENT);
 		createEAttribute(transformerEClass, TRANSFORMER__RETURN_CLASS);
+		createEAttribute(transformerEClass, TRANSFORMER__NAME);
 
 		abstractComponentEClass = createEClass(ABSTRACT_COMPONENT);
 		createEAttribute(abstractComponentEClass, ABSTRACT_COMPONENT__IMPLEMENTATION);
@@ -918,11 +933,6 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		binaryFilterEClass = createEClass(BINARY_FILTER);
 
 		xsltFilterEClass = createEClass(XSLT_FILTER);
-
-		connectorEClass = createEClass(CONNECTOR);
-		createEAttribute(connectorEClass, CONNECTOR__COMMENT);
-		createEAttribute(connectorEClass, CONNECTOR__NAME);
-		createEAttribute(connectorEClass, CONNECTOR__CLASS_NAME);
 	}
 
 	/**
@@ -967,14 +977,14 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEReference(getInboundRouter_InboundEndpoint(), this.getEndpoint(), null, "inboundEndpoint", null, 0, 1, InboundRouter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(muleConfigEClass, MuleConfig.class, "MuleConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getMuleConfig_Components(), this.getAbstractComponent(), null, "components", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getMuleConfig_Version(), ecorePackage.getEString(), "version", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getMuleConfig_Description(), ecorePackage.getEString(), "description", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getMuleConfig_Properties(), this.getProperties(), null, "properties", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getMuleConfig_Interceptors(), this.getInterceptorDefinition(), null, "interceptors", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getMuleConfig_GlobalEndpoints(), this.getGlobalEndpoint(), null, "globalEndpoints", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getMuleConfig_Transformers(), this.getTransformer(), null, "transformers", null, 0, 1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Interceptors(), this.getInterceptorDefinition(), null, "interceptors", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getMuleConfig_Connectors(), this.getConnector(), null, "connectors", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Transformers(), this.getTransformer(), null, "transformers", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_GlobalEndpoints(), this.getGlobalEndpoint(), null, "globalEndpoints", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMuleConfig_Components(), this.getAbstractComponent(), null, "components", null, 0, -1, MuleConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(muleConfigEClass, null, "addComponent"); //$NON-NLS-1$
 
@@ -990,6 +1000,11 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEClass(interceptorEClass, Interceptor.class, "Interceptor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getInterceptor_Name(), ecorePackage.getEString(), "name", null, 1, 1, Interceptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getInterceptor_GroupDefinition(), this.getInterceptorDefinition(), null, "groupDefinition", null, 0, 1, Interceptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getConnector_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getConnector_Name(), ecorePackage.getEString(), "name", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getConnector_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(propertiesEClass, Properties.class, "Properties", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getProperties_Properties(), this.getProperty(), null, "properties", null, 0, -1, Properties.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -1022,6 +1037,7 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEAttribute(getTransformer_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getTransformer_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getTransformer_ReturnClass(), ecorePackage.getEString(), "returnClass", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getTransformer_Name(), ecorePackage.getEString(), "name", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(abstractComponentEClass, AbstractComponent.class, "AbstractComponent", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getAbstractComponent_Implementation(), ecorePackage.getEString(), "implementation", null, 0, 1, AbstractComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -1041,11 +1057,6 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEClass(binaryFilterEClass, BinaryFilter.class, "BinaryFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(xsltFilterEClass, XsltFilter.class, "XsltFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getConnector_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConnector_Name(), ecorePackage.getEString(), "name", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConnector_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

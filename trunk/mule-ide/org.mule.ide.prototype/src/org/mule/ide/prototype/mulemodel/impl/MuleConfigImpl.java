@@ -37,14 +37,14 @@ import org.mule.ide.prototype.mulemodel.Transformer;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getComponents <em>Components</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getInterceptors <em>Interceptors</em>}</li>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getGlobalEndpoints <em>Global Endpoints</em>}</li>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getTransformers <em>Transformers</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getConnectors <em>Connectors</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getTransformers <em>Transformers</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getGlobalEndpoints <em>Global Endpoints</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getComponents <em>Components</em>}</li>
  * </ul>
  * </p>
  *
@@ -57,16 +57,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
-
-	/**
-	 * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getComponents()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList components = null;
 
 	/**
 	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
@@ -119,34 +109,14 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	protected Properties properties = null;
 
 	/**
-	 * The cached value of the '{@link #getInterceptors() <em>Interceptors</em>}' containment reference.
+	 * The cached value of the '{@link #getInterceptors() <em>Interceptors</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getInterceptors()
 	 * @generated
 	 * @ordered
 	 */
-	protected InterceptorDefinition interceptors = null;
-
-	/**
-	 * The cached value of the '{@link #getGlobalEndpoints() <em>Global Endpoints</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getGlobalEndpoints()
-	 * @generated
-	 * @ordered
-	 */
-	protected GlobalEndpoint globalEndpoints = null;
-
-	/**
-	 * The cached value of the '{@link #getTransformers() <em>Transformers</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTransformers()
-	 * @generated
-	 * @ordered
-	 */
-	protected Transformer transformers = null;
+	protected EList interceptors = null;
 
 	/**
 	 * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
@@ -157,6 +127,36 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * @ordered
 	 */
 	protected EList connectors = null;
+
+	/**
+	 * The cached value of the '{@link #getTransformers() <em>Transformers</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTransformers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList transformers = null;
+
+	/**
+	 * The cached value of the '{@link #getGlobalEndpoints() <em>Global Endpoints</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGlobalEndpoints()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList globalEndpoints = null;
+
+	/**
+	 * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComponents()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList components = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -181,7 +181,10 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public GlobalEndpoint getGlobalEndpoints() {
+	public EList getGlobalEndpoints() {
+		if (globalEndpoints == null) {
+			globalEndpoints = new EObjectContainmentEList(GlobalEndpoint.class, this, MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS);
+		}
 		return globalEndpoints;
 	}
 
@@ -190,76 +193,11 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetGlobalEndpoints(GlobalEndpoint newGlobalEndpoints, NotificationChain msgs) {
-		GlobalEndpoint oldGlobalEndpoints = globalEndpoints;
-		globalEndpoints = newGlobalEndpoints;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS, oldGlobalEndpoints, newGlobalEndpoints);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+	public EList getTransformers() {
+		if (transformers == null) {
+			transformers = new EObjectContainmentEList(Transformer.class, this, MulePackage.MULE_CONFIG__TRANSFORMERS);
 		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setGlobalEndpoints(GlobalEndpoint newGlobalEndpoints) {
-		if (newGlobalEndpoints != globalEndpoints) {
-			NotificationChain msgs = null;
-			if (globalEndpoints != null)
-				msgs = ((InternalEObject)globalEndpoints).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS, null, msgs);
-			if (newGlobalEndpoints != null)
-				msgs = ((InternalEObject)newGlobalEndpoints).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS, null, msgs);
-			msgs = basicSetGlobalEndpoints(newGlobalEndpoints, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS, newGlobalEndpoints, newGlobalEndpoints));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Transformer getTransformers() {
 		return transformers;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetTransformers(Transformer newTransformers, NotificationChain msgs) {
-		Transformer oldTransformers = transformers;
-		transformers = newTransformers;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__TRANSFORMERS, oldTransformers, newTransformers);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setTransformers(Transformer newTransformers) {
-		if (newTransformers != transformers) {
-			NotificationChain msgs = null;
-			if (transformers != null)
-				msgs = ((InternalEObject)transformers).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__TRANSFORMERS, null, msgs);
-			if (newTransformers != null)
-				msgs = ((InternalEObject)newTransformers).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__TRANSFORMERS, null, msgs);
-			msgs = basicSetTransformers(newTransformers, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__TRANSFORMERS, newTransformers, newTransformers));
 	}
 
 	/**
@@ -375,42 +313,11 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InterceptorDefinition getInterceptors() {
+	public EList getInterceptors() {
+		if (interceptors == null) {
+			interceptors = new EObjectContainmentEList(InterceptorDefinition.class, this, MulePackage.MULE_CONFIG__INTERCEPTORS);
+		}
 		return interceptors;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetInterceptors(InterceptorDefinition newInterceptors, NotificationChain msgs) {
-		InterceptorDefinition oldInterceptors = interceptors;
-		interceptors = newInterceptors;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__INTERCEPTORS, oldInterceptors, newInterceptors);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setInterceptors(InterceptorDefinition newInterceptors) {
-		if (newInterceptors != interceptors) {
-			NotificationChain msgs = null;
-			if (interceptors != null)
-				msgs = ((InternalEObject)interceptors).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__INTERCEPTORS, null, msgs);
-			if (newInterceptors != null)
-				msgs = ((InternalEObject)newInterceptors).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__INTERCEPTORS, null, msgs);
-			msgs = basicSetInterceptors(newInterceptors, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__INTERCEPTORS, newInterceptors, newInterceptors));
 	}
 
 	/**
@@ -432,18 +339,18 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case MulePackage.MULE_CONFIG__COMPONENTS:
-				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
 			case MulePackage.MULE_CONFIG__PROPERTIES:
 				return basicSetProperties(null, msgs);
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
-				return basicSetInterceptors(null, msgs);
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				return basicSetGlobalEndpoints(null, msgs);
-			case MulePackage.MULE_CONFIG__TRANSFORMERS:
-				return basicSetTransformers(null, msgs);
+				return ((InternalEList)getInterceptors()).basicRemove(otherEnd, msgs);
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				return ((InternalEList)getConnectors()).basicRemove(otherEnd, msgs);
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return ((InternalEList)getTransformers()).basicRemove(otherEnd, msgs);
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				return ((InternalEList)getGlobalEndpoints()).basicRemove(otherEnd, msgs);
+			case MulePackage.MULE_CONFIG__COMPONENTS:
+				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -455,8 +362,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MulePackage.MULE_CONFIG__COMPONENTS:
-				return getComponents();
 			case MulePackage.MULE_CONFIG__VERSION:
 				return getVersion();
 			case MulePackage.MULE_CONFIG__DESCRIPTION:
@@ -465,12 +370,14 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				return getProperties();
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				return getInterceptors();
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				return getGlobalEndpoints();
-			case MulePackage.MULE_CONFIG__TRANSFORMERS:
-				return getTransformers();
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				return getConnectors();
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return getTransformers();
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				return getGlobalEndpoints();
+			case MulePackage.MULE_CONFIG__COMPONENTS:
+				return getComponents();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -482,10 +389,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MulePackage.MULE_CONFIG__COMPONENTS:
-				getComponents().clear();
-				getComponents().addAll((Collection)newValue);
-				return;
 			case MulePackage.MULE_CONFIG__VERSION:
 				setVersion((String)newValue);
 				return;
@@ -496,17 +399,24 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				setProperties((Properties)newValue);
 				return;
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
-				setInterceptors((InterceptorDefinition)newValue);
-				return;
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				setGlobalEndpoints((GlobalEndpoint)newValue);
-				return;
-			case MulePackage.MULE_CONFIG__TRANSFORMERS:
-				setTransformers((Transformer)newValue);
+				getInterceptors().clear();
+				getInterceptors().addAll((Collection)newValue);
 				return;
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				getConnectors().clear();
 				getConnectors().addAll((Collection)newValue);
+				return;
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				getTransformers().clear();
+				getTransformers().addAll((Collection)newValue);
+				return;
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				getGlobalEndpoints().clear();
+				getGlobalEndpoints().addAll((Collection)newValue);
+				return;
+			case MulePackage.MULE_CONFIG__COMPONENTS:
+				getComponents().clear();
+				getComponents().addAll((Collection)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -519,9 +429,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MulePackage.MULE_CONFIG__COMPONENTS:
-				getComponents().clear();
-				return;
 			case MulePackage.MULE_CONFIG__VERSION:
 				setVersion(VERSION_EDEFAULT);
 				return;
@@ -532,16 +439,19 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				setProperties((Properties)null);
 				return;
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
-				setInterceptors((InterceptorDefinition)null);
-				return;
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				setGlobalEndpoints((GlobalEndpoint)null);
-				return;
-			case MulePackage.MULE_CONFIG__TRANSFORMERS:
-				setTransformers((Transformer)null);
+				getInterceptors().clear();
 				return;
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				getConnectors().clear();
+				return;
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				getTransformers().clear();
+				return;
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				getGlobalEndpoints().clear();
+				return;
+			case MulePackage.MULE_CONFIG__COMPONENTS:
+				getComponents().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -554,8 +464,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MulePackage.MULE_CONFIG__COMPONENTS:
-				return components != null && !components.isEmpty();
 			case MulePackage.MULE_CONFIG__VERSION:
 				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
 			case MulePackage.MULE_CONFIG__DESCRIPTION:
@@ -563,13 +471,15 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 			case MulePackage.MULE_CONFIG__PROPERTIES:
 				return properties != null;
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
-				return interceptors != null;
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				return globalEndpoints != null;
-			case MulePackage.MULE_CONFIG__TRANSFORMERS:
-				return transformers != null;
+				return interceptors != null && !interceptors.isEmpty();
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				return connectors != null && !connectors.isEmpty();
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return transformers != null && !transformers.isEmpty();
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				return globalEndpoints != null && !globalEndpoints.isEmpty();
+			case MulePackage.MULE_CONFIG__COMPONENTS:
+				return components != null && !components.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -54,6 +54,12 @@ public class MuleConfigTranslator extends RootTranslator {
 					new Translator(MuleConfigXmlMapping.ATTR_NAME, MULE_CONFIG_PACKAGE.getGlobalEndpoint_Name(), Translator.DOM_ATTRIBUTE) 
 				});
 
+	private static final TranslatorPath TRANSFORMERS_TRANSFORMER_PATH = new TranslatorPath(new Translator[] {
+			new Translator(MuleConfigXmlMapping.MULE_CONFIG, ROOT_FEATURE), 
+			new Translator(MuleConfigXmlMapping.TRANSFORMER_TRANSFORMER, MULE_CONFIG_PACKAGE.getMuleConfig_Transformers()), 
+			new Translator(MuleConfigXmlMapping.ATTR_NAME, MULE_CONFIG_PACKAGE.getTransformer_Name(), Translator.DOM_ATTRIBUTE) 
+		});
+
 	private static final SourceLinkTranslator OUTBOUND_ENDPOINT_SOURCE_LINK = new SourceLinkTranslator(MuleConfigXmlMapping.ENDPOINT_ADDRESS, MULE_CONFIG_PACKAGE.getOutboundRouter_OutboundEndpoint(), 
 							GLOBAL_ENDPOINT_TRANSLATOR_PATH,Translator.DOM_ATTRIBUTE );
 
@@ -209,7 +215,7 @@ public class MuleConfigTranslator extends RootTranslator {
 		GenericTranslator translator = new GenericTranslator(
 				MuleConfigXmlMapping.FILTER,
 				MULE_CONFIG_PACKAGE
-						.getAbstractFilter());
+						.getGenericFilter());
 		translator.setChildren(new Translator[] {
 				IDTranslator.INSTANCE,
 				INBOUND_ENDPOINT_SOURCE_LINK
@@ -276,17 +282,19 @@ public class MuleConfigTranslator extends RootTranslator {
 	 */
 	protected static Translator createTransformersTranslator(int versionID) {
 		GenericTranslator translator = new GenericTranslator(
-				MuleConfigXmlMapping.TRANSFORMERS,
-				MULE_CONFIG_PACKAGE
-						.getMuleConfig_Transformers(), MULE_CONFIG_PACKAGE.getTransformer());
+				MuleConfigXmlMapping.TRANSFORMER_TRANSFORMER,
+				MULE_CONFIG_PACKAGE.getMuleConfig_Transformers(), OBJECT_MAP);
 		translator.setChildren(new Translator[] {
 				IDTranslator.INSTANCE,
 				new Translator(MuleConfigXmlMapping.TRANSFORMER,
 						MULE_CONFIG_PACKAGE.getTransformer_Comment(),
 						Translator.COMMENT_FEATURE),
-				new Translator(MuleConfigXmlMapping.ATTR_CLASSNAME,
-						MULE_CONFIG_PACKAGE.getTransformer_ClassName(),
-						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) });
+				new Translator(MuleConfigXmlMapping.ATTR_NAME,
+						MULE_CONFIG_PACKAGE.getTransformer_Name(),
+						Translator.DOM_ATTRIBUTE),
+				new Translator(MuleConfigXmlMapping.ATTR_CLASSNAME ,
+						MULE_CONFIG_PACKAGE.getTransformer_ClassName() ,
+						Translator.DOM_ATTRIBUTE) });
 		return translator;
 	}
 	

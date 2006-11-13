@@ -95,6 +95,9 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 			public Object caseInterceptor(Interceptor object) {
 				return createInterceptorAdapter();
 			}
+			public Object caseConnector(Connector object) {
+				return createConnectorAdapter();
+			}
 			public Object caseProperties(Properties object) {
 				return createPropertiesAdapter();
 			}
@@ -145,9 +148,6 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 			}
 			public Object caseXsltFilter(XsltFilter object) {
 				return createXsltFilterAdapter();
-			}
-			public Object caseConnector(Connector object) {
-				return createConnectorAdapter();
 			}
 			public Object defaultCase(EObject object) {
 				return createEObjectAdapter();

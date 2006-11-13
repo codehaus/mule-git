@@ -21,14 +21,14 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getComponents <em>Components</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getVersion <em>Version</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getDescription <em>Description</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getInterceptors <em>Interceptors</em>}</li>
- *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints <em>Global Endpoints</em>}</li>
- *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers <em>Transformers</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getConnectors <em>Connectors</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers <em>Transformers</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints <em>Global Endpoints</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.MuleConfig#getComponents <em>Components</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,56 +45,36 @@ public interface MuleConfig extends EObject {
 	String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
 
 	/**
-	 * Returns the value of the '<em><b>Global Endpoints</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Global Endpoints</b></em>' containment reference list.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.GlobalEndpoint}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Global Endpoints</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Global Endpoints</em>' containment reference.
-	 * @see #setGlobalEndpoints(GlobalEndpoint)
+	 * @return the value of the '<em>Global Endpoints</em>' containment reference list.
 	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getMuleConfig_GlobalEndpoints()
-	 * @model containment="true"
+	 * @model type="org.mule.ide.prototype.mulemodel.GlobalEndpoint" containment="true"
 	 * @generated
 	 */
-	GlobalEndpoint getGlobalEndpoints();
+	EList getGlobalEndpoints();
 
 	/**
-	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints <em>Global Endpoints</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Global Endpoints</em>' containment reference.
-	 * @see #getGlobalEndpoints()
-	 * @generated
-	 */
-	void setGlobalEndpoints(GlobalEndpoint value);
-
-	/**
-	 * Returns the value of the '<em><b>Transformers</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Transformers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.Transformer}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Transformers</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Transformers</em>' containment reference.
-	 * @see #setTransformers(Transformer)
+	 * @return the value of the '<em>Transformers</em>' containment reference list.
 	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getMuleConfig_Transformers()
-	 * @model containment="true"
+	 * @model type="org.mule.ide.prototype.mulemodel.Transformer" containment="true"
 	 * @generated
 	 */
-	Transformer getTransformers();
-
-	/**
-	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers <em>Transformers</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Transformers</em>' containment reference.
-	 * @see #getTransformers()
-	 * @generated
-	 */
-	void setTransformers(Transformer value);
+	EList getTransformers();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -199,30 +179,20 @@ public interface MuleConfig extends EObject {
 	void setProperties(Properties value);
 
 	/**
-	 * Returns the value of the '<em><b>Interceptors</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Interceptors</b></em>' containment reference list.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Interceptors</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Interceptors</em>' containment reference.
-	 * @see #setInterceptors(InterceptorDefinition)
+	 * @return the value of the '<em>Interceptors</em>' containment reference list.
 	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getMuleConfig_Interceptors()
-	 * @model containment="true"
+	 * @model type="org.mule.ide.prototype.mulemodel.InterceptorDefinition" containment="true"
 	 * @generated
 	 */
-	InterceptorDefinition getInterceptors();
-
-	/**
-	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getInterceptors <em>Interceptors</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Interceptors</em>' containment reference.
-	 * @see #getInterceptors()
-	 * @generated
-	 */
-	void setInterceptors(InterceptorDefinition value);
+	EList getInterceptors();
 
 	/**
 	 * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.

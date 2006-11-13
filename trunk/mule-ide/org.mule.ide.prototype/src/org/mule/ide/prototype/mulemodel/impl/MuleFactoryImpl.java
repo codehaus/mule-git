@@ -73,6 +73,7 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 			case MulePackage.MULE_CONFIG: return createMuleConfig();
 			case MulePackage.OUTBOUND_ROUTER: return createOutboundRouter();
 			case MulePackage.INTERCEPTOR: return createInterceptor();
+			case MulePackage.CONNECTOR: return createConnector();
 			case MulePackage.PROPERTIES: return createProperties();
 			case MulePackage.TEXT_PROPERTY: return createTextProperty();
 			case MulePackage.LIST_PROPERTY: return createListProperty();
@@ -87,7 +88,6 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 			case MulePackage.GENERIC_FILTER: return createGenericFilter();
 			case MulePackage.BINARY_FILTER: return createBinaryFilter();
 			case MulePackage.XSLT_FILTER: return createXsltFilter();
-			case MulePackage.CONNECTOR: return createConnector();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}

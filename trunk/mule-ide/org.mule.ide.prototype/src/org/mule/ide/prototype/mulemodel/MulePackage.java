@@ -77,7 +77,7 @@ public interface MulePackage extends EPackage {
 	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getRouter()
 	 * @generated
 	 */
-	int ROUTER = 14;
+	int ROUTER = 15;
 
 	/**
 	 * The feature id for the '<em><b>Local Endpoints</b></em>' containment reference list.
@@ -145,22 +145,13 @@ public interface MulePackage extends EPackage {
 	int MULE_CONFIG = 1;
 
 	/**
-	 * The feature id for the '<em><b>Components</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MULE_CONFIG__COMPONENTS = 0;
-
-	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MULE_CONFIG__VERSION = 1;
+	int MULE_CONFIG__VERSION = 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -169,7 +160,7 @@ public interface MulePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MULE_CONFIG__DESCRIPTION = 2;
+	int MULE_CONFIG__DESCRIPTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Properties</b></em>' containment reference.
@@ -178,34 +169,16 @@ public interface MulePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MULE_CONFIG__PROPERTIES = 3;
+	int MULE_CONFIG__PROPERTIES = 2;
 
 	/**
-	 * The feature id for the '<em><b>Interceptors</b></em>' containment reference.
+	 * The feature id for the '<em><b>Interceptors</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MULE_CONFIG__INTERCEPTORS = 4;
-
-	/**
-	 * The feature id for the '<em><b>Global Endpoints</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MULE_CONFIG__GLOBAL_ENDPOINTS = 5;
-
-	/**
-	 * The feature id for the '<em><b>Transformers</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MULE_CONFIG__TRANSFORMERS = 6;
+	int MULE_CONFIG__INTERCEPTORS = 3;
 
 	/**
 	 * The feature id for the '<em><b>Connectors</b></em>' containment reference list.
@@ -214,7 +187,34 @@ public interface MulePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MULE_CONFIG__CONNECTORS = 7;
+	int MULE_CONFIG__CONNECTORS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Transformers</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MULE_CONFIG__TRANSFORMERS = 5;
+
+	/**
+	 * The feature id for the '<em><b>Global Endpoints</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MULE_CONFIG__GLOBAL_ENDPOINTS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Components</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MULE_CONFIG__COMPONENTS = 7;
 
 	/**
 	 * The number of structural features of the '<em>Config</em>' class.
@@ -363,7 +363,7 @@ public interface MulePackage extends EPackage {
 	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getConnector()
 	 * @generated
 	 */
-	int CONNECTOR = 22;
+	int CONNECTOR = 5;
 
 	/**
 	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.PropertiesImpl <em>Properties</em>}' class.
@@ -373,7 +373,193 @@ public interface MulePackage extends EPackage {
 	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getProperties()
 	 * @generated
 	 */
-	int PROPERTIES = 5;
+	int PROPERTIES = 6;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.PropertyImpl <em>Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.PropertyImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getProperty()
+	 * @generated
+	 */
+	int PROPERTY = 7;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.TextPropertyImpl <em>Text Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.TextPropertyImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getTextProperty()
+	 * @generated
+	 */
+	int TEXT_PROPERTY = 8;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.ListPropertyImpl <em>List Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.ListPropertyImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getListProperty()
+	 * @generated
+	 */
+	int LIST_PROPERTY = 9;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.MapPropertyImpl <em>Map Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.MapPropertyImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getMapProperty()
+	 * @generated
+	 */
+	int MAP_PROPERTY = 10;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.InterceptorDefinitionImpl <em>Interceptor Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.InterceptorDefinitionImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getInterceptorDefinition()
+	 * @generated
+	 */
+	int INTERCEPTOR_DEFINITION = 11;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl <em>Abstract Component</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getAbstractComponent()
+	 * @generated
+	 */
+	int ABSTRACT_COMPONENT = 17;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.BridgeComponentImpl <em>Bridge Component</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.BridgeComponentImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getBridgeComponent()
+	 * @generated
+	 */
+	int BRIDGE_COMPONENT = 12;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.LocalEndpointImpl <em>Local Endpoint</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.LocalEndpointImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getLocalEndpoint()
+	 * @generated
+	 */
+	int LOCAL_ENDPOINT = 13;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GlobalEndpointImpl <em>Global Endpoint</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.GlobalEndpointImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGlobalEndpoint()
+	 * @generated
+	 */
+	int GLOBAL_ENDPOINT = 14;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.TransformerImpl <em>Transformer</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.TransformerImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getTransformer()
+	 * @generated
+	 */
+	int TRANSFORMER = 16;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GenericComponentImpl <em>Generic Component</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.GenericComponentImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGenericComponent()
+	 * @generated
+	 */
+	int GENERIC_COMPONENT = 18;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.AbstractFilterImpl <em>Abstract Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.AbstractFilterImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getAbstractFilter()
+	 * @generated
+	 */
+	int ABSTRACT_FILTER = 19;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GenericFilterImpl <em>Generic Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.GenericFilterImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGenericFilter()
+	 * @generated
+	 */
+	int GENERIC_FILTER = 20;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.BinaryFilterImpl <em>Binary Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.BinaryFilterImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getBinaryFilter()
+	 * @generated
+	 */
+	int BINARY_FILTER = 21;
+
+	/**
+	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.XsltFilterImpl <em>Xslt Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.mule.ide.prototype.mulemodel.impl.XsltFilterImpl
+	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getXsltFilter()
+	 * @generated
+	 */
+	int XSLT_FILTER = 22;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR__COMMENT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR__NAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR__CLASS_NAME = 2;
+
+	/**
+	 * The number of structural features of the '<em>Connector</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR_FEATURE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
@@ -394,16 +580,6 @@ public interface MulePackage extends EPackage {
 	int PROPERTIES_FEATURE_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.PropertyImpl <em>Property</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.PropertyImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getProperty()
-	 * @generated
-	 */
-	int PROPERTY = 6;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -420,16 +596,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_FEATURE_COUNT = 1;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.TextPropertyImpl <em>Text Property</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.TextPropertyImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getTextProperty()
-	 * @generated
-	 */
-	int TEXT_PROPERTY = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -459,16 +625,6 @@ public interface MulePackage extends EPackage {
 	int TEXT_PROPERTY_FEATURE_COUNT = PROPERTY_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.ListPropertyImpl <em>List Property</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.ListPropertyImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getListProperty()
-	 * @generated
-	 */
-	int LIST_PROPERTY = 8;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -485,16 +641,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int LIST_PROPERTY_FEATURE_COUNT = PROPERTY_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.MapPropertyImpl <em>Map Property</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.MapPropertyImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getMapProperty()
-	 * @generated
-	 */
-	int MAP_PROPERTY = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -524,16 +670,6 @@ public interface MulePackage extends EPackage {
 	int MAP_PROPERTY_FEATURE_COUNT = PROPERTY_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.InterceptorDefinitionImpl <em>Interceptor Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.InterceptorDefinitionImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getInterceptorDefinition()
-	 * @generated
-	 */
-	int INTERCEPTOR_DEFINITION = 10;
-
-	/**
 	 * The number of structural features of the '<em>Interceptor Definition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -541,16 +677,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERCEPTOR_DEFINITION_FEATURE_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl <em>Abstract Component</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getAbstractComponent()
-	 * @generated
-	 */
-	int ABSTRACT_COMPONENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Implementation</b></em>' attribute.
@@ -616,16 +742,6 @@ public interface MulePackage extends EPackage {
 	int ABSTRACT_COMPONENT_FEATURE_COUNT = 6;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.BridgeComponentImpl <em>Bridge Component</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.BridgeComponentImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getBridgeComponent()
-	 * @generated
-	 */
-	int BRIDGE_COMPONENT = 11;
-
-	/**
 	 * The feature id for the '<em><b>Implementation</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -689,16 +805,6 @@ public interface MulePackage extends EPackage {
 	int BRIDGE_COMPONENT_FEATURE_COUNT = ABSTRACT_COMPONENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.LocalEndpointImpl <em>Local Endpoint</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.LocalEndpointImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getLocalEndpoint()
-	 * @generated
-	 */
-	int LOCAL_ENDPOINT = 12;
-
-	/**
 	 * The feature id for the '<em><b>Address</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -733,16 +839,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int LOCAL_ENDPOINT_FEATURE_COUNT = ENDPOINT_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GlobalEndpointImpl <em>Global Endpoint</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.GlobalEndpointImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGlobalEndpoint()
-	 * @generated
-	 */
-	int GLOBAL_ENDPOINT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Address</b></em>' attribute.
@@ -799,16 +895,6 @@ public interface MulePackage extends EPackage {
 	int GLOBAL_ENDPOINT_FEATURE_COUNT = ENDPOINT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.TransformerImpl <em>Transformer</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.TransformerImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getTransformer()
-	 * @generated
-	 */
-	int TRANSFORMER = 15;
-
-	/**
 	 * The feature id for the '<em><b>Class Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -836,23 +922,22 @@ public interface MulePackage extends EPackage {
 	int TRANSFORMER__RETURN_CLASS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMER__NAME = 3;
+
+	/**
 	 * The number of structural features of the '<em>Transformer</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSFORMER_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GenericComponentImpl <em>Generic Component</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.GenericComponentImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGenericComponent()
-	 * @generated
-	 */
-	int GENERIC_COMPONENT = 17;
+	int TRANSFORMER_FEATURE_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Implementation</b></em>' attribute.
@@ -927,16 +1012,6 @@ public interface MulePackage extends EPackage {
 	int GENERIC_COMPONENT_FEATURE_COUNT = ABSTRACT_COMPONENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.AbstractFilterImpl <em>Abstract Filter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.AbstractFilterImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getAbstractFilter()
-	 * @generated
-	 */
-	int ABSTRACT_FILTER = 18;
-
-	/**
 	 * The number of structural features of the '<em>Abstract Filter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -944,16 +1019,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int ABSTRACT_FILTER_FEATURE_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.GenericFilterImpl <em>Generic Filter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.GenericFilterImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getGenericFilter()
-	 * @generated
-	 */
-	int GENERIC_FILTER = 19;
 
 	/**
 	 * The number of structural features of the '<em>Generic Filter</em>' class.
@@ -965,16 +1030,6 @@ public interface MulePackage extends EPackage {
 	int GENERIC_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.BinaryFilterImpl <em>Binary Filter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.BinaryFilterImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getBinaryFilter()
-	 * @generated
-	 */
-	int BINARY_FILTER = 20;
-
-	/**
 	 * The number of structural features of the '<em>Binary Filter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -982,16 +1037,6 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int BINARY_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.XsltFilterImpl <em>Xslt Filter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.mule.ide.prototype.mulemodel.impl.XsltFilterImpl
-	 * @see org.mule.ide.prototype.mulemodel.impl.MulePackageImpl#getXsltFilter()
-	 * @generated
-	 */
-	int XSLT_FILTER = 21;
 
 	/**
 	 * The number of structural features of the '<em>Xslt Filter</em>' class.
@@ -1002,42 +1047,6 @@ public interface MulePackage extends EPackage {
 	 */
 	int XSLT_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 0;
 
-
-	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTOR__COMMENT = 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTOR__NAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Class Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTOR__CLASS_NAME = 2;
-
-	/**
-	 * The number of structural features of the '<em>Connector</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTOR_FEATURE_COUNT = 3;
 
 	/**
 	 * Returns the meta object for class '{@link org.mule.ide.prototype.mulemodel.InboundRouter <em>Inbound Router</em>}'.
@@ -1071,10 +1080,10 @@ public interface MulePackage extends EPackage {
 	EClass getMuleConfig();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints <em>Global Endpoints</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints <em>Global Endpoints</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Global Endpoints</em>'.
+	 * @return the meta object for the containment reference list '<em>Global Endpoints</em>'.
 	 * @see org.mule.ide.prototype.mulemodel.MuleConfig#getGlobalEndpoints()
 	 * @see #getMuleConfig()
 	 * @generated
@@ -1082,10 +1091,10 @@ public interface MulePackage extends EPackage {
 	EReference getMuleConfig_GlobalEndpoints();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers <em>Transformers</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers <em>Transformers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Transformers</em>'.
+	 * @return the meta object for the containment reference list '<em>Transformers</em>'.
 	 * @see org.mule.ide.prototype.mulemodel.MuleConfig#getTransformers()
 	 * @see #getMuleConfig()
 	 * @generated
@@ -1212,10 +1221,10 @@ public interface MulePackage extends EPackage {
 	EReference getMuleConfig_Properties();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getInterceptors <em>Interceptors</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.mule.ide.prototype.mulemodel.MuleConfig#getInterceptors <em>Interceptors</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Interceptors</em>'.
+	 * @return the meta object for the containment reference list '<em>Interceptors</em>'.
 	 * @see org.mule.ide.prototype.mulemodel.MuleConfig#getInterceptors()
 	 * @see #getMuleConfig()
 	 * @generated
@@ -1529,6 +1538,17 @@ public interface MulePackage extends EPackage {
 	EAttribute getTransformer_ReturnClass();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.mule.ide.prototype.mulemodel.Transformer#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.mule.ide.prototype.mulemodel.Transformer#getName()
+	 * @see #getTransformer()
+	 * @generated
+	 */
+	EAttribute getTransformer_Name();
+
+	/**
 	 * Returns the meta object for class '{@link org.mule.ide.prototype.mulemodel.AbstractComponent <em>Abstract Component</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1716,7 +1736,7 @@ public interface MulePackage extends EPackage {
 		EClass MULE_CONFIG = eINSTANCE.getMuleConfig();
 
 		/**
-		 * The meta object literal for the '<em><b>Global Endpoints</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Global Endpoints</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1724,7 +1744,7 @@ public interface MulePackage extends EPackage {
 		EReference MULE_CONFIG__GLOBAL_ENDPOINTS = eINSTANCE.getMuleConfig_GlobalEndpoints();
 
 		/**
-		 * The meta object literal for the '<em><b>Transformers</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Transformers</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1824,7 +1844,7 @@ public interface MulePackage extends EPackage {
 		EReference MULE_CONFIG__PROPERTIES = eINSTANCE.getMuleConfig_Properties();
 
 		/**
-		 * The meta object literal for the '<em><b>Interceptors</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Interceptors</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2088,6 +2108,14 @@ public interface MulePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TRANSFORMER__RETURN_CLASS = eINSTANCE.getTransformer_ReturnClass();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRANSFORMER__NAME = eINSTANCE.getTransformer_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl <em>Abstract Component</em>}' class.

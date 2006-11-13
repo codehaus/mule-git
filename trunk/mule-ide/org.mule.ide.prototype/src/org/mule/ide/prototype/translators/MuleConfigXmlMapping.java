@@ -41,7 +41,12 @@ public class MuleConfigXmlMapping {
 	/**
 	 * name of 'transformers' XML element
 	 */
-	public static final String TRANSFORMERS = "transformers/transformer"; //$NON-NLS-1$
+	public static final String TRANSFORMERS = "transformers"; //$NON-NLS-1$
+
+	/**
+	 * name of 'transformer' inside 'transformers' XML element
+	 */
+	public static final String TRANSFORMER_TRANSFORMER = "transformers/transformer"; //$NON-NLS-1$
 
 	/**
 	 * name of 'connector' XML element
