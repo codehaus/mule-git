@@ -28,6 +28,8 @@ import org.mule.ide.prototype.mulemodel.MuleConfig;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 import org.mule.ide.prototype.mulemodel.Properties;
 
+import org.mule.ide.prototype.mulemodel.Transformer;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Config</b></em>'.
@@ -40,8 +42,9 @@ import org.mule.ide.prototype.mulemodel.Properties;
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getInterceptors <em>Interceptors</em>}</li>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getGlobalEndpoints <em>Global Endpoints</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getTransformers <em>Transformers</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.MuleConfigImpl#getConnectors <em>Connectors</em>}</li>
  * </ul>
  * </p>
  *
@@ -126,16 +129,6 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	protected InterceptorDefinition interceptors = null;
 
 	/**
-	 * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getConnectors()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList connectors = null;
-
-	/**
 	 * The cached value of the '{@link #getGlobalEndpoints() <em>Global Endpoints</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -144,6 +137,26 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 * @ordered
 	 */
 	protected GlobalEndpoint globalEndpoints = null;
+
+	/**
+	 * The cached value of the '{@link #getTransformers() <em>Transformers</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTransformers()
+	 * @generated
+	 * @ordered
+	 */
+	protected Transformer transformers = null;
+
+	/**
+	 * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConnectors()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList connectors = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -204,6 +217,49 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS, newGlobalEndpoints, newGlobalEndpoints));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Transformer getTransformers() {
+		return transformers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetTransformers(Transformer newTransformers, NotificationChain msgs) {
+		Transformer oldTransformers = transformers;
+		transformers = newTransformers;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__TRANSFORMERS, oldTransformers, newTransformers);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTransformers(Transformer newTransformers) {
+		if (newTransformers != transformers) {
+			NotificationChain msgs = null;
+			if (transformers != null)
+				msgs = ((InternalEObject)transformers).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__TRANSFORMERS, null, msgs);
+			if (newTransformers != null)
+				msgs = ((InternalEObject)newTransformers).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MulePackage.MULE_CONFIG__TRANSFORMERS, null, msgs);
+			msgs = basicSetTransformers(newTransformers, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.MULE_CONFIG__TRANSFORMERS, newTransformers, newTransformers));
 	}
 
 	/**
@@ -382,10 +438,12 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				return basicSetProperties(null, msgs);
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				return basicSetInterceptors(null, msgs);
-			case MulePackage.MULE_CONFIG__CONNECTORS:
-				return ((InternalEList)getConnectors()).basicRemove(otherEnd, msgs);
 			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 				return basicSetGlobalEndpoints(null, msgs);
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return basicSetTransformers(null, msgs);
+			case MulePackage.MULE_CONFIG__CONNECTORS:
+				return ((InternalEList)getConnectors()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -407,10 +465,12 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				return getProperties();
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				return getInterceptors();
-			case MulePackage.MULE_CONFIG__CONNECTORS:
-				return getConnectors();
 			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 				return getGlobalEndpoints();
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return getTransformers();
+			case MulePackage.MULE_CONFIG__CONNECTORS:
+				return getConnectors();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -438,12 +498,15 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				setInterceptors((InterceptorDefinition)newValue);
 				return;
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+				setGlobalEndpoints((GlobalEndpoint)newValue);
+				return;
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				setTransformers((Transformer)newValue);
+				return;
 			case MulePackage.MULE_CONFIG__CONNECTORS:
 				getConnectors().clear();
 				getConnectors().addAll((Collection)newValue);
-				return;
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
-				setGlobalEndpoints((GlobalEndpoint)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -471,11 +534,14 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				setInterceptors((InterceptorDefinition)null);
 				return;
-			case MulePackage.MULE_CONFIG__CONNECTORS:
-				getConnectors().clear();
-				return;
 			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 				setGlobalEndpoints((GlobalEndpoint)null);
+				return;
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				setTransformers((Transformer)null);
+				return;
+			case MulePackage.MULE_CONFIG__CONNECTORS:
+				getConnectors().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -498,10 +564,12 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 				return properties != null;
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
 				return interceptors != null;
-			case MulePackage.MULE_CONFIG__CONNECTORS:
-				return connectors != null && !connectors.isEmpty();
 			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 				return globalEndpoints != null;
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+				return transformers != null;
+			case MulePackage.MULE_CONFIG__CONNECTORS:
+				return connectors != null && !connectors.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.mule.ide.prototype.mulemodel.AbstractFilter;
 import org.mule.ide.prototype.mulemodel.Connector;
 import org.mule.ide.prototype.mulemodel.Endpoint;
 import org.mule.ide.prototype.mulemodel.MulePackage;
@@ -27,6 +28,7 @@ import org.mule.ide.prototype.mulemodel.MulePackage;
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getAddress <em>Address</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getConnector <em>Connector</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getFilter <em>Filter</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +71,16 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 	 * @ordered
 	 */
 	protected Connector connector = null;
+
+	/**
+	 * The cached value of the '{@link #getFilter() <em>Filter</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFilter()
+	 * @generated
+	 * @ordered
+	 */
+	protected AbstractFilter filter = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -152,6 +164,44 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public AbstractFilter getFilter() {
+		if (filter != null && filter.eIsProxy()) {
+			InternalEObject oldFilter = (InternalEObject)filter;
+			filter = (AbstractFilter)eResolveProxy(oldFilter);
+			if (filter != oldFilter) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MulePackage.ENDPOINT__FILTER, oldFilter, filter));
+			}
+		}
+		return filter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AbstractFilter basicGetFilter() {
+		return filter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFilter(AbstractFilter newFilter) {
+		AbstractFilter oldFilter = filter;
+		filter = newFilter;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.ENDPOINT__FILTER, oldFilter, filter));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MulePackage.ENDPOINT__ADDRESS:
@@ -159,6 +209,9 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 			case MulePackage.ENDPOINT__CONNECTOR:
 				if (resolve) return getConnector();
 				return basicGetConnector();
+			case MulePackage.ENDPOINT__FILTER:
+				if (resolve) return getFilter();
+				return basicGetFilter();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -175,6 +228,9 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 				return;
 			case MulePackage.ENDPOINT__CONNECTOR:
 				setConnector((Connector)newValue);
+				return;
+			case MulePackage.ENDPOINT__FILTER:
+				setFilter((AbstractFilter)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -193,6 +249,9 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 			case MulePackage.ENDPOINT__CONNECTOR:
 				setConnector((Connector)null);
 				return;
+			case MulePackage.ENDPOINT__FILTER:
+				setFilter((AbstractFilter)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -208,6 +267,8 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 				return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
 			case MulePackage.ENDPOINT__CONNECTOR:
 				return connector != null;
+			case MulePackage.ENDPOINT__FILTER:
+				return filter != null;
 		}
 		return super.eIsSet(featureID);
 	}

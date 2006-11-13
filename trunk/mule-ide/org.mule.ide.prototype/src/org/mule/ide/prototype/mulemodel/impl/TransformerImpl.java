@@ -24,6 +24,8 @@ import org.mule.ide.prototype.mulemodel.Transformer;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.TransformerImpl#getClassName <em>Class Name</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.TransformerImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.TransformerImpl#getReturnClass <em>Return Class</em>}</li>
  * </ul>
  * </p>
  *
@@ -56,6 +58,46 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 	 * @ordered
 	 */
 	protected String className = CLASS_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComment()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String COMMENT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComment()
+	 * @generated
+	 * @ordered
+	 */
+	protected String comment = COMMENT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getReturnClass() <em>Return Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getReturnClass()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String RETURN_CLASS_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getReturnClass() <em>Return Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getReturnClass()
+	 * @generated
+	 * @ordered
+	 */
+	protected String returnClass = RETURN_CLASS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,10 +143,56 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setComment(String newComment) {
+		String oldComment = comment;
+		comment = newComment;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.TRANSFORMER__COMMENT, oldComment, comment));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getReturnClass() {
+		return returnClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setReturnClass(String newReturnClass) {
+		String oldReturnClass = returnClass;
+		returnClass = newReturnClass;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.TRANSFORMER__RETURN_CLASS, oldReturnClass, returnClass));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MulePackage.TRANSFORMER__CLASS_NAME:
 				return getClassName();
+			case MulePackage.TRANSFORMER__COMMENT:
+				return getComment();
+			case MulePackage.TRANSFORMER__RETURN_CLASS:
+				return getReturnClass();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -118,6 +206,12 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 		switch (featureID) {
 			case MulePackage.TRANSFORMER__CLASS_NAME:
 				setClassName((String)newValue);
+				return;
+			case MulePackage.TRANSFORMER__COMMENT:
+				setComment((String)newValue);
+				return;
+			case MulePackage.TRANSFORMER__RETURN_CLASS:
+				setReturnClass((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,6 +227,12 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 			case MulePackage.TRANSFORMER__CLASS_NAME:
 				setClassName(CLASS_NAME_EDEFAULT);
 				return;
+			case MulePackage.TRANSFORMER__COMMENT:
+				setComment(COMMENT_EDEFAULT);
+				return;
+			case MulePackage.TRANSFORMER__RETURN_CLASS:
+				setReturnClass(RETURN_CLASS_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -146,6 +246,10 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 		switch (featureID) {
 			case MulePackage.TRANSFORMER__CLASS_NAME:
 				return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
+			case MulePackage.TRANSFORMER__COMMENT:
+				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
+			case MulePackage.TRANSFORMER__RETURN_CLASS:
+				return RETURN_CLASS_EDEFAULT == null ? returnClass != null : !RETURN_CLASS_EDEFAULT.equals(returnClass);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -161,6 +265,10 @@ public class TransformerImpl extends EObjectImpl implements Transformer {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (className: "); //$NON-NLS-1$
 		result.append(className);
+		result.append(", comment: "); //$NON-NLS-1$
+		result.append(comment);
+		result.append(", returnClass: "); //$NON-NLS-1$
+		result.append(returnClass);
 		result.append(')');
 		return result.toString();
 	}

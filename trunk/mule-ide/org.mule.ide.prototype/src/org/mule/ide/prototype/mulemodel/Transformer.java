@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.Transformer#getClassName <em>Class Name</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.Transformer#getComment <em>Comment</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.Transformer#getReturnClass <em>Return Class</em>}</li>
  * </ul>
  * </p>
  *
@@ -57,5 +59,57 @@ public interface Transformer extends EObject {
 	 * @generated
 	 */
 	void setClassName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Comment</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Comment</em>' attribute.
+	 * @see #setComment(String)
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getTransformer_Comment()
+	 * @model
+	 * @generated
+	 */
+	String getComment();
+
+	/**
+	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.Transformer#getComment <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Comment</em>' attribute.
+	 * @see #getComment()
+	 * @generated
+	 */
+	void setComment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Return Class</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Return Class</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Return Class</em>' attribute.
+	 * @see #setReturnClass(String)
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getTransformer_ReturnClass()
+	 * @model
+	 * @generated
+	 */
+	String getReturnClass();
+
+	/**
+	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.Transformer#getReturnClass <em>Return Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Return Class</em>' attribute.
+	 * @see #getReturnClass()
+	 * @generated
+	 */
+	void setReturnClass(String value);
 
 } // Transformer

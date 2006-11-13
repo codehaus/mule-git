@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.AbstractComponent#getImplementation <em>Implementation</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.AbstractComponent#getName <em>Name</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.AbstractComponent#getOutboundRouter <em>Outbound Router</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.AbstractComponent#getInboundRouter <em>Inbound Router</em>}</li>
@@ -37,6 +38,32 @@ public interface AbstractComponent extends EObject {
 	 * @generated
 	 */
 	String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
+
+	/**
+	 * Returns the value of the '<em><b>Implementation</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Implementation</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Implementation</em>' attribute.
+	 * @see #setImplementation(String)
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getAbstractComponent_Implementation()
+	 * @model
+	 * @generated
+	 */
+	String getImplementation();
+
+	/**
+	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.AbstractComponent#getImplementation <em>Implementation</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Implementation</em>' attribute.
+	 * @see #getImplementation()
+	 * @generated
+	 */
+	void setImplementation(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.

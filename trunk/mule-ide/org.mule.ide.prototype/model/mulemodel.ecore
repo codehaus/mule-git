@@ -7,6 +7,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="inboundEndpoint" eType="#//Endpoint"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractComponent" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="implementation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outboundRouter" upperBound="-1"
@@ -27,15 +28,18 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="interceptors" eType="#//InterceptorDefinition"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
-        eType="#//Connector" defaultValueLiteral="" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="globalEndpoints" eType="#//GlobalEndpoint"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformers" eType="#//Transformer"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
+        eType="#//Connector" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Endpoint" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connector" eType="#//Connector"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filter" eType="#//AbstractFilter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OutboundRouter" eSuperTypes="#//Router">
     <eStructuralFeatures xsi:type="ecore:EReference" name="outboundEndpoint" eType="#//Endpoint"
@@ -48,6 +52,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connector">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Properties">
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
@@ -66,7 +72,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InterceptorDefinition"/>
   <eClassifiers xsi:type="ecore:EClass" name="GenericComponent" eSuperTypes="#//AbstractComponent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="interceptors" upperBound="-1"
         eType="#//Interceptor" defaultValueLiteral="" containment="true"/>
   </eClassifiers>
@@ -83,6 +88,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transformer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="returnClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractFilter" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="GenericFilter" eSuperTypes="#//AbstractFilter"/>

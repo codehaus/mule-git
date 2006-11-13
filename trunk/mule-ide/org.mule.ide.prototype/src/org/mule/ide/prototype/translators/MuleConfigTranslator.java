@@ -101,6 +101,8 @@ public class MuleConfigTranslator extends RootTranslator {
 	protected Translator[] create10Children() {
 		return new Translator[] {
 				IDTranslator.INSTANCE,
+				createConnectorsTranslator(MuleConfigConstants.VERSION_1_0_ID),
+				createTransformersTranslator(MuleConfigConstants.VERSION_1_0_ID),
 				createGlobalEndpointsTranslator(MuleConfigConstants.VERSION_1_0_ID),
 				createDescriptorTranslator(MuleConfigConstants.VERSION_1_0_ID)
 				};
@@ -121,7 +123,10 @@ public class MuleConfigTranslator extends RootTranslator {
 				IDTranslator.INSTANCE,
 				new Translator(MuleConfigXmlMapping.MULE_DESCRIPTOR,
 						MULE_CONFIG_PACKAGE.getAbstractComponent_Comment(),
-						Translator.COMMENT_FEATURE),
+						Translator.COMMENT_FEATURE),			
+				new Translator(MuleConfigXmlMapping.ATTR_IMPLEMENTATION,
+						MULE_CONFIG_PACKAGE.getAbstractComponent_Implementation(),
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
 				new Translator(MuleConfigXmlMapping.ATTR_NAME,
 						MULE_CONFIG_PACKAGE.getAbstractComponent_Name(),
 						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
@@ -130,6 +135,48 @@ public class MuleConfigTranslator extends RootTranslator {
 		return translator;
 	}
 	
+	/**
+	 * Creates a translator that maps the 'connectors/connector' element to the
+	 * 'connectors' reference of the <code>MuleConfig</code> class.
+	 * 
+	 * @return translator
+	 */
+	protected static Translator createConnectorsTranslator(int versionID) {
+		GenericTranslator translator = new GenericTranslator(
+				MuleConfigXmlMapping.CONNECTOR,
+				MULE_CONFIG_PACKAGE
+						.getConnector());
+		translator.setChildren(new Translator[] {
+				IDTranslator.INSTANCE,
+				new Translator(MuleConfigXmlMapping.CONNECTOR,
+						MULE_CONFIG_PACKAGE.getConnector_Comment(),
+						Translator.COMMENT_FEATURE),
+				new Translator(MuleConfigXmlMapping.ATTR_CLASSNAME,
+						MULE_CONFIG_PACKAGE.getConnector_ClassName(),
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
+				new Translator(MuleConfigXmlMapping.ATTR_NAME,
+						MULE_CONFIG_PACKAGE.getConnector_Name(),
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) });
+		return translator;
+		/*
+		GenericTranslator translator = new GenericTranslator(
+				MuleConfigXmlMapping.CONNECTOR,
+				MULE_CONFIG_PACKAGE
+						.getMuleConfig_Connectors(), MULE_CONFIG_PACKAGE.getConnector());
+		translator.setChildren(new Translator[] {
+				IDTranslator.INSTANCE,
+				new Translator(MuleConfigXmlMapping.CONNECTOR,
+						MULE_CONFIG_PACKAGE.getConnector_Comment(),
+						Translator.COMMENT_FEATURE)
+//				,
+//				new Translator(MuleConfigXmlMapping.ATTR_NAME,
+//						MULE_CONFIG_PACKAGE.getConnector_Name(),
+//						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) 
+				});
+		return translator;
+		*/
+	}
+
 	/**
 	 * Creates a translator that maps an inbound router element to the
 	 * 'inbound' router of a <code>Component</code>.
@@ -144,10 +191,28 @@ public class MuleConfigTranslator extends RootTranslator {
 		translator.setChildren(new Translator[] {
 				IDTranslator.INSTANCE,
 				INBOUND_ENDPOINT_SOURCE_LINK
-//				,
-//				new Translator(MuleConfigXmlMapping.ENDPOINT_ADDRESS,
-//						MULE_CONFIG_PACKAGE.getOutboundRouterType_OutboundEndpoint(),
-//						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT)
+				,
+				new Translator(MuleConfigXmlMapping.ENDPOINT_ADDRESS,
+						MULE_CONFIG_PACKAGE.getInboundRouter_InboundEndpoint(),
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT)
+				});
+		return translator;
+	}
+	
+	/**
+	 * Creates a translator that maps an filter element to the
+	 * 'filter' of an <code>Endpoint</code>.
+	 * 
+	 * @return translator
+	 */
+	protected static Translator createFilterTranslator(int versionID) {
+		GenericTranslator translator = new GenericTranslator(
+				MuleConfigXmlMapping.FILTER,
+				MULE_CONFIG_PACKAGE
+						.getAbstractFilter());
+		translator.setChildren(new Translator[] {
+				IDTranslator.INSTANCE,
+				INBOUND_ENDPOINT_SOURCE_LINK
 				});
 		return translator;
 	}
@@ -202,4 +267,27 @@ public class MuleConfigTranslator extends RootTranslator {
 						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) });
 		return translator;
 	}
+	
+	/**
+	 * Creates a translator that maps the 'transformers/transformer' element to the
+	 * 'transformers' reference of the <code>MuleConfig</code> class.
+	 * 
+	 * @return translator
+	 */
+	protected static Translator createTransformersTranslator(int versionID) {
+		GenericTranslator translator = new GenericTranslator(
+				MuleConfigXmlMapping.TRANSFORMERS,
+				MULE_CONFIG_PACKAGE
+						.getMuleConfig_Transformers(), MULE_CONFIG_PACKAGE.getTransformer());
+		translator.setChildren(new Translator[] {
+				IDTranslator.INSTANCE,
+				new Translator(MuleConfigXmlMapping.TRANSFORMER,
+						MULE_CONFIG_PACKAGE.getTransformer_Comment(),
+						Translator.COMMENT_FEATURE),
+				new Translator(MuleConfigXmlMapping.ATTR_CLASSNAME,
+						MULE_CONFIG_PACKAGE.getTransformer_ClassName(),
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) });
+		return translator;
+	}
+	
 }

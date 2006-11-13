@@ -129,12 +129,6 @@ public class MuleSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case MulePackage.CONNECTOR: {
-				Connector connector = (Connector)theEObject;
-				Object result = caseConnector(connector);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case MulePackage.PROPERTIES: {
 				Properties properties = (Properties)theEObject;
 				Object result = caseProperties(properties);
@@ -244,6 +238,12 @@ public class MuleSwitch {
 				XsltFilter xsltFilter = (XsltFilter)theEObject;
 				Object result = caseXsltFilter(xsltFilter);
 				if (result == null) result = caseAbstractFilter(xsltFilter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.CONNECTOR: {
+				Connector connector = (Connector)theEObject;
+				Object result = caseConnector(connector);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

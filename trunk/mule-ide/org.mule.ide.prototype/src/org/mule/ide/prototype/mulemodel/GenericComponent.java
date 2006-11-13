@@ -16,7 +16,6 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.GenericComponent#getClassName <em>Class Name</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.GenericComponent#getInterceptors <em>Interceptors</em>}</li>
  * </ul>
  * </p>
@@ -32,32 +31,6 @@ public interface GenericComponent extends AbstractComponent {
 	 * @generated
 	 */
 	String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
-
-	/**
-	 * Returns the value of the '<em><b>Class Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Class Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Class Name</em>' attribute.
-	 * @see #setClassName(String)
-	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getGenericComponent_ClassName()
-	 * @model
-	 * @generated
-	 */
-	String getClassName();
-
-	/**
-	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.GenericComponent#getClassName <em>Class Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Class Name</em>' attribute.
-	 * @see #getClassName()
-	 * @generated
-	 */
-	void setClassName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Interceptors</b></em>' containment reference list.

@@ -34,6 +34,21 @@ public class MuleConfigXmlMapping {
 	public static final String GLOBAL_ENDPOINTS = "global-endpoints"; //$NON-NLS-1$
 
 	/**
+	 * name of 'transformer' XML element
+	 */
+	public static final String TRANSFORMER = "transformer"; //$NON-NLS-1$
+
+	/**
+	 * name of 'transformers' XML element
+	 */
+	public static final String TRANSFORMERS = "transformers/transformer"; //$NON-NLS-1$
+
+	/**
+	 * name of 'connector' XML element
+	 */
+	public static final String CONNECTOR = "connector"; //$NON-NLS-1$
+
+	/**
 	 * name of 'endpoint' XML element
 	 */
 	public static final String ENDPOINT = "endpoint"; //$NON-NLS-1$
@@ -71,7 +86,7 @@ public class MuleConfigXmlMapping {
 	/**
 	 * name of 'endpoint/address' XML element
 	 */
-	public static final String ENDPOINT_ADDRESS = "endpoint/address"; //$NON-NLS-1$
+	public static final String ENDPOINT_ADDRESS = "endpoint"; //$NON-NLS-1$
 
 	/**
 	 * name of 'type' XML attribute
@@ -98,6 +113,16 @@ public class MuleConfigXmlMapping {
 	 */
 	public static final String ATTR_IMPLEMENTATION = "implementation"; //$NON-NLS-1$
 	
+	/**
+	 * name of 'className' XML attribute
+	 */
+	public static final String ATTR_CLASSNAME = "className"; //$NON-NLS-1$
+
+	/**
+	 * name of 'filter' XML element
+	 */
+	public static final String FILTER = "filter"; //$NON-NLS-1$
+
 	/**
 	 * Creates a new StrutsConfig XML mapping.
 	 */
