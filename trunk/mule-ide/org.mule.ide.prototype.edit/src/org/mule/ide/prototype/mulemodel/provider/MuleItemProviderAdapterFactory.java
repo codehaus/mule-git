@@ -603,7 +603,6 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 		if (muleConfigItemProvider != null) muleConfigItemProvider.dispose();
 		if (outboundRouterItemProvider != null) outboundRouterItemProvider.dispose();
 		if (interceptorItemProvider != null) interceptorItemProvider.dispose();
-		if (connectorItemProvider != null) connectorItemProvider.dispose();
 		if (propertiesItemProvider != null) propertiesItemProvider.dispose();
 		if (textPropertyItemProvider != null) textPropertyItemProvider.dispose();
 		if (listPropertyItemProvider != null) listPropertyItemProvider.dispose();
@@ -618,6 +617,7 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 		if (genericFilterItemProvider != null) genericFilterItemProvider.dispose();
 		if (binaryFilterItemProvider != null) binaryFilterItemProvider.dispose();
 		if (xsltFilterItemProvider != null) xsltFilterItemProvider.dispose();
+		if (connectorItemProvider != null) connectorItemProvider.dispose();
 	}
 
 }

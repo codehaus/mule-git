@@ -70,6 +70,8 @@ public class TransformerItemProvider
 			super.getPropertyDescriptors(object);
 
 			addClassNamePropertyDescriptor(object);
+			addCommentPropertyDescriptor(object);
+			addReturnClassPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -88,6 +90,50 @@ public class TransformerItemProvider
 				 getString("_UI_Transformer_className_feature"), //$NON-NLS-1$
 				 getString("_UI_PropertyDescriptor_description", "_UI_Transformer_className_feature", "_UI_Transformer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MulePackage.Literals.TRANSFORMER__CLASS_NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Comment feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addCommentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Transformer_comment_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Transformer_comment_feature", "_UI_Transformer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.TRANSFORMER__COMMENT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Return Class feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addReturnClassPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Transformer_returnClass_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Transformer_returnClass_feature", "_UI_Transformer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.TRANSFORMER__RETURN_CLASS,
 				 true,
 				 false,
 				 false,
@@ -131,6 +177,8 @@ public class TransformerItemProvider
 
 		switch (notification.getFeatureID(Transformer.class)) {
 			case MulePackage.TRANSFORMER__CLASS_NAME:
+			case MulePackage.TRANSFORMER__COMMENT:
+			case MulePackage.TRANSFORMER__RETURN_CLASS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

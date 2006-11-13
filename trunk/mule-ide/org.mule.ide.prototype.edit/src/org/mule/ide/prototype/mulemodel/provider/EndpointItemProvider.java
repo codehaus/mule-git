@@ -71,6 +71,7 @@ public class EndpointItemProvider
 
 			addAddressPropertyDescriptor(object);
 			addConnectorPropertyDescriptor(object);
+			addFilterPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -111,6 +112,28 @@ public class EndpointItemProvider
 				 getString("_UI_Endpoint_connector_feature"), //$NON-NLS-1$
 				 getString("_UI_PropertyDescriptor_description", "_UI_Endpoint_connector_feature", "_UI_Endpoint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MulePackage.Literals.ENDPOINT__CONNECTOR,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Filter feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addFilterPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Endpoint_filter_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Endpoint_filter_feature", "_UI_Endpoint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.ENDPOINT__FILTER,
 				 true,
 				 false,
 				 true,

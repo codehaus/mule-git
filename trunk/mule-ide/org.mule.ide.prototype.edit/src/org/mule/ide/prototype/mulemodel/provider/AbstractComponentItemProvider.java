@@ -72,10 +72,33 @@ public class AbstractComponentItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addImplementationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addCommentPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Implementation feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addImplementationPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AbstractComponent_implementation_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractComponent_implementation_feature", "_UI_AbstractComponent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.ABSTRACT_COMPONENT__IMPLEMENTATION,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
 	}
 
 	/**
@@ -176,6 +199,7 @@ public class AbstractComponentItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(AbstractComponent.class)) {
+			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 			case MulePackage.ABSTRACT_COMPONENT__COMMENT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));

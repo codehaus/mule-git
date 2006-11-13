@@ -69,31 +69,8 @@ public class GenericComponentItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addClassNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Class Name feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addClassNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_GenericComponent_className_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_GenericComponent_className_feature", "_UI_GenericComponent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 MulePackage.Literals.GENERIC_COMPONENT__CLASS_NAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
 	}
 
 	/**
@@ -146,9 +123,6 @@ public class GenericComponentItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(GenericComponent.class)) {
-			case MulePackage.GENERIC_COMPONENT__CLASS_NAME:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
 			case MulePackage.GENERIC_COMPONENT__INTERCEPTORS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
