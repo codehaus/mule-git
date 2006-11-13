@@ -77,7 +77,6 @@ public class MuleConfigItemProvider
 
 			addVersionPropertyDescriptor(object);
 			addDescriptionPropertyDescriptor(object);
-			addTransformersPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -127,28 +126,6 @@ public class MuleConfigItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Transformers feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTransformersPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_MuleConfig_transformers_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_MuleConfig_transformers_feature", "_UI_MuleConfig_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 MulePackage.Literals.MULE_CONFIG__TRANSFORMERS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -159,11 +136,12 @@ public class MuleConfigItemProvider
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__COMPONENTS);
 			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__PROPERTIES);
 			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__INTERCEPTORS);
-			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS);
 			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__CONNECTORS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__TRANSFORMERS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS);
+			childrenFeatures.add(MulePackage.Literals.MULE_CONFIG__COMPONENTS);
 		}
 		return childrenFeatures;
 	}
@@ -218,11 +196,12 @@ public class MuleConfigItemProvider
 			case MulePackage.MULE_CONFIG__DESCRIPTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case MulePackage.MULE_CONFIG__COMPONENTS:
 			case MulePackage.MULE_CONFIG__PROPERTIES:
 			case MulePackage.MULE_CONFIG__INTERCEPTORS:
-			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
 			case MulePackage.MULE_CONFIG__CONNECTORS:
+			case MulePackage.MULE_CONFIG__TRANSFORMERS:
+			case MulePackage.MULE_CONFIG__GLOBAL_ENDPOINTS:
+			case MulePackage.MULE_CONFIG__COMPONENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -241,16 +220,6 @@ public class MuleConfigItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
-				 MuleFactory.eINSTANCE.createBridgeComponent()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
-				 MuleFactory.eINSTANCE.createGenericComponent()));
-
-		newChildDescriptors.add
-			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__PROPERTIES,
 				 MuleFactory.eINSTANCE.createProperties()));
 
@@ -261,13 +230,28 @@ public class MuleConfigItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__CONNECTORS,
+				 MuleFactory.eINSTANCE.createConnector()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__TRANSFORMERS,
+				 MuleFactory.eINSTANCE.createTransformer()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__GLOBAL_ENDPOINTS,
 				 MuleFactory.eINSTANCE.createGlobalEndpoint()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(MulePackage.Literals.MULE_CONFIG__CONNECTORS,
-				 MuleFactory.eINSTANCE.createConnector()));
+				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
+				 MuleFactory.eINSTANCE.createBridgeComponent()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
+				 MuleFactory.eINSTANCE.createGenericComponent()));
 	}
 
 	/**

@@ -72,6 +72,7 @@ public class TransformerItemProvider
 			addClassNamePropertyDescriptor(object);
 			addCommentPropertyDescriptor(object);
 			addReturnClassPropertyDescriptor(object);
+			addNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -143,6 +144,28 @@ public class TransformerItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Transformer_name_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Transformer_name_feature", "_UI_Transformer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.TRANSFORMER__NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Transformer.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -159,7 +182,7 @@ public class TransformerItemProvider
 	 * @generated
 	 */
 	public String getText(Object object) {
-		String label = ((Transformer)object).getClassName();
+		String label = ((Transformer)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_Transformer_type") : //$NON-NLS-1$
 			getString("_UI_Transformer_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
@@ -179,6 +202,7 @@ public class TransformerItemProvider
 			case MulePackage.TRANSFORMER__CLASS_NAME:
 			case MulePackage.TRANSFORMER__COMMENT:
 			case MulePackage.TRANSFORMER__RETURN_CLASS:
+			case MulePackage.TRANSFORMER__NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
