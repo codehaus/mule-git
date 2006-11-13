@@ -79,6 +79,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -130,10 +131,14 @@ import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
 import org.eclipse.wst.common.internal.emfworkbench.integration.ProjectResourceSetEditImpl;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.mule.ide.prototype.mulemodel.Connector;
+import org.mule.ide.prototype.mulemodel.MuleConfig;
 import org.mule.ide.prototype.mulemodel.impl.MuleFactoryImpl;
 import org.mule.ide.prototype.mulemodel.provider.MuleItemProviderAdapterFactory;
 import org.mule.ide.prototype.mulemodel.util.MuleConfigResourceFactoryImpl;
 import org.mule.ide.prototype.palette.ComponentItem;
+import org.mule.ide.prototype.palette.ConnectorItem;
+import org.mule.ide.prototype.palette.FilterItem;
 import org.w3c.dom.Node;
 
 
@@ -1745,8 +1750,8 @@ public class MuleEditor
 				System.out.println("object: " + object.getClass().getName());
 				System.out.println("object: " + object.toString());
 
-		        if (object instanceof ComponentItem) {
-		        	ComponentItem component = (ComponentItem)object;
+		        if (object instanceof FilterItem) {
+		        	FilterItem component = (FilterItem)object;
 		            String data = component.getName();
 					if (event.item != null) {
 						String dropOn = "";
@@ -1758,7 +1763,85 @@ public class MuleEditor
 						if (component.mayDropOn((EObject)item)) {
 							
 							// Really, this should be a Command and we should execute it through the EditingDomain
+							//component.performDropOn((EObject)item, MuleFactoryImpl.eINSTANCE);
+						} else {
+							MessageDialog.openInformation(getSite().getShell(),
+									"Drop Listener",
+									"Sorry, you can't drop this filter here");							
+						}
+					}
+		        } else if (object instanceof ConnectorItem) {
+		        	ConnectorItem component = (ConnectorItem)object;
+			            String data = component.getName();
+						if (event.item != null) {
+							String dropOn = "";
+							Object item = event.item.getData();
+							dropOn = "" + item;
+							MessageDialog.openInformation(getSite().getShell(),
+									"Drop Listener",
+									"So you want to drop a "+ data + " on a "+ dropOn +"? What do you think you are doing!");
+							if (component.mayDropOn((EObject)item)) {
+								boolean isDup = false;
+								if (item instanceof MuleConfig) {
+									MuleConfig cfg = (MuleConfig)item;
+									List connectors = cfg.getConnectors();
+									for (int i = 0; i < connectors.size(); i++) {
+										Connector c = (Connector)connectors.get(i);
+										if (c.getName().equals(component.getName()))
+											isDup = true;
+									}
+								}
+								
+								if (isDup) {
+									InputDialog dialog = new InputDialog(getSite().getShell(),
+											"Mule Config",
+											"There is already a connector named '" + component.getName() + "': please provide a new name.",
+											"", null);		
+									dialog.open();
+									component.setName(dialog.getValue());
+								}
+								
+								component.performDropOn((EObject)item, MuleFactoryImpl.eINSTANCE);
+								
+							} else {
+								MessageDialog.openInformation(getSite().getShell(),
+										"Drop Listener",
+										"Sorry, you can't drop this connector here");							
+							}
+						}
+		        } else if (object instanceof ComponentItem) {
+		        	ComponentItem component = (ComponentItem)object;
+		            String data = component.getName();
+					if (event.item != null) {
+						String dropOn = "";
+						Object item = event.item.getData();
+						dropOn = "" + item;
+						MessageDialog.openInformation(getSite().getShell(),
+								"Drop Listener",
+								"So you want to drop a "+ data + " on a "+ dropOn +"? What do you think you are doing!");
+						if (component.mayDropOn((EObject)item)) {
+							InputDialog dialog = new InputDialog(getSite().getShell(),
+									"Mule Config",
+									"Please enter a name for this route",
+									"", null);		
+							dialog.open();
+							component.setName(dialog.getValue());
+							
+							if (component.getClassName() == null || component.getClassName().equals("")) {
+								dialog = new InputDialog(getSite().getShell(),
+										"Mule Config",
+										"Please enter the class name for this route",
+										"", null);		
+								dialog.open();
+								component.setClassName(dialog.getValue());
+		
+							}
+							// Really, this should be a Command and we should execute it through the EditingDomain
 							component.performDropOn((EObject)item, MuleFactoryImpl.eINSTANCE);
+						} else {
+							MessageDialog.openInformation(getSite().getShell(),
+									"Drop Listener",
+									"Sorry, you can't drop this here");							
 						}
 					}
 		        } else {
