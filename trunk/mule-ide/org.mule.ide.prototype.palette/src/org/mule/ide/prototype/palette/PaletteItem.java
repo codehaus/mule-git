@@ -26,20 +26,41 @@ import org.mule.ide.prototype.mulemodel.MuleFactory;
  */
 
 public class PaletteItem implements IAdaptable {
-	private String name;
-	private String type;
+	protected String name;
+	protected String className;
+	protected String type;
 	private ImageDescriptor imageDescriptor;
 
 	private FolderItem parent;
 
-	public PaletteItem(String name) {
-		this.name = name;
+	public PaletteItem(String className) {
+		this.className = className;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public String getType() {
+		return type;
+	}
+	
+	public String getClassName() {
+		return className;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	
 	public void setParent(FolderItem parent) {
 		this.parent = parent;
 	}

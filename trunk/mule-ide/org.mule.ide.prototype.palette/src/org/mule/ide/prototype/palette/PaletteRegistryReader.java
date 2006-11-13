@@ -27,10 +27,14 @@ public class PaletteRegistryReader {
 	protected static final String ENDPOINT_TAG_NAME = "endpoint"; //$NON-NLS-1$
 	protected static final String COMPONENT_TAG_NAME = "component"; //$NON-NLS-1$
 	protected static final String FILTER_TAG_NAME = "filter"; //$NON-NLS-1$
+	protected static final String CONNECTOR_TAG_NAME = "connector"; //$NON-NLS-1$
+	protected static final String ROUTE_TAG_NAME = "route"; //$NON-NLS-1$
 	protected static final String ATT_NAME = "name"; //$NON-NLS-1$
+	protected static final String ATT_TYPE = "type"; //$NON-NLS-1$
 	protected static final String ATT_CLASS_NAME = "className"; //$NON-NLS-1$
 	protected static final String ATT_SCHEME_PREFIX = "schemePrefix"; //$NON-NLS-1$
 	protected static final String ATT_ICON = "icon"; //$NON-NLS-1$
+	protected static final String ATT_FOLDERID = "folderId"; //$NON-NLS-1$
 
 	private FolderItem rootPaletteItem;
 
@@ -63,24 +67,51 @@ public class PaletteRegistryReader {
 		
 		if (element.getName().equals(FOLDER_TAG_NAME)) {
 			FolderItem pi = null;
+			String className = element.getAttribute(ATT_FOLDERID);
 			String name = element.getAttribute(ATT_NAME);
-			if (name != null) {
-				palItem = pi = new FolderItem(name);
+			if (className != null && name != null) {
+				palItem = pi = new FolderItem(className);
+				palItem.setName(name);
 				parent.addChild(pi);
 			}
 			visitConfigElements(element.getChildren(), point, pi);
 		} else if (element.getName().equals(FILTER_TAG_NAME)) {
 			String className = element.getAttribute(ATT_CLASS_NAME);
-			if (className != null) {
+			String name = element.getAttribute(ATT_NAME);
+			if (className != null && name != null) {
 				parent.addChild(palItem = new FilterItem(className));
+				palItem.setName(name);
+			}
+		} else if (element.getName().equals(CONNECTOR_TAG_NAME)) {
+			String className = element.getAttribute(ATT_CLASS_NAME);
+			String name = element.getAttribute(ATT_NAME);
+			if (className != null) {
+				palItem = new ConnectorItem(className);
+				if (name != null) palItem.setName(name);
+				parent.addChild(palItem);
+			}
+		} else if (element.getName().equals(ROUTE_TAG_NAME)) {
+			String type = element.getAttribute(ATT_TYPE);
+			String name = element.getAttribute(ATT_NAME);
+			if (name != null && type != null) {
+				parent.addChild(palItem = new RouteItem(name, type));
 			}
 		} else if (element.getName().equals(COMPONENT_TAG_NAME)) {
 			String className = element.getAttribute(ATT_CLASS_NAME);
-			if (className != null) {
+			String name = element.getAttribute(ATT_NAME);
+			String type = element.getAttribute(ATT_TYPE);
+			
+			if (className != null && name != null) {
 				parent.addChild(palItem = new ComponentItem(className));
+				palItem.setName(name);
+				palItem.setType(type);
 			}
+		
 		}
 		
+		if (palItem == null) {
+			System.out.println("palItem is null!!");
+		}
 		// Only includes folder at this stage 
 		String icon = element.getAttribute(ATT_ICON);
 		if (icon != null) icon = icon.trim();

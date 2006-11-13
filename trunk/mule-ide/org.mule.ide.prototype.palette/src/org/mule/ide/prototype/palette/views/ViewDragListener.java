@@ -4,6 +4,7 @@
 package org.mule.ide.prototype.palette.views;
 
 import org.mule.ide.prototype.palette.ComponentItem;
+import org.mule.ide.prototype.palette.FilterItem;
 import org.mule.ide.prototype.palette.FolderItem;
 
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -39,7 +40,11 @@ public class ViewDragListener extends DragSourceAdapter {
         IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
         Object object = selection.getFirstElement();
 
-        if (object instanceof ComponentItem) {
+        if (object instanceof FilterItem) {
+        	FilterItem component = (FilterItem)object;
+            event.data = component.getName();
+            System.out.println("Setting event.data to " + event.data);
+        } else if (object instanceof ComponentItem) {
         	ComponentItem component = (ComponentItem)object;
             event.data = component.getName();
             System.out.println("Setting event.data to " + event.data);

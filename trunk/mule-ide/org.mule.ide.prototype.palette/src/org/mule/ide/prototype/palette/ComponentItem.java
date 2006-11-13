@@ -13,7 +13,9 @@ package org.mule.ide.prototype.palette;
 import java.util.Date;
 
 import org.eclipse.emf.ecore.EObject;
+import org.mule.ide.prototype.mulemodel.AbstractComponent;
 import org.mule.ide.prototype.mulemodel.GenericComponent;
+import org.mule.ide.prototype.mulemodel.BridgeComponent;
 import org.mule.ide.prototype.mulemodel.MuleConfig;
 import org.mule.ide.prototype.mulemodel.MuleFactory;
 
@@ -34,13 +36,21 @@ public class ComponentItem extends PaletteItem {
 		assert obj instanceof MuleConfig;
 		if (obj instanceof MuleConfig) {
 			MuleConfig cfg = (MuleConfig) obj;
+			AbstractComponent component = null;
 			
-			GenericComponent genericComponent = factory.createGenericComponent();
-			genericComponent.setName(this.getName());
-			genericComponent.setClassName(this.getName()); // Not supported in XML
-			genericComponent.setComment("Dropped from the Mule palette on " + new Date());
+			System.out.println("Component type: " + this.type);
 			
-			cfg.getComponents().add(genericComponent);
+			if (this.type.equals("bridge")) {
+				component = factory.createBridgeComponent();
+			} else {			
+				component = factory.createGenericComponent();
+			}
+			
+			component.setName(this.getName());
+			component.setImplementation(this.getClassName()); // Not supported in XML
+			component.setComment("Dropped from the Mule palette on " + new Date());
+			
+			cfg.getComponents().add(component);
 		}
 	}
 }
