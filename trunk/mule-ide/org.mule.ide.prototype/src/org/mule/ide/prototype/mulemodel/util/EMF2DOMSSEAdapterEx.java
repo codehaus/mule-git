@@ -1,12 +1,18 @@
 package org.mule.ide.prototype.mulemodel.util;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMRenderer;
+import org.eclipse.wst.common.internal.emf.resource.IDTranslator;
 import org.eclipse.wst.common.internal.emf.resource.Translator;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.common.internal.emf.utilities.DOMUtilities;
@@ -138,6 +144,119 @@ public class EMF2DOMSSEAdapterEx extends EMF2DOMSSEAdapter {
 			Comment comment = node.getOwnerDocument().createComment(valueAsString);
 			DOMUtilities.insertBeforeNodeAndWhitespace(node.getParentNode(), comment, node);
 			indent(comment, map);
+		}
+	}
+
+	/**
+	 * Update all the children of the target MOF object in the relationship described by
+	 * 
+	 * @map.
+	 */
+	protected void primUpdateDOMMultiAttributeFeature(Translator map, Node node, EObject mofObject) {
+		List mofChildren = map.getMOFChildren(mofObject);
+		StringBuffer sb = new StringBuffer();
+		
+		for (Iterator it = mofChildren.iterator(); it.hasNext(); ) {
+			Object attrValue = null;
+			try {
+				attrValue = map.getMOFValue((EObject)it.next());
+			} catch (IDTranslator.NoResourceException ex) {
+				//If the object has been removed from the resource,
+				//No need to update
+				continue;
+			}
+			if (attrValue == null) continue;
+			
+			if (sb.length() > 0)
+				sb.append(' ');
+			sb.append(attrValue);
+		}
+		Element e = (Element) node;
+		if (mofObject != null && mofObject.eIsSet(map.getFeature()))
+			e.setAttribute(map.getDOMName(mofObject), sb.toString());
+		else
+			e.removeAttribute(map.getDOMName(mofObject));
+
+	}
+
+	/**
+	 * Update all the children of the target MOF object in the relationship described by
+	 * 
+	 * @map.
+	 */
+	protected void primUpdateDOMMultiFeature(Translator map, Node node, EObject mofObject) {
+
+		if (map.isDOMAttribute()) {
+			primUpdateDOMMultiAttributeFeature(map, node, mofObject);
+		} else {
+			List mofChildren = map.getMOFChildren(mofObject);
+			List domChildren = getDOMChildren(node, map);
+	
+			primUpdateDOMMultiFeature(map, node, mofChildren, domChildren, mofObject);
+		}
+	}
+
+	protected void primUpdateMOFAttributeMultiFeature(Translator map, Node node, EObject mofObject) {
+
+		List mofChildren = map.getMOFChildren(mofObject);
+
+		String attrVal = ((Element)node).getAttribute(map.getDOMName(mofObject));
+
+		// Go though the referenced children to see if the corresponding
+		// MOF Adapter children exists. If not, create the adapter.
+		// Also handles reordering children that have moved.
+		
+		StringTokenizer tokenizer = new StringTokenizer(attrVal);
+		int mofIndex = 0;
+		for (int i = 0;tokenizer.hasMoreTokens();++i) {
+			String value = tokenizer.nextToken();
+			
+			Object mof = map.convertStringToValue(value, mofObject);
+			
+			EMF2DOMAdapter adapter = i < mofChildren.size() ? getExistingAdapter((EObject) mofChildren.get(i)) : null;
+			if (adapter != null && !adapter.isMOFProxy() && adapter.getEObject() == mof) {
+				mofIndex++;
+				continue;
+			}
+
+			if (adapter != null) {
+				reorderIfNecessary((EList) mofChildren, adapter.getEObject(), mofIndex);
+				mofIndex++;
+			} else {
+				boolean wasEnabled = fNotificationEnabled;
+				try {
+					//We don't want to push anything back to the child dom
+					setNotificationEnabled(false);
+					map.setMOFValue(getTarget(), mof, mofIndex);
+				} finally {
+					setNotificationEnabled(true);
+				}
+				mofIndex++;
+			}
+		}
+	}
+
+	/**
+	 * Update all the children of the target MOF object in the relationship described by
+	 * 
+	 * @map.
+	 * 
+	 * @param map
+	 *            com.ibm.etools.mof2dom.AttributeTranslator Describes the mapping from the MOF
+	 *            attribute name to the DOM node name
+	 */
+	protected void primUpdateMOFMultiFeature(Translator map, Node node, EObject mofObject) {
+		// If the feature is a collection of strings or ints, call a special
+		// method that handles this.
+		if (map.isDOMAttribute()) {
+			primUpdateMOFAttributeMultiFeature(map, node, mofObject);
+		} else if (map.isManagedByParent()) {
+			updateMOFMultiPrimitiveFeature(map, node, mofObject);
+		} else{
+			List nodeChildren = getDOMChildren(node, map);
+			List mofChildren = map.getMOFChildren(mofObject);
+	
+			primUpdateMOFMultiFeature(map, node, mofChildren, nodeChildren);
 		}
 	}
 

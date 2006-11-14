@@ -369,6 +369,24 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getEndpoint_Transformers() {
+		return (EReference)endpointEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEndpoint_ResponseTransformers() {
+		return (EReference)endpointEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getOutboundRouter() {
 		return outboundRouterEClass;
 	}
@@ -868,6 +886,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		createEAttribute(endpointEClass, ENDPOINT__ADDRESS);
 		createEReference(endpointEClass, ENDPOINT__CONNECTOR);
 		createEReference(endpointEClass, ENDPOINT__FILTER);
+		createEReference(endpointEClass, ENDPOINT__TRANSFORMERS);
+		createEReference(endpointEClass, ENDPOINT__RESPONSE_TRANSFORMERS);
 
 		outboundRouterEClass = createEClass(OUTBOUND_ROUTER);
 		createEReference(outboundRouterEClass, OUTBOUND_ROUTER__OUTBOUND_ENDPOINT);
@@ -992,6 +1012,8 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEAttribute(getEndpoint_Address(), ecorePackage.getEString(), "address", null, 1, 1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getEndpoint_Connector(), this.getConnector(), null, "connector", null, 0, 1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getEndpoint_Filter(), this.getAbstractFilter(), null, "filter", null, 0, 1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getEndpoint_Transformers(), this.getTransformer(), null, "transformers", null, 0, -1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getEndpoint_ResponseTransformers(), this.getTransformer(), null, "responseTransformers", null, 0, -1, Endpoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(outboundRouterEClass, OutboundRouter.class, "OutboundRouter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getOutboundRouter_OutboundEndpoint(), this.getEndpoint(), null, "outboundEndpoint", null, 0, 1, OutboundRouter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

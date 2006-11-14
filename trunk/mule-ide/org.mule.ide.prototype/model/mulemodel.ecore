@@ -40,6 +40,10 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connector" eType="#//Connector"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filter" eType="#//AbstractFilter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformers" upperBound="-1"
+        eType="#//Transformer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="responseTransformers" upperBound="-1"
+        eType="#//Transformer"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OutboundRouter" eSuperTypes="#//Router">
     <eStructuralFeatures xsi:type="ecore:EReference" name="outboundEndpoint" eType="#//Endpoint"

@@ -66,6 +66,9 @@ public class MuleConfigTranslator extends RootTranslator {
 	private static final SourceLinkTranslator INBOUND_ENDPOINT_SOURCE_LINK = new SourceLinkTranslator(MuleConfigXmlMapping.ENDPOINT_ADDRESS, MULE_CONFIG_PACKAGE.getInboundRouter_InboundEndpoint(), 
 			GLOBAL_ENDPOINT_TRANSLATOR_PATH, Translator.DOM_ATTRIBUTE );
 
+	private static final SourceLinkTranslator TRANSLATOR_SOURCE_LINK = new SourceLinkTranslator(MuleConfigXmlMapping.TRANSFORMERS, MULE_CONFIG_PACKAGE.getEndpoint_Transformers(), 
+			TRANSFORMERS_TRANSFORMER_PATH, Translator.DOM_ATTRIBUTE );
+
 	private static GenericTranslator outboundEndpointTranslator;
 
 	/**
@@ -270,7 +273,9 @@ public class MuleConfigTranslator extends RootTranslator {
 						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
 				new Translator(MuleConfigXmlMapping.ATTR_NAME,
 						MULE_CONFIG_PACKAGE.getGlobalEndpoint_Name(),
-						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT) });
+						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
+				TRANSLATOR_SOURCE_LINK
+		});
 		return translator;
 	}
 	

@@ -6,7 +6,11 @@
  */
 package org.mule.ide.prototype.mulemodel.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -14,10 +18,14 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
 import org.mule.ide.prototype.mulemodel.AbstractFilter;
 import org.mule.ide.prototype.mulemodel.Connector;
 import org.mule.ide.prototype.mulemodel.Endpoint;
 import org.mule.ide.prototype.mulemodel.MulePackage;
+
+import org.mule.ide.prototype.mulemodel.Transformer;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,6 +37,8 @@ import org.mule.ide.prototype.mulemodel.MulePackage;
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getAddress <em>Address</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getConnector <em>Connector</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getFilter <em>Filter</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getTransformers <em>Transformers</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.EndpointImpl#getResponseTransformers <em>Response Transformers</em>}</li>
  * </ul>
  * </p>
  *
@@ -81,6 +91,26 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 	 * @ordered
 	 */
 	protected AbstractFilter filter = null;
+
+	/**
+	 * The cached value of the '{@link #getTransformers() <em>Transformers</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTransformers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList transformers = null;
+
+	/**
+	 * The cached value of the '{@link #getResponseTransformers() <em>Response Transformers</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getResponseTransformers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList responseTransformers = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -202,6 +232,30 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList getTransformers() {
+		if (transformers == null) {
+			transformers = new EObjectResolvingEList(Transformer.class, this, MulePackage.ENDPOINT__TRANSFORMERS);
+		}
+		return transformers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getResponseTransformers() {
+		if (responseTransformers == null) {
+			responseTransformers = new EObjectResolvingEList(Transformer.class, this, MulePackage.ENDPOINT__RESPONSE_TRANSFORMERS);
+		}
+		return responseTransformers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MulePackage.ENDPOINT__ADDRESS:
@@ -212,6 +266,10 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 			case MulePackage.ENDPOINT__FILTER:
 				if (resolve) return getFilter();
 				return basicGetFilter();
+			case MulePackage.ENDPOINT__TRANSFORMERS:
+				return getTransformers();
+			case MulePackage.ENDPOINT__RESPONSE_TRANSFORMERS:
+				return getResponseTransformers();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -231,6 +289,14 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 				return;
 			case MulePackage.ENDPOINT__FILTER:
 				setFilter((AbstractFilter)newValue);
+				return;
+			case MulePackage.ENDPOINT__TRANSFORMERS:
+				getTransformers().clear();
+				getTransformers().addAll((Collection)newValue);
+				return;
+			case MulePackage.ENDPOINT__RESPONSE_TRANSFORMERS:
+				getResponseTransformers().clear();
+				getResponseTransformers().addAll((Collection)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -252,6 +318,12 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 			case MulePackage.ENDPOINT__FILTER:
 				setFilter((AbstractFilter)null);
 				return;
+			case MulePackage.ENDPOINT__TRANSFORMERS:
+				getTransformers().clear();
+				return;
+			case MulePackage.ENDPOINT__RESPONSE_TRANSFORMERS:
+				getResponseTransformers().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -269,6 +341,10 @@ public abstract class EndpointImpl extends EObjectImpl implements Endpoint {
 				return connector != null;
 			case MulePackage.ENDPOINT__FILTER:
 				return filter != null;
+			case MulePackage.ENDPOINT__TRANSFORMERS:
+				return transformers != null && !transformers.isEmpty();
+			case MulePackage.ENDPOINT__RESPONSE_TRANSFORMERS:
+				return responseTransformers != null && !responseTransformers.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

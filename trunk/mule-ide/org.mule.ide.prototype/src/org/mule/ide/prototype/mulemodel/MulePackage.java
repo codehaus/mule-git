@@ -263,13 +263,31 @@ public interface MulePackage extends EPackage {
 	int ENDPOINT__FILTER = 2;
 
 	/**
+	 * The feature id for the '<em><b>Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENDPOINT__TRANSFORMERS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Response Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENDPOINT__RESPONSE_TRANSFORMERS = 4;
+
+	/**
 	 * The number of structural features of the '<em>Endpoint</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENDPOINT_FEATURE_COUNT = 3;
+	int ENDPOINT_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.mule.ide.prototype.mulemodel.impl.OutboundRouterImpl <em>Outbound Router</em>}' class.
@@ -832,6 +850,24 @@ public interface MulePackage extends EPackage {
 	int LOCAL_ENDPOINT__FILTER = ENDPOINT__FILTER;
 
 	/**
+	 * The feature id for the '<em><b>Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_ENDPOINT__TRANSFORMERS = ENDPOINT__TRANSFORMERS;
+
+	/**
+	 * The feature id for the '<em><b>Response Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_ENDPOINT__RESPONSE_TRANSFORMERS = ENDPOINT__RESPONSE_TRANSFORMERS;
+
+	/**
 	 * The number of structural features of the '<em>Local Endpoint</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -866,6 +902,24 @@ public interface MulePackage extends EPackage {
 	 * @ordered
 	 */
 	int GLOBAL_ENDPOINT__FILTER = ENDPOINT__FILTER;
+
+	/**
+	 * The feature id for the '<em><b>Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOBAL_ENDPOINT__TRANSFORMERS = ENDPOINT__TRANSFORMERS;
+
+	/**
+	 * The feature id for the '<em><b>Response Transformers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOBAL_ENDPOINT__RESPONSE_TRANSFORMERS = ENDPOINT__RESPONSE_TRANSFORMERS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1143,6 +1197,28 @@ public interface MulePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getEndpoint_Filter();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.mule.ide.prototype.mulemodel.Endpoint#getTransformers <em>Transformers</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Transformers</em>'.
+	 * @see org.mule.ide.prototype.mulemodel.Endpoint#getTransformers()
+	 * @see #getEndpoint()
+	 * @generated
+	 */
+	EReference getEndpoint_Transformers();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.mule.ide.prototype.mulemodel.Endpoint#getResponseTransformers <em>Response Transformers</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Response Transformers</em>'.
+	 * @see org.mule.ide.prototype.mulemodel.Endpoint#getResponseTransformers()
+	 * @see #getEndpoint()
+	 * @generated
+	 */
+	EReference getEndpoint_ResponseTransformers();
 
 	/**
 	 * Returns the meta object for class '{@link org.mule.ide.prototype.mulemodel.OutboundRouter <em>Outbound Router</em>}'.
@@ -1784,6 +1860,22 @@ public interface MulePackage extends EPackage {
 		 * @generated
 		 */
 		EReference ENDPOINT__FILTER = eINSTANCE.getEndpoint_Filter();
+
+		/**
+		 * The meta object literal for the '<em><b>Transformers</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENDPOINT__TRANSFORMERS = eINSTANCE.getEndpoint_Transformers();
+
+		/**
+		 * The meta object literal for the '<em><b>Response Transformers</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENDPOINT__RESPONSE_TRANSFORMERS = eINSTANCE.getEndpoint_ResponseTransformers();
 
 		/**
 		 * The meta object literal for the '{@link org.mule.ide.prototype.mulemodel.impl.OutboundRouterImpl <em>Outbound Router</em>}' class.

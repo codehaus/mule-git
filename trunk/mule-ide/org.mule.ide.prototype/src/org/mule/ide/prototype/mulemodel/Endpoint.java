@@ -6,6 +6,8 @@
  */
 package org.mule.ide.prototype.mulemodel;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -19,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.mule.ide.prototype.mulemodel.Endpoint#getAddress <em>Address</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.Endpoint#getConnector <em>Connector</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.Endpoint#getFilter <em>Filter</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.Endpoint#getTransformers <em>Transformers</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.Endpoint#getResponseTransformers <em>Response Transformers</em>}</li>
  * </ul>
  * </p>
  *
@@ -111,5 +115,37 @@ public interface Endpoint extends EObject {
 	 * @generated
 	 */
 	void setFilter(AbstractFilter value);
+
+	/**
+	 * Returns the value of the '<em><b>Transformers</b></em>' reference list.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.Transformer}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Transformers</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Transformers</em>' reference list.
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getEndpoint_Transformers()
+	 * @model type="org.mule.ide.prototype.mulemodel.Transformer"
+	 * @generated
+	 */
+	EList getTransformers();
+
+	/**
+	 * Returns the value of the '<em><b>Response Transformers</b></em>' reference list.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.Transformer}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Response Transformers</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Response Transformers</em>' reference list.
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getEndpoint_ResponseTransformers()
+	 * @model type="org.mule.ide.prototype.mulemodel.Transformer"
+	 * @generated
+	 */
+	EList getResponseTransformers();
 
 } // Endpoint
