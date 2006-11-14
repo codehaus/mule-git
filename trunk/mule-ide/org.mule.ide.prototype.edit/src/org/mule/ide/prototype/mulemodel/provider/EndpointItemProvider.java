@@ -72,6 +72,8 @@ public class EndpointItemProvider
 			addAddressPropertyDescriptor(object);
 			addConnectorPropertyDescriptor(object);
 			addFilterPropertyDescriptor(object);
+			addTransformersPropertyDescriptor(object);
+			addResponseTransformersPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -134,6 +136,50 @@ public class EndpointItemProvider
 				 getString("_UI_Endpoint_filter_feature"), //$NON-NLS-1$
 				 getString("_UI_PropertyDescriptor_description", "_UI_Endpoint_filter_feature", "_UI_Endpoint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MulePackage.Literals.ENDPOINT__FILTER,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Transformers feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addTransformersPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Endpoint_transformers_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Endpoint_transformers_feature", "_UI_Endpoint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.ENDPOINT__TRANSFORMERS,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Response Transformers feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addResponseTransformersPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Endpoint_responseTransformers_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Endpoint_responseTransformers_feature", "_UI_Endpoint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.ENDPOINT__RESPONSE_TRANSFORMERS,
 				 true,
 				 false,
 				 true,
