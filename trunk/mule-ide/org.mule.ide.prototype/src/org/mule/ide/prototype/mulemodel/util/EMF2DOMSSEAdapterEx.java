@@ -208,7 +208,8 @@ public class EMF2DOMSSEAdapterEx extends EMF2DOMSSEAdapter {
 		
 		StringTokenizer tokenizer = new StringTokenizer(attrVal);
 		int mofIndex = 0;
-		for (int i = 0;tokenizer.hasMoreTokens();++i) {
+		int i = 0;
+		for (;tokenizer.hasMoreTokens();++ i) {
 			String value = tokenizer.nextToken();
 			
 			Object mof = map.convertStringToValue(value, mofObject);
@@ -220,7 +221,7 @@ public class EMF2DOMSSEAdapterEx extends EMF2DOMSSEAdapter {
 			}
 
 			if (adapter != null) {
-				reorderIfNecessary((EList) mofChildren, adapter.getEObject(), mofIndex);
+				reorderIfNecessary((EList) mofChildren,(EObject) mof, mofIndex);
 				mofIndex++;
 			} else {
 				boolean wasEnabled = fNotificationEnabled;
@@ -229,10 +230,14 @@ public class EMF2DOMSSEAdapterEx extends EMF2DOMSSEAdapter {
 					setNotificationEnabled(false);
 					map.setMOFValue(getTarget(), mof, mofIndex);
 				} finally {
-					setNotificationEnabled(true);
+					setNotificationEnabled(wasEnabled);
 				}
 				mofIndex++;
 			}
+		}
+		// Remove any remaining adapters.
+		for (; i < mofChildren.size(); i++) {
+			removeMOFValue((EObject) mofChildren.get(i), map);
 		}
 	}
 
