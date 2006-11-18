@@ -19,14 +19,14 @@ import org.mule.util.XMLEntityCodec;
 /**
  * Encodes a string with XML entities
  */
-public class XMLEntityEncoder extends AbstractTransformer
+public class XmlEntityEncoder extends AbstractTransformer
 {
     /**
      * Serial version
      */
     private static final long serialVersionUID = -6652088350713495578L;
 
-    public XMLEntityEncoder()
+    public XmlEntityEncoder()
     {
         registerSourceType(String.class);
         registerSourceType(byte[].class);
