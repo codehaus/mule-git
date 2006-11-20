@@ -11,11 +11,11 @@
 package org.mule.test.transformers.codec;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.codec.SgmlEntityDecoder;
-import org.mule.transformers.codec.SgmlEntityEncoder;
+import org.mule.transformers.codec.XmlEntityDecoder;
+import org.mule.transformers.codec.XmlEntityEncoder;
 import org.mule.umo.transformer.UMOTransformer;
 
-public class SgmlTransformersTestCase extends AbstractTransformerTestCase
+public class XMLEntityTransformersTestCase extends AbstractTransformerTestCase
 {
     /*
      * (non-Javadoc)
@@ -44,7 +44,7 @@ public class SgmlTransformersTestCase extends AbstractTransformerTestCase
      */
     public UMOTransformer getTransformer()
     {
-        return new SgmlEntityEncoder();
+        return new XmlEntityEncoder();
     }
 
     /*
@@ -54,7 +54,7 @@ public class SgmlTransformersTestCase extends AbstractTransformerTestCase
      */
     public UMOTransformer getRoundTripTransformer()
     {
-        return new SgmlEntityDecoder();
+        return new XmlEntityDecoder();
     }
 
 }

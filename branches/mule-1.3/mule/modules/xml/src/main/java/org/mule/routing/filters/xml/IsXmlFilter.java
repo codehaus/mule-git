@@ -11,24 +11,26 @@
 package org.mule.routing.filters.xml;
 
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.io.SAXReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOMessage;
-import org.xml.sax.InputSource;
 
 /**
  * <code>IsXmlFilter</code> accepts a String or byte[] if its contents are valid
- * XML.
- * 
- * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a>
+ * (well-formed) XML.
  */
+// @ThreadSafe
 public class IsXmlFilter implements UMOFilter
 {
+    private final XMLInputFactory factory = XMLInputFactory.newInstance();
+
+    // TODO: add validation against a DTD, see MULE-1055
 
     public IsXmlFilter()
     {
@@ -42,29 +44,49 @@ public class IsXmlFilter implements UMOFilter
 
     private boolean accept(Object obj)
     {
+        XMLStreamReader parser = null;
+
         try
         {
             if (obj instanceof String)
             {
-                DocumentHelper.parseText((String)obj);
+                parser = factory.createXMLStreamReader(new StringReader((String)obj));
             }
             else if (obj instanceof byte[])
             {
-                new SAXReader().read(new InputSource(new ByteArrayInputStream((byte[])obj)));
+                parser = factory.createXMLStreamReader(new ByteArrayInputStream((byte[])obj));
             }
             else
             {
-                throw new DocumentException("Object must be a string or byte array");
+                // neither String nor byte[]
+                return false;
             }
-            log.debug("Filter result = true (message is valid XML)");
+
+            while (parser.next() != XMLStreamConstants.END_DOCUMENT)
+            {
+                // meep meep!
+            }
+
             return true;
         }
-        catch (DocumentException e)
+        catch (XMLStreamException ex)
         {
-            log.debug("Filter result = false (message is not valid XML): " + e.getMessage());
             return false;
+        }
+        finally
+        {
+            if (parser != null)
+            {
+                try
+                {
+                    parser.close();
+                }
+                catch (XMLStreamException ignored)
+                {
+                    // bummer
+                }
+            }
         }
     }
 
-    private static Log log = LogFactory.getLog(IsXmlFilter.class);
 }

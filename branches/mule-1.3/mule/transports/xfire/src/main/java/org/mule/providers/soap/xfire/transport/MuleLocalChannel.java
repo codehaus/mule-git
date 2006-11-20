@@ -10,10 +10,24 @@
 
 package org.mule.providers.soap.xfire.transport;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ws.security.handler.WSHandlerConstants;
 import org.codehaus.xfire.MessageContext;
 import org.codehaus.xfire.XFire;
 import org.codehaus.xfire.XFireException;
@@ -25,6 +39,7 @@ import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.transport.AbstractChannel;
 import org.codehaus.xfire.transport.Channel;
 import org.codehaus.xfire.transport.Session;
+import org.codehaus.xfire.transport.Transport;
 import org.codehaus.xfire.util.STAXUtils;
 import org.mule.MuleException;
 import org.mule.impl.message.ExceptionPayload;
@@ -34,39 +49,23 @@ import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.StringUtils;
 
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-
-import org.codehaus.xfire.transport.Transport;
+import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class MuleLocalChannel extends AbstractChannel
 {
+    protected static final String SENDER_URI = "senderUri";
+    protected static final String OLD_CONTEXT = "urn:xfire:transport:local:oldContext";
+    protected static final String DEFAULT_WS_IN_DENCRYPTION_FILE = "insecurity.properties";
+
     /**
      * logger used by this class
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected static final String SENDER_URI = "senderUri";
-    protected static final String OLD_CONTEXT = "urn:xfire:transport:local:oldContext";
-
     private final Session session;
-
     protected UMOWorkManager workManager;
 
     public MuleLocalChannel(String uri, Transport transport, Session session)
@@ -200,7 +199,7 @@ public class MuleLocalChannel extends AbstractChannel
     {
         return workManager;
     }
-    
+
     public void setWorkManager(UMOWorkManager workManager)
     {
         this.workManager = workManager;
@@ -353,6 +352,18 @@ public class MuleLocalChannel extends AbstractChannel
 
             // Return the result to us, not to the sender.
             context.setProperty(Channel.BACKCHANNEL_URI, resultStream);
+
+            // Ws Security
+            if (ctx.getMessage().getProperty(WSHandlerConstants.ACTION) != null)
+            {
+                context.setProperty(WSHandlerConstants.ACTION, ctx.getMessage().getProperty("action"));
+                context.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, ctx.getMessage().getProperty(
+                    WSHandlerConstants.PW_CALLBACK_CLASS));
+                if (ctx.getMessage().getProperty("action").equals(WSHandlerConstants.ENCRYPT))
+                {
+                    context.setProperty(WSHandlerConstants.DEC_PROP_FILE, DEFAULT_WS_IN_DENCRYPTION_FILE);
+                }
+            }
 
             XMLStreamReader reader;
 
