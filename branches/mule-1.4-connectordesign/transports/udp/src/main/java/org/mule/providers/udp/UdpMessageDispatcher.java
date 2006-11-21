@@ -30,7 +30,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class UdpMessageDispatcher extends AbstractMessageDispatcher
 {
-    protected UdpConnector connector;
+    protected final UdpConnector connector;
     protected InetAddress inetAddress;
     protected DatagramSocket socket;
     protected int port;
@@ -76,7 +76,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         return socket;
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected synchronized void doDispatch(UMOEvent event) throws Exception
     {
         byte[] payload = event.getTransformedMessageAsBytes();
         write(socket, payload);
@@ -93,7 +93,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         socket.send(packet);
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected synchronized UMOMessage doSend(UMOEvent event) throws Exception
     {
         doDispatch(event);
         // If we're doing sync receive try and read return info from socket
@@ -104,8 +104,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
             {
                 return null;
             }
-            UMOMessage message = new MuleMessage(connector.getMessageAdapter(result), event.getMessage());
-            return message;
+            return new MuleMessage(connector.getMessageAdapter(result), event.getMessage());
         }
         else
         {
@@ -149,8 +148,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         {
             return null;
         }
-        UMOMessage message = new MuleMessage(connector.getMessageAdapter(result), (Map)null);
-        return message;
+        return new MuleMessage(connector.getMessageAdapter(result), (Map)null);
     }
 
     protected void doDispose()

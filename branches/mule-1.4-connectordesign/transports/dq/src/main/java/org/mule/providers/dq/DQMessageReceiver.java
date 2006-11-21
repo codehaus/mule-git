@@ -26,11 +26,10 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 
 /**
- * @author m999svm <p/> DQMessageReceiver
+ * DQMessageReceiver TODO document
  */
 public class DQMessageReceiver extends PollingMessageReceiver
 {
-
     private DataQueue dataQueue = null;
     private RecordFormat format = null;
 

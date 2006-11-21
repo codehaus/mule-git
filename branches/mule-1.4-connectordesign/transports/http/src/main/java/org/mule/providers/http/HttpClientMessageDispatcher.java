@@ -55,17 +55,13 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 
 /**
- * <p>
- * <code>HttpClientMessageDispatcher</code> dispatches Mule events over http.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
  */
 public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 {
-    private HttpConnector connector;
-    private HttpClient client = null;
-    private UMOTransformer receiveTransformer;
+    private final HttpConnector connector;
+    private volatile HttpClient client = null;
+    private final UMOTransformer receiveTransformer;
 
     public HttpClientMessageDispatcher(UMOImmutableEndpoint endpoint)
     {

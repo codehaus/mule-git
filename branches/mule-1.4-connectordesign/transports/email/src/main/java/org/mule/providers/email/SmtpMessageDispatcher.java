@@ -35,10 +35,9 @@ import org.mule.util.StringUtils;
  */
 public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 {
-    protected Transport transport;
-    protected Session session;
-
-    private SmtpConnector connector;
+    private final SmtpConnector connector;
+    protected volatile Transport transport;
+    protected volatile Session session;
 
     public SmtpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -86,8 +85,8 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Creating mail session, host = " + url.getHost() + ", port = "
-                                 + url.getPort() + ", user = " + url.getUsername() + ", pass = "
-                                 + url.getPassword());
+                                    + url.getPort() + ", user = " + url.getUsername() + ", pass = "
+                                    + url.getPassword());
                 }
                 session = MailUtils.createMailSession(url, connector);
                 session.setDebug(logger.isDebugEnabled());
@@ -125,9 +124,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
      */
     public void doDispatch(UMOEvent event)
     {
-
-        Message msg = null;
-
         try
         {
             Object data = event.getTransformedMessage();
@@ -141,10 +137,8 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             else
             {
                 // Check the message for any unset data and use defaults
-                msg = (Message)data;
+                sendMailMessage((Message)data);
             }
-
-            sendMailMessage(msg);
         }
         catch (Exception e)
         {
@@ -199,7 +193,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         Transport.send(message);
         if (logger.isDebugEnabled())
         {
-            StringBuffer msg = new StringBuffer();
+            StringBuffer msg = new StringBuffer(200);
             msg.append("Email message sent with subject'").append(message.getSubject()).append("' sent- ");
             msg.append(", From: ").append(MailUtils.mailAddressesToString(message.getFrom())).append(" ");
             msg.append(", To: ").append(

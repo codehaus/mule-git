@@ -20,15 +20,11 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
 
 /**
- * <code>StreamConnector</code> can send and receive mule events over IO streams.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>StreamConnector</code> can send and receive Mule events over IO streams.
  */
 
 public abstract class StreamConnector extends AbstractServiceEnabledConnector
 {
-
     public static final String STREAM_SYSTEM_IN = "system.in";
     public static final String STREAM_SYSTEM_OUT = "system.out";
     public static final String STREAM_SYSTEM_ERR = "system.err";

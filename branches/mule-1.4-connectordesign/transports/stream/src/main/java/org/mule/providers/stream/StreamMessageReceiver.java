@@ -23,11 +23,8 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 
 /**
- * <code>StreamMessageReceiver</code> is a listener of events from a mule
- * components which then simply passes the events on to the target components.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>StreamMessageReceiver</code> is a listener for events from Mule components
+ * which then simply passes the events on to the target components.
  */
 public class StreamMessageReceiver extends PollingMessageReceiver
 {

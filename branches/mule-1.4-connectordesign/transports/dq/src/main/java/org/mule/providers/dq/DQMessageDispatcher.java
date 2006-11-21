@@ -10,12 +10,6 @@
 
 package org.mule.providers.dq;
 
-import com.ibm.as400.access.AS400;
-import com.ibm.as400.access.DataQueue;
-import com.ibm.as400.access.DataQueueEntry;
-import com.ibm.as400.access.Record;
-import com.ibm.as400.access.RecordFormat;
-
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
@@ -23,12 +17,18 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
+import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.DataQueue;
+import com.ibm.as400.access.DataQueueEntry;
+import com.ibm.as400.access.Record;
+import com.ibm.as400.access.RecordFormat;
+
 /**
  * <code>DQMessageDispatcher</code> TODO document
  */
 public class DQMessageDispatcher extends AbstractMessageDispatcher
 {
-    private DQConnector connector;
+    private final DQConnector connector;
 
     /**
      * Constructor
@@ -73,7 +73,7 @@ public class DQMessageDispatcher extends AbstractMessageDispatcher
             if (connector.getFormat() == null)
             {
                 throw new IllegalArgumentException("Property " + DQConnector.RECORD_DESCRIPTOR_PROPERTY
-                                                   + " must be set on the endpoint");
+                                + " must be set on the endpoint");
             }
             else
             {

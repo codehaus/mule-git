@@ -23,17 +23,15 @@ import org.mule.umo.transformer.TransformerException;
  * extracting the message payload. The xml exemple:
  * 
  * <pre>
- *  
  *   
- *    &amp;ltDQMessage&amp;gt
- *            &amp;ltentry name=&quot;the name&quot;&amp;gt The value &amp;lt/entry&amp;gt
- *           ....
- *     &amp;lt/DQMessage&amp;gt
  *    
- *   
+ *     &amp;ltDQMessage&amp;gt
+ *             &amp;ltentry name=&quot;the name&quot;&amp;gt The value &amp;lt/entry&amp;gt
+ *            ....
+ *      &amp;lt/DQMessage&amp;gt
+ *     
+ *    
  * </pre>
- * 
- * @author m999svm
  */
 public class DQMessageToXml extends AbstractTransformer
 {
@@ -64,13 +62,11 @@ public class DQMessageToXml extends AbstractTransformer
             Element root = document.addElement(DQMessage.XML_ROOT);
 
             Iterator it = msg.getEntryNames().iterator();
-            String name;
-            Object field;
 
             while (it.hasNext())
             {
-                name = (String)it.next();
-                field = msg.getEntry(name);
+                String name = (String)it.next();
+                Object field = msg.getEntry(name);
 
                 if (field instanceof String)
                 {

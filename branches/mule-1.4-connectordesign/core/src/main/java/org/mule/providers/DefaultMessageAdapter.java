@@ -22,9 +22,6 @@ import org.mule.umo.provider.UMOMessageAdapter;
  * <code>DefaultMessageAdapter</code> can be used to wrap an arbitary object where
  * no special 'apapting' is needed. The adapter allows for a set of properties to be
  * associated with an object.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class DefaultMessageAdapter extends AbstractMessageAdapter

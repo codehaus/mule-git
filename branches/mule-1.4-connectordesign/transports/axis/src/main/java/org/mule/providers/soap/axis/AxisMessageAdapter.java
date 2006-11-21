@@ -30,9 +30,6 @@ import org.mule.umo.transformer.UMOTransformer;
  * <code>AxisMessageAdapter</code> wraps a soap message. The payload of the adapter
  * is the raw message received from the transport, but you also have access to the
  * SOAPMessage object by using <code>adapter.getSOAPMessage()</code>
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class AxisMessageAdapter extends AbstractMessageAdapter
 {
@@ -41,8 +38,8 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
      */
     private static final long serialVersionUID = -923205879581370143L;
 
-    private Object payload;
-    private SOAPMessage message;
+    private final Object payload;
+    private final SOAPMessage message;
     private UMOTransformer trans = new SerializableToByteArray();
 
     public AxisMessageAdapter(Object message) throws MessagingException
@@ -54,9 +51,7 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
 
             if (ctx != null)
             {
-                MuleSoapHeaders header = new MuleSoapHeaders(ctx.getMessage()
-                    .getSOAPPart()
-                    .getEnvelope()
+                MuleSoapHeaders header = new MuleSoapHeaders(ctx.getMessage().getSOAPPart().getEnvelope()
                     .getHeader());
 
                 if (StringUtils.isNotBlank(header.getReplyTo()))
@@ -83,8 +78,8 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
                 {
                     for (Iterator i = this.message.getAttachments(); i.hasNext(); x++)
                     {
-                        super.addAttachment(String.valueOf(x),
-                            ((AttachmentPart)i.next()).getActivationDataHandler());
+                        super.addAttachment(String.valueOf(x), ((AttachmentPart)i.next())
+                            .getActivationDataHandler());
                     }
                 }
                 catch (Exception e)
@@ -92,6 +87,10 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
                     // this will not happen
                     logger.fatal("Failed to read attachments", e);
                 }
+            }
+            else
+            {
+                this.message = null;
             }
         }
         catch (SOAPException e)

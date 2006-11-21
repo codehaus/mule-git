@@ -53,8 +53,9 @@ import org.mule.util.TemplateParser;
  */
 public class XFireMessageDispatcher extends AbstractMessageDispatcher
 {
-    protected XFireConnector connector;
-    protected ObjectPool clientPool;
+    protected final XFireConnector connector;
+    protected volatile ObjectPool clientPool;
+    private final TemplateParser soapActionTemplateParser = TemplateParser.createAntStyleParser();
 
     public XFireMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -106,7 +107,6 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
                 if (connector.getWsSecurity().get("serviceOutHandlers") != null)
                 {
-
                     List outList = (List)connector.getWsSecurity().get("serviceOutHandlers");
                     for (int i = 0; i < outList.size(); i++)
                     {
@@ -154,7 +154,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDispose()
     {
-        connector = null;
+        // nothing to do
     }
 
     protected String getMethod(UMOEvent event) throws DispatchException
@@ -406,13 +406,13 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             properties.put("serviceName", event.getComponent().getDescriptor().getName());
         }
 
-        TemplateParser tp = TemplateParser.createAntStyleParser();
-        soapAction = tp.parse(properties, soapAction);
+        soapAction = soapActionTemplateParser.parse(properties, soapAction);
 
         if (logger.isDebugEnabled())
         {
             logger.debug("SoapAction for this call is: " + soapAction);
         }
+
         return soapAction;
     }
 }

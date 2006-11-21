@@ -34,22 +34,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * <code>TcpMessageDispatcher</code> will send transformed mule events over tcp.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>TcpMessageDispatcher</code> will send transformed Mule events over TCP.
  */
 
 public class TcpMessageDispatcher extends AbstractMessageDispatcher
 {
-
+    private final TcpConnector connector;
+    protected final SerializableToByteArray serializableToByteArray;
     protected Socket connectedSocket = null;
-
-    protected SerializableToByteArray serializableToByteArray;
-
     protected boolean keepSendSocketOpen = false;
-
-    private TcpConnector connector;
 
     public TcpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -83,7 +76,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         return socket;
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected synchronized void doDispatch(UMOEvent event) throws Exception
     {
         try
         {
@@ -98,7 +91,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected synchronized UMOMessage doSend(UMOEvent event) throws Exception
     {
         doInternalDispatch(event);
 
@@ -213,7 +206,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(long timeout) throws Exception
+    protected synchronized UMOMessage doReceive(long timeout) throws Exception
     {
         Socket socket = null;
         try

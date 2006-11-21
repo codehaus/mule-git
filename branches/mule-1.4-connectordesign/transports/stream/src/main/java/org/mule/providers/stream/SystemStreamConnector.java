@@ -19,22 +19,15 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
 
 /**
- * <code>SystemStreamConnector</code> Connects to the System streams in and out by
- * default and add some basic fuctionality for Writing out prompt messages
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>SystemStreamConnector</code> connects to the System streams in and out by
+ * default and add some basic fuctionality for writing out prompt messages.
  */
-
 public class SystemStreamConnector extends StreamConnector
 {
 
     private String promptMessage;
-
     private String outputMessage;
-
     private long messageDelayTime = 3000;
-
     private boolean firstTime = true;
 
     public SystemStreamConnector()

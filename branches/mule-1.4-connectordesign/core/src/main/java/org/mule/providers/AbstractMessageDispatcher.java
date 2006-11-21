@@ -10,8 +10,6 @@
 
 package org.mule.providers;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.beans.ExceptionListener;
 import java.io.OutputStream;
 
@@ -43,6 +41,8 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.util.concurrent.WaitableBoolean;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * <p/> <code>AbstractMessageDispatcher</code> provides a default dispatch (client)
  * support for handling threads lifecycle and validation.
@@ -59,8 +59,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      */
     protected UMOWorkManager workManager = null;
 
-    protected UMOImmutableEndpoint endpoint;
-    protected AbstractConnector connector;
+    protected final UMOImmutableEndpoint endpoint;
+    protected final AbstractConnector connector;
 
     protected boolean disposed = false;
 
@@ -68,21 +68,20 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     protected ConnectionStrategy connectionStrategy;
 
-    protected WaitableBoolean connected = new WaitableBoolean(false);
-
-    private AtomicBoolean connecting = new AtomicBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
+    private final AtomicBoolean connecting = new AtomicBoolean(false);
 
     public AbstractMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
         this.connector = (AbstractConnector)endpoint.getConnector();
+
         connectionStrategy = connector.getConnectionStrategy();
         if (connectionStrategy instanceof AbstractConnectionStrategy)
         {
             // We don't want to do threading in the dispatcher because we're either
             // already running in a worker thread (asynchronous) or we need to
-            // complete the operation
-            // in a single thread
+            // complete the operation in a single thread
             ((AbstractConnectionStrategy)connectionStrategy).setDoThreading(false);
         }
 
@@ -241,8 +240,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                         event.getEndpoint(), component, MessageNotification.MESSAGE_SENT));
                 }
                 // Once a dispatcher has done its work we need to romve this property
-                // so that
-                // it is not propagated to the next request
+                // so that it is not propagated to the next request
                 if (result != null)
                 {
                     result.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
@@ -296,11 +294,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
             return result;
         }
-        catch (DispatchException e)
-        {
-            dispose();
-            throw e;
-        }
         catch (Exception e)
         {
             dispose();
@@ -330,7 +323,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             dispose();
         }
-
     }
 
     public final boolean isDisposed()
@@ -440,12 +432,13 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return null;
     }
 
-    public void connect() throws Exception
+    public synchronized void connect() throws Exception
     {
         if (connected.get())
         {
             return;
         }
+
         if (disposed)
         {
             if (logger.isWarnEnabled())
@@ -453,10 +446,12 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 logger.warn("Dispatcher has been disposed. Cannot connector resource");
             }
         }
+
         if (logger.isDebugEnabled())
         {
             logger.debug("Attempting to connect to: " + endpoint.getEndpointURI());
         }
+
         if (connecting.compareAndSet(false, true))
         {
             connectionStrategy.connect(this);
@@ -483,17 +478,18 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 throw new ConnectException(e, this);
             }
         }
+
         connected.set(true);
         connecting.set(false);
     }
 
-    public void disconnect() throws Exception
+    public synchronized void disconnect() throws Exception
     {
-
         if (logger.isDebugEnabled())
         {
             logger.debug("Disconnecting from: " + endpoint.getEndpointURI());
         }
+
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
             ConnectionNotification.CONNECTION_DISCONNECTED));
         connected.set(false);
@@ -521,7 +517,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return endpoint.getEndpointURI().toString();
     }
 
-    public void reconnect() throws Exception
+    public synchronized void reconnect() throws Exception
     {
         disconnect();
         connect();
