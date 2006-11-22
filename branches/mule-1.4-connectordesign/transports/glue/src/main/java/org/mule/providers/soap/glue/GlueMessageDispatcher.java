@@ -10,11 +10,6 @@
 
 package org.mule.providers.soap.glue;
 
-import electric.glue.context.ProxyContext;
-import electric.glue.context.ThreadContext;
-import electric.proxy.IProxy;
-import electric.registry.Registry;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +22,11 @@ import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
+
+import electric.glue.context.ProxyContext;
+import electric.glue.context.ThreadContext;
+import electric.proxy.IProxy;
+import electric.registry.Registry;
 
 /**
  * <code>GlueMessageDispatcher</code> will make web services calls using the Glue
