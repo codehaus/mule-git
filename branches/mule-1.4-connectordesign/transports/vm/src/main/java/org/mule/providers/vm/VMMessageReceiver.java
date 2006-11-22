@@ -10,6 +10,8 @@
 
 package org.mule.providers.vm;
 
+import java.util.List;
+
 import org.mule.MuleException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -24,8 +26,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
-
-import java.util.List;
 
 /**
  * <code>VMMessageReceiver</code> is a listener of events from a mule component
