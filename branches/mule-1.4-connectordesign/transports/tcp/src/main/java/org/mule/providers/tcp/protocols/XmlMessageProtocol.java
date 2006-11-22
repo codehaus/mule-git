@@ -10,10 +10,6 @@
 
 package org.mule.providers.tcp.protocols;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
-import org.mule.providers.tcp.TcpProtocol;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,6 +17,10 @@ import java.io.PushbackInputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
+
+import org.mule.providers.tcp.TcpProtocol;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>

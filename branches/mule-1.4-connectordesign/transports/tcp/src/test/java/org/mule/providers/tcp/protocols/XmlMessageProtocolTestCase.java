@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.tck.AbstractMuleTestCase;
-
 import java.io.ByteArrayInputStream;
+
+import org.mule.tck.AbstractMuleTestCase;
 
 /**
  * Test by reading characters from a fixed string buffer instead of a tcp port.

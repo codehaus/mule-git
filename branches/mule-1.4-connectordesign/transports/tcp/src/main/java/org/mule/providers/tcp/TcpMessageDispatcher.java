@@ -10,18 +10,6 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.util.MapUtils;
-import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.TransformerException;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -32,6 +20,18 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import org.mule.impl.MuleMessage;
+import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.transformers.simple.SerializableToByteArray;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.DispatchException;
+import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.util.MapUtils;
 
 /**
  * <code>TcpMessageDispatcher</code> will send transformed Mule events over TCP.

@@ -10,6 +10,12 @@
 
 package org.mule.providers.tcp;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.URI;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
@@ -21,12 +27,6 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.URI;
 
 /**
  * <code>TcpStreamingMessageReceiver</code> establishes a tcp client connection to
