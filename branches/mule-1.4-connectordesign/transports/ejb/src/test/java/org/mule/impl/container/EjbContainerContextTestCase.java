@@ -10,17 +10,17 @@
 
 package org.mule.impl.container;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.Context;
+
 import org.mule.impl.jndi.MuleInitialContextFactory;
 import org.mule.tck.model.AbstractContainerContextTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.umo.manager.UMOContainerContext;
-
-import javax.naming.Context;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>

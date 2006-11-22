@@ -10,15 +10,15 @@
 
 package org.mule.impl.container;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.util.ClassUtils;
+import java.lang.reflect.Method;
 
 import javax.ejb.EJBHome;
 import javax.naming.NamingException;
 
-import java.lang.reflect.Method;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.umo.manager.ObjectNotFoundException;
+import org.mule.util.ClassUtils;
 
 /**
  * <code>EjbContainerContext</code> is a container implementaiton that allows EJB
