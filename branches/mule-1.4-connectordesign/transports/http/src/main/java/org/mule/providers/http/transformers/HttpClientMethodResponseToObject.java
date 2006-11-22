@@ -10,6 +10,10 @@
 
 package org.mule.providers.http.transformers;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.io.IOUtils;
@@ -18,10 +22,6 @@ import org.mule.providers.http.HttpConstants;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <code>HttpClientMethodResponseToObject</code> transforms a http client response

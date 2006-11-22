@@ -10,6 +10,16 @@
 
 package org.mule.providers.http.transformers;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.lang.StringUtils;
@@ -24,16 +34,6 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * <code>UMOMessageToHttpResponse</code> converts a UMOMEssage into an Http

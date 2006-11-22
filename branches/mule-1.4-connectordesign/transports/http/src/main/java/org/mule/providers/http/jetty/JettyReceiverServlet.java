@@ -10,14 +10,14 @@
 
 package org.mule.providers.http.jetty;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.http.servlet.MuleReceiverServlet;
 import org.mule.umo.endpoint.EndpointException;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>

@@ -10,6 +10,10 @@
 
 package org.mule.providers.http.transformers;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Iterator;
+
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -29,10 +33,6 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
-
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Iterator;
 
 /**
  * <code>ObjectToHttpClientMethodRequest</code> transforms a UMOMessage into a

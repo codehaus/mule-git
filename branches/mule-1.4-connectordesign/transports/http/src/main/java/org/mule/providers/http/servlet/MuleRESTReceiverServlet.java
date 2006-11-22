@@ -10,6 +10,12 @@
 
 package org.mule.providers.http.servlet;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
@@ -20,12 +26,6 @@ import org.mule.umo.endpoint.EndpointNotFoundException;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 /**
  * <code>MuleRESTReceiverServlet</code> is used for sending a receiving events from
