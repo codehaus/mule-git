@@ -17,36 +17,10 @@ import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
 public abstract class AbstractMessageDispatcherFactory implements UMOMessageDispatcherFactory
 {
-    // TODO can we use a backpointer into the connector?
 
     public AbstractMessageDispatcherFactory()
     {
         super();
-    }
-
-    public final void activateObject(Object key, Object obj) throws Exception
-    {
-        this.activate((UMOImmutableEndpoint)key, (UMOMessageDispatcher)obj);
-    }
-
-    public final void destroyObject(Object key, Object obj) throws Exception
-    {
-        this.destroy((UMOImmutableEndpoint)key, (UMOMessageDispatcher)obj);
-    }
-
-    public final Object makeObject(Object key) throws Exception
-    {
-        return this.create((UMOImmutableEndpoint)key);
-    }
-
-    public final void passivateObject(Object key, Object obj) throws Exception
-    {
-        this.passivate((UMOImmutableEndpoint)key, (UMOMessageDispatcher)obj);
-    }
-
-    public final boolean validateObject(Object key, Object obj)
-    {
-        return this.validate((UMOImmutableEndpoint)key, (UMOMessageDispatcher)obj);
     }
 
     public abstract UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException;

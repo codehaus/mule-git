@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
@@ -539,6 +540,7 @@ public abstract class AbstractConnector
     /**
      * @return Returns the dispatcherFactory.
      */
+    // TODO HH: we should probably get rid of this, the factory is nobody's business
     public UMOMessageDispatcherFactory getDispatcherFactory()
     {
         return dispatcherFactory;
@@ -549,6 +551,12 @@ public abstract class AbstractConnector
      */
     public void setDispatcherFactory(UMOMessageDispatcherFactory dispatcherFactory)
     {
+        // need to adapt the UMOMessageDispatcherFactory for use as commons-pool object factory
+        if (!(dispatcherFactory instanceof KeyedPoolableObjectFactory))
+        {
+            dispatcherFactory = new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory);
+        }
+
         this.dispatcherFactory = dispatcherFactory;
     }
 
@@ -1191,7 +1199,7 @@ public abstract class AbstractConnector
      * 
      * @param protocol the supported protocol to register
      */
-    protected void registerSupportedProtocolWithotPrefix(String protocol)
+    protected void registerSupportedProtocolWithoutPrefix(String protocol)
     {
         supportedProtocols.add(protocol.toLowerCase());
     }

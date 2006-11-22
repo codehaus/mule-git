@@ -10,7 +10,6 @@
 
 package org.mule.umo.provider;
 
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
@@ -18,7 +17,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
  * <code>UMOMessageDispatcherFactory</code> is a factory interface for managing the
  * lifecycle of a message dispatcher for the underlying transport.
  */
-public interface UMOMessageDispatcherFactory extends KeyedPoolableObjectFactory
+public interface UMOMessageDispatcherFactory
 {
     UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException;
 
