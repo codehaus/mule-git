@@ -10,10 +10,8 @@
 
 package org.mule.providers.jbi;
 
-import org.mule.providers.jbi.components.MuleReceiver;
-import org.mule.tck.AbstractMuleTestCase;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
+import java.util.MissingResourceException;
+import java.util.logging.Logger;
 
 import javax.jbi.JBIException;
 import javax.jbi.component.ComponentContext;
@@ -27,8 +25,10 @@ import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 
-import java.util.MissingResourceException;
-import java.util.logging.Logger;
+import org.mule.providers.jbi.components.MuleReceiver;
+import org.mule.tck.AbstractMuleTestCase;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
