@@ -207,7 +207,7 @@ public abstract class AbstractConnector
      */
     private boolean enableMessageEvents = false;
 
-    private List supportedProtocols;
+    private final List supportedProtocols;
 
     /**
      * A shared work manager for all receivers registered with this connector if
@@ -604,18 +604,6 @@ public abstract class AbstractConnector
             }
 
             return dispatcher;
-        }
-    }
-
-    public UMOMessageDispatcher lookupDispatcher(String key)
-    {
-        if (key != null)
-        {
-            return (UMOMessageDispatcher)dispatchers.get(key);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Dispatcher key must not be null");
         }
     }
 
@@ -1094,10 +1082,20 @@ public abstract class AbstractConnector
     }
 
     /**
-     * controls whether dispatchers or cached or created per request Note that if an
-     * exception occurs in the Dispatcher it is automatically disposed of and a new
+     * Controls whether dispatchers are cached or created per request. Note that if an
+     * exception occurs in the dispatcher it is automatically disposed of and a new
      * one is created for the next request. This allows dispatchers to recover from
      * loss of connection and other faults.
+     * 
+     * @return true if a a new dispatcher is created for every request
+     */
+    public boolean isCreateDispatcherPerRequest()
+    {
+        return createDispatcherPerRequest;
+    }
+
+    /**
+     * @see {@link #isCreateDispatcherPerRequest()}
      * 
      * @param createDispatcherPerRequest whether a new dispatcher is created for
      *            every request or not
@@ -1105,19 +1103,6 @@ public abstract class AbstractConnector
     public void setCreateDispatcherPerRequest(boolean createDispatcherPerRequest)
     {
         this.createDispatcherPerRequest = createDispatcherPerRequest;
-    }
-
-    /**
-     * controls whether dispatchers or cached or created per request Note that if an
-     * exception occurs in the Dispatcher it is automatically disposed of and a new
-     * one is created for the next request. This allows dispatchers to recover from
-     * loss of connection and other faults.
-     * 
-     * @return true if a anew dispatcher is created for every request
-     */
-    public boolean isCreateDispatcherPerRequest()
-    {
-        return createDispatcherPerRequest;
     }
 
     /**
@@ -1136,11 +1121,7 @@ public abstract class AbstractConnector
     }
 
     /**
-     * For better throughput when using TransactedMessageReceivers. This will create
-     * an number of receiver threads based on the ThreadingProfile configured fro the
-     * receiver. This property is user by transports that support transactions,
-     * specifically MessageReceivers that extend the
-     * TransactedPollingMessageReceiver.
+     * @see {@link #isCreateMultipleTransactedReceivers()}
      * 
      * @param createMultipleTransactedReceivers true if multiple receiver threads
      *            will be created for receivers on this connection
