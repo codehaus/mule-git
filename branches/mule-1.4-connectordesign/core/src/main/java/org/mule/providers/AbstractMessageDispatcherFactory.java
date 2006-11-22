@@ -32,7 +32,8 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
 
     public void destroy(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
     {
-        // template method
+        // by default we simply dispose the dispatcher.
+        dispatcher.dispose();
     }
 
     public void passivate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)

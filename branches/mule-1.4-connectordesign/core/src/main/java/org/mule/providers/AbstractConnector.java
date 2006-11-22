@@ -425,11 +425,12 @@ public abstract class AbstractConnector
     public final synchronized void dispose()
     {
         disposing.set(true);
+
         if (logger.isInfoEnabled())
         {
             logger.info("Disposing Connector: " + getClass().getName());
-            logger.debug("Disposing Receivers");
         }
+
         disposeReceivers();
         disposeDispatchers();
 
@@ -470,12 +471,16 @@ public abstract class AbstractConnector
         if (dispatchers != null)
         {
             logger.debug("Disposing Dispatchers");
-            for (Iterator iterator = dispatchers.values().iterator(); iterator.hasNext();)
+
+            try
             {
-                UMOMessageDispatcher umoMessageDispatcher = (UMOMessageDispatcher)iterator.next();
-                umoMessageDispatcher.dispose();
+                dispatchers.clear();
             }
-            dispatchers.clear();
+            catch (Exception ex)
+            {
+                // ignored
+            }
+
             logger.debug("Dispatchers Disposed");
         }
     }
@@ -540,7 +545,6 @@ public abstract class AbstractConnector
     /**
      * @return Returns the dispatcherFactory.
      */
-    // TODO HH: we should probably get rid of this, the factory is nobody's business
     public UMOMessageDispatcherFactory getDispatcherFactory()
     {
         return dispatcherFactory;
@@ -551,12 +555,19 @@ public abstract class AbstractConnector
      */
     public void setDispatcherFactory(UMOMessageDispatcherFactory dispatcherFactory)
     {
-        // need to adapt the UMOMessageDispatcherFactory for use as commons-pool object factory
-        if (!(dispatcherFactory instanceof KeyedPoolableObjectFactory))
+        // need to adapt the UMOMessageDispatcherFactory for use as commons-pool
+        // object factory
+        if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
         {
-            dispatcherFactory = new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory);
+            this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
+        }
+        else
+        {
+            this.dispatchers.setFactory(new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
         }
 
+        // we keep a reference to the unadapted factory, otherwise people might end
+        // up with ClassCastExceptions on downcast to their implementation (sigh)
         this.dispatcherFactory = dispatcherFactory;
     }
 
@@ -572,8 +583,8 @@ public abstract class AbstractConnector
         if (!supportsProtocol(endpoint.getConnector().getProtocol()))
         {
             throw new IllegalArgumentException(new Message(
-                Messages.CONNECTOR_SCHEME_X_INCOMPATIBLE_WITH_ENDPOINT_SCHEME_X, getProtocol(),
-                endpoint.getEndpointURI().toString()).getMessage());
+                Messages.CONNECTOR_SCHEME_X_INCOMPATIBLE_WITH_ENDPOINT_SCHEME_X, getProtocol(), endpoint
+                    .getEndpointURI().toString()).getMessage());
         }
 
         if (dispatchers == null)
@@ -644,7 +655,7 @@ public abstract class AbstractConnector
             throw new ConnectorException(new Message(Messages.ENDPOINT_NULL_FOR_LISTENER), this);
         }
         logger.info("registering listener: " + component.getDescriptor().getName() + " on endpointUri: "
-                    + endpointUri.toString());
+                        + endpointUri.toString());
 
         UMOMessageReceiver receiver = getReceiver(component, endpoint);
         if (receiver != null)
@@ -668,8 +679,8 @@ public abstract class AbstractConnector
      */
     protected Object getReceiverKey(UMOComponent component, UMOEndpoint endpoint)
     {
-        return StringUtils.defaultIfEmpty(endpoint.getEndpointURI().getFilterAddress(),
-            endpoint.getEndpointURI().getAddress());
+        return StringUtils.defaultIfEmpty(endpoint.getEndpointURI().getFilterAddress(), endpoint
+            .getEndpointURI().getAddress());
     }
 
     public final void unregisterListener(UMOComponent component, UMOEndpoint endpoint) throws Exception
@@ -865,11 +876,6 @@ public abstract class AbstractConnector
     public ReplyToHandler getReplyToHandler()
     {
         return new DefaultReplyToHandler(defaultResponseTransformer);
-    }
-
-    public Map getDispatchers()
-    {
-        return dispatchers;
     }
 
     /**
@@ -1405,7 +1411,7 @@ public abstract class AbstractConnector
             e = event.getException().getCause();
         }
         logger.error("Work caused exception on '" + type + "'. Work being executed was: "
-                     + event.getWork().toString());
+                        + event.getWork().toString());
         if (e instanceof Exception)
         {
             handleException((Exception)e);
@@ -1415,7 +1421,6 @@ public abstract class AbstractConnector
             throw new MuleRuntimeException(new Message(Messages.CONNECTOR_CAUSED_ERROR, getName()), e);
         }
     }
-
 
     // TODO the following methods should probably be lifecycle-enabled;
     // for now they are only stubs to get the refactoring going.
