@@ -866,6 +866,17 @@ public abstract class AbstractConnector
         return new DefaultReplyToHandler(defaultResponseTransformer);
     }
 
+<<<<<<< .working
+=======
+    /**
+     * @deprecated this method will go away soon.
+     */
+    public Map getDispatchers()
+    {
+        return dispatchers;
+    }
+
+>>>>>>> .merge-right.r4010
     /**
      * Fires a server notification to all registered
      * {@link org.mule.impl.internal.notifications.CustomNotificationListener}
