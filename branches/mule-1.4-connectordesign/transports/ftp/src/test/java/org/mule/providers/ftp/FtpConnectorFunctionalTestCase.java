@@ -10,6 +10,8 @@
 
 package org.mule.providers.ftp;
 
+import java.io.FileOutputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -22,8 +24,6 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
-
-import java.io.FileOutputStream;
 
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
