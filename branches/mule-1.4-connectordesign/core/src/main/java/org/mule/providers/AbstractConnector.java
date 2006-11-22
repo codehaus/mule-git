@@ -10,10 +10,6 @@
 
 package org.mule.providers;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +24,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
@@ -61,6 +59,10 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.concurrent.WaitableBoolean;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <code>AbstractConnector</code> provides base functionality for all connectors
@@ -134,9 +136,9 @@ public abstract class AbstractConnector
     protected UMOMessageDispatcherFactory dispatcherFactory;
 
     /**
-     * A pool of dispa tchers for this connector, the pool is keyed on endpointUri
+     * A pool of dispatchers for this connector, the pool is keyed on endpointUri
      */
-    protected ConcurrentMap dispatchers;
+    protected KeyedObjectPool dispatchers;
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
@@ -242,7 +244,7 @@ public abstract class AbstractConnector
     {
         // make sure we always have an exception strategy
         exceptionListener = new DefaultExceptionStrategy();
-        dispatchers = new ConcurrentHashMap();
+        dispatchers = new GenericKeyedObjectPool();
         receivers = new ConcurrentHashMap();
         connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
         enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
@@ -1169,7 +1171,7 @@ public abstract class AbstractConnector
         protocol = protocol.toLowerCase();
         if (protocol.startsWith(getProtocol().toLowerCase()))
         {
-            registerSupportedProtocolWithotPrefix(protocol);
+            registerSupportedProtocolWithoutPrefix(protocol);
         }
         else
         {
