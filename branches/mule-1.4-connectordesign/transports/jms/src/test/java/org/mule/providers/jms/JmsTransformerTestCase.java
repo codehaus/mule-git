@@ -10,12 +10,6 @@
 
 package org.mule.providers.jms;
 
-import com.mockobjects.constraint.Constraint;
-import com.mockobjects.constraint.IsEqual;
-import com.mockobjects.dynamic.ConstraintMatcher;
-import com.mockobjects.dynamic.FullConstraintMatcher;
-import com.mockobjects.dynamic.Mock;
-
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
@@ -28,6 +22,12 @@ import org.mule.providers.jms.transformers.ObjectToJMSMessage;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.UMOMessage;
+
+import com.mockobjects.constraint.Constraint;
+import com.mockobjects.constraint.IsEqual;
+import com.mockobjects.dynamic.ConstraintMatcher;
+import com.mockobjects.dynamic.FullConstraintMatcher;
+import com.mockobjects.dynamic.Mock;
 
 public class JmsTransformerTestCase extends AbstractMuleTestCase
 {
