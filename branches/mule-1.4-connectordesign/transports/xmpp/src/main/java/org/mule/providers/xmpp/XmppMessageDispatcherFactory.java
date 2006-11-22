@@ -10,10 +10,10 @@
 
 package org.mule.providers.xmpp;
 
+import org.mule.providers.AbstractMessageDispatcherFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
 /**
  * <code>XmppMessageDispatcherFactory</code> creates a dispatcher responsible for
@@ -23,7 +23,7 @@ import org.mule.umo.provider.UMOMessageDispatcherFactory;
  * @version $Revision$
  */
 
-public class XmppMessageDispatcherFactory implements UMOMessageDispatcherFactory
+public class XmppMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {

@@ -10,12 +10,12 @@
 
 package org.mule.providers.xmpp;
 
+import java.net.URI;
+import java.util.Properties;
+
 import org.mule.config.i18n.Message;
 import org.mule.impl.endpoint.UserInfoEndpointBuilder;
 import org.mule.umo.endpoint.MalformedEndpointException;
-
-import java.net.URI;
-import java.util.Properties;
 
 /**
  * Does the same as the UserINfoEndpointBuilder but also ensures that a path is set
