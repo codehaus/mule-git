@@ -9,18 +9,19 @@
  */
 package org.mule.providers.jdbc;
 
-import com.mockobjects.dynamic.Mock;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.ImmutableMuleEndpoint;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.ResultSet;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.mule.impl.ImmutableMuleEndpoint;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+
+import com.mockobjects.dynamic.Mock;
 
 public class JdbcMessageDispatcherTestCase extends AbstractMuleTestCase
 {

@@ -10,6 +10,10 @@
 
 package org.mule.providers.jdbc;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -23,10 +27,6 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.ConnectorException;
 import org.mule.umo.provider.UMOMessageAdapter;
-
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Jdbc Message dispatcher is responsible for executing SQL queries against a
