@@ -13,8 +13,9 @@ package org.mule.providers.ssl;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
 import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
