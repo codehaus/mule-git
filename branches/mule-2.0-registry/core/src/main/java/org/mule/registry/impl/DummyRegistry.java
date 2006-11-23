@@ -61,7 +61,7 @@ public class DummyRegistry implements Registry {
         return null;
     }
 
-    public ComponentReference getRegisteredComponent(String type, String id) {
+    public ComponentReference getRegisteredComponent(long id) {
         return null;
     }
 
