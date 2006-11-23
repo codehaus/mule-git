@@ -26,25 +26,71 @@ import org.mule.umo.lifecycle.Stoppable;
  */
 public interface Registry extends Startable, Stoppable, Disposable {
 
+    /**
+     * Returns a reference to the RegistryStore that is used
+     * to do the actual store of component information.
+     *
+     * @return RegistryStore object
+     */
     public RegistryStore getRegistryStore();
 
+    /**
+     * Register a component in the registry. The registry will 
+     * return a unique id that will be assigned the component for
+     * its lifetime. Ids cannot be reused.
+     *
+     * @return long ID
+     */
     public long registerComponent(ComponentReference component) throws RegistrationException;
 
+    /**
+     * Unregister a component
+     */
     public void deregisterComponent(ComponentReference component) throws DeregistrationException;
 
+    /**
+     * Re-register a component, but this might not be used. Not sure
+     * at present.
+     */
     public void reregisterComponent(ComponentReference component) throws ReregistrationException;
 
+    /**
+     * Get a hashmap of all registered components of a certain type. 
+     * For example, you could call getRegisteredComponents("descriptors")
+     * to get a list of all routes
+     */
     public HashMap getRegisteredComponents(String type);
 
-    public ComponentReference getRegisteredComponent(String type, String id);
+    /**
+     * Get a specific registered component, based on ID
+     */
+    public ComponentReference getRegisteredComponent(long id);
 
+    /**
+     * Start the registry
+     */
     public void start() throws UMOException;
 
+    /**
+     * Stop the registry
+     */
     public void stop() throws UMOException;
 
+    /**
+     * Clean up and release any resources
+     */
     public void dispose();
 
+    /**
+     * Method to alert the registry when a component state has 
+     * changed. This method should be called by listeners that have
+     * already been registered to watch the component's state.
+     */
     public void notifyStateChange(long id, int state);
 
+    /**
+     * Method to alert the registry when a component property has
+     * changed. Not used yet.
+     */
     public void notifyPropertyChange(long id, String propertyName, Object propertyValue);
 }
