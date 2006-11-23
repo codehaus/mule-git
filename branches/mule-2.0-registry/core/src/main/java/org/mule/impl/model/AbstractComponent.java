@@ -22,6 +22,9 @@ import org.mule.impl.RequestContext;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.management.stats.ComponentStatistics;
 import org.mule.providers.AbstractConnector;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
+import org.mule.registry.impl.SimpleComponentReference;
 import org.mule.umo.ComponentException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
@@ -98,6 +101,8 @@ public abstract class AbstractComponent implements UMOComponent
      */
     protected WaitableBoolean paused = new WaitableBoolean(false);
 
+    protected long registryId;
+
     /**
      * Default constructor
      */
@@ -144,6 +149,29 @@ public abstract class AbstractComponent implements UMOComponent
         initialised.set(true);
         fireComponentNotification(ComponentNotification.COMPONENT_INITIALISED);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.UMOComponent#register()
+     */
+    public void register() throws RegistrationException
+    {
+        SimpleComponentReference ref = new 
+            SimpleComponentReference(model.getRegistryId(), "component", this);
+        registryId = 
+            MuleManager.getInstance().getRegistry().registerComponent(ref);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.UMOComponent#deregister()
+     */
+    public void deregister() throws DeregistrationException
+    {
+        registryId = -1L;
     }
 
     protected void fireComponentNotification(int action)

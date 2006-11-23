@@ -11,6 +11,7 @@
 package org.mule.umo.manager;
 
 import org.mule.impl.internal.notifications.NotificationException;
+import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOInterceptorStack;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -208,6 +209,11 @@ public interface UMOManager extends Lifecycle
      * @see UMOTransformer
      */
     Map getTransformers();
+
+    /**
+     * Returns a reference to the Mule registry
+     */
+    Registry getRegistry();
 
     /**
      * registers a interceptor stack list that can be referenced by other components

@@ -23,6 +23,9 @@ import org.mule.impl.ImmutableMuleDescriptor;
 import org.mule.impl.MuleSession;
 import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.model.DynamicEntryPointResolver;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
+import org.mule.registry.impl.SimpleComponentReference;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
@@ -70,6 +73,8 @@ public abstract class AbstractModel implements UMOModel
     private AtomicBoolean started = new AtomicBoolean(false);
 
     private ExceptionListener exceptionListener;
+
+    protected long registryId;
 
     /**
      * Default constructor
@@ -206,6 +211,7 @@ public abstract class AbstractModel implements UMOModel
             component.stop();
             descriptors.remove(descriptor.getName());
             component.dispose();
+            component.deregister();
             logger.info("The component: " + descriptor.getName() + " has been unregistered and disposing");
         }
     }
@@ -460,6 +466,15 @@ public abstract class AbstractModel implements UMOModel
             for (Iterator i = components.values().iterator(); i.hasNext();)
             {
                 component = (UMOComponent)i.next();
+
+                try 
+                {
+                    component.register();
+                } catch (RegistrationException re)
+                {
+                    logger.info("Unable to register component");
+                }
+
                 component.initialise();
 
                 logger.info("Component " + component.getDescriptor().getName()
@@ -472,6 +487,29 @@ public abstract class AbstractModel implements UMOModel
         {
             logger.debug("Model already initialised");
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.UMOModel#register()
+     */
+    public void register() throws RegistrationException
+    {
+        SimpleComponentReference ref = new 
+            SimpleComponentReference(-1, "model", this);
+        registryId = 
+            MuleManager.getInstance().getRegistry().registerComponent(ref);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.UMOModel#deregister()
+     */
+    public void deregister() throws DeregistrationException
+    {
+        registryId = -1L;
     }
 
     public ExceptionListener getExceptionListener()
@@ -502,6 +540,11 @@ public abstract class AbstractModel implements UMOModel
     public Iterator getComponentNames()
     {
         return components.keySet().iterator();
+    }
+
+    public long getRegistryId()
+    {
+        return registryId;
     }
 
     void fireNotification(UMOServerNotification notification)

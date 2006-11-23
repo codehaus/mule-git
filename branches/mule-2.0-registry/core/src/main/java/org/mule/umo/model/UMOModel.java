@@ -16,6 +16,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.Lifecycle;
+import org.mule.umo.lifecycle.Registerable;
 import org.mule.umo.lifecycle.UMOLifecycleAdapterFactory;
 
 import java.beans.ExceptionListener;
@@ -30,7 +31,7 @@ import java.util.List;
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public interface UMOModel extends Lifecycle, Initialisable
+public interface UMOModel extends Lifecycle, Initialisable, Registerable
 {
 
     /**
@@ -58,6 +59,13 @@ public interface UMOModel extends Lifecycle, Initialisable
      * @return the model type
      */
     String getType();
+
+    /**
+     * Returns the model's registry id.
+     * 
+     * @return the registry ID for this model
+     */
+    long getRegistryId();
 
     /**
      * The entry point resolver is used to determine the method to be called on a

@@ -62,6 +62,9 @@ import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.management.stats.AllStatistics;
+import org.mule.registry.Registry;
+import org.mule.registry.impl.DummyRegistry;
+import org.mule.registry.impl.RegistryNotificationListener;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOInterceptorStack;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -217,6 +220,11 @@ public class MuleManager implements UMOManager
     private UMOWorkManager workManager;
 
     /**
+     * Registry
+     */
+    private Registry registry;
+
+    /**
      * logger used by this class
      */
     private static Log logger = LogFactory.getLog(MuleManager.class);
@@ -232,6 +240,7 @@ public class MuleManager implements UMOManager
         {
             config = new MuleConfiguration();
         }
+
         containerContext = new MultiContainerContext();
         securityManager = new MuleSecurityManager();
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
@@ -249,6 +258,10 @@ public class MuleManager implements UMOManager
         notificationManager.registerEventType(CustomNotification.class, CustomNotificationListener.class);
         notificationManager.registerEventType(ConnectionNotification.class,
             ConnectionNotificationListener.class);
+        notificationManager.registerEventType(ModelNotification.class,
+            RegistryNotificationListener.class);
+        notificationManager.registerEventType(ComponentNotification.class,
+            RegistryNotificationListener.class);
 
         // This is obviously just a workaround until extension modules can register
         // their own classes for notifications. Need to revisit this when the
@@ -412,6 +425,12 @@ public class MuleManager implements UMOManager
         containerContext = null;
         // props.clear();
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
+
+        if (registry != null)
+        {
+            registry.dispose();
+            registry = null;
+        }
 
         transformers = null;
         endpoints = null;
@@ -672,6 +691,13 @@ public class MuleManager implements UMOManager
     }
 
     /**
+     */
+    public void setRegistry(Registry registry) 
+    {
+        this.registry = registry;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public synchronized void initialise() throws UMOException
@@ -683,6 +709,16 @@ public class MuleManager implements UMOManager
         {
             initialising.set(true);
             startDate = System.currentTimeMillis();
+
+            // Start the registry
+            if (registry == null)
+            {
+                logger.debug("Creating dummy registry so that things will run");
+                registry = new DummyRegistry();
+                registry.start();
+                registerListener(new RegistryNotificationListener(registry));
+            }
+
             // if no work manager has been set create a default one
             if (workManager == null)
             {
@@ -737,6 +773,7 @@ public class MuleManager implements UMOManager
                 initialiseAgents();
                 if (model != null)
                 {
+                    model.register();
                     model.initialise();
                 }
 
@@ -937,6 +974,11 @@ public class MuleManager implements UMOManager
             model.stop();
         }
 
+        if (registry != null)
+        {
+            registry.stop();
+        }
+
         stopping.set(false);
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED));
     }
@@ -1060,6 +1102,14 @@ public class MuleManager implements UMOManager
     public Map getTransformers()
     {
         return Collections.unmodifiableMap(transformers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Registry getRegistry()
+    {
+        return registry;
     }
 
     /**
