@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.msg.Message;
 
-public class MuleMessageService implements  {
+public class MuleMessageService implements org.jbpm.msg.MessageService {
 
   private static final long serialVersionUID = 1L;
 
