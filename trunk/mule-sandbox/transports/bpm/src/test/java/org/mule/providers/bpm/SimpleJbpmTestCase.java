@@ -11,7 +11,7 @@
 package org.mule.providers.bpm;
 
 import org.jbpm.JbpmConfiguration;
-import org.jbpm.mule.Jbpm;
+import org.jbpm.msg.mule.Jbpm;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.manager.UMOManager;
 

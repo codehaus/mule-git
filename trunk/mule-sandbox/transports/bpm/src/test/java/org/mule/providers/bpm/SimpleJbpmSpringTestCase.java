@@ -10,7 +10,7 @@
 
 package org.mule.providers.bpm;
 
-import org.jbpm.mule.Jbpm;
+import org.jbpm.msg.mule.Jbpm;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
