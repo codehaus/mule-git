@@ -5,6 +5,14 @@ import java.util.Map;
 public interface BPMS {
 
     /**
+     * Set a callback to generate messages within Mule.
+     *
+     * @param msgService An interface within Mule which the BPMS may call to generate
+     *                   Mule messages.
+     */
+    public void setMessageService(MessageService msgService);
+
+    /**
      * Start a new process.
      *
      * @param processType - the type of process to start

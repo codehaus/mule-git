@@ -1,4 +1,4 @@
-package org.jbpm.mule;
+package org.jbpm.msg.mule;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,12 +14,11 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.mule.providers.bpm.BPMS;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Lifecycle;
+import org.mule.providers.bpm.MessageService;
 import org.mule.util.IOUtils;
 import org.mule.util.NumberUtils;
 
-public class Jbpm implements BPMS, Lifecycle {
+public class Jbpm implements BPMS {
     protected static transient Log logger = LogFactory.getLog(Jbpm.class);
 
     protected JbpmConfiguration jbpmConfiguration = null;
@@ -44,16 +43,14 @@ public class Jbpm implements BPMS, Lifecycle {
         setJbpmConfiguration(jbpmConfiguration);
     }
 
-    public void start() throws UMOException {
-        // nothing to do
-    }
-
-    public void stop() throws UMOException {
-        // nothing to do
-    }
-
-    public void dispose() {
-        // nothing to do
+    public void setMessageService(MessageService msgService) {
+        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+        try {
+            ((MuleMessageService) jbpmContext.getServices().getMessageService())
+                .setMessageService(msgService);
+        } finally {
+            jbpmContext.close();
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////

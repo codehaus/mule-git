@@ -3,18 +3,13 @@ package org.jbpm.actions.mule;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.jxpath.JXPathContext;
 import org.jbpm.actions.LoggingActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.mule.config.ConfigurationException;
+import org.jbpm.msg.mule.MuleMessageService;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.RequestContext;
 import org.mule.providers.bpm.ProcessConnector;
-import org.mule.providers.bpm.ProcessMessageDispatcher;
-import org.mule.providers.bpm.ProcessMessageReceiver;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
+import org.mule.util.StringUtils;
 
 /**
  * Sends a Mule message to the specified URL
@@ -30,64 +25,52 @@ public class SendMuleEvent extends LoggingActionHandler {
     boolean synchronous = true;
     String endpoint = null;
     String transformers = null;
-    String payload = null; // TODO This should be an Object
-    String payloadSource = ProcessConnector.PROCESS_VARIABLE_DATA;
-    Map messageProperties = null;
+    Object payload = null;
+    String payloadSource = null;
+    Map properties = null;
 
     private Object payloadObject;
 
     public void execute(ExecutionContext executionContext) throws Exception {
         super.execute(executionContext);
+        MuleMessageService mule =
+            (MuleMessageService) executionContext.getJbpmContext().getServices().getMessageService();
 
         if (transformers != null) {
             endpoint += "?transformers=" + transformers;
         }
-        if (payload == null && payloadSource != null) {
-            payloadObject = executionContext.getVariable(payloadSource);
+
+        if (payload == null) {
+            String source = payloadSource;
+            if (source == null) {
+                source = ProcessConnector.PROCESS_VARIABLE_DATA;
+            }
+
+            // The payloadSource may be specified using JavaBean notation (e.g.,
+            // "myObject.myStuff.myField" would first retrieve the process variable
+            // "myObject" and then call .getMyStuff().getMyField()
+            String[] tokens = StringUtils.split(source, ".", 2);
+            payloadObject = executionContext.getVariable(tokens[0]);
+            if (tokens.length > 1) {
+                JXPathContext context = JXPathContext.newContext(payloadObject);
+                payloadObject = context.getValue(tokens[1]);
+            }
         } else {
             payloadObject = payload;
         }
         if (payloadObject == null) {
             throw new IllegalArgumentException("Payload for message is null.  Payload source is \"" + payloadSource + "\"");
         }
-        messageProperties = new HashMap();
-        messageProperties.put(ProcessConnector.PROPERTY_PROCESS_TYPE, executionContext.getProcessDefinition().getName());
-        messageProperties.put(ProcessConnector.PROPERTY_PROCESS_ID, new Long(executionContext.getProcessInstance().getId()));
-        messageProperties.put(MuleProperties.MULE_CORRELATION_ID_PROPERTY, new Long(executionContext.getProcessInstance().getId()).toString());
-        messageProperties.put(ProcessConnector.PROPERTY_PROCESS_STARTED, executionContext.getProcessInstance().getStart());
 
-        // Get a handle to the BPM connector from the current event.
-        UMOEvent event = RequestContext.getEvent();
-        ProcessConnector connector = (ProcessConnector) event.getEndpoint().getConnector();
-        if (connector == null) { throw new ConfigurationException(Message.createStaticMessage("Unable to locate connector for the current event.")); }
-
-        String processName = executionContext.getProcessDefinition().getName();
-        long processId = executionContext.getProcessInstance().getId();
-
-        // Look up a receiver which matches this process.
-        ProcessMessageReceiver receiver =
-            connector.lookupReceiver(processName, new Long(processId));
-        if (receiver == null) {
-            throw new ConfigurationException(Message.createStaticMessage("No corresponding receiver found for processName = " + processName + ", processId = " + processId));
+        Map props = new HashMap();
+        props.put(ProcessConnector.PROPERTY_PROCESS_TYPE, executionContext.getProcessDefinition().getName());
+        props.put(ProcessConnector.PROPERTY_PROCESS_ID, new Long(executionContext.getProcessInstance().getId()));
+        props.put(MuleProperties.MULE_CORRELATION_ID_PROPERTY, new Long(executionContext.getProcessInstance().getId()).toString());
+        props.put(ProcessConnector.PROPERTY_PROCESS_STARTED, executionContext.getProcessInstance().getStart());
+        if (properties != null) {
+            props.putAll(properties);
         }
 
-        if (synchronous) {
-            // Send the process-generated Mule message synchronously.
-            UMOMessage response = receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
-
-            // Look up the dispatcher which generated the current event.
-            ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
-                connector.lookupDispatcher(event.getEndpoint().getEndpointURI().getAddress());
-            if (dispatcher != null) {
-                // Feed the synchronous response message back into the process.
-                dispatcher.doSend(new MuleEvent(response, event));
-            } else {
-                throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
-            }
-        }
-        else {
-            // Dispatch the process-generated Mule message asynchronously.
-            receiver.generateAsynchronousEvent(endpoint, payloadObject, messageProperties);
-        }
+        mule.generateMessage(endpoint, payloadObject, props, synchronous);
     }
 }

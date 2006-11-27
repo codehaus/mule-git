@@ -10,8 +10,17 @@
 
 package org.mule.providers.bpm;
 
+import java.util.Map;
+
+import org.mule.config.ConfigurationException;
+import org.mule.config.i18n.Message;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleEvent;
+import org.mule.impl.RequestContext;
 import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.NullPayload;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
 
 /**
@@ -19,7 +28,7 @@ import org.mule.util.StringUtils;
  * external or embedded Business Process Management System (BPMS). It also allows
  * executing processes to generate Mule events.
  */
-public class ProcessConnector extends AbstractServiceEnabledConnector {
+public class ProcessConnector extends AbstractServiceEnabledConnector implements MessageService {
 
     /** The underlying BPMS */
     protected BPMS bpms;
@@ -61,6 +70,12 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
         return PROTOCOL;
     }
 
+    public void doInitialise() throws InitialisationException {
+        super.doInitialise();
+        // Set a callback so that the BPMS may generate messages within Mule.
+        bpms.setMessageService(this);
+    }
+
     /**
      * This method looks for a receiver based on the process name and ID.  It searches
      * iteratively from the narrowest scope (match process name and ID) to the widest
@@ -78,6 +93,25 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
             receiver = (ProcessMessageReceiver) lookupReceiver(toUrl(null, null));
         }
         return receiver;
+    }
+
+    /**
+     * This method looks for a dispatcher based on the process name and ID.  It searches
+     * iteratively from the narrowest scope (match process name and ID) to the widest
+     * scope (match neither - global dispatcher) possible.
+     *
+     * @return ProcessMessageDispatcher or null if no match is found
+     */
+    public ProcessMessageDispatcher lookupDispatcher(String processName, Object processId) {
+        ProcessMessageDispatcher dispatcher =
+            (ProcessMessageDispatcher) lookupDispatcher(toUrl(processName, processId));
+        if (dispatcher == null) {
+            dispatcher = (ProcessMessageDispatcher) lookupDispatcher(toUrl(processName, null));
+        }
+        if (dispatcher == null) {
+            dispatcher = (ProcessMessageDispatcher) lookupDispatcher(toUrl(null, null));
+        }
+        return dispatcher;
     }
 
     /**
@@ -100,6 +134,40 @@ public class ProcessConnector extends AbstractServiceEnabledConnector {
             throw new IllegalArgumentException("No valid URL could be created for the given process name and ID.");
         }
         return url;
+    }
+
+    public void generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception {
+        String processName = (String) messageProperties.get(ProcessConnector.PROPERTY_PROCESS_TYPE);
+        Object processId = messageProperties.get(ProcessConnector.PROPERTY_PROCESS_ID);
+
+        // Look up a receiver for this process.
+        ProcessMessageReceiver receiver = lookupReceiver(processName, processId);
+        if (receiver == null) {
+            throw new ConfigurationException(Message.createStaticMessage("No corresponding receiver found for processName = " + processName + ", processId = " + processId));
+        }
+
+        if (synchronous) {
+            // Send the process-generated Mule message synchronously.
+            UMOMessage response = receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
+
+            if (response != null && !(response.getPayload() instanceof NullPayload)) {
+                // Look up a dispatcher for this process.
+                ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
+                    lookupDispatcher(processName, processId);
+                if (dispatcher != null) {
+                    // Feed the synchronous response message back into the process.
+                    dispatcher.doSend(new MuleEvent(response, RequestContext.getEvent()));
+                } else {
+                    throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
+                }
+            } else {
+                logger.debug("Message was sent synchronously to endpoint " + endpoint + " but no response was returned.");
+            }
+        }
+        else {
+            // Dispatch the process-generated Mule message asynchronously.
+            receiver.generateAsynchronousEvent(endpoint, payloadObject, messageProperties);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
