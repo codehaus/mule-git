@@ -24,9 +24,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
@@ -89,9 +86,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
  * <li>Dispose
  * <li>Dispose Receivers
  * </ol>
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public abstract class AbstractConnector
     implements UMOConnector, ExceptionListener, UMOConnectable, WorkListener
@@ -139,7 +133,8 @@ public abstract class AbstractConnector
     /**
      * A pool of dispatchers for this connector, the pool is keyed on endpointUri
      */
-    protected KeyedObjectPool dispatchers;
+    // protected KeyedObjectPool dispatchers;
+    protected ConcurrentMap dispatchers;
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
@@ -222,20 +217,6 @@ public abstract class AbstractConnector
     private UMOWorkManager dispatcherWorkManager = null;
 
     /**
-     * Should a single receiver thread pool be created for all receivers It is
-     * recommended that if you have a lot of receivers being registered per connector
-     * that this should be set to true
-     */
-    private boolean useSingleReceiverThreadPool = false;
-
-    /**
-     * Should a single dispatcher thread pool be created for all distachers It is
-     * recommended that if you have a lot of dispatcher being created per connector
-     * that this should be set to true i.e. many different outbound endpoints
-     */
-    private boolean useSingleDispatcherThreadPool = false;
-
-    /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
@@ -245,7 +226,8 @@ public abstract class AbstractConnector
     {
         // make sure we always have an exception strategy
         exceptionListener = new DefaultExceptionStrategy();
-        dispatchers = new GenericKeyedObjectPool();
+        // dispatchers = new GenericKeyedObjectPool();
+        dispatchers = new ConcurrentHashMap();
         receivers = new ConcurrentHashMap();
         connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
         enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
@@ -557,14 +539,15 @@ public abstract class AbstractConnector
     {
         // need to adapt the UMOMessageDispatcherFactory for use as commons-pool
         // object factory
-        if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
-        {
-            this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
-        }
-        else
-        {
-            this.dispatchers.setFactory(new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
-        }
+        // if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
+        // {
+        // this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
+        // }
+        // else
+        // {
+        // this.dispatchers.setFactory(new
+        // KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
+        // }
 
         // we keep a reference to the unadapted factory, otherwise people might end
         // up with ClassCastExceptions on downcast to their implementation (sigh)
@@ -1082,10 +1065,10 @@ public abstract class AbstractConnector
     }
 
     /**
-     * Controls whether dispatchers are cached or created per request. Note that if an
-     * exception occurs in the dispatcher it is automatically disposed of and a new
-     * one is created for the next request. This allows dispatchers to recover from
-     * loss of connection and other faults.
+     * Controls whether dispatchers are cached or created per request. Note that if
+     * an exception occurs in the dispatcher it is automatically disposed of and a
+     * new one is created for the next request. This allows dispatchers to recover
+     * from loss of connection and other faults.
      * 
      * @return true if a a new dispatcher is created for every request
      */
@@ -1096,7 +1079,6 @@ public abstract class AbstractConnector
 
     /**
      * @see {@link #isCreateDispatcherPerRequest()}
-     * 
      * @param createDispatcherPerRequest whether a new dispatcher is created for
      *            every request or not
      */
@@ -1122,7 +1104,6 @@ public abstract class AbstractConnector
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
-     * 
      * @param createMultipleTransactedReceivers true if multiple receiver threads
      *            will be created for receivers on this connection
      */
@@ -1237,113 +1218,35 @@ public abstract class AbstractConnector
     }
 
     /**
-     * Creates a work manager for a Message receiver. If
-     * <code>useSingleReceiverThreadPool</code> has been set the same workManager
-     * of all receivers will be used
-     * 
-     * @param name The name to associate with the thread pool. No that the connector
-     *            name will be prepended and ".receiver" will be appended
-     * @return A new work manager of an existing one if the work manager is being
-     *         shared
+     * Returns a work manager for message receivers.
      */
-    UMOWorkManager createReceiverWorkManager(String name)
+    synchronized UMOWorkManager getReceiverWorkManager() throws UMOException
     {
-        UMOWorkManager wm;
-        if (useSingleReceiverThreadPool && receiverWorkManager != null)
+        // lazily created because ThreadingProfile was not yet set in Constructor
+        if (receiverWorkManager == null)
         {
-            wm = receiverWorkManager;
+            receiverWorkManager = this.getReceiverThreadingProfile().createWorkManager(
+                this.getName() + ".receiver");
+            receiverWorkManager.start();
         }
-        else
+
+        return receiverWorkManager;
+    }
+
+    /**
+     * Returns a work manager for message dispatchers.
+     */
+    synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
+    {
+        // lazily created because ThreadingProfile was not yet set in Constructor
+        if (dispatcherWorkManager == null)
         {
-            ThreadingProfile tp = getReceiverThreadingProfile();
-            wm = tp.createWorkManager(getName() + "." + name + ".receiver");
-            if (useSingleReceiverThreadPool)
-            {
-                receiverWorkManager = wm;
-            }
+            dispatcherWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
+                getName() + ".dispatcher");
+            dispatcherWorkManager.start();
         }
-        return wm;
-    }
 
-    /**
-     * Creates a work manager for a Message dispatcher. If
-     * <code>useSingleDispatcherThreadPool</code> has been set the same workManager
-     * of all dispatchers will be used
-     * 
-     * @param name The name to associate with the thread pool. No that the connector
-     *            name will be prepended and ".dispatcher" will be appended
-     * @return A new work manager of an existing one if the work manager is being
-     *         shared
-     */
-    UMOWorkManager createDispatcherWorkManager(String name)
-    {
-        UMOWorkManager wm;
-        if (useSingleDispatcherThreadPool && dispatcherWorkManager != null)
-        {
-            wm = dispatcherWorkManager;
-        }
-        else
-        {
-            ThreadingProfile tp = getReceiverThreadingProfile();
-            wm = tp.createWorkManager(getName() + "." + name + ".dispatcher");
-            if (useSingleDispatcherThreadPool)
-            {
-                dispatcherWorkManager = wm;
-            }
-        }
-        return wm;
-    }
-
-    /**
-     * Should a single receiver thread pool be created for all receivers It is
-     * recommended that if you have a lot of receivers being registered per connector
-     * that this should be set to true
-     * 
-     * @return true is a single thread pool is being used for all receivers on this
-     *         connector
-     */
-    public boolean isUseSingleReceiverThreadPool()
-    {
-        return useSingleReceiverThreadPool;
-    }
-
-    /**
-     * Should a single dispatcher thread pool be created for all recivers It is
-     * recommended that if you have a lot of receivers being registered per connector
-     * that this should be set to true
-     * 
-     * @param useSingleReceiverThreadPool true is a single thread pool is being used
-     *            for all receivers on this connector
-     */
-    public void setUseSingleReceiverThreadPool(boolean useSingleReceiverThreadPool)
-    {
-        this.useSingleReceiverThreadPool = useSingleReceiverThreadPool;
-    }
-
-    /**
-     * Should a single dispatcher thread pool be created for all distachers It is
-     * recommended that if you have a lot of dispatcher being created per connector
-     * that this should be set to true i.e. many different outbound endpoints
-     * 
-     * @return true is a single thread pool is being used for all dispatchers on this
-     *         connector
-     */
-    public boolean isUseSingleDispatcherThreadPool()
-    {
-        return useSingleDispatcherThreadPool;
-    }
-
-    /**
-     * Should a single dispatcher thread pool be created for all distachers It is
-     * recommended that if you have a lot of dispatcher being created per connector
-     * that this should be set to true i.e. many different outbound endpoints
-     * 
-     * @param useSingleDispatcherThreadPool true is a single thread pool is being
-     *            used for all dispatchers on this connector
-     */
-    public void setUseSingleDispatcherThreadPool(boolean useSingleDispatcherThreadPool)
-    {
-        this.useSingleDispatcherThreadPool = useSingleDispatcherThreadPool;
+        return dispatcherWorkManager;
     }
 
     public UMOSessionHandler getSessionHandler()
@@ -1379,6 +1282,7 @@ public abstract class AbstractConnector
     protected void handleWorkException(WorkEvent event, String type)
     {
         Throwable e;
+
         if (event != null && event.getException() != null)
         {
             e = event.getException();
@@ -1387,12 +1291,15 @@ public abstract class AbstractConnector
         {
             return;
         }
+
         if (event.getException().getCause() != null)
         {
             e = event.getException().getCause();
         }
+
         logger.error("Work caused exception on '" + type + "'. Work being executed was: "
                         + event.getWork().toString());
+
         if (e instanceof Exception)
         {
             handleException((Exception)e);

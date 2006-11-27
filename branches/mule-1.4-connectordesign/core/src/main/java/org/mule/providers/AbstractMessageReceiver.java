@@ -50,9 +50,6 @@ import org.mule.util.concurrent.WaitableBoolean;
  * <code>AbstractMessageReceiver</code> provides common methods for all Message
  * Receivers provided with Mule. A message receiver enables an endpoint to receive a
  * message from an external system.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 {
@@ -121,10 +118,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         listener = new DefaultInternalMessageListener();
         endpointUri = endpoint.getEndpointURI();
 
-        workManager = this.connector.createReceiverWorkManager(endpoint.getName());
         try
         {
-            workManager.start();
+            workManager = this.connector.getReceiverWorkManager();
         }
         catch (UMOException e)
         {
