@@ -136,7 +136,7 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         return url;
     }
 
-    public void generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception {
+    public UMOMessage generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception {
         String processName = (String) messageProperties.get(ProcessConnector.PROPERTY_PROCESS_TYPE);
         Object processId = messageProperties.get(ProcessConnector.PROPERTY_PROCESS_ID);
 
@@ -148,25 +148,26 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
 
         if (synchronous) {
             // Send the process-generated Mule message synchronously.
-            UMOMessage response = receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
+            return receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
 
-            if (response != null && !(response.getPayload() instanceof NullPayload)) {
-                // Look up a dispatcher for this process.
-                ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
-                    lookupDispatcher(processName, processId);
-                if (dispatcher != null) {
-                    // Feed the synchronous response message back into the process.
-                    dispatcher.doSend(new MuleEvent(response, RequestContext.getEvent()));
-                } else {
-                    throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
-                }
-            } else {
-                logger.debug("Message was sent synchronously to endpoint " + endpoint + " but no response was returned.");
-            }
+//            if (response != null && !(response.getPayload() instanceof NullPayload)) {
+//                // Look up a dispatcher for this process.
+//                ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
+//                    lookupDispatcher(processName, processId);
+//                if (dispatcher != null) {
+//                    // Feed the synchronous response message back into the process.
+//                    dispatcher.doSend(new MuleEvent(response, RequestContext.getEvent()));
+//                } else {
+//                    throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
+//                }
+//            } else {
+//                logger.debug("Message was sent synchronously to endpoint " + endpoint + " but no response was returned.");
+//            }
         }
         else {
             // Dispatch the process-generated Mule message asynchronously.
             receiver.generateAsynchronousEvent(endpoint, payloadObject, messageProperties);
+            return null;
         }
     }
 

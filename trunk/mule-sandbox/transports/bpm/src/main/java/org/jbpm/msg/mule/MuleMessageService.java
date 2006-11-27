@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.msg.Message;
+import org.mule.umo.UMOMessage;
 
 public class MuleMessageService implements org.jbpm.msg.MessageService {
 
@@ -22,8 +23,8 @@ public class MuleMessageService implements org.jbpm.msg.MessageService {
 
   // TODO This should be replaced by the standard send() method below, which would make
   // Mule the default messaging service within jBpm.
-  public void generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception {
-      proxy.generateMessage(endpoint, payloadObject, messageProperties, synchronous);
+  public UMOMessage generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception {
+      return proxy.generateMessage(endpoint, payloadObject, messageProperties, synchronous);
   }
 
   public void send(Message message) {

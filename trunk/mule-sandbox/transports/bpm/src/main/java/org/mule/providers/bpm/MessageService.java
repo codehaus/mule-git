@@ -11,7 +11,9 @@ package org.mule.providers.bpm;
 
 import java.util.Map;
 
+import org.mule.umo.UMOMessage;
+
 public interface MessageService {
 
-    public void generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception;
+    public UMOMessage generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception;
 }

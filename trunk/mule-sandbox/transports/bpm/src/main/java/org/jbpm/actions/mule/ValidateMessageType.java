@@ -15,7 +15,7 @@ import org.jbpm.graph.exe.ExecutionContext;
  */
 public class ValidateMessageType extends IntegrationActionHandler {
 
-    protected Class expectedType;
+    protected String expectedType;
     protected boolean strict = false;
 
     public void execute(ExecutionContext executionContext) throws Exception {
@@ -25,11 +25,12 @@ public class ValidateMessageType extends IntegrationActionHandler {
             throw new JbpmException("Incoming message is null.");
         }
 
+        Class expectedClass = Class.forName(expectedType);
         boolean match;
         if (strict) {
-            match = message.getClass().equals(expectedType);
+            match = message.getClass().equals(expectedClass);
         } else {
-            match = expectedType.isAssignableFrom(message.getClass());
+            match = expectedClass.isAssignableFrom(message.getClass());
         }
         if (match == false) {
             throw new JbpmException("Incoming message type is " + message.getClass() + ", expected type is " + expectedType);

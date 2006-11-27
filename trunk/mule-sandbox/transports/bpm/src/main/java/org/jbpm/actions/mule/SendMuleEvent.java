@@ -9,15 +9,18 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.msg.mule.MuleMessageService;
 import org.mule.config.MuleProperties;
 import org.mule.providers.bpm.ProcessConnector;
+import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 /**
- * Sends a Mule message to the specified URL
+ * Sends a Mule message to the specified URL.
+ * If the message is synchronous, the response will be stored in PROCESS_VARIABLE_INCOMING.
  *
  * @param endpoint - the Mule endpoint
  * @param transformers - any transformers to be applied
  * @param payload - the payload of the message
- * @param payloadSource - process variable from which to generate the message payload, defaults to {@link ProcessConnector.PROCESS_VARIABLE_DATA}
+ * @param payloadSource - process variable from which to generate the message payload,
+ *  defaults to {@link ProcessConnector.PROCESS_VARIABLE_DATA} or {@link ProcessConnector.PROCESS_VARIABLE_INCOMING}
  * @param messageProperties - any properties to be applied to the message
  */
 public class SendMuleEvent extends LoggingActionHandler {
@@ -41,19 +44,22 @@ public class SendMuleEvent extends LoggingActionHandler {
         }
 
         if (payload == null) {
-            String source = payloadSource;
-            if (source == null) {
-                source = ProcessConnector.PROCESS_VARIABLE_DATA;
+            if (payloadSource == null) {
+                payloadObject = executionContext.getVariable(ProcessConnector.PROCESS_VARIABLE_DATA);
+                if (payloadObject == null) {
+                    payloadObject = executionContext.getVariable(ProcessConnector.PROCESS_VARIABLE_INCOMING);
+                }
             }
-
-            // The payloadSource may be specified using JavaBean notation (e.g.,
-            // "myObject.myStuff.myField" would first retrieve the process variable
-            // "myObject" and then call .getMyStuff().getMyField()
-            String[] tokens = StringUtils.split(source, ".", 2);
-            payloadObject = executionContext.getVariable(tokens[0]);
-            if (tokens.length > 1) {
-                JXPathContext context = JXPathContext.newContext(payloadObject);
-                payloadObject = context.getValue(tokens[1]);
+            else {
+                // The payloadSource may be specified using JavaBean notation (e.g.,
+                // "myObject.myStuff.myField" would first retrieve the process variable
+                // "myObject" and then call .getMyStuff().getMyField()
+                String[] tokens = StringUtils.split(payloadSource, ".", 2);
+                payloadObject = executionContext.getVariable(tokens[0]);
+                if (tokens.length > 1) {
+                    JXPathContext context = JXPathContext.newContext(payloadObject);
+                    payloadObject = context.getValue(tokens[1]);
+                }
             }
         } else {
             payloadObject = payload;
@@ -71,6 +77,12 @@ public class SendMuleEvent extends LoggingActionHandler {
             props.putAll(properties);
         }
 
-        mule.generateMessage(endpoint, payloadObject, props, synchronous);
+        UMOMessage response = mule.generateMessage(endpoint, payloadObject, props, synchronous);
+        if (synchronous) {
+            if (response == null) {
+                logger.info("Synchronous message was sent to endpoint " + endpoint + ", but no response was returned.");
+            }
+            executionContext.setVariable(ProcessConnector.PROCESS_VARIABLE_INCOMING, response.getPayload());
+        }
     }
 }
