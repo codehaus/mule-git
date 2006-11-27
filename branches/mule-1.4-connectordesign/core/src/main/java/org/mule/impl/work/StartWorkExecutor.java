@@ -27,15 +27,12 @@
 
 package org.mule.impl.work;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 import javax.resource.spi.work.WorkException;
 
 import org.mule.util.concurrent.Latch;
 
-/**
- * @version $Rev$ $Date$
- */
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 public class StartWorkExecutor implements WorkExecutor
 {
 
@@ -45,4 +42,5 @@ public class StartWorkExecutor implements WorkExecutor
         executor.execute(work);
         latch.await();
     }
+
 }

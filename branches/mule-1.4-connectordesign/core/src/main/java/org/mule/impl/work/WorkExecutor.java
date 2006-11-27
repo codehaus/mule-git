@@ -27,15 +27,12 @@
 
 package org.mule.impl.work;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 import javax.resource.spi.work.WorkException;
+
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 
 /**
  * <code>WorkExecutor</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface WorkExecutor
 {

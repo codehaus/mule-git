@@ -27,8 +27,6 @@
 
 package org.mule.impl.work;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 import javax.resource.spi.XATerminator;
 import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
@@ -43,40 +41,42 @@ import org.mule.config.ThreadingProfile;
 import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOWorkManager;
 
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 /**
- * <code>MuleWorkManager</code> is a Jca Work manager implementation used to manage
- * thread allocation for Mule components and connectors This code has been adapted
- * from the Geronimo implementation, and the different pool executors have be used
- * directly from Geronimo
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>MuleWorkManager</code> is a JCA Work manager implementation used to manage
+ * thread allocation for Mule components and connectors. This code has been adapted
+ * from the Geronimo implementation, and the different pool executors have to be used
+ * directly from Geronimo.
  */
 public class MuleWorkManager implements UMOWorkManager
 {
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MuleWorkManager.class);
+    protected static final Log logger = LogFactory.getLog(MuleWorkManager.class);
 
     /**
      * Pool of threads used by this MuleWorkManager in order to process the Work
      * instances submitted via the doWork methods.
      */
-    private WorkExecutorPool syncWorkExecutorPool;
+    private volatile WorkExecutorPool syncWorkExecutorPool;
 
     /**
      * Pool of threads used by this MuleWorkManager in order to process the Work
      * instances submitted via the startWork methods.
      */
-    private WorkExecutorPool startWorkExecutorPool;
+    private volatile WorkExecutorPool startWorkExecutorPool;
 
     /**
      * Pool of threads used by this MuleWorkManager in order to process the Work
      * instances submitted via the scheduleWork methods.
      */
-    private WorkExecutorPool scheduledWorkExecutorPool;
+    private volatile WorkExecutorPool scheduledWorkExecutorPool;
 
+    /**
+     * Various 'policies' used for work execution
+     */
     private final WorkExecutor scheduleWorkExecutor = new ScheduleWorkExecutor();
     private final WorkExecutor startWorkExecutor = new StartWorkExecutor();
     private final WorkExecutor syncWorkExecutor = new SyncWorkExecutor();
@@ -123,7 +123,6 @@ public class MuleWorkManager implements UMOWorkManager
         catch (UMOException e)
         {
             logger.warn("Error while disposing Work Manager: " + e.getMessage(), e);
-
         }
     }
 

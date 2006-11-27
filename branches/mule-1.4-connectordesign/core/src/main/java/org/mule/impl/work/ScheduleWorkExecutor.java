@@ -27,13 +27,10 @@
 
 package org.mule.impl.work;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 import javax.resource.spi.work.WorkException;
 
-/**
- * @version $Rev$ $Date$
- */
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 public class ScheduleWorkExecutor implements WorkExecutor
 {
 
@@ -41,4 +38,5 @@ public class ScheduleWorkExecutor implements WorkExecutor
     {
         executor.execute(work);
     }
+
 }
