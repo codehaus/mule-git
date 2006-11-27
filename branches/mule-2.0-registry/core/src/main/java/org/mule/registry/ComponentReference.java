@@ -43,6 +43,8 @@ public interface ComponentReference {
 
     public ComponentReference getChild(long childId);
 
+    public ComponentVersion getVersion();
+
     public void setType(String type);
 
     public void setId(long id);
@@ -54,6 +56,8 @@ public interface ComponentReference {
     public void setProperty(String key, Object property);
 
     public void addChild(ComponentReference component);
+
+    public void setVersion(ComponentVersion);
 
     /*
     public void register();
