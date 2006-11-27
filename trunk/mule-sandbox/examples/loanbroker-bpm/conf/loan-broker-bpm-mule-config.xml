@@ -44,10 +44,9 @@
              Events
              *************************************************** -->
         <!-- Customer loan requests to the Loan Broker -->
-        <endpoint-identifier name="LoanBrokerRequests" value="vm://loan.broker.requests"/>
-        <!-- Customer loan quotes from the banks -->
-        <endpoint-identifier name="LoanQuotes" value="vm://loan.quotes"/>
-
+        <endpoint-identifier name="LoanBrokerRequests" value="jms://loan.broker.requests"/>
+        <!-- Loan quote from the banks -->
+        <endpoint-identifier name="LoanQuotes" value="jms://loan.quotes"/>
         <!-- Requests to the credit agency -->
         <endpoint-identifier name="CreditGateway" value="jms://credit.agency.requests"/>
         <!-- Customer credit profiles from the credit agency -->
@@ -86,19 +85,8 @@
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
                     <endpoint address="ProcessEngine" synchronous="false" />
-                    <filter expectedType="org.mule.samples.loanbroker.esb.message.LoanQuote"
-                        className="org.mule.routing.filters.PayloadTypeFilter">
-                        <properties><property name="inverse" value="true"/></properties>
-                    </filter>
                 </router>
             </outbound-router>
-            <response-router timeout="-1">
-                <endpoint address="LoanQuotes"/>
-                <router className="org.mule.routing.response.SingleResponseRouter"/>
-            </response-router>
-            <!--
-            <interceptor className="org.mule.interceptors.LoggingInterceptor" />
-            -->
         </mule-descriptor>
 
         <!-- Outgoing messages from the process engine -->
@@ -126,9 +114,6 @@
                     <endpoint address="LoanQuotes"/>
                 </router>
             </outbound-router>
-            <!--
-            <interceptor className="org.mule.interceptors.LoggingInterceptor" />
-            -->
         </mule-descriptor>
 
         <!-- ***************************************************
