@@ -1,1 +1,0 @@
-exec ./run-with-classpath.sh -config ../conf/echo-mule-config.xml
