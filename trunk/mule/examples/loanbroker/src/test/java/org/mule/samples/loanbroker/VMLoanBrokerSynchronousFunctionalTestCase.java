@@ -11,7 +11,7 @@
 package org.mule.samples.loanbroker;
 
 
-public class VMLoanBrakerSynchronousFunctionalTestCase extends AxisLoanBrokerSynchronousFunctionalTestCase
+public class VMLoanBrokerSynchronousFunctionalTestCase extends AxisLoanBrokerSynchronousFunctionalTestCase
 {
     protected String getConfigResources()
     {
