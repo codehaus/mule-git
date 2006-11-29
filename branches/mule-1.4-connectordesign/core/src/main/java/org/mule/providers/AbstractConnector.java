@@ -228,6 +228,11 @@ public abstract class AbstractConnector
     {
         super();
 
+        // make sure we always have an exception strategy
+        exceptionListener = new DefaultExceptionStrategy();
+        connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
+        enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
+
         // Always add at least the default protocol
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
@@ -278,10 +283,6 @@ public abstract class AbstractConnector
             logger.info("Initialising " + getClass().getName());
         }
 
-        // make sure we always have an exception strategy
-        exceptionListener = new DefaultExceptionStrategy();
-        connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
-        enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
         dispatchers = new GenericKeyedObjectPool();
         receivers = new ConcurrentHashMap();
 
