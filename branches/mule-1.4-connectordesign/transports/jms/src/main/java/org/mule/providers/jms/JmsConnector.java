@@ -134,18 +134,8 @@ public class JmsConnector extends AbstractServiceEnabledConnector implements Con
      */
     public void doInitialise() throws InitialisationException
     {
-        // when a connection to jms server is lost, we are recycling the connector
-        // need to safely reinitialise these here for proper connection recovery
-        if (dispatchers == null)
-        {
-            dispatchers = new ConcurrentHashMap();
-        }
-        if (receivers == null)
-        {
-            receivers = new ConcurrentHashMap();
-        }
-
         super.doInitialise();
+
         try
         {
             MuleManager.getInstance().registerListener(this, getName());
