@@ -493,6 +493,7 @@ public class InMemoryStore
                 SimpleStoredMessage message = (SimpleStoredMessage) mailMessages.get(i);
                 if (message.getFlags().contains(Flags.Flag.DELETED)) {
                     expungeMessage(i + 1);
+                    i--;//since removing the message, the index changes, and thus if we don't decrement we end up jumping a message.
                 }
             }
         }
