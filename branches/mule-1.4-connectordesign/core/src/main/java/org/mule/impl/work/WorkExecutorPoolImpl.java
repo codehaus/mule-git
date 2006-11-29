@@ -27,6 +27,8 @@
 
 package org.mule.impl.work;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.config.ThreadingProfile;
@@ -40,9 +42,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
  */
 public class WorkExecutorPoolImpl implements WorkExecutorPool
 {
-    private final Log logger = LogFactory.getLog(getClass());
+    private static final long SHUTDOWN_TIMEOUT = 5000L;
 
-    private static final long SHUTDOWN_TIMEOUT = 10000L;
+    private final Log logger = LogFactory.getLog(getClass());
 
     private final ThreadPoolExecutor pooledExecutor;
     private final ThreadingProfile profile;
@@ -107,27 +109,20 @@ public class WorkExecutorPoolImpl implements WorkExecutorPool
     }
 
     /**
-     * Stops this pool. Prior to stopping this pool, all the enqueued Work instances
-     * are processed, if possible, in the allowed timeout. After what, all threads
-     * are interrupted and waited for. This is a mix of orderly & abrupt shutdown.
+     * Stops this pool immediately: all threads are interrupted and waited for.
      */
     public WorkExecutorPool stop()
     {
-        // Disable new tasks from being submitted
-        pooledExecutor.shutdown();
+        // Cancel currently executing tasks
+        List outstanding = pooledExecutor.shutdownNow();
 
         try
         {
             // Wait a while for existing tasks to terminate
             if (!pooledExecutor.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
             {
-                // Cancel currently executing tasks
-                pooledExecutor.shutdownNow();
-                // Wait a while for tasks to respond to being cancelled
-                if (!pooledExecutor.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
-                {
-                    logger.warn("Pool " + name + " did not terminate in time!");
-                }
+                logger.warn("Pool " + name + " did not terminate in time; " + outstanding.size()
+                                + " work items were cancelled.");
             }
         }
         catch (InterruptedException ie)
