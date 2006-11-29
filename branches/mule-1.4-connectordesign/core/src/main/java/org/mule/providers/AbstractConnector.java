@@ -24,6 +24,9 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
@@ -133,8 +136,7 @@ public abstract class AbstractConnector
     /**
      * A pool of dispatchers for this connector, the pool is keyed on endpointUri
      */
-    // protected KeyedObjectPool dispatchers;
-    protected ConcurrentMap dispatchers;
+    protected KeyedObjectPool dispatchers;
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
@@ -226,8 +228,7 @@ public abstract class AbstractConnector
     {
         // make sure we always have an exception strategy
         exceptionListener = new DefaultExceptionStrategy();
-        // dispatchers = new GenericKeyedObjectPool();
-        dispatchers = new ConcurrentHashMap();
+        dispatchers = new GenericKeyedObjectPool();
         receivers = new ConcurrentHashMap();
         connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
         enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
@@ -539,15 +540,14 @@ public abstract class AbstractConnector
     {
         // need to adapt the UMOMessageDispatcherFactory for use as commons-pool
         // object factory
-        // if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
-        // {
-        // this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
-        // }
-        // else
-        // {
-        // this.dispatchers.setFactory(new
-        // KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
-        // }
+        if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
+        {
+            this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
+        }
+        else
+        {
+            this.dispatchers.setFactory(new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
+        }
 
         // we keep a reference to the unadapted factory, otherwise people might end
         // up with ClassCastExceptions on downcast to their implementation (sigh)
@@ -570,23 +570,13 @@ public abstract class AbstractConnector
                     .getEndpointURI().toString()).getMessage());
         }
 
-        if (dispatchers == null)
+        try
         {
-            throw new IllegalStateException("Dispatchers are null for connector: " + name);
+            return (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
         }
-
-        synchronized (endpoint)
+        catch (Exception ex)
         {
-            String endpointUriKey = endpoint.getEndpointURI().toString();
-            UMOMessageDispatcher dispatcher = (UMOMessageDispatcher)dispatchers.get(endpointUriKey);
-
-            if (dispatcher == null || dispatcher.isDisposed())
-            {
-                dispatcher = createDispatcher(endpoint);
-                dispatchers.put(endpointUriKey, dispatcher);
-            }
-
-            return dispatcher;
+            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
         }
     }
 
