@@ -15,10 +15,7 @@ import java.util.Map;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.Message;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.RequestContext;
 import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
@@ -72,6 +69,9 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
 
     public void doInitialise() throws InitialisationException {
         super.doInitialise();
+        if (bpms == null) {
+            throw new InitialisationException(Message.createStaticMessage("No BPMS has been set, this must be set prior to initialization of the connector."), this);
+        }
         // Set a callback so that the BPMS may generate messages within Mule.
         bpms.setMessageService(this);
     }
@@ -149,20 +149,6 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         if (synchronous) {
             // Send the process-generated Mule message synchronously.
             return receiver.generateSynchronousEvent(endpoint, payloadObject, messageProperties);
-
-//            if (response != null && !(response.getPayload() instanceof NullPayload)) {
-//                // Look up a dispatcher for this process.
-//                ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)
-//                    lookupDispatcher(processName, processId);
-//                if (dispatcher != null) {
-//                    // Feed the synchronous response message back into the process.
-//                    dispatcher.doSend(new MuleEvent(response, RequestContext.getEvent()));
-//                } else {
-//                    throw new ConfigurationException(Message.createStaticMessage("No corresponding dispatcher found for processName = " + processName + ", processId = " + processId));
-//                }
-//            } else {
-//                logger.debug("Message was sent synchronously to endpoint " + endpoint + " but no response was returned.");
-//            }
         }
         else {
             // Dispatch the process-generated Mule message asynchronously.

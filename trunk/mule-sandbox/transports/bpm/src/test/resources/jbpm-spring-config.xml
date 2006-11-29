@@ -14,9 +14,15 @@
     </connector>
 
     <model name="processModel">
-        <mule-descriptor name="testService" implementation="org.mule.components.simple.NullComponent">
+        <mule-descriptor name="testService1" implementation="org.mule.components.simple.NullComponent">
             <inbound-router>
                 <endpoint address="bpm://dummyProcess" />
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="testService2" implementation="org.mule.components.simple.NullComponent">
+            <inbound-router>
+                <endpoint address="bpm://sendMessageProcess" />
             </inbound-router>
         </mule-descriptor>
     </model>
@@ -25,14 +31,14 @@
          BPMS Configuration
          *************************************************** -->
     <!-- BPMS object for Mule's BPM Connector -->
-    <bean id="jbpm" class="org.jbpm.mule.Jbpm">
+    <bean id="jbpm" class="org.jbpm.msg.mule.Jbpm">
         <spring-property name="jbpmConfiguration">
             <ref local="jbpmConfig" />
         </spring-property>
     </bean>
 
     <!-- jBPM Configuration -->
-    <bean id="jbpmConfig" class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
+    <bean id="jbpmConfig" class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBeanWorkaround">
         <spring-property name="sessionFactory">
             <ref local="jbpmSessionFactory"/>
         </spring-property>

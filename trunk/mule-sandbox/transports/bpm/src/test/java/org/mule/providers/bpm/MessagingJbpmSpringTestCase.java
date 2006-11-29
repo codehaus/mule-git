@@ -19,6 +19,10 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
+/**
+ * Tests the connector against jBPM with a simple process which generates a Mule message.
+ * jBPM is instantiated by Spring using the Spring jBpm module.
+ */
 public class MessagingJbpmSpringTestCase extends FunctionalTestCase {
 
     private ProcessConnector connector;
@@ -30,11 +34,6 @@ public class MessagingJbpmSpringTestCase extends FunctionalTestCase {
 
     protected String getConfigResources() {
         return "jbpm-spring-config.xml";
-    }
-
-    protected void suitePreSetUp() throws Exception {
-        setDisposeManagerPerSuite(false);
-        super.suitePreSetUp();
     }
 
     protected void doPostFunctionalSetUp() throws Exception {

@@ -13,12 +13,12 @@ package org.mule.providers.bpm;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.provider.UMOConnector;
 
-public class BpmConnectorTestCase extends AbstractConnectorTestCase {
+import com.mockobjects.dynamic.Mock;
 
-    public BpmConnectorTestCase() {
-        super();
-        this.setDisposeManagerPerSuite(true);
-    }
+/**
+ * Generic connector tests.
+ */
+public class BpmConnectorTestCase extends AbstractConnectorTestCase {
 
     /*
      * (non-Javadoc)
@@ -28,7 +28,14 @@ public class BpmConnectorTestCase extends AbstractConnectorTestCase {
     public UMOConnector getConnector() throws Exception {
         ProcessConnector c = new ProcessConnector();
         c.setName("ProcessConnector");
+
+        // The BPMS must be set prior to initializing the connector.
+        Mock bpms = new Mock(BPMS.class);
+        bpms.expect("setMessageService", c);
+        c.setBpms((BPMS) bpms.proxy());
         c.initialise();
+        bpms.verify();
+
         return c;
     }
 

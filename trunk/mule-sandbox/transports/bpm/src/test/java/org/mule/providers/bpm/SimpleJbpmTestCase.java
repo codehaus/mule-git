@@ -12,32 +12,100 @@ package org.mule.providers.bpm;
 
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.msg.mule.Jbpm;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.manager.UMOManager;
+import org.mule.MuleManager;
+import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
+import org.mule.util.NumberUtils;
 
-public class SimpleJbpmTestCase extends AbstractMuleTestCase {
+/**
+ * Tests the connector against jBPM with 2 simple processes.
+ * jBPM is instantiated programatically via JbpmConfiguration.getInstance()
+ */
+public class SimpleJbpmTestCase extends FunctionalTestCase {
 
-    private ProcessConnector connector;
-    private BPMS bpms;
+    ProcessConnector connector;
+    BPMS bpms;
 
-    public SimpleJbpmTestCase() {
-        super();
-        setDisposeManagerPerSuite(true);
+    protected String getConfigResources() {
+        return "jbpm-config.xml";
     }
 
-    protected void doSetUp() throws Exception {
+    protected void setupManager() throws Exception {
+        doSetupManager();
+        super.setupManager();
+    }
+
+    protected void doSetupManager() throws Exception {
+        // Configure the BPM connector programmatically so that we are able to pass it the jBPM instance.
         connector = new ProcessConnector();
         bpms = new Jbpm(JbpmConfiguration.getInstance());
         connector.setBpms(bpms);
 
-        UMOManager manager = getManager(true);
-        manager.registerConnector(connector);
-        manager.start();
-        connector.startConnector();
-
-        super.doSetUp();
+        MuleManager.getInstance().registerConnector(connector);
     }
 
-    public void testCreateSimpleProcess() throws Exception {
+    public void testSimpleProcess() throws Exception {
+        // Deploy the process definition.
+        ((Jbpm) bpms).deployProcess("dummyProcess.xml");
+
+        UMOMessage response;
+        Object process;
+        BPMS bpms = connector.getBpms();
+        MuleClient client = new MuleClient();
+        try {
+            // Create a new process.
+            response = client.send("bpm://dummyProcess", "data", null);
+            process = response.getPayload();
+
+            long processId = NumberUtils.toLong(bpms.getId(process));
+            // The process should be started and in a wait state.
+            assertFalse(processId == -1);
+            assertEquals("dummyState", bpms.getState(process));
+
+            // Advance the process one step.
+            response = client.send("bpm://dummyProcess/" + processId, null, null);
+            process = response.getPayload();
+
+            // The process should have ended.
+            assertTrue(bpms.hasEnded(process));
+        } finally {
+            client.dispose();
+        }
+    }
+
+    public void testSimpleProcessWithParameters() throws Exception {
+        // Deploy the process definition.
+        ((Jbpm) bpms).deployProcess("dummyProcess.xml");
+
+        UMOMessage response;
+        Object process;
+        BPMS bpms = connector.getBpms();
+        MuleClient client = new MuleClient();
+        try {
+            // Create a new process.
+            response = client.send("bpm://?" +
+                ProcessConnector.PROPERTY_ACTION + "=" + ProcessConnector.ACTION_START +
+                "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=dummyProcess", "data", null);
+            process = response.getPayload();
+
+            long processId =
+                response.getLongProperty(ProcessConnector.PROPERTY_PROCESS_ID, -1);
+            // The process should be started and in a wait state.
+            assertFalse(processId == -1);
+            assertEquals("dummyState", bpms.getState(process));
+
+            // Advance the process one step.
+            response = client.send("bpm://?" +
+                    ProcessConnector.PROPERTY_ACTION + "=" + ProcessConnector.ACTION_ADVANCE +
+                    "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=dummyProcess&" +
+                    ProcessConnector.PROPERTY_PROCESS_ID + "=" + processId, "data", null);
+            process = response.getPayload();
+
+            // The process should have ended.
+            assertTrue(bpms.hasEnded(process));
+        } finally {
+            client.dispose();
+        }
     }
 }
