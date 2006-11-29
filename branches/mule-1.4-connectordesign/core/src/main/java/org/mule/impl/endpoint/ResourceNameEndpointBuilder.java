@@ -14,13 +14,12 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.mule.umo.endpoint.MalformedEndpointException;
+import org.mule.util.StringUtils;
 
 /**
  * <code>ResourceNameEndpointBuilder</code> extracts a resource name from a uri
  * endpointUri
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ResourceNameEndpointBuilder extends AbstractEndpointBuilder
 {
@@ -28,23 +27,23 @@ public class ResourceNameEndpointBuilder extends AbstractEndpointBuilder
 
     protected void setEndpoint(URI uri, Properties props) throws MalformedEndpointException
     {
+        address = StringUtils.EMPTY;
         if (uri.getHost() != null && !"localhost".equals(uri.getHost()))
         {
-            endpointName = uri.getHost();
+            address = uri.getHost();
         }
-        int i = uri.getPath().indexOf("/", 1);
-        if (i > 0)
+
+        if (uri.getPath() != null && uri.getPath().length() != 0)
         {
-            endpointName = uri.getPath().substring(1, i);
-            address = uri.getPath().substring(i + 1);
+            if(address.length() > 0)
+        {
+                address += "/";
         }
-        else if (uri.getPath() != null && uri.getPath().length() != 0)
-        {
-            address = uri.getPath().substring(1);
+            address += uri.getPath().substring(1);
         }
-        else
+        else if (uri.getAuthority()!=null && ! uri.getAuthority().equals(address))
         {
-            address = uri.getAuthority();
+            address += uri.getAuthority();
         }
         // is user info specified?
         int y = address.indexOf("@");
