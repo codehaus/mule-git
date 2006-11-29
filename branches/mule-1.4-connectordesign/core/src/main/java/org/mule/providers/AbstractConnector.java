@@ -226,15 +226,10 @@ public abstract class AbstractConnector
 
     public AbstractConnector()
     {
-        // make sure we always have an exception strategy
-        exceptionListener = new DefaultExceptionStrategy();
-        dispatchers = new GenericKeyedObjectPool();
-        receivers = new ConcurrentHashMap();
-        connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
-        enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
-        supportedProtocols = new ArrayList();
+        super();
 
-        // Always add the default protocol
+        // Always add at least the default protocol
+        supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
     }
 
@@ -283,11 +278,20 @@ public abstract class AbstractConnector
             logger.info("Initialising " + getClass().getName());
         }
 
+        // make sure we always have an exception strategy
+        exceptionListener = new DefaultExceptionStrategy();
+        connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
+        enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
+        dispatchers = new GenericKeyedObjectPool();
+        receivers = new ConcurrentHashMap();
+
         doInitialise();
+
         if (exceptionListener instanceof Initialisable)
         {
             ((Initialisable)exceptionListener).initialise();
         }
+
         initialised.set(true);
     }
 
@@ -554,6 +558,9 @@ public abstract class AbstractConnector
         this.dispatcherFactory = dispatcherFactory;
     }
 
+    // TODO this method should not be public any longer; make it protected & maybe
+    // provide a corresponding returnDispatcher() as well so that pool borrow/return
+    // is handled consistently
     public UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
         checkDisposed();
@@ -1305,13 +1312,30 @@ public abstract class AbstractConnector
 
     public void dispatch(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
+        UMOMessageDispatcher dispatcher = null;
+
         try
         {
-            this.getDispatcher(endpoint).dispatch(event);
+            dispatcher = this.getDispatcher(endpoint);
+            dispatcher.dispatch(event);
         }
         catch (UMOException ex)
         {
             throw new DispatchException(event.getMessage(), endpoint, ex);
+        }
+        finally
+        {
+            try
+            {
+                if (dispatcher != null)
+                {
+                    dispatchers.returnObject(endpoint, dispatcher);
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored; this will go away in commons-pool
+            }
         }
     }
 
@@ -1322,18 +1346,55 @@ public abstract class AbstractConnector
 
     public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
     {
-        return getDispatcher(endpoint).receive(timeout);
+        UMOMessageDispatcher dispatcher = null;
+
+        try
+        {
+            dispatcher = this.getDispatcher(endpoint);
+            return dispatcher.receive(timeout);
+        }
+        finally
+        {
+            try
+            {
+                if (dispatcher != null)
+                {
+                    dispatchers.returnObject(endpoint, dispatcher);
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored; this will go away in commons-pool
+            }
+        }
     }
 
     public UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
+        UMOMessageDispatcher dispatcher = null;
+
         try
         {
-            return this.getDispatcher(endpoint).send(event);
+            dispatcher = this.getDispatcher(endpoint);
+            return dispatcher.send(event);
         }
         catch (UMOException ex)
         {
             throw new DispatchException(event.getMessage(), endpoint, ex);
+        }
+        finally
+        {
+            try
+            {
+                if (dispatcher != null)
+                {
+                    dispatchers.returnObject(endpoint, dispatcher);
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored; this will go away in commons-pool
+            }
         }
     }
 
