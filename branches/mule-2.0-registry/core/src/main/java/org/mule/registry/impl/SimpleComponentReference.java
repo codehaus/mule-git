@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id:
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,22 +10,23 @@
 
 package org.mule.registry.impl;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import org.mule.registry.*;
+import org.mule.registry.ComponentReference;
+import org.mule.registry.ComponentVersion;
 
 /**
  * The SimpleComponentReference provides a basic implementation
  * of the ComponentReference that defines a component reference
  * as a set of properties
  */
-public class SimpleComponentReference implements ComponentReference 
+public class SimpleComponentReference implements ComponentReference
 {
     public static int COMPONENT_STATE_UNITIALISED = 0;
 
     protected long id = -1L;
+    protected ComponentVersion version;
     protected long parentId = -1L;
     protected String type = null;
     protected Object component = null;
@@ -43,7 +44,7 @@ public class SimpleComponentReference implements ComponentReference
         loadProperties();
     }
 
-    private void loadProperties() 
+    private void loadProperties()
     {
         properties = new HashMap();
         try {
@@ -53,7 +54,7 @@ public class SimpleComponentReference implements ComponentReference
                 if (!method.getName().startsWith("get")) continue;
                 if (method.getParameterTypes().length > 0) continue;
                 if (method.getReturnType().getName().equals("java.lang.String")) {
-                    String name = 
+                    String name =
                         method.getName().substring(3, 4).toLowerCase() +
                         method.getName().substring(4);
                     String value = method.invoke(component, null).toString();
@@ -64,7 +65,7 @@ public class SimpleComponentReference implements ComponentReference
         }
     }
 
-    public String getType() 
+    public String getType()
     {
         return type;
     }
@@ -85,11 +86,11 @@ public class SimpleComponentReference implements ComponentReference
     }
 
     public Object getProperty(String key)
-    { 
+    {
         return properties.get(key);
     }
 
-    public int getState() 
+    public int getState()
     {
         return state;
     }
@@ -129,25 +130,33 @@ public class SimpleComponentReference implements ComponentReference
         this.properties.put(key, property);
     }
 
-    public void addChild(ComponentReference component) 
+    public void addChild(ComponentReference component)
     {
         children.put(new Long(component.getId()), component);
     }
 
+	public ComponentVersion getVersion() {
+		return version;
+	}
+
+    public void setVersion(ComponentVersion version) {
+    	this.version = version;
+    }
+
     /*
-    public void register() 
+    public void register()
     {
     }
 
-    public void deploy() 
+    public void deploy()
     {
     }
 
-    public void undeploy() 
+    public void undeploy()
     {
     }
 
-    public void unregister() 
+    public void unregister()
     {
     }
     */

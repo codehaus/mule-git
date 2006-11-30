@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id:
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -57,7 +57,7 @@ public interface ComponentReference {
 
     public void addChild(ComponentReference component);
 
-    public void setVersion(ComponentVersion);
+    public void setVersion(ComponentVersion version);
 
     /*
     public void register();
