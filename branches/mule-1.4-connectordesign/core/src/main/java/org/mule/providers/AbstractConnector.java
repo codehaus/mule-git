@@ -596,16 +596,6 @@ public abstract class AbstractConnector
         }
     }
 
-    protected UMOMessageDispatcher createDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
-    {
-        if (dispatcherFactory == null)
-        {
-            throw new ConnectorException(new Message(Messages.CONNECTOR_NOT_STARTED, name), this);
-        }
-
-        return dispatcherFactory.create(endpoint);
-    }
-
     public UMOMessageReceiver registerListener(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         if (endpoint == null)
