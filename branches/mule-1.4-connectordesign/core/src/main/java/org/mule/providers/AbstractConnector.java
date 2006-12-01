@@ -562,7 +562,7 @@ public abstract class AbstractConnector
     // TODO this method should not be public any longer; make it protected & maybe
     // provide a corresponding returnDispatcher() as well so that pool borrow/return
     // is handled consistently
-    public UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
+    protected UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
         checkDisposed();
 

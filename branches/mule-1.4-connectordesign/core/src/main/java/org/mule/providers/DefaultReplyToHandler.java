@@ -84,7 +84,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
         // dispatch the event
         try
         {
-            endpoint.getConnector().getDispatcher(endpoint).dispatch(replyToEvent);
+            endpoint.dispatch(replyToEvent);
             if (logger.isInfoEnabled())
             {
                 logger.info("reply to sent: " + endpoint);

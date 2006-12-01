@@ -50,7 +50,6 @@ import org.mule.umo.lifecycle.UMOLifecycleAdapter;
 import org.mule.umo.model.ModelException;
 import org.mule.umo.model.UMOEntryPointResolver;
 import org.mule.umo.model.UMOModel;
-import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.util.ObjectPool;
 import org.mule.util.queue.QueueSession;
 
@@ -484,9 +483,7 @@ public class DefaultMuleProxy implements MuleProxy
             }
             else
             {
-                UMOMessageDispatcher dispatcher = event.getEndpoint().getConnector().getDispatcher(
-                    event.getEndpoint());
-                dispatcher.dispatch(event);
+                event.getEndpoint().dispatch(event);
             }
 
             if (stat.isEnabled())
@@ -509,7 +506,6 @@ public class DefaultMuleProxy implements MuleProxy
         }
         finally
         {
-
             try
             {
                 proxyPool.returnObject(this);

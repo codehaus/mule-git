@@ -18,7 +18,6 @@ import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 
@@ -123,7 +122,8 @@ public interface UMOConnector extends Disposable, Initialisable, UMOEndpointMess
      *         for the current thread one will be created
      * @throws UMOException if creation of a component fails
      */
-    UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException;
+    // TODO HH: remove
+    // UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException;
 
     /**
      * @param listener the exception strategy to use with this endpoint

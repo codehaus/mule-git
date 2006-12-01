@@ -33,7 +33,6 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.security.UMOSecurityContext;
@@ -242,7 +241,6 @@ public final class MuleSession implements UMOSession
                 }
 
                 UMOConnector connector = event.getEndpoint().getConnector();
-                UMOMessageDispatcher dispatcher = connector.getDispatcher(event.getEndpoint());
 
                 if (connector instanceof AbstractConnector)
                 {
@@ -255,8 +253,8 @@ public final class MuleSession implements UMOSession
                     logger.warn("A session handler could not be obtained, using  default");
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
-                dispatcher.dispatch(event);
 
+                event.getEndpoint().dispatch(event);
             }
             catch (Exception e)
             {
@@ -312,7 +310,6 @@ public final class MuleSession implements UMOSession
                 }
 
                 UMOConnector connector = event.getEndpoint().getConnector();
-                UMOMessageDispatcher dispatcher = connector.getDispatcher(event.getEndpoint());
 
                 if (connector instanceof AbstractConnector)
                 {
@@ -325,12 +322,11 @@ public final class MuleSession implements UMOSession
                     logger.warn("A session handler could not be obtained, using default.");
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
-                UMOMessage response = dispatcher.send(event);
+
+                UMOMessage response = event.getEndpoint().send(event);
                 RequestContext.writeResponse(response);
                 processResponse(response);
-
                 return response;
-
             }
             catch (UMOException e)
             {
