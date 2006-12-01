@@ -117,12 +117,12 @@ public class WorkerContext implements Work
     /**
      * A latch, which is released when the work is started.
      */
-    private Latch startLatch = new Latch();
+    private final Latch startLatch = new Latch();
 
     /**
      * A latch, which is released when the work is completed.
      */
-    private Latch endLatch = new Latch();
+    private final Latch endLatch = new Latch();
 
     /**
      * Create a WorkWrapper.
@@ -377,7 +377,7 @@ public class WorkerContext implements Work
      * @return Latch that a caller can acquire to wait for the start of a work
      *         execution.
      */
-    public synchronized Latch provideStartLatch()
+    public Latch provideStartLatch()
     {
         return startLatch;
     }
@@ -388,7 +388,7 @@ public class WorkerContext implements Work
      * @return Latch that a caller can acquire to wait for the end of a work
      *         execution.
      */
-    public synchronized Latch provideEndLatch()
+    public Latch provideEndLatch()
     {
         return endLatch;
     }
