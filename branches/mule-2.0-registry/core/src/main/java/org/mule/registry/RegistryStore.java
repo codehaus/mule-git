@@ -10,7 +10,7 @@
 
 package org.mule.registry;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;

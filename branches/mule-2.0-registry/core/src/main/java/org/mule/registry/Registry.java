@@ -10,7 +10,7 @@
 
 package org.mule.registry;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;
@@ -55,14 +55,14 @@ public interface Registry extends Startable, Stoppable, Disposable {
     public void reregisterComponent(ComponentReference component) throws ReregistrationException;
 
     /**
-     * Get a hashmap of all registered components of a certain type. 
+     * Get a Map of all registered components of a certain type. 
      * For example, you could call getRegisteredComponents("descriptors")
      * to get a list of all routes
      */
     public Map getRegisteredComponents(String type);
 
     /**
-     * Get a hashmap of all registered components that are children
+     * Get a Map of all registered components that are children
      * of this ID.
      *
      * @param id the parent ID

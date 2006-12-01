@@ -10,6 +10,9 @@
 
 package org.mule.registry.persistence;
 
+import org.mule.umo.UMOException;
+import org.mule.umo.manager.UMOServerNotificationListener;
+
 /**
  * <code>Persistable</code> is an interface for a Mule object that wants
  * to be persisted somewhere. Right now, this interface is envisioned for
@@ -28,7 +31,7 @@ public interface Persistable
      * @param listener The listener that the component will talk to
      * @throws UMOException if the registration fails
      */
-    void registerPersistenceRequestListener(PersistenceRequestListener listener) throws UMOException;
+    void registerPersistenceRequestListener(UMOServerNotificationListener listener) throws UMOException;
 
     /**
      * Return the data for persistence. It is the responsibility
