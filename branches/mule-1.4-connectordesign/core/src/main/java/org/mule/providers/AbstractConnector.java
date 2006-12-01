@@ -233,9 +233,13 @@ public abstract class AbstractConnector
         connectionStrategy = MuleManager.getConfiguration().getConnectionStrategy();
         enableMessageEvents = MuleManager.getConfiguration().isEnableMessageEvents();
 
-        // Always add at least the default protocol
+        // always add at least the default protocol
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
+
+        // containers for dispatchers and receivers
+        dispatchers = new GenericKeyedObjectPool();
+        receivers = new ConcurrentHashMap();
     }
 
     /*
@@ -259,10 +263,12 @@ public abstract class AbstractConnector
         {
             throw new IllegalArgumentException(new Message(Messages.X_IS_NULL, "Connector name").toString());
         }
+
         if (logger.isDebugEnabled())
         {
             logger.debug("Set UMOConnector name to: " + newName);
         }
+
         name = newName;
     }
 
@@ -283,10 +289,13 @@ public abstract class AbstractConnector
             logger.info("Initialising " + getClass().getName());
         }
 
-        dispatchers = new GenericKeyedObjectPool();
-        receivers = new ConcurrentHashMap();
+        // we clear out any registered dispatchers and receivers without resetting
+        // the actual containers since this it might actually be a re-initialise
+        // (e.g. as in JmsConnector)
+        this.disposeDispatchers();
+        this.disposeReceivers();
 
-        doInitialise();
+        this.doInitialise();
 
         if (exceptionListener instanceof Initialisable)
         {
@@ -306,31 +315,35 @@ public abstract class AbstractConnector
     public final void startConnector() throws UMOException
     {
         checkDisposed();
+
         if (!isStarted())
         {
             if (!isConnected())
             {
                 startOnConnect.set(true);
-                getConnectionStrategy().connect(this);
+                this.getConnectionStrategy().connect(this);
                 // Only start once we are connected
                 return;
             }
+
             if (logger.isInfoEnabled())
             {
                 logger.info("Starting Connector: " + getClass().getName());
             }
-            doStart();
+
+            this.doStart();
             started.set(true);
+
             if (receivers != null)
             {
                 for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
                 {
-                    AbstractMessageReceiver amr = (AbstractMessageReceiver)iterator.next();
+                    UMOMessageReceiver mr = (UMOMessageReceiver)iterator.next();
                     if (logger.isDebugEnabled())
                     {
-                        logger.debug("Starting receiver on endpoint: " + amr.getEndpoint().getEndpointURI());
+                        logger.debug("Starting receiver on endpoint: " + mr.getEndpoint().getEndpointURI());
                     }
-                    amr.start();
+                    mr.start();
                 }
             }
 
@@ -369,7 +382,8 @@ public abstract class AbstractConnector
             {
                 logger.info("Stopping Connector: " + getClass().getName());
             }
-            doStop();
+
+            this.doStop();
             started.set(false);
 
             // Stop all the receivers on this connector (this will cause them to
@@ -399,6 +413,7 @@ public abstract class AbstractConnector
                 logger.error("Failed to disconnect: " + e.getMessage(), e);
             }
         }
+
         if (logger.isInfoEnabled())
         {
             logger.info("Connector " + getClass().getName() + " has been stopped");
@@ -419,10 +434,10 @@ public abstract class AbstractConnector
             logger.info("Disposing Connector: " + getClass().getName());
         }
 
-        disposeReceivers();
-        disposeDispatchers();
+        this.disposeReceivers();
+        this.disposeDispatchers();
 
-        doDispose();
+        this.doDispose();
         disposed.set(true);
 
         if (logger.isInfoEnabled())
@@ -435,21 +450,23 @@ public abstract class AbstractConnector
     {
         if (receivers != null)
         {
-            UMOMessageReceiver receiver;
+            logger.debug("Disposing Receivers");
+
             for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
             {
-                receiver = (UMOMessageReceiver)iterator.next();
+                UMOMessageReceiver receiver = (UMOMessageReceiver)iterator.next();
+
                 try
                 {
-                    destroyReceiver(receiver, receiver.getEndpoint());
+                    this.destroyReceiver(receiver, receiver.getEndpoint());
                 }
                 catch (Throwable e)
                 {
-                    logger.error("Failed to destroy receiver: " + e.getMessage(), e);
+                    logger.error("Failed to destroy receiver: " + receiver, e);
                 }
             }
+
             receivers.clear();
-            receivers = null;
             logger.debug("Receivers Disposed");
         }
     }
@@ -562,9 +579,9 @@ public abstract class AbstractConnector
     // TODO this method should not be public any longer; make it protected & maybe
     // provide a corresponding returnDispatcher() as well so that pool borrow/return
     // is handled consistently
-    protected UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
+    private UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        checkDisposed();
+        this.checkDisposed();
 
         if (endpoint == null)
         {
@@ -590,7 +607,7 @@ public abstract class AbstractConnector
 
     protected void checkDisposed() throws DisposeException
     {
-        if (isDisposed())
+        if (this.isDisposed())
         {
             throw new DisposeException(new Message(Messages.CANT_USE_DISPOSED_CONNECTOR), this);
         }
@@ -613,10 +630,12 @@ public abstract class AbstractConnector
         {
             throw new ConnectorException(new Message(Messages.ENDPOINT_NULL_FOR_LISTENER), this);
         }
+
         logger.info("registering listener: " + component.getDescriptor().getName() + " on endpointUri: "
                         + endpointUri.toString());
 
-        UMOMessageReceiver receiver = getReceiver(component, endpoint);
+        UMOMessageReceiver receiver = this.getReceiver(component, endpoint);
+
         if (receiver != null)
         {
             throw new ConnectorException(new Message(Messages.LISTENER_ALREADY_REGISTERED, endpointUri), this);
@@ -626,6 +645,7 @@ public abstract class AbstractConnector
             receiver = createReceiver(component, endpoint);
             receivers.put(getReceiverKey(component, endpoint), receiver);
         }
+
         return receiver;
     }
 
@@ -744,7 +764,7 @@ public abstract class AbstractConnector
     {
         try
         {
-            stopConnector();
+            this.stopConnector();
         }
         catch (UMOException e)
         {
@@ -768,13 +788,10 @@ public abstract class AbstractConnector
             catch (CloneNotSupportedException e)
             {
                 logger.error("Failed to clone default Inbound transformer");
-                return null;
             }
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void setDefaultInboundTransformer(UMOTransformer defaultInboundTransformer)
@@ -793,13 +810,10 @@ public abstract class AbstractConnector
             catch (CloneNotSupportedException e)
             {
                 logger.error("Failed to clone default Outbound transformer");
-                return null;
             }
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public UMOTransformer getDefaultOutboundTransformer()
@@ -813,13 +827,10 @@ public abstract class AbstractConnector
             catch (CloneNotSupportedException e)
             {
                 logger.error("Failed to clone default Outbound transformer");
-                return null;
             }
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void setDefaultOutboundTransformer(UMOTransformer defaultOutboundTransformer)
@@ -920,7 +931,6 @@ public abstract class AbstractConnector
 
     public AbstractMessageReceiver[] getReceivers(String wildcardExpression)
     {
-
         List temp = new ArrayList();
         WildcardFilter filter = new WildcardFilter(wildcardExpression);
         filter.setCaseSensitive(false);
@@ -942,20 +952,21 @@ public abstract class AbstractConnector
         {
             return;
         }
-        checkDisposed();
+
+        this.checkDisposed();
+
         if (connecting.commit(false, true))
         {
             connectionStrategy.connect(this);
             logger.info("Connected: " + getConnectionDescription());
-            // This method calls itself so the the connecting vflag is set first, the
-            // the
-            // connection is made on the second call
+            // This method calls itself so the the connecting flag is set first, then
+            // the connection is made on the second call
             return;
         }
 
         try
         {
-            doConnect();
+            this.doConnect();
             fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_CONNECTED));
         }
@@ -963,6 +974,7 @@ public abstract class AbstractConnector
         {
             fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_FAILED));
+
             if (e instanceof ConnectException)
             {
                 throw (ConnectException)e;
@@ -972,11 +984,13 @@ public abstract class AbstractConnector
                 throw new ConnectException(e, this);
             }
         }
+
         connected.set(true);
         connecting.set(false);
+
         if (startOnConnect.get())
         {
-            startConnector();
+            this.startConnector();
         }
         else
         {
@@ -995,9 +1009,12 @@ public abstract class AbstractConnector
     public void disconnect() throws Exception
     {
         startOnConnect.set(isStarted());
+
         fireNotification(new ConnectionNotification(this, getConnectEventId(),
             ConnectionNotification.CONNECTION_DISCONNECTED));
+
         connected.set(false);
+
         try
         {
             doDisconnect();
@@ -1005,7 +1022,6 @@ public abstract class AbstractConnector
         finally
         {
             stopConnector();
-
         }
 
         logger.info("Disconnected: " + getConnectionDescription());
