@@ -91,7 +91,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
         connector.registerListener(component, endpoint);
         connector.startConnector();
-        connector.getDispatcher(new ImmutableMuleEndpoint("file:/foo", false)).dispatch(event);
+        new ImmutableMuleEndpoint("file:/foo", false).dispatch(event);
 
         session.verify();
     }
@@ -111,8 +111,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
         connector.registerListener(component, endpoint);
         connector.startConnector();
-        connector.getDispatcher(new ImmutableMuleEndpoint("file:/foo", false)).send(event);
-
+        new ImmutableMuleEndpoint("file:/foo", false).send(event);
     }
 
     public Object getValidMessage() throws Exception
