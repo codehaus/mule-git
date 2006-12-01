@@ -1326,6 +1326,10 @@ public abstract class AbstractConnector
             dispatcher = this.getDispatcher(endpoint);
             dispatcher.dispatch(event);
         }
+        catch (DispatchException dex)
+        {
+            throw dex;
+        }
         catch (UMOException ex)
         {
             throw new DispatchException(event.getMessage(), endpoint, ex);
@@ -1384,6 +1388,10 @@ public abstract class AbstractConnector
         {
             dispatcher = this.getDispatcher(endpoint);
             return dispatcher.send(event);
+        }
+        catch (DispatchException dex)
+        {
+            throw dex;
         }
         catch (UMOException ex)
         {
