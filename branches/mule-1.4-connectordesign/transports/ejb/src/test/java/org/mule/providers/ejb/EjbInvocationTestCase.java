@@ -29,7 +29,6 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOMessageDispatcher;
 
 /**
  * test RMI object invocations
@@ -75,8 +74,7 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint(
             "ejb://localhost/TestService?method=reverseString", false);
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
-        UMOMessage message = dispatcher.send(getTestEvent("hello", ep));
+        UMOMessage message = ep.send(getTestEvent("hello", ep));
         assertNotNull(message.getPayload());
         assertEquals("olleh", message.getPayloadAsString());
     }
@@ -85,8 +83,7 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint(
             "ejb://localhost/TestService?method=upperCaseString", false);
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
-        UMOMessage message = dispatcher.send(getTestEvent("hello", ep));
+        UMOMessage message = ep.send(getTestEvent("hello", ep));
         assertNotNull(message.getPayload());
         assertEquals("HELLO", message.getPayloadAsString());
     }
@@ -94,10 +91,9 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     public void testNoMethodSet() throws Exception
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint("ejb://localhost/TestService", false);
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
         try
         {
-            dispatcher.send(getTestEvent("hello", ep));
+            ep.send(getTestEvent("hello", ep));
 
         }
         catch (UMOException e)
@@ -111,10 +107,9 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     public void testBadMethodName() throws Exception
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint("ejb://localhost/TestService?method=foo", false);
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
         try
         {
-            dispatcher.send(getTestEvent("hello", ep));
+            ep.send(getTestEvent("hello", ep));
         }
         catch (UMOException e)
         {
@@ -126,10 +121,9 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     {
         UMOEndpoint ep = new MuleEndpoint("ejb://localhost/TestService?method=reverseString", false);
         ep.setProperty(RmiConnector.PROPERTY_SERVICE_METHOD_PARAM_TYPES, StringBuffer.class.getName());
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
         try
         {
-            dispatcher.send(getTestEvent("hello", ep));
+            ep.send(getTestEvent("hello", ep));
         }
         catch (UMOException e)
         {
@@ -141,10 +135,9 @@ public class EjbInvocationTestCase extends FunctionalTestCase
     {
         UMOEndpoint ep = new MuleEndpoint("ejb://localhost/TestService?method=reverseString", false);
         ep.setProperty(RmiConnector.PROPERTY_SERVICE_METHOD_PARAM_TYPES, String.class.getName());
-        UMOMessageDispatcher dispatcher = ejbConnector.getDispatcher(ep);
         try
         {
-            dispatcher.send(getTestEvent("hello", ep));
+            ep.send(getTestEvent("hello", ep));
         }
         catch (UMOException e)
         {
