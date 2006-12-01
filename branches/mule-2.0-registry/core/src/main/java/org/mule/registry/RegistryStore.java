@@ -21,9 +21,8 @@ import org.mule.umo.lifecycle.Stoppable;
  * The Registry store is responsible for storing and persisting
  * the component references. It is also queryable and discoverable.
  */
-public interface RegistryStore {
-
-    public RegistryStore getRegistryStore();
+public interface RegistryStore extends Startable, Stoppable, Disposable 
+{
 
     public void registerComponent(ComponentReference component) throws RegistrationException;
 
@@ -31,14 +30,25 @@ public interface RegistryStore {
 
     public void reregisterComponent(ComponentReference component) throws ReregistrationException;
 
-    public HashMap getRegisteredComponents(String type);
+    public Map getRegisteredComponents(String type);
 
-    public ComponentReference getRegisteredComponent(String type, String id);
+    public Map getRegisteredComponents(long id);
 
+    public ComponentReference getRegisteredComponent(long id);
+
+    /**
+     * Start the registry store
+     */
     public void start() throws UMOException;
 
+    /**
+     * Stop the registry store
+     */
     public void stop() throws UMOException;
 
+    /**
+     * Clean up and release any resources
+     */
     public void dispose();
 
 }

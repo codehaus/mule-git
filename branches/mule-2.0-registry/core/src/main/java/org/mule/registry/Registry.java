@@ -59,10 +59,22 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * For example, you could call getRegisteredComponents("descriptors")
      * to get a list of all routes
      */
-    public HashMap getRegisteredComponents(String type);
+    public Map getRegisteredComponents(String type);
+
+    /**
+     * Get a hashmap of all registered components that are children
+     * of this ID.
+     *
+     * @param id the parent ID
+     * @return Map of components
+     */
+    public Map getRegisteredComponents(long id);
 
     /**
      * Get a specific registered component, based on ID
+     *
+     * @param id the reference ID
+     * @return ComponentReference
      */
     public ComponentReference getRegisteredComponent(long id);
 
