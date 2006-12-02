@@ -148,7 +148,7 @@ public class MuleManager implements UMOManager
     /**
      * Collection for transformers registered in this component
      */
-    private HashMap transformers = new HashMap();
+    private Map transformers = new HashMap();
 
     /**
      * True once the Mule Manager is initialised
@@ -188,7 +188,7 @@ public class MuleManager implements UMOManager
     /**
      * Maintains a reference to any interceptor stacks configured on the manager
      */
-    private HashMap interceptorsMap = new HashMap();
+    private Map interceptorsMap = new HashMap();
 
     /**
      * the date in milliseconds from when the server was started
