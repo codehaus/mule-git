@@ -66,7 +66,7 @@ public class WildcardFilter implements UMOFilter, ObjectFilter
             return false;
         }
 
-        boolean match = false;
+        boolean match;
         for (int x = 0; x < patterns.length; x++)
         {
             String pattern = patterns[x];
