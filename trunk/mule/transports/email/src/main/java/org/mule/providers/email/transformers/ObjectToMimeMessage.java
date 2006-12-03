@@ -106,14 +106,14 @@ public class ObjectToMimeMessage extends StringToEmailMessage
         {
             handler = new DataHandler(new PlainTextDataSource(contentType, payload.toString()));
         }
+        else if (payload instanceof byte[])
+        {
+            handler = new DataHandler(new ByteArrayDataSource((byte[])payload, contentType));
+        }
         else if (payload instanceof Serializable)
         {
             handler = new DataHandler(new ByteArrayDataSource(
                 (byte[])new SerializableToByteArray().transform(payload), contentType));
-        }
-        else if (payload instanceof byte[])
-        {
-            handler = new DataHandler(new ByteArrayDataSource((byte[])payload, contentType));
         }
         else
         {
