@@ -123,6 +123,7 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
 }
 
 // need this since setMessage is protected and we're in a different package
+// TODO refactor, this is no longer required, as tests mirror the original class hierarchy
 class AccessibleFCMAdapter extends FileContentsMessageAdapter
 {
     private static final long serialVersionUID = -985644721173808557L;
