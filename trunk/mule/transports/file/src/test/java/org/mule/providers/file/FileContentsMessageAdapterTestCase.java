@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.mule.MuleManager;
-import org.mule.providers.file.FileContentsMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.UMOMessageAdapter;
