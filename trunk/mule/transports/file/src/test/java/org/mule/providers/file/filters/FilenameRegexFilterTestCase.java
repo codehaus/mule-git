@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.file;
+package org.mule.providers.file.filters;
 
 import org.mule.providers.file.filters.FilenameRegexFilter;
 import org.mule.tck.AbstractMuleTestCase;
