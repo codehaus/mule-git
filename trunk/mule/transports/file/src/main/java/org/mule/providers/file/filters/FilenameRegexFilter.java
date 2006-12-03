@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.file.filters;
 
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ public class FilenameRegexFilter extends FilenameWildcardFilter
 {
     protected Pattern[] compiledPatterns = null;
 
+    // @Override
     public boolean accept(Object object)
     {
         if (object == null)
@@ -23,58 +25,59 @@ public class FilenameRegexFilter extends FilenameWildcardFilter
             return false;
         }
 
-        boolean match = false;
-        for (int i = 0; i < getCompiledPatterns().length; i++)
+        boolean foundMatch = false;
+
+        if (compiledPatterns != null)
         {
-            Pattern pattern = getCompiledPatterns()[i];
-
-            String string = object.toString();
-
-            /* Determine if there is an exact match. */
-            Matcher matcher = pattern.matcher(string);
-            match = matcher.matches();
-
-            if (match)
+            for (int i = 0; i < compiledPatterns.length; i++)
             {
-                // we found a match, bail
-                break;
+                Pattern pattern = compiledPatterns[i];
+                String string = object.toString();
+
+                /* Determine if there is an exact match. */
+                Matcher matcher = pattern.matcher(string);
+                foundMatch = matcher.matches();
+
+                if (foundMatch)
+                {
+                    // we found a match, bail
+                    break;
+                }
             }
         }
 
-        return match;
+        return foundMatch;
     }
 
+    // @Override
     public void setCaseSensitive(boolean caseSensitive)
     {
         super.setCaseSensitive(caseSensitive);
-        this.compiledPatterns = null;
+        this.setPattern(pattern);
     }
 
-    protected Pattern[] getCompiledPatterns()
+    // @Override
+    public void setPattern(String pattern)
     {
-        if (compiledPatterns == null)
-        {
-            /* Patterns not set, compile them. */
+        super.setPattern(pattern);
 
+        if (patterns != null)
+        {
             compiledPatterns = new Pattern[patterns.length];
 
-            Pattern pattern;
             for (int i = 0; i < patterns.length; i++)
             {
                 if (!isCaseSensitive())
                 {
                     /* Add insensitive option if set in the configuration. */
-                    pattern = Pattern.compile(patterns[i],
-                                              Pattern.CASE_INSENSITIVE);
+                    compiledPatterns[i] = Pattern.compile(patterns[i], Pattern.CASE_INSENSITIVE);
                 }
                 else
                 {
-                    pattern = Pattern.compile(patterns[i]);
+                    compiledPatterns[i] = Pattern.compile(patterns[i]);
                 }
-                compiledPatterns[i] = pattern;
             }
         }
-        return compiledPatterns;
     }
-}
 
+}

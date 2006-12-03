@@ -10,14 +10,24 @@
 
 package org.mule.providers.file.filters;
 
-import org.mule.providers.file.filters.FilenameRegexFilter;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class FilenameRegexFilterTestCase extends AbstractMuleTestCase
 {
+
     public void testFilenameRegexFilter()
     {
         FilenameRegexFilter filter = new FilenameRegexFilter();
+        assertNull(filter.getPattern());
+        assertFalse(filter.accept("foo"));
+
+        filter.setPattern("[0-9]*_test.csv");
+        assertNotNull(filter.getPattern());
+        filter.setCaseSensitive(true);
+        assertNotNull(filter.getPattern());
+        filter.setPattern(null);
+        assertNull(filter.getPattern());
+
         filter.setPattern("[0-9]*_test.csv");
         filter.setCaseSensitive(true);
         String fileNameMatch = "20060101_test.csv";
@@ -34,4 +44,5 @@ public class FilenameRegexFilterTestCase extends AbstractMuleTestCase
         assertFalse(filter.accept(fileNameNoMatch1));
         assertTrue(filter.accept(fileNameNoMatch2));
     }
+
 }
