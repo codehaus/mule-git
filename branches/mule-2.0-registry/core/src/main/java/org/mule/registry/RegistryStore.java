@@ -51,5 +51,9 @@ public interface RegistryStore extends Startable, Stoppable, Disposable
      */
     public void dispose();
 
+    /**
+     * Process a command to persist
+     */
+    public void persist();
 }
 

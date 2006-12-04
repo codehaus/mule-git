@@ -38,6 +38,8 @@ public class RegistryNotificationListener implements UMOServerNotificationListen
         if (notification instanceof ModelNotification)
         {
             UMOModel model = (UMOModel)notification.getSource();
+            //System.out.println("Model name: " + model.getName());
+            //System.out.println("Model type: " + model.getType());
             registry.notifyStateChange(model.getRegistryId(), notification.getAction());
         }
 

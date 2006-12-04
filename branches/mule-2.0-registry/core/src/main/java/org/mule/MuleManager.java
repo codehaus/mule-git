@@ -713,8 +713,18 @@ public class MuleManager implements UMOManager
             // Start the registry
             if (registry == null)
             {
-                logger.debug("Creating dummy registry so that things will run");
-                registry = new DummyRegistry();
+                try 
+                {
+                    Class clazz = Class.forName("org.mule.registry.impl.MuleRegistry");
+                    Object o = clazz.newInstance();
+                    registry = (Registry)o;
+                } catch (Exception e)
+                {
+                    logger.warn("Couldn't create MuleRegistry: " + e.toString());
+                    logger.warn("Creating dummy registry so that things will run");
+                    registry = new DummyRegistry();
+                }
+
                 registry.start();
                 registerListener(new RegistryNotificationListener(registry));
             }
@@ -1047,6 +1057,7 @@ public class MuleManager implements UMOManager
         this.model = model;
         if (initialised.get())
         {
+            model.register();
             model.initialise();
         }
 
