@@ -39,10 +39,10 @@ public interface Persistable
      * or synchronizations necessary in order to preserve a consistent
      * backup.
      *
-     * @returns a persistable object, like an XStream
+     * @returns the data to be persisted
      * @throws UMOException if the registration fails
      */
 
-    PersistableObject getPersistableObject() throws UMOException;
+    Object getPersistableObject() throws UMOException;
 }
 

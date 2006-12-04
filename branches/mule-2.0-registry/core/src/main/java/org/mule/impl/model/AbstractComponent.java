@@ -101,7 +101,7 @@ public abstract class AbstractComponent implements UMOComponent
      */
     protected WaitableBoolean paused = new WaitableBoolean(false);
 
-    protected long registryId;
+    protected String registryId;
 
     /**
      * Default constructor
@@ -171,7 +171,7 @@ public abstract class AbstractComponent implements UMOComponent
      */
     public void deregister() throws DeregistrationException
     {
-        registryId = -1L;
+        registryId = null;
     }
 
     protected void fireComponentNotification(int action)

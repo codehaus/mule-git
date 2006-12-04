@@ -29,9 +29,9 @@ public interface ComponentReference {
 
     public String getType();
 
-    public long getId();
+    public String getId();
 
-    public long getParentId();
+    public String getParentId();
 
     public HashMap getProperties();
 
@@ -41,15 +41,15 @@ public interface ComponentReference {
 
     public HashMap getChildren();
 
-    public ComponentReference getChild(long childId);
+    public ComponentReference getChild(String childId);
 
     public ComponentVersion getVersion();
 
     public void setType(String type);
 
-    public void setId(long id);
+    public void setId(String id);
 
-    public void setParentId(long parentId);
+    public void setParentId(String parentId);
 
     public void setProperties(HashMap properties);
 

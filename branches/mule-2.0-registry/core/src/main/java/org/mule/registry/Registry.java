@@ -39,9 +39,9 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * return a unique id that will be assigned the component for
      * its lifetime. Ids cannot be reused.
      *
-     * @return long ID
+     * @return String ID
      */
-    public long registerComponent(ComponentReference component) throws RegistrationException;
+    public String registerComponent(ComponentReference component) throws RegistrationException;
 
     /**
      * Unregister a component
@@ -59,7 +59,7 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * For example, you could call getRegisteredComponents("descriptors")
      * to get a list of all routes
      */
-    public Map getRegisteredComponents(String type);
+    public Map getRegisteredComponents(String parentId, String type);
 
     /**
      * Get a Map of all registered components that are children
@@ -68,7 +68,7 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * @param id the parent ID
      * @return Map of components
      */
-    public Map getRegisteredComponents(long id);
+    public Map getRegisteredComponents(String parentId);
 
     /**
      * Get a specific registered component, based on ID
@@ -76,7 +76,7 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * @param id the reference ID
      * @return ComponentReference
      */
-    public ComponentReference getRegisteredComponent(long id);
+    public ComponentReference getRegisteredComponent(String id);
 
     /**
      * Start the registry
@@ -98,11 +98,11 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * changed. This method should be called by listeners that have
      * already been registered to watch the component's state.
      */
-    public void notifyStateChange(long id, int state);
+    public void notifyStateChange(String id, int state);
 
     /**
      * Method to alert the registry when a component property has
      * changed. Not used yet.
      */
-    public void notifyPropertyChange(long id, String propertyName, Object propertyValue);
+    public void notifyPropertyChange(String id, String propertyName, Object propertyValue);
 }

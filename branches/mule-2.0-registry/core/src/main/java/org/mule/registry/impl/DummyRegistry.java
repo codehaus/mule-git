@@ -11,6 +11,7 @@
 package org.mule.registry.impl;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -41,8 +42,8 @@ public class DummyRegistry implements Registry {
         return null;
     }
 
-    public long registerComponent(ComponentReference component) throws RegistrationException {
-        long newId = getRandomId();
+    public String registerComponent(ComponentReference component) throws RegistrationException {
+        String newId = "" + getRandomId();
         component.setId(newId);
         logger.info("Received registration of " + component.getType() + "/" + component.getId() + " under parent " + component.getParentId());
         return newId;
@@ -56,12 +57,17 @@ public class DummyRegistry implements Registry {
         logger.info("Received reregistration of " + component.getType() + "/" + component.getId());
     }
 
-    public HashMap getRegisteredComponents(String type) 
+    public Map getRegisteredComponents(String parentId) 
     {
         return null;
     }
 
-    public ComponentReference getRegisteredComponent(long id) {
+    public Map getRegisteredComponents(String parentId, String type) 
+    {
+        return null;
+    }
+
+    public ComponentReference getRegisteredComponent(String id) {
         return null;
     }
 
@@ -80,12 +86,12 @@ public class DummyRegistry implements Registry {
         logger.info("Disposing of itself properly - bye bye!");
     }
 
-    public void notifyStateChange(long id, int state) 
+    public void notifyStateChange(String id, int state) 
     {
         logger.info("Component " + id + " has state changed to " + state);
     }
 
-    public void notifyPropertyChange(long id, String propertyName, Object propertyValue)
+    public void notifyPropertyChange(String id, String propertyName, Object propertyValue)
     {
     }
 

@@ -74,7 +74,7 @@ public abstract class AbstractModel implements UMOModel
 
     private ExceptionListener exceptionListener;
 
-    protected long registryId;
+    protected String registryId;
 
     /**
      * Default constructor
@@ -497,7 +497,7 @@ public abstract class AbstractModel implements UMOModel
     public void register() throws RegistrationException
     {
         SimpleComponentReference ref = new 
-            SimpleComponentReference(-1, "model", this);
+            SimpleComponentReference(null, "model", this);
         registryId = 
             MuleManager.getInstance().getRegistry().registerComponent(ref);
     }
@@ -509,7 +509,7 @@ public abstract class AbstractModel implements UMOModel
      */
     public void deregister() throws DeregistrationException
     {
-        registryId = -1L;
+        registryId = null;
     }
 
     public ExceptionListener getExceptionListener()
@@ -542,7 +542,7 @@ public abstract class AbstractModel implements UMOModel
         return components.keySet().iterator();
     }
 
-    public long getRegistryId()
+    public String getRegistryId()
     {
         return registryId;
     }

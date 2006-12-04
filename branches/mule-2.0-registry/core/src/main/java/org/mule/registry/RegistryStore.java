@@ -30,11 +30,11 @@ public interface RegistryStore extends Startable, Stoppable, Disposable
 
     public void reregisterComponent(ComponentReference component) throws ReregistrationException;
 
-    public Map getRegisteredComponents(String type);
+    public Map getRegisteredComponents(String parentId);
 
-    public Map getRegisteredComponents(long id);
+    public Map getRegisteredComponents(String parentId, String type);
 
-    public ComponentReference getRegisteredComponent(long id);
+    public ComponentReference getRegisteredComponent(String id);
 
     /**
      * Start the registry store

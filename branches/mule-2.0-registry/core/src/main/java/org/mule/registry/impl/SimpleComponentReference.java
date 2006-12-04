@@ -25,16 +25,16 @@ public class SimpleComponentReference implements ComponentReference
 {
     public static int COMPONENT_STATE_UNITIALISED = 0;
 
-    protected long id = -1L;
+    protected String id = null;
     protected ComponentVersion version;
-    protected long parentId = -1L;
+    protected String parentId = null;
     protected String type = null;
     protected Object component = null;
     protected int state;
     protected HashMap properties = null;
     protected HashMap children = null;
 
-    public SimpleComponentReference(long parentId, String type, Object component)
+    public SimpleComponentReference(String parentId, String type, Object component)
     {
         this.parentId = parentId;
         this.type = type;
@@ -70,12 +70,12 @@ public class SimpleComponentReference implements ComponentReference
         return type;
     }
 
-    public long getId()
+    public String getId()
     {
         return id;
     }
 
-    public long getParentId()
+    public String getParentId()
     {
         return parentId;
     }
@@ -100,9 +100,9 @@ public class SimpleComponentReference implements ComponentReference
         return children;
     }
 
-    public ComponentReference getChild(long childId)
+    public ComponentReference getChild(String childId)
     {
-        return (ComponentReference)children.get(new Long(childId));
+        return (ComponentReference)children.get(childId);
     }
 
     public void setType(String type)
@@ -110,12 +110,12 @@ public class SimpleComponentReference implements ComponentReference
         this.type = type;
     }
 
-    public void setId(long id)
+    public void setId(String id)
     {
         this.id = id;
     }
 
-    public void setParentId(long parentId)
+    public void setParentId(String parentId)
     {
         this.parentId = parentId;
     }
@@ -132,7 +132,7 @@ public class SimpleComponentReference implements ComponentReference
 
     public void addChild(ComponentReference component)
     {
-        children.put(new Long(component.getId()), component);
+        children.put(component.getId(), component);
     }
 
 	public ComponentVersion getVersion() {
