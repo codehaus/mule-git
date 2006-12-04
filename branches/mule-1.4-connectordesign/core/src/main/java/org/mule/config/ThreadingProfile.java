@@ -40,7 +40,7 @@ public class ThreadingProfile
     /**
      * Default value for MAX_THREADS_IDLE
      */
-    public static final int DEFAULT_MAX_THREADS_IDLE = 4;
+    public static final int DEFAULT_MAX_THREADS_IDLE = 1;
 
     /**
      * Default value for MAX_BUFFER_SIZE
