@@ -1,5 +1,5 @@
 /*
- * $Id: UMOServerNotificationListener.java 3649 2006-10-24 10:09:08Z holger $
+ * $Id: $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *

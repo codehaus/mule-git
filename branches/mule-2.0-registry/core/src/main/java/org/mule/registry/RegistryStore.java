@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id: $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -12,6 +12,7 @@ package org.mule.registry;
 
 import java.util.Map;
 
+import org.mule.registry.persistence.Persistable;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Startable;
@@ -21,7 +22,7 @@ import org.mule.umo.lifecycle.Stoppable;
  * The Registry store is responsible for storing and persisting
  * the component references. It is also queryable and discoverable.
  */
-public interface RegistryStore extends Startable, Stoppable, Disposable 
+public interface RegistryStore extends Startable, Stoppable, Disposable, Persistable
 {
 
     public void registerComponent(ComponentReference component) throws RegistrationException;
