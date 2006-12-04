@@ -597,11 +597,50 @@ public abstract class AbstractConnector
 
         try
         {
-            return (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("borrowing dispatcher for endpoint: " + endpoint.getEndpointURI());
+            }
+
+            UMOMessageDispatcher d = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
+
+            if (logger.isDebugEnabled())
+            {
+                logger.warn("borrowed dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + d.toString());
+            }
+
+            return d;
         }
         catch (Exception ex)
         {
             throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+        }
+    }
+    
+    private void returnDispatcher(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    {
+        if (endpoint == null)
+        {
+            throw new IllegalArgumentException("Endpoint must not be null");
+        }
+
+        if (dispatcher == null)
+        {
+            throw new IllegalArgumentException("Dispatcher must not be null");
+        }
+
+        try
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+            }
+
+            dispatchers.returnObject(endpoint, dispatcher);
+        }
+        catch (Exception ex)
+        {
+            // ignored; this will go away in commons-pool
         }
     }
 
@@ -720,6 +759,7 @@ public abstract class AbstractConnector
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
+            receiverThreadingProfile.setMaxThreadsActive(200);
         }
         return receiverThreadingProfile;
     }
@@ -1336,16 +1376,9 @@ public abstract class AbstractConnector
         }
         finally
         {
-            try
+            if (dispatcher != null)
             {
-                if (dispatcher != null)
-                {
-                    dispatchers.returnObject(endpoint, dispatcher);
-                }
-            }
-            catch (Exception ex)
-            {
-                // ignored; this will go away in commons-pool
+                this.returnDispatcher(endpoint, dispatcher);
             }
         }
     }
@@ -1370,7 +1403,7 @@ public abstract class AbstractConnector
             {
                 if (dispatcher != null)
                 {
-                    dispatchers.returnObject(endpoint, dispatcher);
+                    this.returnDispatcher(endpoint, dispatcher);
                 }
             }
             catch (Exception ex)
@@ -1403,7 +1436,7 @@ public abstract class AbstractConnector
             {
                 if (dispatcher != null)
                 {
-                    dispatchers.returnObject(endpoint, dispatcher);
+                    this.returnDispatcher(endpoint, dispatcher);
                 }
             }
             catch (Exception ex)
