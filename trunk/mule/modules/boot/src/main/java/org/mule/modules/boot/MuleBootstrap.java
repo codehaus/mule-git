@@ -49,9 +49,10 @@ public class MuleBootstrap
     {
         // Make sure MULE_HOME is set.
         File muleHome = null;
+
         String muleHomeVar = System.getProperty("mule.home");
         // Note: we can't use StringUtils.isBlank() here because we don't have that library yet.
-        if (muleHomeVar != null && !muleHomeVar.trim().equals("")) {
+        if (muleHomeVar != null && !muleHomeVar.trim().equals("") && !muleHomeVar.equals("%MULE_HOME%")) {
             muleHome = new File(muleHomeVar).getCanonicalFile();
         }
         if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory()) {
@@ -59,14 +60,26 @@ public class MuleBootstrap
                 "Either MULE_HOME is not set or does not contain a valid directory.");
         }
 
+        File muleBase = null;
+
+        String muleBaseVar = System.getProperty("mule.base");
+        if (muleBaseVar != null && !muleBaseVar.trim().equals("") && !muleBaseVar.equals("%MULE_BASE%")) {
+            muleBase = new File(muleBaseVar).getCanonicalFile();
+        } else {
+            muleBase = muleHome;
+        }
+
         // Build up a list of libraries from $MULE_HOME/lib/* and add them to the classpath.
-        DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome);
+        DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
         addLibrariesToClasspath(classPath.getURLs());
 
         // One-time download to get libraries not included in the Mule distribution due
         // to silly licensing restrictions.
+        // 
+        // Now we will download these libraries to MULE_BASE/lib/user. In
+        // a standard installation, MULE_BASE will be MULE_HOME.
         if (!ClassUtils.isClassOnPath("javax.activation.DataSource", MuleBootstrap.class)) {
-            LibraryDownloader downloader = new LibraryDownloader(muleHome);
+            LibraryDownloader downloader = new LibraryDownloader(muleBase);
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
 
