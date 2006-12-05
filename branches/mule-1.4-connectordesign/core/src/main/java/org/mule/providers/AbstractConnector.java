@@ -576,9 +576,6 @@ public abstract class AbstractConnector
         this.dispatcherFactory = dispatcherFactory;
     }
 
-    // TODO this method should not be public any longer; make it protected & maybe
-    // provide a corresponding returnDispatcher() as well so that pool borrow/return
-    // is handled consistently
     private UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
         this.checkDisposed();
@@ -602,45 +599,38 @@ public abstract class AbstractConnector
                 logger.debug("borrowing dispatcher for endpoint: " + endpoint.getEndpointURI());
             }
 
-            UMOMessageDispatcher d = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
+            UMOMessageDispatcher dispatcher = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
 
             if (logger.isDebugEnabled())
             {
-                logger.warn("borrowed dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + d.toString());
+                logger.warn("borrowed dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
             }
 
-            return d;
+            return dispatcher;
         }
         catch (Exception ex)
         {
             throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
         }
     }
-    
+
     private void returnDispatcher(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
     {
-        if (endpoint == null)
+        if (endpoint != null && dispatcher != null)
         {
-            throw new IllegalArgumentException("Endpoint must not be null");
-        }
-
-        if (dispatcher == null)
-        {
-            throw new IllegalArgumentException("Dispatcher must not be null");
-        }
-
-        try
-        {
-            if (logger.isDebugEnabled())
+            try
             {
-                logger.debug("returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+                }
+    
+                dispatchers.returnObject(endpoint, dispatcher);
             }
-
-            dispatchers.returnObject(endpoint, dispatcher);
-        }
-        catch (Exception ex)
-        {
-            // ignored; this will go away in commons-pool
+            catch (Exception ex)
+            {
+                // ignored; this will go away in commons-pool
+            }
         }
     }
 
@@ -1377,10 +1367,7 @@ public abstract class AbstractConnector
         }
         finally
         {
-            if (dispatcher != null)
-            {
-                this.returnDispatcher(endpoint, dispatcher);
-            }
+            this.returnDispatcher(endpoint, dispatcher);
         }
     }
 
@@ -1400,17 +1387,7 @@ public abstract class AbstractConnector
         }
         finally
         {
-            try
-            {
-                if (dispatcher != null)
-                {
-                    this.returnDispatcher(endpoint, dispatcher);
-                }
-            }
-            catch (Exception ex)
-            {
-                // ignored; this will go away in commons-pool
-            }
+            this.returnDispatcher(endpoint, dispatcher);
         }
     }
 
@@ -1433,17 +1410,7 @@ public abstract class AbstractConnector
         }
         finally
         {
-            try
-            {
-                if (dispatcher != null)
-                {
-                    this.returnDispatcher(endpoint, dispatcher);
-                }
-            }
-            catch (Exception ex)
-            {
-                // ignored; this will go away in commons-pool
-            }
+            this.returnDispatcher(endpoint, dispatcher);
         }
     }
 
