@@ -759,6 +759,7 @@ public abstract class AbstractConnector
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
+            // MULE-595: workaround until PollingMessageReceiver does not require its own thread any longer
             receiverThreadingProfile.setMaxThreadsActive(200);
         }
         return receiverThreadingProfile;

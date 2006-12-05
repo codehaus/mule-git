@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.file;
+package org.mule.providers.file;
 
 import java.io.File;
 import java.util.Properties;
@@ -82,16 +82,15 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testDispatch() throws Exception
     {
-        UMOConnector connector = getConnector();
-
         Mock session = MuleTestUtils.getMockSession();
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
         UMOComponent component = getTestComponent(descriptor);
         UMOEvent event = getTestEvent("TestData");
 
+        UMOConnector connector = getConnector();
         connector.registerListener(component, endpoint);
         connector.startConnector();
-        new ImmutableMuleEndpoint("file:/foo", false).dispatch(event);
+        connector.dispatch(new ImmutableMuleEndpoint("file:/foo", false), event);
 
         session.verify();
     }
@@ -103,15 +102,14 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testSend() throws Exception
     {
-        UMOConnector connector = getConnector();
-
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
         UMOEvent event = getTestEvent("TestData");
         UMOComponent component = getTestComponent(descriptor);
 
+        UMOConnector connector = getConnector();
         connector.registerListener(component, endpoint);
         connector.startConnector();
-        new ImmutableMuleEndpoint("file:/foo", false).send(event);
+        connector.send(new ImmutableMuleEndpoint("file:/foo", false), event);
     }
 
     public Object getValidMessage() throws Exception

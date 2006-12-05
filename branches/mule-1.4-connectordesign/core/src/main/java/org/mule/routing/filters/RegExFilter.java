@@ -16,11 +16,8 @@ import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOMessage;
 
 /**
- * <code>RegExFilter</code> is used to match a rgular expression against a string
- * argument.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>RegExFilter</code> is used to match a String argument against a regular
+ * expression.
  */
 
 public class RegExFilter implements UMOFilter, ObjectFilter
@@ -48,7 +45,8 @@ public class RegExFilter implements UMOFilter, ObjectFilter
         {
             return false;
         }
-        return pattern.matcher(object.toString()).find();
+
+        return (pattern != null ? pattern.matcher(object.toString()).find() : false);
     }
 
     public String getPattern()
@@ -58,7 +56,7 @@ public class RegExFilter implements UMOFilter, ObjectFilter
 
     public void setPattern(String pattern)
     {
-        this.pattern = Pattern.compile(pattern);
+        this.pattern = (pattern != null ? Pattern.compile(pattern) : null);
     }
 
 }

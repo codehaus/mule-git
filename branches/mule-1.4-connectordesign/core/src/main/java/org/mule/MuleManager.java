@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.jar.Manifest;
 import javax.transaction.TransactionManager;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1237,13 +1239,30 @@ public class MuleManager implements UMOManager
      */
     protected void initialiseAgents() throws InitialisationException
     {
-        UMOAgent umoAgent;
         logger.info("Initialising agents...");
-        for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
+
+        // Do not iterate over the map directly, as 'complex' agents
+        // may spawn extra agents during initialisation. This will
+        // cause a ConcurrentModificationException.
+        // Use a cursorable iteration, which supports on-the-fly underlying
+        // data structure changes.
+        Collection agentsSnapshot = agents.values();
+        CursorableLinkedList agents = new CursorableLinkedList(agentsSnapshot);
+        CursorableLinkedList.Cursor cursor = agents.cursor();
+        try
         {
-            umoAgent = (UMOAgent)iterator.next();
-            logger.debug("Initialising agent: " + umoAgent.getName());
-            umoAgent.initialise();
+            while (cursor.hasNext())
+            {
+                UMOAgent umoAgent = (UMOAgent) cursor.next();
+
+            	logger.debug("Initialising agent: " + umoAgent.getName());
+            	umoAgent.initialise();
+        	}
+        }
+        finally
+        {
+            // close the cursor as per JavaDoc
+            cursor.close();
         }
         logger.info("Agents Successfully Initialised");
     }

@@ -13,22 +13,16 @@ package org.mule.providers.file.filters;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.providers.file.FileConnector;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.umo.UMOMessage;
 
 /**
- * <code>FilenameWildcardFilter</code> Filters the incoming files from the read
- * From directory, based on file patterns.
+ * <code>FilenameWildcardFilter</code> filters incoming files from a directory,
+ * based on file patterns.
  */
 public class FilenameWildcardFilter extends WildcardFilter implements FilenameFilter
 {
-    /**
-     * logger used by this class
-     */
-    private static Log logger = LogFactory.getLog(FilenameWildcardFilter.class);
 
     public FilenameWildcardFilter()
     {
@@ -53,7 +47,7 @@ public class FilenameWildcardFilter extends WildcardFilter implements FilenameFi
     {
         if (name == null)
         {
-            logger.warn("The filename and or directory was null");
+            logger.warn("The filename and/or directory was null");
             return false;
         }
         else
