@@ -17,11 +17,13 @@ import org.mule.registry.ComponentReference;
 import org.mule.registry.ComponentVersion;
 
 /**
- * The SimpleComponentReference provides a basic implementation
+ * The BasicComponentReference provides a basic implementation
  * of the ComponentReference that defines a component reference
- * as a set of properties
+ * as a set of properties. It should be overridden.
+ *
+ * @version $Revision: $
  */
-public class SimpleComponentReference implements ComponentReference
+public class BasicComponentReference implements ComponentReference
 {
     public static int COMPONENT_STATE_UNITIALISED = 0;
 
@@ -34,13 +36,25 @@ public class SimpleComponentReference implements ComponentReference
     protected HashMap properties = null;
     protected HashMap children = null;
 
-    public SimpleComponentReference(String parentId, String type, Object component)
+    public BasicComponentReference()
+    {
+    }
+
+    /*
+    public BasicComponentReference(String parentId, String type, Object component)
     {
         this.parentId = parentId;
         this.type = type;
         this.state = COMPONENT_STATE_UNITIALISED;
         this.component = component;
         this.children = new HashMap();
+        loadProperties();
+    }
+    */
+
+    public void setComponent(Object component) 
+    {
+        this.component = component;
         loadProperties();
     }
 
@@ -95,12 +109,18 @@ public class SimpleComponentReference implements ComponentReference
         return state;
     }
 
-    public HashMap getChildren()
+    /*
+     * Non-standard getter so XStream doesn't grab it
+     */
+    public HashMap retrieveChildren()
     {
         return children;
     }
 
-    public ComponentReference getChild(String childId)
+    /*
+     * Non-standard getter so XStream doesn't grab it
+     */
+    public ComponentReference retrieveChild(String childId)
     {
         return (ComponentReference)children.get(childId);
     }

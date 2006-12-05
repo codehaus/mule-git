@@ -19,7 +19,7 @@ import org.mule.umo.model.UMOModel;
 /**
  * 
  * @author 
- * @version $Revision: 3649 $
+ * @version $Revision: $
  */
 public class RegistryNotificationListener implements UMOServerNotificationListener
 {

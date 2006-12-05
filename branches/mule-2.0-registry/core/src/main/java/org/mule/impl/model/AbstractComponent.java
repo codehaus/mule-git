@@ -22,9 +22,9 @@ import org.mule.impl.RequestContext;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.management.stats.ComponentStatistics;
 import org.mule.providers.AbstractConnector;
+import org.mule.registry.ComponentReference;
 import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
-import org.mule.registry.impl.SimpleComponentReference;
 import org.mule.umo.ComponentException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
@@ -158,8 +158,12 @@ public abstract class AbstractComponent implements UMOComponent
      */
     public void register() throws RegistrationException
     {
-        SimpleComponentReference ref = new 
-            SimpleComponentReference(model.getRegistryId(), "component", this);
+        ComponentReference ref = 
+            MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
+        ref.setParentId(model.getRegistryId());
+        ref.setType("component");
+        ref.setComponent(this);
+
         registryId = 
             MuleManager.getInstance().getRegistry().registerComponent(ref);
     }

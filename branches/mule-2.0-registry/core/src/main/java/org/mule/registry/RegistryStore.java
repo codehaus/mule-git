@@ -21,6 +21,8 @@ import org.mule.umo.lifecycle.Stoppable;
 /**
  * The Registry store is responsible for storing and persisting
  * the component references. It is also queryable and discoverable.
+ *
+ * @version $Revision: $
  */
 public interface RegistryStore extends Startable, Stoppable, Disposable, Persistable
 {

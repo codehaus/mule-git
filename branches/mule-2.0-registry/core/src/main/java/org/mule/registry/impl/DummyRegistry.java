@@ -22,6 +22,8 @@ import org.mule.umo.UMOException;
 /**
  * This dummy registry just reports on registration events but
  * doesn't store anything
+ *
+ * @version $Revision: $
  */
 public class DummyRegistry implements Registry {
 
@@ -100,4 +102,13 @@ public class DummyRegistry implements Registry {
         return generator.nextLong();
     }
 
+    public ComponentReference getComponentReferenceInstance()
+    {
+        return new BasicComponentReference();
+    }
+
+    public ComponentReference getComponentReferenceInstance(String referenceType)
+    {
+        return new BasicComponentReference();
+    }
 }

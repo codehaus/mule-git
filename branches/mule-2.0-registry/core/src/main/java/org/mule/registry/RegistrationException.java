@@ -14,7 +14,7 @@ import org.mule.MuleException;
 
 /**
  * @author
- * @version $Revision: 3649 $
+ * @version $Revision: $
  */
 public class RegistrationException extends MuleException
 {

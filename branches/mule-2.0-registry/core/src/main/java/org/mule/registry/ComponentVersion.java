@@ -17,7 +17,7 @@ import java.util.HashMap;
  * Actual implementation will probably be the OSGi Version.
  *
  * @author <a href="mailto:lajos@mulesource.com">Lajos Moczar</a>
- * @version $Revision: 3649 $
+ * @version $Revision: $
  */
 
 public interface ComponentVersion 

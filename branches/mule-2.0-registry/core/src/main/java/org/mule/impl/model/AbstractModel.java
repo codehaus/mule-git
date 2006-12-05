@@ -23,9 +23,9 @@ import org.mule.impl.ImmutableMuleDescriptor;
 import org.mule.impl.MuleSession;
 import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.model.DynamicEntryPointResolver;
+import org.mule.registry.ComponentReference;
 import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
-import org.mule.registry.impl.SimpleComponentReference;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
@@ -496,8 +496,12 @@ public abstract class AbstractModel implements UMOModel
      */
     public void register() throws RegistrationException
     {
-        SimpleComponentReference ref = new 
-            SimpleComponentReference(null, "model", this);
+        ComponentReference ref = 
+            MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
+        ref.setParentId(null);
+        ref.setType("model");
+        ref.setComponent(this);
+
         registryId = 
             MuleManager.getInstance().getRegistry().registerComponent(ref);
     }

@@ -23,6 +23,8 @@ import org.mule.umo.lifecycle.Stoppable;
  *
  * This Registry is really a facade so that we can implement various
  * other types of registries in the future. 
+ *
+ * @version $Revision: $
  */
 public interface Registry extends Startable, Stoppable, Disposable {
 
@@ -105,4 +107,20 @@ public interface Registry extends Startable, Stoppable, Disposable {
      * changed. Not used yet.
      */
     public void notifyPropertyChange(String id, String propertyName, Object propertyValue);
+
+    /**
+     * Returns a ComponentReference instance from the factory
+     * Utility method so objects don't have to know what objects to
+     * create.
+     */
+    ComponentReference getComponentReferenceInstance();
+
+    /**
+     * Returns a ComponentReference instance from the factory
+     * based on the reference type.
+     * Utility method so objects don't have to know what objects to
+     * create.
+     */
+    ComponentReference getComponentReferenceInstance(String referenceType);
+
 }

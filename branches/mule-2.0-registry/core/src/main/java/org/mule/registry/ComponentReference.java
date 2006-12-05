@@ -15,6 +15,8 @@ import java.util.HashMap;
 /**
  * The ComponentReference interface represents a component that is storable
  * in the registry.
+ *
+ * @version $Revision: $
  */
 
 public interface ComponentReference {
@@ -39,9 +41,9 @@ public interface ComponentReference {
 
     public int getState();
 
-    public HashMap getChildren();
+    public HashMap retrieveChildren();
 
-    public ComponentReference getChild(String childId);
+    public ComponentReference retrieveChild(String childId);
 
     public ComponentVersion getVersion();
 
@@ -54,6 +56,8 @@ public interface ComponentReference {
     public void setProperties(HashMap properties);
 
     public void setProperty(String key, Object property);
+
+    public void setComponent(Object component);
 
     public void addChild(ComponentReference component);
 

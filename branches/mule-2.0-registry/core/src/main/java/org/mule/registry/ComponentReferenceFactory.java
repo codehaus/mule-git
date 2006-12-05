@@ -17,20 +17,22 @@ import java.util.HashMap;
  * are used to store registry information about a component.
  *
  * @author <a href="mailto:lajos@mulesource.com">Lajos Moczar</a>
- * @version $Revision: 3649 $
+ * @version $Revision: $
  */
 
 public interface ComponentReferenceFactory 
 {
+    public static String REF_MULE_COMPONENT = "mule-component";
+    public static String REF_OSGI_REGISTRATION = "osgi-registration";
 
     /**
      * Returns a ComponentReference that can be used for storing
      * the reference information. Default call will return the default
-     * component reference (SimpleComponentReference)
+     * component reference (BasicComponentReference)
      *
      * @return the ComponentReference
      */
-    public ComponentReference getInstance();
+    ComponentReference getInstance();
 
     /**
      * Returns a ComponentReference that can be used for storing
@@ -40,5 +42,5 @@ public interface ComponentReferenceFactory
      * @param referenceType the type of reference ("OSGi_Bundle")
      * @return the ComponentReference
      */
-    public ComponentReference getInstance(String referenceType);
+    ComponentReference getInstance(String referenceType);
 }
