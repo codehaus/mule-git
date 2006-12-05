@@ -11,6 +11,7 @@
 package org.mule.providers.oracle.jms;
 
 import oracle.jdbc.pool.OracleDataSource;
+import oracle.jdbc.driver.OracleDriver;
 import org.mule.umo.lifecycle.InitialisationException;
 
 import javax.jms.JMSException;
@@ -54,7 +55,7 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
         try
         {
             // Register the Oracle JDBC driver.
-            Driver oracleDriver = new oracle.jdbc.driver.OracleDriver();
+            Driver oracleDriver = new OracleDriver();
             // Deregister first just in case the driver has already been registered.
             DriverManager.deregisterDriver(oracleDriver);
             DriverManager.registerDriver(oracleDriver);
