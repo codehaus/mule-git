@@ -29,6 +29,7 @@ public class MuleRegistry implements Registry {
     private long counter = 0L;
     private RegistryStore registryStore;
     private PersistenceManager persistenceManager;
+    private ComponentReferenceFactory referenceFactory;
 
     /**
      * logger used by this class
@@ -42,6 +43,7 @@ public class MuleRegistry implements Registry {
     {
         persistenceManager = new RegistryPersistenceManager();
         registryStore = new InMemoryStore();
+        referenceFactory = new ComponentReferenceFactoryImpl();
         PersistenceNotificationListener listener = 
             new PersistenceNotificationListener(persistenceManager);
 
@@ -190,5 +192,13 @@ public class MuleRegistry implements Registry {
         }
     }
 
-}
+    public ComponentReference getComponentReferenceInstance()
+    {
+        return referenceFactory.getInstance();
+    }
 
+    public ComponentReference getComponentReferenceInstance(String referenceType)
+    {
+        return referenceFactory.getInstance(referenceType);
+    }
+}
