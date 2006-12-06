@@ -13,15 +13,19 @@ package org.mule.samples.loanbroker;
 
 public class VMLoanBrokerSynchronousFunctionalTestCase extends AxisLoanBrokerSynchronousFunctionalTestCase
 {
+    public VMLoanBrokerSynchronousFunctionalTestCase()
+    {
+        super();
+    }
 
     protected String getConfigResources()
     {
-        return "loan-broker-vm-sync-config.xml";
+        return "loan-broker-vm-sync-test-config.xml";
     }
 
     protected int getNumberOfRequests()
     {
-        return 5000;
+        return 1000;
     }
 
 }

@@ -13,8 +13,6 @@
 
     <mule-environment-properties synchronous="true" serverUrl=""/>
 
-
-
     <endpoint-identifiers>
         <endpoint-identifier name="LoanBrokerRequests" value="vm://LoanBrokerRequests"/>
         <endpoint-identifier name="LoanBrokerQuotes" value="vm://LoanQuotes"/>

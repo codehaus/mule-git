@@ -17,16 +17,22 @@ import org.mule.umo.UMOMessage;
 
 public class AxisLoanBrokerSynchronousFunctionalTestCase extends FunctionalTestCase
 {
+    
+    public AxisLoanBrokerSynchronousFunctionalTestCase()
+    {
+        super();
+        setDisposeManagerPerSuite(true);
+    }
 
     protected String getConfigResources()
     {
         return "loan-broker-axis-sync-test-config.xml";
     }
 
-    // fire 10 requests as default
+    // fire 100 requests as default
     protected int getNumberOfRequests()
     {
-        return 10;
+        return 100;
     }
 
     public void testSingleLoanRequest() throws Exception
