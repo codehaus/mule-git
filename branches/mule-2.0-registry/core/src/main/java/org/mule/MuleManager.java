@@ -10,23 +10,9 @@
 
 package org.mule;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.Manifest;
-
-import javax.transaction.TransactionManager;
-
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,7 +76,21 @@ import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import javax.transaction.TransactionManager;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Collection;
+import java.util.jar.Manifest;
 
 /**
  * <code>MuleManager</code> maintains and provides services for a Mule instance.
@@ -151,7 +151,7 @@ public class MuleManager implements UMOManager
     /**
      * Collection for transformers registered in this component
      */
-    private HashMap transformers = new HashMap();
+    private Map transformers = new HashMap();
 
     /**
      * True once the Mule Manager is initialised
@@ -191,7 +191,7 @@ public class MuleManager implements UMOManager
     /**
      * Maintains a reference to any interceptor stacks configured on the manager
      */
-    private HashMap interceptorsMap = new HashMap();
+    private Map interceptorsMap = new HashMap();
 
     /**
      * the date in milliseconds from when the server was started
@@ -1299,13 +1299,30 @@ public class MuleManager implements UMOManager
      */
     protected void initialiseAgents() throws InitialisationException
     {
-        UMOAgent umoAgent;
         logger.info("Initialising agents...");
-        for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
+
+        // Do not iterate over the map directly, as 'complex' agents
+        // may spawn extra agents during initialisation. This will
+        // cause a ConcurrentModificationException.
+        // Use a cursorable iteration, which supports on-the-fly underlying
+        // data structure changes.
+        Collection agentsSnapshot = agents.values();
+        CursorableLinkedList agents = new CursorableLinkedList(agentsSnapshot);
+        CursorableLinkedList.Cursor cursor = agents.cursor();
+        try
         {
-            umoAgent = (UMOAgent)iterator.next();
-            logger.debug("Initialising agent: " + umoAgent.getName());
-            umoAgent.initialise();
+            while (cursor.hasNext())
+            {
+                UMOAgent umoAgent = (UMOAgent) cursor.next();
+
+                logger.debug("Initialising agent: " + umoAgent.getName());
+                umoAgent.initialise();
+            }
+        }
+        finally
+        {
+            // close the cursor as per JavaDoc
+            cursor.close();
         }
         logger.info("Agents Successfully Initialised");
     }
