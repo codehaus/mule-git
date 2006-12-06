@@ -1045,6 +1045,7 @@ public class MuleManager implements UMOManager
         {
             model = new SedaModel();
             model.setName(DEFAULT_MODEL_NAME);
+            model.register();
         }
         return model;
     }
