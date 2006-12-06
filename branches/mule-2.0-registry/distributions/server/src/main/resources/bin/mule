@@ -426,7 +426,7 @@ testpid() {
 }
 
 console() {
-    echo "Running $APP_LONG_NAME..."
+    echo "Running wrapper for $APP_LONG_NAME..."
     getpid
     if [ "X$pid" = "X" ]
     then
@@ -443,7 +443,7 @@ console() {
 }
 
 start() {
-    echo "Starting $APP_LONG_NAME..."
+    echo "Starting wrapper for $APP_LONG_NAME..."
     getpid
     if [ "X$pid" = "X" ]
     then

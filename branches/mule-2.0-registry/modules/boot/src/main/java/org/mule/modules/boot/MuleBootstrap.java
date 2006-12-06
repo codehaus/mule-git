@@ -11,41 +11,61 @@
 package org.mule.modules.boot;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mule.MuleServer;
-import org.mule.util.ClassUtils;
-import org.mule.util.SystemUtils;
+import org.tanukisoftware.wrapper.WrapperListener;
+import org.tanukisoftware.wrapper.WrapperManager;
 import org.tanukisoftware.wrapper.WrapperSimpleApp;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
- * Wrapper. <p/> MuleBootstrap class is responsible for constructing Mule's classpath
- * from the Mule home folder.
+ * Wrapper.  If OSGi is not being used to boot with, configure the classpath based on 
+ * the libraries in $MULE_HOME/lib/*
+ * 
+ * Note: this class is intentionally kept free of any external library dependencies and
+ * therefore repeats a few utility methods.  
  */
-public class MuleBootstrap
+public class MuleBootstrap 
 {
-
-    /**
-     * Do not instantiate MuleBootstrap.
-     */
-    private MuleBootstrap()
+	public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
+	public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.FrameworkWrapper";
+	
+    public static void main( String[] args ) throws Exception
     {
-        super();
+        String mainClassName = getCommandLineOption("-main", args);
+
+        if (mainClassName == null || mainClassName.equals(MAIN_CLASS_MULE_SERVER))
+        {
+        	configureClasspath();
+        	System.out.println("Starting the Mule Server...");
+        	WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_MULE_SERVER).newInstance(), args);
+        }
+        else if (mainClassName.equalsIgnoreCase("osgi") || mainClassName.equals(MAIN_CLASS_OSGI_FRAMEWORK))
+        {
+        	System.out.println("Starting the OSGi Framework...");
+        	WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_OSGI_FRAMEWORK).newInstance(), args);
+        }
+        else 
+        {
+	        // Add the main class name as the first argument to the Wrapper.
+	        String[] appArgs = new String[args.length + 1];
+	        appArgs[0] = mainClassName;
+	        System.arraycopy(args, 0, appArgs, 1, args.length);
+        	configureClasspath();
+        	System.out.println("Starting class " + mainClassName + "...");
+	        WrapperSimpleApp.main(appArgs);
+        }
     }
 
-    /**
-     * Entry point.
-     *
-     * @param args command-line arguments
-     * @throws Exception in case of any fatal problem
-     */
-    public static void main(String args[]) throws Exception
+    private static void configureClasspath() 
+    	throws IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException
     {
         // Make sure MULE_HOME is set.
         File muleHome = null;
@@ -78,27 +98,10 @@ public class MuleBootstrap
         // 
         // Now we will download these libraries to MULE_BASE/lib/user. In
         // a standard installation, MULE_BASE will be MULE_HOME.
-        if (!ClassUtils.isClassOnPath("javax.activation.DataSource", MuleBootstrap.class)) {
+        if (!isClassOnPath("javax.activation.DataSource")) {
             LibraryDownloader downloader = new LibraryDownloader(muleBase);
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
-
-        // the core jar has been added dynamically, this construct will run with
-        // a new Mule classpath now
-        String mainClassName = SystemUtils.getCommandLineOption("-main", args);
-
-        if (mainClassName == null)
-        {
-            mainClassName = MuleServer.class.getName();
-        }
-
-        // Add the main class name as the first argument to the Wrapper.
-        String[] appArgs = new String[args.length + 1];
-        appArgs[0] = mainClassName;
-        System.arraycopy(args, 0, appArgs, 1, args.length);
-
-        // Call the wrapper
-        WrapperSimpleApp.main(appArgs);
     }
 
     private static void addLibrariesToClasspath(List urls)
@@ -143,5 +146,48 @@ public class MuleBootstrap
             // System.out.println("Adding: " + url.toExternalForm());
             methodAddUrl.invoke(sysCl, new Object[]{url});
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // The following utility methods are included here in order to keep the bootloader 
+    // free of any external library dependencies.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Imitates ClassUtils.isClassOnPath()
+     */
+    private static boolean isClassOnPath(String className) {
+    	boolean found = false;   	
+    	try {
+    		found = (Thread.currentThread().getContextClassLoader().loadClass(className) != null);
+    	} catch (ClassNotFoundException e) { }
+    	if (!found) {
+	    	try {
+	    		found = (Class.forName(className) != null);
+	    	} catch (ClassNotFoundException e) { }
+    	}
+    	if (!found) {
+	    	try {
+	    		found = (MuleBootstrap.class.getClassLoader().loadClass(className) != null);
+	    	} catch (ClassNotFoundException e) { }
+    	}
+    	return found;
+    }
+
+    /**
+     * Imitates SystemUtils.getCommandLineOption()
+     */
+    private static String getCommandLineOption(String option, String args[])
+    {
+        List options = Arrays.asList(args);
+        if (options.contains(option))
+        {
+            int i = options.indexOf(option);
+            if (i < options.size() - 1)
+            {
+                return options.get(i + 1).toString();
+            }
+        }
+        return null;
     }
 }

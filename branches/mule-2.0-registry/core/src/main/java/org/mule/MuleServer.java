@@ -30,8 +30,6 @@ import org.mule.util.SystemUtils;
 /**
  * <code>MuleServer</code> is a simple application that represents a local Mule
  * Server daemon. It is initialised with a mule-config.xml file.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  */
 public class MuleServer implements Runnable
 {
@@ -81,10 +79,32 @@ public class MuleServer implements Runnable
      * 
      * @param args command-line args
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
-        MuleServer server = new MuleServer();
+    	try {
+    		MuleServer server = new MuleServer(args);
+            server.start(false);
+    	} catch (Exception e) {
+            System.err.println(StringMessageUtils.getBoilerPlate("FATAL: " + e.getMessage()));
+            throw e;
+    	}
+    }
 
+    public MuleServer()
+    {
+        this(new String[0]);
+    }
+
+    public MuleServer(String configResources)
+    {
+        setConfigurationResources(configResources);
+    }
+
+    /**
+     * Configure the server with command-line arguments.
+     */
+    public MuleServer(String[] args) throws IllegalArgumentException
+    {
         String config = SystemUtils.getCommandLineOption("-config", args);
         // Try default if no config file was given.
         if (config == null)
@@ -99,13 +119,11 @@ public class MuleServer implements Runnable
         }
         if (config != null)
         {
-            server.setConfigurationResources(config);
+            setConfigurationResources(config);
         }
         else
         {
-            Message message = new Message(Messages.CONFIG_NOT_FOUND_USAGE);
-            System.err.println(message.toString());
-            System.exit(1);
+        	throw new IllegalArgumentException(new Message(Messages.CONFIG_NOT_FOUND_USAGE).toString());
         }
 
         // Configuration builder
@@ -123,10 +141,7 @@ public class MuleServer implements Runnable
             }
             catch (Exception e)
             {
-                logger.fatal(e);
-                final Message message = new Message(Messages.FAILED_LOAD_X, "Builder: " + cfgBuilderClassName);
-                System.err.println(StringMessageUtils.getBoilerPlate("FATAL: " + message.toString()));
-                System.exit(1);
+            	throw new IllegalArgumentException(new Message(Messages.FAILED_LOAD_X, "Builder: " + cfgBuilderClassName).toString());
             }
         }
 
@@ -136,18 +151,6 @@ public class MuleServer implements Runnable
         {
             setStartupPropertiesFile(propertiesFile);
         }
-
-        server.start(false);
-    }
-
-    public MuleServer()
-    {
-        super();
-    }
-
-    public MuleServer(String configResources)
-    {
-        setConfigurationResources(configResources);
     }
 
     /**
@@ -240,7 +243,7 @@ public class MuleServer implements Runnable
      * 
      * @throws Exception if failed to initialize
      */
-    protected void initialize() throws Exception
+    public void initialize() throws Exception
     {
         logger.info("Mule Server starting...");
 
@@ -275,7 +278,7 @@ public class MuleServer implements Runnable
      * 
      * @param e the exception that caused the shutdown
      */
-    void shutdown(Throwable e)
+    public void shutdown(Throwable e)
     {
         Message msg = new Message(Messages.FATAL_ERROR_WHILE_RUNNING);
         UMOException muleException = ExceptionHelper.getRootMuleException(e);
@@ -304,7 +307,7 @@ public class MuleServer implements Runnable
     /**
      * shutdown the server. This just displays the time the server shut down
      */
-    void shutdown()
+    public void shutdown()
     {
         logger.info("Mule server shutting dow due to normal shutdown request");
         List msgs = new ArrayList();
