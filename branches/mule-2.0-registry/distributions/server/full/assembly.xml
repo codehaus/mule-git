@@ -752,6 +752,9 @@ Assembly descriptor for the full Mule distribution.
       <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
       <includes>
         <include>org.mule.modules:mule-module-boot</include>
+        <include>tanukisoft:wrapper</include>
+        <include>org.mule.modules:mule-module-osgi</include>
+        <include>org.knopflerfish:osgi</include>
       </includes>
     </dependencySet>
 
@@ -856,6 +859,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.modules:mule-module-jotm</exclude>
         <exclude>org.mule.modules:mule-module-management</exclude>
         <exclude>org.mule.modules:mule-module-ognl</exclude>
+        <exclude>org.mule.modules:mule-module-osgi</exclude>
         <exclude>org.mule.modules:mule-module-pgp</exclude>
         <exclude>org.mule.modules:mule-module-picocontainer</exclude>
         <exclude>org.mule.modules:mule-module-scripting</exclude>
@@ -871,6 +875,9 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.examples:mule-example-scripting</exclude>
         <exclude>org.mule.examples:mule-example-stockquote</exclude>
         <exclude>org.mule.examples:mule-example-voipservice</exclude>
+        <!-- Boot libraries -->
+        <exclude>tanukisoft:wrapper</exclude>
+        <exclude>org.knopflerfish:osgi</exclude>
         <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
         <exclude>org.mule.distributions:mule-full</exclude>
         <exclude>javax.activation:activation</exclude>

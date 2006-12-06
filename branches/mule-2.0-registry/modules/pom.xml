@@ -25,6 +25,7 @@
         <module>jotm</module>
         <module>management</module>
         <module>ognl</module>
+        <module>osgi</module>
         <module>pgp</module>
         <module>picocontainer</module>
         <module>registry</module>
