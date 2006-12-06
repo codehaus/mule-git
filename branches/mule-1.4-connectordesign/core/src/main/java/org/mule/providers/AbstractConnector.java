@@ -207,14 +207,12 @@ public abstract class AbstractConnector
     private final List supportedProtocols;
 
     /**
-     * A shared work manager for all receivers registered with this connector if
-     * <code>useSingleReceiverThreadPool</code> is set to true
+     * A shared work manager for all receivers registered with this connector.
      */
     private UMOWorkManager receiverWorkManager = null;
 
     /**
-     * A shared work manager for all dispatchers created for this connector if
-     * <code>useSingleDispatcherThreadPool</code> is set to true
+     * A shared work manager for all dispatchers created for this connector.
      */
     private UMOWorkManager dispatcherWorkManager = null;
 
@@ -734,7 +732,6 @@ public abstract class AbstractConnector
         {
             dispatcherThreadingProfile = MuleManager.getConfiguration()
                 .getMessageDispatcherThreadingProfile();
-
         }
         return dispatcherThreadingProfile;
     }
@@ -749,7 +746,10 @@ public abstract class AbstractConnector
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-            // MULE-595: workaround until PollingMessageReceiver does not require its own thread any longer
+            // MULE-595: workaround until PollingMessageReceiver does not require its own
+            // thread any longer and we have NIO support, probably via Mina. Socket-based
+            // receivers like http need to use a thread since they hang in accept();
+            // having too many of them can exhaust a size-limited pool and block startup.
             receiverThreadingProfile.setMaxThreadsActive(200);
         }
         return receiverThreadingProfile;
@@ -1255,13 +1255,13 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message receivers.
      */
-    synchronized UMOWorkManager getReceiverWorkManager() throws UMOException
+    synchronized UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
         if (receiverWorkManager == null)
         {
             receiverWorkManager = this.getReceiverThreadingProfile().createWorkManager(
-                this.getName() + ".receiver");
+                this.getName() + '.' + receiverName);
             receiverWorkManager.start();
         }
 

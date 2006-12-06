@@ -120,7 +120,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
         try
         {
-            workManager = this.connector.getReceiverWorkManager();
+            workManager = this.connector.getReceiverWorkManager(endpoint.getName());
         }
         catch (UMOException e)
         {
