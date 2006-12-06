@@ -64,9 +64,10 @@ import org.mule.util.concurrent.WaitableBoolean;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -1312,8 +1313,11 @@ public abstract class AbstractConnector
     {
         if (scheduler == null)
         {
-            ThreadFactory stf = new NamedThreadFactory(this.getName() + ".scheduler.");
-            scheduler = Executors.newSingleThreadScheduledExecutor(stf);
+            ThreadFactory stf = new NamedThreadFactory(this.getName() + ".scheduler");
+            ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(1, stf);
+            stpe.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+            stpe.setKeepAliveTime(getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
+            scheduler = stpe;
         }
 
         return scheduler;
