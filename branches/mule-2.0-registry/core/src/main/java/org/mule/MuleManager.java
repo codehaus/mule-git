@@ -48,6 +48,7 @@ import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.management.stats.AllStatistics;
+import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.registry.impl.DummyRegistry;
 import org.mule.registry.impl.RegistryNotificationListener;
@@ -1038,14 +1039,19 @@ public class MuleManager implements UMOManager
     /**
      * {@inheritDoc}
      */
-    public UMOModel getModel()
+    public UMOModel getModel() 
     {
         // todo in version two we must not assume the model
         if (model == null)
         {
             model = new SedaModel();
             model.setName(DEFAULT_MODEL_NAME);
-            model.register();
+            try {
+            	model.register();
+            } catch (RegistrationException e) {
+            	logger.warn("Unable to register model: " + e.getMessage());
+            	// TODO Do something!
+            }
         }
         return model;
     }

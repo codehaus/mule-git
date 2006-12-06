@@ -496,8 +496,13 @@ public abstract class AbstractModel implements UMOModel
      */
     public void register() throws RegistrationException
     {
-        ComponentReference ref = 
-            MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
+    	ComponentReference ref;
+    	try {
+    		ref = MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
+    	} 
+    	catch (NullPointerException e) {
+        	throw new RegistrationException("Unable to get ComponentReference.");
+        }
         ref.setParentId(null);
         ref.setType("model");
         ref.setComponent(this);

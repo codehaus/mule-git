@@ -12,15 +12,11 @@ package org.mule.registry;
 
 import org.mule.MuleException;
 
-/**
- * @author
- * @version $Revision: $
- */
 public class RegistrationException extends MuleException
 {
-    public RegistrationException()
+    public RegistrationException(String message)
     {
-        super("");
+        super(message);
     }
 }
 
