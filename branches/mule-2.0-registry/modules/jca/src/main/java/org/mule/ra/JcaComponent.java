@@ -19,6 +19,8 @@ import org.mule.impl.RequestContext;
 import org.mule.impl.container.ContainerKeyPair;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.management.stats.ComponentStatistics;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
@@ -39,7 +41,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
  */
 public class JcaComponent implements UMOComponent
 {
-    /**
+	/**
      * Serial version
      */
     private static final long serialVersionUID = -1510441245219710451L;
@@ -215,4 +217,12 @@ public class JcaComponent implements UMOComponent
     {
         return component;
     }
+
+	public void register() throws RegistrationException {
+		// TODO 
+	}
+	
+    public void deregister() throws DeregistrationException {
+		// TODO 		
+	}
 }
