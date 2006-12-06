@@ -59,10 +59,14 @@ import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.concurrent.NamedThreadFactory;
 import org.mule.util.concurrent.WaitableBoolean;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+import edu.emory.mathcs.backport.java.util.concurrent.Executors;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -217,6 +221,11 @@ public abstract class AbstractConnector
     private UMOWorkManager dispatcherWorkManager = null;
 
     /**
+     * A generic scheduling service for tasks that need to be performed periodically.
+     */
+    protected ScheduledExecutorService scheduler = null;
+
+    /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
@@ -329,6 +338,12 @@ public abstract class AbstractConnector
                 logger.info("Starting Connector: " + getClass().getName());
             }
 
+            // the scheduler is recreated after stopConnector()
+            if (scheduler == null || scheduler.isShutdown())
+            {
+                scheduler = this.getScheduler();
+            }
+
             this.doStart();
             started.set(true);
 
@@ -398,6 +413,10 @@ public abstract class AbstractConnector
                     mr.stop();
                 }
             }
+
+            // shutdown our scheduler service
+            scheduler.shutdown();
+            scheduler = null;
         }
 
         if (isConnected())
@@ -1282,6 +1301,22 @@ public abstract class AbstractConnector
         }
 
         return dispatcherWorkManager;
+    }
+
+    /**
+     * Returns a Scheduler service for periodic tasks, currently limited to internal
+     * use. Note: getScheduler() currently conflicts with the same method in the
+     * Quartz transport
+     */
+    synchronized ScheduledExecutorService getScheduler()
+    {
+        if (scheduler == null)
+        {
+            ThreadFactory stf = new NamedThreadFactory(this.getName() + ".scheduler.");
+            scheduler = Executors.newSingleThreadScheduledExecutor(stf);
+        }
+
+        return scheduler;
     }
 
     public UMOSessionHandler getSessionHandler()
