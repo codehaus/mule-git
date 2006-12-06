@@ -8,16 +8,8 @@
  * LICENSE.txt file.
  */
 
-package org.mule.registry.store;
+package org.mule.registry.impl.store;
 
-import org.mule.registry.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The PersistenceManager handles the persistence of RegistryStores

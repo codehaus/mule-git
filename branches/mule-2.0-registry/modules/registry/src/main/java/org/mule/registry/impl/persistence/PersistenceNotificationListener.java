@@ -10,8 +10,8 @@
 
 package org.mule.registry.impl.persistence;
 
+import org.mule.registry.impl.store.PersistenceManager;
 import org.mule.registry.persistence.Persistable;
-import org.mule.registry.persistence.PersistenceManager;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
 
@@ -35,7 +35,7 @@ public class PersistenceNotificationListener implements UMOServerNotificationLis
         if (notification instanceof PersistenceNotification)
         {
             Persistable object = (Persistable)notification.getSource();
-            persistenceManager.requestPersistence(object);
+            //persistenceManager.requestPersistence(object);
         }
 
     }

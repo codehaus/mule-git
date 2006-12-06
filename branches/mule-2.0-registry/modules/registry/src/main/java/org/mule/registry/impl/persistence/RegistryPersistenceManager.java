@@ -10,12 +10,13 @@
 
 package org.mule.registry.impl.persistence;
 
-import com.thoughtworks.xstream.XStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.transformers.xml.XStreamFactory;
+import org.mule.registry.impl.store.PersistenceManager;
 import org.mule.registry.persistence.Persistable;
-import org.mule.registry.persistence.PersistenceManager;
+import org.mule.transformers.xml.XStreamFactory;
+
+import com.thoughtworks.xstream.XStream;
 
 /**
  * PLACEHOLDER
@@ -23,7 +24,7 @@ import org.mule.registry.persistence.PersistenceManager;
  * @author 
  * @version $Revision: $
  */
-public class RegistryPersistenceManager implements PersistenceManager
+public class RegistryPersistenceManager extends PersistenceManager
 {
     private XStreamFactory xstreamFactory = null;
 

@@ -10,6 +10,15 @@
 
 package org.mule.providers.jbi.components;
 
+import java.io.OutputStream;
+
+import javax.jbi.JBIException;
+import javax.jbi.messaging.MessageExchange;
+import javax.jbi.messaging.MessagingException;
+import javax.jbi.messaging.NormalizedMessage;
+import javax.jbi.servicedesc.ServiceEndpoint;
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.SystemUtils;
 import org.mule.MuleManager;
 import org.mule.config.converters.QNameConverter;
@@ -20,6 +29,8 @@ import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.InternalMessageListener;
 import org.mule.providers.jbi.JbiMessageAdapter;
 import org.mule.providers.jbi.JbiUtils;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
@@ -29,14 +40,6 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.RecoverableException;
 import org.mule.umo.provider.UMOMessageReceiver;
-
-import javax.jbi.JBIException;
-import javax.jbi.messaging.MessageExchange;
-import javax.jbi.messaging.MessagingException;
-import javax.jbi.messaging.NormalizedMessage;
-import javax.jbi.servicedesc.ServiceEndpoint;
-import javax.xml.namespace.QName;
-import java.io.OutputStream;
 
 /**
  * Can receive events over Mule transports. Given an muleEndpoint (or endpoint string
@@ -231,7 +234,7 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
      */
     class NullUMOComponent implements UMOComponent
     {
-        /**
+		/**
          * Serial version
          */
         private static final long serialVersionUID = 6446394166371870045L;
@@ -302,6 +305,13 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
         {
             return null;
         }
-    }
 
+		public void register() throws RegistrationException {
+            // nothing to do
+		}
+
+		public void deregister() throws DeregistrationException {
+            // nothing to do
+		}
+    }
 }

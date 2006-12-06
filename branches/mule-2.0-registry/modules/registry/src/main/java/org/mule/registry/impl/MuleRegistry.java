@@ -10,15 +10,21 @@
 
 package org.mule.registry.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.registry.*;
-import org.mule.registry.impl.persistence.*;
+import org.mule.registry.ComponentReference;
+import org.mule.registry.ComponentReferenceFactory;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
+import org.mule.registry.Registry;
+import org.mule.registry.RegistryStore;
+import org.mule.registry.ReregistrationException;
+import org.mule.registry.impl.persistence.PersistenceNotificationListener;
+import org.mule.registry.impl.persistence.RegistryPersistenceManager;
 import org.mule.registry.impl.store.InMemoryStore;
-import org.mule.registry.persistence.PersistenceManager;
+import org.mule.registry.impl.store.PersistenceManager;
 import org.mule.umo.UMOException;
 
 /**
