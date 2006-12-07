@@ -21,6 +21,7 @@ import java.util.List;
 import org.mule.MuleServer;
 import org.mule.util.ClassUtils;
 import org.mule.util.SystemUtils;
+import org.tanukisoftware.wrapper.WrapperManager;
 import org.tanukisoftware.wrapper.WrapperSimpleApp;
 
 /**
@@ -72,6 +73,20 @@ public class MuleBootstrap
         // Build up a list of libraries from $MULE_HOME/lib/* and add them to the classpath.
         DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
         addLibrariesToClasspath(classPath.getURLs());
+
+        // If the license ack file isn't on the classpath, we need to
+        // display the EULA and make sure the user accepts it before continuing
+        ClassLoader sys = ClassLoader.getSystemClassLoader();
+        if (ClassUtils.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null) {
+            LicenseHandler licenseHandler = new LicenseHandler(muleHome, muleBase);
+            // If the user didn't accept the license, then we have to exit
+            // Exiting this way insures that the wrapper won't try again
+            // (by default it'll try to start 3 times)
+            if (!licenseHandler.getAcceptance())
+            {
+                WrapperManager.stop(-1);
+            }
+        }
 
         // One-time download to get libraries not included in the Mule distribution due
         // to silly licensing restrictions.
