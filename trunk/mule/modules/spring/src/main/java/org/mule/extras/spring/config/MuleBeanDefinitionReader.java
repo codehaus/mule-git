@@ -10,17 +10,6 @@
 
 package org.mule.extras.spring.config;
 
-import java.io.IOException;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-
 import org.dom4j.io.DOMReader;
 import org.mule.config.MuleDtdResolver;
 import org.mule.umo.transformer.UMOTransformer;
@@ -35,6 +24,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
 
 /**
  * <code>MuleBeanDefinitionReader</code> Is a custom Spring Bean reader that will
@@ -51,7 +50,7 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
     {
         super(beanDefinitionRegistry);
         // TODO Make this configurable as a property somehow.
-        setValidationMode(VALIDATION_DTD);
+        setValidationMode(VALIDATION_XSD);
         setEntityResolver(createEntityResolver());
         this.configCount = configCount;
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,

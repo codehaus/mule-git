@@ -1,0 +1,2 @@
+http\://www.mulesource.org/schema/mule/2.0=org.mule.extras.spring.config.handlers.MuleNamespaceHandler
+http\://www.mulesource.org/schema/management/2.0=org.mule.extras.spring.config.handlers.ManagementNamespaceHandler
