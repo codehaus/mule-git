@@ -71,8 +71,7 @@ public class UserInfoEndpointBuilder extends AbstractEndpointBuilder
         }
         else
         {
-            //I think its valid that user info may not be set
-            //throw new MalformedEndpointException(uri.toString(), new Exception("User info is not set"));
+            throw new MalformedEndpointException(uri.toString(), new Exception("User info is not set"));
         }
     }
 }

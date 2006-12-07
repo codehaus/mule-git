@@ -10,13 +10,6 @@
 
 package org.mule.modules.boot;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -31,7 +24,12 @@ import org.mule.util.FileUtils;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringUtils;
 
-import org.tanukisoftware.wrapper.WrapperManager;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryDownloader {
     static final int STARTUP_TIMEOUT = 120000;
@@ -137,7 +135,7 @@ public class LibraryDownloader {
             if (httpMethod.getStatusCode() == HttpStatus.SC_OK) {
                 File destinationFile =
                     new File(new File(muleHome, DefaultMuleClassPathConfig.FOLDER_USER), destinationFileName);
-                FileUtils.copyStreamToFile(httpMethod.getResponseBodyAsStream(), destinationFile);
+                //FileUtils.copyStreamToFile(httpMethod.getResponseBodyAsStream(), destinationFile);
                 System.out.println("done");
                 return destinationFile.toURL();
             }

@@ -10,8 +10,9 @@
 
 package org.mule.extras.spring.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
@@ -23,14 +24,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOManager;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.util.Properties;
 
 /**
  * <code>SpringConfigurationBuilder</code> Enables Mule to be loaded from as Spring
@@ -43,10 +36,6 @@ import java.util.Properties;
  */
 public class SpringConfigurationBuilder implements ConfigurationBuilder
 {
-    /**
-     * logger used by this class
-     */
-    protected transient Log logger = LogFactory.getLog(getClass());
     /**
      * Will configure a UMOManager based on the configurations made available through
      * Readers.
@@ -108,24 +97,7 @@ public class SpringConfigurationBuilder implements ConfigurationBuilder
             true, true);
 
         MuleManager.getConfiguration().setConfigResources(resources);
-        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-        //reader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
-        reader.setEntityResolver(new MuleSchemaResolver(getClass().getClassLoader()));
-        Resource resource;
-
-        for (int i = 0; i < resources.length; i++)
-        {
-            String s = resources[i];
-            resource = new ClassPathResource(s);
-            if(!resource.exists())
-            {
-                logger.debug("Did not find resource '" + s  +"' on classpath, trying the file system");
-                resource = new FileSystemResource(s);
-            }
-            reader.loadBeanDefinitions(resource);
-        }
-
+        new MuleApplicationContext(resources);
         try
         {
             if (System.getProperty(MuleProperties.MULE_START_AFTER_CONFIG_SYSTEM_PROPERTY, "true")

@@ -10,11 +10,7 @@
 
 package org.mule.tck;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +29,9 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -188,7 +187,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         catch (Exception e)
         {
             getTestInfo().incRunCount();
-            throw e;
+             throw e;
         }
     }
 
