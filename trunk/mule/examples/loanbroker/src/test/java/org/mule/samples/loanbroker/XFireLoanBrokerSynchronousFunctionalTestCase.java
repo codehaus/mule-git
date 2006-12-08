@@ -25,7 +25,7 @@ public class XFireLoanBrokerSynchronousFunctionalTestCase extends AxisLoanBroker
 
     protected int getNumberOfRequests()
     {
-        return 100;
+        return 10;
     }
 
 }
