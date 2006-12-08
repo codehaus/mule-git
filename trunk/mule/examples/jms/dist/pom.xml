@@ -110,6 +110,11 @@
                     <groupId>activemq</groupId>
                     <artifactId>activemq-core-test</artifactId>
                 </exclusion>
+                <!-- This exclusion is to force use of the new cglib -->
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-full</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
