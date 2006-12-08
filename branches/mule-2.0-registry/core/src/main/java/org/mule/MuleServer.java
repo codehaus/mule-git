@@ -81,13 +81,8 @@ public class MuleServer implements Runnable
      */
     public static void main(String[] args) throws Exception
     {
-    	try {
-    		MuleServer server = new MuleServer(args);
-            server.start(false);
-    	} catch (Exception e) {
-            System.err.println(StringMessageUtils.getBoilerPlate("FATAL: " + e.getMessage()));
-            throw e;
-    	}
+		MuleServer server = new MuleServer(args);
+        server.start(false);
     }
 
     public MuleServer()

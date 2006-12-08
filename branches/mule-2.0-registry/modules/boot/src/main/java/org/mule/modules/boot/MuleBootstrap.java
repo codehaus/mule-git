@@ -35,7 +35,7 @@ import org.tanukisoftware.wrapper.WrapperSimpleApp;
 public class MuleBootstrap 
 {
 	public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
-	public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.FrameworkWrapper";
+	public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.OsgiFrameworkWrapper";
 	
     public static void main( String[] args ) throws Exception
     {
