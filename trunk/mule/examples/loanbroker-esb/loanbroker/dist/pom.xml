@@ -57,21 +57,9 @@
                     <groupId>activemq</groupId>
                     <artifactId>activemq-core-test</artifactId>
                 </exclusion>
-                <!-- This exclusion is to force use of the new cglib -->
-                <exclusion>
-                    <groupId>cglib</groupId>
-                    <artifactId>cglib-full</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         
-        <!-- Need the latest version of cglib now -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>2.1_3</version>
-        </dependency>
-
         <!-- Mule modules/transports -->
         <dependency>
             <groupId>org.mule.transports</groupId>
