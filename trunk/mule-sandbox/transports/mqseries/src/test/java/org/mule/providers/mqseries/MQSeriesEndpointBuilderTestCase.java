@@ -76,7 +76,7 @@ public class MQSeriesEndpointBuilderTestCase extends TestCase
         assertEquals("mqs", uri.getScheme());
         assertEquals("my.topic", uri.getAddress());
         assertNull(uri.getEndpointName());
-        assertNull(uri.getParams().getProperty("queueManager"));
+        assertEquals("topic:my.topic",uri.getParams().getProperty("queueManager"));
         assertEquals("topic", uri.getResourceInfo());
         assertEquals("mqs://topic:my.topic", uri.toString());
 
@@ -90,7 +90,7 @@ public class MQSeriesEndpointBuilderTestCase extends TestCase
         assertEquals("user", uri.getUsername());
         assertEquals("pass", uri.getPassword());
         assertNull(uri.getEndpointName());
-        assertNull(uri.getParams().getProperty("queueManager"));
+        assertEquals("user:pass@topic:my.topic",uri.getParams().getProperty("queueManager"));
         assertEquals("topic", uri.getResourceInfo());
         assertEquals("mqs://user:pass@topic:my.topic", uri.toString());
     }
@@ -108,12 +108,12 @@ public class MQSeriesEndpointBuilderTestCase extends TestCase
 
     public void testTopicWithQMAndUserInfo() throws Exception
     {
-        UMOEndpointURI uri = new MuleEndpointURI("mqs://user:passwordQMgr/topic:my.topic");
+        UMOEndpointURI uri = new MuleEndpointURI("mqs://user:password@QMgr/topic:my.topic");
         assertEquals("mqs", uri.getScheme());
         assertEquals("my.topic", uri.getAddress());
         assertNull(uri.getEndpointName());
         assertEquals("QMgr", uri.getParams().getProperty("queueManager"));
-        assertEquals("topic", uri.getSchemeMetaInfo());
+        assertEquals("mqs", uri.getSchemeMetaInfo());
         assertEquals("user:password", uri.getUserInfo());
         assertEquals("user", uri.getUsername());
         assertEquals("password", uri.getPassword());

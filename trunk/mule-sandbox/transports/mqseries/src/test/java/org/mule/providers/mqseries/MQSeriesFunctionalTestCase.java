@@ -30,29 +30,30 @@ public class MQSeriesFunctionalTestCase extends TestCase {
 
     public void testFunctional() throws Exception {
 
-//        MQQueueConnectionFactory f = null;
-//        try
-//        {
-//            f = new MQQueueConnectionFactory();
-//            f.setHostName("Little-Ernie");
-//            f.setQueueManager("FFX.DMZ.QM");
-//            f.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
-//            f.setChannel("FFX.IN2OUT");
-//            f.createQueueConnection().start();
-//        } catch (JMSException e)
-//        {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            e.getLinkedException().printStackTrace();
-//        }
+        MQQueueConnectionFactory f = null;
+        try
+        {
+            f = new MQQueueConnectionFactory();
+            f.setHostName("VMMachine"); 
+            f.setQueueManager("QM_vmmachine");
+            f.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
+            f.setChannel("S_vmmachine");
+        } catch (JMSException e)
+        {
+           e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.getLinkedException().printStackTrace();
+        }
 
         String TEST_MSG = "tresting";
         MuleClient client = new MuleClient();
-//        MQSeriesConnector c = new MQSeriesConnector();
-//        c.setName("mqseries");
-//        c.setConnectionFactory(f);
-//        client.getManager().registerConnector(c);
-        client.sendNoReceive("mqs://FFX.DMZ.QM/DMZ.RECEIVE", TEST_MSG, null);
-        UMOMessage result = client.receive("mqs://FFX.DMZ.QM/DMZ.RECEIVE", 3000);
+        MQSeriesConnector c = new MQSeriesConnector();
+        c.setName("mqseries");
+        c.setHostname("VMMachine"); //AB
+        c.setPort (6969);
+        c.setConnectionFactory(f);
+        client.getManager().registerConnector(c);
+        client.sendNoReceive("mqs://QM_vmmachine/MuleQueue", TEST_MSG, null);
+        UMOMessage result = client.receive("mqs://QM_vmmachine/MuleQueue", 3000);
         assertNotNull(result);
         assertEquals(TEST_MSG, result.getPayloadAsString());
 

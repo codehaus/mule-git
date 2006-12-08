@@ -32,11 +32,15 @@ public class MQSeriesRemoteQMFunctionalTestCase extends TestCase {
     public void testFunctional() throws Exception {
 
         MQQueueConnectionFactory f = null;
+        String TEST_MSG = "tresting";
+        MuleClient client = new MuleClient();
+        MQSeriesConnector c = new MQSeriesConnector();
         try {
             f = new MQQueueConnectionFactory();
-            f.setHostName("localhost");
-            f.setPort(44000);
-            f.setQueueManager("FFX.DMZ.QM");
+            f.setHostName("vmmachine"); //Change this to the name of the server running MQ
+            f.setPort(6969);	//Change this accordingly too. Default is 1414
+            f.setQueueManager("QM_vmmachine");             // Queue Manager with this name needs to be pre-configured!
+
             f.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
             f.createQueueConnection().start();
         } catch (JMSException e) {
@@ -44,17 +48,15 @@ public class MQSeriesRemoteQMFunctionalTestCase extends TestCase {
             e.getLinkedException().printStackTrace();
         }
 
-        String TEST_MSG = "tresting";
-        MuleClient client = new MuleClient();
-        MQSeriesConnector c = new MQSeriesConnector();
-        c.setName("mqseries");
+        c.setName("WSSeries");
+        c.setHostname("vmmachine");
         c.setConnectionFactory(f);
+
         client.getManager().registerConnector(c);
-        client.sendNoReceive("mqs://FFX.DMZ.QM/DMZ.RECEIVE", TEST_MSG, null);
-        UMOMessage result = client.receive("mqs://FFX.DMZ.QM/DMZ.RECEIVE", 3000);
+        client.sendNoReceive("mqs://QM_vmmachine/MuleQueue", TEST_MSG, null);
+        UMOMessage result = client.receive("mqs://QM_vmmachine/MuleQueue", 3000);
         assertNotNull(result);
-        assertEquals(TEST_MSG, result.getPayloadAsString());
-    }
+        assertEquals(TEST_MSG, result.getPayloadAsString());    }
 
     public void testFunctionalRemoteQueue() throws Exception {
 
@@ -62,16 +64,16 @@ public class MQSeriesRemoteQMFunctionalTestCase extends TestCase {
         MQQueueConnectionFactory corp = null;
 
         dmz = new MQQueueConnectionFactory();
-        dmz.setHostName("localhost");
-        dmz.setPort(44000);
-        dmz.setQueueManager("FFX.DMZ.QM");
+        dmz.setHostName("VMMachine"); //AB
+        dmz.setPort(6969);
+        dmz.setQueueManager("QM_vmmachine");
         dmz.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
         //dmz.createQueueConnection().start();
 
         corp = new MQQueueConnectionFactory();
-        corp.setHostName("localhost");
-        corp.setPort(44001);
-        corp.setQueueManager("FFX.CORP.QM");
+        corp.setHostName("VMMachine"); // AB
+        corp.setPort(6969);
+        corp.setQueueManager("QM_vmmachine");
         corp.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
         //corp.createQueueConnection().start();
 
@@ -79,17 +81,21 @@ public class MQSeriesRemoteQMFunctionalTestCase extends TestCase {
         MuleClient client = new MuleClient();
         MQSeriesConnector dmzCnn = new MQSeriesConnector();
         dmzCnn.setName("dmz");
+        dmzCnn.setHostname("VMMachine");
         dmzCnn.setConnectionFactory(dmz);
         client.getManager().registerConnector(dmzCnn);
 
         MQSeriesConnector corpCnn = new MQSeriesConnector();
         corpCnn.setName("corp");
+        corpCnn.setHostname("VMMachine"); // AB
+        corpCnn.setPort(6969);
+        
         corpCnn.setConnectionFactory(corp);
         client.getManager().registerConnector(corpCnn);
         client.getManager().start();
 
-        client.sendNoReceive("mqs://DMZ.REQUEST?connector=dmz", TEST_MSG, null);
-        UMOMessage result = client.receive("mqs://CORP.RECEIVE?connector=corp", 3000);
+        client.sendNoReceive("mqs://QM_vmmachine/MuleQueue", TEST_MSG, null);
+        UMOMessage result = client.receive("mqs://QM_vmmachine/MuleQueue", 3000);
         assertNotNull(result);
         assertEquals(TEST_MSG, result.getPayloadAsString());
 
