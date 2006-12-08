@@ -34,13 +34,7 @@ import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
 /**
- * <code>XmppMessageReceiver</code> is responsible for receiving Mule events over
- * xmpp
- * 
- * @author Peter Braswell
- * @author John Evans
- * @author Ross Mason
- * @version $Revision$
+ * <code>XmppMessageReceiver</code> is responsible for receiving Mule events over XMPP.
  */
 public class XmppMessageReceiver extends AbstractMessageReceiver implements PacketListener
 {
@@ -99,11 +93,15 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
      */
     public void processPacket(Packet packet)
     {
-        logger.debug("processing packet: " + packet.toXML());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("processing packet: " + packet.toXML());
+        }
+
         Work work = createWork(packet);
         try
         {
-            getWorkManager().scheduleWork(work, WorkManager.IMMEDIATE, null, connector);
+            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null, connector);
         }
         catch (WorkException e)
         {
