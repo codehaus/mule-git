@@ -1,0 +1,6 @@
+Bundle-Version: 2.0
+Bundle-SymbolicName: org.mule.osgi
+Bundle-Name: Mule
+Export-Package: org.mule.osgi;version:=2.0
+Import-Package: org.osgi.framework
+Bundle-Activator: org.mule.modules.osgi.MuleServerActivator
