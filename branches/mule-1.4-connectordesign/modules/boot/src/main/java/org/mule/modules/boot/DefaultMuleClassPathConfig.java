@@ -48,15 +48,19 @@ public class DefaultMuleClassPathConfig
              * insures that any local class that override the global classes
              * will in fact do so.
              */
-            if (muleHome != muleBase)
-            {
-                addURL(new URL("file://" + muleBase.getAbsolutePath() + FOLDER_USER + "/"));
-                File[] muleJars = listJars(muleBase, FOLDER_USER);
-                for (int i = 0; i < muleJars.length; i++)
+            try {
+                if (!muleHome.getCanonicalFile().equals(muleBase.getCanonicalFile()))
                 {
-                    File jar = muleJars[i];
-                    addURL(jar.toURL());
+                    addURL(new URL("file://" + muleBase.getAbsolutePath() + FOLDER_USER + "/"));
+                    File[] muleJars = listJars(muleBase, FOLDER_USER);
+                    for (int i = 0; i < muleJars.length; i++)
+                    {
+                        File jar = muleJars[i];
+                        addURL(jar.toURL());
+                    }
                 }
+            } catch (IOException ioe) {
+                System.out.println("Unable to check to see if there are local jars to load: " + ioe.toString());
             }
 
             File[] muleJars = listJars(muleHome, FOLDER_USER);
