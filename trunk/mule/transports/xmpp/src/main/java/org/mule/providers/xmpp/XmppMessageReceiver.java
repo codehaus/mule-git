@@ -127,9 +127,14 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         {
             try
             {
-                logger.info("processing xmpp packet from: " + packet.getFrom());
                 UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
-                logger.info("UMOMessageAdapter is a: " + adapter.getClass().getName());
+
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Processing XMPP packet from: " + packet.getFrom());
+                    logger.debug("UMOMessageAdapter is a: " + adapter.getClass().getName());
+                }
+
                 UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null && packet instanceof Message)
