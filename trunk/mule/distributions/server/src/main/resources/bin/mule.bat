@@ -22,13 +22,13 @@ rem ###############################################################
 rem Customized for Mule
 rem ###############################################################
 
-# MULE_HOME must be set
+rem MULE_HOME must be set
 if "%MULE_HOME%" == "" (
    echo "You must set the MULE_HOME environment variable before starting Mule"
    goto :eof
 )
 
-# If MULE_BASE is not set, set it to MULE_HOME
+rem If MULE_BASE is not set, set it to MULE_HOME
 if "%MULE_BASE%" == "" SET MULE_BASE=%MULE_HOME%
 
 if "%MULE_APP%" == "" (
