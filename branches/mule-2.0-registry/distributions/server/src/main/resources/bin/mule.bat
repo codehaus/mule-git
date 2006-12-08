@@ -30,7 +30,7 @@ if "%MULE_APP%" == "" (
 	)
 )
 
-set _WRAPPER_BASE=..\sbin\wrapper
+set _WRAPPER_BASE=..\lib\boot\exec\wrapper
 rem ###############################################################
 set _WRAPPER_EXE=%_REALPATH%%_WRAPPER_BASE%-windows-x86-32.exe
 if exist "%_WRAPPER_EXE%" goto validate
