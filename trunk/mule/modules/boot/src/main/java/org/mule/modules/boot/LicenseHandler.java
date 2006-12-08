@@ -185,7 +185,7 @@ public class LicenseHandler
 
         if (!muleLib.canWrite()) {
             // If we can't write to MULE_HOME/lib/mule, try MULE_BASE/lib/user
-            if (muleHome != muleBase) {
+            if (!muleHome.getCanonicalFile().equals(muleBase.getCanonicalFile())) {
                 muleLib = new File(muleBase, "lib/user");
 
                 if (!muleLib.canWrite())
