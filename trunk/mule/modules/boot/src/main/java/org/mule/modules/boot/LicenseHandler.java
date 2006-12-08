@@ -184,9 +184,9 @@ public class LicenseHandler
         File tempJar = createAckJarFile(licenseType, licenseVersion);
 
         if (!muleLib.canWrite()) {
-            // If we can't write to MULE_HOME/lib/mule, try MULE_BASE/lib/boot
+            // If we can't write to MULE_HOME/lib/mule, try MULE_BASE/lib/user
             if (muleHome != muleBase) {
-                muleLib = new File(muleBase, "lib/boot");
+                muleLib = new File(muleBase, "lib/user");
 
                 if (!muleLib.canWrite())
                     throw new Exception("No write permissions for " + ackJarName + " in either MULE_HOME or MULE_BASE");
