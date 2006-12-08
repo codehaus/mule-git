@@ -22,9 +22,6 @@ import org.mule.util.queue.QueueSession;
 /**
  * <code>MuleProxy</code> is a proxy to a UMO. It is a poolable object that that
  * can be executed in it's own thread.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public interface MuleProxy extends Work, Lifecycle
