@@ -86,10 +86,6 @@
                 <endpoint address="vm://LoanBrokerRequests"/>
             </inbound-router>
             <outbound-router>
-                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <filter expectedType="org.mule.samples.loanbroker.esb.message.LoanQuote"
-                        className="org.mule.routing.filters.PayloadTypeFilter" />
-                </router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="gs:java://localhost/mule-space_container/mule-space?schema=cache"/>
                 </router>
