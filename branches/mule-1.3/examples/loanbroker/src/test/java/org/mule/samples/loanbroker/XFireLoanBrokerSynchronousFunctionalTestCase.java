@@ -13,9 +13,19 @@ package org.mule.samples.loanbroker;
 public class XFireLoanBrokerSynchronousFunctionalTestCase extends AxisLoanBrokerSynchronousFunctionalTestCase
 {
 
+    public XFireLoanBrokerSynchronousFunctionalTestCase()
+    {
+        super();
+    }
+    
     protected String getConfigResources()
     {
         return "loan-broker-xfire-sync-test-config.xml";
+    }
+
+    protected int getNumberOfRequests()
+    {
+        return 10;
     }
 
 }
