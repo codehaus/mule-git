@@ -28,7 +28,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
 
@@ -193,12 +192,11 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
     protected Session getSession() throws UMOException
     {
         // The session can be closed together with the dispatcher, so it is more
-        // reliable to get it from the dispatcher each time
+        // reliable to get it from the connector each time
         UMOImmutableEndpoint endpoint = this.getEndpoint();
         if (endpoint != null)
         {
-            UMOMessageDispatcher dispatcher = endpoint.getConnector().getDispatcher(endpoint);
-            return (Session)dispatcher.getDelegateSession();
+            return (Session)endpoint.getConnector().getDelegateSession();
         }
         else
         {

@@ -23,22 +23,9 @@ import org.mule.umo.lifecycle.Disposable;
  * data to the underlying protocol. The dispatcher also exposes a receive method that
  * allows users to make specific calls to the underlying transport to receive an
  * event.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface UMOMessageDispatcher extends Disposable, UMOConnectable, UMOMessageDispatching
 {
-
-    /**
-     * If the underlying transport has the notion of a client session when writing to
-     * it, the session should be obtainable using this method. If there is no session
-     * a null will be returned
-     * 
-     * @return the transport specific session or null if there is no session
-     * @throws UMOException
-     */
-    Object getDelegateSession() throws UMOException;
 
     /**
      * Gets the connector for this dispatcher

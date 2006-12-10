@@ -15,7 +15,6 @@ import java.io.OutputStream;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
@@ -49,16 +48,6 @@ public class StreamMessageDispatcher extends AbstractMessageDispatcher
                 ssc.setOutputMessage(outputMessage);
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOMessageDispatcher#getDelegateSession()
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     /*

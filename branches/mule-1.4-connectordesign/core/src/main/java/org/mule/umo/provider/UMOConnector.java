@@ -157,6 +157,17 @@ public interface UMOConnector extends Disposable, Initialisable
     public boolean isRemoteSyncEnabled();
 
     /**
+     * If the underlying transport has the notion of a client session when writing to
+     * it, the session should be obtainable using this method. If there is no session
+     * a null will be returned
+     * 
+     * @return the transport specific session or null if there is no session
+     * @throws UMOException
+     */
+    // TODO HH: fix this description
+    Object getDelegateSession() throws UMOException;
+
+    /**
      * Dispatches an event from the endpoint to the external system
      * 
      * @param event The event to dispatch

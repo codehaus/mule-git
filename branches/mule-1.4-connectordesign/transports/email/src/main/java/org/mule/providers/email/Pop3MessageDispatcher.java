@@ -230,6 +230,7 @@ public class Pop3MessageDispatcher extends AbstractMessageDispatcher
         return getMessageCount(folder) > 0;
     }
 
+    // TODO HH: move to connector
     public Object getDelegateSession() throws UMOException
     {
         return session;

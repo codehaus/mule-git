@@ -1333,6 +1333,11 @@ public abstract class AbstractConnector
         this.sessionHandler = sessionHandler;
     }
 
+    public Object getDelegateSession() throws UMOException
+    {
+        return null;
+    }
+
     public void workAccepted(WorkEvent event)
     {
         handleWorkException(event, "workAccepted");

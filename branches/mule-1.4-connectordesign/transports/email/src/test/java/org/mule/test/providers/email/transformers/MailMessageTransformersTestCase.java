@@ -58,6 +58,7 @@ public class MailMessageTransformersTestCase extends AbstractTransformerTestCase
         mockDispatcher.expectAndReturn("getDelegateSession", Session.getDefaultInstance(new Properties()));
         mockDispatcher.expectAndReturn("getDelegateSession", Session.getDefaultInstance(new Properties()));
 
+        // TODO HH: is this actually used?
         endpoint.setConnector(new SmtpConnector()
         {
             public UMOMessageDispatcher getDispatcher() throws UMOException

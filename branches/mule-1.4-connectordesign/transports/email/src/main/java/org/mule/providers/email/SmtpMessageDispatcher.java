@@ -151,6 +151,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @see org.mule.umo.provider.UMOConnectorSession#getDelegateSession()
      */
+    // TODO HH: move to connector
     public Object getDelegateSession() throws UMOException
     {
         return session;

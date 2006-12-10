@@ -231,6 +231,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @see org.mule.umo.provider.UMOMessageDispatcher#getDelegateSession()
      */
+    // TODO HH: move to connector
     public Object getDelegateSession() throws UMOException
     {
         try

@@ -419,6 +419,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @see org.mule.umo.provider.UMOMessageDispatcher#getDelegateSession()
      */
+    // TODO HH: move to connector
     public synchronized Object getDelegateSession() throws UMOException
     {
         try
