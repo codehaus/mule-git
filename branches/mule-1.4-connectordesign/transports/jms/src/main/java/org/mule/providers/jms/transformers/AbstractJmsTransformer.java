@@ -47,6 +47,7 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
      * @param name the String to encode
      * @return a valid JMS header name
      */
+    // TODO HH: move this to JmsMessageUtils
     public static String encodeHeader(String name)
     {
         if (StringUtils.isEmpty(name))
@@ -196,7 +197,7 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
         UMOImmutableEndpoint endpoint = this.getEndpoint();
         if (endpoint != null)
         {
-            return (Session)endpoint.getConnector().getDelegateSession();
+            return (Session)endpoint.getConnector().getDelegateSession(endpoint);
         }
         else
         {
