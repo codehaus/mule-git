@@ -28,10 +28,7 @@ import org.mule.util.Base64;
 
 /**
  * A JCE based encryption strategy. It also provides base64 encoding of
- * encrypted/decrypted data by setting the base64encoding attribute
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * encrypted/decrypted data by setting the base64encoding attribute.
  */
 public abstract class AbstractJCEEncryptionStrategy implements UMOEncryptionStrategy
 {
@@ -61,6 +58,7 @@ public abstract class AbstractJCEEncryptionStrategy implements UMOEncryptionStra
         }
 
         keySpec = createKeySpec();
+
         try
         {
             secretKey = getSecretKey();

@@ -45,9 +45,6 @@ import org.mule.umo.provider.UMOConnector;
 /**
  * <code>AxisMessageReceiver</code> is used to register a component as a service
  * with a Axis server.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class AxisMessageReceiver extends AbstractMessageReceiver
@@ -312,7 +309,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         {
             connector.addServletService(service);
             String endpointUrl = uri.getAddress() + "/" + serviceName;
-            endpointUrl.replaceFirst("servlet:", "http:");
+            endpointUrl = endpointUrl.replaceFirst("servlet:", "http:");
             service.getServiceDescription().setEndpointURL(endpointUrl);
         }
         else

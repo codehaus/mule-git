@@ -40,9 +40,6 @@ import org.mule.umo.transformer.TransformerException;
  * <code>MuleEventContext</code> is the context object for the current request.
  * Using the context, developers can send/dispatch/receive events programmatically as
  * well as manage transactions.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleEventContext implements UMOEventContext
 {
@@ -51,8 +48,8 @@ public class MuleEventContext implements UMOEventContext
      */
     protected static Log logger = LogFactory.getLog(MuleEventContext.class);
 
-    private UMOEvent event;
-    private UMOSession session;
+    private final UMOEvent event;
+    private final UMOSession session;
 
     MuleEventContext(UMOEvent event)
     {
@@ -245,11 +242,9 @@ public class MuleEventContext implements UMOEventContext
      */
     public UMOMessage sendEvent(UMOMessage message, UMOEndpoint endpoint) throws UMOException
     {
-        // If synchronous receive has not been explicitly set, default it to
-        // true
+        // If synchronous receive has not been explicitly set, default it to true
         setRemoteSync(message, endpoint);
-        UMOMessage result = session.sendEvent(message, endpoint);
-        return result;
+        return session.sendEvent(message, endpoint);
     }
 
     /**

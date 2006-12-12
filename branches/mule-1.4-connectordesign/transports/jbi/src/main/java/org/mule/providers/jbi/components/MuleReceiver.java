@@ -11,6 +11,7 @@
 package org.mule.providers.jbi.components;
 
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import javax.jbi.JBIException;
 import javax.jbi.messaging.MessageExchange;
@@ -119,8 +120,6 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
         }
         catch (Exception e)
         {
-            // TODO fix me
-            e.printStackTrace();
             throw new JBIException(e);
         }
     }
@@ -168,7 +167,7 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
                             .append(";")
                             .append(ep.getServiceName())
                             .append(";")
-                            .append(ep.getInterfaces())
+                            .append(Arrays.asList(ep.getInterfaces()))
                             .append(SystemUtils.LINE_SEPARATOR);
                     }
                     logger.debug(buf.toString());

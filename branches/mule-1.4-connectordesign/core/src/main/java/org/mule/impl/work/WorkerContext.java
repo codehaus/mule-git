@@ -49,7 +49,7 @@ public class WorkerContext implements Work
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(WorkerContext.class);
+    protected static final Log logger = LogFactory.getLog(WorkerContext.class);
 
     /**
      * Null WorkListener used as the default WorkListener.
@@ -395,6 +395,6 @@ public class WorkerContext implements Work
 
     public String toString()
     {
-        return "Work :" + worker;
+        return "Work: " + worker;
     }
 }

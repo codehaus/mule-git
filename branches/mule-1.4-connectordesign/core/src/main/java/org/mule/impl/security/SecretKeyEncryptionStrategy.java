@@ -32,8 +32,6 @@ import org.mule.util.StringMessageUtils;
  * specify any valid algorithm supported by JCE.
  * 
  * @see ObjectFactory
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class SecretKeyEncryptionStrategy extends AbstractJCEEncryptionStrategy
 {
@@ -81,17 +79,12 @@ public class SecretKeyEncryptionStrategy extends AbstractJCEEncryptionStrategy
         return null;
     }
 
-    public byte[] getkey()
-    {
-        return key;
-    }
-
-    public void setkey(byte[] rawKey)
+    public void setKey(byte[] rawKey)
     {
         this.key = rawKey;
     }
 
-    public void setkey(String rawKey)
+    public void setKey(String rawKey)
     {
         this.key = StringMessageUtils.getBytes(rawKey);
     }
@@ -108,7 +101,7 @@ public class SecretKeyEncryptionStrategy extends AbstractJCEEncryptionStrategy
 
     protected SecretKey getSecretKey() throws GeneralSecurityException
     {
-        KeyGenerator kgen = KeyGenerator.getInstance(algorithm);
-        return kgen.generateKey();
+        return KeyGenerator.getInstance(algorithm).generateKey();
     }
+
 }

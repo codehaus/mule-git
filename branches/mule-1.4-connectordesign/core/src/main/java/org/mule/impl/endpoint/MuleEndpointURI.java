@@ -30,11 +30,10 @@ import org.mule.util.PropertiesUtils;
  * received. The url defines the protocol, the endpointUri destination of the message
  * and optionally the endpoint to use when dispatching the event. Mule urls take the
  * form of - protocol://[host]:[port]/[provider]/endpointUri or
- * protocol://[host]:[port]/endpointUri i.e. vm:///my.object or
- * The protocol can be any of any connector registered with Mule. The
- * endpoint name if specified must be the name of a register global endpoint The
- * endpointUri can be any endpointUri recognised by the endpoint type.
- * 
+ * protocol://[host]:[port]/endpointUri i.e. vm:///my.object or The protocol can be
+ * any of any connector registered with Mule. The endpoint name if specified must be
+ * the name of a register global endpoint The endpointUri can be any endpointUri
+ * recognised by the endpoint type.
  */
 
 public class MuleEndpointURI implements UMOEndpointURI
@@ -43,6 +42,7 @@ public class MuleEndpointURI implements UMOEndpointURI
      * Serial version
      */
     private static final long serialVersionUID = 3906735768171252877L;
+
     /**
      * logger used by this class
      */
@@ -510,8 +510,7 @@ public class MuleEndpointURI implements UMOEndpointURI
 
     public int hashCode()
     {
-        int result;
-        result = (address != null ? address.hashCode() : 0);
+        int result = (address != null ? address.hashCode() : 0);
         result = 29 * result + (filterAddress != null ? filterAddress.hashCode() : 0);
         result = 29 * result + (endpointName != null ? endpointName.hashCode() : 0);
         result = 29 * result + (connectorName != null ? connectorName.hashCode() : 0);
@@ -521,7 +520,6 @@ public class MuleEndpointURI implements UMOEndpointURI
         result = 29 * result + (params != null ? params.hashCode() : 0);
         result = 29 * result + (uri != null ? uri.hashCode() : 0);
         result = 29 * result + (schemeMetaInfo != null ? schemeMetaInfo.hashCode() : 0);
-        result = 29 * result + (resourceInfo != null ? resourceInfo.hashCode() : 0);
-        return result;
+        return 29 * result + (resourceInfo != null ? resourceInfo.hashCode() : 0);
     }
 }
