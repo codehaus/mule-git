@@ -29,7 +29,6 @@ import org.mule.umo.routing.RoutingException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <code>AbstractRecipientList</code> is used to dispatch a single event to
