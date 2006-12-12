@@ -35,12 +35,12 @@ import org.mule.umo.provider.UMOMessageAdapter;
 
 public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
-    protected JmsConnector connector;
+    protected final JmsConnector connector;
     protected boolean reuseConsumer;
     protected boolean reuseSession;
-    protected ThreadContextLocal context = new ThreadContextLocal();
-    protected long frequency;
-    protected RedeliveryHandler redeliveryHandler;
+    protected final ThreadContextLocal context = new ThreadContextLocal();
+    protected final long timeout;
+    protected final RedeliveryHandler redeliveryHandler;
 
     /**
      * Holder receiving the session and consumer for this thread.
@@ -72,8 +72,8 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
     {
         super(connector, component, endpoint, new Long(0));
         this.connector = (JmsConnector)connector;
+        this.timeout = endpoint.getTransactionConfig().getTimeout();
 
-        this.frequency = endpoint.getTransactionConfig().getTimeout();
         // If reconnection is set, default reuse strategy to false
         // as some jms brokers will not detect lost connections if the
         // same consumer / session is used
@@ -187,7 +187,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         Message message = null;
         try
         {
-            message = ctx.consumer.receive(frequency);
+            message = ctx.consumer.receive(timeout);
         }
         catch (JMSException e)
         {
