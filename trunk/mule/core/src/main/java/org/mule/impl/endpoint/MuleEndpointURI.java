@@ -46,7 +46,7 @@ public class MuleEndpointURI implements UMOEndpointURI
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MuleEndpointURI.class);
+    protected static final Log logger = LogFactory.getLog(MuleEndpointURI.class);
 
     public static boolean isMuleUri(String url)
     {

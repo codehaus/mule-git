@@ -45,7 +45,7 @@ public class MuleEventContext implements UMOEventContext
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MuleEventContext.class);
+    protected static final Log logger = LogFactory.getLog(MuleEventContext.class);
 
     private final UMOEvent event;
     private final UMOSession session;
