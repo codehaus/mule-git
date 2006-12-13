@@ -46,8 +46,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 /**
  * <code>MuleWorkManager</code> is a JCA Work manager implementation used to manage
  * thread allocation for Mule components and connectors. This code has been adapted
- * from the Geronimo implementation, and the different pool executors have to be used
- * directly from Geronimo.
+ * from the Geronimo implementation.
  */
 public class MuleWorkManager implements UMOWorkManager
 {

@@ -48,9 +48,6 @@ import org.mule.util.StringUtils;
 /**
  * <code>ImmutableMuleEndpoint</code> describes a Provider in the Mule Server. A
  * endpoint is a grouping of an endpoint, an endpointUri and a transformer.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 {
@@ -62,7 +59,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
+    protected static final Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
 
     /**
      * The endpoint used to communicate with the external system

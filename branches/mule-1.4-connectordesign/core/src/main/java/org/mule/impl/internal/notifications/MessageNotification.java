@@ -32,7 +32,7 @@ public class MessageNotification extends UMOServerNotification
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MessageNotification.class);
+    protected static final Log logger = LogFactory.getLog(MessageNotification.class);
 
     public static final int MESSAGE_RECEIVED = MESSAGE_EVENT_ACTION_START_RANGE + 1;
     public static final int MESSAGE_DISPATCHED = MESSAGE_EVENT_ACTION_START_RANGE + 2;
