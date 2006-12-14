@@ -26,18 +26,10 @@ public class GuiInstallerLicenseHandler
     {
         File muleHome = new File(args[0].toString());
         LicenseHandler handler = new LicenseHandler(muleHome);
-        try
-        {
-            handler.saveLicenseAck("MuleSource Public License", "1.1.3");
-        }
-        // the "Unable to rename temporary jar" exception is always thrown when the jar file
-        // containing the license, for some reason is already present.
-        catch (Exception e)
-        {
-            if (!e.getMessage().startsWith("Unable to rename temporary jar"))
-            {
-                throw new Exception(e.getMessage());
-            }
-        }
+        // No need to trap the exception: the saveLicenseAck method
+        // Now checks to make sure there is no license.props already
+        // saved. However, the GuiInstaller should really do this check
+        // first.
+        handler.saveLicenseAck("MuleSource Public License", "1.1.3");
     }
 }
