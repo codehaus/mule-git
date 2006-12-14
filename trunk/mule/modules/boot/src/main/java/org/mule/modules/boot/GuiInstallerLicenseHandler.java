@@ -34,7 +34,7 @@ public class GuiInstallerLicenseHandler
         // containing the license, for some reason is already present.
         catch (Exception e)
         {
-            if (!e.getMessage().contains("Unable to rename temporary jar"))
+            if (!e.getMessage().startsWith("Unable to rename temporary jar"))
             {
                 throw new Exception(e.getMessage());
             }
