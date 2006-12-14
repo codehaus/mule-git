@@ -36,6 +36,7 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
+import org.mule.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,9 +44,6 @@ import java.util.Map;
 /**
  * <code>ImmutableMuleEndpoint</code> describes a Provider in the Mule Server. A
  * endpoint is a grouping of an endpoint, an endpointUri and a transformer.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 {
@@ -57,7 +55,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
+    protected static final Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
 
     /**
      * The endpoint used to communicate with the external system
@@ -530,13 +528,11 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public int hashCode()
     {
-        int result;
-        result = (connector != null ? connector.hashCode() : 0);
+        int result = (connector != null ? connector.hashCode() : 0);
         result = 29 * result + (endpointUri != null ? endpointUri.hashCode() : 0);
         result = 29 * result + (transformer != null ? transformer.hashCode() : 0);
         result = 29 * result + (name != null ? name.hashCode() : 0);
-        result = 29 * result + (type != null ? type.hashCode() : 0);
-        return result;
+        return 29 * result + (type != null ? type.hashCode() : 0);
     }
 
     public UMOFilter getFilter()
@@ -546,8 +542,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public static UMOEndpoint createEndpointFromUri(UMOEndpointURI uri, String type) throws UMOException
     {
-        UMOEndpoint endpoint = ConnectorFactory.createEndpoint(uri, type);
-        return endpoint;
+        return ConnectorFactory.createEndpoint(uri, type);
     }
 
     public static UMOEndpoint getEndpointFromUri(String uri)
@@ -563,22 +558,23 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public static UMOEndpoint getEndpointFromUri(UMOEndpointURI uri) throws UMOException
     {
-        UMOEndpoint endpoint = null;
-        if (uri.getEndpointName() != null)
+        String endpointName = uri.getEndpointName();
+        if (endpointName != null)
         {
-            String endpointString = MuleManager.getInstance().lookupEndpointIdentifier(uri.getEndpointName(),
-                uri.getEndpointName());
-            endpoint = MuleManager.getInstance().lookupEndpoint(endpointString);
+            String endpointString = MuleManager.getInstance().lookupEndpointIdentifier(endpointName,
+                endpointName);
+            UMOEndpoint endpoint = MuleManager.getInstance().lookupEndpoint(endpointString);
             if (endpoint != null)
             {
-                if (uri.getAddress() != null && uri.getAddress().length() > 0)
+                if (StringUtils.isNotEmpty(uri.getAddress()))
                 {
                     endpoint.setEndpointURI(uri);
                 }
             }
-
+            return endpoint;
         }
-        return endpoint;
+
+        return null;
     }
 
     public static UMOEndpoint getOrCreateEndpointForUri(String uriIdentifier, String type)
