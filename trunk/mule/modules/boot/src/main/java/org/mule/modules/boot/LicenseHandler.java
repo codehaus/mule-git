@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-import org.mule.util.ClassUtils;
 
 /**
  * This class has methods for displaying the EULA and saving the
@@ -181,16 +180,6 @@ public class LicenseHandler
      */
     public void saveLicenseAck(String licenseType, String licenseVersion) throws Exception
     {
-        if (ClassUtils.getResource("META-INF/mule/license.props", MuleBootstrap.class) != null) {
-            // We already have the license.props file from somewhere, so
-            // forget about saving the jar file
-            // 
-            // This case should ONLY be for when the GUI installer saved the
-            // license.props already, and forgot to check for its existence
-            // prior to calling this method.
-            return;
-        }
-
         File muleLib = new File(muleHome, "lib/mule");
         File tempJar = createAckJarFile(licenseType, licenseVersion);
 
