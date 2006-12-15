@@ -25,7 +25,6 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.file.FileConnector;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -102,7 +101,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         {
             if (filename == null)
             {
-                String outPattern = (String)endpoint.getProperty(FileConnector.PROPERTY_OUTPUT_PATTERN);
+                String outPattern = (String)endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
                 if (outPattern == null){
                     outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
                     connector.getOutputPattern());
