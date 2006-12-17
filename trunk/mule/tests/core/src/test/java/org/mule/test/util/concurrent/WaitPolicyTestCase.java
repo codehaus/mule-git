@@ -44,6 +44,7 @@ public class WaitPolicyTestCase extends TestCase
 
         // allow 1 active & 1 queued Thread
         _executor = new ThreadPoolExecutor(1, 1, 10000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(1));
+        _executor.prestartAllCoreThreads();
         _asyncGroup = new ExceptionCollectingThreadGroup();
         SleepyTask.activeTasks = new AtomicInteger(0);
     }
@@ -159,7 +160,7 @@ public class WaitPolicyTestCase extends TestCase
         Runnable s3 = new SleepyTask("tweety", 1000);
         this.execute(_executor, s3);
 
-        assertFalse(_executor.awaitTermination(4000, TimeUnit.MILLISECONDS));
+        assertFalse(_executor.awaitTermination(5000, TimeUnit.MILLISECONDS));
         assertEquals(s3, policy.lastRejectedRunnable());
         assertEquals(0, SleepyTask.activeTasks.get());
     }
