@@ -284,7 +284,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
         info.setUserName(userid);
     }
 
-    public String getConfiguratinbuilder()
+    public String getConfigurationBuilder()
     {
         return info.getConfigurationBuilder();
     }

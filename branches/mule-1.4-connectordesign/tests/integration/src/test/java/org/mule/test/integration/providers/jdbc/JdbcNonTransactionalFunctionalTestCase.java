@@ -80,7 +80,7 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         UMOMessage message;
 
         message = muleEndpoint.receive(1000);
-        assertNull(message);
+        assertNotNull(message);
 
         execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
                       + "', NULL, NULL)");
