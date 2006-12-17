@@ -9,7 +9,7 @@
  */
 package org.mule.extras.spring.config.handlers;
 
-import org.mule.extras.spring.config.AbstractChildDefinitionParser;
+import org.mule.extras.spring.config.AbstractChildBeanDefinitionParser;
 import org.mule.routing.filters.ExceptionTypeFilter;
 import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.routing.filters.PayloadTypeFilter;
@@ -47,7 +47,7 @@ public class FilterNamespaceHandler extends NamespaceHandlerSupport
         //registerBeanDefinitionParser("xquery", parser);
     }
 
-    public static class FilterDefinitionParser extends AbstractChildDefinitionParser
+    public static class FilterDefinitionParser extends AbstractChildBeanDefinitionParser
     {
 
         protected Class getBeanClass(Element element)
@@ -98,7 +98,7 @@ public class FilterNamespaceHandler extends NamespaceHandlerSupport
             return null;
         }
 
-        protected String getPropertyName(Element e)
+        public String getPropertyName(Element e)
         {
             return "filter";
         }

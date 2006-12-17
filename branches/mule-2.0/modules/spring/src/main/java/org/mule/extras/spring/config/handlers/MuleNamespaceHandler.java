@@ -9,263 +9,82 @@
  */
 package org.mule.extras.spring.config.handlers;
 
-import org.mule.ManagementContext;
-import org.mule.config.MuleProperties;
-import org.mule.config.ThreadingProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.extras.spring.config.AbstractChildDefinitionParser;
-import org.mule.extras.spring.config.AbstractMuleSingleBeanDefinitionParser;
-import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.SimpleRetryConnectionStrategy;
-import org.mule.umo.endpoint.MalformedEndpointException;
-import org.mule.util.ClassUtils;
-import org.mule.util.StringUtils;
-import org.springframework.beans.FatalBeanException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValue;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
-import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.mule.extras.spring.config.parsers.ConnectionStrategyDefinitionParser;
+import org.mule.extras.spring.config.parsers.CustomElementDefinitionParser;
+import org.mule.extras.spring.config.parsers.EndpointDefinitionParser;
+import org.mule.extras.spring.config.parsers.ManagementContextDefinitionParser;
+import org.mule.extras.spring.config.parsers.ModelDefinitionParser;
+import org.mule.extras.spring.config.parsers.ServiceDescriptorDefinitionParser;
+import org.mule.extras.spring.config.parsers.ServiceOverridesDefinitionParser;
+import org.mule.extras.spring.config.parsers.SimpleChildDefinitionParser;
+import org.mule.extras.spring.config.parsers.SourceTypeDefinitionParser;
+import org.mule.extras.spring.config.parsers.ThreadingProfileDefinitionParser;
+import org.mule.extras.spring.config.parsers.KnownTypeElementDefinitionParser;
+import org.mule.model.CallableEntryPointResolver;
+import org.mule.routing.inbound.InboundMessageRouter;
+import org.mule.routing.outbound.OutboundMessageRouter;
+import org.mule.routing.response.ResponseMessageRouter;
+import org.mule.impl.container.RmiContainerContext;
+import org.mule.impl.container.PropertiesContainerContext;
+import org.mule.impl.container.JndiContainerContext;
 
 /**
  * todo document
  *
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 1.1 $
+ * @version $Revision$
  */
-public class MuleNamespaceHandler extends NamespaceHandlerSupport
+public class MuleNamespaceHandler extends AbstractHierarchicalNamespaceHandler
 {
-
 
     public void init()
     {
-        registerBeanDefinitionParser("mule-configuration", new MuleBeanDefinitionParser());
+        //Common elements
+        registerBeanDefinitionParser("mule-configuration", new ManagementContextDefinitionParser());
         registerBeanDefinitionParser("threading-profile", new ThreadingProfileDefinitionParser());
-        registerBeanDefinitionParser("exception-strategy", new ExceptionStrategyDefinitionParser());
+        registerBeanDefinitionParser("exception-strategy", new SimpleChildDefinitionParser("execptionStrategy", null));
+
+        //Connector elements
         registerBeanDefinitionParser("dispatcher-threading-profile", new ThreadingProfileDefinitionParser());
         registerBeanDefinitionParser("receiver-threading-profile", new ThreadingProfileDefinitionParser());
         registerBeanDefinitionParser("dispatcher-connection-straqtegy", new ConnectionStrategyDefinitionParser());
         registerBeanDefinitionParser("receiver-connection-straqtegy", new ConnectionStrategyDefinitionParser());
         registerBeanDefinitionParser("service-overrides", new ServiceOverridesDefinitionParser());
+        registerBeanDefinitionParser("custom-connector", new CustomElementDefinitionParser());
+
+        //Transformer elements
+        registerBeanDefinitionParser("custom-transformer", new CustomElementDefinitionParser());
+        registerBeanDefinitionParser("source-type", new SourceTypeDefinitionParser());
+
+        //Endpoint elements
         registerBeanDefinitionParser("endpoint", new EndpointDefinitionParser());
-        registerBeanDefinitionParser("custom-connector", new CustomConnectorDefinitionParser());
-        //todo registerBeanDefinitionParser("source-type", new TransformerSourceTypeDefinitionParser());
+
+        //Container contexts
+        registerBeanDefinitionParser("custom-container", new CustomElementDefinitionParser());
+        registerBeanDefinitionParser("rmi-container", new KnownTypeElementDefinitionParser(RmiContainerContext.class));
+        registerBeanDefinitionParser("jndi-container", new KnownTypeElementDefinitionParser(JndiContainerContext.class));
+        registerBeanDefinitionParser("properties-container", new KnownTypeElementDefinitionParser(PropertiesContainerContext.class));
+
+        //Model Elements
+        registerBeanDefinitionParser("model-seda", new ModelDefinitionParser("seda"));
+        registerBeanDefinitionParser("model-seda-optimised", new ModelDefinitionParser("seda-optimised"));
+        registerBeanDefinitionParser("model-simple", new ModelDefinitionParser("simple"));
+        registerBeanDefinitionParser("model-pipeline", new ModelDefinitionParser("pipeline"));
+        registerBeanDefinitionParser("custom-model", new ModelDefinitionParser("custom"));
+
+        registerBeanDefinitionParser("custom-lifecycle-adaptor", new SimpleChildDefinitionParser("lifecycleAdapater", null));
+        registerBeanDefinitionParser("callable-entrypoint-resolver", new SimpleChildDefinitionParser("entrypointResolver", CallableEntryPointResolver.class));
+        registerBeanDefinitionParser("custom-entrypoint-resolver", new SimpleChildDefinitionParser("entrypointResolver", null));
+        //registerBeanDefinitionParser("method-entrypoint-resolver", new SimpleChildDefinitionParser("entrypointResolver", MethodEntryPointResolver.class));
+        //registerBeanDefinitionParser("reflection-entrypoint-resolver", new SimpleChildDefinitionParser("entrypointResolver", MethodEntryPointResolver.class));
+        //registerBeanDefinitionParser("non-void-entrypoint-resolver", new SimpleChildDefinitionParser("entrypointResolver", NonVoidEntryPointResolver.class));
+
+        //Service Elements
+        registerBeanDefinitionParser("service", new ServiceDescriptorDefinitionParser());
+        registerBeanDefinitionParser("inbound-router", new SimpleChildDefinitionParser("inboundRouter", InboundMessageRouter.class));
+        registerBeanDefinitionParser("outbound-router", new SimpleChildDefinitionParser("outboundRouter", OutboundMessageRouter.class));
+        registerBeanDefinitionParser("response-router", new SimpleChildDefinitionParser("responseRouter", ResponseMessageRouter.class));
+
 
     }
-
-    public static class MuleBeanDefinitionParser extends AbstractMuleSingleBeanDefinitionParser
-    {
-
-
-        protected Class getBeanClass(Element element)
-        {
-            return ManagementContext.class;
-        }
-    }
-
-    public static class ThreadingProfileDefinitionParser extends AbstractChildDefinitionParser
-    {
-
-        public ThreadingProfileDefinitionParser() {
-            registerAttributeMapping("poolExhaustedAction", "poolExhaustedActionString");
-        }
-
-        protected Class getBeanClass(Element element) {
-            return ThreadingProfile.class;
-        }
-
-        protected String getPropertyName(Element e) {
-            String name = e.getLocalName();
-            if ("receiver-threading-profile".equals(name)) {
-                return "receiverThreadingProfile";
-            } else if ("dispatcher-threading-profile".equals(name)) {
-                return "dispatcherThreadingProfile";
-            } else {
-                return "threadingProfile";
-            }
-        }
-    }
-
-    public static class ExceptionStrategyDefinitionParser extends AbstractChildDefinitionParser {
-
-        protected Class getBeanClass(Element element) {
-            return DefaultExceptionStrategy.class;
-        }
-
-        protected String getPropertyName(Element e) {
-            return "exceptionListener";
-        }
-    }
-
-    public static class ConnectionStrategyDefinitionParser extends AbstractChildDefinitionParser {
-
-        public static final Class DEFAULT_CONNECTION_STRATEGY = SimpleRetryConnectionStrategy.class;
-
-        protected Class getBeanClass(Element element) {
-            //generateBeanNameIfNotSet(element, JdmkAgent.class);
-            String clazz = element.getAttribute("class");
-            if (clazz != null) {
-                try {
-                    return ClassUtils.loadClass(clazz, getClass());
-                } catch (ClassNotFoundException e) {
-                    throw new FatalBeanException(new Message(Messages.CLASS_X_NOT_FOUND, clazz).getMessage(), e);
-                }
-            }
-            return DEFAULT_CONNECTION_STRATEGY;
-        }
-
-        protected String getPropertyName(Element e) {
-            String name = e.getLocalName();
-            if ("receiver-connection-strategy".equals(name)) {
-                return "receiverConnectionStrategy";
-            } else if ("dispatcher-connection-strategy".equals(name)) {
-                return "dispatcherConnectionStrategy";
-            } else {
-                return "connectionStrategy";
-            }
-        }
-    }
-
-    public static class ServiceOverridesDefinitionParser extends AbstractChildDefinitionParser
-    {
-
-        protected Class getBeanClass(Element element)
-        {
-            return ManagementContext.class;
-        }
-
-
-        protected String getPropertyName(Element e)
-        {
-            return "serviceOverrides";
-        }
-
-
-        protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
-        {
-            Map overrides = new HashMap();
-            addOverride(overrides, element, "messageReceiver", MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS);
-            addOverride(overrides, element, "transactedessageReceiver", MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS);
-            addOverride(overrides, element, "dispatcherFactory", MuleProperties.CONNECTOR_DISPATCHER_FACTORY);
-            addOverride(overrides, element, "messageAdapter", MuleProperties.CONNECTOR_MESSAGE_ADAPTER);
-            addOverride(overrides, element, "streamMessageAdapter", MuleProperties.CONNECTOR_STREAM_MESSAGE_ADAPTER);
-            addOverride(overrides, element, "inboundTransformer", MuleProperties.CONNECTOR_INBOUND_TRANSFORMER);
-            addOverride(overrides, element, "outboundTransformer", MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER);
-            addOverride(overrides, element, "responseTransformer", MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER);
-            addOverride(overrides, element, "endpointBuilder", MuleProperties.CONNECTOR_ENDPOINT_BUILDER);
-            addOverride(overrides, element, "serviceFinder", MuleProperties.CONNECTOR_SERVICE_FINDER);
-            builder.setSource(overrides);
-        }
-
-        protected void postProcess(RootBeanDefinition beanDefinition, Element element) {
-            String parentBean = ((Element) element.getParentNode()).getAttribute("id");
-            beanDefinition.getPropertyValues().addPropertyValue(new PropertyValue("id", parentBean + "-" + element.getNodeName()));
-        }
-
-        protected void addOverride(Map overrides, Element e, String attributeName, String overrideName) {
-            String value = e.getAttribute(attributeName);
-            if (!StringUtils.isBlank(value)) {
-                overrides.put(overrideName, value);
-            }
-        }
-    }
-
-    public static class EndpointDefinitionParser extends AbstractMuleSingleBeanDefinitionParser
-    {
-
-        /**
-         * Parse the specified {@link org.w3c.dom.Element} and register resulting <code>BeanDefinitions</code>
-         * with the supplied {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}.
-         */
-        public BeanDefinition doParse(Element element) {
-
-            String address = element.getAttribute("address");
-
-            MutablePropertyValues mpvs = new MutablePropertyValues();
-
-            NamedNodeMap attributes = element.getAttributes();
-            for(int x = 0; x < attributes.getLength(); x++) {
-                Attr attribute = (Attr) attributes.item(x);
-                String name = attribute.getLocalName();
-
-                if("address".equals(name)) {
-                    try {
-                        mpvs.addPropertyValue("endpointURI", new MuleEndpointURI(address));
-                    } catch (MalformedEndpointException e) {
-                        throw new BeanCreationException(new Message(Messages.ENPOINT_X_IS_MALFORMED, address).getMessage(), e);
-                    }
-                } else {
-                    String n = attribute.getLocalName();
-                    if(n==null) n = attribute.getName();
-                    n = getAttributeMapping(n);
-                    String v = attribute.getValue();
-                    mpvs.addPropertyValue(n, v);
-                }
-            }
-
-            if(StringUtils.isBlank(element.getAttribute("id"))) {
-                mpvs.addPropertyValue(new PropertyValue("id", address));
-                element.setAttribute("id", address);
-            }
-            //todo parseProperties(element, element.getAttribute("id"), mpvs, true);
-
-            RootBeanDefinition def = new RootBeanDefinition(MuleEndpoint.class, mpvs);
-            postProcess(def, element);
-            return def;
-        }
-
-        protected void postProcess(RootBeanDefinition beanDefinition, Element element) {
-            String parentBean = ((Element) element.getParentNode()).getAttribute("id");
-            if(StringUtils.isBlank(parentBean)) {
-                return;
-            }
-            BeanDefinition parent = registry.getBeanDefinition(parentBean);
-            PropertyValue pv = parent.getPropertyValues().getPropertyValue("endpoints");
-            if(pv==null) {
-                pv = new PropertyValue("endpoints", new ManagedList());
-                parent.getPropertyValues().addPropertyValue(pv);
-            }
-            ((List)pv.getValue()).add(beanDefinition);
-
-            //parent.getPropertyValues().addPropertyValue(new PropertyValue(getPropertyName(element), beanDefinition));
-
-        }
-
-
-        protected Class getBeanClass(Element element) {
-            return MuleEndpoint.class;
-        }
-    }
-
-    public static class CustomConnectorDefinitionParser extends AbstractSingleBeanDefinitionParser
-    {
-        protected Class getBeanClass(Element element)
-        {
-            String cls = element.getAttribute("class");
-            try
-            {
-                return ClassUtils.loadClass(cls, getClass());
-            }
-            catch (ClassNotFoundException e)
-            {
-                return null;
-            }
-        }
-    }
-
 }
