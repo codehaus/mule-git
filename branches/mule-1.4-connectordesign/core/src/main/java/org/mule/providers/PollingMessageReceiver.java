@@ -57,7 +57,11 @@ public abstract class PollingMessageReceiver extends AbstractMessageReceiver imp
 //        }
 
         // TODO: handle exceptions & keep the returned ScheduledFuture for cancelling ourselves
-        connector.getScheduler().scheduleAtFixedRate(this, STARTUP_DELAY, frequency, TimeUnit.MILLISECONDS);
+
+        // we use scheduleWithFixedDelay to prevent queue-up of tasks when polling
+        // takes longer than the specified frequency, e.g. when the polled database
+        // or network is slow or returns large amounts of data.
+        connector.getScheduler().scheduleWithFixedDelay(this, STARTUP_DELAY, frequency, TimeUnit.MILLISECONDS);
     }
 
 //    public void run()
