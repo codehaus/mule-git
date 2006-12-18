@@ -108,7 +108,7 @@
         </repository>
         <repository>
             <id>apache-snapshots</id>
-            <name>Snapshot repository</name>
+            <name>Apache Snapshots</name>
             <url>http://people.apache.org/maven-snapshot-repository</url>
             <snapshots>
                 <enabled>true</enabled>
@@ -117,6 +117,18 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>spring</id>
+            <name>Spring Snapshots</name>
+            <url>http://static.springframework.org/maven2-snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+
         <!-- Local module repository -->
         <repository>
             <id>local (Maven 1)</id>
@@ -130,7 +142,6 @@
             </releases>
             <layout>legacy</layout>
         </repository>
-
     </repositories>
 
     <pluginRepositories>
@@ -208,9 +219,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-
                     <archive>
-
                         <!--
                             Disabled for http://mule.mulesource.org/jira/browse/MULE-1153
                             and http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
@@ -219,24 +228,26 @@
                         <!-- List dependencies in the MANIFEST.MF -->
                         <manifest>
                             <addClasspath>true</addClasspath>
-
                         </manifest>
                         <!-- Custom Entries -->
                         <manifestEntries>
                             <More-Info>For more information go to ${pom.url}</More-Info>
                             <Support>Get commercial support: ${pom.organization.url}</Support>
                             <Description>Mule ESB and Integration Platform</Description>
-                            <License>MulesSource MPL http://www.mulesource.com/MSPL/</License>
+                            <License>MuleSource Public License http://www.mulesource.com/MSPL</License>
                             <Vendor-Url>${pom.organization.url}</Vendor-Url>
                             <Product-Url>${pom.url}</Product-Url>
-                            <Dtd-Public-Id>-//${pom.organisation.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
+                            <Dtd-Public-Id>-//${pom.organization.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
                             <Dtd-System-Id>${pom.url}/dtds</Dtd-System-Id>
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
                             <Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
+                            <!-- OSGi entries -->
+							<Bundle-Version>${version}</Bundle-Version>
+							<Bundle-Name>${pom.name}</Bundle-Name>
+							<Bundle-Description>${pom.description}</Bundle-Description>
+							<Bundle-Vendor>${pom.organization.name}</Bundle-Vendor>
                         </manifestEntries>
-
                     </archive>
-
                 </configuration>
             </plugin>
 
