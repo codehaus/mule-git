@@ -1,0 +1,8 @@
+Bundle-Version: 1.0
+Bundle-Name: Hello Example
+Bundle-SymbolicName: org.mule.examples.hello
+Import-Package: org.osgi.framework
+TODO-Bundle-Activator: org.mule.modules.osgi.MuleServerActivator
+
+
+
