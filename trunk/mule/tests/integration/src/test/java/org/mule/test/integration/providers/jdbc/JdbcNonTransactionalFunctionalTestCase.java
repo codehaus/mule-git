@@ -27,6 +27,7 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import javax.sql.DataSource;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Guillaume Nodet
@@ -80,7 +81,20 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         UMOMessage message;
 
         message = muleEndpoint.getConnector().getDispatcher(muleEndpoint).receive(muleEndpoint, 1000);
-        assertNotNull(message);
+
+        /*
+         * org.apache.commons.dbutils.ResultSetHandler (called by QueryRunner
+         * which is called by JdbcMessageReceiver) allows either null or a 
+         * List of 0 rows to be returned so we check for both.
+         */
+
+        if (message != null) 
+        {
+            Object payload = message.getPayload();
+            assertTrue(payload instanceof java.util.List);
+            List list = (List)payload;
+            assertEquals(list.size(), 0);
+        }
 
         execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
                       + "', NULL, NULL)");
