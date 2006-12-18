@@ -1,0 +1,6 @@
+Bundle-SymbolicName: org.mule.example.hello
+Bundle-Name: Hello World Example
+Bundle-Description: Hello World Example
+Bundle-Vendor: My Company
+Bundle-Version: 1.0
+org-springframework-context: hello-spring-config.xml
