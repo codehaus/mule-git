@@ -69,29 +69,6 @@ public class XFireConnector extends AbstractServiceEnabledConnector
     private String serviceTransport = null;
     private List serverInHandlers = null;
     private List serverOutHandlers = null;
-    
-    private String wsDecryptionFile = null;
-    private String wsSignatureFile = null;
-    
-    public String getWsDecryptionFile()
-    {
-        return wsDecryptionFile;
-    }
-
-    public void setWsDecryptionFile(String wsDecryptionFile)
-    {
-        this.wsDecryptionFile = wsDecryptionFile;
-    }
-
-    public String getWsSignatureFile()
-    {
-        return wsSignatureFile;
-    }
-
-    public void setWsSignatureFile(String wsSignatureFile)
-    {
-        this.wsSignatureFile = wsSignatureFile;
-    }
 
     public XFireConnector()
     {
