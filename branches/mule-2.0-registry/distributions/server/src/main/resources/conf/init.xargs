@@ -1,81 +1,135 @@
-#
-# Generated from template.xargs
-# Knopflerfish release 2.0.1
-#
-
-# load common properties
+# Load common properties
 -xargs ../conf/props.xargs
 
 # Prefix for searching for bundle URLs from console or command line
--Dorg.knopflerfish.gosg.jars=file:../lib/osgi/
+-Dorg.knopflerfish.gosg.jars=file:../lib/
 
+# Remove any previously installed bundles
 -init
 
-## Basic KF bundles
+# Set Start Level
+-startlevel 10
+
+#############################################################
+# Standard Knopflerfish Bundles (from template.xargs)
+#############################################################
+# Basic KF bundles
 -initlevel 1
--install log/log_all-2.0.0.jar
--install cm/cm_all-2.0.0.jar
--install console/console_all-2.0.0.jar
--install component/component_all-2.0.0.jar
--install event/event_all-2.0.0.jar
+-install boot/osgi/log/log_all-2.0.0.jar
+-install boot/osgi/cm/cm_all-2.0.0.jar
+-install boot/osgi/console/console_all-2.0.0.jar
+-install boot/osgi/component/component_all-2.0.0.jar
+-install boot/osgi/event/event_all-2.0.0.jar
 
-
-## Some library bundles
+# Some library bundles
 -initlevel 2
--install util/util-2.0.0.jar
--install crimson/crimson-2.0.0.jar
--install jsdk/jsdk-2.2.jar
+-install boot/osgi/util/util-2.0.0.jar
+-install boot/osgi/crimson/crimson-2.0.0.jar
+-install boot/osgi/jsdk/jsdk-2.2.jar
 
 # The Bundle repo commands and desktop plugin
--install  bundlerepository/bundlerepository_all-2.0.0.jar
+-install boot/osgi/bundlerepository/bundlerepository_all-2.0.0.jar
 
-## More basic KF bundles
+# More basic KF bundles
 -initlevel 3
--install device/device_all-2.0.0.jar
--install useradmin/useradmin_all-2.0.0.jar
+-install boot/osgi/device/device_all-2.0.0.jar
+-install boot/osgi/useradmin/useradmin_all-2.0.0.jar
 
 -initlevel 4
--install http/http_all-2.0.0.jar
+-install boot/osgi/http/http_all-2.0.0.jar
 
-## console command bundles
+# Console command bundles
 -initlevel 5
--install frameworkcommands/frameworkcommands-2.0.0.jar
--install logcommands/logcommands-2.0.0.jar
--install cm_cmd/cm_cmd-2.0.0.jar
-
--install consoletty/consoletty-2.0.0.jar
-
--install consoletelnet/consoletelnet-2.0.0.jar
+-install boot/osgi/frameworkcommands/frameworkcommands-2.0.0.jar
+-install boot/osgi/logcommands/logcommands-2.0.0.jar
+-install boot/osgi/cm_cmd/cm_cmd-2.0.0.jar
+-install boot/osgi/consoletty/consoletty-2.0.0.jar
+-install boot/osgi/consoletelnet/consoletelnet-2.0.0.jar
 
 -initlevel 6
--install desktop/desktop_all-2.0.0.jar
-
+-install boot/osgi/desktop/desktop_all-2.0.0.jar
 
 -initlevel 7
--install  httproot/httproot-2.0.0.jar
+-install boot/osgi/httproot/httproot-2.0.0.jar
 
+# Start of these bundles are delayed since this makes start order dependencies much easier
+-start boot/osgi/log/log_all-2.0.0.jar
+-start boot/osgi/crimson/crimson-2.0.0.jar
+-start boot/osgi/cm/cm_all-2.0.0.jar
+-start boot/osgi/console/console_all-2.0.0.jar
+-start boot/osgi/component/component_all-2.0.0.jar
+-start boot/osgi/event/event_all-2.0.0.jar
+-start boot/osgi/device/device_all-2.0.0.jar
+-start boot/osgi/useradmin/useradmin_all-2.0.0.jar
+-start boot/osgi/bundlerepository/bundlerepository_all-2.0.0.jar
+-start boot/osgi/consoletty/consoletty-2.0.0.jar
+-start boot/osgi/consoletelnet/consoletelnet-2.0.0.jar
+-start boot/osgi/frameworkcommands/frameworkcommands-2.0.0.jar
+-start boot/osgi/logcommands/logcommands-2.0.0.jar
+-start boot/osgi/cm_cmd/cm_cmd-2.0.0.jar
+-start boot/osgi/desktop/desktop_all-2.0.0.jar
+-start boot/osgi/http/http_all-2.0.0.jar
+-start boot/osgi/httproot/httproot-2.0.0.jar
 
+#############################################################
+# Commons Logging
+#############################################################
+-istart boot/osgi/commons-logging/commons-logging_all-2.0.0.jar
 
--startlevel 7
+#############################################################
+# Spring OSGi Bundles
+# TODO Add versions to bundles once we're no longer using SNAPSHOTs.
+#############################################################
+-initlevel 8
+-istart opt/spring-osgi-core.jar
+#-istart opt/spring-osgi-core-1.0-SNAPSHOT.jar
+-istart opt/spring-osgi-io.jar
+#-istart opt/spring-osgi-io-1.0-SNAPSHOT.jar
+-istart opt/spring-osgi-extender.jar
+#-istart opt/spring-osgi-extender-1.0-SNAPSHOT.jar
 
+# Libraries required by Spring, packaged as OSGi bundles
+-istart opt/spring-core.jar
+#-istart opt/spring-core-2.1-SNAPSHOT.jar
+-istart opt/spring-aop.jar
+#-istart opt/spring-aop-2.1-SNAPSHOT.jar
+-istart opt/spring-context.jar
+#-istart opt/spring-context-2.1-SNAPSHOT.jar
+-istart opt/spring-beans.jar
+#-istart opt/spring-beans-2.1-SNAPSHOT.jar
+-istart opt/spring-jmx.jar
+#-istart opt/spring-jmx-2.1-SNAPSHOT.jar
+-istart opt/aopalliance.osgi.jar
+#-istart opt/aopalliance.osgi-1.0-SNAPSHOT.jar
+-istart opt/commons-collections.osgi.jar
+#-istart opt/commons-collections.osgi-3.2-SNAPSHOT.jar
 
-# Start of these bundles are delayed since this makes start
-# order dependencies much easier
+-istart opt/asm.osgi.jar
+#-istart opt/asm.osgi-2.2.2-SNAPSHOT.jar
+-istart opt/aspectjrt.osgi.jar
+#-istart opt/aspectjrt.osgi-1.5.2a-SNAPSHOT.jar
+-istart opt/commons-beanutils.osgi.jar
+#-istart opt/commons-beanutils.osgi-1.7.0-SNAPSHOT.jar
+-istart opt/commons-logging.osgi.jar
+#-istart opt/commons-logging.osgi-1.1-SNAPSHOT.jar
+-istart opt/commons-pool.osgi.jar
+#-istart opt/commons-pool.osgi-1.0-SNAPSHOT.jar
+-istart opt/log4j.osgi.jar
+#-istart opt/log4j.osgi-1.2.13-SNAPSHOT.jar
+# These aren't working for some reason.
+# -istart opt/cglib-nodep.osgi.jar
+#-istart opt/cglib-nodep.osgi-2.1.3-SNAPSHOT.jar
+# -istart opt/commons-attributes.osgi.jar
+#-istart opt/commons-attributes.osgi-2.2-SNAPSHOT.jar
 
--start log/log_all-2.0.0.jar
--start crimson/crimson-2.0.0.jar
--start cm/cm_all-2.0.0.jar
--start console/console_all-2.0.0.jar
--start component/component_all-2.0.0.jar
--start event/event_all-2.0.0.jar
--start device/device_all-2.0.0.jar
--start useradmin/useradmin_all-2.0.0.jar
--start bundlerepository/bundlerepository_all-2.0.0.jar
--start consoletty/consoletty-2.0.0.jar
--start consoletelnet/consoletelnet-2.0.0.jar
--start frameworkcommands/frameworkcommands-2.0.0.jar
--start logcommands/logcommands-2.0.0.jar
--start cm_cmd/cm_cmd-2.0.0.jar
--start desktop/desktop_all-2.0.0.jar
--start http/http_all-2.0.0.jar
--start httproot/httproot-2.0.0.jar
+#############################################################
+# Mule Bundles
+#############################################################
+-initlevel 9
+-istart mule/mule-osgi-2.0-REGISTRY.jar
+	      
+#############################################################
+# User Bundles
+#############################################################
+-initlevel 10
+# -istart user/mule-example-hello-2.0-REGISTRY.jar

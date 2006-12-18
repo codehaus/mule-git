@@ -817,6 +817,9 @@ Assembly descriptor for the full Mule distribution.
     <!-- Non-Mule libraries -->
     <dependencySet>
       <outputDirectory>lib/opt</outputDirectory>
+      <!-- Omit version for OSGi bundles because SNAPSHOT versions can't be referenced reliably from the init.xargs file. 
+      		TODO Remove this once we are no longer using SNAPSHOTs. -->
+      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
       <scope>runtime</scope>
       <excludes>
         <!-- Core -->
@@ -880,6 +883,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.knopflerfish:osgi</exclude>
         <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
         <exclude>org.mule.distributions:mule-full</exclude>
+        <!-- TODDO Remove these -->
         <exclude>javax.activation:activation</exclude>
         <exclude>javax.mail:mail</exclude>
       </excludes>
