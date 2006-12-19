@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-example-hello-osgi</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Hello Example OSGi</name>
     <description>Packages the Hello example as OSGi bundles</description>
 
@@ -23,19 +23,19 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-							<org-springframework-context>hello-spring-config.xml</org-springframework-context>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
+
+     	<plugins>
+	      	<plugin>
+		        <groupId>org.apache.felix.plugins</groupId>
+		        <artifactId>maven-osgi-plugin</artifactId>
+		        <configuration>
+		        	<embedJars>false</embedJars>
+		            <osgiManifest>
+		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
+						<importPackage>org.mule, org.mule.interceptors, org.mule.components.simple, org.mule.components.rest, org.mule.transformers, org.mule.transformers.simple, org.mule.routing, org.mule.routing.outbound, org.mule.routing.filters, org.mule.routing.inbound, org.mule.routing.response, org.mule.model, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.routing, org.mule.umo.provider, org.mule.umo.lifecycle, org.mule.umo.model, org.mule.umo.transformer, org.mule.umo.manager, org.mule.impl, org.mule.impl.endpoint, org.mule.impl.container, org.mule.impl.model, org.mule.config, org.mule.config.i18n, org.mule.management, org.mule.providers, org.mule.providers.service, org.mule.util, org.mule.util.xa, org.mule.util.file, org.mule.util.monitor, org.mule.util.properties, org.mule.extras.spring, org.mule.extras.spring.config, org.mule.providers.stream</importPackage>
+ 		            </osgiManifest>
+		        </configuration>
+		    </plugin>
+     	</plugins>
     </build>
 </project>
