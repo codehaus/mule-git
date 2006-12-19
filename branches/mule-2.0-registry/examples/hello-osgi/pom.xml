@@ -23,13 +23,19 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+							<org-springframework-context>hello-spring-config.xml</org-springframework-context>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-osgi</artifactId>
-            <version>${version}</version>
-        </dependency>
-    </dependencies>
 </project>
