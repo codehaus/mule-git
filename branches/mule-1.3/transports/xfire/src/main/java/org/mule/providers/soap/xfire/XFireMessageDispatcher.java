@@ -202,11 +202,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             String head;
             for (int i = 0; i < arr.length; i++){
                 head = "";
-                String test = (String)arr[i];
-                for (int j = 0; j < 4; j++){
-                    head = head + test.charAt(j);
-                }
-                if ((head != null)&&(!head.equals("MULE"))){
+                head = (String)arr[i];
+                if ((head != null)&&(!head.startsWith("MULE"))){
                     client.setProperty((String)arr[i], event.getMessage().getProperty((String)arr[i]));
                 }
             }
