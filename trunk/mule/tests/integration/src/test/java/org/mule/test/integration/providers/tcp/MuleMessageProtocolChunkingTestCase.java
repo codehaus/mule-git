@@ -40,9 +40,9 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
     {
         StringBuffer message = new StringBuffer();
         // send 50K of stuff;
-        for (int i = 0; i < 10000; i++)
+        for (int i = 10000; i < 20000; i++)
         {
-            message.append(String.format("%5d", new Object[]{new Integer(i)}));
+            message.append(i);
         }
         sendString(message.toString());
     }
@@ -52,9 +52,9 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         StringBuffer sBuffer = new StringBuffer();
         // send 50K of stuff;
-        for (int i = 0; i < 10000; i++)
+        for (int i = 10000; i < 20000; i++)
         {
-            sBuffer.append(String.format("%5d", new Object[]{new Integer(i)}));
+            sBuffer.append(i);
         }
         MessageObject message = new MessageObject(1, sBuffer.toString(), true);
 
