@@ -10,13 +10,6 @@
 
 package org.mule.transformers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -28,6 +21,14 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractTransformer</code> Is a base class for all transformers.
@@ -199,8 +200,8 @@ public abstract class AbstractTransformer implements UMOTransformer
 
         if (src instanceof UMOMessage && !isSourceTypeSupported(UMOMessage.class))
         {
-            src = ((UMOMessage)src).getPayload();
             encoding = ((UMOMessage)src).getEncoding();
+            src = ((UMOMessage)src).getPayload();
         }
 
         if (encoding == null && endpoint != null)
@@ -218,8 +219,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             if (ignoreBadInput)
             {
-                logger
-                    .debug("Source type is incompatible with this transformer. Property 'ignoreBadInput' is set to true so the transformer chain will continue");
+                logger.debug("Source type is incompatible with this transformer and property 'ignoreBadInput' is set to true, so the transformer chain will continue.");
                 return src;
             }
             else
@@ -249,6 +249,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         }
 
         result = checkReturnClass(result);
+
         if (nextTransformer != null)
         {
             logger.debug("Following transformer in the chain is " + nextTransformer.getName() + " ("
