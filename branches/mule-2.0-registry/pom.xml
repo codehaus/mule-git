@@ -128,6 +128,11 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>ops4j</id>
+            <name>OPS4J Repository</name>
+            <url>http://repository.ops4j.org/maven2/</url>
+        </repository>
 
         <!-- Local module repository -->
         <repository>
@@ -167,6 +172,18 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
         -->
+	    <!-- needed so that maven can find the maven-osgi-plugin -->
+	    <pluginRepository>
+	      <id>apache.snapshots</id>
+	      <name>Apache Snapshots</name>
+	      <url>http://cvs.apache.org/maven-snapshot-repository/</url>
+	      <snapshots>
+	        <enabled>true</enabled>
+	      </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+	    </pluginRepository>
     </pluginRepositories>
 
     <build>

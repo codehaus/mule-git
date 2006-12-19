@@ -15,27 +15,7 @@
 
     <build>
         <plugins>
-        <!--
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>assembly.xml</descriptor>
-                    </descriptors>
-                    <appendAssemblyId>true</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>assembly</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-		-->
-		
-		  	<!-- for packaging as an OSGi bundle, we use the maven-osgi-plugin -->
+	  	  <!-- for packaging as an OSGi bundle, we use the maven-osgi-plugin -->
 	      <plugin>
 	        <groupId>org.apache.felix.plugins</groupId>
 	        <artifactId>maven-osgi-plugin</artifactId>
@@ -48,18 +28,6 @@
 	    </plugins>
 	  </build>
 		
-	  <!-- needed so that maven can find the maven-osgi-plugin -->
-	  <pluginRepositories>
-	    <pluginRepository>
-	      <snapshots>
-	        <enabled>true</enabled>
-	      </snapshots>
-	      <id>apache.snapshots</id>
-	      <name>Apache Snapshots</name>
-	      <url>http://cvs.apache.org/maven-snapshot-repository/</url>
-	    </pluginRepository>
-	  </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
