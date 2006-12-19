@@ -4,8 +4,6 @@
   xmlns:osgi="http://www.springframework.org/schema/osgi"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                       http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
-
-<beans>
     <!--
     All objects are registered with the MuleManager. The AutowireUMOManagerFactoryBean
     is responsible for determining the UMOManager to implement, creates a default UMOModel
@@ -35,15 +33,15 @@
            determine which method to call on our components based on the return types of these
            transformers.
        -->
-    <bean id="StringToNameString" singleton="false" class="org.mule.samples.hello.StringToNameString">
+    <bean id="StringToNameString" class="org.mule.samples.hello.StringToNameString">
         <property name="returnClass"><value>org.mule.samples.hello.NameString</value></property>
     </bean>
 
-    <bean id="NameStringToChatString" singleton="false" class="org.mule.samples.hello.NameStringToChatString">
+    <bean id="NameStringToChatString" class="org.mule.samples.hello.NameStringToChatString">
         <property name="returnClass"><value>org.mule.samples.hello.ChatString</value></property>
     </bean>
 
-    <bean id="ChatStringToString" singleton="false" class="org.mule.samples.hello.ChatStringToString">
+    <bean id="ChatStringToString" class="org.mule.samples.hello.ChatStringToString">
         <property name="returnClass"><value>java.lang.String</value></property>
     </bean>
 
@@ -82,7 +80,7 @@
     This is the actual bean used by the GreeterUMO. Notice that it is a singleton.  This
     important when component pooling is used (which it is by default).
     -->
-    <bean id="Greeter" singleton="false" class="org.mule.samples.hello.Greeter"/>
+    <bean id="Greeter" class="org.mule.samples.hello.Greeter"/>
 
     <bean id="ChitChatUMO" class="org.mule.impl.MuleDescriptor">
         <property name="inboundEndpoint">
@@ -114,5 +112,5 @@
     This is the actual bean used by the ChitChatUMO. Notice that it is a singleton.  This
     important when component pooling is used (which it is by default).
     -->
-    <bean id="ChitChatter" singleton="false" class="org.mule.samples.hello.ChitChatter"/>
+    <bean id="ChitChatter" class="org.mule.samples.hello.ChitChatter"/>
 </beans>
