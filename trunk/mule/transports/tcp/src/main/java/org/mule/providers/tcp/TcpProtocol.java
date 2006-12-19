@@ -13,6 +13,7 @@ package org.mule.providers.tcp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * The TcpProtocol interface enables to plug different application level protocols on
@@ -31,7 +32,7 @@ public interface TcpProtocol
      * @return an array of byte containing a full message
      * @throws IOException if an exception occurs
      */
-    byte[] read(InputStream is) throws IOException;
+    Serializable read(InputStream is) throws IOException;
 
     /**
      * Write the specified message to the output stream.
@@ -40,5 +41,7 @@ public interface TcpProtocol
      * @param data the data to write
      * @throws IOException if an exception occurs
      */
+    void write(OutputStream os, Serializable data) throws IOException;
+
     void write(OutputStream os, byte[] data) throws IOException;
 }

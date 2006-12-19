@@ -10,16 +10,16 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.providers.tcp.TcpProtocol;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The EOFProtocol class is an application level tcp protocol that does nothing.
@@ -28,14 +28,14 @@ import java.net.SocketTimeoutException;
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public class EOFProtocol implements TcpProtocol
+public class EOFProtocol extends ByteProtocol
 {
 
     private static final int BUFFER_SIZE = 8192;
 
     private static final Log logger = LogFactory.getLog(EOFProtocol.class);
 
-    public byte[] read(InputStream is) throws IOException
+    public Serializable read(InputStream is) throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(EOFProtocol.BUFFER_SIZE);
 

@@ -10,8 +10,6 @@
 
 package org.mule.providers.tcp;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.lang.StringUtils;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -27,22 +25,28 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkException;
-import javax.resource.spi.work.WorkManager;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.SocketAddress;
+
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkException;
+import javax.resource.spi.work.WorkManager;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a tcp server to receive socket
@@ -146,7 +150,8 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                 {
                     if (logger.isDebugEnabled())
                     {
-                        logger.debug("Interupted IO doing serverSocket.accept: " + iie.getMessage());
+                        logger
+                            .debug("Interupted IO doing serverSocket.accept: " + iie.getMessage());
                     }
                 }
                 catch (Exception e)
@@ -165,11 +170,13 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                         Work work = createWork(socket);
                         try
                         {
-                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null, connector);
+                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null,
+                                connector);
                         }
                         catch (WorkException e)
                         {
-                            logger.error("Tcp Server receiver Work was not processed: " + e.getMessage(), e);
+                            logger.error("Tcp Server receiver Work was not processed: "
+                                         + e.getMessage(), e);
                         }
                     }
                     catch (IOException e)
@@ -299,18 +306,16 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
                 while (!socket.isClosed() && !disposing.get())
                 {
-
-                    byte[] b;
+                    Serializable readMsg;
                     try
                     {
-                        b = protocol.read(dataIn);
-                        // end of stream
-                        if (b == null)
+                        readMsg = protocol.read(dataIn);
+                        if (readMsg == null)
                         {
                             break;
                         }
 
-                        byte[] result = processData(b);
+                        Serializable result = processData(readMsg);
                         if (result != null)
                         {
                             protocol.write(dataOut, result);
@@ -336,14 +341,16 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
         }
 
-        protected byte[] processData(byte[] data) throws Exception
+        protected Serializable processData(Serializable data) throws Exception
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);
             OutputStream os = new ResponseOutputStream(socket.getOutputStream(), socket);
-            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), os);
+            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint
+                .isSynchronous(), os);
+
             if (returnMessage != null)
             {
-                return returnMessage.getPayloadAsBytes();
+                return returnMessage;
             }
             else
             {

@@ -10,13 +10,12 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.providers.tcp.TcpProtocol;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * The LengthProtocol is an application level tcp protocol that can be used to
@@ -27,10 +26,10 @@ import java.io.OutputStream;
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
  * @version $Revision$
  */
-public class LengthProtocol implements TcpProtocol
+public class LengthProtocol extends ByteProtocol
 {
 
-    public byte[] read(InputStream is) throws IOException
+    public Serializable read(InputStream is) throws IOException
     {
         // Use a mark / reset here so that an exception
         // will not be thrown is the read times out.

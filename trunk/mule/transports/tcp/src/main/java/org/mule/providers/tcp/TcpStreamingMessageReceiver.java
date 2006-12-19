@@ -10,7 +10,6 @@
 
 package org.mule.providers.tcp;
 
-import org.apache.commons.lang.StringUtils;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.ConnectException;
@@ -27,6 +26,8 @@ import java.io.DataInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>TcpStreamingMessageReceiver</code> establishes a tcp client connection to
@@ -47,8 +48,9 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
 
     protected TcpProtocol protocol = null;
 
-    public TcpStreamingMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
-        throws InitialisationException
+    public TcpStreamingMessageReceiver(UMOConnector connector,
+                                       UMOComponent component,
+                                       UMOEndpoint endpoint) throws InitialisationException
     {
         this(connector, component, endpoint, new Long(0));
     }
@@ -66,7 +68,8 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
     public void poll() throws Exception
     {
         setFrequency(0); // make sure this is zero and not overridden via config
-        byte[] data = protocol.read(dataIn);
+        // TODO check if this cast is ok
+        byte[] data = (byte[])protocol.read(dataIn);
         if (data != null)
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);

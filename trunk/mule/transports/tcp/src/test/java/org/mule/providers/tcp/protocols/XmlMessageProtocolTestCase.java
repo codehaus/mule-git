@@ -40,11 +40,11 @@ public class XmlMessageProtocolTestCase extends AbstractMuleTestCase
 
         ByteArrayInputStream bais = new ByteArrayInputStream(msgData.getBytes());
 
-        byte[] result = xmp.read(bais);
+        byte[] result = (byte[])xmp.read(bais);
         assertNotNull(result);
         assertEquals(msgData, new String(result));
 
-        result = xmp.read(bais);
+        result = (byte[])xmp.read(bais);
         assertNull(result);
     }
 
@@ -55,15 +55,15 @@ public class XmlMessageProtocolTestCase extends AbstractMuleTestCase
 
         ByteArrayInputStream bais = new ByteArrayInputStream((msgData[0] + msgData[1]).getBytes());
 
-        byte[] result = xmp.read(bais);
+        byte[] result = (byte[])xmp.read(bais);
         assertNotNull(result);
         assertEquals(msgData[0], new String(result));
 
-        result = xmp.read(bais);
+        result = (byte[])xmp.read(bais);
         assertNotNull(result);
         assertEquals(msgData[1], new String(result));
 
-        result = xmp.read(bais);
+        result = (byte[])xmp.read(bais);
         assertNull(result);
     }
 
@@ -71,9 +71,12 @@ public class XmlMessageProtocolTestCase extends AbstractMuleTestCase
     {
         String[] msgData = {"<?xml version=\"1.0\"?><data>1</data>",
             "<?xml version=\"1.0\"?><data>22</data>", "<?xml version=\"1.0\"?><data>333</data>",
-            "<?xml version=\"1.0\"?><data>4444</data>", "<?xml version=\"1.0\"?><data>55555</data>",
-            "<?xml version=\"1.0\"?><data>666666</data>", "<?xml version=\"1.0\"?><data>7777777</data>",
-            "<?xml version=\"1.0\"?><data>88888888</data>", "<?xml version=\"1.0\"?><data>999999999</data>",
+            "<?xml version=\"1.0\"?><data>4444</data>",
+            "<?xml version=\"1.0\"?><data>55555</data>",
+            "<?xml version=\"1.0\"?><data>666666</data>",
+            "<?xml version=\"1.0\"?><data>7777777</data>",
+            "<?xml version=\"1.0\"?><data>88888888</data>",
+            "<?xml version=\"1.0\"?><data>999999999</data>",
             "<?xml version=\"1.0\"?><data>aaaaaaaaaa</data>",
             "<?xml version=\"1.0\"?><data>bbbbbbbbbbb</data>",
             "<?xml version=\"1.0\"?><data>cccccccccccc</data>",
@@ -94,12 +97,12 @@ public class XmlMessageProtocolTestCase extends AbstractMuleTestCase
 
         for (int i = 0; i < msgData.length; i++)
         {
-            result = xmp.read(bais);
+            result = (byte[])xmp.read(bais);
             assertNotNull(result);
             assertEquals(msgData[i], new String(result));
         }
 
-        result = xmp.read(bais);
+        result = (byte[])xmp.read(bais);
         assertNull(result);
     }
 
