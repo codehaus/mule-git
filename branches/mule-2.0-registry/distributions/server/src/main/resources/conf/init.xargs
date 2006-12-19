@@ -72,64 +72,47 @@
 -start boot/osgi/httproot/httproot-2.0.0.jar
 
 #############################################################
-# Commons Logging
+# PAX Logging - supports log4j, commons-logging, and slf4j APIs
 #############################################################
--istart boot/osgi/commons-logging/commons-logging_all-2.0.0.jar
+-istart opt/api.jar
+-istart opt/service.jar
+-istart opt/log4j.jar
+-istart opt/jcl.jar
+-istart opt/slf4j.jar
 
 #############################################################
 # Spring OSGi Bundles
-# TODO Add versions to bundles once we're no longer using SNAPSHOTs.
 #############################################################
 -initlevel 8
 -istart opt/spring-osgi-core.jar
-#-istart opt/spring-osgi-core-1.0-SNAPSHOT.jar
 -istart opt/spring-osgi-io.jar
-#-istart opt/spring-osgi-io-1.0-SNAPSHOT.jar
 -istart opt/spring-osgi-extender.jar
-#-istart opt/spring-osgi-extender-1.0-SNAPSHOT.jar
 
 # Libraries required by Spring, packaged as OSGi bundles
 -istart opt/spring-core.jar
-#-istart opt/spring-core-2.1-SNAPSHOT.jar
 -istart opt/spring-aop.jar
-#-istart opt/spring-aop-2.1-SNAPSHOT.jar
 -istart opt/spring-context.jar
-#-istart opt/spring-context-2.1-SNAPSHOT.jar
 -istart opt/spring-beans.jar
-#-istart opt/spring-beans-2.1-SNAPSHOT.jar
 -istart opt/spring-jmx.jar
-#-istart opt/spring-jmx-2.1-SNAPSHOT.jar
 -istart opt/aopalliance.osgi.jar
-#-istart opt/aopalliance.osgi-1.0-SNAPSHOT.jar
 -istart opt/commons-collections.osgi.jar
-#-istart opt/commons-collections.osgi-3.2-SNAPSHOT.jar
-
 -istart opt/asm.osgi.jar
-#-istart opt/asm.osgi-2.2.2-SNAPSHOT.jar
 -istart opt/aspectjrt.osgi.jar
-#-istart opt/aspectjrt.osgi-1.5.2a-SNAPSHOT.jar
 -istart opt/commons-beanutils.osgi.jar
-#-istart opt/commons-beanutils.osgi-1.7.0-SNAPSHOT.jar
--istart opt/commons-logging.osgi.jar
-#-istart opt/commons-logging.osgi-1.1-SNAPSHOT.jar
 -istart opt/commons-pool.osgi.jar
-#-istart opt/commons-pool.osgi-1.0-SNAPSHOT.jar
--istart opt/log4j.osgi.jar
-#-istart opt/log4j.osgi-1.2.13-SNAPSHOT.jar
 # These aren't working for some reason.
 # -istart opt/cglib-nodep.osgi.jar
-#-istart opt/cglib-nodep.osgi-2.1.3-SNAPSHOT.jar
 # -istart opt/commons-attributes.osgi.jar
-#-istart opt/commons-attributes.osgi-2.2-SNAPSHOT.jar
 
 #############################################################
 # Mule Bundles
 #############################################################
 -initlevel 9
--istart mule/mule-osgi-2.0-REGISTRY.jar
+-istart mule/mule-osgi.jar
 	      
 #############################################################
 # User Bundles
 #############################################################
 -initlevel 10
-# -istart user/mule-example-hello-2.0-REGISTRY.jar
+# Install but don't start the examples
+-install user/mule-example-hello-osgi.jar
