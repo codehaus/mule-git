@@ -334,7 +334,7 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/loanbroker-esb/dist</directory>
           <outputDirectory>examples/maven/loanbroker-esb</outputDirectory>
           <includes>
-              <include>loanbroker</include>
+              <include>*.sh</include>
               <include>*.bat</include>
           </includes>
           <fileMode>744</fileMode>
@@ -391,7 +391,7 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/loanbroker-esb/dist</directory>
           <outputDirectory>examples/ant/loanbroker-esb</outputDirectory>
           <includes>
-              <include>loanbroker</include>
+              <include>*.sh</include>
               <include>*.bat</include>
           </includes>
           <fileMode>744</fileMode>
