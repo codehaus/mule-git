@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
@@ -67,7 +68,7 @@ public class MessageChunkingAggregator extends CorrelationAggregator
                     firstEvent.getMessage());
 
             }
-            catch (Exception e)
+            catch (SerializationException e)
             {
                 message = new MuleMessage(baos.toByteArray(), firstEvent.getMessage());
             }
