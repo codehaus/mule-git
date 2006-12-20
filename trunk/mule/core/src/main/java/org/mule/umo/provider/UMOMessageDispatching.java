@@ -12,13 +12,15 @@ package org.mule.umo.provider;
 
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 /**
- * <code>UMOMessageDispatcher</code> is the interface responsible for distpatching
- * events to a particular transport. It implements the client code necessary to write
- * data to the underlying protocol. The dispatcher also exposes a receive method that
- * allows users to make specific calls to the underlying transport to receive an
- * event.
+ * <code>UMOMessageDispatching</code> defines generic methods for dispatching and
+ * receiving events. The exact behaviour of the action is defined by the implementing
+ * class.
+ * 
+ * @see UMOImmutableEndpoint
+ * @see UMOMessageDispatcher
  */
 public interface UMOMessageDispatching
 {
