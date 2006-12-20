@@ -104,7 +104,7 @@ public abstract class AbstractServiceEnabledConnector extends AbstractConnector
             if (serviceDescriptor.getDispatcherFactory() != null)
             {
                 logger.info("Loading DispatcherFactory: " + serviceDescriptor.getDispatcherFactory());
-                dispatcherFactory = serviceDescriptor.createDispatcherFactory();
+                this.setDispatcherFactory(serviceDescriptor.createDispatcherFactory());
             }
 
             defaultInboundTransformer = serviceDescriptor.createInboundTransformer();

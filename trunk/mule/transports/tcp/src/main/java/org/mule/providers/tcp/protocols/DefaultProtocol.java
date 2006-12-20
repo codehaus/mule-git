@@ -25,9 +25,6 @@ import org.apache.commons.logging.LogFactory;
  * The DefaultProtocol class is an application level tcp protocol that does nothing.
  * Reading is performed in reading the socket until no more bytes are available.
  * Writing simply writes the data to the socket.
- * 
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
  */
 public class DefaultProtocol extends ByteProtocol
 {

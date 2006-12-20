@@ -30,16 +30,14 @@ import java.net.URI;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * <code>TcpStreamingMessageReceiver</code> establishes a tcp client connection to
+ * <code>TcpStreamingMessageReceiver</code> establishes a TCP client connection to
  * an external server and reads the streaming data. No polling frequency is used
  * since with blocking i/o reads will block, and with non-blocking i/o reads will
  * occur when data is available. Causing delays between read attempts is unnecessary,
  * so this forces the pollingFrequency property to zero so no pause occurs in the
  * PollingMessageReceiver class.
- * 
- * @author <a href="mailto:rlucente@xecu.net">Rich Lucente</a>
- * @version $Revision$
  */
+// TODO HH: check how this works with the 1.4 connector scheduler
 public class TcpStreamingMessageReceiver extends PollingMessageReceiver
 {
     protected Socket clientSocket = null;

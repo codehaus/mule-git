@@ -23,10 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * The EOFProtocol class is an application level tcp protocol that does nothing.
- * Reading is terminated by the stream being closed by the client
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Reading is terminated by the stream being closed by the client.
  */
 public class EOFProtocol extends ByteProtocol
 {

@@ -10,13 +10,6 @@
 
 package org.mule.providers.http;
 
-import org.apache.commons.httpclient.ChunkedOutputStream;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpParser;
-import org.apache.commons.httpclient.StatusLine;
-import org.apache.commons.io.IOUtils;
-import org.mule.MuleManager;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +18,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
+
+import org.apache.commons.httpclient.ChunkedOutputStream;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpParser;
+import org.apache.commons.httpclient.StatusLine;
+import org.apache.commons.io.IOUtils;
+import org.mule.MuleManager;
 
 /**
  * A connection to the SimpleHttpServer.

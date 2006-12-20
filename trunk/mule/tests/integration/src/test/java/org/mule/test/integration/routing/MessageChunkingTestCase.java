@@ -25,10 +25,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.SerializationUtils;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class MessageChunkingTestCase extends FunctionalTestCase
 {
 

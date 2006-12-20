@@ -10,10 +10,10 @@
 
 package org.mule.test.integration.providers.file;
 
-import java.io.File;
-
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+
+import java.io.File;
 
 public class OutputPatternFromEndpointTestCase extends FunctionalTestCase
 {

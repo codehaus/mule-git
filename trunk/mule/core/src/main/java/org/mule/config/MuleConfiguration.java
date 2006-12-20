@@ -10,10 +10,6 @@
 
 package org.mule.config;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -23,23 +19,26 @@ import org.mule.umo.manager.DefaultWorkListener;
 import org.mule.util.queue.EventFilePersistenceStrategy;
 import org.mule.util.queue.QueuePersistenceStrategy;
 
-import javax.resource.spi.work.WorkListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.Enumeration;
+
+import javax.resource.spi.work.WorkListener;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleConfiguration</code> holds the runtime configuration specific to the
  * <code>MuleManager</code>. Once the <code>MuleManager</code> has been
  * initialised this class is immutable.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleConfiguration
 {

@@ -16,11 +16,7 @@ import org.mule.util.queue.QueueConfiguration;
 
 /**
  * <code>QueueProfile</code> determines how an internal queue for a component will
- * behave
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
+ * behave.
  */
 
 public class QueueProfile

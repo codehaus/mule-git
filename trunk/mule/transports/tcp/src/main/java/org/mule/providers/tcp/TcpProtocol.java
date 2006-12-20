@@ -18,9 +18,6 @@ import java.io.Serializable;
 /**
  * The TcpProtocol interface enables to plug different application level protocols on
  * a TcpConnector.
- * 
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
  */
 public interface TcpProtocol
 {

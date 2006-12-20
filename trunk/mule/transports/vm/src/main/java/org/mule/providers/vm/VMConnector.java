@@ -10,6 +10,8 @@
 
 package org.mule.providers.vm;
 
+import java.util.Iterator;
+
 import org.mule.MuleManager;
 import org.mule.config.QueueProfile;
 import org.mule.config.i18n.Message;
@@ -34,16 +36,10 @@ import org.mule.util.ClassUtils;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueueSession;
 
-import java.util.Iterator;
-
 /**
- * <code>VMConnector</code> A simple endpoint wrapper to allow a Mule component to
- * <p/> be accessed from an endpoint
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
+ * <code>VMConnector</code> is a simple endpoint wrapper to allow a Mule component
+ * to be accessed from an endpoint
  */
-
 public class VMConnector extends AbstractServiceEnabledConnector
 {
     private boolean queueEvents = false;

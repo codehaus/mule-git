@@ -10,6 +10,10 @@
 
 package org.mule.providers.http.filters;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
@@ -36,10 +40,6 @@ import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.UMOConnector;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * @author Jack Hung

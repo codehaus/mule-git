@@ -49,12 +49,8 @@ import javax.resource.spi.work.WorkManager;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * <code>TcpMessageReceiver</code> acts like a tcp server to receive socket
+ * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
  * requests.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @author <a href="mailto:tsuppari@yahoo.co.uk">P.Oikari</a>
- * @version $Revision$
  */
 public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 {
@@ -150,8 +146,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                 {
                     if (logger.isDebugEnabled())
                     {
-                        logger
-                            .debug("Interupted IO doing serverSocket.accept: " + iie.getMessage());
+                        logger.debug("Interupted IO doing serverSocket.accept: " + iie.getMessage());
                     }
                 }
                 catch (Exception e)
@@ -170,13 +165,11 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                         Work work = createWork(socket);
                         try
                         {
-                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null,
-                                connector);
+                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null, connector);
                         }
                         catch (WorkException e)
                         {
-                            logger.error("Tcp Server receiver Work was not processed: "
-                                         + e.getMessage(), e);
+                            logger.error("Tcp Server receiver Work was not processed: " + e.getMessage(), e);
                         }
                     }
                     catch (IOException e)
@@ -345,9 +338,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);
             OutputStream os = new ResponseOutputStream(socket.getOutputStream(), socket);
-            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint
-                .isSynchronous(), os);
-
+            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), os);
             if (returnMessage != null)
             {
                 return returnMessage;

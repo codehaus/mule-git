@@ -10,13 +10,6 @@
 
 package org.mule.providers.http.transformers;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.lang.StringUtils;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
@@ -34,12 +27,17 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Iterator;
 
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.StringUtils;
+
 /**
  * <code>ObjectToHttpClientMethodRequest</code> transforms a UMOMessage into a
  * HttpClient HttpMethod that represents an HttpRequest.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransformer

@@ -10,8 +10,13 @@
 
 package org.mule.tck.testmodels.mule;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.AbstractMessageAdapter;
+import org.mule.providers.AbstractMessageDispatcherFactory;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
@@ -23,20 +28,11 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 /**
- * <p>
- * <code>TestConnector</code> us a mock connector
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>TestConnector</code> use a mock connector
  */
 public class TestConnector extends AbstractConnector
 {
@@ -49,20 +45,17 @@ public class TestConnector extends AbstractConnector
      *         for the current thread one will be created
      * @throws org.mule.umo.UMOException if creation of a component fails
      */
+    // TODO HH: remove this?
     public UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
     {
         return new TestMessageDispatcher(endpoint);
     }
 
-    /**
-     * 
-     */
     public TestConnector()
     {
         super();
-        setDispatcherFactory(new UMOMessageDispatcherFactory()
+        setDispatcherFactory(new AbstractMessageDispatcherFactory()
         {
-
             public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
             {
                 return new TestMessageDispatcher(endpoint);

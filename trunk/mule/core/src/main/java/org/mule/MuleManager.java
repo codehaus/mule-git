@@ -10,12 +10,7 @@
 
 package org.mule;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.list.CursorableLinkedList;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
@@ -64,22 +59,24 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
+import org.mule.util.CollectionUtils;
 import org.mule.util.DateUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.UUID;
-import org.mule.util.CollectionUtils;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
 
-import javax.transaction.TransactionManager;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,8 +84,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 import java.util.jar.Manifest;
+
+import javax.transaction.TransactionManager;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.list.CursorableLinkedList;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleManager</code> maintains and provides services for a Mule instance.

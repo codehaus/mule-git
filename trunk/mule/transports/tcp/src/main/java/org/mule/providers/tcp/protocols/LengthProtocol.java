@@ -21,10 +21,7 @@ import java.io.Serializable;
  * The LengthProtocol is an application level tcp protocol that can be used to
  * transfer large amounts of data without risking some data to be loss. The protocol
  * is defined by sending / reading an integer (the packet length) and then the data
- * to be transfered.
- * 
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
+ * to be transferred.
  */
 public class LengthProtocol extends ByteProtocol
 {

@@ -10,15 +10,12 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.tck.AbstractMuleTestCase;
-
 import java.io.ByteArrayInputStream;
 
+import org.mule.tck.AbstractMuleTestCase;
+
 /**
- * Test by reading characters from a fixed string buffer instead of a tcp port.
- * 
- * @author <a href="mailto:rlucente@xecu.net">Rich Lucente</a>
- * @version $Revision$
+ * Test by reading characters from a fixed StringBuffer instead of a TCP port.
  */
 public class XmlMessageProtocolTestCase extends AbstractMuleTestCase
 {

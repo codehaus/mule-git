@@ -48,9 +48,6 @@ import java.util.Map;
  * limited to insure that unread characters remain on the stream so that all data may
  * be read later.
  * </p>
- * 
- * @author <a href="mailto:rlucente@xecu.net">Rich Lucente</a>
- * @version $Revision$
  */
 public class XmlMessageProtocol extends ByteProtocol
 {

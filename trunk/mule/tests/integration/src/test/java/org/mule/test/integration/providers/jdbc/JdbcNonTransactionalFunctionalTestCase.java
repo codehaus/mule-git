@@ -62,14 +62,13 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         MuleManager.getInstance().start();
 
         MuleEndpoint muleEndpoint = new MuleEndpoint("jdbc://?sql=SELECT * FROM TEST", true);
-        UMOMessage message = muleEndpoint.getConnector().getDispatcher(muleEndpoint).receive(muleEndpoint,
-            1000);
+        UMOMessage message = muleEndpoint.receive(1000);
         assertResultSetEmpty(message);
 
         execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
                         + "', NULL, NULL)");
 
-        message = muleEndpoint.getConnector().getDispatcher(muleEndpoint).receive(muleEndpoint, 1000);
+        message = muleEndpoint.receive(1000);
         assertResultSetNotEmpty(message);
     }
 
@@ -98,15 +97,14 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         MuleManager.getInstance().start();
 
         MuleEndpoint muleEndpoint = new MuleEndpoint(DEFAULT_IN_URI, true);
-        UMOMessage message = muleEndpoint.getConnector().getDispatcher(muleEndpoint).receive(muleEndpoint,
-            1000);
+        UMOMessage message = muleEndpoint.receive(1000);
 
         assertResultSetEmpty(message);
 
         execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
                         + "', NULL, NULL)");
 
-        message = muleEndpoint.getConnector().getDispatcher(muleEndpoint).receive(muleEndpoint, 1000);
+        message = muleEndpoint.receive(1000);
         assertResultSetNotEmpty(message);
     }
 
