@@ -49,17 +49,21 @@ public class FileFunctionalTestCase extends FunctionalTestCase implements Functi
 
     public void testRelative() throws FileNotFoundException, IOException, InterruptedException
     {
+        // create binary file data to be written
         byte[] data = new byte[100000];
         for (int i = 0; i < data.length; i++)
         {
             data[i] = (byte)(Math.random() * 128);
         }
 
-        File f = new File("./test/toto.txt");
+        File f = new File("./test/testfile.temp");
         f.createNewFile();
         FileOutputStream fos = new FileOutputStream(f);
         IOUtils.write(data, fos);
         IOUtils.closeQuietly(fos);
+
+        // atomically rename the file to make it available for polling
+        f.renameTo(new File(f.getPath().replaceAll(".temp", ".data")));
 
         // give polling a chance
         Thread.sleep(5000);
@@ -78,7 +82,8 @@ public class FileFunctionalTestCase extends FunctionalTestCase implements Functi
     {
         synchronized (this)
         {
-            // save the data for verification
+            logger.debug("received notification: " + notification);
+            // save the received message data for verification
             this.receivedData = ((FunctionalTestNotification)notification).getReplyMessage();
         }
     }
