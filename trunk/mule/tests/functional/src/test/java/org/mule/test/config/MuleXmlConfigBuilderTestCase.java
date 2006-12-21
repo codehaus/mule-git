@@ -10,11 +10,6 @@
 
 package org.mule.test.config;
 
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.Assert;
-
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
@@ -39,6 +34,11 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ObjectPool;
 import org.mule.util.properties.JXPathPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
+
+import java.util.List;
+import java.util.Map;
+
+import junit.framework.Assert;
 
 public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
 {
