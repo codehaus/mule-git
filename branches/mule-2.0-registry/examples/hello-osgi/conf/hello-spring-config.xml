@@ -3,27 +3,24 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:osgi="http://www.springframework.org/schema/osgi"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                      http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+                      http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd"
+   default-init-method="initialise" default-destroy-method="dispose">
+
     <!--
     All objects are registered with the MuleManager. The AutowireUMOManagerFactoryBean
     is responsible for determining the UMOManager to implement, creates a default UMOModel
     and autowires the components to the model and all other global objects to the MuleManager.
-    -->
     <bean id="muleManager" class="org.mule.extras.spring.config.AutowireUMOManagerFactoryBean"/>
+    -->
 
     <!-- Used to set mule object names to their corresponding bean id -->
     <bean id="muleNameProcessor" class="org.mule.extras.spring.config.MuleObjectNameProcessor"/>
-    <!--
-        The system stream connector is used to send and receive information via the
-        System.in and System.out. Note this connector is only really useful for testing
-        purposes.
-        promptMessage - is what is written to the console
-        messageDelayTime - is the time in milliseconds before the user is prompted again.
-        These properties are set as bean properties on the connector.
-    -->
-    <bean id="systemStreamConnector" class="org.mule.providers.stream.SystemStreamConnector">
-        <property name="promptMessage"><value>Please enter your name: </value></property>
-        <property name="messageDelayTime"><value>1000</value></property>
+
+    <bean id="fileConnector" class="org.mule.providers.file.FileConnector">
+            <property name="pollingFrequency" value="1000"/>
+    </bean>
+
+    <bean id="httpConnector" class="org.mule.providers.http.HttpConnector">
     </bean>
 
     <!--
@@ -33,17 +30,30 @@
            determine which method to call on our components based on the return types of these
            transformers.
        -->
+    <bean id="BytesToString" class="org.mule.transformers.simple.ByteArrayToString">
+        <property name="returnClass"><value>java.lang.String</value></property>
+    </bean>
+    <osgi:service ref="BytesToString" interface="org.mule.umo.transformer.UMOTransformer" />
+
+    <bean id="HttpToString" class="org.mule.samples.hello.HttpRequestToString">
+        <property name="returnClass"><value>java.lang.String</value></property>
+    </bean>
+    <osgi:service ref="HttpToString" interface="org.mule.umo.transformer.UMOTransformer" />
+
     <bean id="StringToNameString" class="org.mule.samples.hello.StringToNameString">
         <property name="returnClass"><value>org.mule.samples.hello.NameString</value></property>
     </bean>
+    <osgi:service ref="StringToNameString" interface="org.mule.umo.transformer.UMOTransformer" />
 
     <bean id="NameStringToChatString" class="org.mule.samples.hello.NameStringToChatString">
         <property name="returnClass"><value>org.mule.samples.hello.ChatString</value></property>
     </bean>
+    <osgi:service ref="NameStringToChatString" interface="org.mule.umo.transformer.UMOTransformer" />
 
     <bean id="ChatStringToString" class="org.mule.samples.hello.ChatStringToString">
         <property name="returnClass"><value>java.lang.String</value></property>
     </bean>
+    <osgi:service ref="ChatStringToString" interface="org.mule.umo.transformer.UMOTransformer" />
 
     <!--
         A Mule descriptor defines all the necessary information about how your components will
@@ -56,7 +66,7 @@
                 <property name="endpointURI">
                     <bean class="org.mule.impl.endpoint.MuleEndpointURI">
                         <constructor-arg>
-                            <value>stream://System.in?transformers=StringToNameString</value>
+                            <value>file:///tmp/in?transformers=BytesToString,StringToNameString</value>
                         </constructor-arg>
                     </bean>
                </property>
@@ -99,7 +109,7 @@
                 <property name="endpointURI">
                     <bean class="org.mule.impl.endpoint.MuleEndpointURI">
                         <constructor-arg>
-                            <value>stream://System.out?transformers=ChatStringToString</value>
+                            <value>file:///tmp/out?transformers=ChatStringToString</value>
                         </constructor-arg>
                     </bean>
                </property>
