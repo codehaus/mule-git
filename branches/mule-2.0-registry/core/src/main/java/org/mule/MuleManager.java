@@ -48,6 +48,7 @@ import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.management.stats.AllStatistics;
+import org.mule.registry.ComponentReference;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.registry.impl.DummyRegistry;
@@ -224,6 +225,11 @@ public class MuleManager implements UMOManager
      * Registry
      */
     private Registry registry;
+
+    /**
+     * Registry ID for this Manager
+     */
+    private String registryId;
 
     /**
      * logger used by this class
@@ -714,20 +720,7 @@ public class MuleManager implements UMOManager
             // Start the registry
             if (registry == null)
             {
-                try 
-                {
-                    Class clazz = Class.forName("org.mule.registry.impl.MuleRegistry");
-                    Object o = clazz.newInstance();
-                    registry = (Registry)o;
-                } catch (Exception e)
-                {
-                    logger.warn("Couldn't create MuleRegistry: " + e.toString());
-                    logger.warn("Creating dummy registry so that things will run");
-                    registry = new DummyRegistry();
-                }
-
-                registry.start();
-                registerListener(new RegistryNotificationListener(registry));
+                createRegistry();
             }
 
             // if no work manager has been set create a default one
@@ -1042,15 +1035,24 @@ public class MuleManager implements UMOManager
     public UMOModel getModel() 
     {
         // todo in version two we must not assume the model
+        if (registry == null)
+        {
+            createRegistry();
+        }
+
         if (model == null)
         {
             model = new SedaModel();
             model.setName(DEFAULT_MODEL_NAME);
-            try {
-            	model.register();
-            } catch (RegistrationException e) {
-            	logger.warn("Unable to register model: " + e.getMessage());
-            	// TODO Do something!
+
+            try 
+            {
+                model.register();
+            } 
+            catch (UMOException e)
+            {
+                logger.error("Unable to register model " + model.getName() +
+                        " with the registry");
             }
         }
         return model;
@@ -1586,6 +1588,32 @@ public class MuleManager implements UMOManager
     public void setQueueManager(QueueManager queueManager)
     {
         this.queueManager = queueManager;
+    }
+
+    public String getRegistryId()
+    {
+        return registryId;
+    }
+
+    private void createRegistry() {
+        try 
+        {
+            Class clazz = Class.forName("org.mule.registry.impl.MuleRegistry");
+            Object o = clazz.newInstance();
+            registry = (Registry)o;
+            registry.start();
+            registerListener(new RegistryNotificationListener(registry));
+            ComponentReference ref = registry.getComponentReferenceInstance();
+            ref.setParentId(null);
+            ref.setType("UMOManager");
+            ref.setComponent(this);
+            registryId = registry.registerComponent(ref);
+        } catch (Exception e)
+        {
+            logger.warn("Couldn't create MuleRegistry: " + e.toString());
+            logger.warn("Creating dummy registry so that things will run");
+            registry = new DummyRegistry();
+        }
     }
 
     /**
