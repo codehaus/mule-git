@@ -1,7 +1,16 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
 package org.mule.modules.osgi;
 
 import org.mule.MuleManager;
-import org.mule.umo.manager.UMOManager;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -9,10 +18,12 @@ import org.osgi.framework.BundleContext;
 
 public class MuleManagerActivator implements BundleActivator {
 	
-	private UMOManager manager;
+    // Services-based Mule Manager.
+	MuleSoaManager manager;
 
 	public void start(BundleContext bc) throws Exception {
-		manager = MuleManager.getInstance();
+		manager = new MuleSoaManager(bc);
+        MuleManager.setInstance(manager);
 		manager.start();
 	}
 

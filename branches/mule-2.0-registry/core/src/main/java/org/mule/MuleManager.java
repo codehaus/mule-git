@@ -241,7 +241,7 @@ public class MuleManager implements UMOManager
     /**
      * Default Constructor
      */
-    private MuleManager()
+    protected MuleManager()
     {
         if (config == null)
         {
