@@ -31,6 +31,7 @@ import javax.management.ObjectName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tanukisoftware.wrapper.jmx.WrapperManager;
+import org.tanukisoftware.wrapper.jmx.WrapperManagerMBean;
 
 /**
  *
@@ -46,10 +47,16 @@ public class WrapperManagerAgent implements UMOAgent {
 
     private JmxSupportFactory jmxSupportFactory = new AutoDiscoveryJmxSupportFactory();
     private JmxSupport jmxSupport;
-    private WrapperManager wrapperManager;
+    private WrapperManagerMBean wrapperManager = new WrapperManager();
 
     /* @see org.mule.umo.lifecycle.Initialisable#initialise() */
     public void initialise() throws InitialisationException {
+
+        if (!wrapperManager.isControlledByNativeWrapper()) {
+            logger.warn("This JVM hasn't been launched by the wrapper, the agent will not run.");
+            return;
+        }
+
         jmxSupport = jmxSupportFactory.newJmxSupport();
         final List servers = MBeanServerFactory.findMBeanServer(null);
         if (servers.isEmpty())
@@ -65,7 +72,6 @@ public class WrapperManagerAgent implements UMOAgent {
             wrapperName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + WRAPPER_OBJECT_NAME);
 
             unregisterMBeansIfNecessary();
-            wrapperManager = new WrapperManager();
             mBeanServer.registerMBean(wrapperManager, wrapperName);
         }
 
@@ -87,11 +93,11 @@ public class WrapperManagerAgent implements UMOAgent {
     }
 
     /**
-     * Unregister all Mx4j MBeans if there are any left over the old deployment
+     * Unregister all MBeans if there are any left over the old deployment
      */
     protected void unregisterMBeansIfNecessary()
         throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
-        if (mBeanServer == null)
+        if (mBeanServer == null || wrapperName != null)
         {
             return;
         }
