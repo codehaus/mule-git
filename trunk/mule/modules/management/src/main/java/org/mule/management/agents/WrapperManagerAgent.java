@@ -81,7 +81,7 @@ public class WrapperManagerAgent implements UMOAgent {
         else
         {
             lazyInitWrapperManager();
-            launchedByWrapper = !((WrapperManagerMBean) wrapperManagerRef.get()).isControlledByNativeWrapper();
+            launchedByWrapper = ((WrapperManagerMBean) wrapperManagerRef.get()).isControlledByNativeWrapper();
         }
 
         if (!launchedByWrapper)
