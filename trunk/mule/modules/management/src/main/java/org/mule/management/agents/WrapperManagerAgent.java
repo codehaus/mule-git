@@ -123,7 +123,7 @@ public class WrapperManagerAgent implements UMOAgent {
         }
     }
 
-    protected synchronized void lazyInitWrapperManager() {
+    protected void lazyInitWrapperManager() {
         WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
 
         if (wm != null)
@@ -192,7 +192,7 @@ public class WrapperManagerAgent implements UMOAgent {
     // /////////////////////////////////////////////////////////////////////////
 
     /* @see org.mule.umo.manager.UMOAgent#getDescription() */
-    public synchronized String getDescription()
+    public String getDescription()
     {
         WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
         if (wm == null)
