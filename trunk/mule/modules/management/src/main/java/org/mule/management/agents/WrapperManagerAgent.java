@@ -61,7 +61,7 @@ public class WrapperManagerAgent implements UMOAgent {
     private JmxSupport jmxSupport;
 
     // atomic reference to avoid unnecessary construction calls
-    private AtomicReference/*<WrapperManagerMBean>*/ wrapperManagerRef = new AtomicReference();
+    private final AtomicReference/*<WrapperManagerMBean>*/ wrapperManagerRef = new AtomicReference();
 
 
     /* @see org.mule.umo.lifecycle.Initialisable#initialise() */
