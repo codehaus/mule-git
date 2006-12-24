@@ -18,6 +18,7 @@ import org.mule.management.support.JmxSupportFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
+import org.mule.MuleManager;
 
 import java.util.List;
 
@@ -32,14 +33,25 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tanukisoftware.wrapper.jmx.WrapperManager;
 import org.tanukisoftware.wrapper.jmx.WrapperManagerMBean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
+ * This agent integrates Java Service Wrapper into Mule. See
+ * <a href="http://wrapper.tanukisoftware.org">http://wrapper.tanukisoftware.org</a>
+ * for more details.
  */
 public class WrapperManagerAgent implements UMOAgent {
+    /**
+     * MBean name to register under.
+     */
     public static final String WRAPPER_OBJECT_NAME = "name=WrapperManager";
 
     private static final Log logger = LogFactory.getLog(WrapperManagerAgent.class);
+
+    /**
+     * This property is set by the native launcher, used for extra checks.
+     */
+    private static final String WRAPPER_SYSTEM_PROPERTY_NAME = "wrapper.native_library";
 
     private String name = "Wrapper Manager";
     private MBeanServer mBeanServer;
@@ -47,15 +59,45 @@ public class WrapperManagerAgent implements UMOAgent {
 
     private JmxSupportFactory jmxSupportFactory = new AutoDiscoveryJmxSupportFactory();
     private JmxSupport jmxSupport;
-    private WrapperManagerMBean wrapperManager = new WrapperManager();
+
+    // atomic reference to avoid unnecessary construction calls
+    private AtomicReference/*<WrapperManagerMBean>*/ wrapperManagerRef = new AtomicReference();
+
 
     /* @see org.mule.umo.lifecycle.Initialisable#initialise() */
     public void initialise() throws InitialisationException {
 
-        if (!wrapperManager.isControlledByNativeWrapper()) {
+        /*
+           Perform an extra check ourselves. If 'wrapper.native_library' property has
+           not been set, which is the case for embedded scenarios, don't even try to
+           construct the wrapper manager bean, as it performs a number of checks internally
+           and outputs a very verbose warning.
+         */
+        boolean launchedByWrapper;
+        if (System.getProperty(WRAPPER_SYSTEM_PROPERTY_NAME) == null)
+        {
+            launchedByWrapper = false;
+        }
+        else
+        {
+            lazyInitWrapperManager();
+            launchedByWrapper = !((WrapperManagerMBean) wrapperManagerRef.get()).isControlledByNativeWrapper();
+        }
+
+        if (!launchedByWrapper)
+        {
             logger.warn("This JVM hasn't been launched by the wrapper, the agent will not run.");
+            try
+            {
+                // remove the agent from the list, it's not functional
+                MuleManager.getInstance().unregisterAgent(this.getName());
+            }
+            catch (UMOException e) {
+                // not interested, really
+            }
             return;
         }
+
 
         jmxSupport = jmxSupportFactory.newJmxSupport();
         final List servers = MBeanServerFactory.findMBeanServer(null);
@@ -72,13 +114,25 @@ public class WrapperManagerAgent implements UMOAgent {
             wrapperName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + WRAPPER_OBJECT_NAME);
 
             unregisterMBeansIfNecessary();
-            mBeanServer.registerMBean(wrapperManager, wrapperName);
+            mBeanServer.registerMBean(wrapperManagerRef.get(), wrapperName);
         }
 
         catch (Exception e)
         {
             throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "wrapper agent"), e, this);
         }
+    }
+
+    protected synchronized void lazyInitWrapperManager() {
+        WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
+
+        if (wm != null)
+        {
+            return;
+        }
+
+        wm = new WrapperManager();
+        wrapperManagerRef.compareAndSet(null, wm);
     }
 
     /* @see org.mule.umo.lifecycle.Startable#start() */
@@ -138,10 +192,15 @@ public class WrapperManagerAgent implements UMOAgent {
     // /////////////////////////////////////////////////////////////////////////
 
     /* @see org.mule.umo.manager.UMOAgent#getDescription() */
-    public String getDescription()
+    public synchronized String getDescription()
     {
-        return "Wrapper Manager: Mule PID #" + wrapperManager.getJavaPID() +
-               ", Wrapper PID #" + wrapperManager.getWrapperPID();
+        WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
+        if (wm == null)
+        {
+            return "Wrapper Manager";
+        }
+        else return "Wrapper Manager: Mule PID #" + wm.getJavaPID() +
+                ", Wrapper PID #" + wm.getWrapperPID();
     }
 
     /* @see org.mule.umo.manager.UMOAgent#getName() */
