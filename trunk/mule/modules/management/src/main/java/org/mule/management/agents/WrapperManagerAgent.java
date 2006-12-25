@@ -86,7 +86,7 @@ public class WrapperManagerAgent implements UMOAgent {
 
         if (!launchedByWrapper)
         {
-            logger.warn("This JVM hasn't been launched by the wrapper, the agent will not run.");
+            logger.info("This JVM hasn't been launched by the wrapper, the agent will not run.");
             try
             {
                 // remove the agent from the list, it's not functional
