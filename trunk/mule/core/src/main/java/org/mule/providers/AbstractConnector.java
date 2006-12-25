@@ -67,7 +67,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
@@ -142,7 +141,7 @@ public abstract class AbstractConnector
     /**
      * A pool of dispatchers for this connector, the pool is keyed on endpointUri
      */
-    protected KeyedObjectPool dispatchers;
+    protected GenericKeyedObjectPool dispatchers;
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
@@ -767,14 +766,14 @@ public abstract class AbstractConnector
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-            // MULE-595: workaround until PollingMessageReceiver does not require its own
-            // thread any longer and we have NIO support, probably via Mina. Socket-based
-            // receivers like http need to use a thread since they hang in accept();
-            // having too many of them can exhaust a size-limited pool and block startup.
-            // TODO HH: instead of a fixed number of threads we could return a pool
-            // per receiver, as was done previously :/
-            receiverThreadingProfile.setMaxThreadsActive(200);
+            // MULE-595: workaround until PollingMessageReceiver does not require its
+            // own thread any longer and we have NIO support, probably via Mina.
+            // Socket-based receivers like http need to use a thread since they hang
+            // in accept(); having too many of them can exhaust a size-limited pool
+            // and block startup.
+            receiverThreadingProfile.setMaxThreadsActive(256);
         }
+
         return receiverThreadingProfile;
     }
 
