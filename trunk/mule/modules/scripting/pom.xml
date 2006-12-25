@@ -39,7 +39,7 @@
 
         <!-- required for script-api and the retrotranslated groovy-engine -->
         <dependency>
-			<groupId>net.sf.retrotranslator</groupId>
+            <groupId>net.sf.retrotranslator</groupId>
 			<artifactId>retrotranslator-runtime</artifactId>
 			<version>1.1.0</version>
 		</dependency>
