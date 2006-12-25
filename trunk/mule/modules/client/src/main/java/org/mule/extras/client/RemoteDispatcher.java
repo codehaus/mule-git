@@ -10,17 +10,13 @@
 
 package org.mule.extras.client;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Callable;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
-import org.mule.impl.RequestContext;
 import org.mule.impl.MuleSessionHandler;
+import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.security.MuleCredentials;
@@ -38,18 +34,21 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.security.UMOCredentials;
 import org.mule.util.MuleObjectHelper;
 
+import edu.emory.mathcs.backport.java.util.concurrent.Callable;
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>RemoteDispatcher</code> is used to make and receive requests to a remote
- * Mule instance. It is used to proxy requests to Mule using the Server Url as the
- * the transport channel.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Mule instance. It is used to proxy requests to Mule using the Server URL as the
+ * transport channel.
  */
 
 public class RemoteDispatcher implements Disposable
@@ -69,7 +68,7 @@ public class RemoteDispatcher implements Disposable
     /**
      * an ExecutorService for async messages (optional)
      */
-    private ExecutorService executor;
+    private Executor asyncExecutor;
 
     /**
      * calls made to a remote server are serialised using a wireformat
@@ -88,9 +87,9 @@ public class RemoteDispatcher implements Disposable
         wireFormat = new SerializationWireFormat();
     }
 
-    protected void setExecutorService(ExecutorService e)
+    protected void setExecutor(Executor e)
     {
-        this.executor = e;
+        this.asyncExecutor = e;
     }
 
     /**
@@ -162,9 +161,9 @@ public class RemoteDispatcher implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(callable);
 
-        if (executor != null)
+        if (asyncExecutor != null)
         {
-            result.setExecutor(executor);
+            result.setExecutor(asyncExecutor);
         }
 
         if (transformers != null)
@@ -207,9 +206,9 @@ public class RemoteDispatcher implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(callable);
 
-        if (executor != null)
+        if (asyncExecutor != null)
         {
-            result.setExecutor(executor);
+            result.setExecutor(asyncExecutor);
         }
 
         result.execute();
@@ -238,9 +237,9 @@ public class RemoteDispatcher implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(callable);
 
-        if (executor != null)
+        if (asyncExecutor != null)
         {
-            result.setExecutor(executor);
+            result.setExecutor(asyncExecutor);
         }
 
         result.execute();

@@ -10,10 +10,6 @@
 
 package org.mule.extras.client;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Callable;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
@@ -50,11 +46,17 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.StringUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.Callable;
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleClient</code> is a simple interface for Mule clients to send and
@@ -97,15 +99,10 @@ public class MuleClient implements Disposable
     private UMOManager manager;
 
     /**
-     * an ExecutorService for async messages (optional)
-     * <p>
-     * TODO MULE-732: currently always null, any async sends will transparently fall
-     * back to FutureMessageResult's executor. It will need to be created either via
-     * a MuleClient "asyncThreadingProfile" or pulled from MuleManager (part of the
-     * future ManagementContext?). Unless daeon threads are used it will be important
-     * to properly shutdown this pool in {@link #dispose()}.
+     * an Executor for async messages (optional), currently always delegated to
+     * MuleManager's default WorkManager
      */
-    private ExecutorService executor = null;
+    private Executor asyncExecutor = null;
 
     private List dispatchers = new ArrayList();
 
@@ -225,7 +222,7 @@ public class MuleClient implements Disposable
         {
             if (logger.isInfoEnabled())
             {
-                logger.info("There is already a manager available to this client locally, no need to create a new one");
+                logger.info("There is already a manager locally available to this client, no need to create a new one");
             }
         }
         else
@@ -233,11 +230,12 @@ public class MuleClient implements Disposable
             MuleManager.getConfiguration().setClientMode(true);
             if (logger.isInfoEnabled())
             {
-                logger.info("There is no manager instance available locally for this client, Creating a new Manager");
+                logger.info("There is no manager instance locally available for this client, creating a new Manager");
             }
         }
 
         manager = MuleManager.getInstance();
+        asyncExecutor = manager.getWorkManager();
         builder = new QuickConfigurationBuilder();
 
         if (!manager.isInitialised() && startManager == true)
@@ -570,9 +568,9 @@ public class MuleClient implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(call);
 
-        if (executor != null)
+        if (asyncExecutor != null)
         {
-            result.setExecutor(executor);
+            result.setExecutor(asyncExecutor);
         }
 
         result.execute();
@@ -635,9 +633,9 @@ public class MuleClient implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(call);
 
-        if (executor != null)
+        if (asyncExecutor != null)
         {
-            result.setExecutor(executor);
+            result.setExecutor(asyncExecutor);
         }
 
         if (StringUtils.isNotBlank(transformers))
@@ -1036,7 +1034,7 @@ public class MuleClient implements Disposable
     public RemoteDispatcher getRemoteDispatcher(String serverEndpoint) throws UMOException
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint);
-        rd.setExecutorService(executor);
+        rd.setExecutor(asyncExecutor);
         dispatchers.add(rd);
         return rd;
     }
@@ -1046,7 +1044,7 @@ public class MuleClient implements Disposable
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint, new MuleCredentials(user,
             password.toCharArray()));
-        rd.setExecutorService(executor);
+        rd.setExecutor(asyncExecutor);
         dispatchers.add(rd);
         return rd;
     }
