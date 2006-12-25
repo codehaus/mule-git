@@ -20,27 +20,38 @@ then
     read artifactId
     echo "Enter version:"
     read version
+    echo "Enter classifier:"
+    read classifier
+
 
     # Convert the group's package to a path (e.g. javax.mail --> javax/mail)
     groupPath=`echo $groupId | sed s*[.]*/*g`
 
+	# Create file name
     path=$DEPENDENCIES/$groupPath/$artifactId/$version
-    file=$artifactId-$version
+    if [[ "$classifier" > "" ]]; then
+    	file=$artifactId-$version-$classifier
+    else
+    	file=$artifactId-$version
+	fi    	
 
     echo "Creating directory $path"
     mkdir -p $path
     echo "Setting directory privileges"
     chmod -fR 775 $DEPENDENCIES
 
-    echo "Installing library as $artifactId-$version.jar"
+    echo "Installing library as $file.jar"
     cp $1 $path/$file.jar
 
     echo "Generating basic POM"
     echo "<project>" > $path/$file.pom
     echo "  <modelVersion>4.0.0</modelVersion>" >> $path/$file.pom
     echo "  <groupId>$groupId</groupId>" >> $path/$file.pom
-    echo "  <artifactId>$artifactId</artifactId>" >> $path/$file.pom
+	echo "  <artifactId>$artifactId</artifactId>" >> $path/$file.pom
     echo "  <version>$version</version>" >> $path/$file.pom
+    if [[ "$classifier" > "" ]] ; then
+    	echo "  <classifier>$classifier</classifier>" >> $path/$file.pom
+    fi
     echo "</project>" >> $path/$file.pom
 
     echo "Generating checksums"
