@@ -10,7 +10,7 @@
 
 package org.mule.registry.impl.persistence;
 
-import org.mule.registry.persistence.Persistable;
+import org.mule.persistence.Persistable;
 import org.mule.umo.manager.UMOServerNotification;
 
 /**

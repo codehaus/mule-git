@@ -10,13 +10,14 @@
 
 package org.mule.registry.impl.persistence;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mule.persistence.Persistable;
 import org.mule.registry.impl.store.PersistenceManager;
-import org.mule.registry.persistence.Persistable;
 import org.mule.transformers.xml.XStreamFactory;
 
 import com.thoughtworks.xstream.XStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * PLACEHOLDER

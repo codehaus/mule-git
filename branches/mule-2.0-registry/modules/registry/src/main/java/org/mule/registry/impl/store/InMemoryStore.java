@@ -10,17 +10,22 @@
 
 package org.mule.registry.impl.store;
 
+import org.mule.registry.ComponentReference;
+import org.mule.registry.DeregistrationException;
+import org.mule.registry.RegistrationException;
+import org.mule.registry.RegistryStore;
+import org.mule.registry.ReregistrationException;
+import org.mule.registry.impl.persistence.PersistenceNotification;
+import org.mule.registry.impl.persistence.PersistenceNotificationListener;
+import org.mule.umo.UMOException;
+import org.mule.umo.manager.UMOServerNotificationListener;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.registry.*;
-import org.mule.registry.impl.persistence.PersistenceNotification;
-import org.mule.registry.impl.persistence.PersistenceNotificationListener;
-import org.mule.umo.UMOException;
-import org.mule.umo.manager.UMOServerNotificationListener;
 
 /**
  * The InMemoryStore represents an, well, in-memory store of 
@@ -165,5 +170,10 @@ public class InMemoryStore implements RegistryStore
         return store;
     }
 
+    public Object getStorageKey() throws UMOException
+    {
+        // TODO 
+        return null;
+    }
 }
 
