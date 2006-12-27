@@ -153,14 +153,24 @@ public class LicenseHandler
 
     /**
      * Saves the license acceptance acknowledgement file. This method should be used
-     * by the GUI installer. For now, the acknowlegment file is license.props and
-     * contains: LicenseVersion: LicenseAcceptanceDate: LicenseType: We are also
-     * making a copy of the license file into the jar as well The logic here is: 1.
-     * Normally, save the license ack in a jar in MULE_HOME/lib/mule called
-     * "mule-local-install.jar" 2. If MULE_HOME/lib/mule is not writable AND
-     * MULE_BASE != MULE_HOME, try to save in MULE_BASE/lib/user 3. If
-     * MULE_BASE/lib/user is not writable, something is probably strange and we need
-     * a third option ... which is ... well, I'm sure there is one ...
+     * by the GUI installer.
+     * <p>
+     * For now, the acknowlegment file is license.props and contains:
+     * <ul>
+     * <li>LicenseVersion:
+     * <li>LicenseAcceptanceDate:
+     * <li>LicenseType:
+     * </ul>
+     * We are also making a copy of the license file into the jar as well. The logic
+     * here is:
+     * <ol>
+     * <li> Normally, save the license ack in a jar in MULE_HOME/lib/mule called
+     * "mule-local-install.jar"
+     * <li> If MULE_HOME/lib/mule is not writable AND MULE_BASE != MULE_HOME, try to
+     * save in MULE_BASE/lib/user
+     * <li> If MULE_BASE/lib/user is not writable, something is probably strange and
+     * we need a third option ... which is ... well, I'm sure there is one ...
+     * </ol>
      * 
      * @param licenseType type of license - for now, should be just MuleSource Public
      *            License
