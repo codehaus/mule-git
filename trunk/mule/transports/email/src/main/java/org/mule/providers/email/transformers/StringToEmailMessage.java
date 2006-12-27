@@ -120,7 +120,7 @@ public class StringToEmailMessage extends AbstractEventAwareTransformer
 
         try
         {
-            Message email = new MimeMessage((Session)endpoint.getConnector().getDelegateSession(endpoint));
+            Message email = new MimeMessage((Session)endpoint.getConnector().getDelegateSession(endpoint, null));
 
             email.setRecipients(Message.RecipientType.TO, MailUtils.stringToInternetAddresses(to));
 
