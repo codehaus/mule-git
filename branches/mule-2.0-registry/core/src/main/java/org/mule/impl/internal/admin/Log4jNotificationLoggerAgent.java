@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.RollingFileAppender;
-import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -108,11 +107,13 @@ public class Log4jNotificationLoggerAgent extends AbstractNotificationLoggerAgen
                     Appender file = new RollingFileAppender(new PatternLayout("%5p %m%n"), logFile, true);
                     eventLogger.addAppender(file);
                 }
+                /* Disable for now since the org.apache.log4j.net package is not
+                    exported by the PAX Logging Log4J bundle.
                 if (chainsawPort > -1)
                 {
                     Appender chainsaw = new SocketAppender(chainsawHost, chainsawPort);
                     eventLogger.addAppender(chainsaw);
-                }
+                } */
             }
             catch (IOException e)
             {
