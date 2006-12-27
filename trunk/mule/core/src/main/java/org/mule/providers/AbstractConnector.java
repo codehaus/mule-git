@@ -969,19 +969,6 @@ public abstract class AbstractConnector
         }
     }
 
-    /** @deprecated Use lookupReceiver instead */
-    public AbstractMessageReceiver getReceiver(String key)
-    {
-        if (key != null)
-        {
-            return (AbstractMessageReceiver)receivers.get(key);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Receiver key must not be null");
-        }
-    }
-
     public AbstractMessageReceiver[] getReceivers(String wildcardExpression)
     {
         List temp = new ArrayList();
@@ -1333,11 +1320,6 @@ public abstract class AbstractConnector
     public void setSessionHandler(UMOSessionHandler sessionHandler)
     {
         this.sessionHandler = sessionHandler;
-    }
-
-    public Object getDelegateSession(UMOImmutableEndpoint endpoint) throws UMOException
-    {
-        return this.getDelegateSession(endpoint, null);
     }
 
     public Object getDelegateSession(UMOImmutableEndpoint endpoint, Object[] args) throws UMOException
