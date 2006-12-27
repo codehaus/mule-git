@@ -166,7 +166,6 @@ public interface UMOConnector extends Disposable, Initialisable
      * @throws UMOException
      */
     // TODO HH: fix this description
-    Object getDelegateSession(UMOImmutableEndpoint endpoint) throws UMOException;
     Object getDelegateSession(UMOImmutableEndpoint endpoint, Object[] args) throws UMOException;
 
     /**
