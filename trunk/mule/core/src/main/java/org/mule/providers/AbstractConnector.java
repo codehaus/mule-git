@@ -1322,7 +1322,7 @@ public abstract class AbstractConnector
         this.sessionHandler = sessionHandler;
     }
 
-    public Object getDelegateSession(UMOImmutableEndpoint endpoint, Object[] args) throws UMOException
+    public Object getDelegateSession(UMOImmutableEndpoint endpoint, Object args) throws UMOException
     {
         return null;
     }
