@@ -114,6 +114,17 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.0</version>
+            <exclusions>
+                <!-- XML was taken care of in the profiles -->
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- For unit tests only -->
@@ -143,5 +154,5 @@
         </dependency>
         
     </dependencies>
-
+	
 </project>
