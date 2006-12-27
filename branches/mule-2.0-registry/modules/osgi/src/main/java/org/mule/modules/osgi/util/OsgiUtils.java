@@ -8,16 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.osgi;
-
-import org.mule.util.MuleObjectHelper;
+package org.mule.modules.osgi.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
+/**
+ * Convenience methods for working with an OSGi framework.
+ */
 public class OsgiUtils
 {
     private static Log logger = LogFactory.getLog(OsgiUtils.class);
@@ -42,5 +44,15 @@ public class OsgiUtils
         }
         return null;
     }
+
+    public static boolean isBundleLoaded(BundleContext context, String symbolicName) {
+        Bundle[] bundles = context.getBundles();
+        for (int i=0; i<bundles.length; ++i) {
+            if (bundles[i].getSymbolicName().equals(symbolicName)) {
+                return true;
+            }
+        }
+        return false;
+      }      
 }
 

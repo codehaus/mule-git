@@ -1,5 +1,5 @@
 /*
- * $Id: MuleManager.java 4154 2006-12-06 22:12:56Z tcarlson $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -12,6 +12,7 @@ package org.mule.modules.osgi;
 
 import org.mule.MuleManager;
 import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.modules.osgi.util.OsgiUtils;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
@@ -46,7 +47,6 @@ public class MuleSoaManager extends MuleManager
 
     public synchronized void initialise() throws UMOException
     {
-        super.initialise();
         connectors = new ServiceTracker(context, UMOConnector.class.getName(), null);
         connectors.open();
         endpoints = new ServiceTracker(context, UMOEndpoint.class.getName(), null);
@@ -60,7 +60,6 @@ public class MuleSoaManager extends MuleManager
         transformers.close();
         endpoints.close();
         connectors.close();
-        super.dispose();
     }
 
     public UMOConnector lookupConnector(String name)
