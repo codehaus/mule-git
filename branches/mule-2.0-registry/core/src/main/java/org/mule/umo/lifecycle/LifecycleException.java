@@ -10,16 +10,14 @@
 
 package org.mule.umo.lifecycle;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOException;
 
+import org.apache.commons.lang.ObjectUtils;
+
 /**
  * <code>LifecycleException</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class LifecycleException extends UMOException

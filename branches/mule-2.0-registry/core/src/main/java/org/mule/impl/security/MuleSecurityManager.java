@@ -10,10 +10,6 @@
 
 package org.mule.impl.security;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.SecurityException;
@@ -24,18 +20,20 @@ import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.security.UMOSecurityProvider;
 import org.mule.umo.security.UnknownAuthenticationTypeException;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>MuleSecurityManager</code> is a default implementation security manager
- * for a Mule instance
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * for a Mule instance.
  */
 
 public class MuleSecurityManager implements UMOSecurityManager
@@ -43,10 +41,9 @@ public class MuleSecurityManager implements UMOSecurityManager
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MuleSecurityManager.class);
+    protected static final Log logger = LogFactory.getLog(MuleSecurityManager.class);
 
     private Map providers = new ConcurrentHashMap();
-
     private Map cryptoStrategies = new ConcurrentHashMap();
 
     public void initialise() throws InitialisationException
@@ -77,7 +74,10 @@ public class MuleSecurityManager implements UMOSecurityManager
 
             if (provider.supports(toTest))
             {
-                logger.debug("Authentication attempt using " + provider.getClass().getName());
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Authentication attempt using " + provider.getClass().getName());
+                }
 
                 UMOAuthentication result = provider.authenticate(authentication);
 

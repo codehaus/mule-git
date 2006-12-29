@@ -3,12 +3,19 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
 
 package org.mule.test.integration.providers.soap.xfire;
+
+import org.mule.extras.client.MuleClient;
+import org.mule.providers.http.HttpConnector;
+import org.mule.providers.http.HttpConstants;
+import org.mule.providers.http.servlet.MuleReceiverServlet;
+import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +29,6 @@ import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.util.InetAddrPort;
-import org.mule.extras.client.MuleClient;
-import org.mule.providers.http.HttpConnector;
-import org.mule.providers.http.HttpConstants;
-import org.mule.providers.http.servlet.MuleReceiverServlet;
-import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class XFireWsdlCallTestCase extends FunctionalTestCase
 {

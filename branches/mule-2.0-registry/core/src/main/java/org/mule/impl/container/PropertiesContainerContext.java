@@ -32,9 +32,6 @@ import java.util.Map;
  * <environment-properties> element in Mule Xml. The latter element may be removed in
  * the future.
  * </ol>
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class PropertiesContainerContext extends AbstractContainerContext
 {
@@ -101,8 +98,8 @@ public class PropertiesContainerContext extends AbstractContainerContext
             {
                 entry = (Map.Entry)iterator.next();
                 value = entry.getValue().toString();
-                value = templateParser.parse(systemProperties, value.toString());
-                value = templateParser.parse(MuleManager.getInstance().getProperties(), value.toString());
+                value = templateParser.parse(systemProperties, value);
+                value = templateParser.parse(MuleManager.getInstance().getProperties(), value);
                 System.setProperty(entry.getKey().toString(), value);
             }
         }
@@ -137,7 +134,7 @@ public class PropertiesContainerContext extends AbstractContainerContext
             {
                 entry = (Map.Entry)iterator.next();
                 value = entry.getValue().toString();
-                value = templateParser.parse(MuleManager.getInstance().getProperties(), value.toString());
+                value = templateParser.parse(MuleManager.getInstance().getProperties(), value);
                 MuleManager.getInstance().setProperty(entry.getKey(), value);
             }
         }

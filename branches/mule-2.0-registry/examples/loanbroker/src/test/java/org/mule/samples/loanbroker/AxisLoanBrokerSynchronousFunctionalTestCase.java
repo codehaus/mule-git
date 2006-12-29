@@ -29,10 +29,9 @@ public class AxisLoanBrokerSynchronousFunctionalTestCase extends FunctionalTestC
         return "loan-broker-axis-sync-test-config.xml";
     }
 
-    // fire 100 requests as default
     protected int getNumberOfRequests()
     {
-        return 100;
+        return 10;
     }
 
     public void testSingleLoanRequest() throws Exception

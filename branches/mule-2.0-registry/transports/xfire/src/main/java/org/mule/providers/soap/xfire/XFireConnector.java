@@ -11,7 +11,6 @@
 package org.mule.providers.soap.xfire;
 
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.xfire.DefaultXFire;
 import org.codehaus.xfire.XFire;
@@ -28,9 +27,9 @@ import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.internal.notifications.ModelNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.providers.soap.MethodFixInterceptor;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
+import org.mule.providers.soap.MethodFixInterceptor;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -68,7 +67,8 @@ public class XFireConnector extends AbstractServiceEnabledConnector
     private String clientTransport = null;
 
     private String serviceTransport = null;
-    private Map wsSecurity;
+    private List serverInHandlers = null;
+    private List serverOutHandlers = null;
 
     public XFireConnector()
     {
@@ -412,13 +412,23 @@ public class XFireConnector extends AbstractServiceEnabledConnector
         }
     }
 
-    public Map getWsSecurity()
+    public List getServerInHandlers()
     {
-        return wsSecurity;
+        return serverInHandlers;
     }
 
-    public void setWsSecurity(Map wsSecurity)
+    public void setServerInHandlers(List serverInHandlers)
     {
-        this.wsSecurity = wsSecurity;
+        this.serverInHandlers = serverInHandlers;
+    }
+
+    public List getServerOutHandlers()
+    {
+        return serverOutHandlers;
+    }
+
+    public void setServerOutHandlers(List serverOutHandlers)
+    {
+        this.serverOutHandlers = serverOutHandlers;
     }
 }

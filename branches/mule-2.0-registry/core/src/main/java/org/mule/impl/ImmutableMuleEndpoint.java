@@ -10,10 +10,6 @@
 
 package org.mule.impl;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
@@ -23,29 +19,36 @@ import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.service.ConnectorFactory;
 import org.mule.providers.service.ConnectorFactoryException;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOFilter;
+import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
+import org.mule.util.StringUtils;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>ImmutableMuleEndpoint</code> describes a Provider in the Mule Server. A
  * endpoint is a grouping of an endpoint, an endpointUri and a transformer.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 {
@@ -57,7 +60,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
+    protected static final Log logger = LogFactory.getLog(ImmutableMuleEndpoint.class);
 
     /**
      * The endpoint used to communicate with the external system
@@ -530,13 +533,11 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public int hashCode()
     {
-        int result;
-        result = (connector != null ? connector.hashCode() : 0);
+        int result = (connector != null ? connector.hashCode() : 0);
         result = 29 * result + (endpointUri != null ? endpointUri.hashCode() : 0);
         result = 29 * result + (transformer != null ? transformer.hashCode() : 0);
         result = 29 * result + (name != null ? name.hashCode() : 0);
-        result = 29 * result + (type != null ? type.hashCode() : 0);
-        return result;
+        return 29 * result + (type != null ? type.hashCode() : 0);
     }
 
     public UMOFilter getFilter()
@@ -546,8 +547,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public static UMOEndpoint createEndpointFromUri(UMOEndpointURI uri, String type) throws UMOException
     {
-        UMOEndpoint endpoint = ConnectorFactory.createEndpoint(uri, type);
-        return endpoint;
+        return ConnectorFactory.createEndpoint(uri, type);
     }
 
     public static UMOEndpoint getEndpointFromUri(String uri)
@@ -563,22 +563,23 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public static UMOEndpoint getEndpointFromUri(UMOEndpointURI uri) throws UMOException
     {
-        UMOEndpoint endpoint = null;
-        if (uri.getEndpointName() != null)
+        String endpointName = uri.getEndpointName();
+        if (endpointName != null)
         {
-            String endpointString = MuleManager.getInstance().lookupEndpointIdentifier(uri.getEndpointName(),
-                uri.getEndpointName());
-            endpoint = MuleManager.getInstance().lookupEndpoint(endpointString);
+            String endpointString = MuleManager.getInstance().lookupEndpointIdentifier(endpointName,
+                endpointName);
+            UMOEndpoint endpoint = MuleManager.getInstance().lookupEndpoint(endpointString);
             if (endpoint != null)
             {
-                if (uri.getAddress() != null && uri.getAddress().length() > 0)
+                if (StringUtils.isNotEmpty(uri.getAddress()))
                 {
                     endpoint.setEndpointURI(uri);
                 }
             }
-
+            return endpoint;
         }
-        return endpoint;
+
+        return null;
     }
 
     public static UMOEndpoint getOrCreateEndpointForUri(String uriIdentifier, String type)
@@ -864,4 +865,46 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
         return value;
     }
+
+    
+    // TODO the following methods should most likely be lifecycle-enabled
+
+    public void dispatch(UMOEvent event) throws DispatchException
+    {
+        if (connector != null)
+        {
+            connector.dispatch(this, event);
+        }
+        else
+        {
+            // TODO: what?
+        }
+    }
+
+    public UMOMessage receive(long timeout) throws Exception
+    {
+        if (connector != null)
+        {
+            return connector.receive(this, timeout);
+        }
+        else
+        {
+            // TODO: what?
+            return null;
+        }
+    }
+
+    public UMOMessage send(UMOEvent event) throws DispatchException
+    {
+        if (connector != null)
+        {
+            return connector.send(this, event);
+        }
+        else
+        {
+            // TODO: what?
+            return null;
+        }
+    }
+
 }

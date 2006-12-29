@@ -12,13 +12,11 @@ package org.mule.config;
 
 import org.mule.umo.UMOException;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
- * Grabs all information from the UMOexception type
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Grabs all information from the UMOException type
  */
 public final class UMOExceptionReader implements ExceptionReader
 {
@@ -45,6 +43,7 @@ public final class UMOExceptionReader implements ExceptionReader
      */
     public Map getInfo(Throwable t)
     {
-        return ((UMOException)t).getInfo();
+        return (t instanceof UMOException ? ((UMOException)t).getInfo() : Collections.EMPTY_MAP);
     }
+
 }

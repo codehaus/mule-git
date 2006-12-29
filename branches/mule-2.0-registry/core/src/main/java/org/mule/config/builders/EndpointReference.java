@@ -10,8 +10,6 @@
 
 package org.mule.config.builders;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -27,23 +25,23 @@ import org.mule.util.MuleObjectHelper;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>EndpointReference</code> maintains a endpoint reference. Endpoints are
  * cloned when they are looked up for the manager, if there are container properties
  * or transformers set on the Endpoint the clone will have an inconsistent state if
  * the transformers or container properties have not been resolved. This class holds
  * the refernece and is invoked after the container properties/transformers are
- * resolved
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * resolved.
  */
 public class EndpointReference
 {
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(EndpointReference.class);
+    protected static final Log logger = LogFactory.getLog(EndpointReference.class);
 
     private String propertyName;
     private String endpointName;

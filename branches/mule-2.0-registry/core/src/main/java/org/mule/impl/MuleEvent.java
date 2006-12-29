@@ -10,15 +10,11 @@
 
 package org.mule.impl;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
 import org.mule.MuleManager;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
-import org.mule.config.MuleProperties;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.umo.UMOComponent;
@@ -42,6 +38,11 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.EventObject;
 import java.util.Iterator;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleEvent</code> represents any data event occuring in the Mule
@@ -494,15 +495,6 @@ public class MuleEvent extends EventObject implements UMOEvent
     }
 
     /**
-     * @param name
-     * @return
-     */
-    public Object getProperty(String name)
-    {
-        return message.getProperty(name);
-    }
-
-    /**
      * @see org.mule.umo.UMOEvent#getProperty(java.lang.String, boolean)
      */
     public Object getProperty(String name, boolean exhaustiveSearch)
@@ -513,23 +505,12 @@ public class MuleEvent extends EventObject implements UMOEvent
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOEvent#getProperty(java.lang.String, java.lang.Object)
-     *      @param name @param defaultValue @return
-     */
-    public Object getProperty(String name, Object defaultValue)
-    {
-        return message.getProperty(name, defaultValue);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.mule.umo.UMOEvent#getProperty(java.lang.String, java.lang.Object,
      *      boolean)
      */
     public Object getProperty(String name, Object defaultValue, boolean exhaustiveSearch)
     {
-        Object property = getProperty(name);
+        Object property = message.getProperty(name);
 
         if (exhaustiveSearch)
         {
@@ -554,16 +535,6 @@ public class MuleEvent extends EventObject implements UMOEvent
             }
         }
         return (property == null ? defaultValue : property);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOEvent#setProperty(java.lang.String, java.lang.Object)
-     */
-    public void setProperty(String name, Object value)
-    {
-        message.setProperty(name, value);
     }
 
     /*
@@ -663,10 +634,7 @@ public class MuleEvent extends EventObject implements UMOEvent
 
     public int hashCode()
     {
-        int result;
-        result = id.hashCode();
-        result = 29 * result + (message != null ? message.hashCode() : 0);
-        return result;
+        return 29 * id.hashCode() + (message != null ? message.hashCode() : 0);
     }
 
     public boolean isSynchronous()
@@ -695,90 +663,6 @@ public class MuleEvent extends EventObject implements UMOEvent
     }
 
     /**
-     * Gets an int property on the nessage
-     * 
-     * @param name
-     */
-    public int getIntProperty(String name, int defaultValue)
-    {
-        return message.getIntProperty(name, defaultValue);
-    }
-
-    /**
-     * Gets a long property on the nessage
-     * 
-     * @param name
-     */
-    public long getLongProperty(String name, long defaultValue)
-    {
-        return message.getLongProperty(name, defaultValue);
-    }
-
-    /**
-     * Gets a double property on the nessage
-     * 
-     * @param name
-     */
-    public double getDoubleProperty(String name, double defaultValue)
-    {
-        return message.getDoubleProperty(name, defaultValue);
-    }
-
-    /**
-     * Gets a boolean property on the nessage
-     * 
-     * @param name
-     */
-    public boolean getBooleanProperty(String name, boolean defaultValue)
-    {
-        return message.getBooleanProperty(name, defaultValue);
-    }
-
-    /**
-     * Sets a boolean property on the nessage
-     * 
-     * @param name
-     * @param value
-     */
-    public void setBooleanProperty(String name, boolean value)
-    {
-        message.setBooleanProperty(name, value);
-    }
-
-    /**
-     * Sets an int property on the nessage
-     * 
-     * @param name
-     * @param value
-     */
-    public void setIntProperty(String name, int value)
-    {
-        message.setIntProperty(name, value);
-    }
-
-    /**
-     * Sets a long property on the nessage
-     * 
-     * @param name
-     * @param value
-     */
-    public void setLongProperty(String name, long value)
-    {
-        message.setLongProperty(name, value);
-    }
-
-    /**
-     * Sets a double property on the nessage
-     * 
-     * @param name
-     * @param value
-     */
-    public void setDoubleProperty(String name, double value)
-    {
-        message.setDoubleProperty(name, value);
-    }
-
-    /**
      * An outputstream the can optionally be used write response data to an incoming
      * message.
      * 
@@ -788,18 +672,6 @@ public class MuleEvent extends EventObject implements UMOEvent
     public OutputStream getOutputStream()
     {
         return outputStream;
-    }
-
-    /**
-     * Removes a property from the event
-     * 
-     * @param key the property key to remove
-     * @return the removed property or null if the property was not found or if the
-     *         underlying message does not return the removed property
-     */
-    public Object removeProperty(String key)
-    {
-        return message.removeProperty(key);
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException
@@ -820,24 +692,6 @@ public class MuleEvent extends EventObject implements UMOEvent
         {
             throw (IOException)new IOException().initCause(e);
         }
-    }
-
-    /**
-     * Will retrieve a string proerty form the event. If the property does not exist
-     * it will be substituted with the default value
-     * 
-     * @param name the name of the proerty to get
-     * @param defaultValue the default value to return if the proerty is not set
-     * @return the property value or the defaultValue if the proerty is not set
-     */
-    public String getStringProperty(String name, String defaultValue)
-    {
-        return message.getStringProperty(name, defaultValue);
-    }
-
-    public void setStringProperty(String name, String value)
-    {
-        setProperty(name, value);
     }
 
     /**

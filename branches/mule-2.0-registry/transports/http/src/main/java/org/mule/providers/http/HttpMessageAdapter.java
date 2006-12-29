@@ -10,6 +10,9 @@
 
 package org.mule.providers.http;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
@@ -19,9 +22,6 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.transformer.UMOTransformer;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * <code>HttpMessageAdapter</code> Wraps an incoming Http Request making the

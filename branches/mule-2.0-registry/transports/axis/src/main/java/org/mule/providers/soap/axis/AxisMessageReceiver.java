@@ -10,6 +10,13 @@
 
 package org.mule.providers.soap.axis;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.rpc.ParameterMode;
+
 import org.apache.axis.AxisProperties;
 import org.apache.axis.constants.Style;
 import org.apache.axis.constants.Use;
@@ -35,19 +42,9 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 
-import javax.xml.rpc.ParameterMode;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * <code>AxisMessageReceiver</code> is used to register a component as a service
  * with a Axis server.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class AxisMessageReceiver extends AbstractMessageReceiver
@@ -312,7 +309,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         {
             connector.addServletService(service);
             String endpointUrl = uri.getAddress() + "/" + serviceName;
-            endpointUrl.replaceFirst("servlet:", "http:");
+            endpointUrl = endpointUrl.replaceFirst("servlet:", "http:");
             service.getServiceDescription().setEndpointURL(endpointUrl);
         }
         else

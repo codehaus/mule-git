@@ -10,29 +10,26 @@
 
 package org.mule.transaction;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.TransactionException;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * This abstract class can be used as a base class for transactions that can enlist
- * only one resource (such as jms session or jdbc connection).
- * 
- * @author Guillaume Nodet
- * @version $Revision$
+ * only one resource (such as a JMS session or JDBC connection).
  */
 public abstract class AbstractSingleResourceTransaction extends AbstractTransaction
 {
 
-    protected Object key;
-    protected Object resource;
+    protected volatile Object key;
+    protected volatile Object resource;
 
-    protected AtomicBoolean started = new AtomicBoolean(false);
-    protected AtomicBoolean committed = new AtomicBoolean(false);
-    protected AtomicBoolean rolledBack = new AtomicBoolean(false);
-    protected AtomicBoolean rollbackOnly = new AtomicBoolean(false);
+    protected final AtomicBoolean started = new AtomicBoolean(false);
+    protected final AtomicBoolean committed = new AtomicBoolean(false);
+    protected final AtomicBoolean rolledBack = new AtomicBoolean(false);
+    protected final AtomicBoolean rollbackOnly = new AtomicBoolean(false);
 
     /*
      * (non-Javadoc)

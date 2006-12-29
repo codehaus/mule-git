@@ -19,14 +19,26 @@ import java.util.Properties;
  * <code>UserInfoEndpointBuilder</code> builds an endpoint with the userinfo and
  * host details. This endpoint builder is used where endpoints as of the form :
  * xxx://ross:secret@host:1000
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class UserInfoEndpointBuilder extends AbstractEndpointBuilder
 {
+    //TODO THis endpoint builder is redundant I think. We should be able to use the URL endpoint builder.
+    //It depends on where deriving classes can work with the URL endpoint builder, but there are a lot of similarities
     protected void setEndpoint(URI uri, Properties props) throws MalformedEndpointException
     {
+        // Added by Lajos 2006-12-14 per Ross
+        if(uri.getHost()==null)
+        {
+            if(props.getProperty("address")==null)
+            {
+                throw new MalformedEndpointException(uri.toString());
+            }
+            else
+            {
+                return;
+            }
+        }
+
         // Check and handle '@' symbols in the user info
         address = uri.getHost();
         int a = address.indexOf(".");
@@ -68,10 +80,6 @@ public class UserInfoEndpointBuilder extends AbstractEndpointBuilder
                     address = userInfo + "@" + address;
                 }
             }
-        }
-        else
-        {
-            throw new MalformedEndpointException(uri.toString(), new Exception("User info is not set"));
         }
     }
 }

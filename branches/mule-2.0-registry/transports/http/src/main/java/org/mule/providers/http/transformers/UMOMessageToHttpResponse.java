@@ -10,8 +10,6 @@
 
 package org.mule.providers.http.transformers;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpVersion;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.providers.NullPayload;
@@ -35,12 +33,12 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpVersion;
+
 /**
  * <code>UMOMessageToHttpResponse</code> converts a UMOMEssage into an Http
  * response.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer

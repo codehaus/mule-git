@@ -29,15 +29,12 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.TemplateParser;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <code>FilteringRouter</code> is a router that accepts events based on a filter
  * set.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class FilteringOutboundRouter extends AbstractOutboundRouter
@@ -48,7 +45,7 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
 
     private boolean useTemplates = false;
 
-    // We used Square templates as they can exist as part of an uri.
+    // We used Square templates as they can exist as part of an URI.
     private TemplateParser parser = TemplateParser.createSquareBracesStyleParser();
 
     public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)

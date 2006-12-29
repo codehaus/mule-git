@@ -10,6 +10,10 @@
 
 package org.mule.modules.boot;
 
+import org.mule.MuleServer;
+import org.mule.util.ClassUtils;
+import org.mule.util.SystemUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -34,48 +38,51 @@ import org.tanukisoftware.wrapper.WrapperSimpleApp;
  */
 public class MuleBootstrap 
 {
-	public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
-	public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.OsgiFrameworkWrapper";
-	
+    public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
+    public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.OsgiFrameworkWrapper";
+    
     public static void main( String[] args ) throws Exception
     {
         String mainClassName = getCommandLineOption("-main", args);
 
         if (mainClassName == null || mainClassName.equals(MAIN_CLASS_MULE_SERVER))
         {
-        	configureClasspath();
-        	System.out.println("Starting the Mule Server...");
-        	WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_MULE_SERVER).newInstance(), args);
+            configureClasspath();
+            System.out.println("Starting the Mule Server...");
+            WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_MULE_SERVER).newInstance(), args);
         }
         else if (mainClassName.equalsIgnoreCase("osgi") || mainClassName.equals(MAIN_CLASS_OSGI_FRAMEWORK))
         {
-        	System.out.println("Starting the OSGi Framework...");
-        	WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_OSGI_FRAMEWORK).newInstance(), args);
+            System.out.println("Starting the OSGi Framework...");
+            WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_OSGI_FRAMEWORK).newInstance(), args);
         }
         else 
         {
-	        // Add the main class name as the first argument to the Wrapper.
-	        String[] appArgs = new String[args.length + 1];
-	        appArgs[0] = mainClassName;
-	        System.arraycopy(args, 0, appArgs, 1, args.length);
-        	configureClasspath();
-        	System.out.println("Starting class " + mainClassName + "...");
-	        WrapperSimpleApp.main(appArgs);
+            // Add the main class name as the first argument to the Wrapper.
+            String[] appArgs = new String[args.length + 1];
+            appArgs[0] = mainClassName;
+            System.arraycopy(args, 0, appArgs, 1, args.length);
+            configureClasspath();
+            System.out.println("Starting class " + mainClassName + "...");
+            WrapperSimpleApp.main(appArgs);
         }
     }
 
     private static void configureClasspath() 
-    	throws IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException
+        throws IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException
     {
         // Make sure MULE_HOME is set.
         File muleHome = null;
 
         String muleHomeVar = System.getProperty("mule.home");
-        // Note: we can't use StringUtils.isBlank() here because we don't have that library yet.
-        if (muleHomeVar != null && !muleHomeVar.trim().equals("") && !muleHomeVar.equals("%MULE_HOME%")) {
+        // Note: we can't use StringUtils.isBlank() here because we don't have that
+        // library yet.
+        if (muleHomeVar != null && !muleHomeVar.trim().equals("") && !muleHomeVar.equals("%MULE_HOME%"))
+        {
             muleHome = new File(muleHomeVar).getCanonicalFile();
         }
-        if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory()) {
+        if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory())
+        {
             throw new IllegalArgumentException(
                 "Either MULE_HOME is not set or does not contain a valid directory.");
         }
@@ -83,29 +90,49 @@ public class MuleBootstrap
         File muleBase = null;
 
         String muleBaseVar = System.getProperty("mule.base");
-        if (muleBaseVar != null && !muleBaseVar.trim().equals("") && !muleBaseVar.equals("%MULE_BASE%")) {
+        if (muleBaseVar != null && !muleBaseVar.trim().equals("") && !muleBaseVar.equals("%MULE_BASE%"))
+        {
             muleBase = new File(muleBaseVar).getCanonicalFile();
-        } else {
+        }
+        else
+        {
             muleBase = muleHome;
         }
 
-        // Build up a list of libraries from $MULE_HOME/lib/* and add them to the classpath.
+        // Build up a list of libraries from $MULE_HOME/lib/* and add them to the
+        // classpath.
         DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
         addLibrariesToClasspath(classPath.getURLs());
 
-        // One-time download to get libraries not included in the Mule distribution due
-        // to silly licensing restrictions.
+        // If the license ack file isn't on the classpath, we need to
+        // display the EULA and make sure the user accepts it before continuing
+        if (ClassUtils.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null)
+        {
+            LicenseHandler licenseHandler = new LicenseHandler(muleHome, muleBase);
+            // If the user didn't accept the license, then we have to exit
+            // Exiting this way insures that the wrapper won't try again
+            // (by default it'll try to start 3 times)
+            if (!licenseHandler.getAcceptance())
+            {
+                WrapperManager.stop(-1);
+            }
+        }
+
+        // One-time download to get libraries not included in the Mule distribution
+        // due to silly licensing restrictions.
         // 
         // Now we will download these libraries to MULE_BASE/lib/user. In
         // a standard installation, MULE_BASE will be MULE_HOME.
-        if (!isClassOnPath("javax.activation.DataSource")) {
+        if (!isClassOnPath("javax.activation.DataSource"))
+        {
             LibraryDownloader downloader = new LibraryDownloader(muleBase);
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
     }
 
     private static void addLibrariesToClasspath(List urls)
-        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    {
 
         ClassLoader sys = ClassLoader.getSystemClassLoader();
         if (!(sys instanceof URLClassLoader))
@@ -157,21 +184,21 @@ public class MuleBootstrap
      * Imitates ClassUtils.isClassOnPath()
      */
     private static boolean isClassOnPath(String className) {
-    	boolean found = false;   	
-    	try {
-    		found = (Thread.currentThread().getContextClassLoader().loadClass(className) != null);
-    	} catch (ClassNotFoundException e) { }
-    	if (!found) {
-	    	try {
-	    		found = (Class.forName(className) != null);
-	    	} catch (ClassNotFoundException e) { }
-    	}
-    	if (!found) {
-	    	try {
-	    		found = (MuleBootstrap.class.getClassLoader().loadClass(className) != null);
-	    	} catch (ClassNotFoundException e) { }
-    	}
-    	return found;
+        boolean found = false;       
+        try {
+            found = (Thread.currentThread().getContextClassLoader().loadClass(className) != null);
+        } catch (ClassNotFoundException e) { }
+        if (!found) {
+            try {
+                found = (Class.forName(className) != null);
+            } catch (ClassNotFoundException e) { }
+        }
+        if (!found) {
+            try {
+                found = (MuleBootstrap.class.getClassLoader().loadClass(className) != null);
+            } catch (ClassNotFoundException e) { }
+        }
+        return found;
     }
 
     /**

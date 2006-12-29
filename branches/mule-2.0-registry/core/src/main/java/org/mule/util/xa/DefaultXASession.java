@@ -10,13 +10,13 @@
 
 package org.mule.util.xa;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.transaction.Status;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * todo document
@@ -285,23 +285,26 @@ public class DefaultXASession implements XAResource
         {
             throw new XAException(XAException.XAER_PROTO);
         }
+
         AbstractTransactionContext context = resourceManager.getTransactionalResource(xid);
         if (context == null)
         {
             throw new XAException(XAException.XAER_NOTA);
         }
+
         if (logger.isDebugEnabled())
         {
             logger.debug("Preparing transaction branch " + xid);
         }
+
         if (context.status == Status.STATUS_MARKED_ROLLBACK)
         {
             throw new XAException(XAException.XA_RBROLLBACK);
         }
+
         try
         {
-            int result = resourceManager.prepareTransaction(context);
-            return result;
+            return resourceManager.prepareTransaction(context);
         }
         catch (ResourceManagerException e)
         {

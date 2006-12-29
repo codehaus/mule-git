@@ -10,11 +10,7 @@
 
 package org.mule;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.collections.list.CursorableLinkedList;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
@@ -68,6 +64,7 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
+import org.mule.util.CollectionUtils;
 import org.mule.util.DateUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
@@ -78,12 +75,14 @@ import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
 import org.mule.util.MapUtils;
 
-import javax.transaction.TransactionManager;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,8 +90,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 import java.util.jar.Manifest;
+
+import javax.transaction.TransactionManager;
+
+import org.apache.commons.collections.list.CursorableLinkedList;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleManager</code> maintains and provides services for a Mule instance.
@@ -1267,7 +1272,10 @@ public class MuleManager implements UMOManager
     {
         agents.put(agent.getName(), agent);
         agent.registered();
-        if (initialised.get() || initialising.get())
+        // Don't allow initialisation while the server is being initalised,
+        // only when we are done. Otherwise the agent registration
+        // order can be corrupted.
+        if (initialised.get())
         {
             agent.initialise();
         }
@@ -1315,16 +1323,54 @@ public class MuleManager implements UMOManager
         // Use a cursorable iteration, which supports on-the-fly underlying
         // data structure changes.
         Collection agentsSnapshot = agents.values();
-        CursorableLinkedList agents = new CursorableLinkedList(agentsSnapshot);
-        CursorableLinkedList.Cursor cursor = agents.cursor();
+        CursorableLinkedList agentRegistrationQueue = new CursorableLinkedList(agentsSnapshot);
+        CursorableLinkedList.Cursor cursor = agentRegistrationQueue.cursor();
+
+        // the actual agent object refs are the same, so we are just
+        // providing different views of the same underlying data
+
         try
         {
             while (cursor.hasNext())
             {
                 UMOAgent umoAgent = (UMOAgent) cursor.next();
 
+                int originalSize = agentsSnapshot.size();
                 logger.debug("Initialising agent: " + umoAgent.getName());
                 umoAgent.initialise();
+                // thank you, we are done with you
+                cursor.remove();
+
+                // Direct calls to MuleManager.registerAgent() modify the original
+                // agents map, re-check if the above agent registered any
+                // 'child' agents.
+                int newSize = agentsSnapshot.size();
+                int delta = newSize - originalSize;
+                if (delta > 0)
+                {
+                    // TODO there's some mess going on in
+                    // http://issues.apache.org/jira/browse/COLLECTIONS-219
+                    // watch out when upgrading the commons-collections.
+                    Collection tail = CollectionUtils.retainAll(agentsSnapshot, agentRegistrationQueue);
+                    Collection head = CollectionUtils.subtract(agentsSnapshot, tail);
+
+                    // again, above are only refs, all going back to the original agents map
+
+                    // re-order the queue
+                    agentRegistrationQueue.clear();
+                    // 'spawned' agents first
+                    agentRegistrationQueue.addAll(head);
+                    // and the rest
+                    agentRegistrationQueue.addAll(tail);
+
+                    // update agents map with a new order in case we want to re-initialise
+                    // MuleManager on the fly
+                    this.agents.clear();
+                    for (Iterator it = agentRegistrationQueue.iterator(); it.hasNext();) {
+                        UMOAgent theAgent = (UMOAgent) it.next();
+                        this.agents.put(theAgent.getName(), theAgent);
+                    }
+                }
             }
         }
         finally

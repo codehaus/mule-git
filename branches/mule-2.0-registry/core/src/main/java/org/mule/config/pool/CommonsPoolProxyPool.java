@@ -10,10 +10,6 @@
 
 package org.mule.config.pool;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.PoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.mule.impl.MuleDescriptor;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;
@@ -26,19 +22,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.PoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericObjectPool;
+
 /**
  * <code>CommonsPoolProxyPool</code> is pool used to store MuleProxy objects. This
  * pool is a jakarta commons-pool implementation.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class CommonsPoolProxyPool implements ObjectPool
 {
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(CommonsPoolProxyPool.class);
+    protected static final Log logger = LogFactory.getLog(CommonsPoolProxyPool.class);
 
     /**
      * The pool that holds the MuleProxy objects

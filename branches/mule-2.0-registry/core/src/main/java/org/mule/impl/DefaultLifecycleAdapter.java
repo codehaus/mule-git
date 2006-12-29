@@ -10,8 +10,6 @@
 
 package org.mule.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -31,6 +29,9 @@ import org.mule.umo.lifecycle.Stoppable;
 import org.mule.umo.lifecycle.UMOLifecycleAdapter;
 import org.mule.umo.model.UMOEntryPointResolver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>DefaultLifecycleAdapter</code> provides lifecycle methods for all Mule
  * managed components. It's possible to plugin custom lifecycle adapters, this can
@@ -41,7 +42,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
+    protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
 
     private Object component;
     private UMODescriptor descriptor;

@@ -29,7 +29,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
 
@@ -103,7 +102,11 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         }
 
         String filename;
-        String outPattern = message.getStringProperty(FileConnector.PROPERTY_OUTPUT_PATTERN, null);
+        String outPattern = (String)endpoint.getProperty(FileConnector.PROPERTY_OUTPUT_PATTERN);
+        if (outPattern == null)
+        {
+            outPattern = message.getStringProperty(FileConnector.PROPERTY_OUTPUT_PATTERN, null);
+        }
         if (outPattern == null)
         {
             outPattern = connector.getOutputPattern();
@@ -144,6 +147,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     }
 
     /**
+<<<<<<< .working
      * There is no associated session for a file connector
      * 
      * @throws UMOException
@@ -154,6 +158,8 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     }
 
     /**
+=======
+>>>>>>> .merge-right.r3734
      * Will attempt to do a receive from a directory, if the endpointUri resolves to
      * a file name the file will be returned, otherwise the first file in the
      * directory according to the filename filter configured on the connector.
@@ -165,9 +171,8 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
      * @throws Exception
      */
 
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         File file = FileUtils.newFile(endpoint.getEndpointURI().getAddress());
         File result = null;
         FilenameFilter filenameFilter = null;
@@ -269,16 +274,6 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         return event.getMessage();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
-    }
-
     private String generateFilename(UMOMessage message, String pattern)
     {
         if (pattern == null)
@@ -293,7 +288,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         // no op
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         // no op
     }

@@ -101,8 +101,11 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         {
             if (filename == null)
             {
-                String outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
+                String outPattern = (String)endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
+                if (outPattern == null){
+                    outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
                     connector.getOutputPattern());
+                }
                 filename = generateFilename(message, outPattern);
             }
 
@@ -136,7 +139,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         return event.getMessage();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         FTPClient client = connector.getFtp(endpoint.getEndpointURI());
         connector.releaseFtp(endpoint.getEndpointURI(), client);
@@ -160,10 +163,10 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
-
         FTPClient client = null;
+
         try
         {
 
@@ -222,11 +225,6 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         {
             connector.releaseFtp(endpoint.getEndpointURI(), client);
         }
-    }
-
-    public Object getDelegateSession() throws UMOException
-    {
-        return null;
     }
 
     private String generateFilename(UMOMessage message, String pattern)

@@ -61,9 +61,9 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
     private transient UMOManager manager;
 
-    private BootstrapContext bootstrapContext;
+    private transient BootstrapContext bootstrapContext;
     private MuleConnectionRequestInfo info = new MuleConnectionRequestInfo();
-    private Map endpoints = new HashMap();
+    private final Map endpoints = new HashMap();
 
     public MuleResourceAdapter()
     {
@@ -284,7 +284,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
         info.setUserName(userid);
     }
 
-    public String getConfiguratinbuilder()
+    public String getConfigurationBuilder()
     {
         return info.getConfigurationBuilder();
     }

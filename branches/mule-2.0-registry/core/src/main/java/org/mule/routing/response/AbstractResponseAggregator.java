@@ -10,10 +10,6 @@
 
 package org.mule.routing.response;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.routing.inbound.EventGroup;
@@ -23,6 +19,10 @@ import org.mule.umo.routing.ResponseTimeoutException;
 import org.mule.umo.routing.RoutingException;
 import org.mule.util.MapUtils;
 import org.mule.util.concurrent.Latch;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>AbstractResponseAggregator</code> provides a base class for implementing
@@ -210,8 +210,9 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
         // the final result message
         UMOMessage result;
 
-        // indicates whether waiting for the result timed out
-        boolean b = false;
+        // indicates whether the result message could be obtained in the required
+        // timeout interval
+        boolean resultAvailable = false;
 
         try
         {
@@ -221,14 +222,14 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
             }
 
             // how long should we wait for the lock?
-            if (getTimeout() <= 0)
+            if (this.getTimeout() <= 0)
             {
                 l.await();
-                b = true;
+                resultAvailable = true;
             }
             else
             {
-                b = l.await(this.getTimeout(), TimeUnit.MILLISECONDS);
+                resultAvailable = l.await(this.getTimeout(), TimeUnit.MILLISECONDS);
             }
         }
         catch (InterruptedException e)
@@ -241,7 +242,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
             result = (UMOMessage)responseEvents.remove(responseId);
         }
 
-        if (!b)
+        if (!resultAvailable)
         {
             if (logger.isTraceEnabled())
             {

@@ -10,8 +10,6 @@
 
 package org.mule.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.MuleProperties;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
@@ -20,6 +18,9 @@ import org.mule.umo.UMOMessage;
 
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>RequestContext</code> is a thread context where components can get the
  * current event or set response properties that will be sent on the outgoing
@@ -27,12 +28,8 @@ import java.util.Iterator;
  */
 public class RequestContext
 {
-    /**
-     * logger used by this class
-     */
-    private static Log logger = LogFactory.getLog(RequestContext.class);
-
-    private static ThreadLocal currentEvent = new ThreadLocal();
+    private static final Log logger = LogFactory.getLog(RequestContext.class);
+    private static final ThreadLocal currentEvent = new ThreadLocal();
 
     public static UMOEventContext getEventContext()
     {
@@ -83,32 +80,33 @@ public class RequestContext
             UMOEvent event = getEvent();
             if (event != null)
             {
-                String key;
                 for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();)
                 {
-                    key = (String)iterator.next();
+                    String key = (String)iterator.next();
                     if (key == null)
                     {
-                        logger.warn("Message property key null: "
-                                    + " please report the following stack trace to dev@mule.codehaus.org.",
+                        logger.warn("Message property key is null: please report the following stack trace to dev@mule.codehaus.org.",
                             new IllegalArgumentException());
                     }
-                    if (key.startsWith(MuleProperties.PROPERTY_PREFIX))
+                    else
                     {
-                        Object newValue = message.getProperty(key);
-                        Object oldValue = event.getMessage().getProperty(key);
-                        if (newValue == null)
+                        if (key.startsWith(MuleProperties.PROPERTY_PREFIX))
                         {
-                            message.setProperty(key, oldValue);
-                        }
-                        else if (logger.isInfoEnabled() && !newValue.equals(oldValue))
-                        {
-                            logger.info("Message already contains property " + key + "=" + newValue
-                                        + " not replacing old value: " + oldValue);
+                            Object newValue = message.getProperty(key);
+                            Object oldValue = event.getMessage().getProperty(key);
+                            if (newValue == null)
+                            {
+                                message.setProperty(key, oldValue);
+                            }
+                            else if (logger.isInfoEnabled() && !newValue.equals(oldValue))
+                            {
+                                logger.info("Message already contains property " + key + "=" + newValue
+                                            + " not replacing old value: " + oldValue);
+                            }
                         }
                     }
-
                 }
+
                 event = new MuleEvent(message, event.getEndpoint(), event.getSession(), event.isSynchronous());
                 setEvent(event);
             }

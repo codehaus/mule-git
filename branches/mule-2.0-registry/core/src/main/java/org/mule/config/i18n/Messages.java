@@ -10,9 +10,6 @@
 
 package org.mule.config.i18n;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -20,19 +17,19 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>Messages</code> provides facilities for constructing <code>Message</code>
  * objects and access to core message constants.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class Messages implements CoreMessageConstants
 {
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(Messages.class);
+    protected static final Log logger = LogFactory.getLog(Messages.class);
 
     public static final String DEFAULT_BUNDLE = "core";
 

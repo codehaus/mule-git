@@ -10,8 +10,6 @@
 
 package org.mule.tck;
 
-import java.util.Map;
-
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.PoolingProfile;
@@ -50,6 +48,8 @@ import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ObjectPool;
+
+import java.util.Map;
 
 public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {
@@ -241,7 +241,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         ThreadingProfile tp = MuleManager.getConfiguration().getDefaultThreadingProfile();
         assertEquals(ThreadingProfile.DEFAULT_MAX_BUFFER_SIZE, tp.getMaxBufferSize());
         assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_ACTIVE, tp.getMaxThreadsActive());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_IDLE, tp.getMaxThreadsIdle());
+        assertEquals(4, tp.getMaxThreadsIdle());
         assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
         assertEquals(60001, tp.getThreadTTL());
 
@@ -249,7 +249,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         tp = MuleManager.getConfiguration().getComponentThreadingProfile();
         assertEquals(ThreadingProfile.DEFAULT_MAX_BUFFER_SIZE, tp.getMaxBufferSize());
         assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_ACTIVE, tp.getMaxThreadsActive());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_IDLE, tp.getMaxThreadsIdle());
+        assertEquals(4, tp.getMaxThreadsIdle());
         assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
         assertEquals(60001, tp.getThreadTTL());
 

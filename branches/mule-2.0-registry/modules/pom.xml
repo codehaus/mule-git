@@ -30,8 +30,9 @@
         <module>picocontainer</module>
         <module>registry</module>
         <module>scripting</module>
-        <module>springcore</module>
+        <!-- module>springcore</module -->
         <module>spring</module>
+        <module>wssecurity</module>
         <module>xml</module>
     </modules>
 

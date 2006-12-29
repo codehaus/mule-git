@@ -10,6 +10,9 @@
 
 package org.mule.util;
 
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 import java.io.IOException;
@@ -21,8 +24,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 
 /**
  * <code>PropertiesHelper</code> is a utility class for manipulating and filtering
@@ -116,13 +117,13 @@ public class PropertiesUtils
     public static String removeXmlNamespacePrefix(String eleName)
     {
         int i = eleName.indexOf(':');
-        return eleName.substring(i + 1, eleName.length());
+        return (i == -1 ? eleName : eleName.substring(i + 1, eleName.length()));
     }
 
     public static String removeNamespacePrefix(String eleName)
     {
         int i = eleName.lastIndexOf('.');
-        return eleName.substring(i + 1, eleName.length());
+        return (i == -1 ? eleName : eleName.substring(i + 1, eleName.length()));
     }
 
     public static Map removeNamespaces(Map properties)
@@ -151,14 +152,13 @@ public class PropertiesUtils
     public static Map getPropertiesWithPrefix(Map props, String prefix)
     {
         Map newProps = new HashMap();
-
-        Map.Entry entry;
         for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
         {
-            entry = (Map.Entry)iterator.next();
-            if (entry.getKey().toString().startsWith(prefix))
+            Map.Entry entry = (Map.Entry)iterator.next();
+            Object key = entry.getKey();
+            if (key.toString().startsWith(prefix))
             {
-                newProps.put(entry.getKey(), entry.getValue());
+                newProps.put(key, entry.getValue());
             }
         }
         return newProps;
@@ -175,13 +175,13 @@ public class PropertiesUtils
      */
     public static void getPropertiesWithPrefix(Map props, String prefix, Map newProps)
     {
-        Map.Entry entry;
         for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
         {
-            entry = (Map.Entry)iterator.next();
-            if (entry.getKey().toString().startsWith(prefix))
+            Map.Entry entry = (Map.Entry)iterator.next();
+            Object key = entry.getKey();
+            if (key.toString().startsWith(prefix))
             {
-                newProps.put(entry.getKey(), entry.getValue());
+                newProps.put(key, entry.getValue());
             }
         }
     }
@@ -189,13 +189,13 @@ public class PropertiesUtils
     public static Map getPropertiesWithoutPrefix(Map props, String prefix)
     {
         Map newProps = new HashMap();
-        Map.Entry entry;
         for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
         {
-            entry = (Map.Entry)iterator.next();
-            if (!entry.getKey().toString().startsWith(prefix))
+            Map.Entry entry = (Map.Entry)iterator.next();
+            Object key = entry.getKey();
+            if (!key.toString().startsWith(prefix))
             {
-                newProps.put(entry.getKey(), entry.getValue());
+                newProps.put(key, entry.getValue());
             }
         }
         return newProps;

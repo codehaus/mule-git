@@ -10,18 +10,18 @@
 
 package org.mule.config;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ArrayBlockingQueue;
+import org.mule.impl.work.MuleWorkManager;
+import org.mule.umo.manager.UMOWorkManager;
+import org.mule.util.concurrent.NamedThreadFactory;
+import org.mule.util.concurrent.WaitPolicy;
+
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.SynchronousQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
-import org.mule.impl.work.MuleWorkManager;
-import org.mule.umo.manager.UMOWorkManager;
-import org.mule.util.concurrent.NamedThreadFactory;
-import org.mule.util.concurrent.WaitPolicy;
 
 /**
  * <code>ThreadingProfile</code> is used to configure a thread pool. Mule uses a
@@ -40,7 +40,7 @@ public class ThreadingProfile
     /**
      * Default value for MAX_THREADS_IDLE
      */
-    public static final int DEFAULT_MAX_THREADS_IDLE = 4;
+    public static final int DEFAULT_MAX_THREADS_IDLE = 1;
 
     /**
      * Default value for MAX_BUFFER_SIZE
@@ -83,7 +83,6 @@ public class ThreadingProfile
     private long threadWaitTimeout = DEFAULT_THREAD_WAIT_TIMEOUT;
     private int poolExhaustPolicy = DEFAULT_POOL_EXHAUST_ACTION;
     private boolean doThreading = DEFAULT_DO_THREADING;
-    private int threadPriority = Thread.NORM_PRIORITY;
 
     private WorkManagerFactory workManagerFactory = new DefaultWorkManagerFactory();
 
@@ -120,7 +119,6 @@ public class ThreadingProfile
         this.threadWaitTimeout = tp.getThreadWaitTimeout();
         this.poolExhaustPolicy = tp.getPoolExhaustedAction();
         this.doThreading = tp.isDoThreading();
-        this.threadPriority = tp.getThreadPriority();
         this.rejectedExecutionHandler = tp.getRejectedExecutionHandler();
         this.threadFactory = tp.getThreadFactory();
         this.workManagerFactory = tp.getWorkManagerFactory();
@@ -144,16 +142,6 @@ public class ThreadingProfile
     public long getThreadWaitTimeout()
     {
         return threadWaitTimeout;
-    }
-
-    public int getThreadPriority()
-    {
-        return threadPriority;
-    }
-
-    public void setThreadPriority(int threadPriority)
-    {
-        this.threadPriority = threadPriority;
     }
 
     public int getPoolExhaustedAction()
@@ -269,14 +257,14 @@ public class ThreadingProfile
 
         if (maxBufferSize > 0 && maxThreadsActive > 1)
         {
-            buffer = new ArrayBlockingQueue(maxBufferSize);
+            buffer = new LinkedBlockingDeque(maxBufferSize);
         }
         else
         {
             buffer = new SynchronousQueue();
         }
 
-        if (maxThreadsActive < maxThreadsIdle)
+        if (maxThreadsIdle > maxThreadsActive)
         {
             maxThreadsIdle = maxThreadsActive;
         }
@@ -289,10 +277,15 @@ public class ThreadingProfile
             pool.setRejectedExecutionHandler(rejectedExecutionHandler);
         }
 
+        ThreadFactory tf = threadFactory;
         if (name != null)
         {
-            threadFactory = new NamedThreadFactory(name, threadPriority);
-            pool.setThreadFactory(threadFactory);
+            tf = new NamedThreadFactory(name); 
+        }
+
+        if (tf != null)
+        {
+            pool.setThreadFactory(tf);
         }
 
         switch (poolExhaustPolicy)
@@ -345,11 +338,11 @@ public class ThreadingProfile
     public String toString()
     {
         return "ThreadingProfile{" + "maxThreadsActive=" + maxThreadsActive + ", maxThreadsIdle="
-               + maxThreadsIdle + ", maxBufferSize=" + maxBufferSize + ", threadTTL=" + threadTTL
-               + ", poolExhaustPolicy=" + poolExhaustPolicy + ", threadWaitTimeout=" + threadWaitTimeout
-               + ", doThreading=" + doThreading + ", threadPriority=" + threadPriority
-               + ", workManagerFactory=" + workManagerFactory + ", rejectedExecutionHandler="
-               + rejectedExecutionHandler + ", threadFactory=" + threadFactory + "}";
+                        + maxThreadsIdle + ", maxBufferSize=" + maxBufferSize + ", threadTTL=" + threadTTL
+                        + ", poolExhaustPolicy=" + poolExhaustPolicy + ", threadWaitTimeout="
+                        + threadWaitTimeout + ", doThreading=" + doThreading + ", workManagerFactory="
+                        + workManagerFactory + ", rejectedExecutionHandler=" + rejectedExecutionHandler
+                        + ", threadFactory=" + threadFactory + "}";
     }
 
     public static interface WorkManagerFactory

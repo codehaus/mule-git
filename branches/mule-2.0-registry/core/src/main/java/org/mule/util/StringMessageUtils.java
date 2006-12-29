@@ -10,6 +10,11 @@
 
 package org.mule.util;
 
+import org.mule.MuleRuntimeException;
+import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessageConstants;
+import org.mule.config.i18n.Message;
+
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -19,10 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.SystemUtils;
-import org.mule.MuleRuntimeException;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessageConstants;
-import org.mule.config.i18n.Message;
 
 /**
  * <code>StringMessageHelper</code> contains some useful methods for formatting
@@ -89,7 +90,7 @@ public class StringMessageUtils
                     }
                     else
                     {
-                        x = msg.lastIndexOf(" ");
+                        x = msg.lastIndexOf(' ');
                         if (x > -1 && len == trimLength)
                         {
                             msg = msg.substring(0, x);

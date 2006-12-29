@@ -18,17 +18,14 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.RecoverableException;
 
+import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
-import javax.script.Namespace;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
- * A message builder component that can execute message building as a script
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * A message builder component that can execute message building as a script.
  */
 public class ScriptMessageBuilder extends AbstractMessageBuilder implements Initialisable
 {
@@ -43,12 +40,12 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
 
     public Object buildMessage(UMOMessage request, UMOMessage response) throws MessageBuilderException
     {
-        Namespace namespace = scriptable.getScriptEngine().createNamespace();
-        populateNamespace(namespace, request, response);
+        Bindings bindings = scriptable.getScriptEngine().createBindings();
+        populateBindings(bindings, request, response);
         Object result = null;
         try
         {
-            result = runScript(namespace);
+            result = runScript(bindings);
         }
         catch (ScriptException e)
         {
@@ -66,7 +63,7 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         scriptable.initialise();
     }
 
-    protected void populateNamespace(Namespace namespace, UMOMessage request, UMOMessage response)
+    protected void populateBindings(Bindings namespace, UMOMessage request, UMOMessage response)
     {
         namespace.put("request", request);
         namespace.put("response", response);
@@ -120,7 +117,7 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         scriptable.setScriptEngineName(scriptEngineName);
     }
 
-    protected void populateNamespace(Namespace namespace, UMOEventContext context)
+    protected void populateBindings(Bindings namespace, UMOEventContext context)
     {
         namespace.put("context", context);
         namespace.put("message", context.getMessage());
@@ -135,12 +132,12 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         scriptable.compileScript(compilable);
     }
 
-    protected Object evaluteScript(Namespace namespace) throws ScriptException
+    protected Object evaluteScript(Bindings namespace) throws ScriptException
     {
         return scriptable.evaluteScript(namespace);
     }
 
-    protected Object runScript(Namespace namespace) throws ScriptException
+    protected Object runScript(Bindings namespace) throws ScriptException
     {
         return scriptable.runScript(namespace);
     }

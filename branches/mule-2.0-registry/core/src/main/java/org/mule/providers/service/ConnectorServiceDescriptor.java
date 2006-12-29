@@ -10,9 +10,6 @@
 
 package org.mule.providers.service;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -38,6 +35,10 @@ import org.mule.util.ObjectFactory;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>ConnectorServiceDescriptor</code> describes the necessery information for
@@ -764,8 +765,7 @@ public class ConnectorServiceDescriptor
 
     public int hashCode()
     {
-        int result;
-        result = (protocol != null ? protocol.hashCode() : 0);
+        int result = (protocol != null ? protocol.hashCode() : 0);
         result = 29 * result + (serviceLocation != null ? serviceLocation.hashCode() : 0);
         result = 29 * result + (serviceError != null ? serviceError.hashCode() : 0);
         result = 29 * result + (serviceFinder != null ? serviceFinder.hashCode() : 0);
@@ -784,7 +784,7 @@ public class ConnectorServiceDescriptor
                  + (defaultOutboundTransformer != null ? defaultOutboundTransformer.hashCode() : 0);
         result = 29 * result
                  + (defaultResponseTransformer != null ? defaultResponseTransformer.hashCode() : 0);
-        result = 29 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
+        return 29 * result + (properties != null ? properties.hashCode() : 0);
     }
+
 }

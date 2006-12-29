@@ -10,18 +10,6 @@
 
 package org.mule.providers.ssl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
-import java.net.URI;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.mule.MuleManager;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -33,10 +21,18 @@ import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.provider.UMOConnector;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.net.URI;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SslConnectorFunctionalTestCase extends AbstractProviderFunctionalTestCase
 {

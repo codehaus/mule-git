@@ -10,8 +10,6 @@
 
 package org.mule.providers.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
@@ -28,9 +26,9 @@ import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectFactory;
+import org.mule.util.ObjectNameHelper;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.SpiUtils;
-import org.mule.util.ObjectNameHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +36,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>ConnectorFactory</code> can be used for generically creating endpoints
@@ -307,7 +308,7 @@ public class ConnectorFactory
                 ConnectorFactory.class);
 
 
-            //RM* Todo this can be removed in Mule 2.0
+            // TODO RM: this can be removed in Mule 2.0
             if (is == null)
             {
                 //The legacy connector decriptors did did not use file extensions
@@ -406,8 +407,8 @@ public class ConnectorFactory
 
     private static class CSDKey
     {
-        private Map overrides;
-        private String protocol;
+        private final Map overrides;
+        private final String protocol;
 
         public CSDKey(String protocol, Map overrides)
         {
@@ -442,10 +443,7 @@ public class ConnectorFactory
 
         public int hashCode()
         {
-            int result;
-            result = (overrides != null ? overrides.hashCode() : 0);
-            result = 29 * result + protocol.hashCode();
-            return result;
+            return 29 * (overrides != null ? overrides.hashCode() : 0) + protocol.hashCode();
         }
     }
 }

@@ -10,8 +10,6 @@
 
 package org.mule.impl.container;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -23,6 +21,9 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.TreeMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>MultiContainerContext</code> is a container that hosts other containers
  * from which components are queried.
@@ -32,7 +33,7 @@ public class MultiContainerContext implements UMOContainerContext
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(MultiContainerContext.class);
+    protected static final Log logger = LogFactory.getLog(MultiContainerContext.class);
 
     private String name = "multi";
     private TreeMap containers = new TreeMap();

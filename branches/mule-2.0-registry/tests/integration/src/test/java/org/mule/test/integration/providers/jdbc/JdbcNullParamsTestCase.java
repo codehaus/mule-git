@@ -3,12 +3,19 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
 
 package org.mule.test.integration.providers.jdbc;
+
+import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleMessage;
+import org.mule.providers.NullPayload;
+import org.mule.providers.jdbc.JdbcConnector;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.provider.UMOConnector;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,12 +24,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.enhydra.jdbc.standard.StandardDataSource;
-import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
-import org.mule.providers.NullPayload;
-import org.mule.providers.jdbc.JdbcConnector;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.UMOConnector;
 
 public class JdbcNullParamsTestCase extends AbstractJdbcFunctionalTestCase
 {

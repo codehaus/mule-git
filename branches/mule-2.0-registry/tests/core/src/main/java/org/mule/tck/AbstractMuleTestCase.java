@@ -15,7 +15,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
@@ -33,6 +32,7 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This

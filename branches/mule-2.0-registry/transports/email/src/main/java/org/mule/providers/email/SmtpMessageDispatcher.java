@@ -10,6 +10,16 @@
 
 package org.mule.providers.email;
 
+import org.mule.config.i18n.Messages;
+import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.EndpointException;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.DispatchException;
+import org.mule.util.StringUtils;
+
 import java.util.Calendar;
 
 import javax.mail.Message;
@@ -17,18 +27,6 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.URLName;
-
-import org.mule.config.i18n.Messages;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.util.StringUtils;
 
 /**
  * <code>SmtpMessageDispatcher</code> will dispatch Mule events as Mime email
@@ -46,7 +44,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (SmtpConnector)endpoint.getConnector();
     }
 
-    protected void doConnect(UMOImmutableEndpoint endpoint) throws Exception
+    protected void doConnect() throws Exception
     {
         if (transport == null)
         {
@@ -83,13 +81,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 
             try
             {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Creating mail session, host = " + url.getHost() + ", port = "
-                                    + url.getPort() + ", user = " + url.getUsername() + ", pass = "
-                                    + url.getPassword());
-                }
-                session = MailUtils.createMailSession(url, connector);
+                session = (Session)connector.getDelegateSession(endpoint, url);
                 session.setDebug(logger.isDebugEnabled());
 
                 transport = session.getTransport(url);
@@ -147,16 +139,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getDelegateSession()
-     */
-    public Object getDelegateSession() throws UMOException
-    {
-        return session;
-    }
-
     /**
      * Make a specific request to the underlying transport
      * 
@@ -169,7 +151,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    protected UMOMessage doReceive(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("doReceive");
     }
@@ -209,16 +191,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             logger.debug(msg.toString());
         }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnectorSession#getConnector()
-     */
-    public UMOConnector getConnector()
-    {
-        return connector;
     }
 
     protected void doDispose()

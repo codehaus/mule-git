@@ -29,16 +29,14 @@ import java.net.Socket;
 import java.net.URI;
 
 /**
- * <code>TcpStreamingMessageReceiver</code> establishes a tcp client connection to
+ * <code>TcpStreamingMessageReceiver</code> establishes a TCP client connection to
  * an external server and reads the streaming data. No polling frequency is used
  * since with blocking i/o reads will block, and with non-blocking i/o reads will
  * occur when data is available. Causing delays between read attempts is unnecessary,
  * so this forces the pollingFrequency property to zero so no pause occurs in the
  * PollingMessageReceiver class.
- * 
- * @author <a href="mailto:rlucente@xecu.net">Rich Lucente</a>
- * @version $Revision$
  */
+// TODO HH: check how this works with the 1.4 connector scheduler
 public class TcpStreamingMessageReceiver extends PollingMessageReceiver
 {
     protected Socket clientSocket = null;
@@ -47,8 +45,9 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
 
     protected TcpProtocol protocol = null;
 
-    public TcpStreamingMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
-        throws InitialisationException
+    public TcpStreamingMessageReceiver(UMOConnector connector,
+                                       UMOComponent component,
+                                       UMOEndpoint endpoint) throws InitialisationException
     {
         this(connector, component, endpoint, new Long(0));
     }
@@ -66,7 +65,8 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
     public void poll() throws Exception
     {
         setFrequency(0); // make sure this is zero and not overridden via config
-        byte[] data = protocol.read(dataIn);
+        // TODO check if this cast is ok
+        byte[] data = (byte[])protocol.read(dataIn);
         if (data != null)
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);
