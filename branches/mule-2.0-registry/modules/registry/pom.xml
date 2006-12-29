@@ -8,6 +8,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-module-registry</artifactId>
+    <packaging>osgi-bundle</packaging>
     <name>Configuration Registry</name>
     <description>Mule Registry for distributed configurations</description>
     

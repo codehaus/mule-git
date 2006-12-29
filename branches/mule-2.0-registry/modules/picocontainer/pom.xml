@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-module-picocontainer</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Pico Extensions</name>
     <description>Provides extensions to use PicoContainer with Mule, such as using the container as a
         factory for Mule managed objects.</description>

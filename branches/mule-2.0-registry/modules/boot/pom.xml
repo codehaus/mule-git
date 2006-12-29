@@ -9,6 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
   <artifactId>mule-module-boot</artifactId>
+    <packaging>osgi-bundle</packaging>
   <name>Mule Bootstrap</name>
   <description>Classes used to boot up the Mule server</description>
 

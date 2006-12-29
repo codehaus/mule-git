@@ -9,6 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
   <artifactId>mule-module-management</artifactId>
+    <packaging>osgi-bundle</packaging>
   <name>Management Extensions</name>
   <description>Management Extensions for Mule</description>
 

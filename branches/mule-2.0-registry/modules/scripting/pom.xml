@@ -9,6 +9,7 @@
 		<version>2.0-REGISTRY</version>
 	</parent>
 	<artifactId>mule-module-scripting</artifactId>
+    <packaging>osgi-bundle</packaging>
 	<name>JSR-223 Scripting</name>
 	<description>Support for Scripting Mule Services and embedding Mule inside scripts</description>
 

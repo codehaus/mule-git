@@ -9,6 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-module-xml</artifactId>
+    <packaging>osgi-bundle</packaging>
     <name>XML Extensions</name>
     <description>Functionality for working with XML</description>
     
