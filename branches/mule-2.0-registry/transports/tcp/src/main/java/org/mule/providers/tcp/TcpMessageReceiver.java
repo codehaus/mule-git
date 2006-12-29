@@ -11,7 +11,6 @@
 package org.mule.providers.tcp;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.lang.StringUtils;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -26,6 +25,7 @@ import org.mule.umo.lifecycle.DisposeException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.StringUtils;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;

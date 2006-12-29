@@ -16,7 +16,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.lang.StringUtils;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
@@ -29,6 +28,7 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
+import org.mule.util.StringUtils;
 
 import java.io.InputStream;
 import java.net.URI;

@@ -11,7 +11,6 @@
 package org.mule;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -77,6 +76,7 @@ import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
+import org.mule.util.MapUtils;
 
 import javax.transaction.TransactionManager;
 import java.net.InetAddress;

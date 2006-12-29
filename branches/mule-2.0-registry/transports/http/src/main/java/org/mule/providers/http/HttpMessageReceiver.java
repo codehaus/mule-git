@@ -20,7 +20,6 @@ import javax.resource.spi.work.Work;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
-import org.apache.commons.lang.ObjectUtils;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
@@ -39,6 +38,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.MapUtils;
+import org.mule.util.ObjectUtils;
 
 /**
  * <code>HttpMessageReceiver</code> is a simple http server that can be used to

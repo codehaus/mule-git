@@ -10,7 +10,6 @@
 
 package org.mule.impl.internal.admin;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
@@ -43,6 +42,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.MapUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

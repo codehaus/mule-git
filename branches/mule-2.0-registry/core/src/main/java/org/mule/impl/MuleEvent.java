@@ -11,7 +11,6 @@
 package org.mule.impl;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +32,7 @@ import org.mule.umo.security.UMOCredentials;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.UUID;
+import org.mule.util.MapUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

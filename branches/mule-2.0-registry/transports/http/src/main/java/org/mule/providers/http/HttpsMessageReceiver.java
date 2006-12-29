@@ -10,11 +10,11 @@
 
 package org.mule.providers.http;
 
-import org.apache.commons.lang.StringUtils;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.util.StringUtils;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLContext;

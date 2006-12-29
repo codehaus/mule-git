@@ -10,8 +10,6 @@
 
 package org.mule.impl.internal.admin;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -24,6 +22,8 @@ import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.FileUtils;
+import org.mule.util.MapUtils;
+import org.mule.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
