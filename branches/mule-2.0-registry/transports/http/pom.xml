@@ -9,14 +9,31 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-http</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Http Transport</name>
     <description>A Mule transport for Http Connectivity. This transport supplies a simple Http Server implementation.</description>
+
+    <build>
+     	<plugins>
+	      	<plugin>
+		        <groupId>org.apache.felix.plugins</groupId>
+		        <artifactId>maven-osgi-plugin</artifactId>
+		        <configuration>
+		            <osgiManifest>
+		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
+						<importPackage>org.apache.commons.logging;provider=paxlogging, edu.emory.mathcs.backport.java.util.concurrent, edu.emory.mathcs.backport.java.util.concurrent.atomic, org.apache.commons.collections, org.apache.commons.collections.map, org.mule, org.mule.config, org.mule.config.i18n, org.mule.impl, org.mule.impl.endpoint, org.mule.impl.message, org.mule.providers, org.mule.providers.service, org.mule.providers.streaming, org.mule.providers.tcp, org.mule.routing.filters, org.mule.transformers, org.mule.transformers.simple, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.lifecycle, org.mule.umo.manager, org.mule.umo.provider, org.mule.umo.security, org.mule.umo.security.provider, org.mule.umo.transformer, org.mule.util, org.xml.sax, org.xml.sax.helpers</importPackage>
+ 		            </osgiManifest>
+		        </configuration>
+		    </plugin>
+     	</plugins>
+    </build>
+    
     <dependencies>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-tcp</artifactId>
             <version>${version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -43,18 +60,6 @@
             <scope>provided</scope> 
             -->
         </dependency>
-
-        <!--
-            TODO this is a hack. Duplicate declaration (original is in the top pom.xml)
-            makes me happy to compile when run from the project root folder,
-            otherwise it cannot find classes from commons-logging.
-
-            It seems m2 dependency visibility hierarchy is limited to 1 level deep.
-        -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
-        </dependency>
     </dependencies>
 </project>
+
