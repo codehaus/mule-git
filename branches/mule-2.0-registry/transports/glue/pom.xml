@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-glue</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Glue Transport</name>
     <description>A Mule transport for Soap Connectivity using Web Methods Glue.</description>
     

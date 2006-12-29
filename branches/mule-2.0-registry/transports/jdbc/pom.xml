@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-jdbc</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Jdbc Transport</name>
     <description>A Mule transport for Jdbc Connectivity.</description>
     <dependencies>

@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-oracleaq</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>Oracle Advanced Queuing Transport</name>
     <description>Adds Oracle-specific functionality to the standard Mule JMS transport.</description>
     <dependencies>

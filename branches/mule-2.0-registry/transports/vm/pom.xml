@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-vm</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>VM Transport</name>
     <description>A Mule transport that enables event sending and receiving over VM or embedded memory queues. These queues can be persistent or transient.</description>
 </project>

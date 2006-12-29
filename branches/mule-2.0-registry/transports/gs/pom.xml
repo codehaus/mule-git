@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-gigaspaces</artifactId>
-    <packaging>jar</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>GigaSpaces Transport</name>
     <description>Allows Mule to send and receive events via the GigaSpaces Jini implementation.</description>
 
