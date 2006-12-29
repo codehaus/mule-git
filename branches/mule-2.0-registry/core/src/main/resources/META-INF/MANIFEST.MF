@@ -1,11 +1,1 @@
 Bundle-SymbolicName: org.mule.core
-Import-Package: org.apache.commons.logging, 
-  org.apache.log4j, 
-  org.apache.log4j.xml, 
-  org.springframework.core, 
-  org.springframework.core.annotation, 
-  org.springframework.core.io, 
-  org.springframework.core.io.support, 
-  org.springframework.util, 
-  org.springframework.util.xml
-  
