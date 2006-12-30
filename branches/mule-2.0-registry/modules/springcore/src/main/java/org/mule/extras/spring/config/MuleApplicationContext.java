@@ -64,4 +64,9 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
         initBeanDefinitionReader(beanDefinitionReader);
         loadBeanDefinitions(beanDefinitionReader);
     }
+    
+    // TODO Abstract parent method needs to be implemented to avoid compile error
+    public boolean isTypeMatch(String s, Class c) {
+        return true;
+    }
 }

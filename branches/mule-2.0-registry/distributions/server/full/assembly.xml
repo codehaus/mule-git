@@ -796,6 +796,7 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.modules:mule-module-pgp</include>
         <include>org.mule.modules:mule-module-picocontainer</include>
         <include>org.mule.modules:mule-module-scripting</include>
+        <include>org.mule.modules:mule-module-springcore</include>
         <include>org.mule.modules:mule-module-spring</include>
         <include>org.mule.modules:mule-module-xml</include>
       </includes>
@@ -852,6 +853,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.modules:mule-module-pgp</exclude>
         <exclude>org.mule.modules:mule-module-picocontainer</exclude>
         <exclude>org.mule.modules:mule-module-scripting</exclude>
+        <exclude>org.mule.modules:mule-module-springcore</exclude>
         <exclude>org.mule.modules:mule-module-spring</exclude>
         <exclude>org.mule.modules:mule-module-xml</exclude>
         <!-- Examples -->

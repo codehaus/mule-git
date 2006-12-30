@@ -1,0 +1,2 @@
+Bundle-SymbolicName: org.mule.modules.springcore
+Export-Package: org.mule.extras.spring, org.mule.extras.spring.config

@@ -22,7 +22,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.io.DOMReader;
-import org.mule.config.MuleDtdResolver;
+//import org.mule.config.MuleDtdResolver;
 import org.mule.umo.transformer.UMOTransformer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
@@ -32,6 +32,7 @@ import org.springframework.beans.factory.xml.BeansDtdResolver;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 
@@ -44,19 +45,21 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
 {
     private int contextCount = 0;
     private int configCount = 0;
-    private MuleDtdResolver dtdResolver = null;
+//    private MuleDtdResolver dtdResolver = null;
 
     public MuleBeanDefinitionReader(BeanDefinitionRegistry beanDefinitionRegistry, int configCount)
     {
         super(beanDefinitionRegistry);
-        // default resource loader
-        setResourceLoader(new MuleResourceLoader());
-        // TODO Make this configurable as a property somehow.
-        setValidationMode(VALIDATION_DTD);
-        setEntityResolver(createEntityResolver());
+        setValidationMode(VALIDATION_XSD);
+//        setEntityResolver(createEntityResolver());
         this.configCount = configCount;
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,
             new TransformerEditor());
+    }
+
+    public ResourceLoader getResourceLoader()
+    {
+        return new MuleResourceLoader();
     }
 
     public int registerBeanDefinitions(Document document, Resource resource) throws BeansException
@@ -85,65 +88,64 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
 
     protected Document transformDocument(Document document) throws IOException, TransformerException
     {
-        if (getXslResource() != null)
-        {
-            Transformer transformer = createTransformer(createXslSource());
-            DOMResult result = new DOMResult();
-            transformer.setParameter("firstContext", Boolean.valueOf(isFirstContext()));
-            transformer.transform(new DOMSource(document), result);
-            if (logger.isDebugEnabled())
-            {
-                try
-                {
-                    String xml = new DOMReader().read((Document)result.getNode()).asXML();
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("Transformed document is:\n" + xml);
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            return (Document)result.getNode();
-        }
-        else
-        {
+//        if (getXslResource() != null)
+//        {
+//            Transformer transformer = createTransformer(createXslSource());
+//            DOMResult result = new DOMResult();
+//            transformer.setParameter("firstContext", Boolean.valueOf(isFirstContext()));
+//            transformer.transform(new DOMSource(document), result);
+//            if (logger.isDebugEnabled())
+//            {
+//                try
+//                {
+//                    String xml = new DOMReader().read((Document)result.getNode()).asXML();
+//                    if (logger.isDebugEnabled())
+//                    {
+//                        logger.debug("Transformed document is:\n" + xml);
+//                    }
+//                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return (Document)result.getNode();
+//        }
+//        else
+//        {
             return document;
-        }
-
+//        }
     }
 
-    protected Source createXslSource() throws IOException
-    {
-        return new StreamSource(getXslResource().getInputStream(), getXslResource().getURL().toString());
-    }
-
-    protected ClassPathResource getXslResource()
-    {
-        String xsl = dtdResolver.getXslForDtd();
-        if (xsl != null)
-        {
-            return new ClassPathResource(xsl);
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    protected EntityResolver createEntityResolver()
-    {
-        if (dtdResolver == null)
-        {
-            MuleDtdResolver muleSpringResolver = new MuleDtdResolver("mule-spring-configuration.dtd",
-                "mule-to-spring.xsl", new BeansDtdResolver());
-            dtdResolver = new MuleDtdResolver("mule-configuration.dtd", "mule-to-spring.xsl",
-                muleSpringResolver);
-        }
-        return dtdResolver;
-    }
+//    protected Source createXslSource() throws IOException
+//    {
+//        return new StreamSource(getXslResource().getInputStream(), getXslResource().getURL().toString());
+//    }
+//
+//    protected ClassPathResource getXslResource()
+//    {
+//        String xsl = dtdResolver.getXslForDtd();
+//        if (xsl != null)
+//        {
+//            return new ClassPathResource(xsl);
+//        }
+//        else
+//        {
+//            return null;
+//        }
+//    }
+//
+//    protected EntityResolver createEntityResolver()
+//    {
+//        if (dtdResolver == null)
+//        {
+//            MuleDtdResolver muleSpringResolver = new MuleDtdResolver("mule-spring-configuration.dtd",
+//                "mule-to-spring.xsl", new BeansDtdResolver());
+//            dtdResolver = new MuleDtdResolver("mule-configuration.dtd", "mule-to-spring.xsl",
+//                muleSpringResolver);
+//        }
+//        return dtdResolver;
+//    }
 
     public boolean isFirstContext()
     {
