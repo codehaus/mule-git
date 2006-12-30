@@ -10,10 +10,6 @@
 
 package org.mule.modules.boot;
 
-import org.mule.MuleServer;
-import org.mule.util.ClassUtils;
-import org.mule.util.SystemUtils;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +17,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
+
+import org.mule.MuleServer;
+import org.mule.util.ClassUtils;
+import org.mule.util.SystemUtils;
 
 import org.tanukisoftware.wrapper.WrapperManager;
 import org.tanukisoftware.wrapper.WrapperSimpleApp;
@@ -109,7 +109,17 @@ public class MuleBootstrap
 
         // the core jar has been added dynamically, this construct will run with
         // a new Mule classpath now
-        String mainClassName = SystemUtils.getCommandLineOption("-main", args, MuleServer.CLI_OPTIONS);
+        String mainClassName = null;
+
+        try
+        {
+            mainClassName = SystemUtils.getCommandLineOption("main", args, MuleServer.CLI_OPTIONS);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.toString());
+            WrapperManager.stop(-1);
+        }
 
         if (mainClassName == null)
         {
