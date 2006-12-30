@@ -10,6 +10,8 @@
 
 package org.mule.util;
 
+import org.mule.MuleException;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -30,8 +32,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.mule.MuleException;
 
 // @ThreadSafe
 public class SystemUtils extends org.apache.commons.lang.SystemUtils
