@@ -166,11 +166,11 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
             options.addOption(opts[i][0], opts[i][1].equals("true") ? true : false, opts[i][2]);
         }
 
-        CommandLineParser parser = new BasicParser();
+        BasicParser parser = new BasicParser();
 
         try 
         {
-            CommandLine line = parser.parse(options, args);
+            CommandLine line = parser.parse(options, args, true);
             if (line == null)
             {
                 throw new MuleException("Unknown error parsing the Mule command line");
