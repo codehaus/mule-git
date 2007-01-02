@@ -14,6 +14,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mule.persistence.PersistenceManager;
+import org.mule.persistence.PersistenceNotificationListener;
+import org.mule.persistence.manager.ObjectPersistenceManager;
 import org.mule.registry.ComponentReference;
 import org.mule.registry.ComponentReferenceFactory;
 import org.mule.registry.DeregistrationException;
@@ -21,10 +24,7 @@ import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.registry.RegistryStore;
 import org.mule.registry.ReregistrationException;
-import org.mule.registry.impl.persistence.PersistenceNotificationListener;
-import org.mule.registry.impl.persistence.RegistryPersistenceManager;
 import org.mule.registry.impl.store.InMemoryStore;
-import org.mule.registry.impl.store.PersistenceManager;
 import org.mule.umo.UMOException;
 
 /**
@@ -42,22 +42,49 @@ public class MuleRegistry implements Registry {
      */
     private static transient Log logger = LogFactory.getLog(MuleRegistry.class);
 
+    private String registryId = null;
+
     /**
      * 
      */
     public MuleRegistry() 
     {
-        persistenceManager = new RegistryPersistenceManager();
+        persistenceManager = new ObjectPersistenceManager();
         registryStore = new InMemoryStore();
         referenceFactory = new ComponentReferenceFactoryImpl();
         PersistenceNotificationListener listener = 
             new PersistenceNotificationListener(persistenceManager);
 
         try {
+            persistenceManager.initialise();
+        } catch (Exception e) { 
+            logger.info("Unable to initialize PersistenceManager: " + 
+                    e.toString());
+        }
+
+        try {
+            registryStore.initialise();
             registryStore.registerPersistenceRequestListener(listener);
         } catch (Exception e) { 
             logger.info(e);
         }
+
+        // The registry will, for now, be the "root" component reference
+        // and will have an id of 0
+        try
+        {
+            ComponentReference ref = getComponentReferenceInstance();
+            ref.setParentId(null);
+            ref.setType("Registry");
+            ref.setComponent(this);
+            ref.setId("0");
+            registryStore.registerComponent(ref);
+        }
+        catch (Exception e)
+        {
+            logger.error("Unable to store the registry ComponentReference - no data can be persisted");
+        }
+
     }
 
     /**
@@ -91,6 +118,11 @@ public class MuleRegistry implements Registry {
     public void deregisterComponent(ComponentReference component) throws DeregistrationException
     {
         registryStore.deregisterComponent(component);
+    }
+
+    public void deregisterComponent(String registryId) throws DeregistrationException
+    {
+        registryStore.deregisterComponent(registryId);
     }
 
     /**
@@ -141,7 +173,10 @@ public class MuleRegistry implements Registry {
     public void start() throws UMOException
     {
         counter = System.currentTimeMillis();
+        persistenceManager.start();
         registryStore.start();
+
+        logger.info("Started");
     }
 
     /**
@@ -151,7 +186,11 @@ public class MuleRegistry implements Registry {
      */
     public void stop() throws UMOException
     {
+        // Stop the persistence manager first, in case it is
+        // in the middle of requesting something from the store
+        persistenceManager.stop();
         registryStore.stop();
+        logger.info("Stopped");
     }
 
     /**
@@ -162,6 +201,7 @@ public class MuleRegistry implements Registry {
     public void dispose()
     {
         registryStore.dispose();
+        persistenceManager.dispose();
     }
 
     /**
@@ -206,5 +246,11 @@ public class MuleRegistry implements Registry {
     public ComponentReference getComponentReferenceInstance(String referenceType)
     {
         return referenceFactory.getInstance(referenceType);
+    }
+
+    public String getPersistenceMode()
+    {
+        if (persistenceManager == null) return "NONE";
+        return persistenceManager.getStoreType();
     }
 }
