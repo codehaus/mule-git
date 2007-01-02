@@ -39,6 +39,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 
@@ -200,7 +201,12 @@ public class MuleTestUtils
 
     public static Mock getMockMessageDispatcher()
     {
-        return new Mock(UMOMessageDispatcher.class, "umoConnectorSession");
+        return new Mock(UMOMessageDispatcher.class, "umoMessageDispatcher");
+    }
+
+    public static Mock getMockMessageDispatcherFactory()
+    {
+        return new Mock(UMOMessageDispatcherFactory.class, "umoMessageDispatcherFactory");
     }
 
     public static Mock getMockConnector()
