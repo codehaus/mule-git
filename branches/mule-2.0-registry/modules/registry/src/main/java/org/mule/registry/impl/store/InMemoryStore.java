@@ -10,14 +10,15 @@
 
 package org.mule.registry.impl.store;
 
+import org.mule.persistence.PersistenceNotification;
+import org.mule.persistence.PersistenceNotificationListener;
 import org.mule.registry.ComponentReference;
 import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.RegistryStore;
 import org.mule.registry.ReregistrationException;
-import org.mule.registry.impl.persistence.PersistenceNotification;
-import org.mule.registry.impl.persistence.PersistenceNotificationListener;
 import org.mule.umo.UMOException;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotificationListener;
 
 import java.util.HashMap;
@@ -38,6 +39,11 @@ public class InMemoryStore implements RegistryStore
      */
     private Map store = null;
     
+    /**
+     * The root allows traversal of a tree
+     */
+    private ComponentReference root = null;
+
     /**
      * This is the listener for the persistence manager. When
      * the store wants to, it can alert the persistence manager
@@ -61,10 +67,28 @@ public class InMemoryStore implements RegistryStore
 
     public void registerComponent(ComponentReference component) throws RegistrationException
     {
-        if (component.getParentId() != null) 
+        if (component.getId().equals("0")) 
         {
-            ComponentReference parent = 
-                (ComponentReference)store.get(component.getParentId());
+            logger.info("Setting root");
+            root = component;
+        }
+        else 
+        {
+            ComponentReference parent = null;
+
+            if (component.getParentId() != null) 
+            {
+                parent = (ComponentReference)store.get(component.getParentId());
+            }
+            else
+            {
+                parent = root;
+                component.setParentId(root.getId());
+            }
+
+            logger.info("About to add component " + component.getId() + 
+                    " to parent " + component.getParentId());
+
             if (parent != null)
             {
                 parent.addChild(component);
@@ -81,6 +105,14 @@ public class InMemoryStore implements RegistryStore
         logger.info("Received deregistration of " + component.getType() + "/" + component.getId());
         ComponentReference ref = 
             (ComponentReference)store.get(component.getId());
+        // We will throw an exception here
+        if (ref == null) return;
+        store.remove(ref);
+    }
+
+    public void deregisterComponent(String registryId) throws DeregistrationException
+    {
+        ComponentReference ref = (ComponentReference)store.get(registryId);
         // We will throw an exception here
         if (ref == null) return;
         store.remove(ref);
@@ -121,12 +153,19 @@ public class InMemoryStore implements RegistryStore
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public void initialise() throws InitialisationException 
+    {
+        store = new HashMap();
+    }
+
+    /**
      * Start the registry store
      */
     public void start() throws UMOException
     {
-        logger.info("Starting");
-        store = new HashMap();
+        logger.info("Started");
     }
 
     /**
@@ -134,7 +173,7 @@ public class InMemoryStore implements RegistryStore
      */
     public void stop() throws UMOException 
     {
-        logger.info("Stopping");
+        logger.info("Stopped");
     }
 
     /**
@@ -142,11 +181,13 @@ public class InMemoryStore implements RegistryStore
      */
     public void dispose() 
     {
+        // TODO: delete stuff
     }
 
     public void persist()
     {
         logger.info("Got request to persist");
+
         if (notificationListener != null)
         {
             notificationListener.onNotification(new PersistenceNotification(this, PersistenceNotification.PERSISTABLE_READY));
@@ -157,23 +198,29 @@ public class InMemoryStore implements RegistryStore
         }
     }
 
-    public void registerPersistenceRequestListener(UMOServerNotificationListener listener) throws UMOException
+    public void registerPersistenceRequestListener(PersistenceNotificationListener listener) throws UMOException
     {
+        logger.info("Registering request listener");
         if (listener instanceof PersistenceNotificationListener)
         {
             notificationListener = (PersistenceNotificationListener)listener;
+            logger.info("Registered request listener");
         }
     }
 
     public Object getPersistableObject() throws UMOException
     {
-        return store;
+        return root;
     }
 
     public Object getStorageKey() throws UMOException
     {
-        // TODO 
         return null;
+    }
+
+    public ComponentReference getRootObject()
+    { 
+        return root;
     }
 }
 
