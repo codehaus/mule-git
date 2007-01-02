@@ -10,11 +10,14 @@
 
 package org.mule.registry.impl;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-
 import org.mule.registry.ComponentReference;
 import org.mule.registry.ComponentVersion;
+import org.mule.util.StringUtils;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The BasicComponentReference provides a basic implementation
@@ -27,6 +30,17 @@ public class BasicComponentReference implements ComponentReference
 {
     public static int COMPONENT_STATE_UNITIALISED = 0;
 
+    protected static String[] GETTERS_TO_GET = {
+        "java.lang.Boolean", "java.lang.Date", 
+        "byte", "java.lang.Byte",
+        "double", "java.lang.Double",
+        "float", "java.lang.Float",
+        "int", "java.lang.Integer",
+        "long", "java.lang.Long", 
+        "short", "java.lang.Short",
+        "java.lang.String", "java.lang.StringBuffer"
+    };
+
     protected String id = null;
     protected ComponentVersion version;
     protected String parentId = null;
@@ -34,7 +48,7 @@ public class BasicComponentReference implements ComponentReference
     protected Object component = null;
     protected int state;
     protected HashMap properties = null;
-    protected HashMap children = null;
+    protected HashMap children = new HashMap();
 
     public BasicComponentReference()
     {
@@ -46,33 +60,55 @@ public class BasicComponentReference implements ComponentReference
         this.parentId = parentId;
         this.type = type;
         this.state = COMPONENT_STATE_UNITIALISED;
-        this.component = component;
         this.children = new HashMap();
-        loadProperties();
+        loadProperties(component);
     }
     */
 
     public void setComponent(Object component) 
     {
-        this.component = component;
-        loadProperties();
+        loadProperties(component);
     }
 
-    private void loadProperties()
+    private void loadProperties(Object component)
     {
         properties = new HashMap();
+        properties.put("sourceObjectClassName", component.getClass().getName());
+
         try {
             Method[] methods = component.getClass().getMethods();
             for (int i = 0; i < methods.length; i++) {
                 Method method = methods[i];
+
+                // We only want getters
                 if (!method.getName().startsWith("get")) continue;
+                // We only can handle no argument getters
                 if (method.getParameterTypes().length > 0) continue;
-                if (method.getReturnType().getName().equals("java.lang.String")) {
-                    String name =
-                        method.getName().substring(3, 4).toLowerCase() +
-                        method.getName().substring(4);
-                    String value = method.invoke(component, null).toString();
+                // We don't want the registry ID (hasn't been set yet)
+                if (method.getName().equals("getRegistryId")) continue;
+
+                //System.out.println(type + ": " + method.getName() + " returns " + method.getReturnType().getName());
+
+                String retType = method.getReturnType().getName();
+                String name = method.getName().substring(3, 4).toLowerCase() +
+                    method.getName().substring(4);
+
+                if (doCapture(retType))
+                {
+                    Object value = method.invoke(component, null);
                     properties.put(name, value);
+                }
+                else if (retType.equals("java.util.Map"))
+                {
+                    Map map = (Map)method.invoke(component, null);
+                    Iterator iter = map.keySet().iterator();
+                    while (iter.hasNext())
+                    {
+                        Object key = iter.next();
+                        Object val = map.get(key);
+                        if (doCapture(val.getClass().getName()))
+                            properties.put(key.toString(), val);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -155,14 +191,20 @@ public class BasicComponentReference implements ComponentReference
         children.put(component.getId(), component);
     }
 
-	public ComponentVersion getVersion() {
-		return version;
-	}
+    public ComponentVersion getVersion() {
+        return version;
+    }
 
     public void setVersion(ComponentVersion version) {
     	this.version = version;
     }
 
+    private boolean doCapture(String retType)
+    {
+        for (int i = 0; i < GETTERS_TO_GET.length; i++)
+            if (StringUtils.equals(GETTERS_TO_GET[i], retType)) return true;
+        return false;
+    }
     /*
     public void register()
     {
