@@ -604,6 +604,14 @@ public class MuleManager implements UMOManager
         if (initialised.get() || initialising.get())
         {
             connector.initialise();
+
+            try
+            {
+                connector.register();
+            } 
+            catch (RegistrationException re)
+            {
+            }
         }
         if ((started.get() || starting.get()) && !connector.isStarted())
         {
@@ -665,6 +673,18 @@ public class MuleManager implements UMOManager
     public void registerTransformer(UMOTransformer transformer) throws InitialisationException
     {
         transformer.initialise();
+
+        // For now at least, we don't want a registration error to affect
+        // the initialisation process.
+        try
+        {
+            transformer.register();
+        }
+        catch (RegistrationException re)
+        {
+            logger.warn(re);
+        }
+
         transformers.put(transformer.getName(), transformer);
         logger.info("Transformer " + transformer.getName() + " has been initialised successfully");
     }
@@ -1270,6 +1290,7 @@ public class MuleManager implements UMOManager
      */
     public void registerAgent(UMOAgent agent) throws UMOException
     {
+        logger.info("Adding agent " + agent.getName());
         agents.put(agent.getName(), agent);
         agent.registered();
         // Don't allow initialisation while the server is being initalised,
@@ -1277,10 +1298,12 @@ public class MuleManager implements UMOManager
         // order can be corrupted.
         if (initialised.get())
         {
+            logger.info("Initialising agent " + agent.getName());
             agent.initialise();
         }
         if ((started.get() || starting.get()))
         {
+            logger.info("Starting agent " + agent.getName());
             agent.start();
         }
     }
