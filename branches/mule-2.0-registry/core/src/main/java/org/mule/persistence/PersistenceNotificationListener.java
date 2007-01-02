@@ -29,7 +29,6 @@ public class PersistenceNotificationListener implements UMOServerNotificationLis
 
     public void onNotification(UMOServerNotification notification)
     {
-        System.out.println("Got notification");
         if (notification instanceof PersistenceNotification)
         {
             Persistable object = (Persistable)notification.getSource();
