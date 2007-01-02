@@ -51,8 +51,14 @@ public class DummyRegistry implements Registry {
         return newId;
     }
 
-    public void deregisterComponent(ComponentReference component) throws DeregistrationException {
+    public void deregisterComponent(ComponentReference component) throws DeregistrationException 
+    {
         logger.info("Received deregistration of " + component.getType() + "/" + component.getId());
+    }
+
+    public void deregisterComponent(String registryId) throws DeregistrationException 
+    {
+        logger.info("Received deregistration of " + registryId);
     }
 
     public void reregisterComponent(ComponentReference component) throws ReregistrationException {
@@ -110,5 +116,10 @@ public class DummyRegistry implements Registry {
     public ComponentReference getComponentReferenceInstance(String referenceType)
     {
         return new BasicComponentReference();
+    }
+
+    public String getPersistenceMode()
+    {
+        return new String("NONE");
     }
 }
