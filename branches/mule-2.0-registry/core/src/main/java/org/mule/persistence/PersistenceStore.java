@@ -26,6 +26,7 @@ public interface PersistenceStore extends Initialisable, Disposable
      *
      * @object object to persist
      * @myUpdate whether the store has the option to update or not
+     */
     void store(Persistable object, boolean mayUpdate) throws PersistenceException;
 
     /**

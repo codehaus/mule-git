@@ -11,7 +11,6 @@
 package org.mule.persistence;
 
 import org.mule.umo.UMOException;
-import org.mule.umo.manager.UMOServerNotificationListener;
 
 /**
  * <code>Persistable</code> is an interface for a Mule object that wants
@@ -31,7 +30,7 @@ public interface Persistable
      * @param listener The listener that the component will talk to
      * @throws UMOException if the registration fails
      */
-    void registerPersistenceRequestListener(UMOServerNotificationListener listener) throws UMOException;
+    void registerPersistenceRequestListener(PersistenceNotificationListener listener) throws UMOException;
 
     /**
      * Return the data for persistence. It is the responsibility
@@ -53,5 +52,6 @@ public interface Persistable
      * to determine whether/how to update the PersistenceStore
      */
     Object getStorageKey() throws UMOException;
+
 }
 
