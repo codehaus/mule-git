@@ -10,8 +10,10 @@
 
 package org.mule.persistence;
 
-import org.mule.umo.lifecycle.Initialisable;
+import org.mule.umo.lifecycle.Startable;
+import org.mule.umo.lifecycle.Stoppable;
 import org.mule.umo.lifecycle.Disposable;
+import org.mule.umo.lifecycle.Initialisable;
 
 /**
  * <code>PersistenceManager</code> is the interface for any object that
@@ -24,11 +26,34 @@ import org.mule.umo.lifecycle.Disposable;
  * @author 
  * @version $Revision: 3649 $
  */
-public interface PersistenceManager extends Initialisable, Disposable
+public interface PersistenceManager extends Initialisable, Startable, Stoppable, Disposable
 {
     /*
      * Temporary method!
      * Call the manager to schedule the persistence
      */
-    public void requestPersistence(Persistable source);
+    void requestPersistence(Persistable source);
+
+    /*
+     * Returns whether or not the manager is ready to persist
+     */
+    boolean isReady();
+
+    /**
+     * Returns number of requests since the last persistences
+     */
+    int getRequestCount();
+
+    /**
+     * Returns the last time a request was made
+     */
+    long getLastRequestTime();
+
+    /**
+     * Do the persistence. This will probably be replaced by an internal
+     * call used by a timer listener
+     */
+    void persist();
+
+    String getStoreType();
 }
