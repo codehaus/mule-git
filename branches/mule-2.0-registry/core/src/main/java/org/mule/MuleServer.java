@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,10 +35,26 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleServer implements Runnable
 {
+    public static final String CLI_OPTIONS[][] = {
+            { "builder", "true", "Configuration Builder Type" },
+            { "config", "true", "Configuration File" },
+            { "idle", "false", "Whether to run in idle (unconfigured) mode" },
+            { "main", "true", "Main Class"},
+            { "mode", "true", "Run Mode"},
+            { "props", "true", "Startup Properties"}
+        };
+
     /**
      * Don't use a class object so the core doesn't depend on mule-module-builders.
      */
     protected static final String CLASSNAME_DEFAULT_CONFIG_BUILDER = "org.mule.config.builders.MuleXmlConfigurationBuilder";
+
+    /**
+     * This builder sets up the configuration for an idle Mule node - a node
+     * that doesn't do anything initially but is fed configuration during 
+     * runtime
+     */
+    protected static final String CLASSNAME_DEFAULT_IDLE_CONFIG_BUILDER = "org.mule.config.builders.MuleIdleConfigurationBuilder";
 
     /**
      * Required to support the '-config spring' shortcut. Don't use a class object so
@@ -82,7 +99,7 @@ public class MuleServer implements Runnable
      */
     public static void main(String[] args) throws Exception
     {
-		MuleServer server = new MuleServer(args);
+        MuleServer server = new MuleServer(args);
         server.start(false);
     }
 
@@ -101,9 +118,20 @@ public class MuleServer implements Runnable
      */
     public MuleServer(String[] args) throws IllegalArgumentException
     {
-        String config = SystemUtils.getCommandLineOption("-config", args);
+        Map options = null;
+
+        try 
+        {
+            options = SystemUtils.getCommandLineOptions(args, CLI_OPTIONS);
+        }
+        catch (MuleException me)
+        {
+            throw new IllegalArgumentException(me.toString());
+        }
+
+        String config = (String)options.get("config");
         // Try default if no config file was given.
-        if (config == null)
+        if (config == null && !options.containsKey("idle"))
         {
             logger.warn("A configuration file was not set, using default: " + DEFAULT_CONFIGURATION);
             // try to load the config as a file as well
@@ -117,13 +145,20 @@ public class MuleServer implements Runnable
         {
             setConfigurationResources(config);
         }
-        else
+        else if (!options.containsKey("idle"))
         {
         	throw new IllegalArgumentException(new Message(Messages.CONFIG_NOT_FOUND_USAGE).toString());
         }
 
         // Configuration builder
-        String cfgBuilderClassName = SystemUtils.getCommandLineOption("-builder", args);
+        String cfgBuilderClassName = (String)options.get("builder");
+
+        if (options.containsKey("idle"))
+        {
+            setConfigurationResources("IDLE");
+            cfgBuilderClassName = CLASSNAME_DEFAULT_IDLE_CONFIG_BUILDER;
+        }
+
         if (cfgBuilderClassName != null)
         {
             try
@@ -142,7 +177,7 @@ public class MuleServer implements Runnable
         }
 
         // Startup properties
-        String propertiesFile = SystemUtils.getCommandLineOption("-props", args);
+        String propertiesFile = (String)options.get("props");
         if (propertiesFile != null)
         {
             setStartupPropertiesFile(propertiesFile);
