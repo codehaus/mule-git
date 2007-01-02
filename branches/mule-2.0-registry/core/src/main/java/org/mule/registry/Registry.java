@@ -51,6 +51,11 @@ public interface Registry extends Startable, Stoppable, Disposable {
     public void deregisterComponent(ComponentReference component) throws DeregistrationException;
 
     /**
+     * Unregister a component by registry ID
+     */
+    public void deregisterComponent(String registryId) throws DeregistrationException;
+
+    /**
      * Re-register a component, but this might not be used. Not sure
      * at present.
      */
@@ -123,4 +128,8 @@ public interface Registry extends Startable, Stoppable, Disposable {
      */
     ComponentReference getComponentReferenceInstance(String referenceType);
 
+    /**
+     * Returns the type of persistence store used by the Registry
+     */
+    String getPersistenceMode();
 }

@@ -13,6 +13,7 @@ package org.mule.registry;
 import org.mule.persistence.Persistable;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;
+import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;
 
@@ -24,10 +25,17 @@ import java.util.Map;
  *
  * @version $Revision: $
  */
-public interface RegistryStore extends Startable, Stoppable, Disposable, Persistable
+public interface RegistryStore extends Initialisable, Startable, Stoppable, Disposable, Persistable
 {
+    /**
+     * Returns the root of the registry store - this can be used
+     * to traverse all the children in the registry
+     */
+    public ComponentReference getRootObject();
 
     public void registerComponent(ComponentReference component) throws RegistrationException;
+
+    public void deregisterComponent(String registryId) throws DeregistrationException;
 
     public void deregisterComponent(ComponentReference component) throws DeregistrationException;
 
