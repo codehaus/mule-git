@@ -34,5 +34,13 @@ public interface Registerable
      * Degister this component from the registry
      */
     void deregister() throws DeregistrationException;
+
+    /**
+     * Returns the registry id.
+     * 
+     * @return the registry ID
+     */
+    String getRegistryId();
+
 }
 
