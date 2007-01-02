@@ -12,6 +12,7 @@ package org.mule.umo;
 
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.Initialisable;
+import org.mule.umo.lifecycle.Registerable;
 import org.mule.umo.routing.UMOInboundMessageRouter;
 import org.mule.umo.routing.UMOOutboundMessageRouter;
 import org.mule.umo.routing.UMOResponseMessageRouter;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public interface UMOImmutableDescriptor extends Initialisable
+public interface UMOImmutableDescriptor extends Initialisable, Registerable
 {
     /**
      * The exception strategy to use to handle exceptions in the Mule UMO.

@@ -408,4 +408,12 @@ public interface UMOManager extends Lifecycle
      * @return
      */
     QueueManager getQueueManager();
+
+    /**
+     * Returns the registry id.
+     * 
+     * @return the registry ID
+     */
+    String getRegistryId();
+
 }

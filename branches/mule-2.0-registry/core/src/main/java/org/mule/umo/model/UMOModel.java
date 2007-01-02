@@ -61,13 +61,6 @@ public interface UMOModel extends Lifecycle, Initialisable, Registerable
     String getType();
 
     /**
-     * Returns the model's registry id.
-     * 
-     * @return the registry ID for this model
-     */
-    String getRegistryId();
-
-    /**
      * The entry point resolver is used to determine the method to be called on a
      * component when an event is received for it.
      * 

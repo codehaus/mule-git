@@ -11,6 +11,7 @@
 package org.mule.umo.routing;
 
 import org.mule.management.stats.RouterStatistics;
+import org.mule.umo.lifecycle.Registerable;
 
 /**
  * <code>UMORouter</code> A placeholed interfae for all routers
@@ -18,7 +19,8 @@ import org.mule.management.stats.RouterStatistics;
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public interface UMORouter
+//public interface UMORouter extends Registerable
+public interface UMORouter 
 {
     void setRouterStatistics(RouterStatistics stats);
 
