@@ -131,6 +131,17 @@ public abstract class AbstractComponent implements UMOComponent
             throw new InitialisationException(new Message(Messages.OBJECT_X_ALREADY_INITIALISED,
                 "Component '" + descriptor.getName() + "'"), this);
         }
+
+        try 
+        {
+            descriptor.register();
+        }
+        catch (UMOException e)
+        {
+            logger.error("Unable to register descriptor " + 
+                    descriptor.getName() + " with the registry");
+        }
+
         descriptor.initialise();
 
         this.exceptionListener = descriptor.getExceptionListener();
@@ -153,14 +164,14 @@ public abstract class AbstractComponent implements UMOComponent
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOComponent#register()
+     * @see org.mule.umo.lifecycle.Registerable#register()
      */
     public void register() throws RegistrationException
     {
         ComponentReference ref = 
             MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
         ref.setParentId(model.getRegistryId());
-        ref.setType("component");
+        ref.setType("UMOComponent");
         ref.setComponent(this);
 
         registryId = 
@@ -170,11 +181,22 @@ public abstract class AbstractComponent implements UMOComponent
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOComponent#deregister()
+     * @see org.mule.umo.lifecycle.Registerable#deregister()
      */
     public void deregister() throws DeregistrationException
     {
+        MuleManager.getInstance().getRegistry().deregisterComponent(registryId);
         registryId = null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.lifecycle.Registerable#getRegistryId()
+     */
+    public String getRegistryId()
+    {
+        return registryId;
     }
 
     protected void fireComponentNotification(int action)

@@ -156,6 +156,16 @@ public abstract class AbstractModel implements UMOModel
 
         if (initialised.get())
         {
+            try 
+            {
+                descriptor.register();
+            }
+            catch (UMOException e)
+            {
+                logger.error("Unable to register descriptor " + 
+                    descriptor.getName() + " with the registry");
+            }
+
             descriptor.initialise();
         }
         // Set the es if one wasn't set in the configuration
@@ -493,7 +503,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOModel#register()
+     * @see org.mule.umo.lifecycle.Registerable#register()
      */
     public void register() throws RegistrationException
     {
@@ -504,8 +514,8 @@ public abstract class AbstractModel implements UMOModel
     	catch (NullPointerException e) {
         	throw new RegistrationException("Unable to get ComponentReference.");
         }
-        ref.setParentId(null);
-        ref.setType("model");
+        ref.setParentId(MuleManager.getInstance().getRegistryId());
+        ref.setType("UMOModel");
         ref.setComponent(this);
 
         registryId = 
@@ -515,11 +525,22 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOModel#deregister()
+     * @see org.mule.umo.lifecycle.Registerable#deregister()
      */
     public void deregister() throws DeregistrationException
     {
+        MuleManager.getInstance().getRegistry().deregisterComponent(registryId);
         registryId = null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.umo.lifecycle.Registerable#getRegistryId()
+     */
+    public String getRegistryId()
+    {
+        return registryId;
     }
 
     public ExceptionListener getExceptionListener()
@@ -550,11 +571,6 @@ public abstract class AbstractModel implements UMOModel
     public Iterator getComponentNames()
     {
         return components.keySet().iterator();
-    }
-
-    public String getRegistryId()
-    {
-        return registryId;
     }
 
     void fireNotification(UMOServerNotification notification)
