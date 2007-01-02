@@ -245,8 +245,13 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        // containers for dispatchers and receivers
+        // container for dispatchers
         dispatchers = new GenericKeyedObjectPool();
+
+        // TODO HH: dispatcher pool configuration needs to be extracted, maybe even moved into the factory?
+        dispatchers.setTestOnReturn(true);
+        
+        // container for receivers
         receivers = new ConcurrentHashMap();
     }
 
@@ -578,16 +583,19 @@ public abstract class AbstractConnector
      */
     public void setDispatcherFactory(UMOMessageDispatcherFactory dispatcherFactory)
     {
-        // need to adapt the UMOMessageDispatcherFactory for use as commons-pool
-        // object factory
+        KeyedPoolableObjectFactory poolFactory;
+
         if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
         {
-            this.dispatchers.setFactory((KeyedPoolableObjectFactory)dispatcherFactory);
+            poolFactory = (KeyedPoolableObjectFactory)dispatcherFactory;
         }
         else
         {
-            this.dispatchers.setFactory(new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory));
+            // need to adapt the UMOMessageDispatcherFactory for use by commons-pool
+            poolFactory = new KeyedPoolMessageDispatcherFactoryAdapter(dispatcherFactory);
         }
+
+        this.dispatchers.setFactory(poolFactory);
 
         // we keep a reference to the unadapted factory, otherwise people might end
         // up with ClassCastExceptions on downcast to their implementation (sigh)

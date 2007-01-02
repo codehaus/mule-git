@@ -15,6 +15,13 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
+/**
+ * <code>AbstractMessageDispatcherFactory</code> is a base implementation of the
+ * <code>UMOMessageDispatcherFactory</code> interface for managing the lifecycle of
+ * message dispatchers.
+ * 
+ * @see UMOMessageDispatcherFactory
+ */
 public abstract class AbstractMessageDispatcherFactory implements UMOMessageDispatcherFactory
 {
 
@@ -27,7 +34,7 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
 
     public void activate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher) throws UMOException
     {
-        // template method
+        // currently empty
     }
 
     public void destroy(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
@@ -38,11 +45,25 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
 
     public void passivate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
     {
-        // template method
+        // currently empty
     }
 
     public boolean validate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
     {
+        // has the dispatcher disposed itself after an exception?
+        if (dispatcher.isDisposed())
+        {
+            return false;
+        }
+
+        // should dispatchers be disposed after every request?
+        // TODO HH: remove evil cast, move method into interface
+        if (((AbstractConnector)endpoint.getConnector()).isCreateDispatcherPerRequest())
+        {
+            return false;
+        }
+
+        // the dispatcher is still valid for reuse
         return true;
     }
 
