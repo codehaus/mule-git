@@ -248,9 +248,14 @@ public abstract class AbstractConnector
         // container for dispatchers
         dispatchers = new GenericKeyedObjectPool();
 
-        // TODO HH: dispatcher pool configuration needs to be extracted, maybe even moved into the factory?
+        // TODO HH: dispatcher pool configuration needs to be extracted, maybe even
+        // moved into the factory?
+        // NOTE: testOnBorrow MUST be FALSE. this is a bit of a design bug in
+        // commons-pool since validate is used for both activation and passivation,
+        // but has no way of knowing which way it is going.
+        dispatchers.setTestOnBorrow(false);
         dispatchers.setTestOnReturn(true);
-        
+
         // container for receivers
         receivers = new ConcurrentHashMap();
     }
