@@ -35,13 +35,14 @@
             <version>3.1.3</version>
         </dependency>
         -->
-        <!-- Only needed for scripting in jBpm 
+        <!-- Only needed for scripting in jBpm -->
         <dependency>
             <groupId>bsh</groupId>
             <artifactId>bsh</artifactId>
             <version>1.3.0</version>
+            <scope>test</scope>
         </dependency>
-        -->
+
         <!-- *************************************************************************
              Hibernate
         ****************************************************************************** --> 
@@ -57,13 +58,12 @@
                 </exclusion>
             </exclusions>    
         </dependency>
-        <!-- Used to pool connections in Hibernate 
+        <!-- Used to pool connections in Hibernate -->
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
             <version>0.9.0.4</version>
         </dependency>
-        -->
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
