@@ -56,8 +56,28 @@
                     <groupId>javax.transaction</groupId>
                     <artifactId>jta</artifactId>
                 </exclusion>
+                <!-- Use the combined cglib-nodep instead of separate cglib and asm dependencies -->
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-attrs</artifactId>
+                </exclusion>
             </exclusions>    
         </dependency>
+        <!-- Use the combined cglib-nodep instead of separate cglib and asm dependencies -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.1_3</version>
+        </dependency>
+        
         <!-- Used to pool connections in Hibernate -->
         <dependency>
             <groupId>c3p0</groupId>
