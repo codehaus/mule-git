@@ -14,6 +14,7 @@ import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.Lifecycle;
+import org.mule.umo.lifecycle.Registerable;
 
 /**
  * <code>UMOMessageReceiver</code> is used to receive data from an external system.
@@ -29,7 +30,7 @@ import org.mule.umo.lifecycle.Lifecycle;
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
  * @version $Revision$
  */
-public interface UMOMessageReceiver extends Lifecycle, UMOConnectable
+public interface UMOMessageReceiver extends Lifecycle, Registerable, UMOConnectable
 {
     /**
      * @return the receivers endpoint
