@@ -15,6 +15,8 @@
     <description>Mule Example Applications</description>
 
     <modules>
+        <module>hello-osgi</module>
+    	<!--
         <module>echo</module>
         <module>errorhandler</module>
         <module>hello</module>
@@ -24,6 +26,7 @@
         <module>stockquote</module>
         <module>voipservice</module>
         <module>webapp</module>
+        -->
     </modules>
 
     <dependencies>
