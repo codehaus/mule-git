@@ -19,6 +19,7 @@ import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.InternalMessageListener;
 import org.mule.providers.jbi.JbiMessageAdapter;
 import org.mule.providers.jbi.JbiUtils;
+import org.mule.registry.ComponentReference;
 import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
 import org.mule.umo.UMOComponent;
@@ -239,6 +240,11 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
          */
         private static final long serialVersionUID = 6446394166371870045L;
 
+        /**
+         * Registry ID
+         */
+        private String registryId = null;
+
         private UMODescriptor descriptor;
 
         public NullUMOComponent(String name)
@@ -306,12 +312,44 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
             return null;
         }
 
-		public void register() throws RegistrationException {
-            // nothing to do
-		}
+        /*
+         * (non-Javadoc)
+         * 
+        * @see org.mule.umo.lifecycle.Registerable#register()
+        */
+        public void register() throws RegistrationException
+        {
+            ComponentReference ref = 
+                MuleManager.getInstance().getRegistry().getComponentReferenceInstance();
+            ref.setParentId(descriptor.getRegistryId());
+            ref.setType("UMOComponent");
+            ref.setComponent(this);
 
-		public void deregister() throws DeregistrationException {
-            // nothing to do
-		}
+            registryId = 
+                MuleManager.getInstance().getRegistry().registerComponent(ref);
+        }
+
+        /*
+        * (non-Javadoc)
+        * 
+        * @see org.mule.umo.lifecycle.Registerable#deregister()
+        */
+        public void deregister() throws DeregistrationException
+        {
+            MuleManager.getInstance().getRegistry().deregisterComponent(registryId);
+            registryId = null;
+        }
+
+        /*
+        * (non-Javadoc)
+        * 
+        * @see org.mule.umo.lifecycle.Registerable#getRegistryId()
+        */
+        public String getRegistryId()
+        {
+            return registryId;
+        }
+
     }
+
 }
