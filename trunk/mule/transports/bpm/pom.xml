@@ -49,6 +49,13 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
             <version>3.1.3</version>
+            <exclusions>
+                <!-- We've already got the geronimo-jta spec -->
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+            </exclusions>    
         </dependency>
         <!-- Used to pool connections in Hibernate 
         <dependency>
