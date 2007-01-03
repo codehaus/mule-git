@@ -10,7 +10,6 @@
 
 package org.mule.providers.email;
 
-import org.mule.providers.AbstractServiceEnabledConnector;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -22,14 +21,13 @@ import org.mule.util.StringUtils;
 
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.URLName;
 
 /**
  * <code>SmtpConnector</code> is used to connect to and send data to an SMTP mail
  * server
  */
-public class SmtpConnector extends AbstractServiceEnabledConnector implements MailConnector
+public class SmtpConnector extends AbstractMailConnector
 {
     public static final String DEFAULT_SMTP_HOST = "localhost";
     public static final int DEFAULT_SMTP_PORT = 25;
@@ -69,13 +67,6 @@ public class SmtpConnector extends AbstractServiceEnabledConnector implements Ma
      * Any custom headers to be set on messages sent using this connector
      */
     private Properties customHeaders = new Properties();
-
-    /**
-     * A custom authenticator to be used on any mail sessions created with this
-     * connector This will only be used if user name credentials are set on the
-     * endpoint
-     */
-    private Authenticator authenticator = null;
 
     private String contentType = DEFAULT_CONTENT_TYPE;
 
@@ -134,10 +125,6 @@ public class SmtpConnector extends AbstractServiceEnabledConnector implements Ma
     {
         return "smtp";
     }
-
-    // ///////////////////////////////////////////////////////////////////////
-    // Getters and setters
-    // ///////////////////////////////////////////////////////////////////////
 
     /**
      * @return The default from address to use
@@ -211,16 +198,6 @@ public class SmtpConnector extends AbstractServiceEnabledConnector implements Ma
         this.customHeaders = customHeaders;
     }
 
-    public Authenticator getAuthenticator()
-    {
-        return authenticator;
-    }
-
-    public void setAuthenticator(Authenticator authenticator)
-    {
-        this.authenticator = authenticator;
-    }
-
     public String getContentType()
     {
         return contentType;
@@ -277,11 +254,14 @@ public class SmtpConnector extends AbstractServiceEnabledConnector implements Ma
     }
 
     /**
-     * We override the base implementation in Pop3Connector to create a proper
-     * URLName if none was given. This allows javax.mail.Message creation without
-     * access to connection information in the caller (cf. StringToEmailMessage).
+     * We override the base implementation in AbstractMailConnector to create a
+     * proper URLName if none was given. This allows javax.mail.Message creation
+     * without access to connection information in the caller (see
+     * StringToEmailMessage). This is a workaround for the dependency of
+     * StringToEmailMessage on the connection information which only available in
+     * this class.
      */
-    public Object getDelegateSession(UMOImmutableEndpoint endpoint, Object args) throws UMOException
+    public Object getDelegateSession(UMOImmutableEndpoint endpoint, Object args)
     {
         URLName url = (URLName)args;
 
