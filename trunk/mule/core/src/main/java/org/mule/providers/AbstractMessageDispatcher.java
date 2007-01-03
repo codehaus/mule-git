@@ -31,9 +31,6 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.util.concurrent.WaitableBoolean;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.beans.ExceptionListener;
 import java.io.OutputStream;
@@ -69,8 +66,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     protected ConnectionStrategy connectionStrategy;
 
-    protected final WaitableBoolean connected = new WaitableBoolean(false);
-    private final AtomicBoolean connecting = new AtomicBoolean(false);
+    protected volatile boolean connecting = false;
+    protected volatile boolean connected = false;
 
     public AbstractMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -309,9 +306,20 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         }
     }
 
-    public final boolean isDisposed()
+    public boolean validate()
     {
-        return disposed;
+        // by default a dispatcher can be used unless disposed
+        return !disposed;
+    }
+
+    public void activate()
+    {
+        // nothing to do by default
+    }
+
+    public void passivate()
+    {
+        // nothing to do by default
     }
 
     /**
@@ -413,16 +421,17 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     public synchronized void connect() throws Exception
     {
-        if (connected.get())
+        if (connected)
         {
             return;
         }
 
         if (disposed)
         {
+            // TODO HH: throw IllegalState instead?
             if (logger.isWarnEnabled())
             {
-                logger.warn("Dispatcher has been disposed. Cannot connector resource");
+                logger.warn("Dispatcher has been disposed. Cannot connect to resource");
             }
         }
 
@@ -431,8 +440,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             logger.debug("Attempting to connect to: " + endpoint.getEndpointURI());
         }
 
-        if (connecting.compareAndSet(false, true))
+        if (!connecting)
         {
+            connecting = true;
             connectionStrategy.connect(this);
             logger.info("Successfully connected to: " + endpoint.getEndpointURI());
             return;
@@ -458,8 +468,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
         }
 
-        connected.set(true);
-        connecting.set(false);
+        connected = true;
+        connecting = false;
     }
 
     public synchronized void disconnect() throws Exception
@@ -471,7 +481,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
             ConnectionNotification.CONNECTION_DISCONNECTED));
-        connected.set(false);
+        connected = false;
         doDisconnect();
         logger.info("Disconnected from: " + endpoint.getEndpointURI());
     }
@@ -483,7 +493,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     public final boolean isConnected()
     {
-        return connected.get();
+        return connected;
     }
 
     /**

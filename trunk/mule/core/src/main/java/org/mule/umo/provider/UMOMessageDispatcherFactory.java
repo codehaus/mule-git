@@ -19,7 +19,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * <code>UMOMessageDispatcherFactory</code> is a factory interface for managing the
  * lifecycles of a transport's message dispatchers. The methods basically implement
  * the {@link KeyedPoolableObjectFactory} lifecycle, with a
- * {@link UMOImmutableEndpoint} as the key.
+ * {@link UMOImmutableEndpoint} as the key and the dispatcher as pooled object.
  */
 public interface UMOMessageDispatcherFactory
 {
@@ -42,21 +42,18 @@ public interface UMOMessageDispatcherFactory
      * @param dispatcher the dispatcher to be activated
      * @throws UMOException if the dispatcher cannot be activated
      */
-    // TODO HH: delegate to the dispatcher?
     void activate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher) throws UMOException;
 
     /**
-     * Invoked <strong>after</strong> the given dispatcher is returned from a client
-     * but <strong>before</strong> it is returned to its pool.
-     * </p>
+     * Invoked <strong>after</strong> the dispatcher is returned from a client but
+     * <strong>before</strong> it is prepared for return to its pool via
+     * {@link #passivate(UMOImmutableEndpoint, UMOMessageDispatcher)}.
      * 
      * @param endpoint the endpoint of the dispatcher
      * @param dispatcher the dispatcher to be validated
      * @return <code>true</code> if the dispatcher is valid for reuse,
      *         <code>false</code> otherwise.
      */
-    // TODO HH: delegate to the dispatcher?
-    // TODO HH: do we need testOnBorrow?
     boolean validate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher);
 
     /**
@@ -66,7 +63,6 @@ public interface UMOMessageDispatcherFactory
      * @param endpoint the endpoint of the dispatcher
      * @param dispatcher the dispatcher to be passivated
      */
-    // TODO HH: delegate to the dispatcher?
     void passivate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher);
 
     /**
