@@ -109,31 +109,6 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
     }
 
     /**
-     * This method looks for a dispatcher based on the process name and ID. It
-     * searches iteratively from the narrowest scope (match process name and ID) to
-     * the widest scope (match neither - global dispatcher) possible.
-     * 
-     * @return ProcessMessageDispatcher or null if no match is found
-     */
-    // TODO HH: this is never called and needs to be adapted since access to dispatchers has changed
-    /*
-    public ProcessMessageDispatcher lookupDispatcher(String processName, Object processId)
-    {
-        ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(processName,
-            processId));
-        if (dispatcher == null)
-        {
-            dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(processName, null));
-        }
-        if (dispatcher == null)
-        {
-            dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(null, null));
-        }
-        return dispatcher;
-    }
-    */
-
-    /**
      * Generate a URL based on the process name and ID such as "bpm://myProcess/2342"
      * If the parameters are missing, and <code>allowGlobalReceiver</code> is true,
      * the GLOBAL_RECEIVER is returned.
