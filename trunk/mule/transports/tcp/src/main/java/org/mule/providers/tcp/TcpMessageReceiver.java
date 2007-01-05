@@ -181,15 +181,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                     try
                     {
                         Work work = createWork(socket);
-                        work.run();
-//                        try
-//                        {
-//                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null, connector);
-//                        }
-//                        catch (WorkException e)
-//                        {
-//                            logger.error("Tcp Server receiver Work was not processed: " + e.getMessage(), e);
-//                        }
+                        try
+                        {
+                            getWorkManager().scheduleWork(work, WorkManager.INDEFINITE, null, connector);
+                        }
+                        catch (WorkException e)
+                        {
+                            logger.error("Tcp Server receiver Work was not processed: " + e.getMessage(), e);
+                        }
                     }
                     catch (IOException e)
                     {
