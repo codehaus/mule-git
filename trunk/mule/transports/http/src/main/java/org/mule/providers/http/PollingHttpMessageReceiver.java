@@ -13,7 +13,7 @@ package org.mule.providers.http;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.PollingMessageReceiver;
+import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -36,7 +36,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 /**
  * Will poll an http URL and use the response as the input for a service request.
  */
-public class PollingHttpMessageReceiver extends PollingMessageReceiver
+public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
 {
     private URL pollUrl;
 
@@ -70,6 +70,33 @@ public class PollingHttpMessageReceiver extends PollingMessageReceiver
             throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X,
                 endpoint.getEndpointURI().getAddress(), "uri"), e, this);
         }
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        URL url = null;
+        String connectUrl = (String)endpoint.getProperties().get("connectUrl");
+        if (connectUrl == null)
+        {
+            url = pollUrl;
+        }
+        else
+        {
+            url = new URL(connectUrl);
+        }
+        logger.debug("Using url to connect: " + pollUrl.toString());
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.disconnect();
+    }
+
+    public void doDisconnect() throws Exception
+    {
+        // nothing to do
     }
 
     public void poll() throws Exception
@@ -135,25 +162,4 @@ public class PollingHttpMessageReceiver extends PollingMessageReceiver
         routeMessage(message, endpoint.isSynchronous());
     }
 
-    public void doConnect() throws Exception
-    {
-        URL url = null;
-        String connectUrl = (String)endpoint.getProperties().get("connectUrl");
-        if (connectUrl == null)
-        {
-            url = pollUrl;
-        }
-        else
-        {
-            url = new URL(connectUrl);
-        }
-        logger.debug("Using url to connect: " + pollUrl.toString());
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-        connection.disconnect();
-    }
-
-    public void doDisconnect() throws Exception
-    {
-        // nothing to do
-    }
 }

@@ -14,6 +14,7 @@ import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.Message;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
@@ -73,7 +74,7 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         return PROTOCOL;
     }
 
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
         super.doInitialise();
         if (bpms == null)
@@ -85,6 +86,31 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         }
         // Set a callback so that the BPMS may generate messages within Mule.
         bpms.setMessageService(this);
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     /**

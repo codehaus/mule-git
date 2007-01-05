@@ -11,6 +11,7 @@
 package org.mule.providers.email;
 
 import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
 
@@ -45,6 +46,31 @@ public class Pop3Connector extends AbstractMailConnector
         super();
         // by default, close client connections to pop3 after the request.
         this.setCreateDispatcherPerRequest(true);
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     /**

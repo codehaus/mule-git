@@ -330,7 +330,7 @@ public abstract class AbstractConnector
      * 
      * @see org.mule.umo.provider.UMOConnector#start()
      */
-    public final void startConnector() throws UMOException
+    public final synchronized void startConnector() throws UMOException
     {
         checkDisposed();
 
@@ -393,7 +393,7 @@ public abstract class AbstractConnector
      * 
      * @see org.mule.umo.provider.UMOConnector#stop()
      */
-    public final void stopConnector() throws UMOException
+    public final synchronized void stopConnector() throws UMOException
     {
         if (isDisposed())
         {
@@ -460,6 +460,15 @@ public abstract class AbstractConnector
         if (logger.isInfoEnabled())
         {
             logger.info("Disposing Connector: " + getClass().getName());
+        }
+
+        try
+        {
+            this.stopConnector();
+        }
+        catch (UMOException e)
+        {
+            logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
         }
 
         this.disposeReceivers();
@@ -803,45 +812,26 @@ public abstract class AbstractConnector
         receiver.dispose();
     }
 
+    protected abstract void doInitialise() throws InitialisationException;
+
+    /**
+     * Template method to perform any work when destroying the connectoe
+     */
+    protected abstract void doDispose();
+
     /**
      * Template method to perform any work when starting the connectoe
      * 
      * @throws UMOException if the method fails
      */
-    protected void doStart() throws UMOException
-    {
-        // template method
-    }
+    protected abstract void doStart() throws UMOException;
 
     /**
      * Template method to perform any work when stopping the connectoe
      * 
      * @throws UMOException if the method fails
      */
-    protected void doStop() throws UMOException
-    {
-        // template method
-    }
-
-    /**
-     * Template method to perform any work when destroying the connectoe
-     */
-    protected void doDispose()
-    {
-        try
-        {
-            this.stopConnector();
-        }
-        catch (UMOException e)
-        {
-            logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
-        }
-    }
-
-    public void doInitialise() throws InitialisationException
-    {
-        // template method
-    }
+    protected abstract void doStop() throws UMOException;
 
     public UMOTransformer getDefaultInboundTransformer()
     {
@@ -1008,7 +998,7 @@ public abstract class AbstractConnector
 
         this.checkDisposed();
 
-        if (connecting.commit(false, true))
+        if (connecting.compareAndSet(false, true))
         {
             connectionStrategy.connect(this);
             logger.info("Connected: " + getConnectionDescription());
@@ -1095,10 +1085,7 @@ public abstract class AbstractConnector
      * 
      * @throws Exception
      */
-    public void doConnect() throws Exception
-    {
-        // template method
-    }
+    protected abstract void doConnect() throws Exception;
 
     /**
      * Template method where any connected resources used by the connector should be
@@ -1106,10 +1093,7 @@ public abstract class AbstractConnector
      * 
      * @throws Exception
      */
-    public void doDisconnect() throws Exception
-    {
-        // template method
-    }
+    protected abstract void doDisconnect() throws Exception;
 
     /**
      * The resource id used when firing ConnectEvents from this connector

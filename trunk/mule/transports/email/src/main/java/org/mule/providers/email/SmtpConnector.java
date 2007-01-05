@@ -86,39 +86,29 @@ public class SmtpConnector extends AbstractMailConnector
         throw new UnsupportedOperationException("Listeners cannot be registered on a SMTP endpoint");
     }
 
-    /*
-     * @see org.mule.providers.UMOConnector#start()
-     */
-    public void doStart() throws UMOException
-    {
-        // template method
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOConnector#stop()
-     */
-    public void doStop() throws UMOException
-    {
-        // template method
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractConnector#doDispose()
-     */
     protected void doDispose()
     {
-        try
-        {
-            doStop();
-        }
-        catch (UMOException e)
-        {
-            logger.error(e.getMessage(), e);
-        }
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     public String getProtocol()

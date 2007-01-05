@@ -22,12 +22,12 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import javax.resource.spi.work.Work;
 
 /**
- * <code>PollingMessageReceiver</code> implements a polling message receiver. The
- * receiver provides a {@link #poll()} method that implementations should implement
- * to execute their custom code. Note that the receiver will not poll if the
- * associated connector is not started.
+ * <code>AbstractPollingMessageReceiver</code> implements a base class for polling
+ * message receivers. The receiver provides a {@link #poll()} method that
+ * implementations must implement to execute their custom code. Note that the
+ * receiver will not poll if the associated connector is not started.
  */
-public abstract class PollingMessageReceiver extends AbstractMessageReceiver implements Work
+public abstract class AbstractPollingMessageReceiver extends AbstractMessageReceiver implements Work
 {
     public static final long DEFAULT_POLL_FREQUENCY = 1000;
     public static final long STARTUP_DELAY = 1000;
@@ -35,7 +35,7 @@ public abstract class PollingMessageReceiver extends AbstractMessageReceiver imp
     protected long frequency = DEFAULT_POLL_FREQUENCY;
     protected ScheduledFuture schedule;
 
-    public PollingMessageReceiver(UMOConnector connector,
+    public AbstractPollingMessageReceiver(UMOConnector connector,
                                   UMOComponent component,
                                   final UMOEndpoint endpoint,
                                   Long frequency) throws InitialisationException
