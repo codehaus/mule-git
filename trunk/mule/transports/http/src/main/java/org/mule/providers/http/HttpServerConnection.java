@@ -10,6 +10,8 @@
 
 package org.mule.providers.http;
 
+import org.mule.MuleManager;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,18 +26,21 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpParser;
 import org.apache.commons.httpclient.StatusLine;
 import org.apache.commons.io.IOUtils;
-import org.mule.MuleManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * A connection to the SimpleHttpServer.
  */
 public class HttpServerConnection
 {
-    private Socket socket = null;
-    private InputStream in = null;
-    private OutputStream out = null;
+    private static final Log logger = LogFactory.getLog(HttpServerConnection.class);
+
+    private Socket socket;
+    private final InputStream in;
+    private final OutputStream out;
     private boolean keepAlive = false;
-    private String encoding;
+    private final String encoding;
 
     public HttpServerConnection(final Socket socket) throws IOException
     {
@@ -45,10 +50,12 @@ public class HttpServerConnection
     public HttpServerConnection(final Socket socket, String encoding) throws IOException
     {
         super();
+
         if (socket == null)
         {
             throw new IllegalArgumentException("Socket may not be null");
         }
+
         this.socket = socket;
         this.socket.setTcpNoDelay(true);
         this.in = socket.getInputStream();
@@ -56,12 +63,16 @@ public class HttpServerConnection
         this.encoding = encoding;
     }
 
-    public synchronized void close()
+    public void close()
     {
         try
         {
             if (socket != null)
             {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Closing: " + socket);
+                }
                 socket.close();
             }
         }
@@ -112,23 +123,11 @@ public class HttpServerConnection
 
     public HttpRequest readRequest() throws IOException
     {
-        String line = null;
         try
         {
-            do
-            {
-                line = HttpParser.readLine(in, encoding);
-            }
-            while (line != null && line.length() == 0);
-
-            if (line == null)
-            {
-                setKeepAlive(false);
-                return null;
-            }
-            HttpRequest request = new HttpRequest(RequestLine.parseLine(line), HttpParser.parseHeaders(
-                this.in, encoding), this.in);
-            return request;
+            String line = readLine();
+            return new HttpRequest(RequestLine.parseLine(line), HttpParser.parseHeaders(this.in, encoding),
+                this.in);
         }
         catch (IOException e)
         {
@@ -141,27 +140,33 @@ public class HttpServerConnection
     {
         try
         {
-            String line = null;
-            do
-            {
-                line = HttpParser.readLine(in, encoding);
-            }
-            while (line != null && line.length() == 0);
-
-            if (line == null)
-            {
-                setKeepAlive(false);
-                return null;
-            }
-            HttpResponse response = new HttpResponse(new StatusLine(line), HttpParser.parseHeaders(this.in,
-                encoding), this.in);
-            return response;
+            String line = readLine();
+            return new HttpResponse(new StatusLine(line), HttpParser.parseHeaders(this.in, encoding), this.in);
         }
         catch (IOException e)
         {
             close();
             throw e;
         }
+    }
+
+    private String readLine() throws IOException
+    {
+        String line = null;
+
+        do
+        {
+            line = HttpParser.readLine(in, encoding);
+        }
+        while (line != null && line.length() == 0);
+
+        if (line == null)
+        {
+            setKeepAlive(false);
+            return null;
+        }
+
+        return line;
     }
 
     public void writeRequest(final HttpRequest request) throws IOException
@@ -212,6 +217,7 @@ public class HttpServerConnection
         {
             return;
         }
+
         setKeepAlive(response.isKeepAlive());
         ResponseWriter writer = new ResponseWriter(this.out, encoding);
         OutputStream outstream = this.out;
@@ -222,8 +228,8 @@ public class HttpServerConnection
         {
             Header header = (Header)item.next();
             writer.print(header.toExternalForm());
-
         }
+
         writer.println();
         writer.flush();
 
