@@ -34,8 +34,6 @@ import javax.naming.Context;
  * <code>Jms102bSupport</code> is a template class to provide an absstraction
  * to to the Jms 1.0.2b api specification.
  *
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class Jms102bSupport extends Jms11Support
