@@ -10,15 +10,13 @@
 
 package org.mule.providers.vm;
 
-import java.util.Iterator;
-
 import org.mule.MuleManager;
 import org.mule.config.QueueProfile;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.AbstractConnector;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.MessagingException;
@@ -37,11 +35,13 @@ import org.mule.util.ClassUtils;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueueSession;
 
+import java.util.Iterator;
+
 /**
  * <code>VMConnector</code> is a simple endpoint wrapper to allow a Mule component
  * to be accessed from an endpoint
  */
-public class VMConnector extends AbstractServiceEnabledConnector
+public class VMConnector extends AbstractConnector
 {
     private boolean queueEvents = false;
     private QueueProfile queueProfile;
@@ -55,7 +55,6 @@ public class VMConnector extends AbstractServiceEnabledConnector
      */
     protected void doInitialise() throws InitialisationException
     {
-        super.doInitialise();
         if (queueEvents)
         {
             if (queueProfile == null)

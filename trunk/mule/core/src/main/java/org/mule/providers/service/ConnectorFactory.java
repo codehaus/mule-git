@@ -15,7 +15,7 @@ import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.AbstractConnector;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -46,8 +46,6 @@ import org.apache.commons.logging.LogFactory;
  * the endpoint if a connector for the endpoint has not already been configured with
  * the Mule Manager.
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class ConnectorFactory
@@ -176,9 +174,9 @@ public class ConnectorFactory
         {
             // Get connector specific overrides to set on the descriptor
             Properties overrides = new Properties();
-            if (cnn instanceof AbstractServiceEnabledConnector)
+            if (cnn instanceof AbstractConnector)
             {
-                Map so = ((AbstractServiceEnabledConnector)cnn).getServiceOverrides();
+                Map so = ((AbstractConnector)cnn).getServiceOverrides();
                 if (so != null)
                 {
                     overrides.putAll(so);
@@ -250,9 +248,9 @@ public class ConnectorFactory
                 {
                     connector = (UMOConnector)ClassUtils.loadClass(csd.getConnector(), ConnectorFactory.class)
                         .newInstance();
-                    if (connector instanceof AbstractServiceEnabledConnector)
+                    if (connector instanceof AbstractConnector)
                     {
-                        ((AbstractServiceEnabledConnector)connector).initialiseFromUrl(url);
+                        ((AbstractConnector)connector).initialiseFromUrl(url);
                     }
                 }
                 else

@@ -44,24 +44,10 @@ import org.apache.commons.logging.LogFactory;
  * <code>ConnectorServiceDescriptor</code> describes the necessery information for
  * creating a connector from a service descriptor. A service descriptor should be
  * located at META-INF/services/org/mule/providers/<protocol> where protocol is the
- * protocol of the connector to be created The service descriptor is on the form ok
- * key value pairs and supports the following properties <b>connector</b>=org.mule.umo.providers.AbstractServiceEnabledConnector -
- * The connector class <b>conector.factory</b>=org.mule.util.ObjectFactory - A
- * connector factory class to use, this is used instead of the 'connector' property
- * if set <b>dispatcher.factory</b>=org.mule.umo.providers.UMOMessageDispatcherFactory -
- * tHe dispatcher factory class to use <b>message.adapter</b>=org.mule.umo.providers.UMOMessageAdapter -
- * The message adater class to use <b>message.receiver</b>=org.mule.umo.providers.UMOMessageReceiver -
- * The message receiver class to use <b>service.error</b>= This should only be set
- * if the connector described cannot be created directly from this descriptor. In the
- * case of Jms this would be set as the JmsConnector also needs Jndi information.
- * <b>inbound.transformer</b>=org.mule.umo.UMOTransformer - The default inbound
- * transformer to use by endpoints if no other is set <b>outbound.transformer</b>=org.mule.umo.UMOTransformer -
- * The default outbound transformer to use by endpoints if no other is set Any other
- * properties set in the descriptor are made available using the getParams() method
- * on this discriptor.
+ * protocol of the connector to be created The service descriptor is in the form of
+ * string key value pairs and supports a number of properties, descriptions of which
+ * can be found here: http://www.muledocs.org/Connector+Service+Descriptors.
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class ConnectorServiceDescriptor

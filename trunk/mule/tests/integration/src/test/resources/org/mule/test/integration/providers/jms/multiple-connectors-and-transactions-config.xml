@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="http_test" version="1.0">
+
+
+    <!--Connectors Used-->
+
+
+    <connector name="connector1" className="org.mule.providers.jms.JmsConnector">
+        <properties>
+            <property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+            <property name="jndiInitialFactory" value="org.activemq.jndi.ActiveMQInitialContextFactory"/>
+            <property name="jndiProviderUrl" value="tcp://localhost:61616"/>
+            <property name="specification" value="1.1"/>
+            <property name="jndiDestinations" value="false"/>
+            <property name="maxRedelivery" value="2"/>
+        </properties>
+        <threading-profile maxThreadsActive="2" maxThreadsIdle="2" threadTTL="60000" poolExhaustedAction="WAIT"/>
+        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+            <properties>
+                <property name="retryCount" value="4"/>
+                <property name="frequency" value="10000"/>
+                <property name="doThreading" value="false"/>
+            </properties>
+        </connection-strategy>
+    </connector>
+
+
+    <connector name="connector2" className="org.mule.providers.jms.JmsConnector">
+        <properties>
+            <property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+            <property name="jndiInitialFactory" value="org.activemq.jndi.ActiveMQInitialContextFactory"/>
+            <property name="jndiProviderUrl" value="tcp://localhost:61616"/>
+            <property name="specification" value="1.1"/>
+            <property name="jndiDestinations" value="false"/>
+            <property name="maxRedelivery" value="2"/>
+        </properties>
+        <threading-profile maxThreadsActive="5" maxThreadsIdle="5" threadTTL="60000" poolExhaustedAction="WAIT"/>
+        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+            <properties>
+                <property name="retryCount" value="4"/>
+                <property name="frequency" value="10000"/>
+                <property name="doThreading" value="false"/>
+            </properties>
+        </connection-strategy>
+    </connector>
+
+    <!-- Endpoints -->
+    <endpoint-identifiers>
+        <endpoint-identifier name="FROM.QUEUE.ONE" value="jms://TEST.FROM.QUEUE.ONE?connector=connector1"/>
+        <endpoint-identifier name="TO.QUEUE.ONE" value="jms://TEST.FROM.QUEUE.ONE?connector=connector1"/>
+
+        <endpoint-identifier name="FROM.QUEUE.TWO" value="jms://TEST.FROM.QUEUE.TWO?connector=connector2"/>
+        <endpoint-identifier name="TO.QUEUE.TWO" value="jms://TEST.FROM.QUEUE.TWO?connector=connector2"/>
+    </endpoint-identifiers>
+
+</mule-configuration>

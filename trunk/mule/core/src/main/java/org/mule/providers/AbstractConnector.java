@@ -20,7 +20,11 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
+import org.mule.providers.service.ConnectorFactory;
+import org.mule.providers.service.ConnectorServiceDescriptor;
+import org.mule.providers.service.ConnectorServiceException;
 import org.mule.routing.filters.WildcardFilter;
+import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -37,11 +41,15 @@ import org.mule.umo.provider.ConnectorException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOConnectable;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
+import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ObjectNameHelper;
+import org.mule.util.PropertiesUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
 import org.mule.util.concurrent.WaitableBoolean;
 
@@ -54,11 +62,15 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.beans.ExceptionListener;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkListener;
@@ -227,6 +239,16 @@ public abstract class AbstractConnector
     protected ScheduledExecutorService scheduler = null;
 
     /**
+    * Holds the service configuration for this connector
+     */
+    protected ConnectorServiceDescriptor serviceDescriptor;
+
+    /**
+     * The map of service overrides that can e used to extend the capabilities of the connector
+     */
+    protected Properties serviceOverrides;
+
+    /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
@@ -306,6 +328,8 @@ public abstract class AbstractConnector
         {
             logger.info("Initialising " + getClass().getName());
         }
+        //Initialise the structure of this connector
+        initFromServiceDescriptor();
 
         // we clear out any registered dispatchers and receivers without resetting
         // the actual containers since this it might actually be a re-initialise
@@ -803,9 +827,6 @@ public abstract class AbstractConnector
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
-
-    public abstract UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint)
-        throws Exception;
 
     public void destroyReceiver(UMOMessageReceiver receiver, UMOEndpoint endpoint) throws Exception
     {
@@ -1442,6 +1463,195 @@ public abstract class AbstractConnector
         {
             this.returnDispatcher(endpoint, dispatcher);
         }
+    }
+
+
+    //-------- Methods from the remove AbstractServiceEnabled Connector
+
+    /**
+     * When this connector is created via the {@link org.mule.providers.service.ConnectorFactory} the endpoint used to determine the connector
+     * type is passed to this method so that any properties set on the endpoint that can be used to initialise
+     * the connector are made available.
+     * @param endpointUri the {@link UMOEndpointURI} use to create this connector
+     * @throws InitialisationException If there are any problems with the configuration set on the Endpoint or if another
+     * exception is thrown it is wrapped in an InitialisationException.
+     */
+    public void initialiseFromUrl(UMOEndpointURI endpointUri) throws InitialisationException
+    {
+        if (!supportsProtocol(endpointUri.getFullScheme()))
+        {
+            throw new InitialisationException(new Message(Messages.SCHEME_X_NOT_COMPATIBLE_WITH_CONNECTOR_X,
+                endpointUri.getFullScheme(), getClass().getName()), this);
+        }
+        Properties props = new Properties();
+        props.putAll(endpointUri.getParams());
+        // auto set username and password
+        if (endpointUri.getUserInfo() != null)
+        {
+            props.setProperty("username", endpointUri.getUsername());
+            String passwd = endpointUri.getPassword();
+            if (passwd != null)
+            {
+                props.setProperty("password", passwd);
+            }
+        }
+        String host = endpointUri.getHost();
+        if (host != null)
+        {
+            props.setProperty("hostname", host);
+            props.setProperty("host", host);
+        }
+        if (endpointUri.getPort() > -1)
+        {
+            props.setProperty("port", String.valueOf(endpointUri.getPort()));
+        }
+
+        org.mule.util.BeanUtils.populateWithoutFail(this, props, true);
+
+        setName(ObjectNameHelper.getConnectorName(this));
+    }
+
+    /**
+     * Initialises this connector from its {@link ConnectorServiceDescriptor} This will be called before the
+     * {@link #doInitialise()} method is called.
+     * @throws InitialisationException InitialisationException If there are any problems with the configuration or if another
+     * exception is thrown it is wrapped in an InitialisationException.
+     */
+    protected synchronized void initFromServiceDescriptor() throws InitialisationException
+    {
+        try
+        {
+            serviceDescriptor = ConnectorFactory.getServiceDescriptor(getProtocol().toLowerCase(),
+                serviceOverrides);
+
+            if (serviceDescriptor.getDispatcherFactory() != null)
+            {
+                logger.debug("Loading DispatcherFactory: " + serviceDescriptor.getDispatcherFactory());
+                this.setDispatcherFactory(serviceDescriptor.createDispatcherFactory());
+            }
+
+            defaultInboundTransformer = serviceDescriptor.createInboundTransformer();
+            defaultOutboundTransformer = serviceDescriptor.createOutboundTransformer();
+            defaultResponseTransformer = serviceDescriptor.createResponseTransformer();
+
+            sessionHandler = serviceDescriptor.createSessionHandler();
+
+            // Set any manager default properties for the connector. These are set on
+            // the Manager with a protocol e.g. jms.specification=1.1
+            // This provides a really convenient way to set properties on an object
+            // from unit tests
+            Map props = new HashMap();
+            PropertiesUtils.getPropertiesWithPrefix(MuleManager.getInstance().getProperties(),
+                getProtocol().toLowerCase(), props);
+            if (props.size() > 0)
+            {
+                props = PropertiesUtils.removeNamespaces(props);
+                org.mule.util.BeanUtils.populateWithoutFail(this, props, true);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new InitialisationException(e, this);
+        }
+    }
+
+    /**
+     * Get the {@link ConnectorServiceDescriptor} for this connector. This will be null if the connector
+     * was created by the developer. To create a connector the proper way the developer should use the
+     * {@link ConnectorFactory} and pass in an endpoint.
+     *
+     * @return the {@link ConnectorServiceDescriptor} for this connector
+     */
+    protected ConnectorServiceDescriptor getServiceDescriptor()
+    {
+        if (serviceDescriptor == null)
+        {
+            throw new IllegalStateException("This connector has not yet been initialised: " + name);
+        }
+        return serviceDescriptor;
+    }
+
+    /**
+     * Create a Message receiver for this connector
+     * @param component the component that will receive events from this receiver, the listener
+     * @param endpoint the endpoint that defies this inbound communication
+     * @return an instance of the message receiver defined in this connectors' {@link org.mule.providers.service.ConnectorServiceDescriptor}
+     * initialised using the component and endpoint.
+     * @throws Exception if there is a problem creating the receiver. This exception really depends on the underlying
+     * transport, thus any exception could be thrown
+     */
+    protected UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
+    {
+        return getServiceDescriptor().createMessageReceiver(this, component, endpoint);
+    }
+
+    /**
+     * Gets a <code>UMOMessageAdapter</code> for the endpoint for the given message
+     * (data)
+     *
+     * @param message the data with which to initialise the
+     *            <code>UMOMessageAdapter</code>
+     * @return the <code>UMOMessageAdapter</code> for the endpoint
+     * @throws org.mule.umo.MessagingException if the message parameter is not
+     *             supported
+     * @see org.mule.umo.provider.UMOMessageAdapter
+     */
+    public UMOMessageAdapter getMessageAdapter(Object message) throws MessagingException
+    {
+        try
+        {
+            return serviceDescriptor.createMessageAdapter(message);
+        }
+        catch (ConnectorServiceException e)
+        {
+            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Message Adapter"),
+                message, e);
+        }
+    }
+
+    /**
+     * Gets a {@link UMOStreamMessageAdapter} from the connector for the given
+     * message. This Adapter will correctly handle data streaming for this type of
+     * connector
+     *
+     * @param in the input stream to read the data from
+     * @param out the outputStream to write data to. This can be null.
+     * @return the {@link UMOStreamMessageAdapter} for the endpoint
+     * @throws MessagingException if the message parameter is not supported
+     * @see UMOStreamMessageAdapter
+     */
+    public UMOStreamMessageAdapter getStreamMessageAdapter(InputStream in, OutputStream out)
+        throws MessagingException
+    {
+        try
+        {
+            return serviceDescriptor.createStreamMessageAdapter(in, out);
+        }
+        catch (ConnectorServiceException e)
+        {
+            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Stream Message Adapter"),
+                in, e);
+        }
+    }
+
+    /**
+     * A map of fully qualified class names that should override those in the connectors' service descriptor
+     * This map will be null if there are no overrides
+     * @return a map of override values or null
+     */
+    public Map getServiceOverrides()
+    {
+        return serviceOverrides;
+    }
+
+    /**
+     * Set the Service overrides on this connector.
+     * @param serviceOverrides the override values to use
+     */
+    public void setServiceOverrides(Map serviceOverrides)
+    {
+        this.serviceOverrides = new Properties();
+        this.serviceOverrides.putAll(serviceOverrides);
     }
 
 }
