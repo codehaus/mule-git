@@ -20,9 +20,9 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
-import org.mule.providers.service.ConnectorFactory;
-import org.mule.providers.service.ConnectorServiceDescriptor;
-import org.mule.providers.service.ConnectorServiceException;
+import org.mule.providers.service.TransportFactory;
+import org.mule.providers.service.TransportServiceDescriptor;
+import org.mule.providers.service.TransportServiceException;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
@@ -241,7 +241,7 @@ public abstract class AbstractConnector
     /**
     * Holds the service configuration for this connector
      */
-    protected ConnectorServiceDescriptor serviceDescriptor;
+    protected TransportServiceDescriptor serviceDescriptor;
 
     /**
      * The map of service overrides that can e used to extend the capabilities of the connector
@@ -1469,7 +1469,7 @@ public abstract class AbstractConnector
     //-------- Methods from the remove AbstractServiceEnabled Connector
 
     /**
-     * When this connector is created via the {@link org.mule.providers.service.ConnectorFactory} the endpoint used to determine the connector
+     * When this connector is created via the {@link org.mule.providers.service.TransportFactory} the endpoint used to determine the connector
      * type is passed to this method so that any properties set on the endpoint that can be used to initialise
      * the connector are made available.
      * @param endpointUri the {@link UMOEndpointURI} use to create this connector
@@ -1512,7 +1512,7 @@ public abstract class AbstractConnector
     }
 
     /**
-     * Initialises this connector from its {@link ConnectorServiceDescriptor} This will be called before the
+     * Initialises this connector from its {@link TransportServiceDescriptor} This will be called before the
      * {@link #doInitialise()} method is called.
      * @throws InitialisationException InitialisationException If there are any problems with the configuration or if another
      * exception is thrown it is wrapped in an InitialisationException.
@@ -1521,7 +1521,7 @@ public abstract class AbstractConnector
     {
         try
         {
-            serviceDescriptor = ConnectorFactory.getServiceDescriptor(getProtocol().toLowerCase(),
+            serviceDescriptor = TransportFactory.getServiceDescriptor(getProtocol().toLowerCase(),
                 serviceOverrides);
 
             if (serviceDescriptor.getDispatcherFactory() != null)
@@ -1556,13 +1556,13 @@ public abstract class AbstractConnector
     }
 
     /**
-     * Get the {@link ConnectorServiceDescriptor} for this connector. This will be null if the connector
+     * Get the {@link TransportServiceDescriptor} for this connector. This will be null if the connector
      * was created by the developer. To create a connector the proper way the developer should use the
-     * {@link ConnectorFactory} and pass in an endpoint.
+     * {@link TransportFactory} and pass in an endpoint.
      *
-     * @return the {@link ConnectorServiceDescriptor} for this connector
+     * @return the {@link TransportServiceDescriptor} for this connector
      */
-    protected ConnectorServiceDescriptor getServiceDescriptor()
+    protected TransportServiceDescriptor getServiceDescriptor()
     {
         if (serviceDescriptor == null)
         {
@@ -1575,7 +1575,7 @@ public abstract class AbstractConnector
      * Create a Message receiver for this connector
      * @param component the component that will receive events from this receiver, the listener
      * @param endpoint the endpoint that defies this inbound communication
-     * @return an instance of the message receiver defined in this connectors' {@link org.mule.providers.service.ConnectorServiceDescriptor}
+     * @return an instance of the message receiver defined in this connectors' {@link org.mule.providers.service.TransportServiceDescriptor}
      * initialised using the component and endpoint.
      * @throws Exception if there is a problem creating the receiver. This exception really depends on the underlying
      * transport, thus any exception could be thrown
@@ -1602,7 +1602,7 @@ public abstract class AbstractConnector
         {
             return serviceDescriptor.createMessageAdapter(message);
         }
-        catch (ConnectorServiceException e)
+        catch (TransportServiceException e)
         {
             throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Message Adapter"),
                 message, e);
@@ -1627,7 +1627,7 @@ public abstract class AbstractConnector
         {
             return serviceDescriptor.createStreamMessageAdapter(in, out);
         }
-        catch (ConnectorServiceException e)
+        catch (TransportServiceException e)
         {
             throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Stream Message Adapter"),
                 in, e);

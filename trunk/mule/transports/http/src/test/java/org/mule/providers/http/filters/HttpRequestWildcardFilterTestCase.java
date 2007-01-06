@@ -10,6 +10,26 @@
 
 package org.mule.providers.http.filters;
 
+import org.mule.MuleManager;
+import org.mule.components.simple.EchoComponent;
+import org.mule.config.PoolingProfile;
+import org.mule.impl.DefaultExceptionStrategy;
+import org.mule.impl.MuleDescriptor;
+import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.impl.model.seda.SedaModel;
+import org.mule.providers.http.HttpConnector;
+import org.mule.providers.service.TransportFactory;
+import org.mule.routing.filters.WildcardFilter;
+import org.mule.routing.filters.logic.NotFilter;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.EndpointException;
+import org.mule.umo.endpoint.MalformedEndpointException;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.manager.UMOManager;
+import org.mule.umo.provider.UMOConnector;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,25 +41,6 @@ import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.mule.MuleManager;
-import org.mule.components.simple.EchoComponent;
-import org.mule.config.PoolingProfile;
-import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.MuleDescriptor;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.model.seda.SedaModel;
-import org.mule.providers.http.HttpConnector;
-import org.mule.providers.service.ConnectorFactory;
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.routing.filters.logic.NotFilter;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.MalformedEndpointException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.manager.UMOManager;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * @author Jack Hung
@@ -89,7 +90,7 @@ public class HttpRequestWildcardFilterTestCase extends AbstractMuleTestCase
 
     private UMOConnector buildConnector(String urlStr) throws UMOException
     {
-        HttpConnector connector = (HttpConnector)ConnectorFactory.createConnector(new MuleEndpointURI(urlStr));
+        HttpConnector connector = (HttpConnector) TransportFactory.createConnector(new MuleEndpointURI(urlStr));
         connector.getDispatcherThreadingProfile().setDoThreading(false);
         MuleManager.getInstance().registerConnector(connector);
         return connector;

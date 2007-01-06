@@ -19,7 +19,7 @@ import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.internal.notifications.ModelNotificationListener;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.http.servlet.ServletConnector;
-import org.mule.providers.service.ConnectorFactory;
+import org.mule.providers.service.TransportFactory;
 import org.mule.providers.soap.MethodFixInterceptor;
 import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
 import org.mule.providers.soap.axis.extensions.MuleTransport;
@@ -645,7 +645,7 @@ public class AxisConnector extends AbstractConnector implements ModelNotificatio
                     for (Iterator iterator = servletServices.iterator(); iterator.hasNext();)
                     {
                         SOAPService service = (SOAPService)iterator.next();
-                        ServletConnector servletConnector = (ServletConnector)ConnectorFactory.getConnectorByProtocol("servlet");
+                        ServletConnector servletConnector = (ServletConnector) TransportFactory.getConnectorByProtocol("servlet");
                         String url = servletConnector.getServletUrl();
                         if (url != null)
                         {
