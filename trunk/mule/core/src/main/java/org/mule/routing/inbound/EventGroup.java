@@ -12,11 +12,12 @@ package org.mule.routing.inbound;
 
 import org.mule.umo.UMOEvent;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.collections.IteratorUtils;
 
 /**
  * <code>EventGroup</code> is a holder over events grouped by a common group Id.
@@ -33,6 +34,7 @@ public class EventGroup implements Serializable
     private static final UMOEvent[] EMPTY_EVENTS_ARRAY = new UMOEvent[0];
 
     private final Object groupId;
+    // @GuardedBy("itself")
     private final List events;
     private final long created;
     private final int expectedSize;
@@ -46,7 +48,7 @@ public class EventGroup implements Serializable
     {
         super();
         this.created = System.currentTimeMillis();
-        this.events = new CopyOnWriteArrayList();
+        this.events = new ArrayList(expectedSize > 0 ? expectedSize : 10);
         this.expectedSize = expectedSize;
         this.groupId = groupId;
     }
@@ -58,22 +60,31 @@ public class EventGroup implements Serializable
 
     public Iterator iterator()
     {
-        return events.iterator();
+        return IteratorUtils.arrayIterator(this.toArray());
     }
 
     public UMOEvent[] toArray()
     {
-        return (UMOEvent[])events.toArray(EMPTY_EVENTS_ARRAY);
+        synchronized (events)
+        {
+            return (UMOEvent[])events.toArray(EMPTY_EVENTS_ARRAY);
+        }
     }
 
     public void addEvent(UMOEvent event)
     {
-        events.add(event);
+        synchronized (events)
+        {
+            events.add(event);
+        }
     }
 
     public void removeEvent(UMOEvent event)
     {
-        events.remove(event);
+        synchronized (events)
+        {
+            events.remove(event);
+        }
     }
 
     public long getCreated()
@@ -83,12 +94,18 @@ public class EventGroup implements Serializable
 
     public int size()
     {
-        return events.size();
+        synchronized (events)
+        {
+            return events.size();
+        }
     }
 
     public void clear()
     {
-        events.clear();
+        synchronized (events)
+        {
+            events.clear();
+        }
     }
 
     public int expectedSize()
@@ -102,10 +119,6 @@ public class EventGroup implements Serializable
         buf.append("Event Group Id=").append(groupId);
         buf.append(", expected size=").append(expectedSize);
 
-        // COWArrayList synchronizes on itself so we can use that to prevent changes
-        // to the group while we iterate over it. This is only necessary to prevent
-        // output with size=1 and then printing 2 or more events because someone
-        // snuck in behind our back..
         synchronized (events)
         {
             int currentSize = events.size();
@@ -126,8 +139,9 @@ public class EventGroup implements Serializable
                 }
                 buf.append(']');
             }
-            return buf.toString();
         }
+
+        return buf.toString();
     }
 
 }
