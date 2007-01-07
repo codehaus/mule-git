@@ -31,17 +31,11 @@ import org.apache.commons.logging.LogFactory;
  * on the router. If the event does not match the filter a
  * <code>UMOROutnerCatchAllStrategy</code> can be set on this router to route
  * unwanted events. If a catch strategy is not set the router just returns null.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class SelectiveConsumer implements UMOInboundRouter
 {
-    /**
-     * logger used by this class
-     */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected transient final Log logger = LogFactory.getLog(getClass());
 
     private UMOFilter filter;
     private boolean transformFirst = true;
