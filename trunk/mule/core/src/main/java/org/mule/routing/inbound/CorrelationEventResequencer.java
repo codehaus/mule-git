@@ -33,11 +33,19 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
     protected boolean shouldResequence(EventGroup events)
     {
         UMOEvent event = (UMOEvent)events.iterator().next();
+
+        if (event == null)
+        {
+            // nothing to resequence
+            return false;
+        }
+
         int size = event.getMessage().getCorrelationGroupSize();
         if (size == -1)
         {
             logger.warn("Correlation Group Size not set, but CorrelationResequencer is being used.  This can cause messages to be held indefinitely");
         }
+
         return size == events.size();
     }
 
