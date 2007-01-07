@@ -13,10 +13,11 @@ package org.mule.routing.inbound;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <code>AbstractEventResequencer</code> is used to receive a set of events,
@@ -28,7 +29,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     protected static final String NO_CORRELATION_ID = "no-id";
 
     private volatile Comparator comparator;
-    private final Map eventGroups = new HashMap();
+    private final ConcurrentMap eventGroups = new ConcurrentHashMap();
 
     public AbstractEventResequencer()
     {
@@ -44,44 +45,57 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     {
         if (isMatch(event))
         {
-            EventGroup eg = addEvent(event);
-            if (shouldResequence(eg))
+            String cId = event.getMessage().getCorrelationId();
+
+            if (cId == null)
             {
-                removeGroup(eg.getGroupId());
-                return resequenceEvents(eg);
+                cId = NO_CORRELATION_ID;
+            }
+
+            // first check for an existing group
+            EventGroup eg = (EventGroup)eventGroups.get(cId);
+
+            // does the EventGroup exist?
+            if (eg == null)
+            {
+                // ..apprently not, so create a new one
+                eg = new EventGroup(cId);
+
+                // now add the new group to our collection, but also make sure no
+                // other thread outran us
+                EventGroup previous = (EventGroup)eventGroups.putIfAbsent(eg.getGroupId(), eg);
+                if (previous != null)
+                {
+                    // apparently someone was faster, so swizzle the group ptr
+                    eg = previous;
+                }
+            }
+
+            /*
+             * The following block needs to synchonize on the EventGroup because it
+             * creates a dependency on the flow in shouldResequence/resequenceEvents.
+             * Without this multiple threads might add events "at once", creating a
+             * situation where a Sequencer that expects a group of exactly n events
+             * gets to evaluate one that already contains n+1 (or more), "missing" or
+             * "skipping" the superfluous ones by accident. We *could* make it part
+             * of the API that EventGroups are allowed to "overflow" this way, OR
+             * make sure that EventGroup never contains more events than the
+             * expectedSize - which raises the question what it means when more
+             * events than expected are arriving..
+             */
+            synchronized (eg)
+            {
+                // add the incoming event to whatever group we have
+                eg.addEvent(event);
+
+                if (shouldResequenceEvents(eg))
+                {
+                    eventGroups.remove(eg.getGroupId());
+                    return resequenceEvents(eg);
+                }
             }
         }
         return null;
-    }
-
-    protected EventGroup addEvent(UMOEvent event)
-    {
-        String cId = event.getMessage().getCorrelationId();
-
-        if (cId == null)
-        {
-            cId = NO_CORRELATION_ID;
-        }
-
-        // TODO HH: not atomic
-        EventGroup eg = (EventGroup)eventGroups.get(cId);
-        if (eg == null)
-        {
-            eg = new EventGroup(cId);
-            eg.addEvent(event);
-            eventGroups.put(eg.getGroupId(), eg);
-        }
-        else
-        {
-            eg.addEvent(event);
-        }
-
-        return eg;
-    }
-
-    protected void removeGroup(Object id)
-    {
-        eventGroups.remove(id);
     }
 
     protected UMOEvent[] resequenceEvents(EventGroup events)
@@ -100,6 +114,6 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
         return result;
     }
 
-    protected abstract boolean shouldResequence(EventGroup events);
+    protected abstract boolean shouldResequenceEvents(EventGroup events);
 
 }
