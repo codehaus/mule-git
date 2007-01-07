@@ -34,7 +34,7 @@ import org.mule.util.StringMessageUtils;
  */
 public class JmsReplyToHandler extends DefaultReplyToHandler
 {
-    private JmsConnector connector;
+    private final JmsConnector connector;
 
     public JmsReplyToHandler(JmsConnector connector, UMOTransformer transformer)
     {
