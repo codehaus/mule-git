@@ -30,6 +30,8 @@ public class EventGroup implements Serializable
      */
     private static final long serialVersionUID = -7337182983687406403L;
 
+    private static final UMOEvent[] EMPTY_EVENTS_ARRAY = new UMOEvent[0];
+
     private final Object groupId;
     private final List events;
     private final long created;
@@ -57,6 +59,11 @@ public class EventGroup implements Serializable
     public Iterator iterator()
     {
         return events.iterator();
+    }
+
+    public UMOEvent[] toArray()
+    {
+        return (UMOEvent[])events.toArray(EMPTY_EVENTS_ARRAY);
     }
 
     public void addEvent(UMOEvent event)
