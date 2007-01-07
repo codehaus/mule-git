@@ -65,16 +65,14 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 /**
  * <code>JmxAgent</code> registers MUle Jmx management beans with an MBean
  * server.
- * 
- * @version $Revision$
  */
 public class JmxAgent implements UMOAgent
 {
 
     /**
-     * Logger used by this class.
+     * Logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(JmxAgent.class);
+    protected static final Log logger = LogFactory.getLog(JmxAgent.class);
 
     /**
      * Should MBeanServer be discovered.
