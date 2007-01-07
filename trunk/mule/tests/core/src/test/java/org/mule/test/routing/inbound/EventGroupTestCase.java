@@ -10,8 +10,6 @@
 
 package org.mule.test.routing.inbound;
 
-import java.util.Iterator;
-
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.routing.inbound.EventGroup;
@@ -19,6 +17,11 @@ import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.UMOEvent;
 import org.mule.util.UUID;
+
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.apache.commons.collections.IteratorUtils;
 
 public class EventGroupTestCase extends AbstractMuleTestCase
 {
@@ -43,6 +46,17 @@ public class EventGroupTestCase extends AbstractMuleTestCase
 
         // the added events should be in there though
         assertEquals(4, eg.size());
+    }
+
+    public void testToArray() throws Exception
+    {
+        EventGroup eg = new EventGroup(UUID.getUUID());
+        eg.addEvent(MuleTestUtils.getTestEvent("foo1"));
+        eg.addEvent(MuleTestUtils.getTestEvent("foo2"));
+
+        Object[] array1 = IteratorUtils.toArray(eg.iterator());
+        UMOEvent[] array2 = eg.toArray();
+        assertTrue(Arrays.equals(array1, array2));
     }
 
     public void testToString() throws Exception
