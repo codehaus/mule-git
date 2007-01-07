@@ -46,7 +46,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
                                       UMOComponent component,
                                       final UMOEndpoint endpoint) throws InitialisationException
     {
-        this(connector, component, endpoint, new Long(1000));
+        this(connector, component, endpoint, AbstractPollingMessageReceiver.DEFAULT_POLL_FREQUENCY);
 
         long pollingFrequency = MapUtils.getLongValue(endpoint.getProperties(), "pollingFrequency", -1);
         if (pollingFrequency > 0)
@@ -58,17 +58,18 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     public PollingHttpMessageReceiver(UMOConnector connector,
                                       UMOComponent component,
                                       final UMOEndpoint endpoint,
-                                      Long frequency) throws InitialisationException
+                                      long frequency) throws InitialisationException
     {
         super(connector, component, endpoint, frequency);
+
         try
         {
             pollUrl = new URL(endpoint.getEndpointURI().getAddress());
         }
         catch (MalformedURLException e)
         {
-            throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X,
-                endpoint.getEndpointURI().getAddress(), "uri"), e, this);
+            throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X, endpoint
+                .getEndpointURI().getAddress(), "uri"), e, this);
         }
     }
 
@@ -148,7 +149,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         {
             Map.Entry msgHeader = (Map.Entry)it.next();
             Object key = msgHeader.getKey();
-            Object value = msgHeader.getValue(); 
+            Object value = msgHeader.getValue();
             if (key != null && value != null)
             {
                 respHeaders.put(key, ((List)value).get(0));

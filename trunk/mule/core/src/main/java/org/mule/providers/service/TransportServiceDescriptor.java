@@ -382,10 +382,10 @@ public class TransportServiceDescriptor
         return createMessageReceiver(connector, component, endpoint, null);
     }
 
-    public UMOMessageReceiver
-
-    createMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint, Object[] args)
-        throws UMOException
+    public UMOMessageReceiver createMessageReceiver(UMOConnector connector,
+                                                    UMOComponent component,
+                                                    UMOEndpoint endpoint,
+                                                    Object[] args) throws UMOException
     {
         String receiverClass = messageReceiver;
 
@@ -400,7 +400,8 @@ public class TransportServiceDescriptor
 
         if (receiverClass != null)
         {
-            Object[] newArgs = null;
+            Object[] newArgs;
+
             if (args != null && args.length != 0)
             {
                 newArgs = new Object[3 + args.length];
@@ -409,9 +410,11 @@ public class TransportServiceDescriptor
             {
                 newArgs = new Object[3];
             }
+
             newArgs[0] = connector;
             newArgs[1] = component;
             newArgs[2] = endpoint;
+
             if (args != null && args.length != 0)
             {
                 System.arraycopy(args, 0, newArgs, 3, newArgs.length - 3);
