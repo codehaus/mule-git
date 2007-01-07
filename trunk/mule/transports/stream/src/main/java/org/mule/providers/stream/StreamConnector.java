@@ -11,6 +11,7 @@
 package org.mule.providers.stream;
 
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
@@ -42,7 +43,7 @@ public abstract class StreamConnector extends AbstractConnector
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         return serviceDescriptor.createMessageReceiver(this, component, endpoint,
-            new Object[]{new Long(1000)});
+            new Object[]{new Long(AbstractPollingMessageReceiver.DEFAULT_POLL_FREQUENCY)});
     }
 
     /*
