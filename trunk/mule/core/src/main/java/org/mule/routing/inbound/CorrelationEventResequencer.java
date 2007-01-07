@@ -20,15 +20,14 @@ import java.util.Comparator;
  * router splits an event it assigns a correlation sequence to the individual message
  * parts so that another router such as the <i>CorrelationEventResequencer</i> can
  * receive the parts and reorder them or merge them.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class CorrelationEventResequencer extends AbstractEventResequencer
 {
+
     public CorrelationEventResequencer()
     {
-        setComparator(new CorrelationSequenceComparator());
+        super();
+        super.setComparator(CorrelationSequenceComparator.instance);
     }
 
     protected boolean shouldResequence(EventGroup events)
@@ -42,8 +41,10 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
         return size == events.size();
     }
 
-    private class CorrelationSequenceComparator implements Comparator
+    private static class CorrelationSequenceComparator implements Comparator
     {
+        public static final Comparator instance = new CorrelationSequenceComparator();
+
         public int compare(Object o1, Object o2)
         {
             int val1 = ((UMOEvent)o1).getMessage().getCorrelationSequence();
@@ -62,4 +63,5 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
             }
         }
     }
+
 }
