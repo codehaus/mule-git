@@ -46,7 +46,7 @@ public class VMConnector extends AbstractConnector
     private boolean queueEvents = false;
     private QueueProfile queueProfile;
     private Class adapterClass = null;
-    private int queueTimeout = 2000;
+    private int queueTimeout = 1000;
 
     /*
      * (non-Javadoc)
@@ -184,8 +184,7 @@ public class VMConnector extends AbstractConnector
             {
                 if (logger.isTraceEnabled())
                 {
-                    // logger.trace("Retrieving queue session from current
-                    // transaction");
+                    logger.trace("Retrieving queue session from current transaction");
                 }
                 return (QueueSession)tx.getResource(qm);
             }
@@ -193,7 +192,7 @@ public class VMConnector extends AbstractConnector
 
         if (logger.isTraceEnabled())
         {
-            // logger.trace("Retrieving new queue session from queue manager");
+            logger.trace("Retrieving new queue session from queue manager");
         }
 
         QueueSession session = qm.getQueueSession();
