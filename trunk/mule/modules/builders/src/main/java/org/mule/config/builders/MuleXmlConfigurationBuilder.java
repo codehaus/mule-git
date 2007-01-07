@@ -10,15 +10,6 @@
 
 package org.mule.config.builders;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.digester.AbstractObjectCreationFactory;
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.ObjectCreateRule;
-import org.apache.commons.digester.Rule;
-import org.apache.commons.digester.SetNextRule;
-import org.apache.commons.digester.SetPropertiesRule;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
@@ -79,7 +70,6 @@ import org.mule.util.ClassUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.queue.EventFilePersistenceStrategy;
-import org.xml.sax.Attributes;
 
 import java.beans.ExceptionListener;
 import java.io.InputStream;
@@ -91,6 +81,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.digester.AbstractObjectCreationFactory;
+import org.apache.commons.digester.Digester;
+import org.apache.commons.digester.ObjectCreateRule;
+import org.apache.commons.digester.Rule;
+import org.apache.commons.digester.SetNextRule;
+import org.apache.commons.digester.SetPropertiesRule;
+import org.xml.sax.Attributes;
+
 /**
  * <code>MuleXmlConfigurationBuilder</code> is a configuration parser that builds a
  * MuleManager instance based on a mule xml configration file defined in the
@@ -99,11 +98,6 @@ import java.util.Properties;
 public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
     implements ConfigurationBuilder
 {
-    /**
-     * logger used by this class
-     */
-    protected static Log logger = LogFactory.getLog(MuleXmlConfigurationBuilder.class);
-
     public static final String DEFAULT_ENTRY_POINT_RESOLVER = DynamicEntryPointResolver.class.getName();
     public static final String DEFAULT_LIFECYCLE_ADAPTER = DefaultLifecycleAdapter.class.getName();
     public static final String DEFAULT_ENDPOINT = MuleEndpoint.class.getName();
@@ -139,8 +133,8 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
 
     protected UMOManager manager;
 
-    private List transformerReferences = new ArrayList();
-    private List endpointReferences = new ArrayList();
+    private final List transformerReferences = new ArrayList();
+    private final List endpointReferences = new ArrayList();
 
     public MuleXmlConfigurationBuilder() throws ConfigurationException
     {
