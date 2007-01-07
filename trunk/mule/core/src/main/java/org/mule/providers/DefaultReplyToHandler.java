@@ -42,7 +42,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(DefaultReplyToHandler.class);
+    protected static final Log logger = LogFactory.getLog(DefaultReplyToHandler.class);
 
     private volatile UMOTransformer transformer;
     private final Map endpointCache = new HashMap();

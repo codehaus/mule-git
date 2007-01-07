@@ -55,7 +55,7 @@ public class TransportFactory
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(TransportFactory.class);
+    protected static final Log logger = LogFactory.getLog(TransportFactory.class);
 
     public static final int GET_OR_CREATE_CONNECTOR = 0;
     public static final int ALWAYS_CREATE_CONNECTOR = 1;

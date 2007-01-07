@@ -55,7 +55,7 @@ public class TransportServiceDescriptor
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(TransportServiceDescriptor.class);
+    protected static final Log logger = LogFactory.getLog(TransportServiceDescriptor.class);
 
     private String protocol;
     private String serviceLocation;
