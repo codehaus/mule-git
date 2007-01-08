@@ -45,30 +45,16 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     {
         if (isMatch(event))
         {
-            String cId = event.getMessage().getCorrelationId();
+            // Retrieve or create the EventGroup for this event
+            EventGroup group = groupForEvent(event);
 
-            if (cId == null)
+            // Now add the new group to our collection, but also make sure no other
+            // thread outran us
+            EventGroup previousGroup = (EventGroup)eventGroups.putIfAbsent(group.getGroupId(), group);
+            if (previousGroup != null)
             {
-                cId = NO_CORRELATION_ID;
-            }
-
-            // first check for an existing group
-            EventGroup eg = (EventGroup)eventGroups.get(cId);
-
-            // does the EventGroup exist?
-            if (eg == null)
-            {
-                // ..apprently not, so create a new one
-                eg = new EventGroup(cId);
-
-                // now add the new group to our collection, but also make sure no
-                // other thread outran us
-                EventGroup previous = (EventGroup)eventGroups.putIfAbsent(eg.getGroupId(), eg);
-                if (previous != null)
-                {
-                    // apparently someone was faster, so swizzle the group ptr
-                    eg = previous;
-                }
+                // apparently someone was faster, so swizzle the group ptr
+                group = previousGroup;
             }
 
             /*
@@ -83,19 +69,41 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
              * expectedSize - which raises the question what it means when more
              * events than expected are arriving..
              */
-            synchronized (eg)
+            synchronized (group)
             {
                 // add the incoming event to whatever group we have
-                eg.addEvent(event);
+                group.addEvent(event);
 
-                if (shouldResequenceEvents(eg))
+                if (shouldResequenceEvents(group))
                 {
-                    eventGroups.remove(eg.getGroupId());
-                    return resequenceEvents(eg);
+                    eventGroups.remove(group.getGroupId());
+                    return resequenceEvents(group);
                 }
             }
         }
         return null;
+    }
+
+    protected EventGroup groupForEvent(UMOEvent event)
+    {
+        String cId = event.getMessage().getCorrelationId();
+
+        if (cId == null)
+        {
+            cId = NO_CORRELATION_ID;
+        }
+
+        // check for an existing group
+        EventGroup group = (EventGroup)eventGroups.get(cId);
+
+        // does the EventGroup exist?
+        if (group == null)
+        {
+            // ..apprently not, so create a new one
+            group = new EventGroup(cId);
+        }
+
+        return group;
     }
 
     protected UMOEvent[] resequenceEvents(EventGroup events)
