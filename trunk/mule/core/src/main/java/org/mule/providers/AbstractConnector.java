@@ -236,7 +236,7 @@ public abstract class AbstractConnector
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    protected ScheduledExecutorService scheduler = null;
+    private ScheduledExecutorService scheduler = null;
 
     /**
     * Holds the service configuration for this connector
@@ -1324,8 +1324,6 @@ public abstract class AbstractConnector
             ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(1, stf);
             stpe.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
             stpe.setKeepAliveTime(getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
-            // TODO HH: do we have unsafe publication here? The scheduler variable is protected and
-            // not volatile, no proper memory visibility
             scheduler = stpe;
         }
 
