@@ -667,7 +667,7 @@ public abstract class AbstractConnector
 
             if (logger.isDebugEnabled())
             {
-                logger.warn("Borrowed a dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+                logger.debug("Borrowed a dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
             }
 
             return dispatcher;
