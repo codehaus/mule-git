@@ -20,8 +20,6 @@ import org.mule.umo.routing.RoutingException;
  * be received for a single invocation the ResponseCorrelationaggregator should be
  * used.
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class SingleResponseRouter extends AbstractResponseAggregator
 {
