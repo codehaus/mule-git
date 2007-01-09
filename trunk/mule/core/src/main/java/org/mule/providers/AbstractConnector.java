@@ -660,14 +660,14 @@ public abstract class AbstractConnector
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug("borrowing dispatcher for endpoint: " + endpoint.getEndpointURI());
+                logger.debug("Borrowing a dispatcher for endpoint: " + endpoint.getEndpointURI());
             }
 
             UMOMessageDispatcher dispatcher = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
 
             if (logger.isDebugEnabled())
             {
-                logger.warn("borrowed dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+                logger.warn("Borrowed a dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
             }
 
             return dispatcher;
@@ -686,7 +686,7 @@ public abstract class AbstractConnector
             {
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
+                    logger.debug("Returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = " + dispatcher.toString());
                 }
     
                 dispatchers.returnObject(endpoint, dispatcher);
@@ -724,7 +724,7 @@ public abstract class AbstractConnector
             throw new ConnectorException(new Message(Messages.ENDPOINT_NULL_FOR_LISTENER), this);
         }
 
-        logger.info("registering listener: " + component.getDescriptor().getName() + " on endpointUri: "
+        logger.info("Registering listener: " + component.getDescriptor().getName() + " on endpointUri: "
                         + endpointUri.toString());
 
         UMOMessageReceiver receiver = this.getReceiver(component, endpoint);
@@ -777,7 +777,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("removing listener on endpointUri: " + endpointUri);
+            logger.info("Removing listener on endpointUri: " + endpointUri);
         }
 
         if (receivers != null && !receivers.isEmpty())
@@ -1324,6 +1324,8 @@ public abstract class AbstractConnector
             ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(1, stf);
             stpe.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
             stpe.setKeepAliveTime(getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
+            // TODO HH: do we have unsafe publication here? The scheduler variable is protected and
+            // not volatile, no proper memory visibility
             scheduler = stpe;
         }
 
@@ -1466,7 +1468,7 @@ public abstract class AbstractConnector
     }
 
 
-    //-------- Methods from the remove AbstractServiceEnabled Connector
+    //-------- Methods from the removed AbstractServiceEnabled Connector
 
     /**
      * When this connector is created via the {@link org.mule.providers.service.TransportFactory} the endpoint used to determine the connector
