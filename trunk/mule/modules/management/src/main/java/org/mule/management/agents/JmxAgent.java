@@ -137,7 +137,7 @@ public class JmxAgent implements UMOAgent
         if (initialized.get()) {
             return;
         }
-        if (!locateServer && !createServer) {
+        if (mBeanServer == null && !locateServer && !createServer) {
             throw new InitialisationException(new Message(Messages.JMX_CREATE_OR_LOCATE_SHOULD_BE_SET), this);
         }
         if (mBeanServer == null && locateServer) {
