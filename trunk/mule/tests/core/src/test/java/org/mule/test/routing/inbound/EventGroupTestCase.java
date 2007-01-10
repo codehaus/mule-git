@@ -104,6 +104,28 @@ public class EventGroupTestCase extends AbstractMuleTestCase
         EventGroup g2 = new EventGroup(uuid);
         EventGroup g3 = new EventGroup(UUID.getUUID());
 
+        // test comparison against null
+        try
+        {
+            g1.compareTo(null);
+            fail("expected NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // expected
+        }
+
+        // test comparison against incompatible object
+        try
+        {
+            g1.compareTo("foo");
+            fail("expected ClassCastException");
+        }
+        catch (ClassCastException cce)
+        {
+            // expected
+        }
+
         // these tests use the groupId
         assertEquals(0, g1.compareTo(g2));
         assertEquals(-1, g1.compareTo(g3));
