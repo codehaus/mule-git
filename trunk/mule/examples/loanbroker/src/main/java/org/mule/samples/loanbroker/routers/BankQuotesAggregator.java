@@ -76,11 +76,11 @@ public class BankQuotesAggregator extends CorrelationAggregator
     }
 
     /**
-     * Determines if the event group is ready to be aggregated; tthis is entirely up
+     * Determines if the event group is ready to be aggregated; this is entirely up
      * to the application. It could be determined by volume, last modified time or
      * some oher criteria based on the last event received.
      * 
-     * @param events
+     * @param events event group to examine
      * @return true if the events are ready to be aggregated
      */
     protected boolean shouldAggregateEvents(EventGroup events)
