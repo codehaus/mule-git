@@ -60,23 +60,18 @@ public class EventGroup implements Comparable, Serializable
     // TODO HH: document
     public int compareTo(Object o)
     {
-        if (o instanceof EventGroup)
+        EventGroup other = (EventGroup)o;
+        Object otherId = other.getGroupId();
+
+        if (groupId instanceof Comparable && otherId instanceof Comparable)
         {
-            EventGroup other = (EventGroup)o;
-            Object otherId = other.getGroupId();
-
-            if (groupId instanceof Comparable && otherId instanceof Comparable)
-            {
-                return ((Comparable)groupId).compareTo(otherId);
-            }
-            else
-            {
-                long diff = created - other.getCreated();
-                return (diff > 0 ? 1 : (diff < 0 ? -1 : 0));
-            }
+            return ((Comparable)groupId).compareTo(otherId);
         }
-
-        return 0;
+        else
+        {
+            long diff = created - other.getCreated();
+            return (diff > 0 ? 1 : (diff < 0 ? -1 : 0));
+        }
     }
 
     // @Override
