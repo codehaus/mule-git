@@ -11,6 +11,9 @@
 package org.mule.routing.inbound;
 
 import org.mule.umo.UMOEvent;
+import org.mule.util.ClassUtils;
+
+import edu.emory.mathcs.backport.java.util.concurrent.helpers.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,14 +27,14 @@ import org.apache.commons.collections.IteratorUtils;
  * This can be used by components such as routers to managed related events.
  */
 // @ThreadSafe
-public class EventGroup implements Serializable
+public class EventGroup implements Comparable, Serializable
 {
     /**
      * Serial version
      */
-    private static final long serialVersionUID = -7337182983687406403L;
+    private static final long serialVersionUID = 953739659615692697L;
 
-    private static final UMOEvent[] EMPTY_EVENTS_ARRAY = new UMOEvent[0];
+    public static final UMOEvent[] EMPTY_EVENTS_ARRAY = new UMOEvent[0];
 
     private final Object groupId;
     // @GuardedBy("itself")
@@ -47,10 +50,77 @@ public class EventGroup implements Serializable
     public EventGroup(Object groupId, int expectedSize)
     {
         super();
-        this.created = System.currentTimeMillis();
+        this.created = Utils.nanoTime();
         this.events = new ArrayList(expectedSize > 0 ? expectedSize : 10);
         this.expectedSize = expectedSize;
         this.groupId = groupId;
+    }
+
+    // @Override
+    // TODO HH: document
+    public int compareTo(Object o)
+    {
+        if (o instanceof EventGroup)
+        {
+            EventGroup other = (EventGroup)o;
+            Object otherId = other.getGroupId();
+
+            if (groupId instanceof Comparable && otherId instanceof Comparable)
+            {
+                return ((Comparable)groupId).compareTo(otherId);
+            }
+            else
+            {
+                long diff = created - other.getCreated();
+                return (diff > 0 ? 1 : (diff < 0 ? -1 : 0));
+            }
+        }
+
+        return 0;
+    }
+
+    // @Override
+    // TODO HH: document
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+
+        if (obj == null)
+        {
+            return false;
+        }
+
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+
+        final EventGroup other = (EventGroup)obj;
+        if (groupId == null)
+        {
+            if (other.groupId != null)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!groupId.equals(other.groupId))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // @Override
+    // TODO HH: document
+    public int hashCode()
+    {
+        return groupId.hashCode();
     }
 
     public Object getGroupId()
@@ -60,13 +130,27 @@ public class EventGroup implements Serializable
 
     public Iterator iterator()
     {
-        return IteratorUtils.arrayIterator(this.toArray());
+        synchronized (this)
+        {
+            if (events.isEmpty())
+            {
+                return IteratorUtils.emptyIterator();
+            }
+            else
+            {
+                return IteratorUtils.arrayIterator(this.toArray());
+            }
+        }
     }
 
     public UMOEvent[] toArray()
     {
         synchronized (events)
         {
+            if (events.isEmpty())
+            {
+                return EMPTY_EVENTS_ARRAY;
+            }
             return (UMOEvent[])events.toArray(EMPTY_EVENTS_ARRAY);
         }
     }
@@ -116,7 +200,9 @@ public class EventGroup implements Serializable
     public String toString()
     {
         StringBuffer buf = new StringBuffer(80);
-        buf.append("Event Group Id=").append(groupId);
+        buf.append(ClassUtils.getShortClassName(this.getClass()));
+        buf.append(" {");
+        buf.append("id=").append(groupId);
         buf.append(", expected size=").append(expectedSize);
 
         synchronized (events)
@@ -140,6 +226,7 @@ public class EventGroup implements Serializable
                 buf.append(']');
             }
         }
+        buf.append('}');
 
         return buf.toString();
     }
