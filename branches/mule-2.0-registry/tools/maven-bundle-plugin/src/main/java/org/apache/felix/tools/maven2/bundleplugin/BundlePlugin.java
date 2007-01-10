@@ -18,18 +18,34 @@
  */
 package org.apache.felix.tools.maven2.bundleplugin;
  
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.regex.*;
+import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.Builder;
+import aQute.lib.osgi.EmbeddedResource;
+import aQute.lib.osgi.FileResource;
+import aQute.lib.osgi.Jar;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.zip.ZipException;
- 
+
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.*;
-import org.apache.maven.plugin.*;
+import org.apache.maven.model.License;
+import org.apache.maven.model.Model;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
- 
-import aQute.lib.osgi.*;
  
 /**
  * 
@@ -78,7 +94,13 @@ public class BundlePlugin extends AbstractMojo {
   * @parameter
   */
  private Map    instructions = new HashMap();
- 
+
+ // Taken from the old Felix plug-in.
+ private static final java.util.regex.Pattern versionPattern =
+     java.util.regex.Pattern.compile("^(\\w+(\\.\\w+(\\.\\w+)?)?)-");
+ private static final String[] versionCompleters =
+     new String[] { ".0.0", ".0" };
+
  public void execute() throws MojoExecutionException {
   try {
    File jarFile = new File(buildDirectory, project.getBuild()
@@ -93,12 +115,7 @@ public class BundlePlugin extends AbstractMojo {
    if (!instructions.containsKey(Analyzer.PRIVATE_PACKAGE)) {
      properties.put(Analyzer.EXPORT_PACKAGE, bsn + ".*");
    }
-   String version = project.getVersion();
-   Pattern P_VERSION = Pattern.compile("([0-9]+(\\.[0-9])*)-(.*)");
-   Matcher m = P_VERSION.matcher(version);
-   if (m.matches()) {
-     version = m.group(1) + "." + m.group(3);
-   }
+   String version = fixBundleVersion(project.getVersion());
    properties.put(Analyzer.BUNDLE_VERSION, version);
    header(properties, Analyzer.BUNDLE_DESCRIPTION, project
      .getDescription());
@@ -265,4 +282,28 @@ public class BundlePlugin extends AbstractMojo {
  
   properties.put(key, value.toString());
  }
+
+ // Taken from the old Felix plugin.
+ public static String fixBundleVersion(String version) {
+     // Maven uses a '-' to separate the version qualifier, while
+     // OSGi uses a '.', so we need to convert the first '-' to a
+     // '.' and fill in any missing minor or micro version
+     // components if necessary.
+     final java.util.regex.Matcher matcher = versionPattern.matcher(version);
+     if (!matcher.lookingAt())
+         return version;
+
+     // Leave extra space for worst-case additional insertion:
+     final StringBuffer sb = new StringBuffer(version.length() + 4);
+     sb.append(matcher.group(1));
+
+     if (null == matcher.group(3)) {
+        final int count = null != matcher.group(2) ? 2 : 1;
+        sb.append(versionCompleters[count - 1]);
+     }
+
+     sb.append('.');
+     sb.append(version.substring(matcher.end(), version.length()));
+     return sb.toString();
+ } 
 }
