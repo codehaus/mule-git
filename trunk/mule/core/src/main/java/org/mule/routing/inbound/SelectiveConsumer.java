@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class SelectiveConsumer implements UMOInboundRouter
 {
-    protected transient final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private volatile UMOFilter filter;
     private volatile boolean transformFirst = true;
@@ -86,7 +86,7 @@ public class SelectiveConsumer implements UMOInboundRouter
 
     public UMOEvent[] process(UMOEvent event) throws MessagingException
     {
-        if (isMatch(event))
+        if (this.isMatch(event))
         {
             return new UMOEvent[]{event};
         }

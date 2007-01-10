@@ -19,7 +19,7 @@ import java.util.Comparator;
  * to their dispatch sequence in the correlation group. When the MessageSplitter
  * router splits an event it assigns a correlation sequence to the individual message
  * parts so that another router such as the <i>CorrelationEventResequencer</i> can
- * receive the parts and reorder them or merge them.
+ * receive the parts and reorder or merge them.
  */
 public class CorrelationEventResequencer extends AbstractEventResequencer
 {
@@ -27,7 +27,7 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
     public CorrelationEventResequencer()
     {
         super();
-        super.setComparator(CorrelationSequenceComparator.instance);
+        this.setComparator(CorrelationSequenceComparator.getInstance());
     }
 
     protected boolean shouldResequenceEvents(EventGroup events)
@@ -49,9 +49,14 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
         return size == events.size();
     }
 
-    private static class CorrelationSequenceComparator implements Comparator
+    public static class CorrelationSequenceComparator implements Comparator
     {
-        public static final Comparator instance = new CorrelationSequenceComparator();
+        private static final Comparator Instance = new CorrelationSequenceComparator();
+
+        public static Comparator getInstance()
+        {
+            return Instance;
+        }
 
         public int compare(Object o1, Object o2)
         {
