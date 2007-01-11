@@ -113,6 +113,11 @@
 	               icon="icons/folder.gif"
 	               name="Response Routers">
                </folder>
+	         <folder
+	               folderId="org.mule.ide.prototype.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Transformers">
+               </folder>
          </folder>
          <folder
                folderId="org.mule.ide.prototype.palette.components.Java"
