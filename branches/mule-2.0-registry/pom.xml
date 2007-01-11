@@ -172,18 +172,18 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
         -->
-	    <!-- needed so that maven can find the maven-osgi-plugin -->
-	    <pluginRepository>
-	      <id>apache.snapshots</id>
-	      <name>Apache Snapshots</name>
-	      <url>http://cvs.apache.org/maven-snapshot-repository/</url>
-	      <snapshots>
-	        <enabled>true</enabled>
-	      </snapshots>
+        <!-- needed so that maven can find the maven-osgi-plugin -->
+        <pluginRepository>
+          <id>apache.snapshots</id>
+          <name>Apache Snapshots</name>
+          <url>http://cvs.apache.org/maven-snapshot-repository</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
             <releases>
                 <enabled>false</enabled>
             </releases>
-	    </pluginRepository>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -217,24 +217,24 @@
                 </configuration>
             </plugin>
 
-	      	<plugin>
-		        <groupId>org.apache.felix.plugins</groupId>
-		        <artifactId>maven-osgi-plugin</artifactId>
-		        <extensions>true</extensions>
-    			<version>0.9.0-incubator-SNAPSHOT</version>
-		        <configuration>
-		            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-		            <osgiManifest>
-		                <bundleName>${pom.name}</bundleName>
-		                <bundleVersion>${version}</bundleVersion>
-		                <bundleDescription>${pom.description}</bundleDescription>
-		                <bundleVendor>${pom.organization.name}</bundleVendor>
-		                <bundleCopyright>MuleSource Public License http://www.mulesource.com/MSPL</bundleCopyright>
-		                <bundleDocUrl>${pom.url}</bundleDocUrl>
-		                <bundleDate>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</bundleDate>
- 		            </osgiManifest>
-		        </configuration>
-		    </plugin>
+              <plugin>
+                <groupId>org.apache.felix.plugins</groupId>
+                <artifactId>maven-osgi-plugin</artifactId>
+                <extensions>true</extensions>
+                <version>0.9.0-incubator-SNAPSHOT</version>
+                <configuration>
+                    <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    <osgiManifest>
+                        <bundleName>${pom.name}</bundleName>
+                        <bundleVersion>${version}</bundleVersion>
+                        <bundleDescription>${pom.description}</bundleDescription>
+                        <bundleVendor>${pom.organization.name}</bundleVendor>
+                        <bundleCopyright>MuleSource Public License http://www.mulesource.com/MSPL</bundleCopyright>
+                        <bundleDocUrl>${pom.url}</bundleDocUrl>
+                        <bundleDate>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</bundleDate>
+                     </osgiManifest>
+                </configuration>
+            </plugin>
 
             <!-- Global test exclusions -->
             <plugin>
