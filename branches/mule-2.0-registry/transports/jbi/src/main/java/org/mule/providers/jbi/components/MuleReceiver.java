@@ -29,7 +29,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.RecoverableException;
 import org.mule.umo.provider.UMOMessageReceiver;
 
 import java.io.OutputStream;
@@ -297,8 +296,7 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
             // nothing to do
         }
 
-        public void initialise() throws InitialisationException, RecoverableException
-        {
+        public void initialise() throws InitialisationException {
             // nothing to do
         }
 

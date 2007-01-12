@@ -10,12 +10,11 @@
 
 package org.mule.providers.vm;
 
-import java.util.List;
-
 import org.mule.MuleException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
+import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.providers.TransactedPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -26,6 +25,8 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
+
+import java.util.List;
 
 /**
  * <code>VMMessageReceiver</code> is a listener of events from a mule component
@@ -39,12 +40,17 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
     public VMMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
-        super(connector, component, endpoint, new Long(10));
+        super(connector, component, endpoint, AbstractPollingMessageReceiver.DEFAULT_POLL_FREQUENCY);
         this.connector = (VMConnector)connector;
-        receiveMessagesInTransaction = endpoint.getTransactionConfig().isTransacted();
+        super.receiveMessagesInTransaction = endpoint.getTransactionConfig().isTransacted();
     }
 
-    public void doConnect() throws Exception
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
     {
         if (connector.isQueueEvents())
         {
@@ -59,7 +65,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         }
     }
 
-    public void doDisconnect() throws Exception
+    protected void doDisconnect() throws Exception
     {
         // template method
     }

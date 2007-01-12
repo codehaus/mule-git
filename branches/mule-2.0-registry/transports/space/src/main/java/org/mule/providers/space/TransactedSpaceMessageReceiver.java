@@ -10,10 +10,6 @@
 
 package org.mule.providers.space;
 
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.commons.collections.MapUtils;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.ConnectException;
@@ -25,6 +21,11 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.space.UMOSpace;
 import org.mule.umo.space.UMOSpaceException;
+
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.collections.MapUtils;
 
 /**
  * Registers a transacted message listener on a Space.
@@ -38,9 +39,37 @@ public class TransactedSpaceMessageReceiver extends TransactedPollingMessageRece
                                           UMOComponent component,
                                           final UMOEndpoint endpoint) throws InitialisationException
     {
-        super(connector, component, endpoint, new Long(0));
+        // TODO HH: check how frequency=0 works with the scheduler, see setFrequency(long)
+        super(connector, component, endpoint, 0);
         this.connector = (SpaceConnector)connector;
         this.frequency = MapUtils.getLongValue(endpoint.getProperties(), "frequency", 100000L);
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        String destination = endpoint.getEndpointURI().getAddress();
+
+        Properties props = new Properties();
+        props.putAll(endpoint.getProperties());
+        try
+        {
+            logger.info("Connecting to space: " + destination);
+            space = connector.getSpace(endpoint);
+        }
+        catch (UMOSpaceException e)
+        {
+            throw new ConnectException(new Message("space", 1, destination), e, this);
+        }
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
     }
 
     protected List getMessages() throws Exception
@@ -67,30 +96,9 @@ public class TransactedSpaceMessageReceiver extends TransactedPollingMessageRece
         // This method is never called as the message is processed when received
     }
 
-    public void doConnect() throws Exception
-    {
-        String destination = endpoint.getEndpointURI().getAddress();
-
-        Properties props = new Properties();
-        props.putAll(endpoint.getProperties());
-        try
-        {
-            logger.info("Connecting to space: " + destination);
-            space = connector.getSpace(endpoint);
-        }
-        catch (UMOSpaceException e)
-        {
-            throw new ConnectException(new Message("space", 1, destination), e, this);
-        }
-    }
-
-    public void doDisconnect() throws Exception
-    {
-        // template method
-    }
-
     public UMOSpace getSpace()
     {
         return space;
     }
+
 }

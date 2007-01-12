@@ -58,6 +58,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
     {
         // add new event to an event group (it will create a new group if one does
         // not exist for the event correlation ID)
+        // TODO HH: ensure atomic update & removal like in AbstractEventResequencer
         EventGroup eg = addEvent(event);
 
         // check to see if the event group is ready to be aggregated

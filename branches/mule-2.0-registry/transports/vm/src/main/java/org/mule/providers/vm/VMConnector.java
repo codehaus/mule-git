@@ -10,20 +10,19 @@
 
 package org.mule.providers.vm;
 
-import java.util.Iterator;
-
 import org.mule.MuleManager;
 import org.mule.config.QueueProfile;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.AbstractConnector;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.MessagingException;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOException;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -36,25 +35,26 @@ import org.mule.util.ClassUtils;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueueSession;
 
+import java.util.Iterator;
+
 /**
  * <code>VMConnector</code> is a simple endpoint wrapper to allow a Mule component
  * to be accessed from an endpoint
  */
-public class VMConnector extends AbstractServiceEnabledConnector
+public class VMConnector extends AbstractConnector
 {
     private boolean queueEvents = false;
     private QueueProfile queueProfile;
     private Class adapterClass = null;
-    private int queueTimeout = 2000;
+    private int queueTimeout = 1000;
 
     /*
      * (non-Javadoc)
      * 
      * @see org.mule.providers.AbstractConnector#create()
      */
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
-        super.doInitialise();
         if (queueEvents)
         {
             if (queueProfile == null)
@@ -72,6 +72,31 @@ public class VMConnector extends AbstractServiceEnabledConnector
             throw new InitialisationException(new Message(Messages.FAILED_LOAD_X,
                 "Message Adapter: " + serviceDescriptor.getMessageAdapter()), e);
         }
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     /*
@@ -124,16 +149,6 @@ public class VMConnector extends AbstractServiceEnabledConnector
         return "VM";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractConnector#doDispose()
-     */
-    protected void doDispose()
-    {
-        // template method
-    }
-
     public boolean isQueueEvents()
     {
         return queueEvents;
@@ -169,8 +184,7 @@ public class VMConnector extends AbstractServiceEnabledConnector
             {
                 if (logger.isTraceEnabled())
                 {
-                    // logger.trace("Retrieving queue session from current
-                    // transaction");
+                    logger.trace("Retrieving queue session from current transaction");
                 }
                 return (QueueSession)tx.getResource(qm);
             }
@@ -178,7 +192,7 @@ public class VMConnector extends AbstractServiceEnabledConnector
 
         if (logger.isTraceEnabled())
         {
-            // logger.trace("Retrieving new queue session from queue manager");
+            logger.trace("Retrieving new queue session from queue manager");
         }
 
         QueueSession session = qm.getQueueSession();

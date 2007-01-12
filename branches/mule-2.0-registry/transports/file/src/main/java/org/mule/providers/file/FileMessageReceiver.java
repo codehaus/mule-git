@@ -25,7 +25,7 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.ConnectException;
-import org.mule.providers.PollingMessageReceiver;
+import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -40,7 +40,7 @@ import org.mule.util.FileUtils;
  * directory.
  */
 
-public class FileMessageReceiver extends PollingMessageReceiver
+public class FileMessageReceiver extends AbstractPollingMessageReceiver
 {
     private String readDir = null;
     private String moveDir = null;
@@ -55,19 +55,21 @@ public class FileMessageReceiver extends PollingMessageReceiver
                                String readDir,
                                String moveDir,
                                String moveToPattern,
-                               Long frequency) throws InitialisationException
+                               long frequency) throws InitialisationException
     {
         super(connector, component, endpoint, frequency);
+
         this.readDir = readDir;
         this.moveDir = moveDir;
         this.moveToPattern = moveToPattern;
+
         if (endpoint.getFilter() instanceof FilenameFilter)
         {
             filenameFilter = (FilenameFilter)endpoint.getFilter();
         }
     }
 
-    public void doConnect() throws Exception
+    protected void doConnect() throws Exception
     {
         if (readDir != null)
         {
@@ -93,9 +95,14 @@ public class FileMessageReceiver extends PollingMessageReceiver
         }
     }
 
-    public void doDisconnect() throws Exception
+    protected void doDisconnect() throws Exception
     {
         // template method
+    }
+
+    protected void doDispose()
+    {
+        // nothing to do               
     }
 
     public void poll()

@@ -13,7 +13,8 @@ package org.mule.providers.bpm;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.Message;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.AbstractConnector;
+import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
@@ -25,7 +26,7 @@ import java.util.Map;
  * external or embedded Business Process Management System (BPMS). It also allows
  * executing processes to generate Mule events.
  */
-public class ProcessConnector extends AbstractServiceEnabledConnector implements MessageService
+public class ProcessConnector extends AbstractConnector implements MessageService
 {
 
     /** The underlying BPMS */
@@ -73,9 +74,8 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         return PROTOCOL;
     }
 
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
-        super.doInitialise();
         if (bpms == null)
         {
             throw new InitialisationException(
@@ -85,6 +85,31 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         }
         // Set a callback so that the BPMS may generate messages within Mule.
         bpms.setMessageService(this);
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     /**
@@ -107,31 +132,6 @@ public class ProcessConnector extends AbstractServiceEnabledConnector implements
         }
         return receiver;
     }
-
-    /**
-     * This method looks for a dispatcher based on the process name and ID. It
-     * searches iteratively from the narrowest scope (match process name and ID) to
-     * the widest scope (match neither - global dispatcher) possible.
-     * 
-     * @return ProcessMessageDispatcher or null if no match is found
-     */
-    // TODO HH: this is never called and needs to be adapted since access to dispatchers has changed
-    /*
-    public ProcessMessageDispatcher lookupDispatcher(String processName, Object processId)
-    {
-        ProcessMessageDispatcher dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(processName,
-            processId));
-        if (dispatcher == null)
-        {
-            dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(processName, null));
-        }
-        if (dispatcher == null)
-        {
-            dispatcher = (ProcessMessageDispatcher)lookupDispatcher(toUrl(null, null));
-        }
-        return dispatcher;
-    }
-    */
 
     /**
      * Generate a URL based on the process name and ID such as "bpm://myProcess/2342"

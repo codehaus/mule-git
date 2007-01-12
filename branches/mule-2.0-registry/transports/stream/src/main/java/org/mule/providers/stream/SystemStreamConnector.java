@@ -10,13 +10,14 @@
 
 package org.mule.providers.stream;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * <code>SystemStreamConnector</code> connects to the System streams in and out by
@@ -35,6 +36,42 @@ public class SystemStreamConnector extends StreamConnector
         super();
         inputStream = System.in;
         outputStream = System.out;
+    }
+
+
+    protected void doInitialise() throws InitialisationException
+    {
+        // template method, nothing to do
+    }
+
+    protected void doDispose()
+    {
+        // Override as a no-op.
+        // The reason is System.in/out shouldn't be closed.
+        // It is valid for them to remain open (consider, e.g. tail -F).
+        // Trying to close System.in will result in I/O block, and
+        // available() will always return 0 bytes for System.in.
+
+        // There is a scheme to get a ref to System.in via NIO,
+        // e.g. :
+        // FileInputStream fis = new FileInputStream(FileDescriptor.in);
+        // InputStream is = Channels.newInputStream(fis.getChannel);
+        //
+        // It is then possible to register a watchdog thread for the caller
+        // which will interrupt this (now wrapped with NIO) read() call.
+
+        // Well, it isn't absolutely required for the reasons stated above,
+        // just following the KISS principle.
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
     }
 
     /*
@@ -137,23 +174,4 @@ public class SystemStreamConnector extends StreamConnector
         this.messageDelayTime = messageDelayTime;
     }
 
-    protected void doDispose()
-    {
-        // Override as a no-op.
-        // The reason is System.in/out shouldn't be closed.
-        // It is valid for them to remain open (consider, e.g. tail -F).
-        // Trying to close System.in will result in I/O block, and
-        // available() will always return 0 bytes for System.in.
-
-        // There is a scheme to get a ref to System.in via NIO,
-        // e.g. :
-        // FileInputStream fis = new FileInputStream(FileDescriptor.in);
-        // InputStream is = Channels.newInputStream(fis.getChannel);
-        //
-        // It is then possible to register a watchdog thread for the caller
-        // which will interrupt this (now wrapped with NIO) read() call.
-
-        // Well, it isn't absolutely required for the reasons stated above,
-        // just following the KISS principle.
-    }
 }

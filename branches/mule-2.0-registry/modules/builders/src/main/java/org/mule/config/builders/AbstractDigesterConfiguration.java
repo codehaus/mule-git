@@ -10,15 +10,6 @@
 
 package org.mule.config.builders;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.digester.Digester;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleDtdResolver;
@@ -29,15 +20,22 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.umo.UMOFilter;
 import org.mule.util.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.digester.Digester;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
  * A base classs for configuration schemes that use digester to parse the documents.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public abstract class AbstractDigesterConfiguration
 {
@@ -47,7 +45,7 @@ public abstract class AbstractDigesterConfiguration
     /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected transient final Log logger = LogFactory.getLog(getClass());
 
     protected Digester digester;
     protected List containerReferences = new ArrayList();

@@ -10,16 +10,19 @@
 
 package org.mule.providers.xmpp;
 
+import org.mule.providers.AbstractConnector;
+import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.lifecycle.InitialisationException;
+
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 /**
  * <code>XmppConnector</code> TODO
  */
-public class XmppConnector extends AbstractServiceEnabledConnector
+public class XmppConnector extends AbstractConnector
 {
     public static final String XMPP_PROPERTY_PREFIX = "";
     public static final String XMPP_SUBJECT = XMPP_PROPERTY_PREFIX + "subject";
@@ -28,6 +31,37 @@ public class XmppConnector extends AbstractServiceEnabledConnector
     public static final String XMPP_FROM = XMPP_PROPERTY_PREFIX + "from";
     public static final String XMPP_GROUP_CHAT = XMPP_PROPERTY_PREFIX + "groupChat";
     public static final String XMPP_NICKNAME = XMPP_PROPERTY_PREFIX + "nickname";
+
+
+    protected void doInitialise() throws InitialisationException
+    {
+        // template method, nothing to do
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
+    }
 
     public String getProtocol()
     {
@@ -90,14 +124,6 @@ public class XmppConnector extends AbstractServiceEnabledConnector
                 logger.debug("Already authenticated on this connection, no need to log in again.");
         }
         return xmppConnection;
-    }
-
-    /**
-     * Template method to perform any work when destroying the connectoe
-     */
-    protected void doDispose()
-    {
-        // template method
     }
 
     public boolean isRemoteSyncEnabled()

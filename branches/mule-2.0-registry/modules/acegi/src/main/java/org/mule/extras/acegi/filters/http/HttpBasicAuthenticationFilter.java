@@ -41,7 +41,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
     /**
      * logger used by this class
      */
-    protected static Log logger = LogFactory.getLog(HttpBasicAuthenticationFilter.class);
+    protected static final Log logger = LogFactory.getLog(HttpBasicAuthenticationFilter.class);
 
     private String realm;
 
@@ -57,7 +57,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
         this.realm = realm;
     }
 
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
         if (realm == null)
         {

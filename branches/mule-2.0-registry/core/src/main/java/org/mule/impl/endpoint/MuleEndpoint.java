@@ -14,7 +14,7 @@ import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.ImmutableMuleEndpoint;
-import org.mule.providers.service.ConnectorFactory;
+import org.mule.providers.service.TransportFactory;
 import org.mule.registry.ComponentReference;
 import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
@@ -322,15 +322,15 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
     {
         if (ALWAYS_CREATE_STRING.equals(action))
         {
-            createConnector = ConnectorFactory.ALWAYS_CREATE_CONNECTOR;
+            createConnector = TransportFactory.ALWAYS_CREATE_CONNECTOR;
         }
         else if (NEVER_CREATE_STRING.equals(action))
         {
-            createConnector = ConnectorFactory.NEVER_CREATE_CONNECTOR;
+            createConnector = TransportFactory.NEVER_CREATE_CONNECTOR;
         }
         else
         {
-            createConnector = ConnectorFactory.GET_OR_CREATE_CONNECTOR;
+            createConnector = TransportFactory.GET_OR_CREATE_CONNECTOR;
         }
     }
 

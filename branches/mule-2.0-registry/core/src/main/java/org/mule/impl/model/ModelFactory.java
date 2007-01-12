@@ -10,7 +10,7 @@
 
 package org.mule.impl.model;
 
-import org.mule.providers.service.ConnectorFactory;
+import org.mule.providers.service.TransportFactory;
 import org.mule.umo.model.UMOModel;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
@@ -32,7 +32,7 @@ public class ModelFactory
     public static UMOModel createModel(String type) throws ModelServiceNotFoundException
     {
         String location = SpiUtils.SERVICE_ROOT + MODEL_SERVICE_PATH;
-        InputStream is = SpiUtils.findServiceDescriptor(MODEL_SERVICE_PATH, type, ConnectorFactory.class);
+        InputStream is = SpiUtils.findServiceDescriptor(MODEL_SERVICE_PATH, type, TransportFactory.class);
         try
         {
             if (is != null)

@@ -26,8 +26,6 @@ import java.util.Iterator;
  * <code>BankQuotesAggregator</code> receives a number of quotes and selectes the
  * lowest
  * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
 {

@@ -70,7 +70,8 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
     public TransactedJmsMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
-        super(connector, component, endpoint, new Long(0));
+        // TODO AP: check how frequency=0 works with the scheduler, see setFrequency(long)
+        super(connector, component, endpoint, 0);
         this.connector = (JmsConnector)connector;
         this.timeout = endpoint.getTransactionConfig().getTimeout();
 
@@ -112,7 +113,12 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
 
     }
 
-    public void doConnect() throws Exception
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
     {
         if (connector.isConnected())
         {
@@ -129,7 +135,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         }
     }
 
-    public void doDisconnect() throws Exception
+    protected void doDisconnect() throws Exception
     {
         if (connector.isConnected())
         {
@@ -138,7 +144,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
     }
 
     /**
-     * The poll method is overrident from the
+     * The poll method is overriden from the {@link TransactedPollingMessageReceiver}
      */
     public void poll() throws Exception
     {

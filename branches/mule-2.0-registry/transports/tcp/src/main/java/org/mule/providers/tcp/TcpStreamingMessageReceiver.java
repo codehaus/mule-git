@@ -13,7 +13,7 @@ package org.mule.providers.tcp;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.ConnectException;
-import org.mule.providers.PollingMessageReceiver;
+import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -36,8 +36,8 @@ import java.net.URI;
  * so this forces the pollingFrequency property to zero so no pause occurs in the
  * PollingMessageReceiver class.
  */
-// TODO HH: check how this works with the 1.4 connector scheduler
-public class TcpStreamingMessageReceiver extends PollingMessageReceiver
+// TODO SF: check how this works with the 1.4 connector scheduler
+public class TcpStreamingMessageReceiver extends AbstractPollingMessageReceiver
 {
     protected Socket clientSocket = null;
 
@@ -45,37 +45,29 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
 
     protected TcpProtocol protocol = null;
 
-    public TcpStreamingMessageReceiver(UMOConnector connector,
-                                       UMOComponent component,
-                                       UMOEndpoint endpoint) throws InitialisationException
+    public TcpStreamingMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+        throws InitialisationException
     {
-        this(connector, component, endpoint, new Long(0));
+        this(connector, component, endpoint, 0);
     }
 
     private TcpStreamingMessageReceiver(UMOConnector connector,
                                         UMOComponent component,
                                         UMOEndpoint endpoint,
-                                        Long frequency) throws InitialisationException
+                                        long frequency) throws InitialisationException
     {
         super(connector, component, endpoint, frequency);
         protocol = ((TcpConnector)connector).getTcpProtocol();
+        // TODO SF: this seems wrong since 0 is ignored as value
         setFrequency(0);
     }
 
-    public void poll() throws Exception
+    protected void doDispose()
     {
-        setFrequency(0); // make sure this is zero and not overridden via config
-        // TODO check if this cast is ok
-        byte[] data = (byte[])protocol.read(dataIn);
-        if (data != null)
-        {
-            UMOMessageAdapter adapter = connector.getMessageAdapter(data);
-            UMOMessage message = new MuleMessage(adapter);
-            routeMessage(message, endpoint.isSynchronous());
-        }
+        // template method
     }
 
-    public void doConnect() throws ConnectException
+    protected void doConnect() throws ConnectException
     {
         URI uri = endpoint.getEndpointURI().getUri();
         String host = StringUtils.defaultIfEmpty(uri.getHost(), "localhost");
@@ -100,7 +92,7 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
         }
     }
 
-    public void doDisconnect() throws Exception
+    protected void doDisconnect() throws Exception
     {
         try
         {
@@ -118,4 +110,19 @@ public class TcpStreamingMessageReceiver extends PollingMessageReceiver
             logger.info("Closed tcp client socket");
         }
     }
+
+    public void poll() throws Exception
+    {
+        // TODO SF: this seems wrong since 0 is ignored as value
+        setFrequency(0); // make sure this is zero and not overridden via config
+        // TODO SF: check if this cast is ok
+        byte[] data = (byte[])protocol.read(dataIn);
+        if (data != null)
+        {
+            UMOMessageAdapter adapter = connector.getMessageAdapter(data);
+            UMOMessage message = new MuleMessage(adapter);
+            routeMessage(message, endpoint.isSynchronous());
+        }
+    }
+
 }

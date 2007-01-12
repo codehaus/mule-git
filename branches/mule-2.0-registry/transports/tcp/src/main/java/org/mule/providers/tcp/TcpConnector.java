@@ -11,15 +11,16 @@
 package org.mule.providers.tcp;
 
 import org.mule.config.i18n.Message;
-import org.mule.providers.AbstractServiceEnabledConnector;
+import org.mule.providers.AbstractConnector;
 import org.mule.providers.tcp.protocols.DefaultProtocol;
+import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.ClassUtils;
 
 /**
  * <code>TcpConnector</code> can bind or sent to a given TCP port on a given host.
  */
-public class TcpConnector extends AbstractServiceEnabledConnector
+public class TcpConnector extends AbstractConnector
 {
     public static final int DEFAULT_SOCKET_TIMEOUT = INT_VALUE_NOT_SET;
 
@@ -48,9 +49,9 @@ public class TcpConnector extends AbstractServiceEnabledConnector
         return keepSendSocketOpen;
     }
 
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
-        super.doInitialise();
+
         if (tcpProtocol == null)
         {
             try
@@ -62,6 +63,31 @@ public class TcpConnector extends AbstractServiceEnabledConnector
                 throw new InitialisationException(new Message("tcp", 3), e);
             }
         }
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
     }
 
     public String getProtocol()

@@ -10,6 +10,10 @@
 
 package org.mule.providers.jbi;
 
+import org.mule.providers.AbstractConnector;
+import org.mule.umo.UMOException;
+import org.mule.umo.lifecycle.InitialisationException;
+
 import javax.jbi.JBIException;
 import javax.jbi.component.ComponentContext;
 import javax.jbi.component.ComponentLifeCycle;
@@ -17,23 +21,47 @@ import javax.jbi.messaging.DeliveryChannel;
 import javax.jbi.messaging.MessageExchangeFactory;
 import javax.management.ObjectName;
 
-import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.umo.UMOException;
-
 /**
- * <code>JbiConnector</code> can bind to a Jbi container allowing components to
- * send events via Mule
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>JbiConnector</code> can bind to a JBI container allowing components to
+ * send events via Mule.
  */
-public class JbiConnector extends AbstractServiceEnabledConnector implements ComponentLifeCycle
+public class JbiConnector extends AbstractConnector implements ComponentLifeCycle
 {
-
     private ObjectName extensionMBeanName;
     private ComponentContext context;
     private DeliveryChannel deliveryChannel;
     private MessageExchangeFactory exchangeFactory;
+
+
+    protected void doInitialise() throws InitialisationException
+    {
+        // template method, nothing to do
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method
+    }
 
     public String getProtocol()
     {
@@ -65,9 +93,11 @@ public class JbiConnector extends AbstractServiceEnabledConnector implements Com
         return exchangeFactory;
     }
 
+    /**
+     * @see ComponentLifeCycle#init(ComponentContext)
+     */
     // TODO the start/stop/shutdown JBI lifecycle methods are rather picky,
     // we should probably review the spec here again
-
     public void init(ComponentContext componentContext) throws JBIException
     {
         this.context = componentContext;
@@ -75,6 +105,9 @@ public class JbiConnector extends AbstractServiceEnabledConnector implements Com
         this.exchangeFactory = deliveryChannel.createExchangeFactory();
     }
 
+    /**
+     * @see ComponentLifeCycle#start()
+     */
     public void start()
     {
         try
@@ -87,6 +120,9 @@ public class JbiConnector extends AbstractServiceEnabledConnector implements Com
         }
     }
 
+    /**
+     * @see ComponentLifeCycle#stop()
+     */
     public void stop()
     {
         try
@@ -99,8 +135,12 @@ public class JbiConnector extends AbstractServiceEnabledConnector implements Com
         }
     }
 
+    /**
+     * @see ComponentLifeCycle#shutDown()
+     */
     public void shutDown() throws JBIException
     {
         // nothing to do (for now?)
     }
+
 }

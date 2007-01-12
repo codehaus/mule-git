@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @author Binildas Christudas
  */
 public class PaymentValidationResponseAggregator extends ResponseCorrelationAggregator
 {

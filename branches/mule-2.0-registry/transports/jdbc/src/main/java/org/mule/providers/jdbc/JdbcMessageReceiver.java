@@ -46,7 +46,7 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
                                String readStmt,
                                String ackStmt) throws InitialisationException
     {
-        super(connector, component, endpoint, new Long(((JdbcConnector)connector).getPollingFrequency()));
+        super(connector, component, endpoint, ((JdbcConnector)connector).getPollingFrequency());
 
         this.receiveMessagesInTransaction = false;
         this.connector = (JdbcConnector)connector;
@@ -57,7 +57,12 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         this.ackStmt = this.connector.parseStatement(ackStmt, this.ackParams);
     }
 
-    public void doConnect() throws Exception
+    protected void doDispose()
+    {
+        // template method
+    }
+
+    protected void doConnect() throws Exception
     {
         Connection con = null;
         try
@@ -74,7 +79,7 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         }
     }
 
-    public void doDisconnect() throws ConnectException
+    protected void doDisconnect() throws ConnectException
     {
         // noop
     }

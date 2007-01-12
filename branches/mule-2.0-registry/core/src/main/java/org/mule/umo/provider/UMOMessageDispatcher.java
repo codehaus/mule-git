@@ -19,11 +19,8 @@ import org.mule.umo.lifecycle.Registerable;
 import java.io.OutputStream;
 
 /**
- * <code>UMOMessageDispatcher</code> is the interface responsible for distpatching
- * events to a particular transport. It implements the client code necessary to write
- * data to the underlying protocol. The dispatcher also exposes a receive method that
- * allows users to make specific calls to the underlying transport to receive an
- * event.
+ * <code>UMOMessageDispatcher</code> combines {@link UMOMessageDispatching} with
+ * various lifecycle methods for the actual instances doing message sending/receiving.
  */
 public interface UMOMessageDispatcher extends Registerable, Disposable, UMOConnectable, UMOMessageDispatching
 {

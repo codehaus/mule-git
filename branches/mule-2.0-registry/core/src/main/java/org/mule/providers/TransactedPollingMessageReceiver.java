@@ -30,12 +30,8 @@ import javax.resource.spi.work.Work;
  * The TransactedPollingMessageReceiver is an abstract receiver that handles polling
  * and transaction management. Derived implementations of these class must be thread
  * safe as several threads can be started at once for an improveded throuput.
- * 
- * @author <a href=mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
-public abstract class TransactedPollingMessageReceiver extends PollingMessageReceiver
+public abstract class TransactedPollingMessageReceiver extends AbstractPollingMessageReceiver
 {
     /** determines whether messages will be received in a transaction template */
     protected boolean receiveMessagesInTransaction = true;
@@ -46,7 +42,7 @@ public abstract class TransactedPollingMessageReceiver extends PollingMessageRec
     public TransactedPollingMessageReceiver(UMOConnector connector,
                                             UMOComponent component,
                                             final UMOEndpoint endpoint,
-                                            Long frequency) throws InitialisationException
+                                            long frequency) throws InitialisationException
     {
         super(connector, component, endpoint, frequency);
 
@@ -67,6 +63,7 @@ public abstract class TransactedPollingMessageReceiver extends PollingMessageRec
         ThreadingProfile tp = connector.getReceiverThreadingProfile();
         if (useMultipleReceivers && receiveMessagesInTransaction && tp.isDoThreading())
         {
+            // TODO HH: BIG problem here since receivers now share a pool?!
             for (int i = 0; i < tp.getMaxThreadsActive(); i++)
             {
                 super.doStart();

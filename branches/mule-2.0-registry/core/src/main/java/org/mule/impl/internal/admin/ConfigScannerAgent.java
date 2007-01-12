@@ -1,5 +1,5 @@
 /*
- * $Id: $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,32 +10,21 @@
 
 package org.mule.impl.internal.admin;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.MuleServer;
 import org.mule.config.ConfigurationBuilder;
-import org.mule.transformers.wire.WireFormat;
-import org.mule.transformers.wire.SerializationWireFormat;
-import org.mule.impl.AlreadyInitialisedException;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.service.ConnectorFactory;
-import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
-import org.mule.umo.manager.UMOManager;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * EXPERIMENTAL!!!
@@ -47,6 +36,8 @@ import org.apache.commons.logging.LogFactory;
  * We need a strategy for this.
  *
  * This agent should also respond to wire transfers (tcp, multicast).
+ *
+ * TODO Correct interruption and visibility/synchrnozation, do not use in production.
  */
 public class ConfigScannerAgent implements UMOAgent 
 {
@@ -100,7 +91,7 @@ public class ConfigScannerAgent implements UMOAgent
     /**
      * Should be a 1 line description of the agent
      * 
-     * @return
+     * @return description
      */
     public String getDescription()
     {

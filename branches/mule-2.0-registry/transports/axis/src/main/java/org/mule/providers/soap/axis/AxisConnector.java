@@ -10,6 +10,30 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.MuleManager;
+import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.Messages;
+import org.mule.impl.MuleDescriptor;
+import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.internal.notifications.ModelNotification;
+import org.mule.impl.internal.notifications.ModelNotificationListener;
+import org.mule.providers.AbstractConnector;
+import org.mule.providers.http.servlet.ServletConnector;
+import org.mule.providers.service.TransportFactory;
+import org.mule.providers.soap.MethodFixInterceptor;
+import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
+import org.mule.providers.soap.axis.extensions.MuleTransport;
+import org.mule.providers.soap.axis.extensions.WSDDFileProvider;
+import org.mule.providers.soap.axis.extensions.WSDDJavaMuleProvider;
+import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.manager.UMOServerNotification;
+import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.util.ClassUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,39 +53,15 @@ import org.apache.axis.handlers.soap.SOAPService;
 import org.apache.axis.server.AxisServer;
 import org.apache.axis.wsdl.fromJava.Namespaces;
 import org.apache.axis.wsdl.fromJava.Types;
-import org.mule.MuleManager;
-import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.Messages;
-import org.mule.impl.MuleDescriptor;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.internal.notifications.ModelNotification;
-import org.mule.impl.internal.notifications.ModelNotificationListener;
-import org.mule.providers.AbstractServiceEnabledConnector;
-import org.mule.providers.http.servlet.ServletConnector;
-import org.mule.providers.service.ConnectorFactory;
-import org.mule.providers.soap.MethodFixInterceptor;
-import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
-import org.mule.providers.soap.axis.extensions.MuleTransport;
-import org.mule.providers.soap.axis.extensions.WSDDFileProvider;
-import org.mule.providers.soap.axis.extensions.WSDDJavaMuleProvider;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.provider.UMOMessageReceiver;
-import org.mule.util.ClassUtils;
 
 /**
  * <code>AxisConnector</code> is used to maintain one or more Services for Axis
- * server instance. <p/> Some of the Axis specific service initialisation code was
- * adapted from the Ivory project (http://ivory.codehaus.org). Thanks guys :)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * server instance.
+ * <p>
+ * Some of the Axis specific service initialisation code was adapted from the Ivory
+ * project (http://ivory.codehaus.org). Thanks guys :)
  */
-public class AxisConnector extends AbstractServiceEnabledConnector implements ModelNotificationListener
+public class AxisConnector extends AbstractConnector implements ModelNotificationListener
 {
     /* Register the AxisFault Exception reader if this class gets loaded */
     static
@@ -93,6 +93,7 @@ public class AxisConnector extends AbstractServiceEnabledConnector implements Mo
 
     private List beanTypes;
     private MuleDescriptor axisDescriptor;
+
     /**
      * These protocols will be set on client invocations. by default Mule uses it's
      * own transports rather that Axis's. This is only because it gives us more
@@ -148,10 +149,8 @@ public class AxisConnector extends AbstractServiceEnabledConnector implements Mo
         }
     }
 
-    public void doInitialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
-        super.doInitialise();
-
         axisTransportProtocols = new HashMap();
 
         try
@@ -477,6 +476,21 @@ public class AxisConnector extends AbstractServiceEnabledConnector implements Mo
         // model.unregisterComponent(model.getDescriptor(AXIS_SERVICE_COMPONENT_NAME));
     }
 
+    protected void doConnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method
+    }
+
+    protected void doDispose()
+    {
+        // template method
+    }
+
     public String getServerConfig()
     {
         return serverConfig;
@@ -631,7 +645,7 @@ public class AxisConnector extends AbstractServiceEnabledConnector implements Mo
                     for (Iterator iterator = servletServices.iterator(); iterator.hasNext();)
                     {
                         SOAPService service = (SOAPService)iterator.next();
-                        ServletConnector servletConnector = (ServletConnector)ConnectorFactory.getConnectorByProtocol("servlet");
+                        ServletConnector servletConnector = (ServletConnector) TransportFactory.getConnectorByProtocol("servlet");
                         String url = servletConnector.getServletUrl();
                         if (url != null)
                         {
