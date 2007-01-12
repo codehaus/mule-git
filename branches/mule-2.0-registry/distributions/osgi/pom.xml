@@ -9,23 +9,23 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-osgi</artifactId>
-  	<packaging>osgi-bundle</packaging>
+    <packaging>osgi-bundle</packaging>
     <name>OSGi Bundle</name>
     <description>Distributes Mule and all its libraries as one big OSGi bundle</description>
 
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix.plugins</groupId>
-		        <artifactId>maven-osgi-plugin</artifactId>
-		        <configuration>
-		            <osgiManifest>
-		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
-						<exportPackage>org.mule, org.mule.interceptors, org.mule.transaction, org.mule.transaction.constraints, org.mule.transaction.lookup, org.mule.components.builder, org.mule.components.simple, org.mule.components.rest, org.mule.transformers, org.mule.transformers.compression, org.mule.transformers.wire, org.mule.transformers.simple, org.mule.transformers.encryption, org.mule.transformers.codec, org.mule.routing, org.mule.routing.outbound, org.mule.routing.filters, org.mule.routing.filters.logic, org.mule.routing.inbound, org.mule.routing.response, org.mule.model, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.routing, org.mule.umo.provider, org.mule.umo.lifecycle, org.mule.umo.model, org.mule.umo.transformer, org.mule.umo.security, org.mule.umo.security.provider, org.mule.umo.manager, org.mule.impl, org.mule.impl.endpoint, org.mule.impl.container, org.mule.impl.work, org.mule.impl.jndi, org.mule.impl.message, org.mule.impl.model, org.mule.impl.model.pipeline, org.mule.impl.model.direct, org.mule.impl.model.seda, org.mule.impl.model.seda.optimised, org.mule.impl.security, org.mule.impl.security.filters, org.mule.impl.internal.admin, org.mule.impl.internal.notifications, org.mule.config, org.mule.config.factories, org.mule.config.i18n, org.mule.config.converters, org.mule.config.builders, org.mule.config.pool, org.mule.registry, org.mule.registry.impl, org.mule.registry.persistence,org.mule.management, org.mule.management.stats, org.mule.management.stats.printers, org.mule.providers, org.mule.providers.streaming, org.mule.providers.service, org.mule.util, org.mule.util.concurrent, org.mule.util.xa, org.mule.util.file, org.mule.util.timer, org.mule.util.queue, org.mule.util.monitor, org.mule.util.properties, org.mule.util.compression, org.mule.util.counters, org.mule.util.counters.impl, org.mule.extras.spring, org.mule.extras.spring.events, org.mule.extras.spring.remoting, org.mule.extras.spring.config, org.mule.extras.spring.transaction, org.mule.providers.stream, org.mule.providers.file, org.mule.providers.http</exportPackage>
- 		            </osgiManifest>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix.plugins</groupId>
+                <artifactId>maven-osgi-plugin</artifactId>
+                <configuration>
+                    <osgiManifest>
+                        <!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
+                        <exportPackage>org.mule, org.mule.interceptors, org.mule.transaction, org.mule.transaction.constraints, org.mule.transaction.lookup, org.mule.components.builder, org.mule.components.simple, org.mule.components.rest, org.mule.transformers, org.mule.transformers.compression, org.mule.transformers.wire, org.mule.transformers.simple, org.mule.transformers.encryption, org.mule.transformers.codec, org.mule.routing, org.mule.routing.outbound, org.mule.routing.filters, org.mule.routing.filters.logic, org.mule.routing.inbound, org.mule.routing.response, org.mule.model, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.routing, org.mule.umo.provider, org.mule.umo.lifecycle, org.mule.umo.model, org.mule.umo.transformer, org.mule.umo.security, org.mule.umo.security.provider, org.mule.umo.manager, org.mule.impl, org.mule.impl.endpoint, org.mule.impl.container, org.mule.impl.work, org.mule.impl.jndi, org.mule.impl.message, org.mule.impl.model, org.mule.impl.model.pipeline, org.mule.impl.model.direct, org.mule.impl.model.seda, org.mule.impl.model.seda.optimised, org.mule.impl.security, org.mule.impl.security.filters, org.mule.impl.internal.admin, org.mule.impl.internal.notifications, org.mule.config, org.mule.config.factories, org.mule.config.i18n, org.mule.config.converters, org.mule.config.builders, org.mule.config.pool, org.mule.registry, org.mule.registry.impl, org.mule.registry.persistence,org.mule.management, org.mule.management.stats, org.mule.management.stats.printers, org.mule.providers, org.mule.providers.streaming, org.mule.providers.service, org.mule.util, org.mule.util.concurrent, org.mule.util.xa, org.mule.util.file, org.mule.util.timer, org.mule.util.queue, org.mule.util.monitor, org.mule.util.properties, org.mule.util.compression, org.mule.util.counters, org.mule.util.counters.impl, org.mule.extras.spring, org.mule.extras.spring.events, org.mule.extras.spring.remoting, org.mule.extras.spring.config, org.mule.extras.spring.transaction, org.mule.providers.stream, org.mule.providers.file, org.mule.providers.http</exportPackage>
+                     </osgiManifest>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <dependencies>
