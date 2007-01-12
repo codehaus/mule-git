@@ -41,7 +41,7 @@ public class StringMessageUtilsTestCase extends TestCase
         result = StringMessageUtils.toString(test);
         assertEquals("Bert", result);
 
-        test = new Object[]{"foo", "bar"};
+        test = new String[]{"foo", "bar"};
         result = StringMessageUtils.toString(test);
         assertEquals("{foo,bar}", result);
 
