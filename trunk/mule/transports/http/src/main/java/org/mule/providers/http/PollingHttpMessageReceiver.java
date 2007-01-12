@@ -14,6 +14,7 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractPollingMessageReceiver;
+import org.mule.providers.http.extras.URLAuthenticator;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -22,6 +23,7 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.InputStream;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -77,9 +79,9 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     {
         // template method
     }
-
+    
     protected void doConnect() throws Exception
-    {
+    {       
         URL url = null;
         String connectUrl = (String)endpoint.getProperties().get("connectUrl");
         if (connectUrl == null)
@@ -91,6 +93,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
             url = new URL(connectUrl);
         }
         logger.debug("Using url to connect: " + pollUrl.toString());
+        Authenticator.setDefault(new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword()));
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.disconnect();
     }
@@ -102,6 +105,8 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
 
     public void poll() throws Exception
     {
+        Authenticator.setDefault(new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword()));
+                
         HttpURLConnection connection = (HttpURLConnection)pollUrl.openConnection();
 
         int len = 0;
@@ -162,5 +167,5 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         UMOMessage message = new MuleMessage(adapter);
         routeMessage(message, endpoint.isSynchronous());
     }
-
+    
 }
