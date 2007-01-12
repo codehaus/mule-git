@@ -66,8 +66,15 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
             {
                 if (miss)
                 {
-                    // might be a nop but it's not that important
-                    Thread.yield();
+                    try
+                    {
+                        // recommended over Thread.yield()
+                        Thread.sleep(1);
+                    }
+                    catch (InterruptedException interrupted)
+                    {
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
                 // check for an existing group first
