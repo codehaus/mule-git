@@ -41,6 +41,7 @@ public class SingleResponseRouter extends AbstractResponseAggregator
         {
             logger.warn("Correlation Group Size is not 1. The SingleResponse Aggregator will only handle single replyTo events for a response router.  If there will be multiple events for a single request use the 'ResponseCorrelationAggregator'");
         }
+        // TODO HH: this seems wrong, should use size()?
         return true;
     }
 

@@ -57,9 +57,11 @@ public abstract class ResponseCorrelationAggregator extends AbstractResponseAggr
      * @param event the current event
      * @return a new event group of a fixed size
      */
+    // @Override
     protected EventGroup createEventGroup(Object id, UMOEvent event)
     {
         int groupSize = event.getMessage().getCorrelationGroupSize();
         return new EventGroup(id, groupSize);
     }
+
 }
