@@ -14,20 +14,20 @@
   <description>Classes used for Mule's OSGi support</description>
 
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix.plugins</groupId>
-		        <artifactId>maven-osgi-plugin</artifactId>
-		        <configuration>
-		            <osgiManifest>
-		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
-						<importPackage>org.apache.commons.logging;provider=paxlogging, org.mule, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.routing, org.mule.umo.provider, org.mule.umo.lifecycle, org.mule.umo.model, org.mule.umo.transformer, org.mule.umo.manager, org.mule.util</importPackage>
- 		            </osgiManifest>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix.plugins</groupId>
+                <artifactId>maven-osgi-plugin</artifactId>
+                <configuration>
+                    <osgiManifest>
+                        <!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
+                        <importPackage>org.apache.commons.logging;provider=paxlogging, org.mule, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.routing, org.mule.umo.provider, org.mule.umo.lifecycle, org.mule.umo.model, org.mule.umo.transformer, org.mule.umo.manager, org.mule.util</importPackage>
+                     </osgiManifest>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
-	
+
   <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -35,10 +35,10 @@
             <version>${version}</version>
             <scope>provided</scope>
         </dependency>
-	    <dependency>
-		     <groupId>org.knopflerfish</groupId>
-		     <artifactId>osgi</artifactId>
-		     <version>2.0.1</version>
-	    </dependency>	    
+        <dependency>
+             <groupId>org.knopflerfish</groupId>
+             <artifactId>osgi</artifactId>
+             <version>2.0.1</version>
+        </dependency>
   </dependencies>
 </project>

@@ -17,17 +17,17 @@ import org.osgi.framework.BundleContext;
 
 
 public class MuleManagerActivator implements BundleActivator {
-	
+
     // Services-based Mule Manager.
-	MuleSoaManager manager;
+    MuleSoaManager manager;
 
-	public void start(BundleContext bc) throws Exception {
-		manager = new MuleSoaManager(bc);
+    public void start(BundleContext bc) throws Exception {
+        manager = new MuleSoaManager(bc);
         MuleManager.setInstance(manager);
-		manager.start();
-	}
+        manager.start();
+    }
 
-	public void stop(BundleContext bc) throws Exception {
-		manager.stop();
-	}
+    public void stop(BundleContext bc) throws Exception {
+        manager.stop();
+    }
 }

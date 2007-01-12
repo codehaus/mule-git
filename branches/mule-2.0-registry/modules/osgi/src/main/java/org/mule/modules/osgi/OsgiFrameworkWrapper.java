@@ -19,7 +19,7 @@ import org.tanukisoftware.wrapper.WrapperManager;
 
 public class OsgiFrameworkWrapper implements WrapperListener
 {
-	private org.knopflerfish.framework.Main framework;
+    private org.knopflerfish.framework.Main framework;
 
     /*---------------------------------------------------------------
      * Constructors
@@ -33,9 +33,9 @@ public class OsgiFrameworkWrapper implements WrapperListener
      *-------------------------------------------------------------*/
     /**
      * The start method is called when the WrapperManager is signaled by the
-     *	native wrapper code that it can start its application.  This
-     *	method call is expected to return, so a new thread should be launched
-     *	if necessary.
+     *    native wrapper code that it can start its application.  This
+     *    method call is expected to return, so a new thread should be launched
+     *    if necessary.
      *
      * @param args List of arguments used to initialize the application.
      *
@@ -45,25 +45,25 @@ public class OsgiFrameworkWrapper implements WrapperListener
      */
     public Integer start( String[] args )
     {
-    	Properties SYSTEM_PROPS = new Properties();
-    	// Directory where bundle state info. is stored.
-    	// .xargs files will be read from the parent of this directory.
-		SYSTEM_PROPS.put("org.osgi.framework.dir", "../conf/knopflerfish");
-		
+        Properties SYSTEM_PROPS = new Properties();
+        // Directory where bundle state info. is stored.
+        // .xargs files will be read from the parent of this directory.
+        SYSTEM_PROPS.put("org.osgi.framework.dir", "../conf/knopflerfish");
+
         for (Iterator iter = SYSTEM_PROPS.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			System.setProperty((String) entry.getKey(), (String) entry.getValue());
-		}
+            Map.Entry entry = (Map.Entry) iter.next();
+            System.setProperty((String) entry.getKey(), (String) entry.getValue());
+        }
 
         try {
-        	// TODO Pop any Mule-specific arguments off of args and pass the rest through to KF.
-        	String[] kfArgs = {};
-        	org.knopflerfish.framework.Main.main(kfArgs);
-			return null;
-    	} catch (Exception e) {
+            // TODO Pop any Mule-specific arguments off of args and pass the rest through to KF.
+            String[] kfArgs = {};
+            org.knopflerfish.framework.Main.main(kfArgs);
+            return null;
+        } catch (Exception e) {
             e.printStackTrace();
             return new Integer(1);
-    	}
+        }
     }
 
     /**
@@ -84,7 +84,7 @@ public class OsgiFrameworkWrapper implements WrapperListener
      */
     public int stop( int exitCode )
     {
-    	org.knopflerfish.framework.Main.shutdown(exitCode);
+        org.knopflerfish.framework.Main.shutdown(exitCode);
         return exitCode;
     }
 
