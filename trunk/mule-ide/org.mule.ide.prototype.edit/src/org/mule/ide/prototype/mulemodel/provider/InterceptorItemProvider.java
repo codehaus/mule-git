@@ -74,6 +74,7 @@ public class InterceptorItemProvider
 
 			addNamePropertyDescriptor(object);
 			addGroupDefinitionPropertyDescriptor(object);
+			addClassNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -123,6 +124,28 @@ public class InterceptorItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Class Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addClassNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Interceptor_className_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Interceptor_className_feature", "_UI_Interceptor_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 MulePackage.Literals.INTERCEPTOR__CLASS_NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Interceptor.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -157,6 +180,7 @@ public class InterceptorItemProvider
 
 		switch (notification.getFeatureID(Interceptor.class)) {
 			case MulePackage.INTERCEPTOR__NAME:
+			case MulePackage.INTERCEPTOR__CLASS_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

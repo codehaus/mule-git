@@ -226,7 +226,7 @@ public class MuleConfigItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__INTERCEPTORS,
-				 MuleFactory.eINSTANCE.createInterceptorDefinition()));
+				 MuleFactory.eINSTANCE.createInterceptorStack()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -246,12 +246,12 @@ public class MuleConfigItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
-				 MuleFactory.eINSTANCE.createBridgeComponent()));
+				 MuleFactory.eINSTANCE.createGenericComponent()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(MulePackage.Literals.MULE_CONFIG__COMPONENTS,
-				 MuleFactory.eINSTANCE.createGenericComponent()));
+				 MuleFactory.eINSTANCE.createBridgeComponent()));
 	}
 
 	/**

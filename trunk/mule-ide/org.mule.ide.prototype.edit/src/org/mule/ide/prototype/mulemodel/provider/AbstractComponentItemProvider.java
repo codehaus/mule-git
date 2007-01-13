@@ -72,33 +72,10 @@ public class AbstractComponentItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addImplementationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addCommentPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Implementation feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addImplementationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractComponent_implementation_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractComponent_implementation_feature", "_UI_AbstractComponent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 MulePackage.Literals.ABSTRACT_COMPONENT__IMPLEMENTATION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
 	}
 
 	/**
@@ -159,6 +136,7 @@ public class AbstractComponentItemProvider
 			childrenFeatures.add(MulePackage.Literals.ABSTRACT_COMPONENT__OUTBOUND_ROUTER);
 			childrenFeatures.add(MulePackage.Literals.ABSTRACT_COMPONENT__INBOUND_ROUTER);
 			childrenFeatures.add(MulePackage.Literals.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES);
+			childrenFeatures.add(MulePackage.Literals.ABSTRACT_COMPONENT__INTERCEPTORS);
 		}
 		return childrenFeatures;
 	}
@@ -199,7 +177,6 @@ public class AbstractComponentItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(AbstractComponent.class)) {
-			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 			case MulePackage.ABSTRACT_COMPONENT__COMMENT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
@@ -207,6 +184,7 @@ public class AbstractComponentItemProvider
 			case MulePackage.ABSTRACT_COMPONENT__OUTBOUND_ROUTER:
 			case MulePackage.ABSTRACT_COMPONENT__INBOUND_ROUTER:
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -247,6 +225,11 @@ public class AbstractComponentItemProvider
 			(createChildParameter
 				(MulePackage.Literals.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES,
 				 MuleFactory.eINSTANCE.createMapProperty()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.ABSTRACT_COMPONENT__INTERCEPTORS,
+				 MuleFactory.eINSTANCE.createInterceptor()));
 	}
 
 	/**

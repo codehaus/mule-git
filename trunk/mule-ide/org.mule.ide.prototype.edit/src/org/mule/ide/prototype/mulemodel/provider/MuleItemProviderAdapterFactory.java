@@ -284,25 +284,25 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition} instances.
+	 * This keeps track of the one adapter used for all {@link org.mule.ide.prototype.mulemodel.InterceptorStack} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected InterceptorDefinitionItemProvider interceptorDefinitionItemProvider;
+	protected InterceptorStackItemProvider interceptorStackItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition}.
+	 * This creates an adapter for a {@link org.mule.ide.prototype.mulemodel.InterceptorStack}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Adapter createInterceptorDefinitionAdapter() {
-		if (interceptorDefinitionItemProvider == null) {
-			interceptorDefinitionItemProvider = new InterceptorDefinitionItemProvider(this);
+	public Adapter createInterceptorStackAdapter() {
+		if (interceptorStackItemProvider == null) {
+			interceptorStackItemProvider = new InterceptorStackItemProvider(this);
 		}
 
-		return interceptorDefinitionItemProvider;
+		return interceptorStackItemProvider;
 	}
 
 	/**
@@ -608,13 +608,13 @@ public class MuleItemProviderAdapterFactory extends MuleAdapterFactory implement
 		if (textPropertyItemProvider != null) textPropertyItemProvider.dispose();
 		if (listPropertyItemProvider != null) listPropertyItemProvider.dispose();
 		if (mapPropertyItemProvider != null) mapPropertyItemProvider.dispose();
-		if (interceptorDefinitionItemProvider != null) interceptorDefinitionItemProvider.dispose();
+		if (interceptorStackItemProvider != null) interceptorStackItemProvider.dispose();
+		if (genericComponentItemProvider != null) genericComponentItemProvider.dispose();
 		if (bridgeComponentItemProvider != null) bridgeComponentItemProvider.dispose();
 		if (localEndpointItemProvider != null) localEndpointItemProvider.dispose();
 		if (globalEndpointItemProvider != null) globalEndpointItemProvider.dispose();
 		if (routerItemProvider != null) routerItemProvider.dispose();
 		if (transformerItemProvider != null) transformerItemProvider.dispose();
-		if (genericComponentItemProvider != null) genericComponentItemProvider.dispose();
 		if (genericFilterItemProvider != null) genericFilterItemProvider.dispose();
 		if (binaryFilterItemProvider != null) binaryFilterItemProvider.dispose();
 		if (xsltFilterItemProvider != null) xsltFilterItemProvider.dispose();
