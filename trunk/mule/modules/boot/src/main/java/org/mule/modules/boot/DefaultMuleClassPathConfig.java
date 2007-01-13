@@ -37,12 +37,6 @@ public class DefaultMuleClassPathConfig
     {
         try
         {
-            // if trailing slash is specified, the folder will be added (e.g. for
-            // properties files)
-            addURL(new URL("file://" + muleHome.getAbsolutePath() + FOLDER_USER + "/"));
-            addURL(new URL("file://" + muleHome.getAbsolutePath() + FOLDER_MULE + "/"));
-            addURL(new URL("file://" + muleHome.getAbsolutePath() + FOLDER_OPT + "/"));
-
             /**
              * Pick up any local jars, if there are any. Doing this here insures that
              * any local class that override the global classes will in fact do so.
@@ -51,7 +45,7 @@ public class DefaultMuleClassPathConfig
             {
                 if (!muleHome.getCanonicalFile().equals(muleBase.getCanonicalFile()))
                 {
-                    addURL(new URL("file://" + muleBase.getAbsolutePath() + FOLDER_USER + "/"));
+                    addURL(new URL("file:/" + muleBase.getAbsolutePath() + FOLDER_USER + "/"));
                     File[] muleJars = listJars(muleBase, FOLDER_USER);
                     for (int i = 0; i < muleJars.length; i++)
                     {
@@ -66,6 +60,9 @@ public class DefaultMuleClassPathConfig
                                 + ioe.toString());
             }
 
+            // if trailing slash is specified, the folder will be added (e.g. for
+            // properties files)
+            addURL(new URL("file:/" + muleHome.getAbsolutePath() + FOLDER_USER + "/"));
             File[] muleJars = listJars(muleHome, FOLDER_USER);
             for (int i = 0; i < muleJars.length; i++)
             {
@@ -73,12 +70,17 @@ public class DefaultMuleClassPathConfig
                 addURL(jar.toURL());
             }
 
+            addURL(new URL("file:/" + muleHome.getAbsolutePath() + FOLDER_MULE + "/"));
+
             muleJars = listJars(muleHome, FOLDER_MULE);
             for (int i = 0; i < muleJars.length; i++)
             {
                 File jar = muleJars[i];
                 addURL(jar.toURL());
             }
+
+            addURL(new URL("file:/" + muleHome.getAbsolutePath() + FOLDER_OPT + "/"));
+            
 
             muleJars = listJars(muleHome, FOLDER_OPT);
             for (int i = 0; i < muleJars.length; i++)
