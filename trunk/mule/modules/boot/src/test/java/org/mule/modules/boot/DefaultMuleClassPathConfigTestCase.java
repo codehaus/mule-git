@@ -22,10 +22,10 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
 {
 
     /**
-     * $MULE_BASE/lib/user folder should come before $MULE_HOME/lib/user.
-     * Note this test checks folder only, not the jars.
-     * See http://mule.mulesource.org/jira/browse/MULE-1311 for more details.
-     *
+     * $MULE_BASE/lib/user folder should come before $MULE_HOME/lib/user. Note this
+     * test checks folder only, not the jars. See
+     * http://mule.mulesource.org/jira/browse/MULE-1311 for more details.
+     * 
      * @throws Exception in case of any error
      */
     public void testMuleBaseUserFolderOverridesMuleHome() throws Exception
@@ -44,9 +44,12 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
             assertFalse("Urls shouldn't be empty.", urls.isEmpty());
 
             URL muleBaseUserFolder = new File(testMuleBase, "lib/user").toURL();
-            assertEquals("$MULE_BASE/lib/user must come first. URLs are: " + urls,
-                         muleBaseUserFolder.toExternalForm() + "/", // the slash is required
-                         ((URL) urls.get(0)).toExternalForm());
+            // the slash is required
+            String expectedMuleBaseUserFolder = muleBaseUserFolder.toExternalForm() + "/";
+            String firstUrl = ((URL)urls.get(0)).toExternalForm();
+            assertEquals("$MULE_BASE/lib/user must come first; expected: '" + expectedMuleBaseUserFolder
+                            + "', got: '" + firstUrl + "', URLs are: " + urls, expectedMuleBaseUserFolder,
+                firstUrl);
         }
         finally
         {
@@ -55,4 +58,5 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
             FileUtils.deleteTree(testMuleBase);
         }
     }
+
 }
