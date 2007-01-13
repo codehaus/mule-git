@@ -7,7 +7,8 @@ Bundle-ClassPath: .
 Bundle-Activator: org.mule.ide.prototype.mulemodel.presentation.MuleEditorPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.mule.ide.prototype.mulemodel.presentation
+Export-Package: org.mule.ide.prototype.mulemodel.presentation,
+ org.mule.ide.prototype.mulemodel.presentation.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  org.mule.ide.prototype.edit;visibility:=reexport,

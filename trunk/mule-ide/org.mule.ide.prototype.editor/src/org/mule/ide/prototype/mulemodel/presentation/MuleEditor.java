@@ -891,7 +891,7 @@ public class MuleEditor
 		}
 		
 		if (! modelProject.equals(currentProject)) {
-			ResourceSet projectResourceSet = new ProjectResourceSetEditImpl(modelProject);
+			ResourceSet projectResourceSet = new MuleResourceSetEditImpl(modelProject);
 			StructuredTextEditingDomain sted = new StructuredTextEditingDomain(adapterFactory, commandStack, projectResourceSet); 
 			editingDomain = sted;
 			

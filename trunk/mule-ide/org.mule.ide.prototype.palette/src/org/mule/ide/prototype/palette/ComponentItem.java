@@ -47,7 +47,9 @@ public class ComponentItem extends PaletteItem {
 			}
 			
 			component.setName(this.getName());
-			component.setImplementation(this.getClassName()); // Not supported in XML
+			if (component instanceof GenericComponent) {
+				((GenericComponent)component).setImplementation(this.getClassName()); // Not supported in XML
+			}
 			component.setComment("Dropped from the Mule palette on " + new Date());
 			
 			cfg.getComponents().add(component);
