@@ -104,6 +104,12 @@ public class MuleSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case MulePackage.ABSTRACT_COMPONENT: {
+				AbstractComponent abstractComponent = (AbstractComponent)theEObject;
+				Object result = caseAbstractComponent(abstractComponent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case MulePackage.MULE_CONFIG: {
 				MuleConfig muleConfig = (MuleConfig)theEObject;
 				Object result = caseMuleConfig(muleConfig);
@@ -168,9 +174,16 @@ public class MuleSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case MulePackage.INTERCEPTOR_DEFINITION: {
-				InterceptorDefinition interceptorDefinition = (InterceptorDefinition)theEObject;
-				Object result = caseInterceptorDefinition(interceptorDefinition);
+			case MulePackage.INTERCEPTOR_STACK: {
+				InterceptorStack interceptorStack = (InterceptorStack)theEObject;
+				Object result = caseInterceptorStack(interceptorStack);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MulePackage.GENERIC_COMPONENT: {
+				GenericComponent genericComponent = (GenericComponent)theEObject;
+				Object result = caseGenericComponent(genericComponent);
+				if (result == null) result = caseAbstractComponent(genericComponent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -204,19 +217,6 @@ public class MuleSwitch {
 			case MulePackage.TRANSFORMER: {
 				Transformer transformer = (Transformer)theEObject;
 				Object result = caseTransformer(transformer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case MulePackage.ABSTRACT_COMPONENT: {
-				AbstractComponent abstractComponent = (AbstractComponent)theEObject;
-				Object result = caseAbstractComponent(abstractComponent);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case MulePackage.GENERIC_COMPONENT: {
-				GenericComponent genericComponent = (GenericComponent)theEObject;
-				Object result = caseGenericComponent(genericComponent);
-				if (result == null) result = caseAbstractComponent(genericComponent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -417,17 +417,17 @@ public class MuleSwitch {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Interceptor Definition</em>'.
+	 * Returns the result of interpretting the object as an instance of '<em>Interceptor Stack</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Interceptor Definition</em>'.
+	 * @return the result of interpretting the object as an instance of '<em>Interceptor Stack</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseInterceptorDefinition(InterceptorDefinition object) {
+	public Object caseInterceptorStack(InterceptorStack object) {
 		return null;
 	}
 

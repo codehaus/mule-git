@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.GenericComponent#getInterceptors <em>Interceptors</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.GenericComponent#getImplementation <em>Implementation</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,19 +33,29 @@ public interface GenericComponent extends AbstractComponent {
 	String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
 
 	/**
-	 * Returns the value of the '<em><b>Interceptors</b></em>' containment reference list.
-	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.Interceptor}.
+	 * Returns the value of the '<em><b>Implementation</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Interceptors</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Implementation</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Interceptors</em>' containment reference list.
-	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getGenericComponent_Interceptors()
-	 * @model type="org.mule.ide.prototype.mulemodel.Interceptor" containment="true"
+	 * @return the value of the '<em>Implementation</em>' attribute.
+	 * @see #setImplementation(String)
+	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getGenericComponent_Implementation()
+	 * @model
 	 * @generated
 	 */
-	EList getInterceptors();
+	String getImplementation();
+
+	/**
+	 * Sets the value of the '{@link org.mule.ide.prototype.mulemodel.GenericComponent#getImplementation <em>Implementation</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Implementation</em>' attribute.
+	 * @see #getImplementation()
+	 * @generated
+	 */
+	void setImplementation(String value);
 
 } // GenericComponent

@@ -21,14 +21,23 @@ public class MuleConfigConstants {
 	/**
 	 * public identifier of Mule configuration version 1.0
 	 */
-	public static final String MULE_CONFIG_PUBLIC_ID_1_0 = "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"; //$NON-NLS-1$
+	public static final String LEGACY_MULE_CONFIG_PUBLIC_ID_1_0 = "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"; //$NON-NLS-1$
+
+	/**
+	 * public identifier of Mule configuration version 1.0
+	 */
+	public static final String MULE_CONFIG_PUBLIC_ID_1_0 = "-//MuleSource //DTD mule-configuration XML V1.0//EN"; //$NON-NLS-1$
 
 	/**
 	 * system identifier of Mule configuration version 1.0
 	 */
-	public static final String MULE_CONFIG_SYSTEM_ID_1_0 = "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd"; //$NON-NLS-1$
+	public static final String LEGACY_MULE_CONFIG_SYSTEM_ID_1_0 = "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd"; //$NON-NLS-1$
 
-
+	/**
+	 * system identifier of Mule configuration version 1.0
+	 */
+	public static final String MULE_CONFIG_SYSTEM_ID_1_0 = "http://mule.mulesource.org/dtds/mule-configuration.dtd"; //$NON-NLS-1$
+	 
 	/**
 	 * identifier indicating Mule configuration version 1.0
 	 */

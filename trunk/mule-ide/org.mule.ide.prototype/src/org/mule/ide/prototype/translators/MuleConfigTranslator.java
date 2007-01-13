@@ -19,10 +19,9 @@ import org.eclipse.wst.common.internal.emf.resource.TranslatorPath;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 
 /**
- * The class <code>StrutsConfigTranslator</code> provides the root translator
- * that maps the StrutsConfig model to the Apache Struts configuration file.
+ * The class <code>MuleConfigTranslator</code> provides the root translator
+ * that maps the MuleConfig model to the Mule configuration file.
  * 
- * @author Daniel
  */
 public class MuleConfigTranslator extends RootTranslator {
 
@@ -44,7 +43,7 @@ public class MuleConfigTranslator extends RootTranslator {
 	}
 
 	/**
-	 * StrutsConfig package
+	 * MuleModel package
 	 */
 	private static MulePackage MULE_CONFIG_PACKAGE = MulePackage.eINSTANCE;
 
@@ -77,7 +76,7 @@ public class MuleConfigTranslator extends RootTranslator {
 	private Translator[] children10;
 
 	/**
-	 * Creates a new <code>StrutsConfigTranslator</code>.
+	 * Creates a new <code>MuleConfigTranslator</code>.
 	 */
 	public MuleConfigTranslator() {
 		super(MuleConfigXmlMapping.MULE_CONFIG, MULE_CONFIG_PACKAGE
@@ -109,7 +108,7 @@ public class MuleConfigTranslator extends RootTranslator {
 	 */
 	protected Translator[] create10Children() {
 		return new Translator[] {
-				IDTranslator.INSTANCE,
+//				IDTranslator.INSTANCE,
 				createConnectorsTranslator(MuleConfigConstants.VERSION_1_0_ID),
 				createTransformersTranslator(MuleConfigConstants.VERSION_1_0_ID),
 				createGlobalEndpointsTranslator(MuleConfigConstants.VERSION_1_0_ID),
@@ -134,7 +133,7 @@ public class MuleConfigTranslator extends RootTranslator {
 						MULE_CONFIG_PACKAGE.getAbstractComponent_Comment(),
 						Translator.COMMENT_FEATURE),			
 				new Translator(MuleConfigXmlMapping.ATTR_IMPLEMENTATION,
-						MULE_CONFIG_PACKAGE.getAbstractComponent_Implementation(),
+						MULE_CONFIG_PACKAGE.getGenericComponent_Implementation(),
 						Translator.DOM_ATTRIBUTE | Translator.CDATA_CONTENT),
 				new Translator(MuleConfigXmlMapping.ATTR_NAME,
 						MULE_CONFIG_PACKAGE.getAbstractComponent_Name(),

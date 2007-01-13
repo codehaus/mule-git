@@ -1,6 +1,13 @@
-/*
- * $Id: StrutsConfigResourceFactoryImpl.java,v 1.3 2005/07/21 15:21:01 daniel_rohe Exp $
+/**
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
+
 package org.mule.ide.prototype.mulemodel.util;
 
 import org.eclipse.emf.common.util.URI;
@@ -17,7 +24,7 @@ import org.eclipse.wst.common.internal.emf.resource.TranslatorResourceFactory;
 public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 
 	/**
-	 * Creates a new <code>StrutsConfigResourceFactoryImpl</code>.
+	 * Creates a new <code>MuleConfigResourceFactoryImpl</code>.
 	 */
 	public MuleConfigResourceFactoryImpl() {
 		super(EMF2DOMSSERendererExFactory.INSTANCE);

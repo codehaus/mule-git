@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.mule.ide.prototype.mulemodel.AbstractComponent;
 import org.mule.ide.prototype.mulemodel.Connector;
 import org.mule.ide.prototype.mulemodel.GlobalEndpoint;
+import org.mule.ide.prototype.mulemodel.InterceptorStack;
 import org.mule.ide.prototype.mulemodel.InterceptorDefinition;
 import org.mule.ide.prototype.mulemodel.MuleConfig;
 import org.mule.ide.prototype.mulemodel.MulePackage;
@@ -315,7 +316,7 @@ public class MuleConfigImpl extends EObjectImpl implements MuleConfig {
 	 */
 	public EList getInterceptors() {
 		if (interceptors == null) {
-			interceptors = new EObjectContainmentEList(InterceptorDefinition.class, this, MulePackage.MULE_CONFIG__INTERCEPTORS);
+			interceptors = new EObjectContainmentEList(InterceptorStack.class, this, MulePackage.MULE_CONFIG__INTERCEPTORS);
 		}
 		return interceptors;
 	}

@@ -78,13 +78,13 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 			case MulePackage.TEXT_PROPERTY: return createTextProperty();
 			case MulePackage.LIST_PROPERTY: return createListProperty();
 			case MulePackage.MAP_PROPERTY: return createMapProperty();
-			case MulePackage.INTERCEPTOR_DEFINITION: return createInterceptorDefinition();
+			case MulePackage.INTERCEPTOR_STACK: return createInterceptorStack();
+			case MulePackage.GENERIC_COMPONENT: return createGenericComponent();
 			case MulePackage.BRIDGE_COMPONENT: return createBridgeComponent();
 			case MulePackage.LOCAL_ENDPOINT: return createLocalEndpoint();
 			case MulePackage.GLOBAL_ENDPOINT: return createGlobalEndpoint();
 			case MulePackage.ROUTER: return createRouter();
 			case MulePackage.TRANSFORMER: return createTransformer();
-			case MulePackage.GENERIC_COMPONENT: return createGenericComponent();
 			case MulePackage.GENERIC_FILTER: return createGenericFilter();
 			case MulePackage.BINARY_FILTER: return createBinaryFilter();
 			case MulePackage.XSLT_FILTER: return createXsltFilter();
@@ -188,9 +188,9 @@ public class MuleFactoryImpl extends EFactoryImpl implements MuleFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InterceptorDefinition createInterceptorDefinition() {
-		InterceptorDefinitionImpl interceptorDefinition = new InterceptorDefinitionImpl();
-		return interceptorDefinition;
+	public InterceptorStack createInterceptorStack() {
+		InterceptorStackImpl interceptorStack = new InterceptorStackImpl();
+		return interceptorStack;
 	}
 
 	/**

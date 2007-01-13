@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.mule.ide.prototype.mulemodel.Interceptor;
+import org.mule.ide.prototype.mulemodel.InterceptorStack;
 import org.mule.ide.prototype.mulemodel.InterceptorDefinition;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 
@@ -31,6 +32,7 @@ import org.mule.ide.prototype.mulemodel.MulePackage;
  * <ul>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorImpl#getGroupDefinition <em>Group Definition</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorImpl#getClassName <em>Class Name</em>}</li>
  * </ul>
  * </p>
  *
@@ -72,7 +74,27 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * @generated
 	 * @ordered
 	 */
-	protected InterceptorDefinition groupDefinition = null;
+	protected InterceptorStack groupDefinition = null;
+
+	/**
+	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getClassName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String CLASS_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getClassName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String className = CLASS_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -118,10 +140,10 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InterceptorDefinition getGroupDefinition() {
+	public InterceptorStack getGroupDefinition() {
 		if (groupDefinition != null && groupDefinition.eIsProxy()) {
 			InternalEObject oldGroupDefinition = (InternalEObject)groupDefinition;
-			groupDefinition = (InterceptorDefinition)eResolveProxy(oldGroupDefinition);
+			groupDefinition = (InterceptorStack)eResolveProxy(oldGroupDefinition);
 			if (groupDefinition != oldGroupDefinition) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MulePackage.INTERCEPTOR__GROUP_DEFINITION, oldGroupDefinition, groupDefinition));
@@ -135,7 +157,7 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InterceptorDefinition basicGetGroupDefinition() {
+	public InterceptorStack basicGetGroupDefinition() {
 		return groupDefinition;
 	}
 
@@ -144,11 +166,32 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setGroupDefinition(InterceptorDefinition newGroupDefinition) {
-		InterceptorDefinition oldGroupDefinition = groupDefinition;
+	public void setGroupDefinition(InterceptorStack newGroupDefinition) {
+		InterceptorStack oldGroupDefinition = groupDefinition;
 		groupDefinition = newGroupDefinition;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.INTERCEPTOR__GROUP_DEFINITION, oldGroupDefinition, groupDefinition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setClassName(String newClassName) {
+		String oldClassName = className;
+		className = newClassName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.INTERCEPTOR__CLASS_NAME, oldClassName, className));
 	}
 
 	/**
@@ -163,6 +206,8 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
 				if (resolve) return getGroupDefinition();
 				return basicGetGroupDefinition();
+			case MulePackage.INTERCEPTOR__CLASS_NAME:
+				return getClassName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -178,7 +223,10 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 				setName((String)newValue);
 				return;
 			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
-				setGroupDefinition((InterceptorDefinition)newValue);
+				setGroupDefinition((InterceptorStack)newValue);
+				return;
+			case MulePackage.INTERCEPTOR__CLASS_NAME:
+				setClassName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -195,7 +243,10 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 				setName(NAME_EDEFAULT);
 				return;
 			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
-				setGroupDefinition((InterceptorDefinition)null);
+				setGroupDefinition((InterceptorStack)null);
+				return;
+			case MulePackage.INTERCEPTOR__CLASS_NAME:
+				setClassName(CLASS_NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -212,6 +263,8 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case MulePackage.INTERCEPTOR__GROUP_DEFINITION:
 				return groupDefinition != null;
+			case MulePackage.INTERCEPTOR__CLASS_NAME:
+				return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -227,6 +280,8 @@ public class InterceptorImpl extends EObjectImpl implements Interceptor {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
+		result.append(", className: "); //$NON-NLS-1$
+		result.append(className);
 		result.append(')');
 		return result.toString();
 	}

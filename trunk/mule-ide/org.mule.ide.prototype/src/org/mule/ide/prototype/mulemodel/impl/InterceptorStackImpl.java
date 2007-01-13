@@ -8,7 +8,6 @@ package org.mule.ide.prototype.mulemodel.impl;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -16,29 +15,29 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.mule.ide.prototype.mulemodel.GenericComponent;
 import org.mule.ide.prototype.mulemodel.Interceptor;
+import org.mule.ide.prototype.mulemodel.InterceptorStack;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Generic Component</b></em>'.
+ * An implementation of the model object '<em><b>Interceptor Stack</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.GenericComponentImpl#getImplementation <em>Implementation</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.InterceptorStackImpl#getInterceptors <em>Interceptors</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class GenericComponentImpl extends AbstractComponentImpl implements GenericComponent {
+public class InterceptorStackImpl extends EObjectImpl implements InterceptorStack {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -47,31 +46,21 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	public static final String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
 
 	/**
-	 * The default value of the '{@link #getImplementation() <em>Implementation</em>}' attribute.
+	 * The cached value of the '{@link #getInterceptors() <em>Interceptors</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getImplementation()
+	 * @see #getInterceptors()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String IMPLEMENTATION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getImplementation() <em>Implementation</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getImplementation()
-	 * @generated
-	 * @ordered
-	 */
-	protected String implementation = IMPLEMENTATION_EDEFAULT;
+	protected EList interceptors = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected GenericComponentImpl() {
+	protected InterceptorStackImpl() {
 		super();
 	}
 
@@ -81,7 +70,7 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return MulePackage.Literals.GENERIC_COMPONENT;
+		return MulePackage.Literals.INTERCEPTOR_STACK;
 	}
 
 	/**
@@ -89,8 +78,11 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getImplementation() {
-		return implementation;
+	public EList getInterceptors() {
+		if (interceptors == null) {
+			interceptors = new EObjectContainmentEList(Interceptor.class, this, MulePackage.INTERCEPTOR_STACK__INTERCEPTORS);
+		}
+		return interceptors;
 	}
 
 	/**
@@ -98,11 +90,12 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImplementation(String newImplementation) {
-		String oldImplementation = implementation;
-		implementation = newImplementation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.GENERIC_COMPONENT__IMPLEMENTATION, oldImplementation, implementation));
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MulePackage.INTERCEPTOR_STACK__INTERCEPTORS:
+				return ((InternalEList)getInterceptors()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -112,8 +105,8 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MulePackage.GENERIC_COMPONENT__IMPLEMENTATION:
-				return getImplementation();
+			case MulePackage.INTERCEPTOR_STACK__INTERCEPTORS:
+				return getInterceptors();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -125,8 +118,9 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MulePackage.GENERIC_COMPONENT__IMPLEMENTATION:
-				setImplementation((String)newValue);
+			case MulePackage.INTERCEPTOR_STACK__INTERCEPTORS:
+				getInterceptors().clear();
+				getInterceptors().addAll((Collection)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -139,8 +133,8 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MulePackage.GENERIC_COMPONENT__IMPLEMENTATION:
-				setImplementation(IMPLEMENTATION_EDEFAULT);
+			case MulePackage.INTERCEPTOR_STACK__INTERCEPTORS:
+				getInterceptors().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -153,25 +147,10 @@ public class GenericComponentImpl extends AbstractComponentImpl implements Gener
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MulePackage.GENERIC_COMPONENT__IMPLEMENTATION:
-				return IMPLEMENTATION_EDEFAULT == null ? implementation != null : !IMPLEMENTATION_EDEFAULT.equals(implementation);
+			case MulePackage.INTERCEPTOR_STACK__INTERCEPTORS:
+				return interceptors != null && !interceptors.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (implementation: "); //$NON-NLS-1$
-		result.append(implementation);
-		result.append(')');
-		return result.toString();
-	}
-
-} //GenericComponentImpl
+} //InterceptorStackImpl

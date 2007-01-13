@@ -117,13 +117,13 @@ public interface MuleFactory extends EFactory {
 	MapProperty createMapProperty();
 
 	/**
-	 * Returns a new object of class '<em>Interceptor Definition</em>'.
+	 * Returns a new object of class '<em>Interceptor Stack</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Interceptor Definition</em>'.
+	 * @return a new object of class '<em>Interceptor Stack</em>'.
 	 * @generated
 	 */
-	InterceptorDefinition createInterceptorDefinition();
+	InterceptorStack createInterceptorStack();
 
 	/**
 	 * Returns a new object of class '<em>Bridge Component</em>'.

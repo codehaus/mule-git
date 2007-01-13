@@ -23,11 +23,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * The class <code>StrutsConfigEntityResolver</code> provides an entity
- * resolver that tries to load the Document Type Definitions of the Apache
- * Struts configuration files from the plugin directory.
- * 
- * @author Daniel
+ * The class <code>MuleConfigEntityResolver</code> provides an entity
+ * resolver that tries to load the Document Type Definitions of the Mule
+ * configuration files from the plugin directory.
  */
 public class MuleConfigEntityResolver implements EntityResolver {
 
@@ -40,7 +38,7 @@ public class MuleConfigEntityResolver implements EntityResolver {
 		if (MuleConfigConstants.MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId)) {
 			Implementation plugin = MuleModelPlugin.getPlugin();
 			if (plugin != null) {
-				URL url = FileLocator.find(plugin.getBundle(), new Path("src/schemas/mule-configuration_1_0.dtd"), Collections.emptyMap()); //$NON-NLS-1$
+				URL url = FileLocator.find(plugin.getBundle(), new Path("schemas/mule-configuration_1_0.dtd"), Collections.emptyMap()); //$NON-NLS-1$
 				if (url != null) return new InputSource(url.openStream());
 			}
 		}

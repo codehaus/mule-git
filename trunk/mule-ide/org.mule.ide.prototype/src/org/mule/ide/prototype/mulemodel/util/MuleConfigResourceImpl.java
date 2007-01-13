@@ -1,15 +1,11 @@
-/*****************************************************************************
- * Copyright (c) 2005 StrutsBox.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/**
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * Contributors:
- *    StrutsBox - initial API and implementation
- *****************************************************************************/
-/*
- * $Id: StrutsConfigResourceImpl.java,v 1.3 2005/07/21 15:21:01 daniel_rohe Exp $
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
 package org.mule.ide.prototype.mulemodel.util;
 
@@ -28,10 +24,8 @@ import org.mule.ide.prototype.translators.MuleConfigXmlMapping;
 import org.xml.sax.EntityResolver;
 
 /**
- * The class <code>StrutsConfigResourceImpl</code> provides a resource
- * implementation for the StrutsConfig model.
- * 
- * @author Daniel
+ * The class <code>MuleConfigResourceImpl</code> provides a resource
+ * implementation for the MuleConfig model.
  */
 public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 
@@ -39,8 +33,6 @@ public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 	 * The class <code>RootVersionAdapter</code> provides a notification that
 	 * synchronizes the version of the root object in the resource with the
 	 * version from the resource after the root object is added to the resource.
-	 * 
-	 * @author Daniel
 	 */
 	private class RootVersionAdapter extends AdapterImpl {
 
@@ -71,7 +63,7 @@ public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 	private EntityResolver entityResolver;
 
 	/**
-	 * Creates a new <code>StrutsConfigResourceImpl</code>.
+	 * Creates a new <code>MuleConfigResourceImpl</code>.
 	 * 
 	 * @param renderer
 	 *            resource renderer
@@ -81,7 +73,7 @@ public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 	}
 
 	/**
-	 * Creates a new <code>StrutsConfigResourceImpl</code>.
+	 * Creates a new <code>MuleConfigResourceImpl</code>.
 	 * 
 	 * @param uri
 	 *            resource uri
@@ -111,12 +103,12 @@ public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 	 * extracted from the resource.
 	 */
 	protected void syncVersionOfRootObject() {
-		MuleConfig strutsConfig = (MuleConfig) getRootObject();
-		if (strutsConfig != null) {
-			String version = strutsConfig.getVersion();
+		MuleConfig muleConfig = (MuleConfig) getRootObject();
+		if (muleConfig != null) {
+			String version = muleConfig.getVersion();
 			String newVersion = getVersionString();
 			if (!newVersion.equals(version)) {
-				strutsConfig.setVersion(newVersion);
+				muleConfig.setVersion(newVersion);
 			}
 		}
 	}
@@ -173,7 +165,7 @@ public class MuleConfigResourceImpl extends TranslatorResourceImpl {
 	public void setDoctypeValues(String publicId, String systemId) {
 		super.setDoctypeValues(publicId, systemId);
 
-		// here we decide based on the given public id which struts-config
+		// here we decide based on the given public id which mule-config
 		// version gets loaded
 		int version = MuleConfigConstants.VERSION_1_0_ID;
 		setVersionID(version);

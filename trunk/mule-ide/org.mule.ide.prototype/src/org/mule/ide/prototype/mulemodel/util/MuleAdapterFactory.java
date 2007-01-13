@@ -83,6 +83,9 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 			public Object caseInboundRouter(InboundRouter object) {
 				return createInboundRouterAdapter();
 			}
+			public Object caseAbstractComponent(AbstractComponent object) {
+				return createAbstractComponentAdapter();
+			}
 			public Object caseMuleConfig(MuleConfig object) {
 				return createMuleConfigAdapter();
 			}
@@ -113,8 +116,11 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 			public Object caseMapProperty(MapProperty object) {
 				return createMapPropertyAdapter();
 			}
-			public Object caseInterceptorDefinition(InterceptorDefinition object) {
-				return createInterceptorDefinitionAdapter();
+			public Object caseInterceptorStack(InterceptorStack object) {
+				return createInterceptorStackAdapter();
+			}
+			public Object caseGenericComponent(GenericComponent object) {
+				return createGenericComponentAdapter();
 			}
 			public Object caseBridgeComponent(BridgeComponent object) {
 				return createBridgeComponentAdapter();
@@ -130,12 +136,6 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 			}
 			public Object caseTransformer(Transformer object) {
 				return createTransformerAdapter();
-			}
-			public Object caseAbstractComponent(AbstractComponent object) {
-				return createAbstractComponentAdapter();
-			}
-			public Object caseGenericComponent(GenericComponent object) {
-				return createGenericComponentAdapter();
 			}
 			public Object caseAbstractFilter(AbstractFilter object) {
 				return createAbstractFilterAdapter();
@@ -322,16 +322,16 @@ public class MuleAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.mule.ide.prototype.mulemodel.InterceptorDefinition <em>Interceptor Definition</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.mule.ide.prototype.mulemodel.InterceptorStack <em>Interceptor Stack</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.mule.ide.prototype.mulemodel.InterceptorDefinition
+	 * @see org.mule.ide.prototype.mulemodel.InterceptorStack
 	 * @generated
 	 */
-	public Adapter createInterceptorDefinitionAdapter() {
+	public Adapter createInterceptorStackAdapter() {
 		return null;
 	}
 

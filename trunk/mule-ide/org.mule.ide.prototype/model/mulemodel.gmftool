@@ -3,15 +3,14 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:gmftool="http://www.eclipse.org/gmf/2005/ToolDefinition">
-  <palette
-      title="Mule">
+  <palette>
     <tools
         xsi:type="gmftool:ToolGroup"
         title="mulemodel">
       <tools
           xsi:type="gmftool:CreationTool"
-          title="Route"
-          description="Create new route">
+          title="InboundRouter"
+          description="Create new InboundRouter">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -19,8 +18,8 @@
       </tools>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="Component"
-          description="Create new Component">
+          title="InboundRouterInboundEndpoint"
+          description="Create new InboundRouterInboundEndpoint">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -28,8 +27,26 @@
       </tools>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="Endpoint"
-          description="Create new Endpoint">
+          title="OutboundRouter"
+          description="Create new OutboundRouter">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="OutboundRouterOutboundEndpoint"
+          description="Create new OutboundRouterOutboundEndpoint">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="OutboundRouterOutboundTransformer"
+          description="Create new OutboundRouterOutboundTransformer">
         <smallIcon
             xsi:type="gmftool:DefaultImage"/>
         <largeIcon
@@ -38,15 +55,119 @@
       <tools
           xsi:type="gmftool:CreationTool"
           title="Interceptor"
-          description="Add an interceptor">
+          description="Create new Interceptor">
         <smallIcon
-            xsi:type="gmftool:BundleImage"
-            path="/icons/full/obj16/interceptor16.png"
-            bundle="org.mule.ide.prototype.mulemodel.editor"/>
+            xsi:type="gmftool:DefaultImage"/>
         <largeIcon
-            xsi:type="gmftool:BundleImage"
-            path="/icons/full/obj32/interceptor32.png"
-            bundle="org.mule.ide.prototype.mulemodel.editor"/>
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Connector"
+          description="Create new Connector">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Interceptor"
+          description="Create new Interceptor">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="InterceptorDefinition"
+          description="Create new InterceptorDefinition">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="GenericComponent"
+          description="Create new GenericComponent">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="BridgeComponent"
+          description="Create new BridgeComponent">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="LocalEndpoint"
+          description="Create new LocalEndpoint">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="GlobalEndpoint"
+          description="Create new GlobalEndpoint">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Router"
+          description="Create new Router">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Transformer"
+          description="Create new Transformer">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="GenericFilter"
+          description="Create new GenericFilter">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="BinaryFilter"
+          description="Create new BinaryFilter">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="XsltFilter"
+          description="Create new XsltFilter">
+        <smallIcon
+            xsi:type="gmftool:DefaultImage"/>
+        <largeIcon
+            xsi:type="gmftool:DefaultImage"/>
       </tools>
     </tools>
   </palette>

@@ -180,7 +180,7 @@ public interface MuleConfig extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Interceptors</b></em>' containment reference list.
-	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.InterceptorDefinition}.
+	 * The list contents are of type {@link org.mule.ide.prototype.mulemodel.InterceptorStack}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Interceptors</em>' containment reference isn't clear,
@@ -189,7 +189,7 @@ public interface MuleConfig extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Interceptors</em>' containment reference list.
 	 * @see org.mule.ide.prototype.mulemodel.MulePackage#getMuleConfig_Interceptors()
-	 * @model type="org.mule.ide.prototype.mulemodel.InterceptorDefinition" containment="true"
+	 * @model type="org.mule.ide.prototype.mulemodel.InterceptorStack" containment="true"
 	 * @generated
 	 */
 	EList getInterceptors();

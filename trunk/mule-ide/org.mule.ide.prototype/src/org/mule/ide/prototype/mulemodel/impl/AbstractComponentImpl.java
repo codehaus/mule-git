@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.mule.ide.prototype.mulemodel.AbstractComponent;
 import org.mule.ide.prototype.mulemodel.InboundRouter;
+import org.mule.ide.prototype.mulemodel.Interceptor;
 import org.mule.ide.prototype.mulemodel.MulePackage;
 import org.mule.ide.prototype.mulemodel.OutboundRouter;
 import org.mule.ide.prototype.mulemodel.Property;
@@ -35,12 +36,12 @@ import org.mule.ide.prototype.mulemodel.Property;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getImplementation <em>Implementation</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getOutboundRouter <em>Outbound Router</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getInboundRouter <em>Inbound Router</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getComment <em>Comment</em>}</li>
  *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getComponentProperties <em>Component Properties</em>}</li>
+ *   <li>{@link org.mule.ide.prototype.mulemodel.impl.AbstractComponentImpl#getInterceptors <em>Interceptors</em>}</li>
  * </ul>
  * </p>
  *
@@ -53,26 +54,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com"; //$NON-NLS-1$
-
-	/**
-	 * The default value of the '{@link #getImplementation() <em>Implementation</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getImplementation()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String IMPLEMENTATION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getImplementation() <em>Implementation</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getImplementation()
-	 * @generated
-	 * @ordered
-	 */
-	protected String implementation = IMPLEMENTATION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -145,6 +126,16 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	protected Property componentProperties = null;
 
 	/**
+	 * The cached value of the '{@link #getInterceptors() <em>Interceptors</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInterceptors()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList interceptors = null;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -160,27 +151,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 */
 	protected EClass eStaticClass() {
 		return MulePackage.Literals.ABSTRACT_COMPONENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getImplementation() {
-		return implementation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImplementation(String newImplementation) {
-		String oldImplementation = implementation;
-		implementation = newImplementation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION, oldImplementation, implementation));
 	}
 
 	/**
@@ -297,6 +267,18 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList getInterceptors() {
+		if (interceptors == null) {
+			interceptors = new EObjectContainmentEList(Interceptor.class, this, MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS);
+		}
+		return interceptors;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MulePackage.ABSTRACT_COMPONENT__OUTBOUND_ROUTER:
@@ -305,6 +287,8 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 				return ((InternalEList)getInboundRouter()).basicRemove(otherEnd, msgs);
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
 				return basicSetComponentProperties(null, msgs);
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
+				return ((InternalEList)getInterceptors()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -316,8 +300,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
-				return getImplementation();
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 				return getName();
 			case MulePackage.ABSTRACT_COMPONENT__OUTBOUND_ROUTER:
@@ -328,6 +310,8 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 				return getComment();
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
 				return getComponentProperties();
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
+				return getInterceptors();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -339,9 +323,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
-				setImplementation((String)newValue);
-				return;
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 				setName((String)newValue);
 				return;
@@ -359,6 +340,10 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
 				setComponentProperties((Property)newValue);
 				return;
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
+				getInterceptors().clear();
+				getInterceptors().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -370,9 +355,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
-				setImplementation(IMPLEMENTATION_EDEFAULT);
-				return;
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 				setName(NAME_EDEFAULT);
 				return;
@@ -388,6 +370,9 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
 				setComponentProperties((Property)null);
 				return;
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
+				getInterceptors().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -399,8 +384,6 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MulePackage.ABSTRACT_COMPONENT__IMPLEMENTATION:
-				return IMPLEMENTATION_EDEFAULT == null ? implementation != null : !IMPLEMENTATION_EDEFAULT.equals(implementation);
 			case MulePackage.ABSTRACT_COMPONENT__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case MulePackage.ABSTRACT_COMPONENT__OUTBOUND_ROUTER:
@@ -411,6 +394,8 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
 			case MulePackage.ABSTRACT_COMPONENT__COMPONENT_PROPERTIES:
 				return componentProperties != null;
+			case MulePackage.ABSTRACT_COMPONENT__INTERCEPTORS:
+				return interceptors != null && !interceptors.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -424,9 +409,7 @@ public abstract class AbstractComponentImpl extends EObjectImpl implements Abstr
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (implementation: "); //$NON-NLS-1$
-		result.append(implementation);
-		result.append(", name: "); //$NON-NLS-1$
+		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", comment: "); //$NON-NLS-1$
 		result.append(comment);

@@ -1,7 +1,14 @@
+/**
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package org.mule.ide.prototype.mulemodel.util;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -201,6 +208,7 @@ public class EMF2DOMSSEAdapterEx extends EMF2DOMSSEAdapter {
 		List mofChildren = map.getMOFChildren(mofObject);
 
 		String attrVal = ((Element)node).getAttribute(map.getDOMName(mofObject));
+		if (attrVal == null) attrVal = "";
 
 		// Go though the referenced children to see if the corresponding
 		// MOF Adapter children exists. If not, create the adapter.
