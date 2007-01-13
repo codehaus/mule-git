@@ -44,7 +44,7 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
             assertFalse("Urls shouldn't be empty.", urls.isEmpty());
 
             URL muleBaseUserFolder = new File(testMuleBase, "lib/user").toURL();
-            assertEquals("$MULE_BASE/lib/user must come first.",
+            assertEquals("$MULE_BASE/lib/user must come first. URLs are: " + urls,
                          muleBaseUserFolder.toExternalForm() + "/", // the slash is required
                          ((URL) urls.get(0)).toExternalForm());
         }
