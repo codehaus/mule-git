@@ -17,6 +17,7 @@ import org.mule.util.SystemUtils;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.text.MessageFormat;
 
 public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
 {
@@ -31,8 +32,9 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
     public void testMuleBaseUserFolderOverridesMuleHome() throws Exception
     {
         File tempDir = SystemUtils.getJavaIoTmpDir();
-        File testMuleHome = new File(tempDir, "mule_test_delete_me/mule_home/");
-        File testMuleBase = new File(tempDir, "mule_test_delete_me/mule_base/");
+        long now = System.currentTimeMillis();
+        File testMuleHome = new File(tempDir, "mule_test_delete_me_" + now + "/mule_home/");
+        File testMuleBase = new File(tempDir, "mule_test_delete_me_" + now + "/mule_base/");
         try
         {
             assertTrue("Couldn't create test Mule home folder.", testMuleHome.mkdirs());
