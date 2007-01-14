@@ -48,10 +48,8 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
             URL muleBaseUserFolder = new File(testMuleBase, "lib/user").toURL();
             // the slash is required
             String expectedMuleBaseUserFolder = muleBaseUserFolder.toExternalForm() + "/";
-            String firstUrl = ((URL)urls.get(0)).toExternalForm();
-            assertEquals("$MULE_BASE/lib/user must come first; expected: '" + expectedMuleBaseUserFolder
-                            + "', got: '" + firstUrl + "', URLs are: " + urls, expectedMuleBaseUserFolder,
-                firstUrl);
+            String firstUrl = ((URL) urls.get(0)).toExternalForm();
+            assertEquals("$MULE_BASE/lib/user must come first.", expectedMuleBaseUserFolder, firstUrl);
         }
         finally
         {
