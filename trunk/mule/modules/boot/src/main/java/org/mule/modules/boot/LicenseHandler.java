@@ -283,7 +283,8 @@ public class LicenseHandler
     {
         File tempJar = File.createTempFile(ackJarName, null);
         File licenseFile = new File(muleHome, licenseFileName);
-        JarOutputStream newJar = null;
+        JarOutputStream newJar;
+        FileOutputStream fos;
 
         String ackData = "LicenseType=" + licenseType + "\n";
         ackData += "LicenseVersion=" + licenseVersion + "\n";
@@ -291,7 +292,8 @@ public class LicenseHandler
 
         try
         {
-            newJar = new JarOutputStream(new FileOutputStream(tempJar));
+            fos = new FileOutputStream(tempJar);
+            newJar = new JarOutputStream(fos);
         }
         catch (IOException ioe)
         {
@@ -318,6 +320,9 @@ public class LicenseHandler
                 newJar.write(buffer, 0, bytesRead);
             }
 
+            // wait till the physical file is written and released by the OS
+            newJar.flush();
+            fos.getFD().sync();
         }
         catch (IOException ioe)
         {
