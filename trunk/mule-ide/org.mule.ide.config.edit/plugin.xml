@@ -15,7 +15,7 @@
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
     <factory 
        uri = "http://muleumo.org/model/" 
-       class = "org.mule.ide.prototype.mulemodel.provider.MulemodelItemProviderAdapterFactory" 
+       class = "org.mule.ide.config.mulemodel.provider.MulemodelItemProviderAdapterFactory" 
        supportedTypes = 
          "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
           org.eclipse.emf.edit.provider.IStructuredItemContentProvider

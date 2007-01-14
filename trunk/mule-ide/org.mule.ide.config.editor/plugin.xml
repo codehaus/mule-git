@@ -20,9 +20,9 @@
       name="%_UI_Wizard_category">
     </category>
     <wizard
-      id = "org.mule.ide.prototype.mulemodel.presentation.MuleModelWizardID"
+      id = "org.mule.ide.config.mulemodel.presentation.MuleModelWizardID"
       name = "%_UI_MuleModelWizard_label"
-      class = "org.mule.ide.prototype.mulemodel.presentation.MuleModelWizard"
+      class = "org.mule.ide.config.mulemodel.presentation.MuleModelWizard"
       category = "org.eclipse.emf.ecore.Wizard.category.ID"
       icon = "icons/full/obj16/MuleModelFile.gif">
       <description>%_UI_MuleModelWizard_description</description>
@@ -32,12 +32,12 @@
 
   <extension point = "org.eclipse.ui.editors">
     <editor
-        id = "org.mule.ide.prototype.mulemodel.presentation.MuleEditorID"
+        id = "org.mule.ide.config.mulemodel.presentation.MuleEditorID"
         name = "%_UI_MuleEditor_label"
         icon = "icons/full/obj16/MuleModelFile.gif"
         extensions = "xml"
-        class = "org.mule.ide.prototype.mulemodel.presentation.MuleEditor" 
-        contributorClass="org.mule.ide.prototype.mulemodel.presentation.MuleActionBarContributor" >
+        class = "org.mule.ide.config.mulemodel.presentation.MuleEditor" 
+        contributorClass="org.mule.ide.config.mulemodel.presentation.MuleActionBarContributor" >
     </editor>
   </extension>    
 </plugin>

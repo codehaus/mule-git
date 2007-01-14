@@ -11,20 +11,20 @@
  -->
 
 <plugin>
-   <extension-point id="org.mule.ide.prototype.palette.paletteEntries" name="paletteFolder" schema="schema/org.mule.ide.prototype.palette.exsd"/>
+   <extension-point id="org.mule.ide.config.palette.paletteEntries" name="paletteFolder" schema="schema/org.mule.ide.config.palette.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
       <category
             name="Mule IDE"
-            id="org.mule.ide.prototype.palette">
+            id="org.mule.ide.config.palette">
       </category>
       <view
             name="Mule Component Palette"
             icon="icons/mule16.GIF"
-            category="org.mule.ide.prototype.palette"
-            class="org.mule.ide.prototype.palette.views.ToolPalette"
-            id="org.mule.ide.prototype.palette.views.ToolPalette">
+            category="org.mule.ide.config.palette"
+            class="org.mule.ide.config.palette.views.ToolPalette"
+            id="org.mule.ide.config.palette.views.ToolPalette">
       </view>
    </extension>
    <extension
@@ -35,23 +35,23 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.mule.ide.prototype.palette.views.Tool Palette">
+               id="org.mule.ide.config.palette.views.Tool Palette">
          </view>
       </perspectiveExtension>
    </extension>
    <extension
-         point="org.mule.ide.prototype.palette.paletteEntries">
+         point="org.mule.ide.config.palette.paletteEntries">
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Simple"
+               folderId="org.mule.ide.config.palette.components.Simple"
                icon="icons/folder.gif"
                name="Atomic Components">
           <folder
-               folderId="org.mule.ide.prototype.palette.components.Application"
+               folderId="org.mule.ide.config.palette.components.Application"
                icon="icons/folder.gif"
                name="Application">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Database"
+               folderId="org.mule.ide.config.palette.components.Database"
                icon="icons/folder.gif"
                name="Database">
                <connector name="JdbcConnector"
@@ -59,21 +59,21 @@
                      icon="icons/component.gif"/>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Email"
+               folderId="org.mule.ide.config.palette.components.Email"
                icon="icons/folder.gif"
                name="Email">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.File"
+               folderId="org.mule.ide.config.palette.components.File"
                icon="icons/folder.gif"
                name="File">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.File"
+               folderId="org.mule.ide.config.palette.components.File"
                icon="icons/folder.gif"
                name="Generic">
 	         <folder
-	               folderId="org.mule.ide.prototype.palette.components.File"
+	               folderId="org.mule.ide.config.palette.components.File"
 	               icon="icons/folder.gif"
 	               name="Filters">
 	               <filter name="EqualsFilter"
@@ -99,43 +99,43 @@
 	                     icon="icons/component.gif"/>
                </folder>
 	         <folder
-	               folderId="org.mule.ide.prototype.palette.components.File"
+	               folderId="org.mule.ide.config.palette.components.File"
 	               icon="icons/folder.gif"
 	               name="Inbound Routers">
                </folder>
 	         <folder
-	               folderId="org.mule.ide.prototype.palette.components.File"
+	               folderId="org.mule.ide.config.palette.components.File"
 	               icon="icons/folder.gif"
 	               name="Outbound Routers">
                </folder>
 	         <folder
-	               folderId="org.mule.ide.prototype.palette.components.File"
+	               folderId="org.mule.ide.config.palette.components.File"
 	               icon="icons/folder.gif"
 	               name="Response Routers">
                </folder>
 	         <folder
-	               folderId="org.mule.ide.prototype.palette.components.File"
+	               folderId="org.mule.ide.config.palette.components.File"
 	               icon="icons/folder.gif"
 	               name="Transformers">
                </folder>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Java"
+               folderId="org.mule.ide.config.palette.components.Java"
                icon="icons/folder.gif"
                name="Java">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.JavaSpaces"
+               folderId="org.mule.ide.config.palette.components.JavaSpaces"
                icon="icons/folder.gif"
                name="JavaSpaces">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.JBI"
+               folderId="org.mule.ide.config.palette.components.JBI"
                icon="icons/folder.gif"
                name="JBI">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Messaging"
+               folderId="org.mule.ide.config.palette.components.Messaging"
                icon="icons/folder.gif"
                name="Messaging">
                <!--
@@ -154,7 +154,7 @@
                      icon="icons/component.gif"/>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Network"
+               folderId="org.mule.ide.config.palette.components.Network"
                icon="icons/folder.gif"
                name="Network">
                <connector name="MulticastConnector"
@@ -168,7 +168,7 @@
                      icon="icons/component.gif"/>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.RMI"
+               folderId="org.mule.ide.config.palette.components.RMI"
                icon="icons/folder.gif"
                name="RMI">
                <connector name="RmiConnector"
@@ -176,7 +176,7 @@
                      icon="icons/component.gif"/>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Scheduling"
+               folderId="org.mule.ide.config.palette.components.Scheduling"
                icon="icons/folder.gif"
                name="Scheduling">
                <connector name="QuartzConnector"
@@ -184,16 +184,16 @@
                      icon="icons/component.gif"/>
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.SSL"
+               folderId="org.mule.ide.config.palette.components.SSL"
                icon="icons/folder.gif"
                name="SSL">
          </folder>
          <folder
-               folderId="org.mule.ide.prototype.palette.components.Web"
+               folderId="org.mule.ide.config.palette.components.Web"
                icon="icons/folder.gif"
                name="Web">
             <folder
-                  folderId="org.mule.ide.prototype.palette.components.HTTP"
+                  folderId="org.mule.ide.config.palette.components.HTTP"
                   icon="icons/sample.gif"
                   name="HTTP">
                <connector name="HttpConnector"
@@ -204,7 +204,7 @@
                      icon="icons/component.gif"/>
             </folder>
             <folder
-                  folderId="org.mule.ide.prototype.palette.components.J2EE"
+                  folderId="org.mule.ide.config.palette.components.J2EE"
                   icon="icons/sample.gif"
                   name="J2EE">
                <connector name="JettyConnector"
@@ -215,7 +215,7 @@
                      icon="icons/component.gif"/>
             </folder>
             <folder
-                  folderId="org.mule.ide.prototype.palette.components.SOAP"
+                  folderId="org.mule.ide.config.palette.components.SOAP"
                   icon="icons/sample.gif"
                   name="SOAP">
                <connector name="AxisConnector"
@@ -237,7 +237,7 @@
         </folder>
       </folder>
  	  <folder
-               folderId="org.mule.ide.prototype.palette.components.Complex"
+               folderId="org.mule.ide.config.palette.components.Complex"
                icon="icons/folder.gif"
                name="Complex Components">
           <component name="Simple (Bridging) Route"

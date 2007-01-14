@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.mule.ide.prototype.palette">
+<schema targetNamespace="org.mule.ide.config.palette">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.mule.ide.prototype.palette" id="org.mule.ide.prototype.palette.paletteEntries" name="paletteEntries"/>
+         <meta.schema plugin="org.mule.ide.config.palette" id="org.mule.ide.config.palette.paletteEntries" name="paletteEntries"/>
       </appInfo>
       <documentation>
          This extension point defines a number of items in the Mule component palette.
@@ -399,14 +399,14 @@
       </appInfo>
       <documentation>
          &lt;extension
-  point=&quot;org.mule.ide.prototype.palette.paletteEntries&quot;&gt;
+  point=&quot;org.mule.ide.config.palette.paletteEntries&quot;&gt;
 
   &lt;folder
-    folderId=&quot;org.mule.ide.prototype.palette.ws&quot;
+    folderId=&quot;org.mule.ide.config.palette.ws&quot;
       icon=&quot;icons/sample.gif&quot;
       name=&quot;Web Service Protocols&quot;&gt;
     &lt;folder
-      folderId=&quot;org.mule.ide.prototype.palette.soap&quot;
+      folderId=&quot;org.mule.ide.config.palette.soap&quot;
       icon=&quot;icons/mule16.GIF&quot;
       name=&quot;SOAP&quot;/&gt;
   &lt;/folder&gt;

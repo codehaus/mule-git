@@ -14,7 +14,7 @@
 package org.mule.ide.core.nature;
 
 import java.io.ByteArrayInputStream;
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
 import org.eclipse.core.resources.ICommand;

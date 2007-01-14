@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.mule.ide.prototype.editor; singleton:=true
+Bundle-SymbolicName: org.mule.ide.config.editor; singleton:=true
 Bundle-Version: 1.4.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.mule.ide.prototype.mulemodel.presentation.MuleEditorPlugin$Implementation
+Bundle-Activator: org.mule.ide.config.mulemodel.presentation.MuleEditorPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.mule.ide.prototype.mulemodel.presentation,
- org.mule.ide.prototype.mulemodel.presentation.util
+Export-Package: org.mule.ide.config.mulemodel.presentation,
+ org.mule.ide.config.mulemodel.presentation.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
- org.mule.ide.prototype.edit;visibility:=reexport,
- org.mule.ide.prototype.palette;visibility:=reexport,
+ org.mule.ide.config.edit;visibility:=reexport,
+ org.mule.ide.config.palette;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,

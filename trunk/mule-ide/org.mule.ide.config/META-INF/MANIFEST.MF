@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.mule.ide.prototype; singleton:=true
+Bundle-SymbolicName: org.mule.ide.config; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.mule.ide.prototype.mulemodel,
- org.mule.ide.prototype.mulemodel.impl,
- org.mule.ide.prototype.mulemodel.util
+Export-Package: org.mule.ide.config.mulemodel,
+ org.mule.ide.config.mulemodel.impl,
+ org.mule.ide.config.mulemodel.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.emf,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.sse.core
 Eclipse-LazyStart: true
-Bundle-Activator: org.mule.ide.prototype.mulemodel.MuleModelPlugin$Implementation
+Bundle-Activator: org.mule.ide.config.mulemodel.MuleModelPlugin$Implementation

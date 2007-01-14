@@ -255,8 +255,8 @@
             xsi:type="gmfgen:ToolEntry"
             title="Interceptor"
             description="Add an interceptor"
-            largeIconPath="/org.mule.ide.prototype.mulemodel.editor/icons/full/obj32/interceptor32.png"
-            smallIconPath="/org.mule.ide.prototype.mulemodel.editor/icons/full/obj16/interceptor16.png"
+            largeIconPath="/org.mule.ide.config.mulemodel.editor/icons/full/obj32/interceptor32.png"
+            smallIconPath="/org.mule.ide.config.mulemodel.editor/icons/full/obj16/interceptor16.png"
             genNodes="//@diagram/@childNodes.0"/>
       </groups>
     </palette>

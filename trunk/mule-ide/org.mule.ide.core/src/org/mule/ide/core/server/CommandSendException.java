@@ -7,7 +7,9 @@ package org.mule.ide.core.server;
  */
 public class CommandSendException extends Exception {
 
-    public CommandSendException(String message) {
+	private static final long serialVersionUID = -6983752410460049359L;
+
+	public CommandSendException(String message) {
         super(message);
     }
 }

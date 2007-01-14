@@ -7,7 +7,9 @@ import org.mule.MuleServer;
 
 public class MuleShutdownCommand extends MuleCommand implements Serializable {
 
-    /** Command id */
+	private static final long serialVersionUID = 6448821136763641370L;
+
+	/** Command id */
     private static final String ID = "shutdown";
 
     /** Command description */

@@ -8,7 +8,9 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class MuleModelException extends CoreException {
 
-    public MuleModelException(IStatus status) {
+	private static final long serialVersionUID = -3743356049112147557L;
+
+	public MuleModelException(IStatus status) {
         super(status);
     }
 }

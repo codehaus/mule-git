@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
-Bundle-SymbolicName: org.mule.ide.prototype.palette; singleton:=true
+Bundle-SymbolicName: org.mule.ide.config.palette; singleton:=true
 Bundle-Version: 0.1.0
-Bundle-Activator: org.mule.ide.prototype.palette.Activator
+Bundle-Activator: org.mule.ide.config.palette.Activator
 Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.mule.ide.prototype,
+ org.mule.ide.config,
  org.eclipse.emf.ecore
 Eclipse-LazyStart: true
-Export-Package: org.mule.ide.prototype.palette,
- org.mule.ide.prototype.palette.views
+Export-Package: org.mule.ide.config.palette,
+ org.mule.ide.config.palette.views

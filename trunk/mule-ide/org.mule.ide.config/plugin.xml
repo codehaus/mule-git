@@ -15,7 +15,7 @@
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
        uri = "http://muleumo.org/model/" 
-       class = "org.mule.ide.prototype.mulemodel.MulePackage"
+       class = "org.mule.ide.config.mulemodel.MulePackage"
        genModel = "model/mulemodel.genmodel" /> 
   </extension>
 
