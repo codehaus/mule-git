@@ -31,10 +31,11 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
      */
     public void testMuleBaseUserFolderOverridesMuleHome() throws Exception
     {
-        File tempDir = SystemUtils.getJavaIoTmpDir();
-        long now = System.currentTimeMillis();
-        File testMuleHome = new File(tempDir, "mule_test_delete_me_" + now + "/mule_home/");
-        File testMuleBase = new File(tempDir, "mule_test_delete_me_" + now + "/mule_base/");
+        final File tempDir = SystemUtils.getJavaIoTmpDir();
+        final long now = System.currentTimeMillis();
+        final File currentTestFolder = new File(tempDir, "mule_test_delete_me_" + now);
+        File testMuleHome = new File(currentTestFolder, "mule_home/");
+        File testMuleBase = new File(currentTestFolder, "mule_base/");
         try
         {
             assertTrue("Couldn't create test Mule home folder.", testMuleHome.mkdirs());
@@ -45,7 +46,7 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
             assertNotNull("Urls shouldn't be null.", urls);
             assertFalse("Urls shouldn't be empty.", urls.isEmpty());
 
-            URL muleBaseUserFolder = new File(testMuleBase, "lib/user").toURL();
+            URL muleBaseUserFolder = new File(testMuleBase, "lib/user").toURI().toURL();
             // the slash is required
             String expectedMuleBaseUserFolder = muleBaseUserFolder.toExternalForm() + "/";
             String firstUrl = ((URL) urls.get(0)).toExternalForm();
@@ -54,8 +55,7 @@ public class DefaultMuleClassPathConfigTestCase extends AbstractMuleTestCase
         finally
         {
             // tearDown() may be too late for these calls
-            FileUtils.deleteTree(testMuleHome);
-            FileUtils.deleteTree(testMuleBase);
+            FileUtils.deleteTree(currentTestFolder);
         }
     }
 
