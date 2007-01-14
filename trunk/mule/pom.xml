@@ -378,7 +378,7 @@
                         <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
                         <link>http://logging.apache.org/log4j/docs/api/</link>
                         <link>http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/</link>
-                        <link>http://www.junit.org/junit/javadoc/3.8.2/</link>
+                        <link>http://www.junit.org/junit/javadoc/3.8.1/</link>
                     </links>
                     <groups>
                         <group>
