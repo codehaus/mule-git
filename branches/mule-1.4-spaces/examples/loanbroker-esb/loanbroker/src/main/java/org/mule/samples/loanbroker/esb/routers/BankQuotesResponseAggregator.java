@@ -25,7 +25,6 @@ import java.util.Iterator;
 /**
  * <code>BankQuotesAggregator</code> receives a number of quotes and selectes the
  * lowest
- * 
  */
 public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
 {
@@ -53,6 +52,7 @@ public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
                 event = (UMOEvent)iterator.next();
                 quote = (LoanQuote)event.getTransformedMessage();
                 logger.info("Processing quote: " + quote);
+
                 if (lowestQuote == null)
                 {
                     lowestQuote = quote;
@@ -65,6 +65,7 @@ public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
                     }
                 }
             }
+
             logger.info("Lowest quote is: " + lowestQuote);
             return new MuleMessage(lowestQuote, event.getMessage());
         }
@@ -74,4 +75,5 @@ public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
                 new MuleMessage(events), null, e);
         }
     }
+
 }

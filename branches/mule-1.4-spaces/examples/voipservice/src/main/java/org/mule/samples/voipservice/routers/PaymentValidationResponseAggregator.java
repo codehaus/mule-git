@@ -39,10 +39,12 @@ public class PaymentValidationResponseAggregator extends ResponseCorrelationAggr
             {
                 event = (UMOEvent)iterator.next();
                 creditProfileTO = (CreditProfileTO)event.getTransformedMessage();
+
                 if (creditProfileTO.getCreditScore() >= CreditProfileTO.CREDIT_LIMIT)
                 {
                     one = true;
                 }
+
                 if (creditProfileTO.getCreditAuthorisedStatus() == CreditProfileTO.CREDIT_AUTHORISED)
                 {
                     two = true;
@@ -61,11 +63,6 @@ public class PaymentValidationResponseAggregator extends ResponseCorrelationAggr
         }
 
         return new MuleMessage(creditProfileTO, event.getMessage());
-    }
-
-    protected boolean shouldAggregate(EventGroup events)
-    {
-        return super.shouldAggregate(events);
     }
 
 }

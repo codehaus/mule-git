@@ -12,7 +12,6 @@ package org.mule.routing.inbound;
 
 import org.mule.umo.UMOEvent;
 
-import java.util.Comparator;
 
 /**
  * <code>CorrelationEventResequencer</code> is used to resequence events according
@@ -47,34 +46,6 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
         }
 
         return size == events.size();
-    }
-
-    public static class CorrelationSequenceComparator implements Comparator
-    {
-        private static final Comparator Instance = new CorrelationSequenceComparator();
-
-        public static Comparator getInstance()
-        {
-            return Instance;
-        }
-
-        public int compare(Object o1, Object o2)
-        {
-            int val1 = ((UMOEvent)o1).getMessage().getCorrelationSequence();
-            int val2 = ((UMOEvent)o2).getMessage().getCorrelationSequence();
-            if (val1 == val2)
-            {
-                return 0;
-            }
-            else if (val1 > val2)
-            {
-                return 1;
-            }
-            else
-            {
-                return -1;
-            }
-        }
     }
 
 }

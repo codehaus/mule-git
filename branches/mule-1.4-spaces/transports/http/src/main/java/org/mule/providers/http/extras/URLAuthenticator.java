@@ -15,15 +15,13 @@ import java.net.PasswordAuthentication;
 
 public class URLAuthenticator extends Authenticator
 {   
-    protected String userName;
-    protected String password;
+    private final PasswordAuthentication passwordAuth;
     
     public URLAuthenticator(String userName, String password){
-        this.userName = userName;
-        this.password = password;
+        this.passwordAuth = new PasswordAuthentication(userName, password.toCharArray());
     }
     
     protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(userName, password.toCharArray());
+        return this.passwordAuth;
     }
 }
