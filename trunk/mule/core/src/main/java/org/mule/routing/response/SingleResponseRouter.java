@@ -34,7 +34,7 @@ public class SingleResponseRouter extends AbstractResponseAggregator
      * @param events
      * @return true if the event group size is 1 or greater
      */
-    protected boolean shouldAggregate(EventGroup events)
+    protected boolean shouldAggregateEvents(EventGroup events)
     {
         int size = events.expectedSize();
         if (size > 1)
