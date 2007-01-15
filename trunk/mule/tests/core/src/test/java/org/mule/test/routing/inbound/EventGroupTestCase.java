@@ -128,16 +128,16 @@ public class EventGroupTestCase extends AbstractMuleTestCase
 
         // these tests use the groupId
         assertEquals(0, g1.compareTo(g2));
-        assertEquals(-1, g1.compareTo(g3));
-        assertEquals(1, g3.compareTo(g1));
-        assertEquals(1, g3.compareTo(g2));
+        assertTrue(g1.compareTo(g3) < 0);
+        assertTrue(g3.compareTo(g1) > 0);
+        assertTrue(g3.compareTo(g2) > 0);
 
         // when the groupId is not Comparable, the creation time is used as fallback
         g1 = new EventGroup(new Object());
         g2 = new EventGroup(new Object());
         // g1 is older (smaller) than g2
-        assertEquals(-1, g1.compareTo(g2));
-        assertEquals(1, g2.compareTo(g1));
+        assertTrue(g1.compareTo(g2) < 0);
+        assertTrue(g2.compareTo(g1) > 0);
     }
 
     public void testToArray() throws Exception
