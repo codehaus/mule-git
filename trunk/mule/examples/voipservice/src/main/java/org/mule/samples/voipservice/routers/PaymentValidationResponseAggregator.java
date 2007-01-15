@@ -63,9 +63,9 @@ public class PaymentValidationResponseAggregator extends ResponseCorrelationAggr
         return new MuleMessage(creditProfileTO, event.getMessage());
     }
 
-    protected boolean shouldAggregate(EventGroup events)
+    protected boolean shouldAggregateEvents(EventGroup events)
     {
-        return super.shouldAggregate(events);
+        return super.shouldAggregateEvents(events);
     }
 
 }
