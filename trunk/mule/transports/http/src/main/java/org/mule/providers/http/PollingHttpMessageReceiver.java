@@ -43,7 +43,9 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     private URL pollUrl;
 
     private int defaultBufferSize = 1024 * 32;
-
+    
+    private URLAuthenticator authenticator;
+    
     public PollingHttpMessageReceiver(UMOConnector connector,
                                       UMOComponent component,
                                       final UMOEndpoint endpoint) throws InitialisationException
@@ -54,6 +56,12 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         if (pollingFrequency > 0)
         {
             setFrequency(pollingFrequency);
+        }
+        if (endpoint.getEndpointURI().getUserInfo() != null){
+            this.authenticator = new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword());
+        }
+        else{
+            this.authenticator = new URLAuthenticator("","");
         }
     }
 
@@ -67,6 +75,12 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         try
         {
             pollUrl = new URL(endpoint.getEndpointURI().getAddress());
+            if (endpoint.getEndpointURI().getUserInfo() != null){
+                this.authenticator = new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword());
+            }
+            else{
+                this.authenticator = new URLAuthenticator("","");
+            }
         }
         catch (MalformedURLException e)
         {
@@ -93,7 +107,6 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
             url = new URL(connectUrl);
         }
         logger.debug("Using url to connect: " + pollUrl.toString());
-        Authenticator.setDefault(new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword()));
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.disconnect();
     }
@@ -104,9 +117,8 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     }
 
     public void poll() throws Exception
-    {
-        Authenticator.setDefault(new URLAuthenticator(endpoint.getEndpointURI().getUsername(), endpoint.getEndpointURI().getPassword()));
-                
+    { 
+        setAuthenticator(this.authenticator);
         HttpURLConnection connection = (HttpURLConnection)pollUrl.openConnection();
 
         int len = 0;
@@ -168,4 +180,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         routeMessage(message, endpoint.isSynchronous());
     }
     
+    public void setAuthenticator(URLAuthenticator auth){
+        Authenticator.setDefault(auth);
+    }
 }
