@@ -11,6 +11,7 @@
 package org.mule.ide.config.mulemodel.util;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jem.util.emf.workbench.ProjectResourceSet;
 import org.eclipse.wst.common.internal.emf.resource.Renderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResourceFactory;
@@ -23,11 +24,14 @@ import org.eclipse.wst.common.internal.emf.resource.TranslatorResourceFactory;
  */
 public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 
+	private ProjectResourceSet resourceSet;
+	
 	/**
 	 * Creates a new <code>MuleConfigResourceFactoryImpl</code>.
 	 */
-	public MuleConfigResourceFactoryImpl() {
+	public MuleConfigResourceFactoryImpl(ProjectResourceSet resourceSet) {
 		super(EMF2DOMSSERendererExFactory.INSTANCE);
+		this.resourceSet = resourceSet;
 	}
 
 	/*
@@ -35,7 +39,12 @@ public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 	 *      org.eclipse.wst.common.internal.emf.resource.Renderer)
 	 */
 	protected TranslatorResource createResource(URI uri, Renderer aRenderer) {
-		return new MuleConfigResourceImpl(uri, aRenderer);
+//    	((AbstractRendererImpl)aRenderer).setValidating(false);
+		MuleConfigResourceImpl resource = new MuleConfigResourceImpl(uri, aRenderer);
+        resource.basicSetResourceSet(resourceSet, null);
+        resource.accessForRead();
+        resource.accessForWrite();
+        return resource;
 	}
-
+	
 }

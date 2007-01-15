@@ -889,19 +889,18 @@ public class MuleEditor
 		}
 		
 		if (! modelProject.equals(currentProject)) {
-			ResourceSet projectResourceSet = new MuleResourceSetEditImpl(modelProject);
+			ProjectResourceSet projectResourceSet = new MuleResourceSetEditImpl(modelProject);
 			StructuredTextEditingDomain sted = new StructuredTextEditingDomain(adapterFactory, commandStack, projectResourceSet); 
 			editingDomain = sted;
 			
-		    editingDomain.getResourceSet()
-	        .getResourceFactoryRegistry().getExtensionToFactoryMap()
-	                .put("xml", new MuleConfigResourceFactoryImpl());
+			projectResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+	                .put("xml", new MuleConfigResourceFactoryImpl(projectResourceSet));
 		}
 		
 		try {
 			// Load the resource through the editing domain.
 			//
-//			Resource emfResource = editingDomain.loadResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()).toString());
+			Resource emfResource = editingDomain.loadResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()).toString());
 			// TODO: Initialize ResourceSet
 		}
 		catch (Exception exception) {
@@ -1024,7 +1023,7 @@ public class MuleEditor
 		createModel();
 		try {
 			createSourcePage();
-	//		createAndAddDesignPage();
+			//createAndAddDesignPage();
 			addSourcePage();
 		} catch (Throwable e) {
 			MuleEditorPlugin.INSTANCE.log(e);
@@ -1081,30 +1080,30 @@ public class MuleEditor
 //		fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
 
 		
-//		// This is the page for the tree viewer
-//		//
-//		{
-//			ViewerPane viewerPane =
-//				new ViewerPane(getSite().getPage(), MuleEditor.this) {
-//					public Viewer createViewer(Composite composite) {
-//						return new TreeViewer(composite);
-//					}
-//					public void requestActivation() {
-//						super.requestActivation();
-//						setCurrentViewerPane(this);
-//					}
-//				};
-//			viewerPane.createControl(getContainer());
-//			treeViewer = (TreeViewer)viewerPane.getViewer();
-//			treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-//			treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-//
-//			new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
-//
-//			createContextMenuFor(treeViewer);
-//			int pageIndex = addPage(viewerPane.getControl());
-//			setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
-//		}
+		// This is the page for the tree viewer
+		//
+		{
+			ViewerPane viewerPane =
+				new ViewerPane(getSite().getPage(), MuleEditor.this) {
+					public Viewer createViewer(Composite composite) {
+						return new TreeViewer(composite);
+					}
+					public void requestActivation() {
+						super.requestActivation();
+						setCurrentViewerPane(this);
+					}
+				};
+			viewerPane.createControl(getContainer());
+			treeViewer = (TreeViewer)viewerPane.getViewer();
+			treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
+			treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+
+			new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
+
+			createContextMenuFor(treeViewer);
+			int pageIndex = addPage(viewerPane.getControl());
+			setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
+		}
 
 		setActivePage(0);
 	}
