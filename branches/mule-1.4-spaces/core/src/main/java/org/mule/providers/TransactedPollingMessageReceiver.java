@@ -61,10 +61,10 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
         // Connector property overrides any implied value
         useMultipleReceivers = connector.isCreateMultipleTransactedReceivers();
         ThreadingProfile tp = connector.getReceiverThreadingProfile();
+
         if (useMultipleReceivers && receiveMessagesInTransaction && tp.isDoThreading())
         {
-            // TODO HH: BIG problem here since receivers now share a pool?!
-            for (int i = 0; i < tp.getMaxThreadsActive(); i++)
+            for (int i = 0; i < connector.getNumberOfConcurrentTransactedReceivers(); i++)
             {
                 super.doStart();
             }
@@ -79,6 +79,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
     {
         TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
             connector.getExceptionListener());
+
         if (receiveMessagesInTransaction)
         {
             // Receive messages and process them in a single transaction
@@ -93,12 +94,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
                     {
                         for (Iterator it = messages.iterator(); it.hasNext();)
                         {
-                            Object message = it.next();
-                            if (logger.isTraceEnabled())
-                            {
-                                logger.trace("Received Message: " + message);
-                            }
-                            processMessage(message);
+                            TransactedPollingMessageReceiver.this.processMessage(it.next());
                         }
                     }
                     return null;
@@ -108,22 +104,16 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
         }
         else
         {
-            // Receive messages and launch a worker thread
-            // for each message
+            // Receive messages and launch a worker for each message
             List messages = getMessages();
             if (messages != null && messages.size() > 0)
             {
                 final CountDownLatch countdown = new CountDownLatch(messages.size());
                 for (Iterator it = messages.iterator(); it.hasNext();)
                 {
-                    final Object message = it.next();
-                    if (logger.isTraceEnabled())
-                    {
-                        logger.trace("Received Message: " + message);
-                    }
                     try
                     {
-                        getWorkManager().scheduleWork(new MessageProcessorWorker(tt, countdown, message));
+                        this.getWorkManager().scheduleWork(new MessageProcessorWorker(tt, countdown, it.next()));
                     }
                     catch (Exception e)
                     {
@@ -138,9 +128,9 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
 
     protected class MessageProcessorWorker implements Work, TransactionCallback
     {
-        private TransactionTemplate tt;
-        private Object message;
-        private CountDownLatch latch;
+        private final TransactionTemplate tt;
+        private final Object message;
+        private final CountDownLatch latch;
 
         public MessageProcessorWorker(TransactionTemplate tt, CountDownLatch latch, Object message)
         {
@@ -172,7 +162,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
 
         public Object doInTransaction() throws Exception
         {
-            processMessage(message);
+            TransactedPollingMessageReceiver.this.processMessage(message);
             return null;
         }
 

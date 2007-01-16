@@ -171,19 +171,19 @@ public abstract class AbstractConnector
     private ThreadingProfile receiverThreadingProfile = null;
 
     /**
-     * Determines whether dispatchers should be disposed straight away of after every
-     * request or cached
+     * @see {@link #isCreateDispatcherPerRequest()}
      */
     protected boolean createDispatcherPerRequest = false;
 
     /**
-     * For better throughput when using TransactedMessageReceivers. This will create
-     * an number of receiver threads based on the ThreadingProfile configured fro the
-     * receiver. This property is user by transports that support transactions,
-     * specifically MessageReceivers that extend the
-     * TransactedPollingMessageReceiver.
+     * @see {@link #isCreateMultipleTransactedReceivers()}
      */
     protected boolean createMultipleTransactedReceivers = true;
+    
+    /**
+     * @see {@link #getNumberOfConcurrentTransactedReceivers()}
+     */
+    protected int numberOfConcurrentTransactedReceivers = 4;
 
     /**
      * The service descriptor can define a default inbound transformer to be used on
@@ -792,7 +792,7 @@ public abstract class AbstractConnector
         }
     }
 
-    public ThreadingProfile getDispatcherThreadingProfile()
+    public synchronized ThreadingProfile getDispatcherThreadingProfile()
     {
         if (dispatcherThreadingProfile == null)
         {
@@ -802,28 +802,22 @@ public abstract class AbstractConnector
         return dispatcherThreadingProfile;
     }
 
-    public void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
+    public synchronized void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
     {
         this.dispatcherThreadingProfile = dispatcherThreadingProfile;
     }
 
-    public ThreadingProfile getReceiverThreadingProfile()
+    public synchronized ThreadingProfile getReceiverThreadingProfile()
     {
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-            // MULE-595: workaround until PollingMessageReceiver does not require its
-            // own thread any longer and we have NIO support, probably via Mina.
-            // Socket-based receivers like http need to use a thread since they hang
-            // in accept(); having too many of them can exhaust a size-limited pool
-            // and block startup.
-            receiverThreadingProfile.setMaxThreadsActive(256);
         }
 
         return receiverThreadingProfile;
     }
 
-    public void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
+    public synchronized void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
@@ -1150,14 +1144,13 @@ public abstract class AbstractConnector
     }
 
     /**
-     * For better throughput when using TransactedMessageReceivers. This will create
-     * an number of receiver threads based on the ThreadingProfile configured fro the
-     * receiver. This property is user by transports that support transactions,
-     * specifically MessageReceivers that extend the
+     * For better throughput when using TransactedMessageReceivers this will enable a
+     * number of concurrent receivers, based on the value returned by
+     * {@link #getNumberOfConcurrentTransactedReceivers()}. This property is used by
+     * transports that support transactions, specifically receivers that extend the
      * TransactedPollingMessageReceiver.
      * 
-     * @return true if multiple receiver threads will be created for receivers on
-     *         this connection
+     * @return true if multiple receivers will be enabled for this connection
      */
     public boolean isCreateMultipleTransactedReceivers()
     {
@@ -1166,14 +1159,33 @@ public abstract class AbstractConnector
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
-     * @param createMultipleTransactedReceivers true if multiple receiver threads
-     *            will be created for receivers on this connection
+     * @param createMultipleTransactedReceivers if true, multiple receivers will be
+     *            created for this connection
      */
     public void setCreateMultipleTransactedReceivers(boolean createMultipleTransactedReceivers)
     {
         this.createMultipleTransactedReceivers = createMultipleTransactedReceivers;
     }
+    
+    /**
+     * Returns the number of concurrent receivers that will be launched when
+     * {@link #isCreateMultipleTransactedReceivers()} returns <code>true</code>.
+     * By default the number is <strong>4</strong>.
+     */
+    public int getNumberOfConcurrentTransactedReceivers()
+    {
+        return numberOfConcurrentTransactedReceivers;
+    }
 
+    /**
+     * @see {@link #getNumberOfConcurrentTransactedReceivers()}
+     * @param count the number of concurrent transacted receivers to start
+     */
+    public void setNumberOfConcurrentTransactedReceivers(int count)
+    {
+        numberOfConcurrentTransactedReceivers = count;
+    }
+    
     /**
      * Whether to fire message notifications for every message that is sent or
      * received from this connector
