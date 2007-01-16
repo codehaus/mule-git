@@ -33,6 +33,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * <code>MuleServer</code> is a simple application that represents a local Mule
  * Server daemon. It is initialised with a mule-config.xml file.
+ * 
+ * @deprecated This class is going away in Mule 2.0
  */
 public class MuleServer implements Runnable
 {
