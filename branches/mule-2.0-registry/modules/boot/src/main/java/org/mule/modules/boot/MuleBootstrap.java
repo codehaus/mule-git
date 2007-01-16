@@ -10,9 +10,7 @@
 
 package org.mule.modules.boot;
 
-import org.mule.MuleServer;
 import org.mule.util.ClassUtils;
-import org.mule.util.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +18,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 import org.tanukisoftware.wrapper.WrapperSimpleApp;
@@ -39,29 +40,50 @@ import org.tanukisoftware.wrapper.WrapperSimpleApp;
 public class MuleBootstrap 
 {
     public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
-    public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.modules.osgi.OsgiFrameworkWrapper";
-    
+
+    public static final String CLI_OPTIONS[][] = {
+        {"main", "true", "Main Class"},
+        {"osgi", "false", "Run in an OSGi framework"},
+        {"nogui", "false", "Suppress graphical console"}
+    };
+
     public static void main( String[] args ) throws Exception
     {
-        String mainClassName = getCommandLineOption("-main", args);
+        // The last argument is the command from the Service Wrapper (console/start/stop).
+        if (args.length < 1) 
+        {
+            throw new IllegalArgumentException("Missing expected arguments from the Service Wrapper.");
+        }
+        String wrapperCommand = args[args.length - 1];
+        // Drop the last argument.
+        String[] remainingArgs = new String[args.length - 1];
+        System.arraycopy(args, 0, remainingArgs, 0, args.length - 1);
 
-        if (mainClassName == null || mainClassName.equals(MAIN_CLASS_MULE_SERVER))
+        // Parse any command line options based on the list above.
+        CommandLine commandLine = parseCommandLine(remainingArgs);
+        // Any unrecognized arguments get passed through to the next class (e.g., to Knopflerfish).
+        remainingArgs = commandLine.getArgs();
+        
+        String mainClassName = commandLine.getOptionValue("main");
+        if (commandLine.hasOption("osgi")) 
+        {
+            // Only start up the GUI console if Mule is run in the foreground.
+            boolean startGui = wrapperCommand.startsWith("console") && !commandLine.hasOption("nogui");
+            System.out.println("Starting the OSGi Framework...");
+            WrapperManager.start(new OsgiFrameworkWrapper(startGui), remainingArgs);
+        }
+        else if (mainClassName == null || mainClassName.equals(MAIN_CLASS_MULE_SERVER))
         {
             configureClasspath();
             System.out.println("Starting the Mule Server...");
-            WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_MULE_SERVER).newInstance(), args);
-        }
-        else if (mainClassName.equalsIgnoreCase("osgi") || mainClassName.equals(MAIN_CLASS_OSGI_FRAMEWORK))
-        {
-            System.out.println("Starting the OSGi Framework...");
-            WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_OSGI_FRAMEWORK).newInstance(), args);
+            WrapperManager.start((WrapperListener) Class.forName(MAIN_CLASS_MULE_SERVER).newInstance(), remainingArgs);
         }
         else 
         {
             // Add the main class name as the first argument to the Wrapper.
-            String[] appArgs = new String[args.length + 1];
+            String[] appArgs = new String[remainingArgs.length + 1];
             appArgs[0] = mainClassName;
-            System.arraycopy(args, 0, appArgs, 1, args.length);
+            System.arraycopy(remainingArgs, 0, appArgs, 1, remainingArgs.length);
             configureClasspath();
             System.out.println("Starting class " + mainClassName + "...");
             WrapperSimpleApp.main(appArgs);
@@ -175,6 +197,18 @@ public class MuleBootstrap
         }
     }
 
+    /** 
+     * Parse any command line arguments using the Commons CLI library.
+     */
+    private static CommandLine parseCommandLine(String[] args) throws ParseException {
+        Options options = new Options();
+        for (int i = 0; i < CLI_OPTIONS.length; i++)
+        {
+            options.addOption(CLI_OPTIONS[i][0], CLI_OPTIONS[i][1].equals("true") ? true : false, CLI_OPTIONS[i][2]);
+        }
+        return new BasicParser().parse(options, args, true);
+    }
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // The following utility methods are included here in order to keep the bootloader 
     // free of any external library dependencies.
@@ -199,22 +233,5 @@ public class MuleBootstrap
             } catch (ClassNotFoundException e) { }
         }
         return found;
-    }
-
-    /**
-     * Imitates SystemUtils.getCommandLineOption()
-     */
-    private static String getCommandLineOption(String option, String args[])
-    {
-        List options = Arrays.asList(args);
-        if (options.contains(option))
-        {
-            int i = options.indexOf(option);
-            if (i < options.size() - 1)
-            {
-                return options.get(i + 1).toString();
-            }
-        }
-        return null;
     }
 }
