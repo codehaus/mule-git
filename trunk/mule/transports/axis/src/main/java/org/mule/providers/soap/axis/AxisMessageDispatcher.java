@@ -251,19 +251,15 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         call.setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY, event.getEndpoint());
         
         // set custom properties
-        Object[] arr = event.getMessage().getPropertyNames().toArray();
-        String head;
-        for (int i = 0; i < arr.length; i++){
-            head = "";
-            String test = (String)arr[i];
-            for (int j = 0; j < 4; j++){
-                head = head + test.charAt(j);
-            }
-            if ((head != null)&&(!head.equals("MULE"))){
-                call.setProperty((String)arr[i], event.getMessage().getProperty((String)arr[i]));
+        Object head;
+        for (Iterator iter = event.getMessage().getPropertyNames().iterator(); iter.hasNext();){           
+            if ((head = iter.next()) != null){
+                if ((!((String)head).startsWith(MuleProperties.PROPERTY_PREFIX)) && (!(event.getMessage().getProperty((String)head) == null))){
+                    call.setProperty((String)head, event.getMessage().getProperty((String)head));
+                }
             }
         }
-        
+                
         // Set timeout
         call.setTimeout(new Integer(event.getTimeout()));
 
