@@ -14,10 +14,15 @@
         <name>MuleSource, Inc.</name>
         <url>http://www.mulesource.com</url>
     </organization>
+    <licenses>
+	    <license>
+	    	<name>MuleSource Public License</name>
+	    	<url>http://www.mulesource.com/MSPL</url>
+	    </license>
+    </licenses>
 
     <!-- Project -->
     <name>Mule</name>
-
     <description>Mule is a simple yet robust and highly scalable Integration and ESB services framework. It is designed
         as a light-weight, event-driven component technology that handles communication with disparate systems
         transparently providing a simple component interface.
@@ -166,24 +171,17 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
-        <!--
-        <pluginRepository>
-            <id>Maven Snapshots</id>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-        </pluginRepository>
-        -->
-        <!-- needed so that maven can find the maven-osgi-plugin -->
-        <pluginRepository>
-          <id>apache.snapshots</id>
-          <name>Apache Snapshots</name>
-          <url>http://cvs.apache.org/maven-snapshot-repository</url>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
+	    <pluginRepository>
+            <id>apache-m2-incubator</id>
+            <name>Apache m2 Incubator</name>
+            <url>http://people.apache.org/repo/m2-incubating-repository</url>
+	      <snapshots>
+	        <enabled>true</enabled>
+	      </snapshots>
+	      <releases>
+	        <enabled>true</enabled>
+	      </releases>
+	    </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -217,24 +215,38 @@
                 </configuration>
             </plugin>
 
-              <plugin>
-                <groupId>org.apache.felix.plugins</groupId>
-                <artifactId>maven-osgi-plugin</artifactId>
-                <extensions>true</extensions>
-                <version>0.9.0-incubator-SNAPSHOT</version>
-                <configuration>
-                    <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                    <osgiManifest>
-                        <bundleName>${pom.name}</bundleName>
-                        <bundleVersion>${version}</bundleVersion>
-                        <bundleDescription>${pom.description}</bundleDescription>
-                        <bundleVendor>${pom.organization.name}</bundleVendor>
-                        <bundleCopyright>MuleSource Public License http://www.mulesource.com/MSPL</bundleCopyright>
-                        <bundleDocUrl>${pom.url}</bundleDocUrl>
-                        <bundleDate>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</bundleDate>
-                     </osgiManifest>
-                </configuration>
-            </plugin>
+	      	<plugin>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
+		        <version>0.9.0-incubator-SNAPSHOT</version>
+		        <extensions>true</extensions>
+		        <configuration>
+		        	<instructions>
+		        		<Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+		        		<Bundle-DocURL>${pom.url}</Bundle-DocURL>
+		        		<!-- These packages are part of the JDK and should not appear in the imports list -->
+						<Import-Package>
+							!com.ccg.net.ethernet,
+							!com.sun.activation.registries,
+							!com.sun.net.ssl,
+							!com.sun.net.ssl.internal.ssl,
+							!javax.crypto,
+							!javax.crypto.spec,
+							!javax.naming,
+							!javax.naming.spi,
+							!javax.net,
+							!javax.net.ssl,
+							!javax.security.auth,
+							!javax.security.cert,
+							!javax.xml.namespace,
+							!javax.xml.transform,
+							!org.xml.sax,
+							!sun.misc,
+							*
+						</Import-Package>
+		        	</instructions>
+		        </configuration>
+		    </plugin>
 
             <!-- Global test exclusions -->
             <plugin>
@@ -477,7 +489,7 @@
             http://mule.mulesource.org/jira/browse/MULETOOLS-21
             http://mule.mulesource.org/jira/browse/MULETOOLS-22
         -->
-        <!-- <module>tools</module> -->
+        <module>tools</module>
     </modules>
 
     <!--
