@@ -792,7 +792,7 @@ public abstract class AbstractConnector
         }
     }
 
-    public ThreadingProfile getDispatcherThreadingProfile()
+    public synchronized ThreadingProfile getDispatcherThreadingProfile()
     {
         if (dispatcherThreadingProfile == null)
         {
@@ -802,28 +802,22 @@ public abstract class AbstractConnector
         return dispatcherThreadingProfile;
     }
 
-    public void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
+    public synchronized void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
     {
         this.dispatcherThreadingProfile = dispatcherThreadingProfile;
     }
 
-    public ThreadingProfile getReceiverThreadingProfile()
+    public synchronized ThreadingProfile getReceiverThreadingProfile()
     {
         if (receiverThreadingProfile == null)
         {
             receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-            // MULE-595: workaround until PollingMessageReceiver does not require its
-            // own thread any longer and we have NIO support, probably via Mina.
-            // Socket-based receivers like http need to use a thread since they hang
-            // in accept(); having too many of them can exhaust a size-limited pool
-            // and block startup.
-            receiverThreadingProfile.setMaxThreadsActive(256);
         }
 
         return receiverThreadingProfile;
     }
 
-    public void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
+    public synchronized void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
