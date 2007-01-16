@@ -9,9 +9,27 @@
         <version>2.0-REGISTRY</version>
     </parent>
   <artifactId>mule-module-management</artifactId>
-    <packaging>osgi-bundle</packaging>
+    <packaging>bundle</packaging>
   <name>Management Extensions</name>
   <description>Management Extensions for Mule</description>
+
+    <build>
+     	<plugins>
+	      	<plugin>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
+		        <configuration>
+		        	<instructions>
+                        <!-- TODO This module needs reorganization in order to properly export its packages. 
+                            Note that org.mule.management.stats.* is still in mule-core -->
+						<Export-Package>
+							org.mule.management.*
+						</Export-Package>
+		        	</instructions>
+		        </configuration>
+		    </plugin>
+     	</plugins>
+    </build>
 
   <dependencies>
         <dependency>
@@ -56,7 +74,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
-            <scope>provided</scope>
         </dependency>
   </dependencies>
 </project>

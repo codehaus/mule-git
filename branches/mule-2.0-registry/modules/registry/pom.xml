@@ -8,10 +8,27 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-module-registry</artifactId>
-    <packaging>osgi-bundle</packaging>
+    <packaging>bundle</packaging>
     <name>Configuration Registry</name>
     <description>Mule Registry for distributed configurations</description>
     
+    <build>
+     	<plugins>
+	      	<plugin>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
+		        <configuration>
+		        	<instructions>
+						<Export-Package>
+							org.mule.registry.*,
+							org.mule.persistence.*
+						</Export-Package>
+		        	</instructions>
+		        </configuration>
+		    </plugin>
+     	</plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
