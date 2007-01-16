@@ -9,20 +9,25 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-module-springcore</artifactId>
-    <packaging>osgi-bundle</packaging>
+    <packaging>bundle</packaging> 
     <name>Spring Core Extensions</name>
     <description>Core Spring functionality such as IoC, AOP, and Schema-based configuration</description>   
 
     <build>
      	<plugins>
 	      	<plugin>
-		        <groupId>org.apache.felix.plugins</groupId>
-		        <artifactId>maven-osgi-plugin</artifactId>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
 		        <configuration>
-		            <osgiManifest>
-		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
-						<importPackage>org.apache.commons.logging;provider=paxlogging, org.mule, org.mule.config, org.mule.config.i18n, org.mule.impl.container, org.mule.impl.model, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.lifecycle, org.mule.umo.manager, org.mule.umo.model, org.mule.umo.provider, org.mule.umo.security, org.mule.umo.transformer, org.mule.util, org.springframework.beans, org.springframework.beans.factory, org.springframework.beans.factory.config, org.springframework.beans.factory.support, org.springframework.beans.factory.xml, org.springframework.context, org.springframework.context.support, org.springframework.core.io, org.springframework.core.io.support, org.springframework.util, org.w3c.dom, org.xml.sax, org.xml.sax.ext, org.xml.sax.helpers</importPackage>
- 		            </osgiManifest>
+		        	<instructions>
+						<Export-Package>
+							org.mule.extras.spring.*
+						</Export-Package>
+						<Private-Package>
+							javax.transaction,
+							javax.transaction.xa
+						</Private-Package>
+		        	</instructions>
 		        </configuration>
 		    </plugin>
      	</plugins>
@@ -40,13 +45,11 @@
                     <groupId>xml-apis</groupId>
                     <artifactId>xml-apis</artifactId>
                     <version>1.3.03</version>
-                    <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>xerces</groupId>
                     <artifactId>xercesImpl</artifactId>
                     <version>2.8.1</version>
-                    <scope>provided</scope>
                 </dependency>
                 <!-- Needed for XSLT -->
                 <dependency>
@@ -133,8 +136,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
+            <version>2.0.2</version>
         </dependency>
 
         <!-- For test cases only -->
