@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.osgi;
+package org.mule.modules.boot;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,13 +19,16 @@ import org.tanukisoftware.wrapper.WrapperManager;
 
 public class OsgiFrameworkWrapper implements WrapperListener
 {
-    private org.knopflerfish.framework.Main framework;
+    private final String DESKTOP_BUNDLE = "boot/osgi/desktop/desktop_all-2.0.0.jar";
+    
+    private final boolean startGui;
 
     /*---------------------------------------------------------------
      * Constructors
      *-------------------------------------------------------------*/
-    public OsgiFrameworkWrapper()
+    public OsgiFrameworkWrapper(boolean startGui)
     {
+        this.startGui = startGui;
     }
 
     /*---------------------------------------------------------------
@@ -56,9 +59,10 @@ public class OsgiFrameworkWrapper implements WrapperListener
         }
 
         try {
-            // TODO Pop any Mule-specific arguments off of args and pass the rest through to KF.
-            String[] kfArgs = {};
-            org.knopflerfish.framework.Main.main(kfArgs);
+            org.knopflerfish.framework.Main.main(args);
+            if (startGui) {
+                org.knopflerfish.framework.Main.main(new String[]{"-istart", DESKTOP_BUNDLE});
+            }
             return null;
         } catch (Exception e) {
             e.printStackTrace();
