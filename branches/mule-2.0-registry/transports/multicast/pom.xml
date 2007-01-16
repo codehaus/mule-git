@@ -9,19 +9,24 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-multicast</artifactId>
-    <packaging>osgi-bundle</packaging>
+    <packaging>bundle</packaging>
     <name>Multicast Transport</name>
     <description>A Mule transport for Udp Multicasting. This transport supplies a Multicast Data Packet dispatcher and client implementation.</description>
-    <dependencies>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-udp</artifactId>
-            <version>${version}</version>
-        </dependency>
-    </dependencies>
 
     <build>
-        <plugins>
+     	<plugins>
+	      	<plugin>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
+		        <configuration>
+		        	<instructions>
+						<Export-Package>
+							org.mule.providers.multicast.*
+						</Export-Package>
+		        	</instructions>
+		        </configuration>
+		    </plugin>
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -31,7 +36,14 @@
                     </excludes>
                 </configuration>
             </plugin>
-
-        </plugins>
+     	</plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-udp</artifactId>
+            <version>${version}</version>
+        </dependency>
+    </dependencies>
 </project>
