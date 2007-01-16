@@ -2,6 +2,9 @@
 # Properties used by both init.xargs and restart.xargs
 #
 
+# Prefix for searching for bundle URLs from console or command line
+-Dorg.knopflerfish.gosg.jars=file:../lib/
+
 # The Service Platform ID should be used by bundles needing to
 # a unique ID for the platform itself
 -Dorg.osgi.provisioning.spid=knopflerfish
@@ -25,10 +28,11 @@
 
 # Comma-separated list of packges exported by system classloader
 -Dorg.osgi.framework.system.packages=
+#-Dorg.osgi.framework.system.packages=com.ccg.net.ethernet,com.sun.*,javax.crypto.*,javax.naming.*,javax.net.*,javax.security.*,javax.xml.namespace,javax.xml.transform,org.xml.sax,sun.*
 
 # Comma-separated list of packages that may be loaded by system classloader
 -Dorg.osgi.framework.bootdelegation=*
-#-Dorg.osgi.framework.bootdelegation=sun.*,com.sun.*
+#-Dorg.osgi.framework.bootdelegation=com.ccg.net.ethernet,com.sun.*,javax.crypto.*,javax.naming.*,javax.net.*,javax.security.*,javax.xml.namespace,javax.xml.transform,org.xml.sax,sun.*
 
 # Web server properties
 -Dorg.knopflerfish.http.dnslookup=false

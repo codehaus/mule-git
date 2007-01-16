@@ -1,9 +1,6 @@
 # Load common properties
 -xargs ../conf/props.xargs
 
-# Prefix for searching for bundle URLs from console or command line
--Dorg.knopflerfish.gosg.jars=file:../lib/
-
 # Remove any previously installed bundles
 -init
 
@@ -67,7 +64,8 @@
 -start boot/osgi/frameworkcommands/frameworkcommands-2.0.0.jar
 -start boot/osgi/logcommands/logcommands-2.0.0.jar
 -start boot/osgi/cm_cmd/cm_cmd-2.0.0.jar
--start boot/osgi/desktop/desktop_all-2.0.0.jar
+# Install but don't start the desktop.
+#-start boot/osgi/desktop/desktop_all-2.0.0.jar
 -start boot/osgi/http/http_all-2.0.0.jar
 -start boot/osgi/httproot/httproot-2.0.0.jar
 
@@ -113,10 +111,9 @@
 # Mule
 #############################################################
 -initlevel 10
-#-istart mule/mule-osgi.jar
--istart boot/mule-module-osgi.jar
 -istart mule/mule-core.jar
 -istart mule/mule-module-springcore.jar
+-istart mule/mule-module-osgi.jar
 -istart mule/mule-transport-file.jar
 -istart mule/mule-transport-tcp.jar
 -istart mule/mule-transport-http.jar
