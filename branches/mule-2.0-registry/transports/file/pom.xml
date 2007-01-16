@@ -9,7 +9,7 @@
         <version>2.0-REGISTRY</version>
     </parent>
     <artifactId>mule-transport-file</artifactId>
-    <packaging>osgi-bundle</packaging>
+    <packaging>bundle</packaging>
     <name>File Transport</name>
     <description>A Mule transport for File Connectivity. This transport allows files to be read and written to
         directories on the local file system. The transport can be configured to filter the file it reads and the way
@@ -18,15 +18,28 @@
     <build>
      	<plugins>
 	      	<plugin>
-		        <groupId>org.apache.felix.plugins</groupId>
-		        <artifactId>maven-osgi-plugin</artifactId>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
 		        <configuration>
-		            <osgiManifest>
-		            	<!-- TODO This list should ideally be in MANIFEST.MF, but the maven-osgi-plugin can't handle it because it's too long. -->
-						<importPackage>org.apache.commons.logging;provider=paxlogging, edu.emory.mathcs.backport.java.util.concurrent, edu.emory.mathcs.backport.java.util.concurrent.atomic, org.mule, org.mule.config, org.mule.config.i18n, org.mule.impl, org.mule.impl.endpoint, org.mule.providers, org.mule.providers.service, org.mule.routing.filters, org.mule.transformers, org.mule.umo, org.mule.umo.endpoint, org.mule.umo.lifecycle, org.mule.umo.provider, org.mule.umo.routing, org.mule.umo.transformer, org.mule.util</importPackage>
- 		            </osgiManifest>
+		        	<instructions>
+						<Export-Package>
+							org.mule.providers.file.*
+						</Export-Package>
+						<Private-Package>
+							org.apache.commons.io.*
+						</Private-Package>
+		        	</instructions>
 		        </configuration>
 		    </plugin>
      	</plugins>
-    </build>    
+    </build>
+    
+	<dependencies>
+        <!-- TODO This needs to be a bundle -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.2</version>
+        </dependency>
+	</dependencies>
 </project>
