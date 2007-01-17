@@ -32,7 +32,7 @@
         <module>scripting</module>
         <module>springcore</module>
         <module>spring</module>
-        <!--<module>wssecurity</module>-->
+        <module>wssecurity</module>
         <module>xml</module>
     </modules>
 

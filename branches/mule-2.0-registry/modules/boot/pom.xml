@@ -13,25 +13,6 @@
   <name>Mule Bootstrap</name>
   <description>Classes used to boot up the Mule server</description>
 
-    <build>
-         <plugins>
-              <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Export-Package>
-                            org.mule.modules.boot.*
-                        </Export-Package>
-                        <Private-Package>
-                            org.apache.commons.cli.*
-                        </Private-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-         </plugins>
-    </build>
-
   <dependencies>
           <dependency>
                 <groupId>tanukisoft</groupId>
