@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        						"http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Default" version="1.0">
+
+	<!-- general Mule settings -->
+	<mule-environment-properties serverUrl="tcp://localhost:60504" synchronous="true" transactionTimeout="30000"/>
+
+	<!-- JMS connector -->
+	<connector name="jmsConnector1" className="org.mule.providers.jms.JmsConnector">
+		<properties>
+			<property name="specification" value="1.1"/>
+			<property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+			<property name="jndiInitialFactory" value="org.activemq.jndi.ActiveMQInitialContextFactory"/>
+			<map name="connectionFactoryProperties">
+			    <property name="brokerURL" value="vm://localhost"/>
+			</map>
+			<property name="maxRedelivery" value="0" />
+		</properties>
+		<!-- thread profile -->
+		<threading-profile maxThreadsActive="1" maxThreadsIdle="1" threadTTL="60000" poolExhaustedAction="WAIT" />
+		<!-- retry profile -->
+		<connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+			<properties>
+				<property name="retryCount" value="1" />
+				<property name="frequency" value="1000" />
+				<!-- doThreading originally true as per http://jira.symphonysoft.com/browse/MULE-708 -->
+				<!-- then false because of http://jira.symphonysoft.com/browse/MULE-785 -->
+				<property name="doThreading" value="false" />
+			</properties>
+		</connection-strategy>
+	</connector>
+
+	<connector name="jmsConnector2" className="org.mule.providers.jms.JmsConnector">
+		<properties>
+			<property name="specification" value="1.1"/>
+			<property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+			<property name="jndiInitialFactory" value="org.activemq.jndi.ActiveMQInitialContextFactory"/>
+			<map name="connectionFactoryProperties">
+			    <property name="brokerURL" value="vm://localhost"/>
+			</map>
+			<property name="maxRedelivery" value="0"/>
+	  	</properties>
+		<!-- thread profile -->
+		<!-- maxthreads was 5 and threadsIdle was 1 but email dated 10/01 from
+				Senthil changed this to 15 and 5 -->
+		<threading-profile maxThreadsActive="1" maxThreadsIdle="1" threadTTL="60000" poolExhaustedAction="WAIT" />
+		<!-- retry profile -->
+		<connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+			<properties>
+				<property name="retryCount" value="1" />
+				<property name="frequency" value="1000" />
+				<!-- doThreading originally true as per http://jira.symphonysoft.com/browse/MULE-708 -->
+				<!-- then false because of http://jira.symphonysoft.com/browse/MULE-785 -->
+				<property name="doThreading" value="false" />
+			</properties>
+		</connection-strategy>
+	</connector>
+
+	<endpoint-identifiers>
+		<!-- CSP -->
+		<endpoint-identifier name="endpoint1" value="jms://endpoint1?connector=jmsConnector1" />
+		<endpoint-identifier name="endpoint2" value="jms://endpoint2?connector=jmsConnector2" />
+		<endpoint-identifier name="endpoint3" value="jms://endpoint3?connector=jmsConnector2" />
+	</endpoint-identifiers>
+
+	<model name="bus-instance">
+		<mule-descriptor name="service1" implementation="org.mule.components.simple.EchoComponent">
+			<inbound-router>
+				<endpoint address="endpoint1" type="receiver" synchronous="true">
+					<transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory" />
+				</endpoint>
+			</inbound-router>
+			<outbound-router matchAll="true">
+				<router className="org.mule.routing.outbound.StaticRecipientList" >
+					<properties>
+						<list name="recipients">
+							<entry value="jms://endpoint3?connector=jmsConnector1"/>
+						</list>
+					</properties>
+				</router>
+			</outbound-router>
+		</mule-descriptor>
+
+		<mule-descriptor name="service2" implementation="org.mule.components.simple.EchoComponent">
+			<inbound-router>
+				<endpoint address="endpoint2" type="receiver" synchronous="true">
+					<transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory" />
+				</endpoint>
+			</inbound-router>
+
+			<outbound-router matchAll="true">
+				<router className="org.mule.routing.outbound.StaticRecipientList" >
+					<properties>
+						<list name="recipients">
+							<entry value="jms://endpoint3?connector=jmsConnector2" />
+						</list>
+					</properties>
+				</router>
+			</outbound-router>
+		</mule-descriptor>
+	</model>
+</mule-configuration>
