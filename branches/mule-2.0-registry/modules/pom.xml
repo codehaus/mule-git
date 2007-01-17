@@ -64,11 +64,11 @@
             <scope>provided</scope>
         </dependency>
 
-		<!-- Note: Ideally, the following list of libraries should be in the Mule project's top-level 
-			POM, but Maven has visibility problems when dependencies are more than 2 levels 
-			away, so this list is repeated in core/pom.xml, modules/pom.xml, and transports/pom.xml -->
-			
-		<!-- The following libraries are provided by separate OSGi bundles -->
+        <!-- Note: Ideally, the following list of libraries should be in the Mule project's top-level
+            POM, but Maven has visibility problems when dependencies are more than 2 levels
+            away, so this list is repeated in core/pom.xml, modules/pom.xml, and transports/pom.xml -->
+
+        <!-- The following libraries are provided by separate OSGi bundles -->
         <dependency>
             <groupId>backport-util-concurrent</groupId>
             <artifactId>backport-util-concurrent</artifactId>

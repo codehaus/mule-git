@@ -14,19 +14,19 @@
     <description>Mule Acegi Support exposes Acegi Authentication providers and Method interceptors to authentication event traffic via endpoints and method level authorisation on components.</description>   
 
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix</groupId>
-		        <artifactId>maven-bundle-plugin</artifactId>
-		        <configuration>
-		        	<instructions>
-						<Export-Package>
-							org.mule.extras.acegi.*
-						</Export-Package>
-		        	</instructions>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.mule.extras.acegi.*
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <dependencies>
@@ -104,11 +104,11 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-support</artifactId>
                 </exclusion>
-				<!-- Provided by OSGi -->
+                <!-- Provided by OSGi -->
                 <exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>  
         </dependency>
 

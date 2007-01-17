@@ -14,20 +14,20 @@
     <description>Allows Mule events to initiate and/or advance processes in an external or embedded Business Process Management System (BPMS). It also allows executing processes to generate Mule events.</description>
 
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix</groupId>
-		        <artifactId>maven-bundle-plugin</artifactId>
-		        <configuration>
-		        	<instructions>
-						<Export-Package>
-							org.mule.providers.bpm.*,
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.mule.providers.bpm.*,
                             org.jbpm.*
-						</Export-Package>
-		        	</instructions>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <dependencies>

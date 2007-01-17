@@ -14,19 +14,19 @@
     <description>A Mule transport for SOAP connectivity using XFire, a STaX-based SOAP stack.</description>
 
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix</groupId>
-		        <artifactId>maven-bundle-plugin</artifactId>
-		        <configuration>
-		        	<instructions>
-						<Export-Package>
-							org.mule.providers.soap.xfire.*
-						</Export-Package>
-		        	</instructions>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.mule.providers.soap.xfire.*
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <repositories>

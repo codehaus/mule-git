@@ -15,10 +15,10 @@
         <muleVersion>2.0-REGISTRY</muleVersion>
     </properties>
 
-	<modules>
-		<module>credit-agency</module>
-		<module>loanbroker</module>
-	</modules>
+    <modules>
+        <module>credit-agency</module>
+        <module>loanbroker</module>
+    </modules>
 
     <dependencies>
         <dependency>

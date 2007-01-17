@@ -15,19 +15,19 @@
         factory for Mule managed objects.</description>
     
     <build>
-     	<plugins>
-	      	<plugin>
-		        <groupId>org.apache.felix</groupId>
-		        <artifactId>maven-bundle-plugin</artifactId>
-		        <configuration>
-		        	<instructions>
-						<Export-Package>
-							org.mule.extras.picocontainer.*
-						</Export-Package>
-		        	</instructions>
-		        </configuration>
-		    </plugin>
-     	</plugins>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.mule.extras.picocontainer.*
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <profiles>
