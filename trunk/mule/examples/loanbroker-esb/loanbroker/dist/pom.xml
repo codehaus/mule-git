@@ -149,7 +149,6 @@
                                     <groupId>openejb</groupId>
                                     <artifactId>openejb-core</artifactId>
                                     <version>1.0</version>
-                                    <destFileName>openejb.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>castor</groupId>

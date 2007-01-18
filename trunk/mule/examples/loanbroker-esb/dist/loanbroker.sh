@@ -15,15 +15,17 @@ fi
 # Any changes to the files in ./conf will take precedence over those deployed to $MULE_HOME/lib/user
 MULE_LIB=./conf
 export MULE_LIB
+ACTIVEMQ=activemq-3.4.2.jar
+OPENEJB=openejb-core-1.0.jar
 
-if [ ! -f "$MULE_BASE/lib/user/openejb.jar" ]; then
-   if [ ! -f "$MULE_HOME/lib/user/openejb.jar" ]; then
+if [ ! -f "$MULE_BASE/lib/user/${OPENEJB}" ]; then
+   if [ ! -f "$MULE_HOME/lib/user/${OPENEJB}" ]; then
       MISSING_LIB=1
    fi
 fi
 
-if [ ! -f "$MULE_BASE/lib/user/activemq.jar" ]; then
-   if [ ! -f "$MULE_HOME/lib/user/activemq.jar" ]; then
+if [ ! -f "$MULE_BASE/lib/user/${ACTIVEMQ}" ]; then
+   if [ ! -f "$MULE_HOME/lib/user/${ACTIVEMQ}" ]; then
       MISSING_LIB=1
    fi
 fi

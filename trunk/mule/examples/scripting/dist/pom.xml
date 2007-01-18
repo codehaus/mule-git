@@ -35,7 +35,7 @@
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.0-RC-02</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -128,13 +128,11 @@
                                     <artifactId>groovy</artifactId>
                                     <version>20061114</version>
                                     <classifier>jdk14</classifier>
-                                    <destFileName>groovy-engine.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>groovy</groupId>
                                     <artifactId>groovy-all</artifactId>
                                     <version>1.0</version>
-                                    <destFileName>groovy.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
