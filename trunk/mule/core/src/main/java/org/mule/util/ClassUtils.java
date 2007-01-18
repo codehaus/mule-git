@@ -23,12 +23,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.collections.IteratorUtils;
 
 /**
  * This class is useful for loading resources and classes in a fault tolerant manner
@@ -451,29 +448,31 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
                                              Set ignoredMethodNames)
     {
         List result = new ArrayList();
-        
+
         if (ignoredMethodNames == null)
         {
             ignoredMethodNames = Collections.EMPTY_SET;
         }
 
-        for (Iterator iterator = IteratorUtils.arrayIterator(implementation.getMethods()); iterator.hasNext();)
+        Method[] methods = implementation.getMethods();
+        for (int i = 0; i < methods.length; i++)
         {
-            Method method = (Method)iterator.next();
+            Method method = methods[i];
             Class[] methodParams = method.getParameterTypes();
 
             if (compare(methodParams, parameterTypes, matchOnObject))
             {
                 if (!ignoredMethodNames.contains(method.getName()))
                 {
-                    if ((method.getReturnType().getName().equals("void") && voidOk)
-                                    || !method.getReturnType().getName().equals("void"))
+                    String returnType = method.getReturnType().getName();
+                    if ((returnType.equals("void") && voidOk) || !returnType.equals("void"))
                     {
                         result.add(method);
                     }
                 }
             }
         }
+
         return result;
     }
 
