@@ -182,6 +182,11 @@
             <enabled>true</enabled>
           </releases>
         </pluginRepository>
+        <pluginRepository>
+            <id>mule-deps</id>
+            <name>Mule Dependencies</name>
+            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -218,7 +223,7 @@
               <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>0.9.0-incubator-SNAPSHOT</version>
+                <version>0.9.0-mule-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>

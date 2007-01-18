@@ -15,6 +15,5 @@
     <description>Tools for building and working with Mule projects.</description>
 
     <modules>
-        <module>maven-bundle-plugin</module>
     </modules>
 </project>
