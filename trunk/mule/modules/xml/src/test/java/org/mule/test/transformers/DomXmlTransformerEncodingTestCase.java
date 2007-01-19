@@ -29,9 +29,9 @@ public class DomXmlTransformerEncodingTestCase extends AbstractTransformerTestCa
 
     protected void doSetUp() throws Exception
     {
-        org.dom4j.Document dom4jDoc = DocumentHelper.parseText(IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-esoteric.xml", getClass()), "UTF-8"));
+        org.dom4j.Document dom4jDoc = DocumentHelper.parseText(IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-utf-8.xml", getClass()), "UTF-8"));
         srcData = new DOMWriter().write(dom4jDoc);
-        resultData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-esoteric-us-ascii.xml", getClass()),
+        resultData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-us-ascii.xml", getClass()),
             "US-ASCII");
     }
 
