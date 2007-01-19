@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: Mule IDE Model
 Bundle-SymbolicName: org.mule.ide.emf; singleton:=true
-Bundle-Version: 1.2.1
+Bundle-Version: 1.3.0
 Bundle-ClassPath: mule-emf.jar
-Bundle-Vendor: %providerName
+Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin
 Export-Package: org.mule.ide,
  org.mule.ide.impl,
