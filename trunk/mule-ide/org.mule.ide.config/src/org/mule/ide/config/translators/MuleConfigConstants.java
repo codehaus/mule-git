@@ -12,9 +12,9 @@ package org.mule.ide.config.translators;
 
 /**
  * The class <code>MuleConfigConstants</code> provides constants used for
- * identifying Mule UMO configuration files.
+ * identifying Mule configuration files.
  * 
- * @author Jesper Steen MÃ¸ller
+ * @author Jesper Steen Møller
  */
 public class MuleConfigConstants {
 

@@ -41,10 +41,6 @@ public class MuleConfigResourceFactoryImpl extends TranslatorResourceFactory {
 	protected TranslatorResource createResource(URI uri, Renderer aRenderer) {
 //    	((AbstractRendererImpl)aRenderer).setValidating(false);
 		MuleConfigResourceImpl resource = new MuleConfigResourceImpl(uri, aRenderer);
-        resource.basicSetResourceSet(resourceSet, null);
-        resource.accessForRead();
-        resource.accessForWrite();
         return resource;
 	}
-	
 }
