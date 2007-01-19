@@ -25,11 +25,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -86,11 +81,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -106,6 +99,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -119,6 +113,7 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
@@ -127,7 +122,10 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
+import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
+import org.eclipse.wst.common.internal.emfworkbench.integration.ResourceSetWorkbenchEditSynchronizer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.mule.ide.config.mulemodel.Connector;
 import org.mule.ide.config.mulemodel.MuleConfig;
@@ -218,46 +216,12 @@ public class MuleEditor
 	protected TreeViewer selectionViewer;
 
 	/**
-	 * This inverts the roll of parent and child in the content provider and show parents as a tree.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected TreeViewer parentViewer;
-
-	/**
 	 * This shows how a tree view works.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TreeViewer treeViewer;
-
-	/**
-	 * This shows how a list view works.
-	 * A list viewer doesn't support icons.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ListViewer listViewer;
-
-	/**
-	 * This shows how a table view works.
-	 * A table can be used as a list with icons.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected TableViewer tableViewer;
-
-	/**
-	 * This shows how a tree view with columns works.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected TreeViewer treeViewerWithColumns;
+//	protected TreeViewer treeViewer;
 
 	/**
 	 * This keeps track of the active viewer pane, in the book.
@@ -430,88 +394,6 @@ public class MuleEditor
 
 			protected void unsetTarget(Resource target) {
 				basicUnsetTarget(target);
-			}
-		};
-
-	/**
-	 * This listens for workspace changes.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected IResourceChangeListener resourceChangeListener =
-		new IResourceChangeListener() {
-			public void resourceChanged(IResourceChangeEvent event) {
-				// Only listening to these.
-				// if (event.getType() == IResourceDelta.POST_CHANGE)
-				{
-					IResourceDelta delta = event.getDelta();
-					try {
-						class ResourceDeltaVisitor implements IResourceDeltaVisitor {
-							protected ResourceSet resourceSet = editingDomain.getResourceSet();
-							protected Collection changedResources = new ArrayList();
-							protected Collection removedResources = new ArrayList();
-
-							public boolean visit(IResourceDelta delta) {
-								if (delta.getFlags() != IResourceDelta.MARKERS &&
-								    delta.getResource().getType() == IResource.FILE) {
-									if ((delta.getKind() & (IResourceDelta.CHANGED | IResourceDelta.REMOVED)) != 0) {
-										Resource resource = resourceSet.getResource(URI.createURI(delta.getFullPath().toString()), false);
-										if (resource != null) {
-											if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
-												removedResources.add(resource);
-											}
-											else if (!savedResources.remove(resource)) {
-												changedResources.add(resource);
-											}
-										}
-									}
-								}
-
-								return true;
-							}
-
-							public Collection getChangedResources() {
-								return changedResources;
-							}
-
-							public Collection getRemovedResources() {
-								return removedResources;
-							}
-						}
-
-						ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
-						delta.accept(visitor);
-
-						if (!visitor.getRemovedResources().isEmpty()) {
-							removedResources.addAll(visitor.getRemovedResources());
-							if (!isDirty()) {
-								getSite().getShell().getDisplay().asyncExec
-									(new Runnable() {
-										 public void run() {
-											 getSite().getPage().closeEditor(MuleEditor.this, false);
-											 MuleEditor.this.dispose();
-										 }
-									 });
-							}
-						}
-
-						if (!visitor.getChangedResources().isEmpty()) {
-							changedResources.addAll(visitor.getChangedResources());
-							if (getSite().getPage().getActiveEditor() == MuleEditor.this) {
-								getSite().getShell().getDisplay().asyncExec
-									(new Runnable() {
-										 public void run() {
-											 handleActivate();
-										 }
-									 });
-							}
-						}
-					}
-					catch (CoreException exception) {
-						MuleEditorPlugin.INSTANCE.log(exception);
-					}
-				}
 			}
 		};
 
@@ -773,6 +655,7 @@ public class MuleEditor
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * Deletion candidate...
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -895,13 +778,16 @@ public class MuleEditor
 			
 			projectResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 	                .put("xml", new MuleConfigResourceFactoryImpl(projectResourceSet));
+			new ResourceSetWorkbenchEditSynchronizer(projectResourceSet, modelProject);
 		}
 		
 		try {
 			// Load the resource through the editing domain.
 			//
-			Resource emfResource = editingDomain.loadResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()).toString());
-			// TODO: Initialize ResourceSet
+			ResourceSet rs = editingDomain.getResourceSet();
+			Resource emfResource = rs.getResource(URI.createPlatformResourceURI(modelFile.getFile().getFullPath().toString()), true);
+			mainResource = (TranslatorResource)emfResource;
+			// TODO: Check that ResourceSet is OK and that the resource is added
 		}
 		catch (Exception exception) {
 			MuleEditorPlugin.INSTANCE.log(exception);
@@ -991,6 +877,8 @@ public class MuleEditor
 	private StructuredTextEditor fTextEditor;
 
 	private BasicCommandStack commandStack;
+
+	private TranslatorResource mainResource;
 	
 	
 	public class MultiViewerPane extends ViewerPane {
@@ -1082,28 +970,28 @@ public class MuleEditor
 		
 		// This is the page for the tree viewer
 		//
-		{
-			ViewerPane viewerPane =
-				new ViewerPane(getSite().getPage(), MuleEditor.this) {
-					public Viewer createViewer(Composite composite) {
-						return new TreeViewer(composite);
-					}
-					public void requestActivation() {
-						super.requestActivation();
-						setCurrentViewerPane(this);
-					}
-				};
-			viewerPane.createControl(getContainer());
-			treeViewer = (TreeViewer)viewerPane.getViewer();
-			treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-			treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-
-			new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
-
-			createContextMenuFor(treeViewer);
-			int pageIndex = addPage(viewerPane.getControl());
-			setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
-		}
+//		{
+//			ViewerPane viewerPane =
+//				new ViewerPane(getSite().getPage(), MuleEditor.this) {
+//					public Viewer createViewer(Composite composite) {
+//						return new TreeViewer(composite);
+//					}
+//					public void requestActivation() {
+//						super.requestActivation();
+//						setCurrentViewerPane(this);
+//					}
+//				};
+//			viewerPane.createControl(getContainer());
+//			treeViewer = (TreeViewer)viewerPane.getViewer();
+//			treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
+//			treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+//
+//			new AdapterFactoryTreeEditor(treeViewer.getTree(), adapterFactory);
+//
+//			createContextMenuFor(treeViewer);
+//			int pageIndex = addPage(viewerPane.getControl());
+//			setPageText(pageIndex, getString("_UI_TreePage_label")); //$NON-NLS-1$
+//		}
 
 		setActivePage(0);
 	}
@@ -1493,7 +1381,6 @@ public class MuleEditor
 		setPartName(editorInput.getName());
 		site.setSelectionProvider(new EMFMultiPageSelectionProvider(this));
 		site.getPage().addPartListener(partListener);
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 	}
 
 	/**
@@ -1646,8 +1533,6 @@ public class MuleEditor
 	public void dispose() {
 		updateProblemIndication = false;
 
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
-
 		getSite().getPage().removePartListener(partListener);
 		adapterFactory.dispose();
 
@@ -1662,7 +1547,11 @@ public class MuleEditor
 		if (contentOutlinePage != null) {
 			contentOutlinePage.dispose();
 		}
-
+		if (mainResource != null) {
+			mainResource.releaseFromWrite();
+			mainResource = null;
+		}
+		
 		super.dispose();
 	}
 
@@ -1850,4 +1739,37 @@ public class MuleEditor
 			}
 		}
 	}
+	
+	/**
+	 * @see org.eclipse.ui.part.MultiPageEditorPart#createSite(org.eclipse.ui.IEditorPart)
+	 */
+	protected IEditorSite createSite(IEditorPart editor) {
+		IEditorSite site = null;
+		if (editor == fTextEditor) {
+			site = new MultiPageEditorSite(this, editor) {
+				/**
+				 * @see org.eclipse.ui.part.MultiPageEditorSite#getActionBarContributor()
+				 */
+				public IEditorActionBarContributor getActionBarContributor() {
+					IEditorActionBarContributor contributor = super.getActionBarContributor();
+					IEditorActionBarContributor multiContributor = MuleEditor.this.getEditorSite().getActionBarContributor();
+					if (multiContributor instanceof MuleMultiPageEditorActionBarContributor) {
+//						contributor = ((MuleMultiPageEditorActionBarContributor) multiContributor).sourceViewerActionContributor;
+					}
+					return contributor;
+				}
+
+				public String getId() {
+					// sets this id so nested editor is considered xml source
+					// page
+					return ContentTypeIdForXML.ContentTypeID_XML + ".source"; //$NON-NLS-1$;
+				}
+			};
+		}
+		else {
+			site = super.createSite(editor);
+		}
+		return site;
+	}
+
 }

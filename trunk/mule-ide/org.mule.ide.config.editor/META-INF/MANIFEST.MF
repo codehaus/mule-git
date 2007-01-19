@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: Mule Configuration Model Editor Plugin
 Bundle-SymbolicName: org.mule.ide.config.editor; singleton:=true
 Bundle-Version: 1.4.0.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.mule.ide.config.mulemodel.presentation.MuleEditorPlugin$Implementation
-Bundle-Vendor: %providerName
+Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin
 Export-Package: org.mule.ide.config.mulemodel.presentation,
  org.mule.ide.config.mulemodel.presentation.util
