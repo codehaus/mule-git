@@ -20,6 +20,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.Base64;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -33,8 +34,6 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import sun.misc.BASE64Encoder;
-
 /**
  * Will poll an http URL and use the response as the input for a service request.
  */
@@ -43,14 +42,15 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     private URL pollUrl;
 
     private int defaultBufferSize = 1024 * 32;
-    
+
     public PollingHttpMessageReceiver(UMOConnector connector,
                                       UMOComponent component,
                                       final UMOEndpoint endpoint) throws InitialisationException
     {
         this(connector, component, endpoint, AbstractPollingMessageReceiver.DEFAULT_POLL_FREQUENCY);
 
-        long pollingFrequency = MapUtils.getLongValue(endpoint.getProperties(), "pollingFrequency", -1);
+        long pollingFrequency = MapUtils.getLongValue(endpoint.getProperties(), "pollingFrequency",
+            -1);
         if (pollingFrequency > 0)
         {
             setFrequency(pollingFrequency);
@@ -70,8 +70,8 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         }
         catch (MalformedURLException e)
         {
-            throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X, endpoint
-                .getEndpointURI().getAddress(), "uri"), e, this);
+            throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X,
+                endpoint.getEndpointURI().getAddress(), "uri"), e, this);
         }
     }
 
@@ -79,9 +79,9 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     {
         // template method
     }
-    
+
     protected void doConnect() throws Exception
-    {       
+    {
         URL url = null;
         String connectUrl = (String)endpoint.getProperties().get("connectUrl");
         if (connectUrl == null)
@@ -103,12 +103,14 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     }
 
     public void poll() throws Exception
-    { 
+    {
         HttpURLConnection connection = (HttpURLConnection)pollUrl.openConnection();
         String authentication = endpoint.getEndpointURI().getUserInfo();
-        if (authentication != null){
-            BASE64Encoder encoder = new BASE64Encoder();
-            connection.setRequestProperty("Authorization", "Basic " + encoder.encode(authentication.getBytes()));
+        if (authentication != null)
+        {
+            connection.setRequestProperty("Authorization", "Basic "
+                                                           + Base64.encodeBytes(authentication
+                                                               .getBytes()));
         }
 
         int len = 0;
