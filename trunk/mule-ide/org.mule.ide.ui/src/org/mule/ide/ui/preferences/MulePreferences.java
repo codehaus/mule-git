@@ -14,7 +14,7 @@ public class MulePreferences {
 	 * 
 	 * @return the path or null if not set
 	 */
-	public static String getDefaultExternalMuleRoot() {
+	public static String getLegacyExternalMuleRoot() {
 		return getStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT);
 	}
 
@@ -23,28 +23,69 @@ public class MulePreferences {
 	 * 
 	 * @param root
 	 */
-	public static void setDefaultExternalMuleRoot(String root) {
-		setStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT, root);
+	public static void clearDeprecatedValues() {
+		clearPreferenceValue(IPreferenceConstants.EXTERNAL_MULE_ROOT);
+		clearPreferenceValue(IPreferenceConstants.MULE_CLASSPATH_TYPE_PLUGIN);
+		clearPreferenceValue(IPreferenceConstants.EXTERNAL_MULE_ROOT);
 	}
 
+	public static String[] getDistributions() {
+		int n = getIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
+		String distributions[] = new String[n];
+		for (int i = 0; i < n; ++i) {
+			distributions[i] = getStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
+		}
+		return distributions;
+	}
+	
+	public static int getDefaultDistribution() {
+		return getIntPreference(IPreferenceConstants.DEFAULT_EXTERNAL_MULE_ROOT);
+		
+	}
+
+	public static void setDistributions(String[] distributions, int selected) {
+		int oldMax = getIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
+		
+		setIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT, distributions.length);
+		int i = 0;
+		for (; i < distributions.length; ++i) {
+			setStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i, distributions[i]);
+		}
+		for (; i < oldMax; ++i) {
+			clearPreferenceValue(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
+		}
+	}
+	
 	/**
 	 * Gets the default classpath type preference.
 	 * 
 	 * @return the preference value
 	 */
-	public static String getDefaultClasspathChoice() {
+	public static String getDeprecatedClasspathChoice() {
 		return getStringPreference(IPreferenceConstants.MULE_CLASSPATH_TYPE);
 	}
 
 	/**
-	 * Sets the default classpath type preference.
+	 * Get an integer preference value from the preference service.
 	 * 
-	 * @param choice the preference value
+	 * @param key the preference key
+	 * @param defaultValue the fallback value
+	 * @return the value or 0 if not found
 	 */
-	public static void setDefaultClasspathChoice(String choice) {
-		setStringPreference(IPreferenceConstants.MULE_CLASSPATH_TYPE, choice);
+	protected static int getIntPreference(String key) {
+		return MulePlugin.getDefault().getPreferenceStore().getDefaultInt(key);
 	}
 
+	/**
+	 * Set an integer preference value to the preference service.
+	 * 
+	 * @param key the preference key
+	 * @param value the new value for the preference
+	 */
+	protected static void setIntPreference(String key, int value) {
+		MulePlugin.getDefault().getPreferenceStore().setValue(key, value);
+	}
+	
 	/**
 	 * Get a String preference value from the preference service.
 	 * 
@@ -64,4 +105,14 @@ public class MulePreferences {
 	protected static void setStringPreference(String key, String value) {
 		MulePlugin.getDefault().getPreferenceStore().setValue(key, value);
 	}
+
+	/**
+	 * Clear a string preference value in instance scope.
+	 * 
+	 * @param key the preference key
+	 */
+	protected static void clearPreferenceValue(String key) {
+		MulePlugin.getDefault().getPreferenceStore().setToDefault(key);
+	}
+	
 }

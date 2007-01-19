@@ -30,7 +30,7 @@ public class MulePropertiesPage extends PropertyPage {
 	private List propertyPanels = new ArrayList();
 
 	/** Text shown by the nature checkbox */
-	private static final String NATURE_MESSAGE = "&Mule UMO project";
+	private static final String NATURE_MESSAGE = "&Mule Project";
 
 	/** Nature checkbox widget */
 	private Button hasNatureButton;

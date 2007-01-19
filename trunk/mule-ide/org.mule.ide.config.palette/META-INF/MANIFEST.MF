@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Plugin.name
+Bundle-Name: Mule IDE Configuration Palette
 Bundle-SymbolicName: org.mule.ide.config.palette; singleton:=true
-Bundle-Version: 0.1.0
+Bundle-Version: 1.3.0
 Bundle-Activator: org.mule.ide.config.palette.Activator
 Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin

@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.mule.ide.ui.MulePlugin;
-import org.mule.ide.ui.panels.MuleClasspathChooser;
+import org.mule.ide.ui.panels.MuleClasspathPreferencesPanel;
 
 /**
  * Preference page for Mule setttings.
@@ -30,11 +30,11 @@ import org.mule.ide.ui.panels.MuleClasspathChooser;
 public class MulePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	/** Widget for choosing classpath */
-	private MuleClasspathChooser classpathChooser;
+	private MuleClasspathPreferencesPanel classpathPanel;
 
 	public MulePreferencePage() {
 		setPreferenceStore(MulePlugin.getDefault().getPreferenceStore());
-		setDescription("Default settings for Mule UMO projects");
+		setDescription("Default settings for Mule projects");
 	}
 
 	/*
@@ -46,8 +46,9 @@ public class MulePreferencePage extends PreferencePage implements IWorkbenchPref
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		classpathChooser = new MuleClasspathChooser();
-		classpathChooser.createControl(composite);
+		classpathPanel = new MuleClasspathPreferencesPanel(this);
+		classpathPanel.createControl(composite);
+		classpathPanel.initializeFromPreferences();
 		return composite;
 	}
 
@@ -58,14 +59,22 @@ public class MulePreferencePage extends PreferencePage implements IWorkbenchPref
 	 */
 	public void init(IWorkbench workbench) {
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		classpathChooser.saveToPreferences();
+		classpathPanel.saveToPreferences();
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#setErrorMessage(java.lang.String)
+	 */
+	public void setErrorMessage(String newMessage) {
+		setValid(newMessage == null);
+		super.setErrorMessage(newMessage);
 	}
 }

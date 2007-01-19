@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: Mule Configuration Edit Support Plugin
 Bundle-SymbolicName: org.mule.ide.config.edit; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Activator: org.mule.ide.config.mulemodel.provider.MulemodelEditPlugin$Implementation
-Bundle-Vendor: %providerName
+Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin
 Export-Package: org.mule.ide.config.mulemodel.provider
 Require-Bundle: org.eclipse.core.runtime,

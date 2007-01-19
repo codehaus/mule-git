@@ -35,7 +35,7 @@ public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		Composite existing = (Composite) getControl();
-		classpathChooser = new MuleClasspathChooser();
+		classpathChooser = new MuleClasspathChooser(this);
 		classpathChooser.createControl(existing);
 		contentChooser = new ProjectContentChooser();
 		contentChooser.createControl(existing);
@@ -48,7 +48,7 @@ public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 	 * @return
 	 */
 	public boolean isChoosingLibsFromPlugin() {
-		return classpathChooser.getLibLocationChoice() == MuleClasspathChooser.LOAD_FROM_PLUGIN;
+		return false;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 	 * @return
 	 */
 	public boolean isChoosingLibsFromExternal() {
-		return classpathChooser.getLibLocationChoice() == MuleClasspathChooser.LOAD_FROM_EXTERNAL;
+		return false;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 	 * @return
 	 */
 	public String getExternalRoot() {
-		return classpathChooser.getExternalRoot();
+		return "d:\\java\\mule-1.3.3";
 	}
 
 	/**
