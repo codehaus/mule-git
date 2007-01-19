@@ -65,7 +65,7 @@ public class MuleCorePlugin extends Plugin {
     }
 
     /**
-     * Sets or clears the Mule UMO Configuration nature to this project
+     * Sets or clears the Mule Configuration nature to this project
      *
      * @param project The project to set.
      * @param setIt True if the nature should be added, false if it should be removed

@@ -29,7 +29,7 @@
 
    <extension
          id="muleConfig"
-         name="Mule UMO Configuration File Verifier"
+         name="Mule Configuration File Verifier"
          point="org.eclipse.core.resources.builders">
       <builder
             hasNature="true"
@@ -42,7 +42,7 @@
    
    <extension
          id="muleConfigNature"
-         name="Mule UMO Configuration Nature"
+         name="Mule Configuration Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
@@ -58,7 +58,7 @@
    <extension point="org.eclipse.core.runtime.contentTypes"> 
       <content-type id="org.mule.ide.core.muleConfigXml"
        base-type="org.eclipse.core.runtime.xml"      
-       name="Mule UMO Configuration Type"
+       name="Mule Configuration Type"
        file-extensions="xml">
        <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
         <parameter name="element" value="mule-configuration"/>
@@ -74,6 +74,11 @@
        </describer>
       </content-type>
    </extension>
-
-
+   
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+          <classpathContainerInitializer    
+	         id="org.mule.ide.core.muleClasspath"
+    		 class="org.mule.ide.core.distribution.MuleDistributionClasspath" />
+   </extension>
 </plugin>
