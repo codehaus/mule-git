@@ -232,7 +232,7 @@ public class LicenseHandler
             try
             {
                 srcChannel = new FileInputStream(tempJar.getAbsolutePath()).getChannel();
-                destChannel = new FileInputStream(newJarFile).getChannel();
+                destChannel = new FileOutputStream(newJarFile).getChannel();
                 destChannel.transferFrom(srcChannel, 0, srcChannel.size());
             }
             catch (Exception e)

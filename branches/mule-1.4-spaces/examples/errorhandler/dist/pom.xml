@@ -63,6 +63,14 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
+                    <groupId>activemq</groupId>
+                    <artifactId>activemq-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>activemq</groupId>
+                    <artifactId>activemq-core-test</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>commons-dbcp</groupId>
                     <artifactId>commons-dbcp</artifactId>
                 </exclusion>
@@ -103,11 +111,11 @@
                     <artifactId>activecluster</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>incubator-derby</groupId>
+                    <groupId>org.apache.derby</groupId>
                     <artifactId>derby</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>incubator-derby</groupId>
+                    <groupId>org.apache.derby</groupId>
                     <artifactId>derbynet</artifactId>
                 </exclusion>
                 <exclusion>
@@ -119,8 +127,8 @@
                     <artifactId>xmlParserAPIs</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq-core-test</artifactId>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -184,9 +192,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <!-- The overWrite functionality is documented but not available in the latest
-                    released version (see http://jira.codehaus.org/browse/MDEP-35) -->
-                <version>2.0-20060907.213033-3</version>
                 <executions>
                     <execution>
                         <id>copy-artifact</id>
