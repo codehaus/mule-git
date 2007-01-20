@@ -11,7 +11,6 @@
 package org.mule.test.transformers;
 
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.xml.DomDocumentToXml;
 import org.mule.transformers.xml.XmlToDomDocument;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -23,7 +22,7 @@ import org.dom4j.io.DOMReader;
 import org.dom4j.io.DOMWriter;
 import org.w3c.dom.Document;
 
-public class DomXmlTransformerEncodingTestCase extends AbstractTransformerTestCase
+public class DomXmlTransformerEncodingTestCase extends AbstractXmlTransformerTestCase
 {
     private Document srcData; // Parsed XML doc
     private String resultData; // String as US-ASCII
@@ -65,17 +64,17 @@ public class DomXmlTransformerEncodingTestCase extends AbstractTransformerTestCa
     }
 
     // @Override
-    public boolean compareResults(Object src, Object result)
+    public boolean compareResults(Object expected, Object result)
     {
         // This is only used during roundtrip test, so it will always be Document
         // instances
-        if (src instanceof Document)
+        if (expected instanceof Document)
         {
-            src = new DOMReader().read((Document)src).asXML();
+            expected = new DOMReader().read((Document)expected).asXML();
             result = new DOMReader().read((Document)result).asXML();
         }
 
-        return super.compareResults(src, result);
+        return super.compareResults(expected, result);
     }
 
 }
