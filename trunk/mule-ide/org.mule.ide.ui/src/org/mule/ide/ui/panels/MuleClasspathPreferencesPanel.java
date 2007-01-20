@@ -85,8 +85,9 @@ public class MuleClasspathPreferencesPanel {
 		defaultIndex = defaultDistribution;
 		distros.clearAll();
 		for (int i = 0; i < distributions.length; ++i) {
-			TableItem ti = new TableItem(distros, i == defaultDistribution ? SWT.CHECK : SWT.NONE);
+			TableItem ti = new TableItem(distros, SWT.NONE);
 			ti.setText(distributions[i]);
+			ti.setChecked(i == defaultDistribution);
 		}
 		distros.select(defaultIndex);
 	}
@@ -190,7 +191,6 @@ public class MuleClasspathPreferencesPanel {
 		data3.horizontalSpan = 3;
 		textDistributionDescription.setLayoutData(data3);
 		
-		initializeFromPreferences();
 		return cpGroup;
 	}
 

@@ -73,7 +73,7 @@ public class MulePreferences {
 	 * @return the value or 0 if not found
 	 */
 	protected static int getIntPreference(String key) {
-		return MulePlugin.getDefault().getPreferenceStore().getDefaultInt(key);
+		return MulePlugin.getDefault().getPreferenceStore().getInt(key);
 	}
 
 	/**
