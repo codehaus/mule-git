@@ -10,14 +10,15 @@
 
 package org.mule.test.transformers;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.io.DOMReader;
-import org.dom4j.io.DOMWriter;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.xml.DomDocumentToXml;
 import org.mule.transformers.xml.XmlToDomDocument;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
+
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.DOMReader;
+import org.dom4j.io.DOMWriter;
 import org.w3c.dom.Document;
 
 public class DomXmlTransformersTestCase extends AbstractTransformerTestCase
@@ -26,6 +27,7 @@ public class DomXmlTransformersTestCase extends AbstractTransformerTestCase
     private String srcData;
     private Document resultData;
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         srcData = IOUtils.getResourceAsString("cdcatalog.xml", getClass());
@@ -53,6 +55,7 @@ public class DomXmlTransformersTestCase extends AbstractTransformerTestCase
         return resultData;
     }
 
+    // @Override
     public boolean compareResults(Object src, Object result)
     {
         if (src instanceof Document)
@@ -61,15 +64,10 @@ public class DomXmlTransformersTestCase extends AbstractTransformerTestCase
             String resultXml = new DOMReader().read((Document)result).asXML();
             return srcXml.equals(resultXml);
         }
-        else if (src != null)
-        {
-            src = ((String)src).replaceAll("\r", "");
-            src = ((String)src).replaceAll("\t", "");
-            src = ((String)src).replaceAll("\n", "");
-            result = ((String)result).replaceAll("\r", "");
-            result = ((String)result).replaceAll("\t", "");
-            result = ((String)result).replaceAll("\n", "");
-        }
+
+        src = super.normalizeString((String)src);
+        result = super.normalizeString((String)result);
         return super.compareResults(src, result);
     }
+
 }

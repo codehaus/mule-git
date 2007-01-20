@@ -27,12 +27,14 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
 {
     private UMOMessage testObject = null;
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         RequestContext.setEvent(new MuleEvent(testObject, getTestEndpoint("test", "sender"),
             MuleTestUtils.getTestSession(), true));
     }
 
+    // @Override
     protected void doTearDown() throws Exception
     {
         RequestContext.clear();
@@ -93,16 +95,19 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                + "</org.mule.impl.MuleMessage>";
     }
 
+    // @Override
     public boolean compareRoundtripResults(Object src, Object result)
     {
         if (src == null && result == null)
         {
             return true;
         }
+
         if (src == null || result == null)
         {
             return false;
         }
+
         if (src instanceof UMOMessage && result instanceof UMOMessage)
         {
             return ((UMOMessage)src).getPayload().equals(((UMOMessage)result).getPayload())

@@ -34,17 +34,13 @@ public abstract class AbstractXmlTransformerTestCase extends AbstractTransformer
      * 
      * @throws Exception if any error
      */
+    // @Override
     public void testTransform() throws Exception
     {
         Object result = getTransformer().transform(getTestData());
         assertNotNull(result);
         XMLAssert.assertXMLEqual("Xml documents have different data.", (String)getResultData(),
             (String)result);
-    }
-
-    protected String normalizeString(String rawString)
-    {
-        return rawString.replaceAll("\r\n", "").replaceAll("\n", "");
     }
 
 }
