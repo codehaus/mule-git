@@ -20,20 +20,26 @@ import java.util.Arrays;
 public abstract class AbstractTransformerTestCase extends AbstractMuleTestCase
 {
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         // setup a dummy context for transformers that are event aware
         RequestContext.setEvent(getTestEvent("test"));
     }
 
+    // @Override
     protected void doTearDown() throws Exception
     {
         RequestContext.setEvent(null);
     }
 
+    // Remove tabs and line breaks in the passed String; this makes comparison of XML
+    // fragments easier
     protected String normalizeString(String rawString)
     {
-        return rawString.replaceAll("\r\n", "\n");
+        rawString = rawString.replaceAll("\r", "");
+        rawString = rawString.replaceAll("\n", "");
+        return rawString.replaceAll("\t", "");
     }
 
     public void testTransform() throws Exception
