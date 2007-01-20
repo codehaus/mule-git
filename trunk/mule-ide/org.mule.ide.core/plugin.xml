@@ -79,6 +79,6 @@
          point="org.eclipse.jdt.core.classpathContainerInitializer">
           <classpathContainerInitializer    
 	         id="org.mule.ide.core.muleClasspath"
-    		 class="org.mule.ide.core.distribution.MuleDistributionClasspath" />
+    		 class="org.mule.ide.core.distribution.MuleDistributionClasspathInitializer" />
    </extension>
 </plugin>
