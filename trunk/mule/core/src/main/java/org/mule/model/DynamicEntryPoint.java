@@ -230,7 +230,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
     /**
      * This method will actually invoke the given method on the given component.
      */
-    protected Object invokeMethod(Object component, Method method, Object arg)
+    protected Object invokeMethod(Object component, Method method, Object argument)
         throws InvocationTargetException, IllegalAccessException
     {
         String methodCall = null;
@@ -238,32 +238,45 @@ public class DynamicEntryPoint implements UMOEntryPoint
         if (logger.isDebugEnabled())
         {
             methodCall = component.getClass().getName() + "." + currentMethod.getName() + "("
-                            + arg.getClass().getName() + ")";
+                            + argument.getClass().getName() + ")";
             logger.debug("Invoking " + methodCall);
         }
 
-        Object[] args;
-        if (arg.getClass().isArray())
+        // this will wrap the given argument for the invocation
+        Object[] invocationArgs;
+
+        // TODO MULE-1088: in order to properly support an array as argument for a
+        // component method, the block below would need to be removed. Unfortunately
+        // this would break the LoanBroker, which passes a BankQuoteRequest in an
+        // array even though the correct method only takes a single non-Array
+        // argument.
+        // It is not entirely clear to me whether this is a bug in the LoanBroker or
+        // intended behaviour, and what the check for Object[] assignment
+        // compatibility is supposed to do/prevent in the first place?
+        // Any kind of interpretation/rewriting of the array argument is pretty
+        // much futile at this point, because we have already found a matching method
+        // - otherwise we wouldn't be here!
+        if (argument.getClass().isArray())
         {
-            if (Object[].class.isAssignableFrom(arg.getClass()))
+            if (Object[].class.isAssignableFrom(argument.getClass()))
             {
-                args = (Object[])arg;
+                invocationArgs = (Object[])argument;
             }
             else
             {
-                args = new Object[]{arg};
+                invocationArgs = new Object[]{argument};
             }
         }
-        else if (arg instanceof NullPayload)
+        else if (argument instanceof NullPayload)
         {
-            args = null;
+            invocationArgs = null;
         }
         else
         {
-            args = new Object[]{arg};
+            invocationArgs = new Object[]{argument};
         }
 
-        Object result = method.invoke(component, args);
+        Object result = method.invoke(component, invocationArgs);
 
         if (logger.isDebugEnabled())
         {

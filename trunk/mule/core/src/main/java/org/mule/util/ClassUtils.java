@@ -347,7 +347,6 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     {
         Class clazz = loadClass(name, callingClass);
         return instanciateClass(clazz, constructorArgs);
-
     }
 
     public static Class[] getParameterTypes(Object bean, String methodName)
@@ -356,6 +355,7 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         {
             methodName = "set" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
         }
+
         Method methods[] = bean.getClass().getMethods();
 
         for (int i = 0; i < methods.length; i++)
@@ -365,6 +365,7 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
                 return methods[i].getParameterTypes();
             }
         }
+
         return new Class[]{};
     }
 
@@ -436,8 +437,8 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
      * @param voidOk whether void methods shouldbe included in the found list
      * @param matchOnObject determines whether parameters of OBject type are matched
      *            when they are of Object.class type
-     * @param ignoredMethodNames a Set of method names to ignore. Often 'equals' is not
-     *            a desired match. This argument can be null.
+     * @param ignoredMethodNames a Set of method names to ignore. Often 'equals' is
+     *            not a desired match. This argument can be null.
      * @return a List of methods on the class that match the criteria. If there are
      *         none, an empty list is returned
      */
@@ -505,6 +506,14 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     public static Class[] getClassTypes(Object object)
     {
         Class[] types;
+
+        // TODO MULE-1088: instead of returning the classes of an array's elements we should
+        // just return the array class - which makes the whole method pointless!?
+//        if (object.getClass().isArray())
+//        {
+//            types = new Class[]{object.getClass()};
+//        }
+
         if (object instanceof Object[])
         {
             Object[] objects = (Object[])object;
@@ -516,9 +525,9 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         }
         else
         {
-            types = new Class[1];
-            types[0] = object.getClass();
+            types = new Class[]{object.getClass()};
         }
+
         return types;
     }
 
