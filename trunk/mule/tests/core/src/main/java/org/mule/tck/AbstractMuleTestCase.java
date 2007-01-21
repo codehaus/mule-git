@@ -40,7 +40,7 @@ import org.mule.util.StringMessageUtils;
  */
 public abstract class AbstractMuleTestCase extends TestCase
 {
-    protected transient final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     // This should be set to a string message describing any prerequisites not met
     protected String prereqs = null;
