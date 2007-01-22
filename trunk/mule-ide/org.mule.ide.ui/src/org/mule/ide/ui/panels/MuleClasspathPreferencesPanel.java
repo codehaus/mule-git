@@ -1,10 +1,12 @@
 package org.mule.ide.ui.panels;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -67,7 +69,7 @@ public class MuleClasspathPreferencesPanel {
 		String cpType = MulePreferences.getDeprecatedClasspathChoice();
 		if (IPreferenceConstants.MULE_CLASSPATH_TYPE_PLUGIN.equals(cpType)) {
 			hadDeprecatedValues = true;
-			parentPage.setErrorMessage("Mule IDE no longer distributes Mule as part of the plugin. " + 
+			parentPage.setMessage("Mule IDE no longer distributes Mule as part of the plugin. " + 
 					"You must set the location of the external install for Mule to work.");
 			initDistros(new String[0], -1);
 		} else if (IPreferenceConstants.MULE_CLASSPATH_TYPE_EXTERNAL.equals(cpType)) {
@@ -92,7 +94,7 @@ public class MuleClasspathPreferencesPanel {
 		distros.select(defaultIndex);
 	}
 
-	public void showMuleVersion(int idx) {
+	public boolean showMuleVersion(int idx) {
 		
 		if (idx >= 0 && idx < pathList.size()) {
 			IMuleDistribution dist = getValidDistribution((String)pathList.get(idx));
@@ -100,14 +102,17 @@ public class MuleClasspathPreferencesPanel {
 				this.textDistributionVersion.setText(dist.getVersion());
 				this.textDistributionDescription.setText(dist.getLocation().toString());
 				dist.close();
+				return true;
 			} else {
 				this.textDistributionVersion.setText("Error");
 				this.textDistributionDescription.setText("The selected Mule distribution cannot be used with Mule IDE");
+				return false;
 			}
 		} else {
 			this.textDistributionVersion.setText("");
 			this.textDistributionDescription.setText("");
 		}
+		return true;
 	}
 	
 	/**
@@ -147,7 +152,7 @@ public class MuleClasspathPreferencesPanel {
 					TableItem oldItem = distros.getItem(defaultIndex);
 					if (oldItem != event.item) oldItem.setChecked(false);
 					((TableItem)(event.item)).setChecked(true);
-					defaultIndex = distros.indexOf((TableItem)(event.item));
+					setNewDefault(distros.indexOf((TableItem)(event.item)));
 				} else {
 					// Must be selection
 					showMuleVersion(distros.indexOf((TableItem)(event.item)));
@@ -202,12 +207,20 @@ public class MuleClasspathPreferencesPanel {
 	protected void addDirDistribution() {
 		DirectoryDialog dialog = new DirectoryDialog(parentPage.getShell());
 		dialog.setText("Choose the root of an unpacked Mule Distribution");
-		String filepath = dialog.open();
-		if (filepath != null && checkDistribution(filepath)) {
-			addDistributionRoot(filepath);
-		}
+		tryAddDistribution(dialog.open());
 	}
 	
+	/**
+	 * Browse for the external root.
+	 */
+	protected void addJarDistribution() {
+		FileDialog dialog = new FileDialog(parentPage.getShell());
+		dialog.setText("Choose a Mule single-file distribution (JAR or RAR)");
+		dialog.setFilterNames (new String [] {"Java Archive", "Resource Adapter Archive"});
+		dialog.setFilterExtensions (new String [] {"*.jar", "*.rar"});
+		tryAddDistribution(dialog.open());
+	}
+
 	private boolean checkDistribution(String filepath) {
 		IMuleDistribution dist = getValidDistribution(filepath);
 		if (dist != null) {
@@ -217,18 +230,36 @@ public class MuleClasspathPreferencesPanel {
 		return false;
 	}
 	
-	/**
-	 * Browse for the external root.
-	 */
-	protected void addJarDistribution() {
-		FileDialog dialog = new FileDialog(parentPage.getShell());
-		dialog.setText("Choose a Mule single-file distribution (JAR or RAR)");
-		dialog.setFilterExtensions(new String[]{ "jar", "rar" });
-		dialog.setFilterNames (new String [] {"Java Archive", "Resource Adapter Archive"});
-		dialog.setFilterExtensions (new String [] {"*.jar", "*.rar"});
-		String filepath = dialog.open();
-		if (filepath != null && checkDistribution(filepath)) {
+	private void tryAddDistribution(String filepath) {
+		if (filepath == null) return;
+
+		try
+		{
+			File path = new File(filepath);
+			filepath = path.getCanonicalPath();
+			if (! path.exists()) filepath = null;
+		}
+		catch (IOException ioe)
+		{
+			// Do nothing
+		}
+		
+		if (filepath == null)
+		{
+			MessageDialog.openError(parentPage.getShell(), "Mule Distribution not found", "No Mule Distribution found at:\r\n" + filepath);
+			return;
+		}
+		
+		if (pathList.contains(filepath)) {
+			MessageDialog.openError(parentPage.getShell(), "Existing Mule Distribution", "This installation is already in the list");
+			return;
+		}
+			
+		if (checkDistribution(filepath)) {
 			addDistributionRoot(filepath);
+			parentPage.setMessage(null);
+		} else {
+			MessageDialog.openError(parentPage.getShell(), "Unrecognized Mule Distribution", "The Mule installation or distribution at this location cannot be recognized");
 		}
 	}
 
@@ -236,11 +267,16 @@ public class MuleClasspathPreferencesPanel {
 		pathList.add(filePath);
 		TableItem it = new TableItem(distros,SWT.NONE);
 		it.setText(filePath);
+		if (defaultIndex < 0)
+		{
+			setNewDefault(distros.indexOf(it));
+		}
 	}
 
 	protected void removeDistribution(int idx) {
 		if (idx >= 0 && idx < pathList.size()) {
 			distros.remove(idx);
+			pathList.remove(idx);
 		}
 		showMuleVersion(-1);
 		if (defaultIndex == idx) {
@@ -251,10 +287,24 @@ public class MuleClasspathPreferencesPanel {
 	}
 
 	private void setNewDefault(int idx) {
-		if (defaultIndex > 0) {
+		// clear old checkmark
+		if (idx != defaultIndex && defaultIndex > 0 && idx < distros.getItemCount()) distros.getItem(defaultIndex).setChecked(false);
+
+		defaultIndex = idx;
+		if (idx > 0 && idx < distros.getItemCount()) {
 			distros.getItem(defaultIndex).setChecked(true);
-			distros.select(defaultIndex);
-			showMuleVersion(defaultIndex);
+		}
+		distros.select(defaultIndex);
+		boolean ok = showMuleVersion(defaultIndex);
+		defaultIndex = idx;
+		
+		if (! ok)
+		{
+			parentPage.setErrorMessage("The Mule installation or distribution at this location cannot be recognized");
+		}
+		else
+		{
+			parentPage.setErrorMessage(null);
 		}
 	}
 	
