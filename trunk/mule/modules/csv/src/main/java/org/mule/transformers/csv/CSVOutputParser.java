@@ -13,6 +13,8 @@ package org.mule.transformers.csv;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import java.io.Writer;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class CSVOutputParser implements CSVParser
 
     /**
      * Constructor
-     *
+     * 
      * @param out output writer
      * @param separator character to use as the field delimiter
      */
@@ -42,55 +44,72 @@ public class CSVOutputParser implements CSVParser
         writer = new CSVWriter(out, separator, quoteChar);
     }
 
-    /*
-     * Convert the object to CSV. We accept a List of Maps that represents
-     * multiple rows or just a Map that represents on row
-     *
+    /**
+     * Convert the object to CSV. We accept a List of Maps that represents multiple
+     * rows or just a Map that represents one row.
+     * 
      * @param o source object
      */
     public void write(Object o) throws Exception
     {
         if (o instanceof List)
         {
-            write((List)o);
+            this.write((List)o);
         }
         else if (o instanceof Map)
         {
-            writeRow((Map)o);
+            this.writeRow((Map)o);
         }
     }
 
     /**
-     * Write the List as a CSV string. The List will contain Maps
-     * Each string in this array represents a field in the CSV file.
+     * Write the List as a CSV string. The List will contain Maps Each string in this
+     * array represents a field in the CSV file.
      * 
      * @param l the List of Maps
      * @throws Exception
      */
     public void write(List l) throws Exception
     {
-        for (int i = 0; i < l.size(); i++) {
-            Map row = (Map)l.get(i);
-            writeRow(row);
+        try
+        {
+            for (Iterator i = l.iterator(); i.hasNext();)
+            {
+                writeRow((Map)i.next());
+            }
         }
-        writer.close();
+        finally
+        {
+            writer.close();
+        }
     }
 
     /**
      * Write the row Map as a CSV string.
-     *
+     * 
      * @param row the Map containing row data
      */
     public void writeRow(Map row) throws Exception
     {
-        Object[] a = row.values().toArray();
-        String[] sa = new String[a.length];
-        for (int i = 0; i < a.length; i++) 
+        Collection values = row.values();
+        String[] stringValues = new String[values.size()];
+
+        int i = 0;
+        for (Iterator v = values.iterator(); v.hasNext(); i++)
         {
-            if (a[i] != null) sa[i] = a[i].toString();
-            else sa[i] = new String("");
+            Object value = v.next();
+
+            if (value != null)
+            {
+                stringValues[i] = value.toString();
+            }
+            else
+            {
+                stringValues[i] = "";
+            }
         }
-        writer.writeNext(sa);
+
+        writer.writeNext(stringValues);
     }
 
 }

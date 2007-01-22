@@ -14,6 +14,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class CSVInputParser implements CSVParser
 
     /**
      * Constructor
-     *
+     * 
      * @param in input reader
      * @param separator character to use as the field delimiter
      */
@@ -61,53 +62,47 @@ public class CSVInputParser implements CSVParser
         reader = new CSVReader(in, separator, quoteChar, startLine);
     }
 
-    /*
-     * Reads the input and build a List of Maps
-     *
+    /**
+     * Reads the input and builds a List of Maps.
+     * 
      * @return Object the List
      */
     public Object parse() throws Exception
     {
-        int counter = 0;
-
         try
         {
             List rows = new ArrayList();
-            String[] line = reader.readNext();
-            while (line != null)
-            {
-                counter++;
+            int currentRow = 0;
+            String[] line;
 
-                if (firstLineLabels && counter == 1 && !isEmpty(line))
+            while (((line = reader.readNext()) != null) && !this.isEmpty(line))
+            {
+                currentRow++;
+
+                if (firstLineLabels && currentRow == 1)
                 {
-                    labels = new ArrayList();
+                    labels = Arrays.asList(line);
+                }
+                else
+                {
+                    Map row = new HashMap(line.length);
+
                     for (int i = 0; i < line.length; i++)
                     {
-                        labels.add(line[i]);
-                    }
-                } else {
-                    if (!isEmpty(line))
-                    {
-                        Map row = new HashMap();
-                        for (int i = 0; i < line.length; i++)
+                        if (labels != null)
                         {
-                            if (labels != null)
-                            {
-                                row.put(labels.get(i), line[i]);
-                            } 
-                            else
-                            {
-                                row.put("" + i, line[i]);
-                            }
-
-                            //row.add(line[i]);
+                            row.put(labels.get(i), line[i]);
                         }
-                        rows.add(row);
+                        else
+                        {
+                            row.put(String.valueOf(i), line[i]);
+                        }
                     }
-                }
 
-                line = reader.readNext();
+                    rows.add(row);
+                }
             }
+
             return rows;
         }
         finally
@@ -117,8 +112,8 @@ public class CSVInputParser implements CSVParser
     }
 
     /**
-     * Check if the array that was passed is completely empty. Will return 
-     * false if at least one element was found that contained a value.
+     * Check if the array that was passed is completely empty. Will return false if
+     * at least one element was found that contained a value.
      * 
      * @param line
      * @return true if the array is completely empty.
@@ -140,7 +135,7 @@ public class CSVInputParser implements CSVParser
 
     /**
      * Sets whether to extract field names from the first line or not
-     *
+     * 
      * @param firstLineLabels boolean yes/no
      */
     public void setFirstLineLabels(boolean firstLineLabels)
@@ -150,16 +145,17 @@ public class CSVInputParser implements CSVParser
 
     /**
      * Gets whether or not to extract field names
-     *
+     * 
      * @return true of extracting field names from the first line
      */
-    public void setLabels(List labels) {
+    public void setLabels(List labels)
+    {
         this.labels = labels;
     }
 
     /**
      * Returns the List of field names
-     *
+     * 
      * @return the List
      */
     public List getLabels()

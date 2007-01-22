@@ -1,5 +1,5 @@
 /*
- * $Id: XmlObjectTransformersTestCase.java 3921 2006-11-18 18:19:12Z holger $
+ * $Id: $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,13 +10,13 @@
 
 package org.mule.test.transformers;
 
-import java.util.List;
-
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.csv.CSVToMapList;
 import org.mule.transformers.csv.MapListToCSV;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
+
+import java.util.List;
 
 public class CSVTransformersTestCase extends AbstractTransformerTestCase
 {
@@ -25,6 +25,7 @@ public class CSVTransformersTestCase extends AbstractTransformerTestCase
 
     public CSVTransformersTestCase()
     {
+        super();
     }
 
     protected void doSetUp() throws Exception
@@ -37,14 +38,14 @@ public class CSVTransformersTestCase extends AbstractTransformerTestCase
     {
         Object result = this.getTransformer().transform(getTestData());
         assertNotNull(result);
-        assert(result instanceof List);
+        assertTrue(result instanceof List);
         assertEquals(((List)result).size(), 6);
     }
 
     /**
-     * Note: testing with input data that has quote won't work because
-     * OpenCSV will escape them with another quote. You can't turn this off
-     * (at least in this version), so the last assert will always fail.
+     * Note: testing with input data that has quote won't work because OpenCSV will
+     * escape them with another quote. You can't turn this off (at least in this
+     * version), so the last assert will always fail.
      */
     public void testRoundtripTransform() throws Exception
     {
@@ -52,13 +53,12 @@ public class CSVTransformersTestCase extends AbstractTransformerTestCase
         assertNotNull(outbound);
         Object inbound = this.getRoundTripTransformer().transform(outbound);
         assertNotNull(inbound);
-        assert(compareResults(inbound, getTestData()));
+        assert (compareResults(inbound, getTestData()));
     }
 
     public UMOTransformer getTransformer() throws Exception
     {
-        CSVToMapList t = new CSVToMapList();
-        return t;
+        return new CSVToMapList();
     }
 
     public UMOTransformer getRoundTripTransformer() throws Exception
@@ -79,4 +79,3 @@ public class CSVTransformersTestCase extends AbstractTransformerTestCase
     }
 
 }
-

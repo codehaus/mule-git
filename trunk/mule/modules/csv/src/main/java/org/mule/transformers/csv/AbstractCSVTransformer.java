@@ -11,18 +11,11 @@
 package org.mule.transformers.csv;
 
 import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.List;
 
 /**
+ * TODO document
  */
 public abstract class AbstractCSVTransformer extends AbstractTransformer
 {
@@ -34,6 +27,7 @@ public abstract class AbstractCSVTransformer extends AbstractTransformer
 
     public AbstractCSVTransformer()
     {
+        super();
     }
 
     public void setFieldNames(List fieldNames)

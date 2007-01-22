@@ -10,19 +10,18 @@
 
 package org.mule.transformers.csv;
 
-import org.mule.umo.UMOEventContext;
 import org.mule.umo.transformer.TransformerException;
 
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
-import java.util.List;
 
 /**
  * Transform a Map to a single CSV row.
  */
 public class MapToCSV extends AbstractCSVTransformer
 {
+    private static final long serialVersionUID = 7706571607820420420L;
 
     public MapToCSV()
     {
@@ -32,7 +31,7 @@ public class MapToCSV extends AbstractCSVTransformer
 
     /**
      * Do the transformation
-     *
+     * 
      * @param src source data
      * @param encoding data encoding
      */
@@ -40,20 +39,15 @@ public class MapToCSV extends AbstractCSVTransformer
     {
         try
         {
-            if (src instanceof Map)
-            {
-                Writer stringWriter = new StringWriter();
-                CSVOutputParser writer = new CSVOutputParser(stringWriter, separator, quoteCharacter);
-                writer.write(src);
-                return stringWriter.toString();
-            }
+            Writer stringWriter = new StringWriter();
+            CSVOutputParser writer = new CSVOutputParser(stringWriter, separator, quoteCharacter);
+            writer.write(src);
+            return stringWriter.toString();
         }
         catch (Exception e)
         {
             throw new TransformerException(this, e);
         }
-
-        return null;
     }
 
 }

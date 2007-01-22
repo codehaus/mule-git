@@ -10,9 +10,7 @@
 
 package org.mule.transformers.csv;
 
-import org.mule.umo.UMOEventContext;
 import org.mule.umo.transformer.TransformerException;
-import org.mule.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,13 +20,14 @@ import java.io.StringReader;
 import java.util.List;
 
 /**
- * Transform a CSV string to a List of Maps. Each Map represents the
- * fields of a row. The key of the map is either the zero-based sequence
- * number or the actual field names. Field names can be passed in via the
- * configuration or can be parsed out of the first line of the CSV data.
+ * Transform a CSV string to a List of Maps. Each Map represents the fields of a row.
+ * The key of the map is either the zero-based sequence number or the actual field
+ * names. Field names can be passed in via the configuration or can be parsed out of
+ * the first line of the CSV data.
  */
 public class CSVToMapList extends AbstractCSVTransformer
 {
+    private static final long serialVersionUID = 4050673946506172890L;
 
     public CSVToMapList()
     {
@@ -39,7 +38,7 @@ public class CSVToMapList extends AbstractCSVTransformer
 
     /**
      * Do the transformation
-     *
+     * 
      * @param src source data
      * @param encoding data encoding
      */
@@ -47,11 +46,11 @@ public class CSVToMapList extends AbstractCSVTransformer
     {
         try
         {
-            CSVInputParser reader = new CSVInputParser(getReader(src), separator, quoteCharacter, startLine);
-            reader.setFirstLineLabels(firstLineLabels);
-            reader.setLabels(fieldNames);
-            Object o = reader.parse();
-            return o;
+            Reader reader = this.getReader(src, encoding);
+            CSVInputParser parser = new CSVInputParser(reader, separator, quoteCharacter, startLine);
+            parser.setFirstLineLabels(firstLineLabels);
+            parser.setLabels(fieldNames);
+            return parser.parse();
         }
         catch (Exception e)
         {
@@ -59,11 +58,11 @@ public class CSVToMapList extends AbstractCSVTransformer
         }
     }
 
-    protected Reader getReader(Object src) throws Exception
+    protected Reader getReader(Object src, String encoding) throws Exception
     {
         if (src instanceof byte[])
         {
-            return getReader((byte[])src);
+            return getReader((byte[])src, encoding);
         }
         else if (src instanceof String)
         {
@@ -79,9 +78,9 @@ public class CSVToMapList extends AbstractCSVTransformer
         }
     }
 
-    protected Reader getReader(byte[] src) throws Exception
+    protected Reader getReader(byte[] src, String encoding) throws Exception
     {
-        return getReader(new String(src));
+        return getReader(new String(src, encoding));
     }
 
     protected Reader getReader(String src) throws Exception
