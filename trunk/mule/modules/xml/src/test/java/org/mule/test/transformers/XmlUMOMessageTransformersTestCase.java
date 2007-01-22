@@ -18,11 +18,12 @@ import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.transformers.xml.ObjectToXml;
 import org.mule.transformers.xml.XmlToObject;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.custommonkey.xmlunit.XMLAssert;
 
 public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTestCase
 {
@@ -90,8 +91,10 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                         + "      </entry>\n"
                         + "    </properties>\n"
                         + "    <attachments class=\"edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap\"/>\n"
-                        + "    <encoding>UTF-8</encoding>\n" + "    <id>" + testObject.getUniqueId()
-                        + "</id>\n" + "  </adapter>\n" + "</org.mule.impl.MuleMessage>";
+                        + "    <encoding>UTF-8</encoding>\n"
+                        + "    <id>" + testObject.getUniqueId() + "</id>\n"
+                        + "  </adapter>\n"
+                        + "</org.mule.impl.MuleMessage>";
     }
 
     /**
@@ -109,21 +112,17 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
             // this is currently the case when running on Mustang
             try
             {
-                UMOTransformer stringToMessage = new XmlToObject();
-                UMOMessage m1 = (UMOMessage)stringToMessage.transform(expected);
-                UMOMessage m2 = (UMOMessage)stringToMessage.transform(result);
-                return compareRoundtripResults(m1, m2);
+                XMLAssert.assertXpathEvaluatesTo("3", "count(//adapter/properties/entry)", (String)result);
+                XMLAssert.assertXpathEvaluatesTo("object", "//adapter/properties/entry/string/text()", (String)result);
+                XMLAssert.assertXpathEvaluatesTo("false", "//adapter/properties/entry/org.mule.tck.testmodels.fruit.Apple/bitten", (String)result);
             }
-            catch (TransformerException ex)
+            catch (Exception ex)
             {
-                return false;
+                fail(ex.getMessage());
             }
-        }
-        else
-        {
-            return true;
         }
 
+        return true;
     }
 
     // @Override
