@@ -837,6 +837,15 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getAbstractFilter_NestedFilter() {
+		return (EReference)abstractFilterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getGenericFilter() {
 		return genericFilterEClass;
 	}
@@ -848,6 +857,24 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 	 */
 	public EClass getBinaryFilter() {
 		return binaryFilterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBinaryFilter_LeftFilter() {
+		return (EReference)binaryFilterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBinaryFilter_RightFilter() {
+		return (EReference)binaryFilterEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -967,10 +994,13 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		createEAttribute(transformerEClass, TRANSFORMER__NAME);
 
 		abstractFilterEClass = createEClass(ABSTRACT_FILTER);
+		createEReference(abstractFilterEClass, ABSTRACT_FILTER__NESTED_FILTER);
 
 		genericFilterEClass = createEClass(GENERIC_FILTER);
 
 		binaryFilterEClass = createEClass(BINARY_FILTER);
+		createEReference(binaryFilterEClass, BINARY_FILTER__LEFT_FILTER);
+		createEReference(binaryFilterEClass, BINARY_FILTER__RIGHT_FILTER);
 
 		xsltFilterEClass = createEClass(XSLT_FILTER);
 	}
@@ -1095,10 +1125,13 @@ public class MulePackageImpl extends EPackageImpl implements MulePackage {
 		initEAttribute(getTransformer_Name(), ecorePackage.getEString(), "name", null, 0, 1, Transformer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(abstractFilterEClass, AbstractFilter.class, "AbstractFilter", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getAbstractFilter_NestedFilter(), this.getAbstractFilter(), null, "nestedFilter", null, 0, 1, AbstractFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(genericFilterEClass, GenericFilter.class, "GenericFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(binaryFilterEClass, BinaryFilter.class, "BinaryFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getBinaryFilter_LeftFilter(), this.getAbstractFilter(), null, "leftFilter", null, 0, 1, BinaryFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getBinaryFilter_RightFilter(), this.getAbstractFilter(), null, "rightFilter", null, 0, 1, BinaryFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(xsltFilterEClass, XsltFilter.class, "XsltFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 

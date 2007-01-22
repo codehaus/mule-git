@@ -22,6 +22,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
+import org.eclipse.emf.edit.provider.ViewerNotification;
+
+import org.mule.ide.config.mulemodel.AbstractFilter;
+import org.mule.ide.config.mulemodel.MuleFactory;
+import org.mule.ide.config.mulemodel.MulePackage;
+
 /**
  * This is the item provider adapter for a {@link org.mule.ide.config.mulemodel.AbstractFilter} object.
  * <!-- begin-user-doc -->
@@ -68,6 +74,22 @@ public class AbstractFilterItemProvider
 	}
 
 	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Collection getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(MulePackage.Literals.ABSTRACT_FILTER__NESTED_FILTER);
+		}
+		return childrenFeatures;
+	}
+
+	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -86,6 +108,12 @@ public class AbstractFilterItemProvider
 	 */
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(AbstractFilter.class)) {
+			case MulePackage.ABSTRACT_FILTER__NESTED_FILTER:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 
@@ -98,6 +126,21 @@ public class AbstractFilterItemProvider
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.ABSTRACT_FILTER__NESTED_FILTER,
+				 MuleFactory.eINSTANCE.createGenericFilter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.ABSTRACT_FILTER__NESTED_FILTER,
+				 MuleFactory.eINSTANCE.createBinaryFilter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(MulePackage.Literals.ABSTRACT_FILTER__NESTED_FILTER,
+				 MuleFactory.eINSTANCE.createXsltFilter()));
 	}
 
 	/**

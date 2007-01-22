@@ -1084,13 +1084,31 @@ public interface MulePackage extends EPackage {
 	int TRANSFORMER_FEATURE_COUNT = 4;
 
 	/**
+	 * The feature id for the '<em><b>Nested Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_FILTER__NESTED_FILTER = 0;
+
+	/**
 	 * The number of structural features of the '<em>Abstract Filter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_FILTER_FEATURE_COUNT = 0;
+	int ABSTRACT_FILTER_FEATURE_COUNT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Nested Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_FILTER__NESTED_FILTER = ABSTRACT_FILTER__NESTED_FILTER;
 
 	/**
 	 * The number of structural features of the '<em>Generic Filter</em>' class.
@@ -1102,13 +1120,49 @@ public interface MulePackage extends EPackage {
 	int GENERIC_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Nested Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINARY_FILTER__NESTED_FILTER = ABSTRACT_FILTER__NESTED_FILTER;
+
+	/**
+	 * The feature id for the '<em><b>Left Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINARY_FILTER__LEFT_FILTER = ABSTRACT_FILTER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Right Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINARY_FILTER__RIGHT_FILTER = ABSTRACT_FILTER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Binary Filter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINARY_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 0;
+	int BINARY_FILTER_FEATURE_COUNT = ABSTRACT_FILTER_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Nested Filter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XSLT_FILTER__NESTED_FILTER = ABSTRACT_FILTER__NESTED_FILTER;
 
 	/**
 	 * The number of structural features of the '<em>Xslt Filter</em>' class.
@@ -1772,6 +1826,17 @@ public interface MulePackage extends EPackage {
 	EClass getAbstractFilter();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.mule.ide.config.mulemodel.AbstractFilter#getNestedFilter <em>Nested Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Nested Filter</em>'.
+	 * @see org.mule.ide.config.mulemodel.AbstractFilter#getNestedFilter()
+	 * @see #getAbstractFilter()
+	 * @generated
+	 */
+	EReference getAbstractFilter_NestedFilter();
+
+	/**
 	 * Returns the meta object for class '{@link org.mule.ide.config.mulemodel.GenericFilter <em>Generic Filter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1790,6 +1855,28 @@ public interface MulePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getBinaryFilter();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.mule.ide.config.mulemodel.BinaryFilter#getLeftFilter <em>Left Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Left Filter</em>'.
+	 * @see org.mule.ide.config.mulemodel.BinaryFilter#getLeftFilter()
+	 * @see #getBinaryFilter()
+	 * @generated
+	 */
+	EReference getBinaryFilter_LeftFilter();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.mule.ide.config.mulemodel.BinaryFilter#getRightFilter <em>Right Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Right Filter</em>'.
+	 * @see org.mule.ide.config.mulemodel.BinaryFilter#getRightFilter()
+	 * @see #getBinaryFilter()
+	 * @generated
+	 */
+	EReference getBinaryFilter_RightFilter();
 
 	/**
 	 * Returns the meta object for class '{@link org.mule.ide.config.mulemodel.XsltFilter <em>Xslt Filter</em>}'.
@@ -2352,6 +2439,14 @@ public interface MulePackage extends EPackage {
 		EClass ABSTRACT_FILTER = eINSTANCE.getAbstractFilter();
 
 		/**
+		 * The meta object literal for the '<em><b>Nested Filter</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_FILTER__NESTED_FILTER = eINSTANCE.getAbstractFilter_NestedFilter();
+
+		/**
 		 * The meta object literal for the '{@link org.mule.ide.config.mulemodel.impl.GenericFilterImpl <em>Generic Filter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2370,6 +2465,22 @@ public interface MulePackage extends EPackage {
 		 * @generated
 		 */
 		EClass BINARY_FILTER = eINSTANCE.getBinaryFilter();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Filter</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BINARY_FILTER__LEFT_FILTER = eINSTANCE.getBinaryFilter_LeftFilter();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Filter</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BINARY_FILTER__RIGHT_FILTER = eINSTANCE.getBinaryFilter_RightFilter();
 
 		/**
 		 * The meta object literal for the '{@link org.mule.ide.config.mulemodel.impl.XsltFilterImpl <em>Xslt Filter</em>}' class.

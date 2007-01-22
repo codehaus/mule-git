@@ -284,30 +284,6 @@
     <element xmi:type="ecore:EClass" href="mulemodel.ecore#//MapProperty"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BN3rBG3xEduqB_yyRTZLaw" x="630" y="18"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_BN78cG3xEduqB_yyRTZLaw" type="2001">
-    <children xmi:type="notation:Node" xmi:id="_BN8jgG3xEduqB_yyRTZLaw" type="5001"/>
-    <children xmi:type="notation:Node" xmi:id="_BN8jgW3xEduqB_yyRTZLaw" type="7001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_BN8jgm3xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_BN8jg23xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_BN8jhG3xEduqB_yyRTZLaw"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_BN-_wG3xEduqB_yyRTZLaw" type="7002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_BN-_wW3xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_BN-_wm3xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_BN-_w23xEduqB_yyRTZLaw"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_BN_m0G3xEduqB_yyRTZLaw" type="7003">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_BN_m0W3xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_BN_m0m3xEduqB_yyRTZLaw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_BN_m023xEduqB_yyRTZLaw"/>
-    </children>
-    <styles xmi:type="notation:FontStyle" xmi:id="_BN78cW3xEduqB_yyRTZLaw" fontName="Sans"/>
-    <styles xmi:type="notation:DescriptionStyle" xmi:id="_BN78cm3xEduqB_yyRTZLaw"/>
-    <styles xmi:type="notation:FillStyle" xmi:id="_BN78c23xEduqB_yyRTZLaw"/>
-    <styles xmi:type="notation:LineStyle" xmi:id="_BN78dG3xEduqB_yyRTZLaw"/>
-    <element xmi:type="ecore:EClass" href="mulemodel.ecore#//InterceptorDefinition"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BN78dW3xEduqB_yyRTZLaw" x="648" y="684"/>
-  </children>
   <children xmi:type="notation:Node" xmi:id="_iQ7cQG3xEduqB_yyRTZLaw" type="2001">
     <children xmi:type="notation:Node" xmi:id="_iQ8qYG3xEduqB_yyRTZLaw" type="5001"/>
     <children xmi:type="notation:Node" xmi:id="_iQ8qYW3xEduqB_yyRTZLaw" type="7001">
@@ -615,16 +591,6 @@
     <element xmi:type="ecore:EReference" href="mulemodel.ecore#//MuleConfig/properties"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BP3PEG3xEduqB_yyRTZLaw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_BP9VsG3xEduqB_yyRTZLaw" type="4003" source="_1R4hMEhAEduwPcwdaMnFtw" target="_BN78cG3xEduqB_yyRTZLaw">
-    <children xmi:type="notation:Node" xmi:id="_BP_K4G3xEduqB_yyRTZLaw" type="6002">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_BP_K4W3xEduqB_yyRTZLaw" y="40"/>
-    </children>
-    <styles xmi:type="notation:RoutingStyle" xmi:id="_BP98wG3xEduqB_yyRTZLaw"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_BP98wW3xEduqB_yyRTZLaw" fontName="Sans"/>
-    <styles xmi:type="notation:LineStyle" xmi:id="_BP-j0G3xEduqB_yyRTZLaw"/>
-    <element xmi:type="ecore:EReference" href="mulemodel.ecore#//MuleConfig/interceptors"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BP-j0W3xEduqB_yyRTZLaw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
-  </edges>
   <edges xmi:type="notation:Edge" xmi:id="_BQFRgG3xEduqB_yyRTZLaw" type="4002" source="_1R-n0EhAEduwPcwdaMnFtw" target="_BNeCYG3xEduqB_yyRTZLaw">
     <children xmi:type="notation:Node" xmi:id="_BQHtwG3xEduqB_yyRTZLaw" type="6001">
       <layoutConstraint xmi:type="notation:Location" xmi:id="_BQHtwW3xEduqB_yyRTZLaw" y="40"/>
@@ -634,16 +600,6 @@
     <styles xmi:type="notation:LineStyle" xmi:id="_BQFRg23xEduqB_yyRTZLaw"/>
     <element xmi:type="ecore:EReference" href="mulemodel.ecore#//Endpoint/connector"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BQFRhG3xEduqB_yyRTZLaw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_BQL_MG3xEduqB_yyRTZLaw" type="4002" source="_Po-7UEhCEduwPcwdaMnFtw" target="_BN78cG3xEduqB_yyRTZLaw">
-    <children xmi:type="notation:Node" xmi:id="_BQMmRG3xEduqB_yyRTZLaw" type="6001">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_BQNNUG3xEduqB_yyRTZLaw" y="40"/>
-    </children>
-    <styles xmi:type="notation:RoutingStyle" xmi:id="_BQMmQG3xEduqB_yyRTZLaw"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_BQMmQW3xEduqB_yyRTZLaw" fontName="Sans"/>
-    <styles xmi:type="notation:LineStyle" xmi:id="_BQMmQm3xEduqB_yyRTZLaw"/>
-    <element xmi:type="ecore:EReference" href="mulemodel.ecore#//Interceptor/groupDefinition"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BQMmQ23xEduqB_yyRTZLaw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_BQRewG3xEduqB_yyRTZLaw" type="4003" source="_BNpBgG3xEduqB_yyRTZLaw" target="_BNt6AG3xEduqB_yyRTZLaw">
     <children xmi:type="notation:Node" xmi:id="_BQSF0G3xEduqB_yyRTZLaw" type="6002">

@@ -100,8 +100,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="returnClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractFilter" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractFilter" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nestedFilter" eType="#//AbstractFilter"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GenericFilter" eSuperTypes="#//AbstractFilter"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BinaryFilter" eSuperTypes="#//AbstractFilter"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryFilter" eSuperTypes="#//AbstractFilter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftFilter" eType="#//AbstractFilter"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightFilter" eType="#//AbstractFilter"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XsltFilter" eSuperTypes="#//AbstractFilter"/>
 </ecore:EPackage>
