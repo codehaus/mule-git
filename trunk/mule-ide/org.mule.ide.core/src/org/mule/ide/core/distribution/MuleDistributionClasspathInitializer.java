@@ -2,16 +2,18 @@ package org.mule.ide.core.distribution;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathContainer;
-import org.eclipse.jdt.core.IJavaModel;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
 public class MuleDistributionClasspathInitializer extends ClasspathContainerInitializer {
 
-	public void initialize(IPath arg0, IJavaProject arg1) throws CoreException {
+	public void initialize(final IPath path, final IJavaProject project) throws CoreException {
 		// Get the project and the required libs, find the Mule distro, add the libs
+		
 		
 		
 	    /**
@@ -71,6 +73,28 @@ public class MuleDistributionClasspathInitializer extends ClasspathContainerInit
 	     * @see JavaCore#setClasspathContainer(IPath, IJavaProject[], IClasspathContainer[], org.eclipse.core.runtime.IProgressMonitor)
 	     * @see IClasspathContainer
 	     */
+		IClasspathContainer cc = JavaCore.getClasspathContainer(path.uptoSegment(1), project);
+		final IClasspathEntry containerEntries[] = new IClasspathEntry[] { JavaCore.newLibraryEntry(new Path("c:\\java\\mule-1.3.3\\lib\\opt\\commons-pool-1.3.jar"), null, null) }; 
+		IClasspathContainer container = new IClasspathContainer() {
+			public IClasspathEntry[] getClasspathEntries() {
+				return containerEntries;
+			}
+			public String getDescription() {
+				return "Mule librariesfor project ["+ project.getElementName()+"]";
+			}
+			public int getKind() {
+				return K_APPLICATION; 
+			}
+			public IPath getPath() {
+				return path;
+			}
+			public String toString() {
+				return getDescription();
+			}
+
+			};
+		JavaCore.setClasspathContainer(path, new IJavaProject[] { project }, new IClasspathContainer[] { container }, null);
+		
 	}
 	public boolean canUpdateClasspathContainer(IPath containerPath, IJavaProject project) {
 		return super.canUpdateClasspathContainer(containerPath, project);
