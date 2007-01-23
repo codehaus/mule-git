@@ -10,13 +10,6 @@
 
 package org.mule.providers.file;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLDecoder;
-
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.i18n.Message;
@@ -31,6 +24,13 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLDecoder;
 
 /**
  * <code>FileMessageDispatcher</code> is used to read/write files to the filesystem
@@ -65,6 +65,8 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         {
             buf = data.toString().getBytes(event.getEncoding());
         }
+
+        // TODO HH: move this into the FileConnector
         FileOutputStream fos = (FileOutputStream)getOutputStream(event.getEndpoint(), message);
         try
         {
@@ -86,31 +88,36 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
      *         does not support streaming
      * @throws org.mule.umo.UMOException
      */
+    // TODO HH: move this into the FileConnector
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {
         String address = endpoint.getEndpointURI().getAddress();
-        String writeToDirectory = message.getStringProperty(
-            FileConnector.PROPERTY_WRITE_TO_DIRECTORY, null);
+        String writeToDirectory = message.getStringProperty(FileConnector.PROPERTY_WRITE_TO_DIRECTORY, null);
+
         if (writeToDirectory == null)
         {
             writeToDirectory = connector.getWriteToDirectory();
         }
+
         if (writeToDirectory != null)
         {
             address = connector.getFilenameParser().getFilename(message, writeToDirectory);
         }
 
-        String filename;
         String outPattern = (String)endpoint.getProperty(FileConnector.PROPERTY_OUTPUT_PATTERN);
+
         if (outPattern == null)
         {
             outPattern = message.getStringProperty(FileConnector.PROPERTY_OUTPUT_PATTERN, null);
         }
+
         if (outPattern == null)
         {
             outPattern = connector.getOutputPattern();
         }
+
+        String filename;
         try
         {
             if (outPattern != null)
@@ -130,7 +137,9 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
             {
                 throw new IOException("Filename is null");
             }
+
             File file = FileUtils.createFile(address + "/" + filename);
+
             if (logger.isInfoEnabled())
             {
                 logger.info("Writing file to: " + file.getAbsolutePath());
