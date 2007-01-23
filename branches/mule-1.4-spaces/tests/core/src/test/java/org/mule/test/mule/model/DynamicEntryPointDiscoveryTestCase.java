@@ -19,6 +19,7 @@ import org.mule.routing.inbound.InboundMessageRouter;
 import org.mule.tck.model.AbstractEntryPointDiscoveryTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
+import org.mule.tck.testmodels.fruit.Fruit;
 import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.tck.testmodels.fruit.FruitLover;
 import org.mule.tck.testmodels.fruit.Kiwi;
@@ -32,9 +33,11 @@ import org.mule.umo.model.UMOEntryPointResolver;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.EventObject;
 
-public class ExtendedEntryPointDiscoveryTestCase extends AbstractEntryPointDiscoveryTestCase
+public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscoveryTestCase
 {
     /** Name of the method override property on the event. */
     private static final String METHOD_PROPERTY_NAME = MuleProperties.MULE_METHOD_PROPERTY;
@@ -44,15 +47,20 @@ public class ExtendedEntryPointDiscoveryTestCase extends AbstractEntryPointDisco
 
     public ComponentMethodMapping[] getComponentMappings()
     {
-        ComponentMethodMapping[] mappings = new ComponentMethodMapping[4];
+        ComponentMethodMapping[] mappings = new ComponentMethodMapping[6];
         mappings[0] = new ComponentMethodMapping(WaterMelon.class, "myEventHandler", UMOEvent.class);
         mappings[1] = new ComponentMethodMapping(FruitBowl.class, "consumeFruit", FruitLover.class);
-        mappings[2] = new ComponentMethodMapping(Banana.class, "peelEvent", EventObject.class);
+        // see testArrayArgumentResolution
+        mappings[2] = new ComponentMethodMapping(FruitBowl.class, "setFruit", Fruit[].class);
+        // see testListArgumentResolution
+        mappings[3] = new ComponentMethodMapping(FruitBowl.class, "setFruit", Collection.class);
+        mappings[4] = new ComponentMethodMapping(Banana.class, "peelEvent", EventObject.class);
         // test proxy objects
-        mappings[3] = new ComponentMethodMapping(InvocationHandler.class, "invoke", FruitLover.class);
+        mappings[5] = new ComponentMethodMapping(InvocationHandler.class, "invoke", FruitLover.class);
         return mappings;
     }
 
+    // @Override
     public UMODescriptor getDescriptorToResolve(String className) throws Exception
     {
         UMODescriptor descriptor = super.getDescriptorToResolve(className);
@@ -194,7 +202,6 @@ public class ExtendedEntryPointDiscoveryTestCase extends AbstractEntryPointDisco
 
         try
         {
-
             RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
 
             // those are usually set on the endpoint and copied over to the message
@@ -224,7 +231,6 @@ public class ExtendedEntryPointDiscoveryTestCase extends AbstractEntryPointDisco
 
         try
         {
-
             RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
 
             // those are usually set on the endpoint and copied over to the message
@@ -246,6 +252,69 @@ public class ExtendedEntryPointDiscoveryTestCase extends AbstractEntryPointDisco
         {
             RequestContext.setEvent(null);
         }
+    }
+
+    /**
+     * Test for proper resolution of a method that takes an array as argument.
+     */
+    // TODO MULE-1088: currently fails, therefore disabled
+    public void _testArrayArgumentResolution() throws Exception
+    {
+        UMOEntryPointResolver epd = this.getEntryPointResolver();
+        UMODescriptor descriptor = this.getDescriptorToResolve(FruitBowl.class.getName());
+
+        UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
+        assertNotNull(ep);
+        
+        try
+        {
+            Object payload = new Fruit[]{new Apple(), new Banana()};
+            RequestContext.setEvent(getTestEvent(payload));
+
+            FruitBowl bowl = new FruitBowl();
+            assertFalse(bowl.hasApple());
+            assertFalse(bowl.hasBanana());
+
+            ep.invoke(bowl, RequestContext.getEventContext());
+
+            assertTrue(bowl.hasApple());
+            assertTrue(bowl.hasBanana());
+        }
+        finally
+        {
+            RequestContext.setEvent(null);
+        }        
+    }
+
+    /**
+     * Test for proper resolution of a method that takes a List as argument.
+     */
+    public void testListArgumentResolution() throws Exception
+    {
+        UMOEntryPointResolver epd = this.getEntryPointResolver();
+        UMODescriptor descriptor = this.getDescriptorToResolve(FruitBowl.class.getName());
+
+        UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
+        assertNotNull(ep);
+        
+        try
+        {
+            Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
+            RequestContext.setEvent(getTestEvent(payload));
+
+            FruitBowl bowl = new FruitBowl();
+            assertFalse(bowl.hasApple());
+            assertFalse(bowl.hasBanana());
+
+            ep.invoke(bowl, RequestContext.getEventContext());
+
+            assertTrue(bowl.hasApple());
+            assertTrue(bowl.hasBanana());
+        }
+        finally
+        {
+            RequestContext.setEvent(null);
+        }        
     }
 
 }

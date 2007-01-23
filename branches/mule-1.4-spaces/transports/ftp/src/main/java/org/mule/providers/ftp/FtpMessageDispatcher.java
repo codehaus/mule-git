@@ -66,6 +66,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
                 dataBytes = data.toString().getBytes();
             }
 
+            // TODO HH: move this into the FtpConnector
             FtpOutputStreamWrapper out = (FtpOutputStreamWrapper)getOutputStream(event.getEndpoint(),
                 event.getMessage());
             client = out.getFtpClient();
@@ -89,6 +90,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
      *         does not support streaming
      * @throws org.mule.umo.UMOException
      */
+    // TODO HH: move this into the FtpConnector
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {

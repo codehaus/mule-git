@@ -322,20 +322,19 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
     }
 
     /**
-     * Determines if the event group is ready to be aggregated. if the group is ready
-     * to be aggregated (this is entirely up to the application. it could be
-     * determined by volume, last modified time or some oher criteria based on the
-     * last event received)
+     * Determines if the event group is ready to be aggregated. This could be
+     * determined by volume, last modified time or some other criteria based on the
+     * last event received.
      * 
      * @param events
-     * @return true if the event gorep is ready for aggregation
+     * @return true if the event group is ready for aggregation
      */
     protected abstract boolean shouldAggregateEvents(EventGroup events);
 
     /**
      * This method is invoked if the shouldAggregate method is called and returns
-     * true. Once this method returns an aggregated message the event group is
-     * removed from the router
+     * true. When this method returns an aggregated message, the event group is
+     * removed from the router.
      * 
      * @param events the event group for this request
      * @return an aggregated message

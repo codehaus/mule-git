@@ -72,11 +72,10 @@ public interface UMOConnector extends Disposable, Initialisable
     boolean isDisposing();
 
     /**
-     * Gets a {@link UMOMessageAdapter} from the connector for the given
-     * message (data)
+     * Gets a {@link UMOMessageAdapter} from the connector for the given message
+     * (data)
      * 
-     * @param message the data with which to initialise the
-     *            {@link UMOMessageAdapter}
+     * @param message the data with which to initialise the {@link UMOMessageAdapter}
      * @return the {@link UMOMessageAdapter} for the endpoint
      * @throws MessagingException if the message parameter is not supported
      * @see UMOMessageAdapter
@@ -96,6 +95,20 @@ public interface UMOConnector extends Disposable, Initialisable
      */
     UMOStreamMessageAdapter getStreamMessageAdapter(InputStream in, OutputStream out)
         throws MessagingException;
+
+    /**
+     * Get an output stream (if one is available) for this type of transport.
+     * Typically this will be called only when streaming is being used on an outbound
+     * endpoint.
+     * 
+     * @param endpoint the endpoint for which an output stream is needed
+     * @param message the current message being processed
+     * @return the output stream to use for this request or null if the transport
+     *         does not support streaming
+     * @throws UMOException
+     */
+    // TODO RM: figure out how this plays together with getStreamMessageAdapter()
+    OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
 
     /**
      * @return the name associated with the endpoint

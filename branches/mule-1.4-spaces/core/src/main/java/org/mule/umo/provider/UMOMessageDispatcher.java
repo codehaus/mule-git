@@ -59,18 +59,4 @@ public interface UMOMessageDispatcher extends Disposable, UMOConnectable, UMOMes
      */
     UMOConnector getConnector();
 
-    /**
-     * Well get the output stream (if any) for this type of transport. Typically this
-     * will be called only when Streaming is being used on an outbound endpoint
-     * 
-     * @param endpoint the endpoint that releates to this Dispatcher
-     * @param message the current message being processed
-     * @return the output stream to use for this request or null if the transport
-     *         does not support streaming
-     * @throws UMOException
-     */
-    // TODO HH: this one needs to move to the connector, and I can already see more
-    // trouble with it than I want to think of..
-    OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
-
 }
