@@ -115,7 +115,7 @@ public class FtpConnector extends AbstractConnector
 
     public void releaseFtp(UMOEndpointURI uri, FTPClient client) throws Exception
     {
-        if (isCreateDispatcherPerRequest())
+        if (dispatcherFactory.isCreateDispatcherPerRequest())
         {
             destroyFtp(uri, client);
         }
