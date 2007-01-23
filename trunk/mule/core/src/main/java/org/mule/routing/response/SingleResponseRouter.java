@@ -20,7 +20,7 @@ import org.mule.umo.routing.RoutingException;
  * be received for a single invocation, the {@link ResponseCorrelationAggregator}
  * should be used.
  */
-public class SingleResponseAggregator extends AbstractResponseAggregator
+public class SingleResponseRouter extends AbstractResponseAggregator
 {
     /**
      * The <code>SingleResponseRouter</code> will return true if the event group
