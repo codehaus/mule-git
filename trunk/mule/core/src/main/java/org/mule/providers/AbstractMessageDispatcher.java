@@ -33,7 +33,6 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 
 import java.beans.ExceptionListener;
-import java.io.OutputStream;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkManager;
@@ -156,8 +155,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     {
                         component = event.getComponent().getDescriptor().getName();
                     }
-                    connector.fireNotification(new MessageNotification(event.getMessage(),
-                        event.getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                    connector.fireNotification(new MessageNotification(event.getMessage(), event
+                        .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
                 }
             }
         }
@@ -225,8 +224,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 {
                     component = event.getComponent().getDescriptor().getName();
                 }
-                connector.fireNotification(new MessageNotification(event.getMessage(),
-                    event.getEndpoint(), component, MessageNotification.MESSAGE_SENT));
+                connector.fireNotification(new MessageNotification(event.getMessage(), event.getEndpoint(),
+                    component, MessageNotification.MESSAGE_SENT));
             }
             // Once a dispatcher has done its work we need to romve this property
             // so that
@@ -402,22 +401,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return remoteSync;
     }
 
-    /**
-     * Well get the output stream (if any) for this type of transport. Typically this
-     * will be called only when Streaming is being used on an outbound endpoint
-     * 
-     * @param endpoint the endpoint that releates to this Dispatcher
-     * @param message the current message being processed
-     * @return the output stream to use for this request or null if the transport
-     *         does not support streaming
-     * @throws org.mule.umo.UMOException
-     */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
-        throws UMOException
-    {
-        return null;
-    }
-
     public synchronized void connect() throws Exception
     {
         if (connected)
@@ -427,11 +410,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
         if (disposed)
         {
-            // TODO HH: throw IllegalState instead?
-            if (logger.isWarnEnabled())
-            {
-                logger.warn("Dispatcher has been disposed. Cannot connect to resource");
-            }
+            throw new IllegalStateException("Dispatcher has been disposed; cannot connect to resource");
         }
 
         if (logger.isDebugEnabled())
@@ -563,8 +542,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     {
                         component = event.getComponent().getDescriptor().getName();
                     }
-                    connector.fireNotification(new MessageNotification(event.getMessage(),
-                        event.getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                    connector.fireNotification(new MessageNotification(event.getMessage(), event
+                        .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
                 }
             }
             catch (Exception e)
@@ -600,4 +579,5 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         }
         return false;
     }
+
 }
