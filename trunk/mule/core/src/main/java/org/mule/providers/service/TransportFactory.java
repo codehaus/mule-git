@@ -62,6 +62,7 @@ public class TransportFactory
     public static final int NEVER_CREATE_CONNECTOR = 2;
     public static final int USE_CONNECTOR = 3;
 
+    // @GuardedBy("TransportFactory.class")
     private static Map csdCache = new HashMap();
 
     public static UMOEndpoint createEndpoint(UMOEndpointURI uri, String type) throws EndpointException
@@ -293,7 +294,7 @@ public class TransportFactory
         return getServiceDescriptor(protocol, null);
     }
 
-    public static TransportServiceDescriptor getServiceDescriptor(String protocol, Properties overrides)
+    public static synchronized TransportServiceDescriptor getServiceDescriptor(String protocol, Properties overrides)
         throws TransportFactoryException
     {
         TransportServiceDescriptor csd = (TransportServiceDescriptor)csdCache.get(new CSDKey(protocol,
@@ -305,17 +306,17 @@ public class TransportFactory
             InputStream is = SpiUtils.findServiceDescriptor(PROVIDER_SERVICES_PATH, protocol + ".properties",
                 TransportFactory.class);
 
-
             // TODO RM: this can be removed in Mule 2.0
             if (is == null)
             {
                 //The legacy connector decriptors did did not use file extensions
                 is = SpiUtils.findServiceDescriptor(PROVIDER_SERVICES_PATH, protocol,
                 TransportFactory.class);
-                if(is==null)
+                if (is != null)
                 {
-                    logger.warn("The transport " + protocol + " is using a legacy style of descriptor. This needs to be updated."
-                     + " Future versions of Mule will not work with this connector descriptor.");
+                    logger.warn("The transport " + protocol + " is using a legacy style descriptor."
+                                    + " This needs to be updated."
+                                    + " Future versions of Mule will not work with this descriptor.");
                 }
             }
             try
@@ -414,6 +415,7 @@ public class TransportFactory
             this.protocol = protocol;
         }
 
+        // @Override
         public boolean equals(Object o)
         {
             if (this == o)
@@ -439,6 +441,7 @@ public class TransportFactory
             return true;
         }
 
+        // @Override
         public int hashCode()
         {
             return 29 * (overrides != null ? overrides.hashCode() : 0) + protocol.hashCode();
