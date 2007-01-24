@@ -68,10 +68,17 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
 
         // TODO HH: move this into the FileConnector
         FileOutputStream fos = (FileOutputStream)getOutputStream(event.getEndpoint(), message);
+        if (event.getMessage().getStringProperty(FileConnector.PROPERTY_FILENAME,null) == null)
+        {
+            event.getMessage().setStringProperty( 
+                 FileConnector.PROPERTY_FILENAME, 
+                 message.getStringProperty(FileConnector.PROPERTY_FILENAME, ""));
+        }
         try
         {
             fos.write(buf);
-        }
+        } 
+
         finally
         {
             fos.close();
@@ -137,7 +144,8 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
             {
                 throw new IOException("Filename is null");
             }
-
+            message.setStringProperty(FileConnector.PROPERTY_FILENAME, filename); 
+            
             File file = FileUtils.createFile(address + "/" + filename);
 
             if (logger.isInfoEnabled())
