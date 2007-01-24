@@ -205,6 +205,8 @@
                         <!-- List dependencies in the MANIFEST.MF -->
                         <manifest>
                             <addClasspath>true</addClasspath>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 
                         </manifest>
                         <!-- Custom Entries -->
