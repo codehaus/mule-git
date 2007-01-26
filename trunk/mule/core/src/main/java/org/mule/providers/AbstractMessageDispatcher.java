@@ -227,9 +227,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 connector.fireNotification(new MessageNotification(event.getMessage(), event.getEndpoint(),
                     component, MessageNotification.MESSAGE_SENT));
             }
-            // Once a dispatcher has done its work we need to romve this property
-            // so that
-            // it is not propagated to the next request
+
+            // Once a dispatcher has done its work we need to remove this property
+            // so that it is not propagated to the next request
             if (result != null)
             {
                 result.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
@@ -268,9 +268,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             UMOMessage result = doReceive(timeout);
             if (result != null && connector.isEnableMessageEvents())
             {
-                // TODO HH: WTF is this null?
-                String component = null;
-                connector.fireNotification(new MessageNotification(result, endpoint, component,
+                connector.fireNotification(new MessageNotification(result, endpoint, null,
                     MessageNotification.MESSAGE_RECEIVED));
             }
             return result;

@@ -10,12 +10,8 @@
 
 package org.mule.umo.provider;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
-
-import java.io.OutputStream;
 
 /**
  * <code>UMOMessageDispatcher</code> combines {@link UMOMessageDispatching} with

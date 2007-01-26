@@ -117,11 +117,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
-     * 
-     * @param event
-     * @param correlationId
-     * @return
+     * @see AbstractEventAggregator#createEventGroup(UMOEvent, Object)
      */
     protected EventGroup createEventGroup(UMOEvent event, Object groupId)
     {
@@ -129,10 +125,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
-     * 
-     * @param event
-     * @return
+     * @see AbstractEventAggregator#getEventGroupIdForEvent(UMOEvent)
      */
     protected Object getEventGroupIdForEvent(UMOEvent event)
     {
@@ -147,10 +140,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
-     * 
-     * @param groupId
-     * @return
+     * @see AbstractEventAggregator#getEventGroupWithId(Object)
      */
     protected EventGroup getEventGroupWithId(Object groupId)
     {
@@ -158,10 +148,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
-     * 
-     * @param group
-     * @return
+     * @see AbstractEventAggregator#addEventGroup(EventGroup)
      */
     protected EventGroup addEventGroup(EventGroup group)
     {
@@ -172,9 +159,7 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
-     * 
-     * @param group
+     * @see AbstractEventAggregator#removeEventGroup(EventGroup)
      */
     protected void removeEventGroup(EventGroup group)
     {
@@ -182,10 +167,12 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
+     * Reorder collected events according to the configured Comparator.
      * 
-     * @param events
-     * @return
+     * @param events the EventGroup used for collecting the events
+     * @return an array of events reordered according to the Comparator returned by
+     *         {@link #getComparator()}. If no comparator is configured, the events
+     *         are returned unsorted.
      */
     protected UMOEvent[] resequenceEvents(EventGroup events)
     {
@@ -210,10 +197,10 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * TODO HH: writeme
+     * Determines whether the events in the passed EventGroup are ready to be
+     * reordered.
      * 
-     * @param events
-     * @return
+     * @see AbstractEventAggregator#shouldAggregateEvents(EventGroup)
      */
     protected abstract boolean shouldResequenceEvents(EventGroup events);
 
