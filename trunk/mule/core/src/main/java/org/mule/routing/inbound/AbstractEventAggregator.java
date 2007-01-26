@@ -63,7 +63,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
                 }
 
                 // check for an existing group first
-                EventGroup group = this.getEventGroupWithId(groupId);
+                EventGroup group = this.getEventGroup(groupId);
 
                 // does the group exist?
                 if (group == null)
@@ -76,7 +76,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
                 synchronized (group)
                 {
                     // make sure no other thread removed the group in the meantime
-                    if (group != this.getEventGroupWithId(groupId))
+                    if (group != this.getEventGroup(groupId))
                     {
                         // if that is the (rare) case, spin
                         miss = true;
@@ -146,7 +146,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
      * @return the EventGroup with the given id or <code>null</code> if the group
      *         does not exist.
      */
-    protected EventGroup getEventGroupWithId(Object groupId)
+    protected EventGroup getEventGroup(Object groupId)
     {
         return (EventGroup)eventGroups.get(groupId);
     }
