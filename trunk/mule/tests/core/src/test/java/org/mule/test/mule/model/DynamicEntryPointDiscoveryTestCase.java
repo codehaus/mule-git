@@ -40,10 +40,14 @@ import java.util.EventObject;
 
 public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscoveryTestCase
 {
-    /** Name of the method override property on the event. */
+    /**
+     * Name of the method override property on the event.
+     */
     private static final String METHOD_PROPERTY_NAME = MuleProperties.MULE_METHOD_PROPERTY;
 
-    /** Name of the non-existent method. */
+    /**
+     * Name of the non-existent method.
+     */
     private static final String INVALID_METHOD_NAME = "nosuchmethod";
 
     public ComponentMethodMapping[] getComponentMappings()
@@ -94,7 +98,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
     {
         UMOEntryPointResolver epd = getEntryPointResolver();
         UMODescriptor descriptor = getTestDescriptor("badContexts", MultipleEventContextsTestObject.class
-            .getName());
+                .getName());
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
@@ -132,7 +136,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
     {
         UMOEntryPointResolver epd = getEntryPointResolver();
         UMODescriptor descriptor = getTestDescriptor("badPayloads", MultiplePayloadsTestObject.class
-            .getName());
+                .getName());
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
@@ -207,7 +211,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
             // those are usually set on the endpoint and copied over to the message
             RequestContext.getEventContext().getMessage().setProperty(METHOD_PROPERTY_NAME,
-                INVALID_METHOD_NAME);
+                    INVALID_METHOD_NAME);
 
             ep.invoke(new Apple(), RequestContext.getEventContext());
         }
@@ -266,7 +270,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
-        
+
         try
         {
             Object payload = new Fruit[]{new Apple(), new Banana()};
@@ -284,7 +288,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         finally
         {
             RequestContext.setEvent(null);
-        }        
+        }
     }
 
     /**
@@ -297,7 +301,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
-        
+
         try
         {
             Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
@@ -315,7 +319,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         finally
         {
             RequestContext.setEvent(null);
-        }        
+        }
     }
 
 }

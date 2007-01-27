@@ -16,10 +16,11 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.model.UMOEntryPoint;
 
 /**
- * A simple Entrypoint for the callable interface
+ * A simple Entrypoint for the {@link Callable} interface.
  */
 public class CallableEntryPoint implements UMOEntryPoint
 {
+
     public Class[] getParameterTypes()
     {
         return Callable.class.getMethods()[0].getParameterTypes();
@@ -46,4 +47,5 @@ public class CallableEntryPoint implements UMOEntryPoint
     {
         return Callable.class.getMethods()[0].getName();
     }
+
 }
