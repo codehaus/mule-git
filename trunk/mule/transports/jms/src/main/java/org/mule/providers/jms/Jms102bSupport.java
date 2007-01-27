@@ -225,7 +225,8 @@ public class Jms102bSupport extends Jms11Support
         }
         else if (producer instanceof QueueSender)
         {
-            producer.send(
+            // DO NOT REMOVE THIS CAST, it breaks Weblogic
+            ((QueueSender) producer).send(
                     message,
                     (persistent ? DeliveryMode.PERSISTENT : DeliveryMode.NON_PERSISTENT),
                     priority,
