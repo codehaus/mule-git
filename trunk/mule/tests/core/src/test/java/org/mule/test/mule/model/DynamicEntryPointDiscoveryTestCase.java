@@ -14,7 +14,7 @@ import org.mule.config.MuleProperties;
 import org.mule.impl.RequestContext;
 import org.mule.impl.TooManySatisfiableMethodsException;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.model.DynamicEntryPointResolver;
+import org.mule.impl.model.resolvers.DynamicEntryPointResolver;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.tck.model.AbstractEntryPointDiscoveryTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
+
 
 public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscoveryTestCase
 {
