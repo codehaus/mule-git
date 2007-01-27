@@ -19,7 +19,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMOOutboundMessageRouter;
+import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouter;
 
 import java.util.ArrayList;
@@ -27,16 +27,16 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <code>OutboundMessageRouter</code> is a container of routers. An
- * OutboundMessageRouter must have atleast one router. By default the first matching
+ * <code>OutboundRouterCollection</code> is a container of routers. An
+ * OutboundRouterCollection must have atleast one router. By default the first matching
  * router is used to route an event though it is possible to match on all routers
  * meaning that the message will get sent over all matching routers.
  */
 
-public class OutboundMessageRouter extends AbstractRouterCollection implements UMOOutboundMessageRouter
+public class OutboundRouterCollection extends AbstractRouterCollection implements UMOOutboundRouterCollection
 {
 
-    public OutboundMessageRouter()
+    public OutboundRouterCollection()
     {
         super(RouterStatistics.TYPE_OUTBOUND);
     }

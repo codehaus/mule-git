@@ -10,26 +10,24 @@
 
 package org.mule.umo.routing;
 
+import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 
 import java.util.List;
 
 /**
- * <code>UMOResponseMessageRouter</code> is a router that can be used to control
- * how the response in a request/response message flow is created. Its main use case
- * is to aggregate a set of asynchonous events into a single response.
+ * <code>InboundRouterCollection</code> manages a collection of inbound routers.
  */
 
-public interface UMOResponseMessageRouter extends UMORouterCollection
+public interface UMOInboundRouterCollection extends UMORouterCollection
 {
-    void route(UMOEvent event) throws RoutingException;
+    UMOMessage route(UMOEvent event) throws MessagingException;
 
-    UMOMessage getResponse(UMOMessage message) throws UMOException;
+    void addRouter(UMOInboundRouter router);
 
-    UMOResponseRouter removeRouter(UMOResponseRouter router);
+    UMOInboundRouter removeRouter(UMOInboundRouter router);
 
     void addEndpoint(UMOEndpoint endpoint);
 
@@ -40,13 +38,9 @@ public interface UMOResponseMessageRouter extends UMORouterCollection
     /**
      * @param name the Endpoint identifier
      * @return the Endpoint or null if the endpointUri is not registered
-     * @see UMOResponseMessageRouter
+     * @see UMOInboundRouterCollection
      */
     UMOEndpoint getEndpoint(String name);
 
     void setEndpoints(List endpoints);
-
-    public int getTimeout();
-
-    public void setTimeout(int timeout);
 }

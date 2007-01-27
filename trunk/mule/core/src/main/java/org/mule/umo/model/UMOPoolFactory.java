@@ -17,13 +17,10 @@ import org.mule.util.ObjectPool;
 /**
  * <code>UMOPoolFactory</code> is a factory interface for created a component pool
  * instance
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface UMOPoolFactory
 {
-    ObjectPool createPool(UMODescriptor descriptor, ObjectFactory factory);
+    ObjectPool createPool(UMODescriptor descriptor, UMOModel model, ObjectFactory factory);
 
-    ObjectPool createPool(UMODescriptor descriptor);
+    ObjectPool createPool(UMODescriptor descriptor, UMOModel model);
 }

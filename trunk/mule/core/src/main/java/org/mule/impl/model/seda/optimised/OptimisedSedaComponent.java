@@ -44,8 +44,8 @@ public class OptimisedSedaComponent extends SedaComponent
             // Initialise the proxy pool
 
             // overload the default Proxy Factory impl
-            proxyPool = descriptor.getPoolingProfile().getPoolFactory().createPool(descriptor,
-                new OptimisedProxyFactory(descriptor));
+            proxyPool = descriptor.getPoolingProfile().getPoolFactory().createPool(descriptor, model,
+                new OptimisedProxyFactory(descriptor, model));
 
             if (descriptor.getPoolingProfile().getInitialisationPolicy() == PoolingProfile.POOL_INITIALISE_ALL_COMPONENTS)
             {

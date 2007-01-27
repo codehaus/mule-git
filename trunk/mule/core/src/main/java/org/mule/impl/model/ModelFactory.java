@@ -27,6 +27,8 @@ import java.util.Properties;
 public class ModelFactory
 {
 
+    public static final String DEFAULT_MODEL_NAME = "_default";
+
     public static final String MODEL_SERVICE_PATH = "org/mule/models";
 
     public static UMOModel createModel(String type) throws ModelServiceNotFoundException
@@ -45,6 +47,10 @@ public class ModelFactory
                     UMOModel model = (UMOModel)ClassUtils.instanciateClass(clazz, ClassUtils.NO_ARGS,
                         ModelFactory.class);
                     BeanUtils.populateWithoutFail(model, props, false);
+                    if(model.getName()==null)
+                    {
+                        model.setName(DEFAULT_MODEL_NAME);
+                    }
                     return model;
                 }
                 catch (Exception e)

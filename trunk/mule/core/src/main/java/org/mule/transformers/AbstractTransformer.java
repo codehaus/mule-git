@@ -38,22 +38,29 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractTransformer implements UMOTransformer
 {
     /**
-     * The fully qualified class name of the fallback <code>Transformer</code>
-     * implementation class to use, if no other can be found.
-     */
-    public static final String TRANSFORMER_DEFAULT = "org.mule.transformers.NoActionTransformer";
-
-    /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected transient final Log logger = LogFactory.getLog(AbstractTransformer.class);
 
+    /**
+     * The return type that will be returned by the {@link #transform} method is called
+     */
     protected Class returnClass = null;
 
+    /**
+     * The name that identifies this transformer. If none is set the class name of the transformer
+     * is used
+     */
     protected String name = null;
 
+    /**
+     * The endpoint that this transformer instance is configured on
+     */
     protected UMOImmutableEndpoint endpoint = null;
 
+    /**
+     * A list of support Class types that the source payload passed into this transformer
+     */
     protected List sourceTypes = new ArrayList();
 
     /**
@@ -61,6 +68,10 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     protected UMOTransformer nextTransformer;
 
+    /**
+     * Determines whether the transformer will throw an exception if the message passed is
+     * is not supported or the return tye is incorrect
+     */
     private boolean ignoreBadInput = false;
 
     /**

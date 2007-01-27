@@ -10,8 +10,6 @@
 
 package org.mule.extras.spring.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.MuleConfiguration;
 import org.mule.extras.spring.SpringContainerContext;
@@ -31,6 +29,14 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
+
+import java.beans.ExceptionListener;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.DisposableBean;
@@ -39,11 +45,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
-
-import java.beans.ExceptionListener;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * <code>UMOManagerFactoryBean</code> is a MuleManager factory bean that is used to
@@ -86,6 +87,7 @@ public class AutowireUMOManagerFactoryBean
     public static final String MULE_MODEL_EXCEPTION_STRATEGY_BEAN_NAME = "muleModelExceptionStrategy";
 
     private UMOManager manager;
+    private UMOModel model;
 
     private AbstractApplicationContext context;
 
@@ -186,8 +188,11 @@ public class AutowireUMOManagerFactoryBean
     {
         // set the model
         Map temp = context.getBeansOfType(UMOModel.class, true, true);
-        UMOModel model;
-        if (temp.size() > 0)
+        if (temp.size() > 1)
+        {
+            throw new IllegalStateException("In Mule 1.x only one model can be created when using Spring");
+        }
+        else if(temp.size()==1)
         {
             Map.Entry entry = (Map.Entry)temp.entrySet().iterator().next();
             model = (UMOModel)entry.getValue();
@@ -227,7 +232,7 @@ public class AutowireUMOManagerFactoryBean
             model.setExceptionListener((ExceptionListener)listener);
         }
 
-        manager.setModel(model);
+        manager.registerModel(model);
 
     }
 
@@ -334,9 +339,9 @@ public class AutowireUMOManagerFactoryBean
         for (Iterator iterator = components.iterator(); iterator.hasNext();)
         {
             d = (UMODescriptor)iterator.next();
-            if (!manager.getModel().isComponentRegistered(d.getName()))
+            if (!model.isComponentRegistered(d.getName()))
             {
-                manager.getModel().registerComponent(d);
+                model.registerComponent(d);
             }
         }
     }

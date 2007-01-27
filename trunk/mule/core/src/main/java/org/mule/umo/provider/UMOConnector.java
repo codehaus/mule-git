@@ -97,20 +97,6 @@ public interface UMOConnector extends Disposable, Initialisable
         throws MessagingException;
 
     /**
-     * Get an output stream (if one is available) for this type of transport.
-     * Typically this will be called only when streaming is being used on an outbound
-     * endpoint.
-     * 
-     * @param endpoint the endpoint for which an output stream is needed
-     * @param message the current message being processed
-     * @return the output stream to use for this request or null if the transport
-     *         does not support streaming
-     * @throws UMOException
-     */
-    // TODO RM: figure out how this plays together with getStreamMessageAdapter()
-    OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
-
-    /**
      * @return the name associated with the endpoint
      */
     String getName();
@@ -227,5 +213,20 @@ public interface UMOConnector extends Disposable, Initialisable
      * @throws DispatchException if the event fails to be dispatched
      */
     UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException;
+
+
+    /**
+     * Well get the output stream for this type of transport. Typically this
+     * will be called only when Streaming is being used on an outbound endpoint.
+     * If Streaming is not supported by this transport an {@link UnsupportedOperationException}
+     * is thrown
+     *
+     * @param endpoint the endpoint that releates to this Dispatcher
+     * @param message the current message being processed
+     * @return the output stream to use for this request or null if the transport
+     *         does not support streaming
+     * @throws UMOException
+     */
+    OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
 
 }

@@ -68,7 +68,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
     public MuleResourceAdapter()
     {
-        MuleManager.getConfiguration().setModelType("jca");
+        MuleManager.getConfiguration().setModelType(JcaModel.JCA_MODEL_TYPE);
     }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
@@ -178,7 +178,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 MuleDescriptor descriptor = new MuleDescriptor(name);
                 descriptor.getInboundRouter().addEndpoint(endpoint);
                 descriptor.setImplementationInstance(messageEndpoint);
-                MuleManager.getInstance().getModel().registerComponent(descriptor);
+                MuleManager.getInstance().lookupModel(JcaModel.JCA_MODEL_TYPE).registerComponent(descriptor);
 
                 MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec)activationSpec);
 
@@ -215,7 +215,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             }
             try
             {
-                manager.getModel().unregisterComponent(descriptor);
+                manager.lookupModel(JcaModel.JCA_MODEL_TYPE).unregisterComponent(descriptor);
             }
             catch (UMOException e)
             {

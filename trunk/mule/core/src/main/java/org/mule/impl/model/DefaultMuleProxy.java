@@ -101,13 +101,11 @@ public class DefaultMuleProxy implements MuleProxy
      * @param component the underlying object that with receive events
      * @param descriptor the UMOComponent descriptor associated with the component
      */
-    public DefaultMuleProxy(Object component, MuleDescriptor descriptor, ObjectPool proxyPool)
+    public DefaultMuleProxy(Object component, MuleDescriptor descriptor, UMOModel model, ObjectPool proxyPool)
         throws UMOException
     {
         this.descriptor = new ImmutableMuleDescriptor(descriptor);
         this.proxyPool = proxyPool;
-
-        UMOModel model = MuleManager.getInstance().getModel();
 
         UMOEntryPointResolver resolver = model.getEntryPointResolver();
         umo = model.getLifecycleAdapterFactory().create(component, descriptor, resolver);

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.model;
+package org.mule.impl.model.resolvers;
 
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.model.ModelException;
@@ -20,8 +20,6 @@ import org.mule.umo.model.UMOEntryPointResolver;
  * Callable interface
  * 
  * @see org.mule.umo.lifecycle.Callable
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class CallableEntryPointResolver implements UMOEntryPointResolver
 {

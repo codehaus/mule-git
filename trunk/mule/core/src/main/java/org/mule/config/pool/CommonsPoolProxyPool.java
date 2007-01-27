@@ -12,6 +12,7 @@ package org.mule.config.pool;
 
 import org.mule.impl.MuleDescriptor;
 import org.mule.umo.UMOException;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;
@@ -56,7 +57,7 @@ public class CommonsPoolProxyPool implements ObjectPool
      * @param descriptor the descriptor to use when constructing MuleProxy objects in
      *            the pool
      */
-    public CommonsPoolProxyPool(MuleDescriptor descriptor, ObjectFactory factory)
+    public CommonsPoolProxyPool(MuleDescriptor descriptor, UMOModel model, ObjectFactory factory)
     {
         this.factory = factory;
 
@@ -66,29 +67,29 @@ public class CommonsPoolProxyPool implements ObjectPool
         config.maxWait = descriptor.getPoolingProfile().getMaxWait();
         config.whenExhaustedAction = (byte)descriptor.getPoolingProfile().getExhaustedAction();
 
-        init(descriptor, config);
+        init(descriptor, model, config);
     }
 
     /**
      * @param descriptor the UMO descriptor to pool
      * @param config the config to use when configuring the pool
      */
-    public CommonsPoolProxyPool(MuleDescriptor descriptor, GenericObjectPool.Config config)
+    public CommonsPoolProxyPool(MuleDescriptor descriptor,  UMOModel model, GenericObjectPool.Config config)
     {
-        init(descriptor, config);
+        init(descriptor, model, config);
     }
 
     /**
      * @param descriptor the UMO descriptor to pool
      * @param config the config to use when configuring the pool
      */
-    private void init(MuleDescriptor descriptor, GenericObjectPool.Config config)
+    private void init(MuleDescriptor descriptor, UMOModel model, GenericObjectPool.Config config)
     {
         components = new ArrayList();
 
         if (factory == null)
         {
-            setFactory(new CommonsPoolProxyFactory(descriptor));
+            setFactory(new CommonsPoolProxyFactory(descriptor, model));
         }
 
         pool = new GenericObjectPool((PoolableObjectFactory)factory, config);

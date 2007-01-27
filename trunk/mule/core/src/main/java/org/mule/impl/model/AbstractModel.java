@@ -18,7 +18,7 @@ import org.mule.impl.DefaultLifecycleAdapterFactory;
 import org.mule.impl.ImmutableMuleDescriptor;
 import org.mule.impl.MuleSession;
 import org.mule.impl.internal.notifications.ModelNotification;
-import org.mule.model.DynamicEntryPointResolver;
+import org.mule.impl.model.resolvers.DynamicEntryPointResolver;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
@@ -56,21 +56,21 @@ public abstract class AbstractModel implements UMOModel
     protected transient Log logger = LogFactory.getLog(getClass());
 
     private String name;
-    private UMOEntryPointResolver entryPointResolver;
-    private UMOLifecycleAdapterFactory lifecycleAdapterFactory;
+    private UMOEntryPointResolver entryPointResolver= new DynamicEntryPointResolver();
+    private UMOLifecycleAdapterFactory lifecycleAdapterFactory = new DefaultLifecycleAdapterFactory();
 
-    private Map components;
+    private Map components = new ConcurrentSkipListMap();
 
     /**
      * Collection for mule descriptors registered in this Manager
      */
-    protected Map descriptors;
+    protected Map descriptors = new ConcurrentHashMap();
 
     private AtomicBoolean initialised = new AtomicBoolean(false);
 
     private AtomicBoolean started = new AtomicBoolean(false);
 
-    private ExceptionListener exceptionListener;
+    private ExceptionListener exceptionListener = new DefaultComponentExceptionStrategy();
 
     /**
      * Default constructor
@@ -149,14 +149,15 @@ public abstract class AbstractModel implements UMOModel
             throw new ModelException(new Message(Messages.X_IS_NULL, "UMO Descriptor"));
         }
 
-        if (initialised.get())
-        {
-            descriptor.initialise();
-        }
         // Set the es if one wasn't set in the configuration
         if (descriptor.getExceptionListener() == null)
         {
             descriptor.setExceptionListener(exceptionListener);
+        }
+
+        if (initialised.get())
+        {
+            descriptor.initialise();
         }
 
         // detect duplicate descriptor declarations
@@ -254,8 +255,6 @@ public abstract class AbstractModel implements UMOModel
 
         components.clear();
         descriptors.clear();
-        components = null;
-        descriptors = null;
 
         fireNotification(new ModelNotification(this, ModelNotification.MODEL_DISPOSED));
     }
@@ -266,7 +265,7 @@ public abstract class AbstractModel implements UMOModel
      * @param muleName the Name of the Mule for which the component is required
      * @return a component for the specified name
      */
-    public UMOSession getComponentSession(String muleName)
+    public UMOSession getxComponentSession(String muleName)
     {
         UMOComponent component = (UMOComponent)components.get(muleName);
         if (component == null)

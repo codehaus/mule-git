@@ -17,7 +17,7 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMOResponseMessageRouter;
+import org.mule.umo.routing.UMOResponseRouterCollection;
 import org.mule.umo.routing.UMOResponseRouter;
 import org.mule.umo.routing.UMORouter;
 
@@ -27,23 +27,24 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <code>ResponseMessageRouter</code> is a router that can be used to control how
+ * <code>ResponseRouterCollection</code> is a router that can be used to control how
  * the response in a request/response message flow is created. Main usecase is to
  * aggregate a set of asynchonous events into a single response
  */
-public class ResponseMessageRouter extends AbstractRouterCollection implements UMOResponseMessageRouter
+public class ResponseRouterCollection extends AbstractRouterCollection implements UMOResponseRouterCollection
 {
     private volatile List endpoints = new CopyOnWriteArrayList();
     private volatile int timeout = MuleConfiguration.DEFAULT_TIMEOUT;
+    private volatile boolean failOnTimeout = true;
 
-    public ResponseMessageRouter()
+    public ResponseRouterCollection()
     {
         super(RouterStatistics.TYPE_RESPONSE);
     }
 
     public void route(UMOEvent event) throws RoutingException
     {
-        UMOResponseRouter router = null;
+        UMOResponseRouter router;
         for (Iterator iterator = getRouters().iterator(); iterator.hasNext();)
         {
             router = (UMOResponseRouter)iterator.next();
@@ -66,7 +67,7 @@ public class ResponseMessageRouter extends AbstractRouterCollection implements U
         }
         else
         {
-            UMOResponseRouter router = null;
+            UMOResponseRouter router;
             for (Iterator iterator = getRouters().iterator(); iterator.hasNext();)
             {
                 router = (UMOResponseRouter)iterator.next();
@@ -98,6 +99,7 @@ public class ResponseMessageRouter extends AbstractRouterCollection implements U
     public void addRouter(UMORouter router)
     {
         ((UMOResponseRouter)router).setTimeout(getTimeout());
+        ((UMOResponseRouter)router).setFailOnTimeout(isFailOnTimeout());
         routers.add(router);
     }
 
@@ -158,7 +160,7 @@ public class ResponseMessageRouter extends AbstractRouterCollection implements U
     /**
      * @param name the Endpoint identifier
      * @return the Endpoint or null if the endpointUri is not registered
-     * @see org.mule.umo.routing.UMOInboundMessageRouter
+     * @see org.mule.umo.routing.UMOInboundRouterCollection
      */
     public UMOEndpoint getEndpoint(String name)
     {
@@ -184,4 +186,14 @@ public class ResponseMessageRouter extends AbstractRouterCollection implements U
         this.timeout = timeout;
     }
 
+
+    public boolean isFailOnTimeout()
+    {
+        return failOnTimeout;
+    }
+
+    public void setFailOnTimeout(boolean failOnTimeout)
+    {
+        this.failOnTimeout = failOnTimeout;
+    }
 }

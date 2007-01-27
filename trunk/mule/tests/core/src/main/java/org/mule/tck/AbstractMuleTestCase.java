@@ -10,14 +10,6 @@
 
 package org.mule.tck;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.MuleConfiguration;
 import org.mule.impl.MuleDescriptor;
@@ -27,12 +19,22 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import junit.framework.TestCase;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -273,6 +275,11 @@ public abstract class AbstractMuleTestCase extends TestCase
         return MuleTestUtils.getManager(disableAdminAgent);
     }
 
+    public static UMOModel getDefaultModel() throws UMOException
+    {
+        return MuleTestUtils.getDefaultModel();
+    }
+
     public static UMOEndpoint getTestEndpoint(String name, String type) throws Exception
     {
         return MuleTestUtils.getTestEndpoint(name, type);
@@ -329,9 +336,9 @@ public abstract class AbstractMuleTestCase extends TestCase
         return MuleTestUtils.getTestDescriptor(name, implementation);
     }
 
-    public static UMOManager getTestManager() throws UMOException
+    public static UMOManager getTestManager() throws Exception
     {
-        return MuleTestUtils.getTestManager();
+        return MuleTestUtils.getManager(true);
     }
 
     protected void finalize() throws Throwable

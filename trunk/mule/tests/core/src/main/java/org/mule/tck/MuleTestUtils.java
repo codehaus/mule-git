@@ -33,6 +33,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -55,6 +56,8 @@ import org.apache.commons.lang.StringUtils;
 public class MuleTestUtils
 {
 
+    public static final String DEFAULT_MODEL_NAME = "main";
+
     public static UMOManager getManager(boolean disableAdminService) throws Exception
     {
         if (MuleManager.isInstanciated())
@@ -69,12 +72,27 @@ public class MuleTestUtils
             MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
         }
 
-        manager.setModel(new SedaModel());
+        UMOModel model = new SedaModel();
+        model.setName(DEFAULT_MODEL_NAME);
+        manager.registerModel(model);
         MuleManager.getConfiguration().setSynchronous(true);
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
             PoolingProfile.POOL_INITIALISE_NO_COMPONENTS);
 
         return manager;
+    }
+
+    public static UMOModel getDefaultModel() throws UMOException
+    {
+        UMOModel m = MuleManager.getInstance().lookupModel(DEFAULT_MODEL_NAME);
+        if(m==null)
+        {
+            m = new SedaModel();
+            m.setName(DEFAULT_MODEL_NAME);
+            MuleManager.getInstance().registerModel(m);
+        }
+        return m;
+
     }
 
     public static UMOEndpoint getTestEndpoint(String name, String type) throws Exception
@@ -182,12 +200,6 @@ public class MuleTestUtils
         return descriptor;
     }
 
-    public static UMOManager getTestManager() throws UMOException
-    {
-        UMOManager manager = MuleManager.getInstance();
-        manager.setModel(new SedaModel());
-        return manager;
-    }
 
     public static TestAgent getTestAgent()
     {

@@ -19,6 +19,7 @@ import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
@@ -48,18 +49,22 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
 
     protected UMOConnector connector;
     protected static UMOManager manager;
+    protected UMOModel model;
     protected DataSource dataSource;
 
     protected void doSetUp() throws Exception
     {
         // Create a new mule manager
         manager = MuleManager.getInstance();
+        model = new SedaModel();
+        model.setName("main");
+        manager.registerModel(model);
         // Make sure we are running synchronously
         MuleManager.getConfiguration().setSynchronous(true);
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
             PoolingProfile.POOL_INITIALISE_ONE_COMPONENT);
         // Create an empty model
-        manager.setModel(new SedaModel());
+        manager.registerModel(new SedaModel());
         // Create and register connector
         connector = createConnector();
         MuleManager.getInstance().registerConnector(connector);

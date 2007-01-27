@@ -38,6 +38,12 @@ public class SedaModel extends AbstractModel
      */
     protected boolean componentPerRequest = false;
 
+
+    public SedaModel()
+    {
+        super();
+    }
+
     /**
      * Returns the model type name. This is a friendly identifier that is used to
      * look up the SPI class for the model

@@ -19,7 +19,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMOInboundMessageRouter;
+import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMOInboundRouter;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
@@ -30,17 +30,17 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <code>InboundMessageRouter</code> is a collection of routers that will be
+ * <code>InboundRouterCollection</code> is a collection of routers that will be
  * invoked when an event is received. It is responsible for managing a collection of
  * routers and also executing the routing logic. Each router must match against the
  * current event for the event to be routed.
  */
 
-public class InboundMessageRouter extends AbstractRouterCollection implements UMOInboundMessageRouter
+public class InboundRouterCollection extends AbstractRouterCollection implements UMOInboundRouterCollection
 {
     private final List endpoints = new CopyOnWriteArrayList();
 
-    public InboundMessageRouter()
+    public InboundRouterCollection()
     {
         super(RouterStatistics.TYPE_INBOUND);
     }
@@ -247,7 +247,7 @@ public class InboundMessageRouter extends AbstractRouterCollection implements UM
     /**
      * @param name the Endpoint identifier
      * @return the Endpoint or null if the endpointUri is not registered
-     * @see org.mule.umo.routing.UMOInboundMessageRouter
+     * @see org.mule.umo.routing.UMOInboundRouterCollection
      */
     public UMOEndpoint getEndpoint(String name)
     {

@@ -39,7 +39,6 @@ import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.internal.notifications.SecurityNotificationListener;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
-import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.management.stats.AllStatistics;
@@ -99,7 +98,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleManager implements UMOManager
 {
-    public static final String DEFAULT_MODEL_NAME = "_default";
     /**
      * singleton instance
      */
@@ -138,7 +136,7 @@ public class MuleManager implements UMOManager
     /**
      * The model being used
      */
-    private UMOModel model;
+    private Map models = new LinkedHashMap();
 
     /**
      * the unique id for this manager
@@ -288,8 +286,6 @@ public class MuleManager implements UMOManager
             try
             {
                 instance = (UMOManager)clazz.newInstance();
-                // HACK hit the model, so it's created and initialized
-                instance.getModel();
             }
             catch (Exception e)
             {
@@ -404,10 +400,12 @@ public class MuleManager implements UMOManager
         disposed.set(true);
         disposeConnectors();
 
-        if (model != null)
+        for (Iterator i = models.values().iterator(); i.hasNext();)
         {
+            UMOModel model = (UMOModel) i.next();
             model.dispose();
         }
+
         disposeAgents();
 
         transformers.clear();
@@ -740,8 +738,9 @@ public class MuleManager implements UMOManager
                 initialiseConnectors();
                 initialiseEndpoints();
                 initialiseAgents();
-                if (model != null)
+                for (Iterator i = models.values().iterator(); i.hasNext();)
                 {
+                    UMOModel model = (UMOModel) i.next();
                     model.initialise();
                 }
 
@@ -857,8 +856,9 @@ public class MuleManager implements UMOManager
             }
             startConnectors();
             startAgents();
-            if (model != null)
+            for (Iterator i = models.values().iterator(); i.hasNext();)
             {
+                UMOModel model = (UMOModel) i.next();
                 model.start();
             }
             started.set(true);
@@ -937,8 +937,9 @@ public class MuleManager implements UMOManager
         }
 
         logger.debug("Stopping model...");
-        if (model != null)
+        for (Iterator i = models.values().iterator(); i.hasNext();)
         {
+            UMOModel model = (UMOModel) i.next();
             model.stop();
         }
 
@@ -988,26 +989,14 @@ public class MuleManager implements UMOManager
         System.exit(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public UMOModel getModel()
+    public UMOModel lookupModel(String name)
     {
-        // todo in version two we must not assume the model
-        if (model == null)
-        {
-            model = new SedaModel();
-            model.setName(DEFAULT_MODEL_NAME);
-        }
-        return model;
+        return (UMOModel)models.get(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setModel(UMOModel model) throws UMOException
+    public void registerModel(UMOModel model) throws UMOException
     {
-        this.model = model;
+        models.put(model.getName(), model);
         if (initialised.get())
         {
             model.initialise();
@@ -1017,6 +1006,21 @@ public class MuleManager implements UMOManager
         {
             model.start();
         }
+    }
+
+    public void unregisterModel(String name)
+    {
+        UMOModel model = lookupModel(name);
+        if(model!=null)
+        {
+            models.remove(model);
+            model.dispose();
+        }
+    }
+
+    public Map getModels()
+    {
+        return Collections.unmodifiableMap(models);
     }
 
     /**

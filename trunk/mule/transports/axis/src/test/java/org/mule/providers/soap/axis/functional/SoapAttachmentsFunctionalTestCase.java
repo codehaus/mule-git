@@ -10,11 +10,6 @@
 
 package org.mule.providers.soap.axis.functional;
 
-import java.io.File;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-
 import org.mule.MuleManager;
 import org.mule.config.PoolingProfile;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -31,10 +26,11 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 
-/**
- * @author <a href="mailto:risears@gmail.com">Rick Sears</a>
- * @version $Revision$
- */
+import java.io.File;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+
 public class SoapAttachmentsFunctionalTestCase extends AbstractProviderFunctionalTestCase
 {
     protected void doSetUp() throws Exception
@@ -45,7 +41,7 @@ public class SoapAttachmentsFunctionalTestCase extends AbstractProviderFunctiona
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
             PoolingProfile.POOL_INITIALISE_ONE_COMPONENT);
 
-        manager.setModel(new SedaModel());
+        manager.registerModel(new SedaModel());
         callbackCalled = false;
         callbackCount = 0;
         connector = createConnector();

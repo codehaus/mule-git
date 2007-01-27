@@ -578,4 +578,12 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return false;
     }
 
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("MessageDispatcher");
+        sb.append("{endpoint=").append(endpoint.getEndpointURI());
+        sb.append('}');
+        return sb.toString();
+    }
 }

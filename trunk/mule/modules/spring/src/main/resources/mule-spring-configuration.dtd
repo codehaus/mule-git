@@ -11,7 +11,7 @@
 -->
 <!ELEMENT mule-configuration (description?,environment-properties?,mule-environment-properties?,container-context*,security-manager?,
  transaction-manager?,agents?,connector*,endpoint-identifiers?,transformers?,global-endpoints?,
-            interceptor-stack*,model?,mule-descriptor*,(import | alias | bean)*)>
+            interceptor-stack*,model*,(import | alias | bean)*)>
 
 <!--
     The id attribute allows for a unique id for this file as it is often the case that
@@ -848,7 +848,7 @@ The type of Model to use for component processing for this Mule instance.  The d
 at http://mule.codehaus.org/Models
 The custom model can be used to specify a custom model type.  In which case you must supply a className.
 -->
-<!ATTLIST model type           (seda | direct | pipeline | jms | jms-clustered | jcyclone | custom)             "seda">
+<!ATTLIST model type           (seda | direct | pipeline | jms | streaming | inherited | custom)             "seda">
 
 <!--
     The class used for instanciate the model if a custom model type is being used.  The class must implement
@@ -921,7 +921,7 @@ Jndi
     on the input and outputig a result, thus triggering futher events in the system.
 -->
 
-<!ELEMENT mule-descriptor ((inbound-router)?, (outbound-router)?, (response-router)?, (interceptor)*, (threading-profile)?, (pooling-profile)?, (queue-profile)?, (exception-strategy)?, (properties)?, (bean)*)>
+<!ELEMENT mule-descriptor ((inbound-router)?, (nested-router)?, (outbound-router)?, (response-router)?, (interceptor)*, (threading-profile)?, (pooling-profile)?, (queue-profile)?, (exception-strategy)?, (properties)?, (bean)*)>
 
 <!--
     name
@@ -1039,6 +1039,32 @@ Whether every configured router will be matched
 -->
 <!ATTLIST response-router timeout        CDATA         #IMPLIED>
 
+<!--
+//TODO
+If a timeout occurs, should an error be thorwn or allow the events to be passed on regardless
+-->
+<!--<!ATTLIST response-router failOnTimeout        (true | false)         "true">-->
+
+<!--
+ A nested router allows for mule orchestration of component dependencies
+-->
+<!ELEMENT nested-router ((binding)*)>
+
+<!--
+Configuration that binds and endpoint to an interface
+-->
+<!ELEMENT binding ((endpoint | global-endpoint))>
+
+<!--
+The fully qualified name of the interface class that will be proxied to call out to an endpoint
+ if the interface has more than one method then the method param must also be set.
+ -->
+<!ATTLIST binding interface NMTOKEN #REQUIRED>
+
+<!--
+The name of the method that will be bound to the endpoint
+-->
+<!ATTLIST binding method NMTOKEN #IMPLIED>
 <!--
 A catch-all-strategy is invoked to route an event when an event is not accepted by any of the configured
 routers.

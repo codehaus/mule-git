@@ -32,7 +32,9 @@ public class MuleClientListenerTestCase extends FunctionalTestCase
 
     protected ConfigurationBuilder getBuilder() throws Exception
     {
-        return new QuickConfigurationBuilder();
+        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
+        builder.registerModel("seda", "main");
+        return builder;
     }
 
     public void doTestRegisterListener(String urlString, boolean canSendWithoutReceiver) throws Exception
@@ -68,14 +70,14 @@ public class MuleClientListenerTestCase extends FunctionalTestCase
         descriptor.setInboundEndpoint(endpoint);
         client.registerComponent(descriptor);
 
-        assertTrue(MuleManager.getInstance().getModel().isComponentRegistered(name));
+        assertTrue(MuleManager.getInstance().lookupModel("main").isComponentRegistered(name));
 
         UMOMessage message = client.send(urlString, "Test Client Send message", null);
         assertNotNull(message);
         assertEquals("Received: Test Client Send message", message.getPayloadAsString());
         client.unregisterComponent(name);
 
-        assertTrue(!MuleManager.getInstance().getModel().isComponentRegistered(name));
+        assertTrue(!MuleManager.getInstance().lookupModel("main").isComponentRegistered(name));
 
         if (!canSendWithoutReceiver)
         {

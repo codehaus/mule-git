@@ -10,8 +10,6 @@
 
 package org.mule.tck.functional;
 
-import java.util.HashMap;
-
 import org.mule.MuleManager;
 import org.mule.config.PoolingProfile;
 import org.mule.impl.DefaultExceptionStrategy;
@@ -25,7 +23,10 @@ import org.mule.umo.UMOEventContext;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+
+import java.util.HashMap;
 
 public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTestCase
 {
@@ -49,7 +50,9 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
             PoolingProfile.POOL_INITIALISE_ONE_COMPONENT);
 
-        manager.setModel(new SedaModel());
+        UMOModel model = new SedaModel();
+        model.setName("main");
+        manager.registerModel(model);
         callbackCalled = false;
         callbackCount = 0;
         connector = createConnector();
@@ -95,7 +98,7 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
         props.put("eventCallback", callback);
         descriptor.setProperties(props);
         MuleManager.getInstance().registerConnector(connector);
-        UMOComponent component = MuleManager.getInstance().getModel().registerComponent(descriptor);
+        UMOComponent component = MuleManager.getInstance().lookupModel("main").registerComponent(descriptor);
         descriptor.initialise();
         return component;
     }

@@ -10,15 +10,6 @@
 
 package org.mule.extras.spring.events;
 
-import java.beans.ExceptionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleConfiguration;
@@ -33,6 +24,8 @@ import org.mule.impl.MuleSession;
 import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.impl.model.ModelHelper;
+import org.mule.impl.model.seda.SedaModel;
 import org.mule.providers.AbstractConnector;
 import org.mule.routing.filters.ObjectFilter;
 import org.mule.routing.filters.WildcardFilter;
@@ -48,11 +41,24 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.routing.UMOInboundMessageRouter;
+import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArraySet;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
+
+import java.beans.ExceptionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -62,9 +68,6 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArraySet;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 
 /**
  * <code>MuleEventMulticaster</code> is an implementation of a Spring
@@ -597,7 +600,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         {
             descriptor = getDefaultDescriptor();
             setSubscriptionsOnDescriptor((MuleDescriptor)descriptor);
-            component = MuleManager.getInstance().getModel().registerComponent(descriptor);
+            component = MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).registerComponent(descriptor);
         }
     }
 
@@ -770,7 +773,13 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     {
         // When the the beanFactory is refreshed all the beans get
         // reloaded so we need to unregister the component from Mule
-        UMOModel model = MuleManager.getInstance().getModel();
+        UMOModel model = MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL);
+        if(model==null)
+        {
+            model = new SedaModel();
+            model.setName(ModelHelper.SYSTEM_MODEL);
+            MuleManager.getInstance().registerModel(model);
+        }
         UMODescriptor descriptor = model.getDescriptor(EVENT_MULTICASTER_DESCRIPTOR_NAME);
         if (descriptor != null)
         {
@@ -785,7 +794,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         else
         {
             // Set multiple inbound subscriptions on the descriptor
-            UMOInboundMessageRouter messageRouter = descriptor.getInboundRouter();
+            UMOInboundRouterCollection messageRouter = descriptor.getInboundRouter();
 
             for (int i = 0; i < subscriptions.length; i++)
             {

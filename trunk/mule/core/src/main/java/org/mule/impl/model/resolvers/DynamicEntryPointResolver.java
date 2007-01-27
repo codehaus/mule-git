@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.model;
+package org.mule.impl.model.resolvers;
 
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.model.ModelException;
@@ -35,6 +35,7 @@ import org.mule.umo.model.UMOEntryPointResolver;
  * </OL>
  * It allows also void methods where Mule assumes that the Payload itself of the
  * message will be modified.
+ * 
  */
 public class DynamicEntryPointResolver implements UMOEntryPointResolver
 {
@@ -62,5 +63,4 @@ public class DynamicEntryPointResolver implements UMOEntryPointResolver
     {
         return new DynamicEntryPoint();
     }
-
 }

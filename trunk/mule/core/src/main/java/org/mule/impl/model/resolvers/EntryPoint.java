@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.model;
+package org.mule.impl.model.resolvers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

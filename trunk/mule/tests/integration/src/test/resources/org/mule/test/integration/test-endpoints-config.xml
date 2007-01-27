@@ -27,7 +27,7 @@
         <endpoint name="testEndpoint2" type="sender" address="vm://yet.another.queue" connector="testConnector" transformers="ObjectToXml"/>
     </global-endpoints>
 
-    <model name="model">
+    <model name="main">
         <!-- Test sendEndpoint and receive endpoint as URIs where the test connector will be
         used from the above config and the stream connector will be create dymanically
         -->

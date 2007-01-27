@@ -270,4 +270,81 @@ public class VMConnector extends AbstractConnector
         this.queueTimeout = queueTimeout;
     }
 
+
+//    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException
+//    {
+//        VMMessageReceiver receiver = getReceiver(endpoint.getEndpointURI());
+//        if(receiver!=null)
+//        {
+//            return new VMOutputStream( RequestContext.getEvent(), receiver);
+//        }
+//
+//        return null;
+//    }
+
+//    private class VMOutputStream extends OutputStream
+//    {
+//        private UMOEvent event;
+//        private UMOEvent newEvent;
+//        private VMMessageReceiver receiver;
+//        private Object lock = new Object();
+//        private int count = 0;
+//        private PipedOutputStream out;
+//
+//        public VMOutputStream(UMOEvent event, VMMessageReceiver receiver)
+//        {
+//            this.event = event;
+//            this.receiver = receiver;
+//        }
+//
+//
+//        public void write(int b) throws IOException
+//        {
+//            if(count==0)
+//            {
+//                synchronized(lock)
+//                {
+//                    count++;
+//                }
+//
+//                PipedInputStream in = new PipedInputStream();
+//                out = new PipedOutputStream(in);
+//                try
+//                {
+//                    UMOStreamMessageAdapter sma = getStreamMessageAdapter(in, out);
+//
+//                    newEvent = new MuleEvent(
+//                            new MuleMessage(sma, event.getMessage()),
+//                            receiver.getEndpoint(),
+//                            receiver.getComponent(), event);
+//
+//                }
+//                catch (UMOException e)
+//                {
+//                    throw new IOException(e.getMessage());
+//                }
+//            }
+//            out.write(b);
+//        }
+//
+//
+//        public void flush() throws IOException
+//        {
+//            try
+//            {
+//                if(event.isSynchronous())
+//                {
+//                    receiver.onEvent(newEvent);
+//                }
+//                else
+//                {
+//                    receiver.onEvent(newEvent);
+//                }
+//            }
+//            catch (UMOException e)
+//            {
+//
+//            }
+//        }
+//    }
 }

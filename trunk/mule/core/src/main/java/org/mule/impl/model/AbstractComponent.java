@@ -107,7 +107,7 @@ public abstract class AbstractComponent implements UMOComponent
             throw new IllegalArgumentException("Descriptor cannot be null");
         }
         this.descriptor = descriptor;
-        this.model = MuleManager.getInstance().getModel();
+        this.model = model;
     }
 
     /**

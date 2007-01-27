@@ -16,10 +16,10 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 
 /**
- * <code>UMOOutboundMessageRouter</code> TODO
+ * <code>UMOOutboundRouterCollection</code> is responsible for holding all outbound routers for a service component.
  */
 
-public interface UMOOutboundMessageRouter extends UMORouterCollection
+public interface UMOOutboundRouterCollection extends UMORouterCollection
 {
     /**
      * Prepares one or more events to be dispached by a Message Dispatcher
