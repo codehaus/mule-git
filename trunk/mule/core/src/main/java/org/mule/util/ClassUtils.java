@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 /**
  * This class is useful for loading resources and classes in a fault tolerant manner
@@ -481,24 +480,30 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     public static List getSatisfiableMethodsWithReturnType(Class implementation,
                                              Class returnType,
                                              boolean matchOnObject,
-                                             Set ignoreMethods)
+                                             Set ignoredMethodNames)
     {
         List result = new ArrayList();
-        List ignore = (ignoreMethods == null ? Collections.EMPTY_LIST : Arrays.asList(ignoreMethods));
-        List methods = Arrays.asList(implementation.getMethods());
-        for (Iterator iterator = methods.iterator(); iterator.hasNext();)
+
+        if (ignoredMethodNames == null)
         {
-            Method method = (Method)iterator.next();
+            ignoredMethodNames = Collections.EMPTY_SET;
+        }
+
+        Method[] methods = implementation.getMethods();
+        for (int i = 0; i < methods.length; i++)
+        {
+            Method method = methods[i];
             Class returns = method.getReturnType();
 
             if (compare(new Class[]{returns}, new Class[]{returnType}, matchOnObject))
             {
-                if (!ignore.contains(method.getName()))
+                if (!ignoredMethodNames.contains(method.getName()))
                 {
                     result.add(method);
                 }
             }
         }
+
         return result;
     }
 
