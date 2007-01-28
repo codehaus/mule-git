@@ -97,17 +97,17 @@ public interface UMOConnector extends Disposable, Initialisable
         throws MessagingException;
 
     /**
-     * @return the name associated with the endpoint
+     * @return the name associated with the connector
      */
     String getName();
 
     /**
-     * @param newName the name to associate with the endpoint
+     * @param newName the name to associate with the connector
      */
     void setName(String newName);
 
     /**
-     * @return the protocol name for the endpoint
+     * @return the primary protocol name for endpoints of this connector
      */
     String getProtocol();
 
