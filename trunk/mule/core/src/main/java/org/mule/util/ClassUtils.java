@@ -404,9 +404,9 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         Constructor[] ctors = clazz.getConstructors();
         for (int i = 0; i < ctors.length; i++)
         {
-            if (ctors[i].getParameterTypes().length == paramTypes.length)
+            Class[] types = ctors[i].getParameterTypes();
+            if (types.length == paramTypes.length)
             {
-                Class[] types = ctors[i].getParameterTypes();
                 boolean match = true;
                 for (int x = 0; x < types.length; x++)
                 {

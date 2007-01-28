@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
     protected static final Log logger = LogFactory.getLog(DynamicEntryPoint.class);
 
     // we don't want to match these methods when looking for a service method
-    protected static final Set ignoredMethods = new HashSet(Arrays.asList(new String[]{"equals",
+    protected static final Set IgnoredMethodNames = new HashSet(Arrays.asList(new String[]{"equals",
         "getInvocationHandler"}));
 
     // @GuardedBy(itself)
@@ -66,9 +67,40 @@ public class DynamicEntryPoint implements UMOEntryPoint
         super();
     }
 
-    public boolean isVoid()
+    protected Method addMethodByArgumentType(Method method, String payloadClass)
     {
-        return (currentMethod != null ? currentMethod.getReturnType().getName().equals("void") : false);
+        Method previousMethod = (Method)entryPoints.putIfAbsent(payloadClass, method);
+        return (previousMethod != null ? previousMethod : method);
+    }
+
+    protected Method addMethodByName(Method method, String payloadClass)
+    {
+        String methodName = method.getName();
+
+        ConcurrentMap argumentTypes = (ConcurrentMap)entryPoints.get(methodName);
+        if (argumentTypes == null)
+        {
+            argumentTypes = new ConcurrentHashMap();
+            ConcurrentMap previousTypes = (ConcurrentMap)entryPoints.putIfAbsent(methodName, argumentTypes);
+            if (previousTypes != null)
+            {
+                argumentTypes = previousTypes;
+            }
+        }
+
+        Method previousMethod = (Method)argumentTypes.putIfAbsent(payloadClass, method);
+        return (previousMethod != null ? previousMethod : method);
+    }
+
+    protected Method getMethodByArgumentType(String argumentType)
+    {
+        return (Method)entryPoints.get(argumentType);
+    }
+
+    protected Method getMethodByName(String methodName, String argumentType)
+    {
+        ConcurrentMap argumentTypes = (ConcurrentMap)entryPoints.get(methodName);
+        return (argumentTypes != null ? (Method)argumentTypes.get(argumentType) : null);
     }
 
     public String getMethodName()
@@ -94,22 +126,49 @@ public class DynamicEntryPoint implements UMOEntryPoint
         {
             // Check for method override and remove it from the event
             Object methodOverride = context.getMessage().removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
+
             if (methodOverride instanceof Method)
             {
+                // Methods are (hopefully) directly useable
                 method = (Method)methodOverride;
             }
             else if (methodOverride != null)
             {
                 payload = context.getTransformedMessage();
-                // Get the method that matches the method name with the current
-                // argument types
-                method = ClassUtils.getMethod(component.getClass(), methodOverride.toString(),
-                    ClassUtils.getClassTypes(payload));
-                validateMethod(component, method, methodOverride.toString());
-                // TODO HH: valid overrides should to be looked up & cached too!
-                // need to take care of name clashes foo(String) vs. bar(String),
-                // might be necessary to revert to the previous class:arg scheme but
-                // doing that on every call is probably slower than method lookup..
+                String payloadClassName = payload.getClass().getName();
+
+                // try lookup first
+                String methodOverrideName = methodOverride.toString();
+                method = this.getMethodByName(methodOverrideName, payloadClassName);
+
+                // method is not yet in the cache, so find it by name
+                if (method == null)
+                {
+                    // get all methods that match the current argument types
+                    List matchingMethods = ClassUtils.getSatisfiableMethods(component.getClass(), ClassUtils
+                        .getClassTypes(payload), true, true, IgnoredMethodNames);
+
+                    // try to find the method matching the methodOverride
+                    for (Iterator i = matchingMethods.iterator(); i.hasNext();)
+                    {
+                        Method candidate = (Method)i.next();
+                        if (candidate.getName().equals(methodOverride))
+                        {
+                            method = candidate;
+                            break;
+                        }
+                    }
+
+                    // this will throw up unless the component is a Callable
+                    this.validateMethod(component, method, methodOverrideName);
+
+                    // if validateMethod didn't complain AND we have a valid method
+                    // reference, add it to the cache
+                    if (method != null)
+                    {
+                        method = this.addMethodByName(method, payloadClassName);
+                    }
+                }
             }
         }
 
@@ -126,12 +185,12 @@ public class DynamicEntryPoint implements UMOEntryPoint
             {
                 // no Callable: try to find the method dynamically
                 // first we try to find a method that accepts UMOEventContext
-                method = (Method)entryPoints.get(context.getClass().getName());
+                method = this.getMethodByArgumentType(context.getClass().getName());
                 if (method == null)
                 {
                     // if that failed we try to find the method by payload
                     payload = context.getTransformedMessage();
-                    method = (Method)entryPoints.get(payload.getClass().getName());
+                    method = this.getMethodByArgumentType(payload.getClass().getName());
                     if (method != null)
                     {
                         RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
@@ -149,7 +208,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
         {
             // do any methods on the component accept a context?
             List methods = ClassUtils.getSatisfiableMethods(component.getClass(), ClassUtils
-                .getClassTypes(context), true, false, ignoredMethods);
+                .getClassTypes(context), true, false, IgnoredMethodNames);
 
             int numMethods = methods.size();
             if (numMethods > 1)
@@ -164,21 +223,8 @@ public class DynamicEntryPoint implements UMOEntryPoint
             else if (numMethods == 1)
             {
                 // found exact match for method with context argument
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Dynamic Entrypoint using method: " + component.getClass().getName() + "."
-                                    + ((Method)methods.get(0)).getName() + "(" + context.getClass().getName()
-                                    + ")");
-                }
-
-                method = (Method)methods.get(0);
-                Method previous = (Method)entryPoints.putIfAbsent(context.getClass().getName(), method);
-                if (previous != null)
-                {
-                    method = previous;
-                }
-
                 payload = context;
+                method = this.addMethodByArgumentType((Method)methods.get(0), payload.getClass().getName());
             }
             else
             {
@@ -187,7 +233,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
                 RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
 
                 methods = ClassUtils.getSatisfiableMethods(component.getClass(), ClassUtils
-                    .getClassTypes(payload), true, true, ignoredMethods);
+                    .getClassTypes(payload), true, true, IgnoredMethodNames);
 
                 numMethods = methods.size();
 
@@ -199,18 +245,8 @@ public class DynamicEntryPoint implements UMOEntryPoint
                 else if (numMethods == 1)
                 {
                     // found exact match for payload argument
-                    method = (Method)methods.get(0);
-                    Method previous = (Method)entryPoints.putIfAbsent(payload.getClass().getName(), method);
-                    if (previous != null)
-                    {
-                        method = previous;
-                    }
-
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("Dynamic Entrypoint using method: " + component.getClass().getName()
-                                        + "." + method.getName() + "(" + payload.getClass().getName() + ")");
-                    }
+                    method = this.addMethodByArgumentType((Method)methods.get(0), payload.getClass()
+                        .getName());
                 }
                 else
                 {
@@ -228,6 +264,12 @@ public class DynamicEntryPoint implements UMOEntryPoint
         {
             payload = context.getTransformedMessage();
             RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
+        }
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Dynamic Entrypoint using method: " + component.getClass().getName() + "."
+                            + method.getName() + "(" + payload.getClass().getName() + ")");
         }
 
         return this.invokeMethod(component, method, payload);
@@ -248,9 +290,6 @@ public class DynamicEntryPoint implements UMOEntryPoint
             logger.debug("Invoking " + methodCall);
         }
 
-        // this will wrap the given argument for the invocation
-        Object[] invocationArgs;
-
         // TODO MULE-1088: in order to properly support an array as argument for a
         // component method, the block below would need to be removed. Unfortunately
         // this would break the LoanBroker, which passes a BankQuoteRequest in an
@@ -262,6 +301,10 @@ public class DynamicEntryPoint implements UMOEntryPoint
         // Any kind of interpretation/rewriting of the array argument is pretty
         // much futile at this point, because we have already found a matching method
         // - otherwise we wouldn't be here!
+
+        // this will wrap the given argument for the invocation
+        Object[] invocationArgs;
+
         if (argument.getClass().isArray())
         {
             if (Object[].class.isAssignableFrom(argument.getClass()))
@@ -292,11 +335,17 @@ public class DynamicEntryPoint implements UMOEntryPoint
         return result;
     }
 
+    public boolean isVoid()
+    {
+        return (currentMethod != null ? currentMethod.getReturnType().getName().equals("void") : false);
+    }
+
     /**
      * This method can be used to validate that the method exists and is allowed to
      * be executed.
      */
-    protected void validateMethod(Object component, Method method, String methodName) throws NoSuchMethodException
+    protected void validateMethod(Object component, Method method, String methodName)
+        throws NoSuchMethodException
     {
         boolean fallback = component instanceof Callable;
 
