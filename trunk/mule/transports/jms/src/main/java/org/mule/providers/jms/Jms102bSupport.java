@@ -121,7 +121,8 @@ public class Jms102bSupport extends Jms11Support
             }
             else
             {
-                return session.createDurableSubscriber((Topic) destination, durableName, messageSelector, noLocal);
+                // DO NOT REMOVE THE CAST, breaks Weblogic
+                return ((TopicSession) session).createDurableSubscriber((Topic) destination, durableName, messageSelector, noLocal);
             }
         }
         else if (session instanceof QueueSession)
