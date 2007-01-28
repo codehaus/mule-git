@@ -103,8 +103,8 @@ public class DynamicEntryPoint implements UMOEntryPoint
                 payload = context.getTransformedMessage();
                 // Get the method that matches the method name with the current
                 // argument types
-                method = ClassUtils.getMethod(methodOverride.toString(), ClassUtils.getClassTypes(payload),
-                    component.getClass());
+                method = ClassUtils.getMethod(component.getClass(), methodOverride.toString(),
+                    ClassUtils.getClassTypes(payload));
                 validateMethod(component, method, methodOverride.toString());
                 // TODO HH: valid overrides should to be looked up & cached too!
                 // need to take care of name clashes foo(String) vs. bar(String),

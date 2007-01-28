@@ -372,14 +372,14 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     /**
      * Returns a matching method for the given name and parameters on the given class
      * If the parameterTypes arguments is null it will return the first matching
-     * method on the class
+     * method on the class.
      * 
+     * @param clazz the class to find the method on
      * @param name the method name to find
      * @param parameterTypes an array of argument types or null
-     * @param clazz the class to find the method on
      * @return the Method object or null if none was found
      */
-    public static Method getMethod(String name, Class[] parameterTypes, Class clazz)
+    public static Method getMethod(Class clazz, String name, Class[] parameterTypes)
     {
         Method[] methods = clazz.getMethods();
         for (int i = 0; i < methods.length; i++)
