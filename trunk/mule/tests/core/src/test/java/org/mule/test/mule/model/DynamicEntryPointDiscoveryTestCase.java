@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
 
-
 public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscoveryTestCase
 {
     /**
@@ -99,7 +98,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
     {
         UMOEntryPointResolver epd = getEntryPointResolver();
         UMODescriptor descriptor = getTestDescriptor("badContexts", MultipleEventContextsTestObject.class
-                .getName());
+            .getName());
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
@@ -137,7 +136,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
     {
         UMOEntryPointResolver epd = getEntryPointResolver();
         UMODescriptor descriptor = getTestDescriptor("badPayloads", MultiplePayloadsTestObject.class
-                .getName());
+            .getName());
 
         UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
         assertNotNull(ep);
@@ -212,11 +211,11 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
             // those are usually set on the endpoint and copied over to the message
             RequestContext.getEventContext().getMessage().setProperty(METHOD_PROPERTY_NAME,
-                    INVALID_METHOD_NAME);
+                INVALID_METHOD_NAME);
 
             Apple apple = new Apple();
-            apple.setAppleCleaner(new FruitCleaner() {
-
+            apple.setAppleCleaner(new FruitCleaner()
+            {
                 public void wash(Fruit fruit)
                 {
                     // dummy
@@ -320,6 +319,41 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         {
             Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
             RequestContext.setEvent(getTestEvent(payload));
+
+            FruitBowl bowl = new FruitBowl();
+            assertFalse(bowl.hasApple());
+            assertFalse(bowl.hasBanana());
+
+            ep.invoke(bowl, RequestContext.getEventContext());
+
+            assertTrue(bowl.hasApple());
+            assertTrue(bowl.hasBanana());
+        }
+        finally
+        {
+            RequestContext.setEvent(null);
+        }
+    }
+
+    /**
+     * Test for proper resolution of an existing method specified as override
+     */
+    public void testExplicitOverride() throws Exception
+    {
+        UMOEntryPointResolver epd = this.getEntryPointResolver();
+        UMODescriptor descriptor = this.getDescriptorToResolve(FruitBowl.class.getName());
+
+        UMOEntryPoint ep = epd.resolveEntryPoint(descriptor);
+        assertNotNull(ep);
+
+        try
+        {
+            Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
+            RequestContext.setEvent(getTestEvent(payload));
+
+            final String methodName = "setFruit";
+            final String propertyName = MuleProperties.MULE_METHOD_PROPERTY;
+            RequestContext.getEventContext().getMessage().setProperty(propertyName, methodName);
 
             FruitBowl bowl = new FruitBowl();
             assertFalse(bowl.hasApple());
