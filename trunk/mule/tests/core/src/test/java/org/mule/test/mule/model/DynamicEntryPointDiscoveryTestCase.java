@@ -21,6 +21,7 @@ import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.Fruit;
 import org.mule.tck.testmodels.fruit.FruitBowl;
+import org.mule.tck.testmodels.fruit.FruitCleaner;
 import org.mule.tck.testmodels.fruit.FruitLover;
 import org.mule.tck.testmodels.fruit.Kiwi;
 import org.mule.tck.testmodels.fruit.ObjectToFruitLover;
@@ -213,7 +214,20 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
             RequestContext.getEventContext().getMessage().setProperty(METHOD_PROPERTY_NAME,
                     INVALID_METHOD_NAME);
 
-            ep.invoke(new Apple(), RequestContext.getEventContext());
+            Apple apple = new Apple();
+            apple.setAppleCleaner(new FruitCleaner() {
+
+                public void wash(Fruit fruit)
+                {
+                    // dummy
+                }
+
+                public void polish(Fruit fruit)
+                {
+                    // dummy
+                }
+            });
+            ep.invoke(apple, RequestContext.getEventContext());
         }
         finally
         {
