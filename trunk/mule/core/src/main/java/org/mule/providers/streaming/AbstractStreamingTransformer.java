@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.providers.streaming;
 
 import org.mule.MuleManager;
@@ -28,14 +29,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractStreamingTransformer implements UMOStreamingTransformer
 {
-     /**
+    /**
      * logger used by this class
      */
-    protected transient final Log logger = LogFactory.getLog(AbstractStreamingTransformer.class);
+    protected transient final Log logger = LogFactory.getLog(getClass());
 
     /**
-     * The name that identifies this transformer. If none is set the class name of the transformer
-     * is used
+     * The name that identifies this transformer. If none is set the class name of
+     * the transformer is used
      */
     protected String name = null;
 
@@ -50,8 +51,8 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
     protected UMOStreamingTransformer nextTransformer;
 
     /**
-     * Determines whether the transformer will throw an exception if the message passed is
-     * is not supported or the return tye is incorrect
+     * Determines whether the transformer will throw an exception if the message
+     * passed is is not supported or the return tye is incorrect
      */
     private boolean ignoreBadInput = false;
 
@@ -86,11 +87,12 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
 
     /**
      * Transforms the object.
-     *
+     * 
      * @param src The source object to transform.
      * @return The transformed object
      */
-    public final Object transform(InputStream src, OutputStream dest, String encoding) throws TransformerException
+    public final Object transform(InputStream src, OutputStream dest, String encoding)
+        throws TransformerException
     {
         if (encoding == null && endpoint != null)
         {
@@ -103,33 +105,33 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
             encoding = MuleManager.getConfiguration().getEncoding();
         }
 
-
         if (logger.isDebugEnabled())
         {
             logger.debug("Applying transformer " + getName() + " (" + getClass().getName() + ")");
             logger.debug("Object before transform");
         }
 
-        //TODO we should have a pipeline of transformers that we just 'execute'
-//        Object result = doTransform(src, dest, encoding);
-//        if (result == null)
-//        {
-//            result = new NullPayload();
-//        }
-//
-//        if (logger.isDebugEnabled())
-//        {
-//            logger.debug("Object after transform");
-//        }
-//
-//        if (nextTransformer != null)
-//        {
-//            logger.debug("Following transformer in the chain is " + nextTransformer.getName() + " ("
-//                            + nextTransformer.getClass().getName() + ")");
-//            result = nextTransformer.transform(result);
-//        }
-//
-//        return result;
+        // TODO we should have a pipeline of transformers that we just 'execute'
+        // Object result = doTransform(src, dest, encoding);
+        // if (result == null)
+        // {
+        // result = new NullPayload();
+        // }
+        //
+        // if (logger.isDebugEnabled())
+        // {
+        // logger.debug("Object after transform");
+        // }
+        //
+        // if (nextTransformer != null)
+        // {
+        // logger.debug("Following transformer in the chain is " +
+        // nextTransformer.getName() + " ("
+        // + nextTransformer.getClass().getName() + ")");
+        // result = nextTransformer.transform(result);
+        // }
+        //
+        // return result;
         return null;
     }
 
@@ -140,7 +142,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.umo.transformer.UMOTransformer#setConnector(org.mule.umo.provider.UMOConnector)
      */
     public void setEndpoint(UMOImmutableEndpoint endpoint)
@@ -154,11 +156,12 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
         }
     }
 
-    protected abstract Object doTransform(InputStream src, OutputStream dest, String encoding) throws TransformerException;
+    protected abstract Object doTransform(InputStream src, OutputStream dest, String encoding)
+        throws TransformerException;
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.umo.transformer.UMOTransformer#getNextTransformer()
      */
     public UMOStreamingTransformer getNextTransformer()
@@ -168,7 +171,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.umo.transformer.UMOTransformer#setNextTransformer(org.mule.umo.transformer.UMOTransformer)
      */
     public void setNextTransformer(UMOStreamingTransformer nextTransformer)
@@ -178,7 +181,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#clone()
      */
     public Object clone() throws CloneNotSupportedException
@@ -196,7 +199,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
     /**
      * Template method were deriving classes can do any initialisation after the
      * properties have been set on this transformer
-     *
+     * 
      * @throws org.mule.umo.lifecycle.InitialisationException
      */
     public void initialise() throws InitialisationException
@@ -234,4 +237,5 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
     {
         return false;
     }
+
 }

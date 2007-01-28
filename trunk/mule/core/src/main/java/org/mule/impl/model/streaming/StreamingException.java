@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.impl.model.streaming;
 
 import org.mule.config.i18n.Message;
@@ -18,6 +19,8 @@ import org.mule.umo.UMOMessage;
  */
 public class StreamingException extends MessagingException
 {
+
+    private static final long serialVersionUID = 3346892963333693210L;
 
     public StreamingException(Message message, UMOMessage umoMessage)
     {

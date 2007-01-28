@@ -10,7 +10,6 @@
 
 package org.mule.impl.model;
 
-import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;

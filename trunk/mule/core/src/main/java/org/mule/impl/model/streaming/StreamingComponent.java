@@ -7,6 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.impl.model.streaming;
 
 import org.mule.config.i18n.Message;
@@ -33,6 +34,8 @@ import java.util.Iterator;
 public class StreamingComponent extends AbstractComponent
 {
 
+    private static final long serialVersionUID = 2967438446264425730L;
+
     protected Object component;
 
     protected UMOEntryPoint entryPoint;
@@ -53,20 +56,22 @@ public class StreamingComponent extends AbstractComponent
             throw new InitialisationException(e, this);
         }
 
-        //Validate the component
-        //Right now we do not support transformers on the Streaming model
+        // Validate the component
+        // Right now we do not support transformers on the Streaming model
         for (Iterator iterator = descriptor.getInboundRouter().getEndpoints().iterator(); iterator.hasNext();)
         {
             UMOImmutableEndpoint ep = (UMOImmutableEndpoint)iterator.next();
-            if(!ep.isStreaming())
+            if (!ep.isStreaming())
             {
-                throw new InitialisationException(new Message(Messages.STREAMING_ENDPOINTS_MUST_BE_USED_WITH_STREAMING_MODEL), this);
+                throw new InitialisationException(new Message(
+                    Messages.STREAMING_ENDPOINTS_MUST_BE_USED_WITH_STREAMING_MODEL), this);
 
             }
-            //TODO RM*: This restriction could be lifted in future
-            if(ep.getTransformer()!=null)
+            // TODO RM*: This restriction could be lifted in future
+            if (ep.getTransformer() != null)
             {
-                throw new InitialisationException(new Message(Messages.STREAMING_ENDPOINTS_DONT_SUPPORT_TRANSFORMERS), this);
+                throw new InitialisationException(new Message(
+                    Messages.STREAMING_ENDPOINTS_DONT_SUPPORT_TRANSFORMERS), this);
             }
         }
         if (component instanceof Initialisable)

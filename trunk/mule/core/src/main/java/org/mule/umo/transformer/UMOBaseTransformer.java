@@ -43,8 +43,7 @@ public interface UMOBaseTransformer extends Initialisable, Serializable, Cloneab
      */
     String getName();
 
-    // TODO shouldn't have to declare this but eclipse?? throws an error
-    // TODO RM*: This can be removed for Mule 2.0 (we'll use Spring bean prototypes
+    // TODO RM*: This can be removed for Mule 2.0 (we'll use Spring bean prototypes)
     Object clone() throws CloneNotSupportedException;
 
 }

@@ -13,10 +13,9 @@ package org.mule.umo;
 import org.mule.MuleException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.umo.routing.UMONestedRouter;
+import org.mule.umo.routing.UMONestedRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOResponseRouterCollection;
-import org.mule.umo.routing.UMONestedRouterCollection;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.beans.ExceptionListener;
