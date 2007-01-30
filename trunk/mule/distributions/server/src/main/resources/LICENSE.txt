@@ -415,7 +415,7 @@ I. Effect.These additional terms described in this MuleSource Public License -
 Additional Terms shall apply to the Covered Code under this License.
 
 II. MuleSource and logo. This License does not grant any rights to use the 
-trademarks "MuleSource", “Mule” and the "MuleSource", “Mule” logos even if 
+trademarks "MuleSource", "Mule" and the "MuleSource", "Mule" logos even if 
 such marks are included in the Original Code or Modifications.
 
 Redistributions of the Covered Code in binary form or source code form, must 
