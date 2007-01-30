@@ -208,7 +208,7 @@ public class XFireConnector extends AbstractConnector
         // this will be registered with Mule when the Connector starts
         if (xfireDescriptor == null)
         {
-            // See if the axis descriptor has already been added. This allows
+            // See if the xfire descriptor has already been added. This allows
             // developers to override the default configuration, say to increase
             // the threadpool
             xfireDescriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
