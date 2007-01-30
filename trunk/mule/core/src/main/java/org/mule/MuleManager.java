@@ -856,11 +856,14 @@ public class MuleManager implements UMOManager
             }
             startConnectors();
             startAgents();
+            fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STARTING_MODELS));
             for (Iterator i = models.values().iterator(); i.hasNext();)
             {
                 UMOModel model = (UMOModel) i.next();
                 model.start();
             }
+            fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STARTED_MODELS));
+
             started.set(true);
             starting.set(false);
             if (!config.isEmbedded())
@@ -937,11 +940,13 @@ public class MuleManager implements UMOManager
         }
 
         logger.debug("Stopping model...");
+        fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPING_MODELS));
         for (Iterator i = models.values().iterator(); i.hasNext();)
         {
             UMOModel model = (UMOModel) i.next();
             model.stop();
         }
+        fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED_MODELS));
 
         stopping.set(false);
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED));

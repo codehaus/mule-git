@@ -13,8 +13,8 @@ import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
-import org.mule.impl.internal.notifications.ModelNotification;
-import org.mule.impl.internal.notifications.ModelNotificationListener;
+import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
@@ -167,10 +167,10 @@ public class JmxAgent implements UMOAgent
         jmxSupport = jmxSupportFactory.newJmxSupport();
 
         // We need to register all the services once the server has initialised
-        ModelNotificationListener l = new ModelNotificationListener() {
+        ManagerNotificationListener l = new ManagerNotificationListener() {
             public void onNotification(UMOServerNotification notification)
             {
-                if (notification.getAction() == ModelNotification.MODEL_STARTED) {
+                if (notification.getAction() == ManagerNotification.MANAGER_STARTED_MODELS) {
                     try {
                         registerWrapperService();
                         registerStatisticsService();
