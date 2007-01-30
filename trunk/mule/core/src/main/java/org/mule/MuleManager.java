@@ -1458,6 +1458,8 @@ public class MuleManager implements UMOManager
      * {@link org.mule.impl.internal.notifications.CustomNotificationListener}
      * notificationManager.
      *
+     * TODO RM: This method now duplicates #fireSystemEvent() completely
+     *
      * @param notification the notification to fire. This must be of type
      *            {@link org.mule.impl.internal.notifications.CustomNotification}
      *            otherwise an exception will be thrown.
