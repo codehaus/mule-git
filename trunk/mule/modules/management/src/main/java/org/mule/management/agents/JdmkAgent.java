@@ -10,9 +10,12 @@
 
 package org.mule.management.agents;
 
-// import com.sun.jdmk.comm.HtmlAdaptorServer;
-
-import java.net.URI;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.umo.UMOException;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.manager.UMOAgent;
+import org.mule.util.ClassUtils;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
@@ -20,12 +23,7 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOAgent;
+import java.net.URI;
 
 /**
  * <code>JdmkAgent</code> configures an Jdmk Http Adaptor for Jmx management,
@@ -34,19 +32,21 @@ import org.mule.umo.manager.UMOAgent;
  */
 public class JdmkAgent implements UMOAgent
 {
+    /** A FQN of the adaptor class to instantiate via reflection. */
+    public static final String CLASSNAME_ADAPTER = "com.sun.jdmk.comm.HtmlAdaptorServer";
 
     private String name = "JDMK Agent";
     private String jmxAdaptorUrl = "http://localhost:9092";
-    private Object adaptor;
     private MBeanServer mBeanServer;
     private ObjectName adaptorName;
 
     protected Object createAdaptor() throws Exception
     {
-        Object adaptor = null;
-        URI uri = new URI(jmxAdaptorUrl);
+        final URI uri = new URI(jmxAdaptorUrl);
         // adaptor = new HtmlAdaptorServer(uri.getPort());
-        return adaptor;
+        final int port = uri.getPort();
+        return ClassUtils.instanciateClass(CLASSNAME_ADAPTER,
+                                           new Object[] {new Integer(port)}, this.getClass());
     }
 
     /*
@@ -185,14 +185,14 @@ public class JdmkAgent implements UMOAgent
         try
         {
             mBeanServer = (MBeanServer)MBeanServerFactory.findMBeanServer(null).get(0);
-            adaptor = createAdaptor();
+            final Object adaptor = createAdaptor();
             // TODO use Jmx support classes
             adaptorName = new ObjectName("Adaptor:class=" + adaptor.getClass().getName());
             mBeanServer.registerMBean(adaptor, adaptorName);
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "Jdmk Agent"), e);
+            throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "Jdmk Agent"), e, this);
         }
     }
 
