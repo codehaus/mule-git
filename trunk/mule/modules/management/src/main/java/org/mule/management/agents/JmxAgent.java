@@ -169,7 +169,7 @@ public class JmxAgent implements UMOAgent
         if (connectorServerUrl != null) {
             try {
                 JMXServiceURL url = new JMXServiceURL(connectorServerUrl);
-                if (connectorServerProperties == null || connectorServerProperties.isEmpty())
+                if (connectorServerProperties == null)
                 {
                     connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
                 }
