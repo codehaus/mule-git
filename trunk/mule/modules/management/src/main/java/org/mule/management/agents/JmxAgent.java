@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
@@ -70,6 +72,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JmxAgent implements UMOAgent
 {
+    public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
+    // populated with values below in a static initializer
+    public static final Map DEFAULT_CONNECTOR_SERVER_PROPERTIES;
 
     /**
      * Logger used by this class
@@ -94,6 +99,12 @@ public class JmxAgent implements UMOAgent
 
     private JmxSupportFactory jmxSupportFactory = new AutoDiscoveryJmxSupportFactory();
     private JmxSupport jmxSupport;
+
+    static {
+        Map props = new HashMap(1);
+        props.put("jmx.remote.jndi.rebind", "true");
+        DEFAULT_CONNECTOR_SERVER_PROPERTIES = Collections.unmodifiableMap(props);
+    }
 
     /** {@inheritDoc}
     *
@@ -158,6 +169,10 @@ public class JmxAgent implements UMOAgent
         if (connectorServerUrl != null) {
             try {
                 JMXServiceURL url = new JMXServiceURL(connectorServerUrl);
+                if (connectorServerProperties == null || connectorServerProperties.isEmpty())
+                {
+                    connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+                }
                 connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, connectorServerProperties, mBeanServer);
             } catch (Exception e) {
                 throw new InitialisationException(new Message(Messages.FAILED_TO_CREATE_X, "Jmx Connector"), e, this);
