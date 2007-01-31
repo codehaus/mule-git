@@ -192,7 +192,7 @@ public interface UMODescriptor extends UMOImmutableDescriptor
     void setContainer(String containerName);
 
     /**
-     * Sets the Model name that this descriptor is registered within
+     * Sets the Model name that this descriptor is registered within.
      * @param modelName
      */
     void setModelName(String modelName);

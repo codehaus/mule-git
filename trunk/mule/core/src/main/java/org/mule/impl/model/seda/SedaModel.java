@@ -26,17 +26,17 @@ public class SedaModel extends AbstractModel
 {
 
     /**
-     * The time out used for taking from the Seda Queue
+     * The time out used for taking from the Seda Queue.
      */
     private int queueTimeout = MuleManager.getConfiguration().getSynchronousEventTimeout();
 
     /**
-     * Whether components in this model should be pooled or not
+     * Whether components in this model should be pooled or not.
      */
     private boolean enablePooling = true;
 
     /**
-     * Whether to create a new component for every request
+     * Whether to create a new component for every request.
      */
     protected boolean componentPerRequest = false;
 
@@ -73,7 +73,7 @@ public class SedaModel extends AbstractModel
 
     protected UMOComponent createComponent(UMODescriptor descriptor)
     {
-        return new SedaComponent((MuleDescriptor)descriptor, this);
+        return new SedaComponent((MuleDescriptor) descriptor, this);
     }
 
     public int getQueueTimeout()
