@@ -69,14 +69,14 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
     /**
      * holds the exception stategy for this UMO
      */
-    protected ExceptionListener exceptionListener = null;
+    protected ExceptionListener exceptionListener;
 
     /**
      * The implementationReference used to create the Object UMO instance. Can either
      * be a string such as a container reference or classname or can be an instance
      * of the implementation.
      */
-    protected Object implementationReference = null;
+    protected Object implementationReference;
 
     /**
      * The descriptor name
@@ -98,15 +98,16 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
      */
     protected List intecerptorList = new CopyOnWriteArrayList();
 
-    protected UMOInboundRouterCollection inboundRouter = null;
+    protected UMOInboundRouterCollection inboundRouter;
 
-    protected UMOOutboundRouterCollection outboundRouter = null;
+    protected UMOOutboundRouterCollection outboundRouter;
 
-    protected UMONestedRouterCollection nestedRouter = null;
+    protected UMONestedRouterCollection nestedRouter;
 
-    protected UMOResponseRouterCollection responseRouter = null;
+    protected UMOResponseRouterCollection responseRouter;
 
-    protected String modelName = null;
+    protected String modelName;
+
     /**
      * The default receive endpoint.
      *
@@ -324,16 +325,15 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             }
         }
 
-		if (nestedRouter!=null)
+        if (nestedRouter != null)
         {
-            Iterator it = nestedRouter.getRouters().iterator();
-			while (it.hasNext()) {
-				UMONestedRouter nestedRouter =  (UMONestedRouter) it.next();
-				endpoint = (MuleEndpoint) nestedRouter.getEndpoint();
-				endpoint.initialise();
-			}
-
-		}
+            for (Iterator it = nestedRouter.getRouters().iterator(); it.hasNext();)
+            {
+                UMONestedRouter nestedRouter = (UMONestedRouter) it.next();
+                endpoint = (MuleEndpoint) nestedRouter.getEndpoint();
+                endpoint.initialise();
+            }
+        }
 
         if (outboundRouter == null)
         {
@@ -345,9 +345,9 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             if (outboundRouter.getCatchAllStrategy() != null
                 && outboundRouter.getCatchAllStrategy().getEndpoint() != null)
             {
-                ((MuleEndpoint)outboundRouter.getCatchAllStrategy().getEndpoint()).initialise();
+                outboundRouter.getCatchAllStrategy().getEndpoint().initialise();
             }
-            UMOOutboundRouter router = null;
+            UMOOutboundRouter router;
             for (Iterator iterator = outboundRouter.getRouters().iterator(); iterator.hasNext();)
             {
                 router = (UMOOutboundRouter)iterator.next();
@@ -498,12 +498,12 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
 
     public UMONestedRouterCollection getNestedRouter()
     {
-    	return nestedRouter;
+        return nestedRouter;
     }
 
     /**
-     * The threading profile used but the UMO when managing a component. can be used
-     * to allocate more or less resources to this particular umo component
+     * The threading profile used by the UMO when managing a component. Can be used
+     * to allocate more or less resources to this particular umo component.
      */
     public ThreadingProfile getThreadingProfile()
     {
@@ -528,7 +528,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
     public Class getImplementationClass() throws UMOException
     {
         // check for other types of references
-        Class implClass = null;
+        Class implClass;
         if (implementationReference instanceof String || implementationReference instanceof ContainerKeyPair)
         {
             Object object = MuleManager.getInstance().getContainerContext().getComponent(
