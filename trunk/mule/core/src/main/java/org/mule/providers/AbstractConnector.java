@@ -734,7 +734,10 @@ public abstract class AbstractConnector
         else
         {
             receiver = createReceiver(component, endpoint);
-            receivers.put(getReceiverKey(component, endpoint), receiver);
+            Object receiverKey = getReceiverKey(component, endpoint);
+            receiver.setReceiverKey(receiverKey.toString());
+            receivers.put(receiverKey, receiver);
+            //receivers.put(getReceiverKey(component, endpoint), receiver);
         }
 
         return receiver;
