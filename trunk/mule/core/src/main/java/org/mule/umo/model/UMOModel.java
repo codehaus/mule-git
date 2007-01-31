@@ -133,7 +133,7 @@ public interface UMOModel extends Lifecycle, Initialisable
      * @return a UMOSession for the given name or null if the component is not
      *         registered
      */
-    UMOSession getxComponentSession(String muleName);
+    UMOSession getComponentSession(String muleName);
 
     /**
      * A convenience method to set a list of components on the model. This method
