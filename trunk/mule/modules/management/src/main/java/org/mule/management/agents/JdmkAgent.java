@@ -16,6 +16,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
@@ -28,22 +29,30 @@ import java.net.URI;
 /**
  * <code>JdmkAgent</code> configures an Jdmk Http Adaptor for Jmx management,
  * statistics and configuration viewing of a Mule instance.
- * 
+* <p/>
+ * TODO MULE-1353 
  */
 public class JdmkAgent implements UMOAgent
 {
     /** A FQN of the adaptor class to instantiate via reflection. */
     public static final String CLASSNAME_ADAPTER = "com.sun.jdmk.comm.HtmlAdaptorServer";
 
+    private static final String PROTOCOL_PREFIX = "http://";
+    public static final String DEFAULT_HOSTNAME = "localhost";
+    public static final int DEFAULT_PORT = 9092;
+    public static final String DEFAULT_JMX_ADAPTOR_URL = PROTOCOL_PREFIX + DEFAULT_HOSTNAME + ":" + DEFAULT_PORT;
+
+    private String jmxAdaptorUrl;
+    private String host;
+    private String port;
+
     private String name = "JDMK Agent";
-    private String jmxAdaptorUrl = "http://localhost:9092";
     private MBeanServer mBeanServer;
     private ObjectName adaptorName;
 
     protected Object createAdaptor() throws Exception
     {
         final URI uri = new URI(jmxAdaptorUrl);
-        // adaptor = new HtmlAdaptorServer(uri.getPort());
         final int port = uri.getPort();
         return ClassUtils.instanciateClass(CLASSNAME_ADAPTER,
                                            new Object[] {new Integer(port)}, this.getClass());
@@ -186,6 +195,17 @@ public class JdmkAgent implements UMOAgent
         {
             mBeanServer = (MBeanServer)MBeanServerFactory.findMBeanServer(null).get(0);
             final Object adaptor = createAdaptor();
+            if (StringUtils.isBlank(jmxAdaptorUrl))
+            {
+                if (StringUtils.isNotBlank(host) && StringUtils.isNotBlank(port))
+                {
+                    jmxAdaptorUrl = PROTOCOL_PREFIX + host + ":" + port;
+                }
+                else
+                {
+                    jmxAdaptorUrl = DEFAULT_JMX_ADAPTOR_URL;
+                }
+            }
             // TODO use Jmx support classes
             adaptorName = new ObjectName("Adaptor:class=" + adaptor.getClass().getName());
             mBeanServer.registerMBean(adaptor, adaptorName);
@@ -210,5 +230,26 @@ public class JdmkAgent implements UMOAgent
     public void setJmxAdaptorUrl(String jmxAdaptorUrl)
     {
         this.jmxAdaptorUrl = jmxAdaptorUrl;
+    }
+
+
+    public String getHost()
+    {
+        return host;
+    }
+
+    public void setHost(String host)
+    {
+        this.host = host;
+    }
+
+    public String getPort()
+    {
+        return port;
+    }
+
+    public void setPort(String port)
+    {
+        this.port = port;
     }
 }
