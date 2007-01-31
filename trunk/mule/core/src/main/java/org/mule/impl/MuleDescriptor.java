@@ -347,4 +347,10 @@ public class MuleDescriptor extends ImmutableMuleDescriptor implements UMODescri
     {
         this.container = containerName;
     }
+
+
+    public void setModelName(String modelName)
+    {
+        this.modelName = modelName;
+    }
 }

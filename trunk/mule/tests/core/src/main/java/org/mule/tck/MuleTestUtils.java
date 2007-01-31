@@ -33,11 +33,11 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
-import org.mule.umo.model.UMOModel;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOManager;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
@@ -195,7 +195,7 @@ public class MuleTestUtils
         descriptor.setOutboundEndpoint(getTestEndpoint("test1", UMOEndpoint.ENDPOINT_TYPE_SENDER));
         descriptor.initialise();
 
-        descriptor.getPoolingProfile().setInitialisationPolicy(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS);
+        //TODO descriptor.getPoolingProfile().setInitialisationPolicy(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS);
 
         return descriptor;
     }

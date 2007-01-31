@@ -10,6 +10,7 @@
 
 package org.mule.tck.model;
 
+import org.mule.config.PoolingProfile;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
@@ -202,7 +203,7 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
     {
         UMODescriptor descriptor = getTestDescriptor("orange", Orange.class.getName());
         UMOPoolFactory factory = getPoolFactory();
-        ObjectPool pool = factory.createPool(descriptor, new SedaModel());
+        ObjectPool pool = factory.createPool(descriptor, new SedaModel(), new PoolingProfile());
         assertNotNull(pool);
     }
 

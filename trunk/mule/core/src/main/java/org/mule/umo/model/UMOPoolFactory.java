@@ -10,6 +10,7 @@
 
 package org.mule.umo.model;
 
+import org.mule.config.PoolingProfile;
 import org.mule.umo.UMODescriptor;
 import org.mule.util.ObjectFactory;
 import org.mule.util.ObjectPool;
@@ -20,7 +21,7 @@ import org.mule.util.ObjectPool;
  */
 public interface UMOPoolFactory
 {
-    ObjectPool createPool(UMODescriptor descriptor, UMOModel model, ObjectFactory factory);
+    ObjectPool createPool(UMODescriptor descriptor, UMOModel model, ObjectFactory factory, PoolingProfile pp);
 
-    ObjectPool createPool(UMODescriptor descriptor, UMOModel model);
+    ObjectPool createPool(UMODescriptor descriptor, UMOModel model, PoolingProfile pp);
 }

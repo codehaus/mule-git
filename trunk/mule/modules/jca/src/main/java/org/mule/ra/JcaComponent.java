@@ -148,7 +148,7 @@ public class JcaComponent implements UMOComponent
         }
 
         // initialise statistics
-        stats = new ComponentStatistics(descriptor.getName(), -1, -1);
+        stats = new ComponentStatistics(descriptor.getName(), -1);
 
         stats.setEnabled(((MuleManager)MuleManager.getInstance()).getStatistics().isEnabled());
         ((MuleManager)MuleManager.getInstance()).getStatistics().add(stats);

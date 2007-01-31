@@ -20,10 +20,10 @@ import org.mule.impl.container.DescriptorContainerContext;
 import org.mule.impl.container.DescriptorContainerKeyPair;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.routing.inbound.InboundPassThroughRouter;
-import org.mule.routing.outbound.OutboundRouterCollection;
+import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
+import org.mule.routing.outbound.OutboundRouterCollection;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOImmutableDescriptor;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -32,10 +32,10 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMONestedRouter;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.routing.UMOOutboundRouter;
-import org.mule.umo.routing.UMOResponseRouterCollection;
 import org.mule.umo.routing.UMONestedRouterCollection;
+import org.mule.umo.routing.UMOOutboundRouter;
+import org.mule.umo.routing.UMOOutboundRouterCollection;
+import org.mule.umo.routing.UMOResponseRouterCollection;
 import org.mule.umo.transformer.UMOTransformer;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
@@ -106,6 +106,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
 
     protected UMOResponseRouterCollection responseRouter = null;
 
+    protected String modelName = null;
     /**
      * The default receive endpoint.
      *
@@ -618,4 +619,9 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
         return container;
     }
 
+
+    public String getModelName()
+    {
+        return modelName;
+    }
 }

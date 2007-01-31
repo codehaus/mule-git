@@ -163,7 +163,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
                 axisTransportProtocols.put(s, MuleTransport.getTransportClass(s));
                 registerSupportedProtocol(s);
             }
-            MuleManager.getInstance().registerListener(this, ModelHelper.SYSTEM_MODEL);
+            MuleManager.getInstance().registerListener(this);
         }
         catch (Exception e)
         {

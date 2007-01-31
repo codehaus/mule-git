@@ -11,6 +11,8 @@
 package org.mule.impl.model.seda;
 
 import org.mule.MuleManager;
+import org.mule.config.PoolingProfile;
+import org.mule.config.QueueProfile;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.AbstractModel;
 import org.mule.umo.UMOComponent;
@@ -39,9 +41,23 @@ public class SedaModel extends AbstractModel
     protected boolean componentPerRequest = false;
 
 
+    /**
+     * the pooling configuration used when initialising the component described by
+     * this descriptor.
+     */
+    protected PoolingProfile poolingProfile;
+
+    /**
+     * The queuing profile for events received for this component
+     */
+    protected QueueProfile queueProfile;
+
+
     public SedaModel()
     {
         super();
+        poolingProfile = new PoolingProfile();
+        queueProfile = new QueueProfile();
     }
 
     /**
@@ -88,5 +104,26 @@ public class SedaModel extends AbstractModel
     public void setComponentPerRequest(boolean componentPerRequest)
     {
         this.componentPerRequest = componentPerRequest;
+    }
+
+
+    public PoolingProfile getPoolingProfile()
+    {
+        return poolingProfile;
+    }
+
+    public void setPoolingProfile(PoolingProfile poolingProfile)
+    {
+        this.poolingProfile = poolingProfile;
+    }
+
+    public QueueProfile getQueueProfile()
+    {
+        return queueProfile;
+    }
+
+    public void setQueueProfile(QueueProfile queueProfile)
+    {
+        this.queueProfile = queueProfile;
     }
 }
