@@ -150,7 +150,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDisconnect() throws Exception
     {
-        // nothing to do
+        client = null;
     }
 
     protected void doDispose()
