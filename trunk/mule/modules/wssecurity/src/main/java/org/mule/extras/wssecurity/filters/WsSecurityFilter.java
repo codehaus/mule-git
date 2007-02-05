@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -115,10 +115,12 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
             {
                 if (outhandlers[i] instanceof DOMOutHandler)
                 {
+                    // TODO Marie NPE !
                     connector.getClientOutHandlers().remove(i);
                 }
                 if (outhandlers[i] instanceof WSS4JOutHandler)
                 {
+                    // TODO Marie NPE !
                     connector.getClientOutHandlers().remove(i);
                 }
             }
@@ -175,7 +177,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
 
             String prefix = event.getEndpoint().getProtocol() + ":";
             String serviceName = event.getEndpoint().getName().substring(prefix.length());
-            SOAPService soapService = null;
+            SOAPService soapService;
 
             // set required security handlers
             try
@@ -234,7 +236,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
 
             String prefix = event.getEndpoint().getProtocol() + ":";
             String serviceName = event.getEndpoint().getName().substring(prefix.length());
-            SOAPService soapService = null;
+            SOAPService soapService;
 
             try
             {
