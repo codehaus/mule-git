@@ -8,7 +8,7 @@
         <artifactId>mule-examples</artifactId>
         <version>1.4-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-example-loanbroker</artifactId>
+    <artifactId>mule-example-loanbroker-space</artifactId>
     <name>Loan Broker Example</name>
     <description>The Loan Broker example application is based on the example presented in the Enterprise Integration Patterns book. This chapter of the book is available online so you can see a detailed description of the application here (http://www.eaipatterns.com/ComposedMessagingWS.html).</description>
 
@@ -29,9 +29,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <!-- these fail quite often with an unexpected NullPayload :( -->
-                        <exclude>org/mule/samples/loanbroker/AxisLoanBrokerSynchronousFunctionalTestCase.java</exclude>
-                        <exclude>org/mule/samples/loanbroker/XFireLoanBrokerSynchronousFunctionalTestCase.java</exclude>
+                        <!-- exclude>org/mule/samples/loanbroker/AxisLoanBrokerSynchronousFunctionalTestCase.java</exclude -->
                     </excludes>
                 </configuration>
             </plugin>
@@ -41,25 +39,13 @@
     <dependencies>
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-axis</artifactId>
+            <artifactId>mule-transport-javaspaces</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-xfire</artifactId>
+            <artifactId>mule-transport-gigaspaces</artifactId>
             <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-glue</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>glue</groupId>
-            <artifactId>glue</artifactId>
-            <version>5.0.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
