@@ -10,11 +10,12 @@
 
 package org.mule.extras.wssecurity.headers;
 
+import org.mule.umo.UMOMessage;
+
 import java.util.Properties;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.mule.umo.UMOMessage;
 
 public class WsSecurityHeadersSetter
 {

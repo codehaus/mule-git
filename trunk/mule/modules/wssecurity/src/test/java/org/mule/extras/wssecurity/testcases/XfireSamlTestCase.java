@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id$ 
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,25 +10,26 @@
 
 package org.mule.extras.wssecurity.testcases;
 
+import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
+
 import java.util.Properties;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.mule.extras.client.MuleClient;
-import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class XfireSamlTestCase extends FunctionalTestCase
 {
     // The test cases have been suppressed because for JDK 1.4, the Xerces parser
     // must be in an endorsed file for SAML to work. Everything works fine on JDK 1.5
 
-    public void testBogus() throws Exception
+    public void testBogus () throws Exception
     {
         // no test
     }
 
-    public void _testGoodUnsignedSamlTokenAuthentication() throws Exception
+    public void _testGoodUnsignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
@@ -43,16 +44,16 @@ public class XfireSamlTestCase extends FunctionalTestCase
         props.setProperty(WSHandlerConstants.USER, "mulealias");
         // Callback used to retrive password for given user.
         props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-            "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
+                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
         UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test",
-            props);
+                                   props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
-        assertTrue(((String)m.getPayload()).equals("Test"));
+        assertTrue(m.getPayload().equals("Test"));
     }
 
-    public void _testBadUnsignedSamlTokenAuthentication() throws Exception
+    public void _testBadUnsignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
@@ -65,7 +66,7 @@ public class XfireSamlTestCase extends FunctionalTestCase
         props.setProperty(WSHandlerConstants.USER, "baduser");
         // Callback used to retrive password for given user.
         props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-            "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
+                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
         UMOMessage m = null;
         try
@@ -79,7 +80,7 @@ public class XfireSamlTestCase extends FunctionalTestCase
         assertNull(m);
     }
 
-    public void _testGoodSignedSamlTokenAuthentication() throws Exception
+    public void _testGoodSignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
@@ -94,20 +95,20 @@ public class XfireSamlTestCase extends FunctionalTestCase
         props.setProperty(WSHandlerConstants.USER, "mulealias");
         // Callback used to retrive password for given user.
         props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-            "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
+                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
         // Configuration for accessing private key in keystore
         props.setProperty(WSHandlerConstants.SIG_PROP_FILE, "out-signed-security.properties");
         // "IssuerSerial" is not supported
         props.setProperty(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
 
         UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test",
-            props);
+                                   props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
-        assertTrue(((String)m.getPayload()).equals("Test"));
+        assertTrue(m.getPayload().equals("Test"));
     }
 
-    protected String getConfigResources()
+    protected String getConfigResources ()
     {
         return "wssecurity-mule-config-for-inbound.xml";
     }

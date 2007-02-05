@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -9,6 +9,8 @@
  */
 
 package org.mule.extras.wssecurity.handlers;
+
+import org.mule.umo.security.SecurityException;
 
 import java.security.cert.X509Certificate;
 import java.util.Properties;
@@ -35,7 +37,6 @@ import org.codehaus.xfire.security.wss4j.AbstractWSS4JHandler;
 import org.codehaus.xfire.soap.handler.ReadHeadersHandler;
 import org.codehaus.xfire.util.dom.DOMInHandler;
 import org.w3c.dom.Document;
-import org.mule.umo.security.SecurityException;
 
 public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
 {
@@ -79,7 +80,7 @@ public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
             reqData.setMsgContext(msgContext);
 
             Vector actions = new Vector();
-            String action = null;
+            String action;
 
             // the action property in the security header is necessary to know which
             // type of security measure to adopt. It cannot be null.
@@ -123,7 +124,7 @@ public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
                 reqData.setSigCrypto(loadSignatureCrypto(reqData));
             }
 
-            Vector wsResult = null;
+            Vector wsResult;
 
             // process the security header
             try
@@ -197,7 +198,7 @@ public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
              * Construct and setup the security result structure. The service may
              * fetch this and check it.
              */
-            Vector results = null;
+            Vector results;
             if ((results = (Vector)msgContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null)
             {
                 results = new Vector();

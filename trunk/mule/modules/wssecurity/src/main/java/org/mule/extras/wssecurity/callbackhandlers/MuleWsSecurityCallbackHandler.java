@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,18 +10,20 @@
 
 package org.mule.extras.wssecurity.callbackhandlers;
 
+import org.mule.MuleException;
+import org.mule.MuleManager;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.Messages;
+import org.mule.umo.manager.ObjectNotFoundException;
+
 import java.io.IOException;
 import java.util.Properties;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
+
 import org.apache.ws.security.WSPasswordCallback;
-import org.mule.MuleException;
-import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.manager.ObjectNotFoundException;
 
 public class MuleWsSecurityCallbackHandler implements CallbackHandler
 {
@@ -31,7 +33,7 @@ public class MuleWsSecurityCallbackHandler implements CallbackHandler
      * This is the standard Mule callback handler that gets a set of passwords from
      * the configuration file.
      * 
-     * @throws MuleException
+     * @throws MuleException in case of any error
      */
     public MuleWsSecurityCallbackHandler() throws MuleException
     {
