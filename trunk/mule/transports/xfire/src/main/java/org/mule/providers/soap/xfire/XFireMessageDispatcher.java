@@ -233,10 +233,10 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
         for (int i = 0; i < arr.length; i++)
         {
-            head = "";
-            head = (String)arr[i];
-            if ((head != null)&&(!head.startsWith("MULE"))){
-                this.client.setProperty((String)arr[i], event.getMessage().getProperty((String)arr[i]));
+            head = (String) arr[i];
+            if ((head != null) && (!head.startsWith("MULE")))
+            {
+                this.client.setProperty((String) arr[i], event.getMessage().getProperty((String) arr[i]));
             }
         }
 
@@ -268,7 +268,6 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     /**
      * Make a specific request to the underlying transport
      * 
-     * @param endpoint the endpoint to use when connecting to the resource
      * @param timeout the maximum time the operation should block before returning.
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
@@ -315,6 +314,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     /**
      * Get the service that is mapped to the specified request.
+     * @param endpoint endpoint containing a service path
+     * @return service name
      */
     protected String getServiceName(UMOImmutableEndpoint endpoint)
     {
