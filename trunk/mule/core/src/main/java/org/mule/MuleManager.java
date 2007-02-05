@@ -39,6 +39,8 @@ import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.internal.notifications.SecurityNotificationListener;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.model.ModelFactory;
+import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.management.stats.AllStatistics;
@@ -285,7 +287,11 @@ public class MuleManager implements UMOManager
                 MuleManager.class);
             try
             {
+                //There should always be a defualt system model registered
                 instance = (UMOManager)clazz.newInstance();
+                UMOModel model = ModelFactory.createModel(ModelHelper.getSystemModelType());
+                model.setName(ModelHelper.SYSTEM_MODEL);
+                instance.registerModel(model);
             }
             catch (Exception e)
             {
