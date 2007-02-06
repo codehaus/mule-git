@@ -58,7 +58,7 @@ public class WrapperManagerAgent implements UMOAgent {
     private ObjectName wrapperName;
 
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
-    private JmxSupport jmxSupport;
+    private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
 
     // atomic reference to avoid unnecessary construction calls
     private final AtomicReference/*<WrapperManagerMBean>*/ wrapperManagerRef = new AtomicReference();
@@ -99,7 +99,6 @@ public class WrapperManagerAgent implements UMOAgent {
         }
 
 
-        jmxSupport = jmxSupportFactory.getJmxSupport();
         final List servers = MBeanServerFactory.findMBeanServer(null);
         if (servers.isEmpty())
         {

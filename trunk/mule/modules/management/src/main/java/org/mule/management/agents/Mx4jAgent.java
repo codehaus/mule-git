@@ -87,7 +87,7 @@ public class Mx4jAgent implements UMOAgent
     private Map socketFactoryProperties = new HashMap();
 
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
-    private JmxSupport jmxSupport;
+    private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
 
     protected HttpAdaptor createAdaptor() throws Exception
     {
@@ -144,7 +144,6 @@ public class Mx4jAgent implements UMOAgent
     {
         try
         {
-            jmxSupport = jmxSupportFactory.getJmxSupport();
             mBeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
 
             if (StringUtils.isBlank(jmxAdaptorUrl))

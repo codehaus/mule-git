@@ -33,7 +33,7 @@ public class JmxRegistrationContext
     /**
      * The logger used for this class
      */
-    private final transient Log logger = LogFactory.getLog(getClass());
+    protected final transient Log logger = LogFactory.getLog(getClass());
 
     /**
      * Normally ThreadLocal is fine, as Mule is being initialised and destroyed
@@ -41,6 +41,8 @@ public class JmxRegistrationContext
      * during startup.
      */
     private static final ThreadLocal contexts = new ThreadLocal();
+
+
 
     private String resolvedDomain;
 

@@ -98,7 +98,7 @@ public class JmxAgent implements UMOAgent
     private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
-    private JmxSupport jmxSupport;
+    private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
 
     static {
         Map props = new HashMap(1);
@@ -178,8 +178,6 @@ public class JmxAgent implements UMOAgent
                 throw new InitialisationException(new Message(Messages.FAILED_TO_CREATE_X, "Jmx Connector"), e, this);
             }
         }
-
-        jmxSupport = jmxSupportFactory.getJmxSupport();
 
         // We need to register all the services once the server has initialised
         ManagerNotificationListener l = new ManagerNotificationListener() {
