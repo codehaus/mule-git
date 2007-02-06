@@ -78,7 +78,7 @@ public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
      * @return matching support class instance
      * @see JmxLegacySupport
      */
-    public JmxSupport newJmxSupport()
+    public JmxSupport getJmxSupport ()
     {
         return this.jmxSupport;
     }

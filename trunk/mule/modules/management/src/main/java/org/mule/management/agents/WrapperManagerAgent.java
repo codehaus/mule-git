@@ -99,7 +99,7 @@ public class WrapperManagerAgent implements UMOAgent {
         }
 
 
-        jmxSupport = jmxSupportFactory.newJmxSupport();
+        jmxSupport = jmxSupportFactory.getJmxSupport();
         final List servers = MBeanServerFactory.findMBeanServer(null);
         if (servers.isEmpty())
         {

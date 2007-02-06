@@ -179,7 +179,7 @@ public class JmxAgent implements UMOAgent
             }
         }
 
-        jmxSupport = jmxSupportFactory.newJmxSupport();
+        jmxSupport = jmxSupportFactory.getJmxSupport();
 
         // We need to register all the services once the server has initialised
         ManagerNotificationListener l = new ManagerNotificationListener() {

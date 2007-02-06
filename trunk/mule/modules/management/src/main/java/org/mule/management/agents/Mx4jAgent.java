@@ -144,7 +144,7 @@ public class Mx4jAgent implements UMOAgent
     {
         try
         {
-            jmxSupport = jmxSupportFactory.newJmxSupport();
+            jmxSupport = jmxSupportFactory.getJmxSupport();
             mBeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
 
             if (StringUtils.isBlank(jmxAdaptorUrl))
