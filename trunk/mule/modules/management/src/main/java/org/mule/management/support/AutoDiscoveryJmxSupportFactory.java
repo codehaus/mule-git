@@ -9,38 +9,56 @@
  */
 package org.mule.management.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.util.ClassUtils;
 
-import javax.management.ObjectName;
 import java.lang.reflect.Method;
+
+import javax.management.ObjectName;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Will discover if newer JMX version is available, otherwise fallback to JMX 1.1
  * style support.
  */
+// @Immutable
 public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
 {
     /**
-     * Should an older JMX 1.1 support be turned on. Default is {@code true}.
-     */
-    protected static volatile boolean legacyMode = true;
-
-    /**
      * Safe initialization for a singleton.
      */
-    private static final JmxSupportFactory instance = AutoDiscoveryJmxSupportFactory.getInstance();
+    private static final JmxSupportFactory instance = new AutoDiscoveryJmxSupportFactory();
 
     /**
      * logger used by this class
      */
     private transient Log logger = LogFactory.getLog(getClass());
 
+    /**
+     * A cached JMX support class instance.
+     */
+    private JmxSupport jmxSupport;
+
 
     /** Constructs a new AutoDiscoveryJmxSupportFactory. */
     protected AutoDiscoveryJmxSupportFactory ()
     {
+        final boolean jmxModernAvailable = isModernSpecAvailable();
+
+        // tertiary operand does not work anymore after hiererachy refactoring ?!
+        if (jmxModernAvailable)
+        {
+            jmxSupport = new JmxModernSupport();
+        }
+        else
+        {
+            jmxSupport = new JmxLegacySupport();
+        }
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("JMX support instance is " + jmxSupport);
+        }
     }
 
     /**
@@ -62,23 +80,7 @@ public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
      */
     public JmxSupport newJmxSupport()
     {
-        final boolean jmxModernAvailable = isModernSpecAvailable();
-
-        final JmxSupport jmxSupport;
-        // tertiary operand does not work anymore after hiererachy refactoring ?!
-        if (jmxModernAvailable)
-        {
-            jmxSupport = new JmxModernSupport();
-        }
-        else
-        {
-            jmxSupport = new JmxLegacySupport();
-        }
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("JMX support instance is " + jmxSupport);
-        }
-        return jmxSupport;
+        return this.jmxSupport;
     }
 
     /**
@@ -87,13 +89,11 @@ public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
      */
     protected boolean isModernSpecAvailable ()
     {
-        // TODO cache the support class instance
         Class clazz = ObjectName.class;
         // method escape() is available since JMX 1.2
         Method method = ClassUtils.getMethod(clazz, "quote", new Class[]{String.class});
 
-        final boolean jmxModernAvailable = method != null;
-        return jmxModernAvailable;
+        return  method != null;
     }
 
 }
