@@ -41,7 +41,7 @@ public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
         // method escape() is available since JMX 1.2
         Method method = ClassUtils.getMethod(clazz, "quote", new Class[]{String.class});
 
-        final boolean jmxModernAvailable = method == null;
+        final boolean jmxModernAvailable = method != null;
         final JmxSupport jmxSupport;
         // tertiary operand does not work anymore after hiererachy refactoring ?!
         if (jmxModernAvailable)
