@@ -12,10 +12,11 @@ package org.mule.management.support;
 import org.mule.MuleManager;
 import org.mule.util.StringUtils;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class AbstractJmxSupport implements JmxSupport
 {
@@ -38,7 +39,8 @@ public abstract class AbstractJmxSupport implements JmxSupport
             throw new IllegalStateException("MBeanServer is not available.");
         }
         MBeanServer server = (MBeanServer) servers.get(0);
-        List registeredDomains = Arrays.asList(server.getDomains());
+
+        Collection registeredDomains = getDomains(server);
         int counter = 1;
         // Just append .<n> suffix to the domain for a start
         if (registeredDomains.contains(domain))
@@ -54,6 +56,13 @@ public abstract class AbstractJmxSupport implements JmxSupport
 
         return domain;
     }
+
+    /**
+     * List all domains of this MBean server.
+     * @param server server to contact
+     * @return a collection of unique JMX domains
+     */
+    protected abstract Collection getDomains(MBeanServer server);
 
     /** {@inheritDoc} */
     public String getDomainName()
