@@ -29,7 +29,8 @@ import org.mule.ide.ui.preferences.MulePreferences;
 
 /**
  * Panel used in the Mule Distribution preferences.
- * 
+ *
+ * @deprecated 1.3.0 Refactored into MuleDistributionsPreferencesPanel
  */
 public class MuleClasspathPreferencesPanel {
 
@@ -63,6 +64,80 @@ public class MuleClasspathPreferencesPanel {
 	}
 
 	/**
+	 * Create the widgets on a parent composite.
+	 * 
+	 * @param parent the parent composite
+	 * @return the created composite
+	 */
+	public Composite createControl(Composite parent) {
+		Group cpGroup = new Group(parent, SWT.NONE);
+		cpGroup.setText("Mule distributions");
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		cpGroup.setLayout(layout);
+		cpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	
+		distros = new Table (cpGroup, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL);
+		distros.setSize (100, 200);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
+		data.verticalSpan = 4;
+		distros.setLayoutData(data);
+	
+		distros.addListener (SWT.Selection, new Listener () {
+			public void handleEvent (Event event) {
+				if (event.detail == SWT.CHECK) { 
+					TableItem oldItem = distros.getItem(defaultIndex);
+					if (oldItem != event.item) oldItem.setChecked(false);
+					((TableItem)(event.item)).setChecked(true);
+					setNewDefault(distros.indexOf((TableItem)(event.item)));
+				} else {
+					// Must be selection
+					showMuleVersion(distros.indexOf((TableItem)(event.item)));
+				}
+			}
+		});
+		
+		addDirButton = new Button(cpGroup, SWT.PUSH);
+		addDirButton.setText("Add Mule &Directory");
+		addDirButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		addDirButton.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				 addDirDistribution();
+			}
+		});
+	
+		addSingleFileButton = new Button(cpGroup, SWT.PUSH);
+		addSingleFileButton.setText("Add Mule &JAR");
+		addSingleFileButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		addSingleFileButton.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				 addJarDistribution();
+			}
+		});
+		
+		removeButton = new Button(cpGroup, SWT.PUSH);
+		removeButton.setText("&Remove");
+		removeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		removeButton.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				 removeDistribution(distros.getSelectionIndex());
+			}
+		}); 
+		textDistributionVersion = new Text(cpGroup, SWT.READ_ONLY);
+		GridData data2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
+		data2.horizontalSpan = 2;
+		textDistributionVersion.setLayoutData(data2);
+	
+		textDistributionDescription = new Text(cpGroup, SWT.READ_ONLY);
+		GridData data3 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
+		data3.horizontalSpan = 2;
+		textDistributionDescription.setLayoutData(data3);
+		
+//		initializeFromPreferences();
+		return cpGroup;
+	}
+
+	/**
 	 * Initialize the values from the preferences store.
 	 */
 	public void initializeFromPreferences() {
@@ -87,9 +162,9 @@ public class MuleClasspathPreferencesPanel {
 		defaultIndex = defaultDistribution;
 		distros.clearAll();
 		for (int i = 0; i < distributions.length; ++i) {
-			TableItem ti = new TableItem(distros, SWT.NONE);
-			ti.setText(distributions[i]);
+			TableItem ti = new TableItem(distros, SWT.CHECK);
 			ti.setChecked(i == defaultDistribution);
+			ti.setText(distributions[i]);
 		}
 		distros.select(defaultIndex);
 	}
@@ -101,7 +176,6 @@ public class MuleClasspathPreferencesPanel {
 			if (dist != null) {
 				this.textDistributionVersion.setText(dist.getVersion());
 				this.textDistributionDescription.setText(dist.getLocation().toString());
-				dist.close();
 				return true;
 			} else {
 				this.textDistributionVersion.setText("Error");
@@ -127,81 +201,6 @@ public class MuleClasspathPreferencesPanel {
 	}
 
 	/**
-	 * Create the widgets on a parent composite.
-	 * 
-	 * @param parent the parent composite
-	 * @return the created composite
-	 */
-	public Composite createControl(Composite parent) {
-		Group cpGroup = new Group(parent, SWT.NONE);
-		cpGroup.setText("Mule distributions");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
-		cpGroup.setLayout(layout);
-		cpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		distros = new Table (cpGroup, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		distros.setSize (100, 100);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
-		data.horizontalSpan = 3;
-		distros.setLayoutData(data);
-
-		distros.addListener (SWT.Selection, new Listener () {
-			public void handleEvent (Event event) {
-				if (event.detail == SWT.CHECK) { 
-					TableItem oldItem = distros.getItem(defaultIndex);
-					if (oldItem != event.item) oldItem.setChecked(false);
-					((TableItem)(event.item)).setChecked(true);
-					setNewDefault(distros.indexOf((TableItem)(event.item)));
-				} else {
-					// Must be selection
-					showMuleVersion(distros.indexOf((TableItem)(event.item)));
-				}
-			}
-		});
-		
-		addDirButton = new Button(cpGroup, SWT.PUSH);
-		addDirButton.setText("Add Mule &Directory");
-		addDirButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		addDirButton.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				 addDirDistribution();
-			}
-		});
-
-		addSingleFileButton = new Button(cpGroup, SWT.PUSH);
-		addSingleFileButton.setText("Add Mule &JAR");
-		addSingleFileButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		addSingleFileButton.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				 addJarDistribution();
-			}
-		});
-		
-		removeButton = new Button(cpGroup, SWT.PUSH);
-		removeButton.setText("&Remove");
-		removeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		removeButton.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				 removeDistribution(distros.getSelectionIndex());
-			}
-		}); 
-		textDistributionVersion = new Text(cpGroup, SWT.READ_ONLY);
-		GridData data2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
-		data2.horizontalSpan = 3;
-		textDistributionVersion.setLayoutData(data2);
-
-		textDistributionDescription = new Text(cpGroup, SWT.READ_ONLY);
-		GridData data3 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL);
-		data3.horizontalSpan = 3;
-		textDistributionDescription.setLayoutData(data3);
-		
-		return cpGroup;
-	}
-
-	
-	
-	/**
 	 * Browse for the external root.
 	 */
 	protected void addDirDistribution() {
@@ -223,11 +222,7 @@ public class MuleClasspathPreferencesPanel {
 
 	private boolean checkDistribution(String filepath) {
 		IMuleDistribution dist = getValidDistribution(filepath);
-		if (dist != null) {
-			dist.close();
-			return true;
-		}
-		return false;
+		return dist != null;
 	}
 	
 	private void tryAddDistribution(String filepath) {

@@ -1,14 +1,11 @@
-/*
+/**
  * $Id$
- * ------------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * Copyright (c) Jesper Steen Møller. All rights reserved.
- * http://www.selskabet.org/jesper/
- * 
- * 
- * The software in this package is published under the terms of the BSD
- * style license a copy of which has been included with this distribution in
- * the LICENSE.txt file.
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * MULE_LICENSE.txt file.
  */
 
 package org.mule.ide.ui;
@@ -35,29 +32,14 @@ public class MulePlugin extends AbstractUIPlugin {
 	// The shared instance.
 	private static MulePlugin plugin;
 
+	public IPreferenceStore myPreferenceStore;
+
 	/**
-	 * Returns the preference store for this UI plug-in. This preference store is used to hold persistent
-	 * settings for this plug-in in the context of a workbench. Some of these settings will be user
-	 * controlled, whereas others may be internal setting that are never exposed to the user.
-	 * <p>
-	 * If an error occurs reading the preference store, an empty preference store is quietly created,
-	 * initialized with defaults, and returned.
-	 * </p>
-	 * <p>
-	 * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime
-	 * compatibility layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access
-	 * the compatibility layer themselves.
-	 * </p>
+	 * Returns the preference store for this UI plug-in, which is the same as the core plug-in's.
 	 * 
 	 * @return the preference store
 	 */
-	public IPreferenceStore myPreferenceStore;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#getPreferenceStore()
-	 */
 	public IPreferenceStore getPreferenceStore() {
 		if (myPreferenceStore == null) {
 			myPreferenceStore = new ScopedPreferenceStore(new InstanceScope(), MuleCorePlugin.getDefault()

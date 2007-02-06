@@ -1,64 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
-      id="org.mule.ide"
-      label="Mule IDE"
-      version="1.3.0"
-      provider-name="MuleSource, Inc."
-      plugin="org.mule.ide.core">
-
-   <description url="http://mule.mulesource.org">
-      Mule IDE
-   </description>
-
-   <copyright url="http://mule.codehaus.org/License">
-      Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
-The software in this package is published under the terms of
-the MuleSource MPL license, a copy of which has been included
-with this distribution in the LICENSE.txt file.
-   </copyright>
-
-   <license url="http://www.mulesource.com/products/licensing.php">
-      MuleSource Public License
+MuleSource Public License
 Version 1.1.4
 
-The MuleSource Public License Version (&quot;MSPL&quot;) consists of the Mozilla Public 
+The MuleSource Public License Version ("MSPL") consists of the Mozilla Public 
 License Version 1.1, modified to be specific to MuleSource, with the Additional 
 Terms in Exhibit B. The original Mozilla Public License 1.1 can be found at: 
 http://www.mozilla.org/MPL/MPL-1.1.html
 
 1. Definitions.
 
-1.0.1. &quot;Commercial Use&quot; means distribution or otherwise making the Covered Code 
+1.0.1. "Commercial Use" means distribution or otherwise making the Covered Code 
 available to a third party.
 
-1.1. &quot;Contributor&quot; means each entity that creates or contributes to the creation 
+1.1. "Contributor" means each entity that creates or contributes to the creation 
 of Modifications.
 
-1.2. &quot;Contributor Version&quot; means the combination of the Original Code, prior 
+1.2. "Contributor Version" means the combination of the Original Code, prior 
 Modifications used by a Contributor, and the Modifications made by that 
 particular Contributor.
 
-1.3. &quot;Covered Code&quot; means the Original Code or Modifications or the combination 
+1.3. "Covered Code" means the Original Code or Modifications or the combination 
 of the Original Code and Modifications, in each case including portions thereof.
 
-1.4. &quot;Electronic Distribution Mechanism&quot;. means a mechanism generally accepted 
+1.4. "Electronic Distribution Mechanism". means a mechanism generally accepted 
 in the software development community for the electronic transfer of data.
 
-1.5. &quot;Executable&quot; means Covered Code in any form other than Source Code.
+1.5. "Executable" means Covered Code in any form other than Source Code.
 
-1.6. &quot;Initial Developer&quot; means the individual or entity identified as the 
+1.6. "Initial Developer" means the individual or entity identified as the 
 Initial Developer in the Source Code notice required by Exhibit A.
 
-1.7. &quot;Larger Work&quot; means a work which combines Covered Code or portions thereof 
+1.7. "Larger Work" means a work which combines Covered Code or portions thereof 
 with code not governed by the terms of this License.
 
-1.8. &quot;License&quot; means this document.
+1.8. "License" means this document.
 
-1.8.1. &quot;Licensable&quot; means having the right to grant, to the maximum extent 
+1.8.1. "Licensable" means having the right to grant, to the maximum extent 
 possible, whether at the time of the initial grant or subsequently acquired, any 
 and all of the rights conveyed herein.
 
-1.9. &quot;Modifications&quot; means any addition to or deletion from the substance or 
+1.9. "Modifications" means any addition to or deletion from the substance or 
 structure of either the Original Code or any previous Modifications. When 
 Covered Code is released as a series of files, a Modification is:
 
@@ -68,29 +48,29 @@ Code or previous Modifications.
 B. Any new file that contains any part of the Original Code or previous 
 Modifications.
 
-1.10. &quot;Original Code&quot; means Source Code of computer software code which is 
+1.10. "Original Code" means Source Code of computer software code which is 
 described in the Source Code notice required by Exhibit A as Original Code, and 
 which, at the time of its release under this License is not already Covered Code 
 governed by this License.
 
-1.10.1. &quot;Patent Claims&quot; means any patent claim(s), now owned or hereafter 
+1.10.1. "Patent Claims" means any patent claim(s), now owned or hereafter 
 acquired, including without limitation, method, process, and apparatus claims, 
 in any patent Licensable by grantor.
 
-1.11. &quot;Source Code&quot; means the preferred form of the Covered Code for making 
+1.11. "Source Code" means the preferred form of the Covered Code for making 
 modifications to it, including all modules it contains, plus any associated 
 interface definition files, scripts used to control compilation and installation 
 of an Executable, or source code differential comparisons against either the 
-Original Code or another well known, available Covered Code of the Contributor&apos;s 
+Original Code or another well known, available Covered Code of the Contributor's 
 choice. The Source Code can be in a compressed or archival form, provided the 
 appropriate decompression or de-archiving software is widely available for no 
 charge.
 
-1.12. &quot;You&quot; (or &quot;Your&quot;) means an individual or a legal entity exercising rights 
+1.12. "You" (or "Your") means an individual or a legal entity exercising rights 
 under, and complying with all of the terms of, this License or a future version 
-of this License issued under Section 6.1. For legal entities, &quot;You&quot; includes any 
+of this License issued under Section 6.1. For legal entities, "You" includes any 
 entity which controls, is controlled by, or is under common control with You. 
-For purposes of this definition, &quot;control&quot; means (a) the power, direct or 
+For purposes of this definition, "control" means (a) the power, direct or 
 indirect, to cause the direction or management of such entity, whether by 
 contract or otherwise, or (b) ownership of more than fifty percent (50%) of the 
 outstanding shares or beneficial ownership of such entity.
@@ -158,7 +138,7 @@ License or a future version of this License released under Section 6.1, and You
 must include a copy of this License with every copy of the Source Code You 
 distribute. You may not offer or impose any terms on any Source Code version 
 that alters or restricts the applicable version of this License or the 
-recipients&apos; rights hereunder. However, You may include an additional document 
+recipients' rights hereunder. However, You may include an additional document 
 offering the additional rights described in Section 3.5.
 
 3.2. Availability of Source Code.
@@ -185,10 +165,10 @@ describe the origin or ownership of the Covered Code.
 3.4. Intellectual Property Matters.
 
 (a) Third Party Claims.
-If Contributor has knowledge that a license under a third party&apos;s intellectual 
+If Contributor has knowledge that a license under a third party's intellectual 
 property rights is required to exercise the rights granted by such Contributor 
 under Sections 2.1 or 2.2, Contributor must include a text file with the Source 
-Code distribution titled &quot;LEGAL&quot; which describes the claim and the party making 
+Code distribution titled "LEGAL" which describes the claim and the party making 
 the claim in sufficient detail that a recipient will know whom to contact. If 
 Contributor obtains such knowledge after the Modification is made available as 
 described in Section 3.2, Contributor shall promptly modify the LEGAL file in 
@@ -198,14 +178,14 @@ calculated to inform those who received the Covered Code that new knowledge has
 been obtained.
 
 (b) Contributor APIs.
-If Contributor&apos;s Modifications include an application programming interface and 
+If Contributor's Modifications include an application programming interface and 
 Contributor has knowledge of patent licenses which are reasonably necessary to 
 implement that API, Contributor must also include this information in the LEGAL 
 file.
 
 (c) Representations.
 Contributor represents that, except as disclosed pursuant to Section 3.4(a) 
-above, Contributor believes that Contributor&apos;s Modifications are Contributor&apos;s 
+above, Contributor believes that Contributor's Modifications are Contributor's 
 original creation(s) and/or Contributor has sufficient rights to grant the 
 rights conveyed by this License.
 
@@ -216,7 +196,7 @@ its structure, then You must include such notice in a location (such as a
 relevant directory) where a user would be likely to look for such a notice. If 
 You created one or more Modification(s) You may add your name as a Contributor 
 to the notice described in Exhibit A. You must also duplicate this License in 
-any documentation for the Source Code where You describe recipients&apos; rights or 
+any documentation for the Source Code where You describe recipients' rights or 
 ownership rights relating to Covered Code. You may choose to offer, and to 
 charge a fee for, warranty, support, indemnity or liability obligations to one 
 or more recipients of Covered Code. However, You may do so only on Your own 
@@ -234,12 +214,12 @@ stating that the Source Code version of the Covered Code is available under the
 terms of this License, including a description of how and where You have 
 fulfilled the obligations of Section 3.2. The notice must be conspicuously 
 included in any notice in an Executable version, related documentation or 
-collateral in which You describe recipients&apos; rights relating to the Covered 
+collateral in which You describe recipients' rights relating to the Covered 
 Code. You may distribute the Executable version of Covered Code or ownership 
 rights under a license of Your choice, which may contain terms different from 
 this License, provided that You are in compliance with the terms of this License 
 and that the license for the Executable version does not attempt to limit or 
-alter the recipient&apos;s rights in the Source Code version from the rights set 
+alter the recipient's rights in the Source Code version from the rights set 
 forth in this License. If You distribute the Executable version under a 
 different license You must make it absolutely clear that any terms which differ 
 from this License are offered by You alone, not by the Initial Developer or any 
@@ -274,7 +254,7 @@ notice in Exhibit A and to related Covered Code.
 
 6.1. New Versions.
 
-MuleSource Inc. (&quot;MuleSource&quot;) may publish revised and/or new versions of the 
+MuleSource Inc. ("MuleSource") may publish revised and/or new versions of the 
 License from time to time. Each version will be given a distinguishing version 
 number.
 
@@ -290,8 +270,8 @@ modify the terms applicable to Covered Code created under this License.
 
 If You create or use a modified version of this License (which you may only do 
 in order to apply it to code which is not already Covered Code governed by this 
-License), You must (a) rename Your license so that the phrases &quot;MuleSource&quot;, 
-&quot;MSPL&quot; or any confusingly similar phrase do not appear in your license (except 
+License), You must (a) rename Your license so that the phrases "MuleSource", 
+"MSPL" or any confusingly similar phrase do not appear in your license (except 
 to note that your license differs from this License) and (b) otherwise make it 
 clear that Your version of the license contains terms which differ from the 
 MuleSource Public License. (Filling in the name of the Initial Developer, 
@@ -300,7 +280,7 @@ themselves be deemed to be modifications of this License.)
 
 7. DISCLAIMER OF WARRANTY.
 
-COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN &quot;AS IS&quot; BASIS, WITHOUT 
+COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT 
 WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT 
 LIMITATION, WARRANTIES THAT THE COVERED CODE IS FREE OF DEFECTS, MERCHANTABLE, 
 FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE 
@@ -322,9 +302,9 @@ License shall survive.
 8.2. If You initiate litigation by asserting a patent infringement claim 
 (excluding declatory judgment actions) against Initial Developer or a 
 Contributor (the Initial Developer or Contributor against whom You file such 
-action is referred to as &quot;Participant&quot;) alleging that:
+action is referred to as "Participant") alleging that:
 
-(a) such Participant&apos;s Contributor Version directly or indirectly infringes any 
+(a) such Participant's Contributor Version directly or indirectly infringes any 
 patent, then any and all rights granted by such Participant to You under 
 Sections 2.1 and/or 2.2 of this License shall, upon 60 days notice from 
 Participant terminate prospectively, unless if within 60 days after receipt of 
@@ -337,14 +317,14 @@ writing by the parties or the litigation claim is not withdrawn, the rights
 granted by Participant to You under Sections 2.1 and/or 2.2 automatically 
 terminate at the expiration of the 60 day notice period specified above.
 
-(b) any software, hardware, or device, other than such Participant&apos;s Contributor 
+(b) any software, hardware, or device, other than such Participant's Contributor 
 Version, directly or indirectly infringes any patent, then any rights granted to 
 You by such Participant under Sections 2.1(b) and 2.2(b) are revoked effective 
 as of the date You first made, used, sold, distributed, or had made, 
 Modifications made by that Participant.
 
 8.3. If You assert a patent infringement claim against Participant alleging that 
-such Participant&apos;s Contributor Version directly or indirectly infringes any 
+such Participant's Contributor Version directly or indirectly infringes any 
 patent where such claim is resolved (such as by license or settlement) prior to 
 the initiation of patent infringement litigation, then the reasonable value of 
 the licenses granted by such Participant under Sections 2.1 or 2.2 shall be 
@@ -364,14 +344,14 @@ WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER
 FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN 
 IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS 
 LIMITATION OF LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL 
-INJURY RESULTING FROM SUCH PARTY&apos;S NEGLIGENCE TO THE EXTENT APPLICABLE LAW 
+INJURY RESULTING FROM SUCH PARTY'S NEGLIGENCE TO THE EXTENT APPLICABLE LAW 
 PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR 
 LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS EXCLUSION AND 
 LIMITATION MAY NOT APPLY TO YOU.
 
-10. U.S. GOVERNMENT END USERS. The Covered Code is a &quot;commercial item,&quot; as that 
-term is defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of &quot;commercial 
-computer software&quot; and &quot;commercial computer software documentation,&quot; as such 
+10. U.S. GOVERNMENT END USERS. The Covered Code is a "commercial item," as that 
+term is defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial 
+computer software" and "commercial computer software documentation," as such 
 terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48 C.F.R. 
 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all U.S. 
 Government End Users acquire Covered Code with only those rights set forth 
@@ -388,7 +368,7 @@ United States of America, any litigation relating to this License shall be
 subject to the jurisdiction of the Federal Courts of the Northern District of 
 California, with venue lying in Santa Clara County, California, with the losing 
 party responsible for costs, including without limitation, court costs and 
-reasonable attorneys&apos; fees and expenses. The application of the United Nations 
+reasonable attorneys' fees and expenses. The application of the United Nations 
 Convention on Contracts for the International Sale of Goods is expressly 
 excluded. Any law or regulation which provides that the language of a contract 
 shall be construed against the drafter shall not apply to this License.
@@ -401,7 +381,7 @@ responsibility on an equitable basis. Nothing herein is intended or shall be
 deemed to constitute any admission of liability.
 
 13. MULTIPLE-LICENSED CODE. Initial Developer may designate portions of the 
-Covered Code as &quot;Multiple-Licensed&quot;. &quot;Multiple-Licensed&quot; means that the Initial 
+Covered Code as "Multiple-Licensed". "Multiple-Licensed" means that the Initial 
 Developer permits you to utilize portions of the Covered Code under Your choice 
 of the SPL or the alternative licenses, if any, specified by the Initial 
 Developer in the file described in Exhibit A.
@@ -409,9 +389,9 @@ Developer in the file described in Exhibit A.
 MuleSource Public License 1.1.4 - Exhibit A
 
 The contents of this file are subject to the MuleSource Public License Version 
-1.1.4 (&quot;License&quot;); You may not use this file except in compliance with the 
+1.1.4 ("License"); You may not use this file except in compliance with the 
 License. You may obtain a copy of the License at http://www.MuleSource.com/MSPL 
-Software distributed under the License is distributed on an &quot;AS IS&quot; basis, 
+Software distributed under the License is distributed on an "AS IS" basis, 
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the 
 specific language governing rights and limitations under the License.
 
@@ -435,7 +415,7 @@ I. Effect.These additional terms described in this MuleSource Public License -
 Additional Terms shall apply to the Covered Code under this License.
 
 II. MuleSource and logo. This License does not grant any rights to use the 
-trademarks &quot;MuleSource&quot;, &quot;Mule&quot; and the &quot;MuleSource&quot;, &quot;Mule&quot; logos even if 
+trademarks "MuleSource", "Mule" and the "MuleSource", "Mule" logos even if 
 such marks are included in the Original Code or Modifications.
 
 Redistributions of the Covered Code in binary form or source code form, must 
@@ -448,87 +428,3 @@ of the Covered Code.  :
 (a) MuleSource Inc.
 (b) Logo image: http://www.mulesource.com/images/mulesource_logo.gif
 (c) http://www.mulesource.com
-   </license>
-
-   <requires>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.jdt.launching"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.jdt.debug.ui"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-   </requires>
-
-   <plugin
-         id="org.mule.ide.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.launching"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.launching.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.emf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.config"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.config.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.config.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mule.ide.config.palette"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-</feature>

@@ -5,7 +5,7 @@
  *
  * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
+ * MULE_LICENSE.txt file.
  */
 
 package org.mule.ide.config.translators;
@@ -35,7 +35,7 @@ public class MuleConfigEntityResolver implements EntityResolver {
 	 */
 	public InputSource resolveEntity(String publicId, String systemId)
 			throws SAXException, IOException {
-		if (MuleConfigConstants.MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId)) {
+		if (MuleConfigConstants.MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId) || MuleConfigConstants.LEGACY_MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId)) {
 			Implementation plugin = MuleModelPlugin.getPlugin();
 			if (plugin != null) {
 				URL url = FileLocator.find(plugin.getBundle(), new Path("schemas/mule-configuration_1_0.dtd"), Collections.emptyMap()); //$NON-NLS-1$

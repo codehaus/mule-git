@@ -3,20 +3,20 @@ package org.mule.ide.ui.panels;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.mule.ide.core.samples.SampleLoader;
 
 /**
  * Allows the choice of initial project content.
  * 
- * @author dadams
+ * @author dadams, jmoller
  */
-public class ProjectContentChooser {
+public class ProjectContentChooser extends Composite{
 
 	/** Button for loading an empty project */
 	private Button buttonEmpty;
@@ -36,22 +36,44 @@ public class ProjectContentChooser {
 	/** Constant that indicates to load from a sample project */
 	public static final int LOAD_FROM_SAMPLE = 1;
 
+	public ProjectContentChooser(Composite parent, int style) {
+		super(parent, style);
+		initialize();
+	}
+	
+	public void setSampleList(String[] sampleList) {
+		if (sampleList == null || sampleList.length == 0) setChoice(LOAD_FROM_EMPTY);
+		
+		// Set new list into the widget, attempt to preserve any selection based on the string value
+		if (samples != null && ! samples.isDisposed()) {
+			int selectionIndex = samples.getSelectionIndex();
+			String oldSelection = selectionIndex > 0 ? samples.getItem(selectionIndex) : null;
+			samples.setItems(sampleList);
+			for (int i = 0; i < sampleList.length; ++i) {
+				if (sampleList[i].equals(oldSelection)) samples.select(i); 
+			}
+		}
+	}
+	
+	public void initialize() {
+		this.setLayout(new FillLayout());
+		createGroup();
+	}
+	
 	/**
 	 * Create the widgets on a parent composite.
 	 * 
 	 * @param parent the parent composite
 	 * @return the created composite
 	 */
-	public Composite createControl(Composite parent) {
-		Group group = new Group(parent, SWT.NONE);
+	public void createGroup() {
+		Group group = new Group(this, SWT.NONE);
 		group.setText("Choose the initial content of the project");
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		group.setLayout(layout);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
 		buttonEmpty = new Button(group, SWT.RADIO);
-		buttonEmpty.setText("Empty project");
+		buttonEmpty.setText("&Empty project");
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		buttonEmpty.setLayoutData(data);
@@ -66,8 +88,9 @@ public class ProjectContentChooser {
 			}
 		});
 
+		
 		buttonSample = new Button(group, SWT.RADIO);
-		buttonSample.setText("Sample project");
+		buttonSample.setText("S&ample project");
 		buttonSample.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 		buttonSample.addSelectionListener(new SelectionListener() {
 
@@ -82,9 +105,6 @@ public class ProjectContentChooser {
 
 		samples = new Combo(group, SWT.DROP_DOWN | SWT.READ_ONLY);
 		samples.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		samples.setItems(SampleLoader.getInstance().getSampleDescriptions());
-
-		return group;
 	}
 
 	/**
@@ -94,23 +114,21 @@ public class ProjectContentChooser {
 	 */
 	public void setChoice(int choice) {
 		this.choice = choice;
+		if (isDisposed()) return;
+
 		if (choice == LOAD_FROM_EMPTY) {
-			if (!buttonEmpty.isDisposed()) {
-				buttonEmpty.setSelection(true);
-				buttonSample.setSelection(false);
-				samples.setEnabled(false);
-			}
+			buttonEmpty.setSelection(true);
+			buttonSample.setSelection(false);
+			samples.setEnabled(false);
 		} else {
-			if (!buttonSample.isDisposed()) {
-				buttonEmpty.setSelection(false);
-				buttonSample.setSelection(true);
-				samples.setEnabled(true);
-			}
+			buttonEmpty.setSelection(false);
+			buttonSample.setSelection(true);
+			samples.setEnabled(true);
 		}
 	}
 
 	/**
-	 * Ge the "load from" choice.
+	 * Get the "load from" choice.
 	 * 
 	 * @return the choice of LOAD_FROM_* constant
 	 */
@@ -119,18 +137,11 @@ public class ProjectContentChooser {
 	}
 
 	/**
-	 * Get the sample description that is chosen.
+	 * Get the sample which is chosen.
 	 * 
-	 * @return the description or null if empty project or no sample chosen
+	 * @return the index of the sample, or null if empty project or no sample chosen
 	 */
-	public String getChosenSampleDescription() {
-		if (choice == LOAD_FROM_EMPTY) {
-			return null;
-		}
-		if (samples.getSelectionIndex() > -1) {
-			return samples.getItem(samples.getSelectionIndex());
-		} else {
-			return null;
-		}
+	public int getChosenSample() {
+		return samples.getSelectionIndex();
 	}
 }

@@ -14,7 +14,6 @@
 -->
 
 <plugin>
-   <extension-point id="samples" name="Mule Sample Projects" schema="schema/samples.exsd"/>
      <extension
          id="xmlProblem"
          name="Mule Configuration File Problem"

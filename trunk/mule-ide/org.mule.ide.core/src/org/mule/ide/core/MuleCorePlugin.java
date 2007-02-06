@@ -1,14 +1,11 @@
-/*
+/**
  * $Id$
- * ------------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * Copyright (c) Jesper Steen Møller. All rights reserved.
- * http://www.selskabet.org/jesper/
- * 
- * 
- * The software in this package is published under the terms of the BSD
- * style license a copy of which has been included with this distribution in
- * the LICENSE.txt file.
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * MULE_LICENSE.txt file.
  */
 package org.mule.ide.core;
 
@@ -26,6 +23,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.mule.ide.core.exception.MuleModelException;
 import org.mule.ide.core.jobs.UpdateMarkersForEcoreResourceJob;
@@ -277,4 +277,14 @@ public class MuleCorePlugin extends Plugin {
         job.setPriority(Job.SHORT);
         job.schedule();
     }
-}
+
+    private IEclipsePreferences preferencesNode = null;
+    
+    public IEclipsePreferences getEclipsePreferences() {
+    	if (preferencesNode == null) {
+    		IScopeContext prefScope = new InstanceScope();
+    		preferencesNode = prefScope.getNode(getBundle().getSymbolicName());
+    	}
+    	return preferencesNode;
+    }
+} 

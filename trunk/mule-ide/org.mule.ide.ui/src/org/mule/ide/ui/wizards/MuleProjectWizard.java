@@ -1,24 +1,26 @@
 package org.mule.ide.ui.wizards;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -31,22 +33,25 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.mule.ide.core.MuleClasspathUtils;
 import org.mule.ide.core.MuleCorePlugin;
+import org.mule.ide.core.distribution.IMuleBundle;
+import org.mule.ide.core.distribution.IMuleDistribution;
+import org.mule.ide.core.distribution.IMuleSample;
 import org.mule.ide.core.exception.MuleModelException;
 import org.mule.ide.core.model.IMuleConfigSet;
 import org.mule.ide.core.model.IMuleConfiguration;
 import org.mule.ide.core.model.IMuleModel;
 import org.mule.ide.core.nature.MuleNature;
-import org.mule.ide.core.samples.ConfigSet;
-import org.mule.ide.core.samples.Sample;
-import org.mule.ide.core.samples.SampleLoader;
 import org.mule.ide.ui.IMuleImages;
 import org.mule.ide.ui.MulePlugin;
-import org.osgi.framework.Bundle;
 
 /**
  * Wizard for creating a new Mule project.
  */
 public class MuleProjectWizard extends Wizard implements INewWizard {
+
+	private static final String MULE_MODULE_BUILDER_NAME = "mule-module-builder";
+
+	private static final String MULE_TRANSPORT_TCP_NAME = "mule-transport-tcp";
 
 	/** The workbench handle */
 	private IWorkbench workbench;
@@ -91,15 +96,11 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			// Add the Mule classpath container.
 			IProject project = projectPage.getProjectHandle();
 			IJavaProject javaProject = JavaCore.create(project);
-			addMuleLibraries(javaProject);
-			String sampleChosen = projectPage.getSelectedSampleProject();
-			if (sampleChosen != null) {
-				Sample sample = SampleLoader.getInstance().getSampleByDescription(sampleChosen);
-				addFromSample(sample, javaProject);
-			} else {
-				Sample sample = createEmptyProject();
-				addFromSample(sample, javaProject);
-			}
+			IMuleSample sampleChosen = projectPage.getSelectedSample();
+			IMuleSample sample = sampleChosen;
+			if (sample == null) sample = createEmptyProject(projectPage.getMuleDistribution());
+			addMuleLibraries(javaProject, sampleChosen);
+			addFromSample(sampleChosen, javaProject);
 			return true;
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
@@ -114,23 +115,41 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * A sample that creates the content for an empty project
+	 * A sample that creates the content for an empty project for a given 
 	 * 
 	 * @return the sample
 	 */
-	protected Sample createEmptyProject() {
-		Sample sample = new Sample();
-		sample.setPluginId(MulePlugin.PLUGIN_ID);
-		sample.setDescription("Empty Project");
-		sample.setRoot("empty");
-		sample.setSourcePath("src");
-		sample.setConfigPath("conf");
-		ConfigSet set = new ConfigSet();
-		set.setName("Default");
-		set.setConfigPath("mule-config.xml");
-		set.setConfigName("Default Mule Config");
-		sample.setConfigSets(new ConfigSet[] { set });
-		return sample;
+	protected IMuleSample createEmptyProject(final IMuleDistribution distribution) {
+		return new IMuleSample() {
+
+			public String getDescription() {
+				return "Empty Mule project";
+			}
+
+			public IMuleBundle[] getMuleDependencies() throws IOException {
+				return new IMuleBundle[] { distribution.getCoreModule() };
+			}
+
+			public String getName() {
+				return "Empty";
+			}
+
+			public String[] getOtherDependencies() throws IOException {
+				return new String[0];
+			}
+
+			public File getSourcePath() {
+				return null;
+			}
+
+			public File[] getConfigFiles() {
+				return null;
+			}
+
+			public File[] getSourceFolders() {
+				return null;
+			}
+		};
 	}
 
 	/**
@@ -139,14 +158,24 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	 * @param muleProject the mule project
 	 * @throws JavaModelException
 	 */
-	protected void addMuleLibraries(IJavaProject muleProject) throws JavaModelException, MuleModelException {
+	protected void addMuleLibraries(IJavaProject muleProject, IMuleSample sample) throws JavaModelException, MuleModelException {
 		IClasspathEntry[] initial = muleProject.getRawClasspath();
-		IClasspathEntry[] entries;
-		if (projectPage.isChoosingLibsFromPlugin()) {
-			entries = MuleClasspathUtils.getMulePluginLibraryEntries();
-		} else {
-			entries = MuleClasspathUtils.getExternalMuleLibraries(projectPage.getExternalRoot());
+		
+		HashSet moduleNames = new HashSet();
+		try {
+			IMuleBundle[] bundles;
+			bundles = sample.getMuleDependencies();
+			for (int i=0; i<bundles.length; ++i)
+				moduleNames.add(bundles[i].getName());
+
+			// Add mandatory modules (we can't launch without these)
+			moduleNames.add(MULE_TRANSPORT_TCP_NAME);
+			moduleNames.add(MULE_MODULE_BUILDER_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
+		IClasspathEntry[] entries = new IClasspathEntry[] { MuleClasspathUtils.createMuleClasspathContainer(projectPage.getDistributionHint(), moduleNames)};
 		IClasspathEntry[] result = new IClasspathEntry[initial.length + entries.length];
 		System.arraycopy(initial, 0, result, 0, initial.length);
 		System.arraycopy(entries, 0, result, initial.length, entries.length);
@@ -159,51 +188,23 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	 * @param sample the sample
 	 * @param project the Java project
 	 */
-	protected void addFromSample(Sample sample, IJavaProject project) {
-		if (sample == null) {
-			return;
-		}
-
-		// Find the bundle to copy from.
-		Bundle bundle = Platform.getBundle(sample.getPluginId());
-		if (bundle == null) {
-			return;
-		}
-
-		// Locate the bundle entries based on extension attributes.
-		String src = IPath.SEPARATOR + sample.getRoot() + IPath.SEPARATOR + sample.getSourcePath();
-		String conf = IPath.SEPARATOR + sample.getRoot() + IPath.SEPARATOR + sample.getConfigPath();
-		Enumeration srcs = bundle.findEntries(src, "*", true);
-		Enumeration confs = bundle.findEntries(conf, "*", true);
-
+	protected void addFromSample(IMuleSample sample, IJavaProject project) {
 		// Copy source files.
 		try {
 			IContainer sourceFolder = getSourceContainer(project);
-			if (srcs != null) {
-				while (srcs.hasMoreElements()) {
-					URL url = (URL) srcs.nextElement();
-					copyIntoProject(url, sourceFolder);
-				}
+			File[] dirs = sample.getSourceFolders();
+			for (int i=0; i<dirs.length; ++i) {
+				File[] subs = dirs[i].listFiles();
+				for (int j = 0; i < subs.length; ++j )
+					copyIntoProject(subs[j], sourceFolder);
 			}
 		} catch (JavaModelException e) {
 			MuleCorePlugin.getDefault().logException("Unable to find a source folder.", e);
 		}
 
-		// Copy configuration files.
+		// Copy configuration files
 		try {
-			IFolder configFolder = project.getProject().getFolder(CONFIG_FOLDER_NAME);
-			configFolder.create(true, true, new NullProgressMonitor());
-			Map configs = new HashMap();
-			if (confs != null) {
-				while (confs.hasMoreElements()) {
-					URL url = (URL) confs.nextElement();
-					IResource config = copyIntoProject(url, configFolder);
-					if (config != null) {
-						configs.put(config.getName(), config);
-					}
-				}
-			}
-			addConfigSets(sample, configs, project.getProject());
+			copyConfigSets(sample, project.getProject());
 		} catch (CoreException e) {
 			MuleCorePlugin.getDefault().logException("Unable to create config folder.", e);
 		}
@@ -232,62 +233,107 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	 * @param input
 	 * @param project
 	 */
-	protected IResource copyIntoProject(URL input, IContainer parent) {
+	protected void copyIntoProject(File input, IContainer parent) {
 		try {
-			URL local = Platform.asLocalURL(input);
-			File inputFile = new File(local.getPath());
-			IPath relative = new Path(input.getFile());
-			relative = relative.removeFirstSegments(2);
+			IPath relative = new Path(input.getName());
 
 			// Do not copy CVS entries.
-			if (relative.toString().indexOf("CVS") != -1) {
-				return null;
+			if (relative.toString().indexOf("CVS") != -1 || relative.toString().equals(".svn")) {
+				return;
 			}
 
 			// Copy directories.
-			if (inputFile.isDirectory()) {
+			if (input.isDirectory()) {
 				IFolder folder = parent.getFolder(relative);
 				folder.create(true, true, new NullProgressMonitor());
-				return folder;
-			}
-
-			// Copy files.
-			else if (inputFile.isFile()) {
+				
+				File[] children = input.listFiles();
+				for (int i=0; i < children.length; ++i) {
+					copyIntoProject(children[i], folder);
+				}
+			} else if (input.isFile()) {
+				// Copy files.
 				IFile file = parent.getFile(relative);
-				file.create(input.openStream(), true, new NullProgressMonitor());
-				return file;
+				file.create(new FileInputStream(input), true, new NullProgressMonitor());
 			}
 		} catch (IOException e) {
 			MuleCorePlugin.getDefault().logException("Unable to copy sample resource.", e);
 		} catch (CoreException e) {
 			MuleCorePlugin.getDefault().logException("Unable to create resource.", e);
 		}
-		return null;
 	}
 
+	private IFolder createConfigFolder(IProject project) throws CoreException {
+		IFolder configFolder = project.getFolder(CONFIG_FOLDER_NAME);
+		configFolder.create(true, true, new NullProgressMonitor());
+		
+		return configFolder;
+	}
+	
 	/**
 	 * Add config sets based on the list specified in the sample extension.
 	 * 
 	 * @param sample the sample
-	 * @param resources the resources map
 	 * @param project the project
 	 * @throws MuleModelException
 	 */
-	protected void addConfigSets(Sample sample, Map resources, IProject project) throws MuleModelException {
+	protected void copyConfigSets(IMuleSample sample, IProject project) throws MuleModelException {
 		MuleNature nature = MuleCorePlugin.getDefault().getMuleNature(project);
 		IMuleModel model = nature.getMuleModel().createWorkingCopy();
-		ConfigSet[] configs = sample.getConfigSets();
-		for (int i = 0; i < configs.length; i++) {
-			ConfigSet config = configs[i];
-			IFile file = (IFile) resources.get(config.getConfigPath());
-			if (file != null) {
-				IMuleConfiguration newConfig = model.createNewMuleConfiguration(config.getConfigName(), file
-						.getProjectRelativePath().toString());
-				model.addMuleConfiguration(newConfig);
-				IMuleConfigSet newSet = model.createNewMuleConfigSet(config.getName());
-				newSet.addConfiguration(newConfig);
-				model.addMuleConfigSet(newSet);
+		File[] configs = sample.getConfigFiles();
+		Collection addedConfigs = new LinkedList();
+		
+		try {
+			IFolder configFolder = createConfigFolder(project);
+			if (configs == null) {
+				String emptyConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
+						"\r\n" + 
+						"<!DOCTYPE mule-configuration PUBLIC \"-//MuleSource //DTD mule-configuration XML V1.0//EN\"\r\n" + 
+						"                                \"http://mule.mulesource.org/dtds/mule-configuration.dtd\">\r\n" + 
+						"\r\n" + 
+						"<!--  This is a blank configuration file for the " + project.getName() + " project -->\r\n" + 
+						"\r\n" + 
+						"<mule-configuration id=\"" + project.getName() + "-config\" version=\"1.0\">\r\n" + 
+						"\r\n" + 
+						"    <description>\r\n" +
+						"        Configuration for the the \"" + project.getName() + "\" project" +
+						"    </description>\r\n" + 
+						"\r\n" + 
+						"</mule-configuration";
+				// Make an empty one...
+				IFile blankConfigFile = configFolder.getFile("mule-config.xml");
+					blankConfigFile.create(new ByteArrayInputStream(emptyConfig.getBytes("UTF-8")), true, new NullProgressMonitor());
+			addedConfigs.add(blankConfigFile);
+			} else {
+				for (int i = 0; i < configs.length; i++) {
+					File configFile = configs[i];
+					IFile newConfigFile = configFolder.getFile(configFile.getName());
+					newConfigFile.create(new FileInputStream(configFile), true, new NullProgressMonitor());
+	
+					if (configFile.getName().endsWith(".xml")) {
+						addedConfigs.add(newConfigFile);
+					}
+				}
 			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for (Iterator configIt = addedConfigs.iterator(); configIt.hasNext();) {
+			IFile file = (IFile)configIt.next();
+			IMuleConfiguration newConfig = model.createNewMuleConfiguration(file.getName(), file
+					.getProjectRelativePath().toString());
+			model.addMuleConfiguration(newConfig);
+			IMuleConfigSet newSet = model.createNewMuleConfigSet(file.getName());
+			newSet.addConfiguration(newConfig);
+			model.addMuleConfigSet(newSet);
 		}
 		model.save();
 	}

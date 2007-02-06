@@ -5,8 +5,6 @@ package org.mule.ide.core.distribution;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 /**
  * @author jsm
@@ -24,6 +22,7 @@ public class MuleDistributionFactory {
 	}
 	
 	public IMuleDistribution createMuleDistribution(File location) {
+		if (location == null) throw new IllegalArgumentException("location must not be null");
 		if (location != null && location.isDirectory()) {
 			try {
 				MuleFullDistribution muleFullDistribution = new MuleFullDistribution(location);
@@ -33,43 +32,7 @@ public class MuleDistributionFactory {
 				// Drop through and get the dummy
 			}
 		}
-		return new DummyMuleDistribution();		
+		throw new IllegalArgumentException("Unexpected distribution location type");
 	}
 	
-	class DummyMuleDistribution implements IMuleDistribution {
-
-		public void close() {
-		}
-
-		public InputStream getDTDContents(String dtdName) throws IOException {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public String[] getDependencies(String[] moduleAndTransportNames) {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public URL[] getFullClasspath() {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public File getLocation() {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public String[] getSuppliedModules() {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public String[] getSuppliedTransports() {
-			throw new IllegalStateException("Forgot to call isValid!");
-		}
-
-		public String getVersion() {
-			return "";
-		}
-
-		public boolean isValid() {
-			return false;
-		}}
 }

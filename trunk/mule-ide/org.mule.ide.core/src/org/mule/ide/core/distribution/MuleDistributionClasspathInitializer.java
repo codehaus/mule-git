@@ -1,86 +1,90 @@
 package org.mule.ide.core.distribution;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.mule.ide.core.MuleCorePreferences;
 
 public class MuleDistributionClasspathInitializer extends ClasspathContainerInitializer {
+
+	
+	/**
+	 * This algorithm matches the one in the UI - 
+	 * 
+	 * @param hint
+	 * @return
+	 */
+	static public String pathify(String hint) {
+		return hint.replace('\\', '_').replace(':', '_').replace('/', '_');
+	}
 
 	public void initialize(final IPath path, final IJavaProject project) throws CoreException {
 		// Get the project and the required libs, find the Mule distro, add the libs
 		
+		// First, find the distribution location to work with (from the preferences) 
+		String [] distributions = MuleCorePreferences.getDistributions();
+		int defaultIndex = MuleCorePreferences.getDefaultDistribution();
+		String candidate = null;
+		if (defaultIndex >= 0 && defaultIndex < distributions.length) {
+			candidate = distributions[defaultIndex]; 
+		}
 		
+		// Now, see if the supplied classpath has specified the distribution (as "pathified" hint)
+		if (path.segmentCount() > 2) {
+			String hint = path.segment(2);
+			if (hint != null) {
+				hint = pathify(hint);
+				for (int i=0; i<distributions.length; ++i) {
+					if (hint.equals(pathify(distributions[i]))) candidate = distributions[i];
+				}
+				// TODO: Perhaps we should suppress the default/fallback if the hint is set?  
+			}
+		}
+		// We should have a candidate either way.
+		if (candidate == null) return; // Silently fail as expected
+		// TODO: Mark the Mule nature as having a bad path or missing prefs
 		
-	    /**
-	     * Binds a classpath container to a <code>IClasspathContainer</code> for a given project,
-	     * or silently fails if unable to do so.
-	     * <p>
-	     * A container is identified by a container path, which must be formed of two segments.
-	     * The first segment is used as a unique identifier (which this initializer did register onto), and
-	     * the second segment can be used as an additional hint when performing the resolution.
-	     * <p>
-	     * The initializer is invoked if a container path needs to be resolved for a given project, and no
-	     * value for it was recorded so far. The implementation of the initializer would typically set the 
-	     * corresponding container using <code>JavaCore#setClasspathContainer</code>.
-	     * <p>
-	     * A container initialization can be indirectly performed while attempting to resolve a project
-	     * classpath using <code>IJavaProject#getResolvedClasspath(</code>; or directly when using
-	     * <code>JavaCore#getClasspathContainer</code>. During the initialization process, any attempt
-	     * to further obtain the same container will simply return <code>null</code> so as to avoid an
-	     * infinite regression of initializations.
-	     * <p>
-	     * A container initialization may also occur indirectly when setting a project classpath, as the operation
-	     * needs to resolve the classpath for validation purpose. While the operation is in progress, a referenced 
-	     * container initializer may be invoked. If the initializer further tries to access the referring project classpath, 
-	     * it will not see the new assigned classpath until the operation has completed. Note that once the Java 
-	     * change notification occurs (at the end of the operation), the model has been updated, and the project 
-	     * classpath can be queried normally.
-		 * <p>
-		 * This method is called by the Java model to give the party that defined
-		 * this particular kind of classpath container the chance to install
-		 * classpath container objects that will be used to convert classpath
-		 * container entries into simpler classpath entries. The method is typically
-		 * called exactly once for a given Java project and classpath container
-		 * entry. This method must not be called by other clients.
-		 * <p>
-		 * There are a wide variety of conditions under which this method may be
-		 * invoked. To ensure that the implementation does not interfere with
-		 * correct functioning of the Java model, the implementation should use
-		 * only the following Java model APIs:
-		 * <ul>
-		 * <li>{@link JavaCore#setClasspathContainer(IPath, IJavaProject[], IClasspathContainer[], org.eclipse.core.runtime.IProgressMonitor)}</li>
-		 * <li>{@link JavaCore#getClasspathContainer(IPath, IJavaProject)}</li>
-		 * <li>{@link JavaCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
-		 * <li>{@link JavaCore#create(org.eclipse.core.resources.IProject)}</li>
-		 * <li>{@link IJavaModel#getJavaProjects()}</li>
-		 * <li>Java element operations marked as "handle-only"</li>
-		 * </ul>
-		 * The effects of using other Java model APIs are unspecified.
-		 * </p>
-		 * 
-	     * @param containerPath a two-segment path (ID/hint) identifying the container that needs 
-	     * 	to be resolved
-	     * @param project the Java project in which context the container is to be resolved.
-	     *    This allows generic containers to be bound with project specific values.
-	     * @throws CoreException if an exception occurs during the initialization
-	     * 
-	     * @see JavaCore#getClasspathContainer(IPath, IJavaProject)
-	     * @see JavaCore#setClasspathContainer(IPath, IJavaProject[], IClasspathContainer[], org.eclipse.core.runtime.IProgressMonitor)
-	     * @see IClasspathContainer
-	     */
-		IClasspathContainer cc = JavaCore.getClasspathContainer(path.uptoSegment(1), project);
-		final IClasspathEntry containerEntries[] = new IClasspathEntry[] { JavaCore.newLibraryEntry(new Path("c:\\java\\mule-1.3.3\\lib\\opt\\commons-pool-1.3.jar"), null, null) }; 
+		IMuleDistribution distrib = null;
+		distrib = MuleDistributionFactory.getInstance().createMuleDistribution(new File(candidate));
+		
+		if (distrib == null) return; // As per contract...
+		// TODO: Mark the Mule prefs as having a bad path
+		
+		Set included = null;
+		if (path != null && path.segmentCount() > 1) {
+			included = commaStringToSet(path.segment(1));
+		}
+		List bundles = new LinkedList();
+		bundles.add(distrib.getCoreModule());
+		IMuleBundle modules[] = distrib.getMuleModules();
+		for (int i=0; i < modules.length; ++i) {
+			if (included == null || included.contains(modules[i].getName())) bundles.add(modules[i]);
+		}
+		IMuleBundle transports[] = distrib.getMuleTransports();
+		for (int i=0; i < transports.length; ++i) {
+			if (included == null || included.contains(transports[i].getName())) bundles.add(transports[i]);
+		}
+		IMuleBundle[] allRequiredBundles = distrib.getTransitiveMuleDependencies((IMuleBundle[])bundles.toArray(new IMuleBundle[bundles.size()]));
+		
+		final IClasspathEntry containerEntries[] = distrib.getClasspath(allRequiredBundles);
+		
 		IClasspathContainer container = new IClasspathContainer() {
 			public IClasspathEntry[] getClasspathEntries() {
 				return containerEntries;
 			}
 			public String getDescription() {
-				return "Mule librariesfor project ["+ project.getElementName()+"]";
+				return "Mule libraries for project ["+ project.getElementName()+"]";
 			}
 			public int getKind() {
 				return K_APPLICATION; 
@@ -91,11 +95,18 @@ public class MuleDistributionClasspathInitializer extends ClasspathContainerInit
 			public String toString() {
 				return getDescription();
 			}
-
-			};
+		};
 		JavaCore.setClasspathContainer(path, new IJavaProject[] { project }, new IClasspathContainer[] { container }, null);
-		
 	}
+
+	private static Set commaStringToSet(String bundleSelectString2) {
+		Set selection = new HashSet();
+		StringTokenizer st = new StringTokenizer(bundleSelectString2, ",");
+		while (st.hasMoreTokens()) selection.add(st.nextToken());
+		return selection;
+	}
+	
+	
 	public boolean canUpdateClasspathContainer(IPath containerPath, IJavaProject project) {
 		return super.canUpdateClasspathContainer(containerPath, project);
 	}

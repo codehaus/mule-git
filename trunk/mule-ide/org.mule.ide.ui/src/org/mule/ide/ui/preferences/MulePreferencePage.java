@@ -1,28 +1,23 @@
-/*
+/**
  * $Id$
- * ------------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * Copyright (c) Jesper Steen Møller. All rights reserved.
- * http://www.selskabet.org/jesper/
- * 
- * 
- * The software in this package is published under the terms of the BSD
- * style license a copy of which has been included with this distribution in
- * the LICENSE.txt file.
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * MULE_LICENSE.txt file.
  */
 
 package org.mule.ide.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.mule.ide.ui.MulePlugin;
-import org.mule.ide.ui.panels.MuleClasspathPreferencesPanel;
+import org.mule.ide.ui.panels.MuleDistributionPreferencePanel;
 
 /**
  * Preference page for Mule setttings.
@@ -30,7 +25,7 @@ import org.mule.ide.ui.panels.MuleClasspathPreferencesPanel;
 public class MulePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	/** Widget for choosing classpath */
-	private MuleClasspathPreferencesPanel classpathPanel;
+	private MuleDistributionPreferencePanel classpathPanel;
 
 	public MulePreferencePage() {
 		setPreferenceStore(MulePlugin.getDefault().getPreferenceStore());
@@ -43,13 +38,9 @@ public class MulePreferencePage extends PreferencePage implements IWorkbenchPref
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout());
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		classpathPanel = new MuleClasspathPreferencesPanel(this);
-		classpathPanel.createControl(composite);
+		classpathPanel = new MuleDistributionPreferencePanel(this, parent, SWT.NONE);
 		classpathPanel.initializeFromPreferences();
-		return composite;
+		return classpathPanel;
 	}
 
 	/*

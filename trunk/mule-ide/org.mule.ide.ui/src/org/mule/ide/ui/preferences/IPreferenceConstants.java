@@ -1,23 +1,23 @@
-/*
+/**
  * $Id$
- * ------------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * Copyright (c) Jesper Steen Møller. All rights reserved.
- * http://www.selskabet.org/jesper/
- * 
- * 
- * The software in this package is published under the terms of the BSD
- * style license a copy of which has been included with this distribution in
- * the LICENSE.txt file.
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * MULE_LICENSE.txt file.
  */
 
 package org.mule.ide.ui.preferences;
 
-/**
- * Constant definitions for plug-in preferences
- */
-public class IPreferenceConstants {
+import org.mule.ide.core.ICorePreferenceConstants;
 
+/**
+ * Constant definitions for plug-in preferences relevant for UI
+ */
+public class IPreferenceConstants extends ICorePreferenceConstants {
+	public static final String DISTRIBUTION_PREFERENCES_ID = "org.mule.ide.ui.preferences.MulePreferencePage";
+	
 	/** Value constant for MULE_CLASSPATH_TYPE. Use core plugin for classpath.
 	 *
 	 * @deprecated Since Mule IDE 1.3.0, the distribution is no longer bundled
@@ -48,14 +48,5 @@ public class IPreferenceConstants {
 	 * This is only preserved in order to migrate preferences
 	 */
 	public static final String EXTERNAL_MULE_ROOT = "externalMuleRoot";
-
-	/** Prefix for Mule installation roots */
-	public static final String EXTERNAL_MULE_ROOT_PREFIX = "externalMuleRoot.";
-
-	/** Location of external Mule installation root */
-	public static final String EXTERNAL_MULE_ROOT_COUNT = "externalMuleRootCount";
-
-	/** Number of the default Mule installation root */
-	public static final String DEFAULT_EXTERNAL_MULE_ROOT = "defaultExternalMuleRoot";
 
 }

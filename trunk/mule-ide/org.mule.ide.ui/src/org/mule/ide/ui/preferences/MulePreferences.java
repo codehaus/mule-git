@@ -1,11 +1,12 @@
 package org.mule.ide.ui.preferences;
 
+import org.mule.ide.core.ICorePreferenceConstants;
 import org.mule.ide.ui.MulePlugin;
 
 /**
  * Preferences for various Mule settings.
  * 
- * @author dadams
+ * @author dadams, jsmoller
  */
 public class MulePreferences {
 
@@ -30,30 +31,31 @@ public class MulePreferences {
 	}
 
 	public static String[] getDistributions() {
-		int n = getIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
+		int n = getIntPreference(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
 		String distributions[] = new String[n];
 		for (int i = 0; i < n; ++i) {
-			distributions[i] = getStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
+			distributions[i] = getStringPreference(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
 		}
 		return distributions;
 	}
 	
 	public static int getDefaultDistribution() {
-		return getIntPreference(IPreferenceConstants.DEFAULT_EXTERNAL_MULE_ROOT);
+		return getIntPreference(ICorePreferenceConstants.DEFAULT_EXTERNAL_MULE_ROOT);
 		
 	}
 
 	public static void setDistributions(String[] distributions, int selected) {
-		int oldMax = getIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
+		int oldMax = getIntPreference(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_COUNT);
 		
-		setIntPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_COUNT, distributions.length);
+		setIntPreference(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_COUNT, distributions.length);
 		int i = 0;
 		for (; i < distributions.length; ++i) {
-			setStringPreference(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i, distributions[i]);
+			setStringPreference(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i, distributions[i]);
 		}
 		for (; i < oldMax; ++i) {
-			clearPreferenceValue(IPreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
+			clearPreferenceValue(ICorePreferenceConstants.EXTERNAL_MULE_ROOT_PREFIX + i);
 		}
+		setIntPreference(ICorePreferenceConstants.DEFAULT_EXTERNAL_MULE_ROOT, selected);
 	}
 	
 	/**

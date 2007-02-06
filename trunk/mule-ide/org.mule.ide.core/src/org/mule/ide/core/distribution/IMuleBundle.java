@@ -1,4 +1,4 @@
-/*
+/**
  * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
@@ -8,14 +8,14 @@
  * MULE_LICENSE.txt file.
  */
 
-package org.mule.ide.config.mulemodel.presentation.util;
+package org.mule.ide.core.distribution;
 
-import org.eclipse.ui.part.MultiPageEditorPart;
+import java.io.File;
+import java.io.IOException;
 
-public abstract class EMFEditor extends MultiPageEditorPart {
-
-	public EMFEditor() {
-		super();
-	}
-
+public interface IMuleBundle {
+	String getName();
+	IMuleBundle[] getMuleDependencies() throws IOException;
+	String[] getOtherDependencies() throws IOException;
+	File getSourcePath();
 }
