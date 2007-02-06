@@ -60,7 +60,7 @@ public abstract class AbstractJmxSupport implements JmxSupport
     {
         // TODO add some config options to the JmxAgent
         String domain = DEFAULT_JMX_DOMAIN_PREFIX;
-        String instanceId = StringUtils.defaultIfEmpty(MuleManager.getInstance().getId(), StringUtils.EMPTY);
+        String instanceId = StringUtils.defaultString(MuleManager.getInstance().getId());
         if (instanceId.length() > 0)
         {
             domain += "." + instanceId;
