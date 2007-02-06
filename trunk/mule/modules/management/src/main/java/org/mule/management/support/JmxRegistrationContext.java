@@ -45,7 +45,7 @@ public class JmxRegistrationContext
     private String resolvedDomain;
 
     /** Do not instantiate JmxRegistrationContext. */
-    private JmxRegistrationContext()
+    protected JmxRegistrationContext()
     {
         // no manager available, bail out
         if (!MuleManager.isInstanciated())
