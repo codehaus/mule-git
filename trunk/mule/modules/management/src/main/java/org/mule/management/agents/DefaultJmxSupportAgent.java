@@ -10,13 +10,13 @@
 
 package org.mule.management.agents;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mule.MuleManager;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
+import org.mule.util.StringUtils;
+
+import java.text.MessageFormat;
 
 /**
  * TODO document.
@@ -27,6 +27,11 @@ public class DefaultJmxSupportAgent implements UMOAgent
     private String name = "Default Jmx";
     private boolean loadJdmkAgent = false;
     private boolean loadMx4jAgent = false;
+
+    private String port;
+    private String host;
+    public static final String DEFAULT_HOST = "localhost";
+    public static final String DEFAULT_PORT = "1099";
 
     /**
      * Gets the name of this agent
@@ -51,7 +56,7 @@ public class DefaultJmxSupportAgent implements UMOAgent
     /**
      * Should be a 1 line description of the agent
      * 
-     * @return
+     * @return agent description
      */
     public String getDescription()
     {
@@ -155,7 +160,19 @@ public class DefaultJmxSupportAgent implements UMOAgent
     protected JmxAgent createJmxAgent()
     {
         JmxAgent agent = new JmxAgent();
-        agent.setConnectorServerUrl(JmxAgent.DEFAULT_REMOTING_URI);
+        String remotingUri;
+        if (StringUtils.isBlank(host) && StringUtils.isBlank(port))
+        {
+            remotingUri = JmxAgent.DEFAULT_REMOTING_URI;
+        }
+        else
+        {
+            remotingUri =
+                    MessageFormat.format("service:jmx:rmi:///jndi/rmi://{0}:{1}/server",
+                                         new Object[] {StringUtils.defaultString(host, DEFAULT_HOST),
+                                                       StringUtils.defaultString(port, DEFAULT_PORT)});
+        }
+        agent.setConnectorServerUrl(remotingUri);
         return agent;
     }
 
@@ -166,7 +183,10 @@ public class DefaultJmxSupportAgent implements UMOAgent
 
     protected RmiRegistryAgent createRmiAgent()
     {
-        return new RmiRegistryAgent();
+        final RmiRegistryAgent agent = new RmiRegistryAgent();
+        agent.setHost(StringUtils.defaultString(host, DEFAULT_HOST));
+        agent.setPort(StringUtils.defaultString(port, DEFAULT_PORT));
+        return agent;
     }
 
     protected JmxServerNotificationAgent createJmxNotificationAgent()
@@ -207,5 +227,26 @@ public class DefaultJmxSupportAgent implements UMOAgent
     public void setLoadMx4jAgent(boolean loadMx4jAgent)
     {
         this.loadMx4jAgent = loadMx4jAgent;
+    }
+
+
+    public String getPort()
+    {
+        return port;
+    }
+
+    public void setPort(final String port)
+    {
+        this.port = port;
+    }
+
+    public String getHost()
+    {
+        return host;
+    }
+
+    public void setHost(final String host)
+    {
+        this.host = host;
     }
 }
