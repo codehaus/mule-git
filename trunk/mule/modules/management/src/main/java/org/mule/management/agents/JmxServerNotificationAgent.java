@@ -64,12 +64,12 @@ public class JmxServerNotificationAgent extends AbstractNotificationLoggerAgent
         try
         {
             mBeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
-            broadcasterObjectName = ObjectName.getInstance(jmxSupport.getDomainName() + ":" + BROADCASTER_JMX_OBJECT_NAME);
+            broadcasterObjectName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + BROADCASTER_JMX_OBJECT_NAME);
             broadcastNotificationMbean = new BroadcastNotificationService();
             mBeanServer.registerMBean(broadcastNotificationMbean, broadcasterObjectName);
             if (registerListenerMbean)
             {
-                listenerObjectName = ObjectName.getInstance(jmxSupport.getDomainName() + ":" + LISTENER_JMX_OBJECT_NAME);
+                listenerObjectName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + LISTENER_JMX_OBJECT_NAME);
                 NotificationListener mbean = new NotificationListener();
                 broadcastNotificationMbean.addNotificationListener(mbean, null, null);
                 mBeanServer.registerMBean(mbean, listenerObjectName);
