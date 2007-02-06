@@ -97,7 +97,7 @@ public class JmxAgent implements UMOAgent
     private final AtomicBoolean serverCreated = new AtomicBoolean(false);
     private final AtomicBoolean initialized = new AtomicBoolean(false);
 
-    private JmxSupportFactory jmxSupportFactory = new AutoDiscoveryJmxSupportFactory();
+    private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     private JmxSupport jmxSupport;
 
     static {

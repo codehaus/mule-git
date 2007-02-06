@@ -86,7 +86,7 @@ public class Mx4jAgent implements UMOAgent
     // SSL/TLS socket factory config
     private Map socketFactoryProperties = new HashMap();
 
-    private JmxSupportFactory jmxSupportFactory = new AutoDiscoveryJmxSupportFactory();
+    private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     private JmxSupport jmxSupport;
 
     protected HttpAdaptor createAdaptor() throws Exception
