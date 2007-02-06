@@ -24,14 +24,14 @@ import java.text.MessageFormat;
 public class DefaultJmxSupportAgent implements UMOAgent
 {
 
+    public static final String DEFAULT_HOST = "localhost";
+    public static final String DEFAULT_PORT = "1099";
+
     private String name = "Default Jmx";
     private boolean loadJdmkAgent = false;
     private boolean loadMx4jAgent = false;
-
     private String port;
     private String host;
-    public static final String DEFAULT_HOST = "localhost";
-    public static final String DEFAULT_PORT = "1099";
 
     /**
      * Gets the name of this agent

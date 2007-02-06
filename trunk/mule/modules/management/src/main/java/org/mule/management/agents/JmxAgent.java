@@ -62,6 +62,7 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
+import javax.management.remote.rmi.RMIConnectorServer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,7 +103,7 @@ public class JmxAgent implements UMOAgent
 
     static {
         Map props = new HashMap(1);
-        props.put("jmx.remote.jndi.rebind", "true");
+        props.put(RMIConnectorServer.JNDI_REBIND_ATTRIBUTE, "true");
         DEFAULT_CONNECTOR_SERVER_PROPERTIES = Collections.unmodifiableMap(props);
     }
 
