@@ -21,6 +21,8 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+
 import java.beans.ExceptionListener;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -132,6 +134,11 @@ public interface UMOConnector extends Disposable, Initialisable
      * @param exception the exception that was caught
      */
     void handleException(Exception exception);
+
+    /**
+     * Returns a Scheduler service for execution of periodic tasks.
+     */
+    ScheduledExecutorService getScheduler();
 
     /**
      * The dispatcher factory is used to create a message dispatcher of the current

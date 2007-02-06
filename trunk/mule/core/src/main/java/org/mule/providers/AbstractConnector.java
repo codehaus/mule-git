@@ -783,12 +783,11 @@ public abstract class AbstractConnector
 
         if (receivers != null && !receivers.isEmpty())
         {
-            UMOMessageReceiver receiver = (UMOMessageReceiver)receivers.remove(getReceiverKey(component,
+            UMOMessageReceiver receiver = (UMOMessageReceiver)receivers.remove(this.getReceiverKey(component,
                 endpoint));
             if (receiver != null)
             {
-                destroyReceiver(receiver, endpoint);
-                receiver.dispose();
+                this.destroyReceiver(receiver, endpoint);
             }
         }
     }
@@ -823,7 +822,7 @@ public abstract class AbstractConnector
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
 
-    public void destroyReceiver(UMOMessageReceiver receiver, UMOEndpoint endpoint) throws Exception
+    protected void destroyReceiver(UMOMessageReceiver receiver, UMOEndpoint endpoint) throws Exception
     {
         receiver.dispose();
     }
@@ -1272,7 +1271,7 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message receivers.
      */
-    synchronized UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
+    protected synchronized UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
         if (receiverWorkManager == null)
@@ -1288,7 +1287,7 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message dispatchers.
      */
-    synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
+    protected synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
         if (dispatcherWorkManager == null)
@@ -1301,19 +1300,14 @@ public abstract class AbstractConnector
         return dispatcherWorkManager;
     }
 
-    /**
-     * Returns a Scheduler service for periodic tasks, currently limited to internal
-     * use. Note: getScheduler() currently conflicts with the same method in the
-     * Quartz transport
-     */
-    synchronized ScheduledExecutorService getScheduler()
+    public synchronized ScheduledExecutorService getScheduler()
     {
         if (scheduler == null)
         {
             ThreadFactory stf = new NamedThreadFactory(this.getName() + ".scheduler");
             ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(1, stf);
             stpe.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-            stpe.setKeepAliveTime(getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
+            stpe.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
             scheduler = stpe;
         }
 
