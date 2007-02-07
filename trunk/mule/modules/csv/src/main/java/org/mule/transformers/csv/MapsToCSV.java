@@ -19,11 +19,11 @@ import java.util.List;
 /**
  * Transform a List of Maps to CSV. Each Map represents the fields of a single row.
  */
-public class MapListToCSV extends AbstractCSVTransformer
+public class MapsToCSV extends AbstractCSVTransformer
 {
     private static final long serialVersionUID = -8424314305961170435L;
 
-    public MapListToCSV()
+    public MapsToCSV()
     {
         super.registerSourceType(List.class);
         super.setReturnClass(String.class);
@@ -41,6 +41,7 @@ public class MapListToCSV extends AbstractCSVTransformer
         {
             Writer stringWriter = new StringWriter(80);
             CSVOutputParser writer = new CSVOutputParser(stringWriter, separator, quoteCharacter);
+            writer.setLabels(fieldNames);
             writer.write(src);
             return stringWriter.toString();
         }

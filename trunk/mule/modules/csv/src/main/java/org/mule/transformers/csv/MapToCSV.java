@@ -41,6 +41,7 @@ public class MapToCSV extends AbstractCSVTransformer
         {
             Writer stringWriter = new StringWriter();
             CSVOutputParser writer = new CSVOutputParser(stringWriter, separator, quoteCharacter);
+            writer.setLabels(fieldNames);
             writer.write(src);
             return stringWriter.toString();
         }

@@ -25,11 +25,11 @@ import java.util.List;
  * names. Field names can be passed in via the configuration or can be parsed out of
  * the first line of the CSV data.
  */
-public class CSVToMapList extends AbstractCSVTransformer
+public class CSVToMaps extends AbstractCSVTransformer
 {
     private static final long serialVersionUID = 4050673946506172890L;
 
-    public CSVToMapList()
+    public CSVToMaps()
     {
         registerSourceType(String.class);
         registerSourceType(byte[].class);
