@@ -32,6 +32,7 @@ import org.mule.management.mbeans.StatisticsService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
+import org.mule.management.support.SimplePasswordJmxAuthenticator;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -41,16 +42,15 @@ import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
@@ -59,11 +59,13 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
+import javax.management.remote.JMXAuthenticator;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -76,6 +78,11 @@ public class JmxAgent implements UMOAgent
     public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
     // populated with values below in a static initializer
     public static final Map DEFAULT_CONNECTOR_SERVER_PROPERTIES;
+
+    /**
+     * Default JMX Authenticator to use for securing remote access.
+     */
+    public static final String DEFAULT_JMX_AUTHENTICATOR = SimplePasswordJmxAuthenticator.class.getName();
 
     /**
      * Logger used by this class
@@ -100,6 +107,12 @@ public class JmxAgent implements UMOAgent
 
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
+
+    /**
+     * Username/password combinations for JMX Remoting
+     * authentication.
+     */
+    private Map credentials = new HashMap();
 
     static {
         Map props = new HashMap(1);
@@ -173,6 +186,15 @@ public class JmxAgent implements UMOAgent
                 if (connectorServerProperties == null)
                 {
                     connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+                }
+                // TODO custom authenticator may have its own security config, refactor
+                if (!credentials.isEmpty())
+                {
+                    JMXAuthenticator jmxAuthenticator = (JMXAuthenticator) ClassUtils.instanciateClass(
+                                                                    DEFAULT_JMX_AUTHENTICATOR, ClassUtils.NO_ARGS);
+                    // TODO support for custom authenticators 
+                    ((SimplePasswordJmxAuthenticator) jmxAuthenticator).setCredentials(credentials);
+                    connectorServerProperties.put(JMXConnectorServer.AUTHENTICATOR, jmxAuthenticator);
                 }
                 connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, connectorServerProperties, mBeanServer);
             } catch (Exception e) {
@@ -558,5 +580,20 @@ public class JmxAgent implements UMOAgent
     public void setJmxSupportFactory(JmxSupportFactory jmxSupportFactory)
     {
         this.jmxSupportFactory = jmxSupportFactory;
+    }
+
+
+    /**
+     * Setter for property 'credentials'.
+     *
+     * @param newCredentials Value to set for property 'credentials'.
+     */
+    public void setCredentials(final Map newCredentials)
+    {
+        this.credentials.clear();
+        if (newCredentials != null && !newCredentials.isEmpty())
+        {
+            this.credentials.putAll(newCredentials);
+        }
     }
 }
