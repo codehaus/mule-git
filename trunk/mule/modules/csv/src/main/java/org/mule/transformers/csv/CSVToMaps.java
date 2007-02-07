@@ -11,12 +11,15 @@
 package org.mule.transformers.csv;
 
 import org.mule.umo.transformer.TransformerException;
+import org.mule.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -44,9 +47,11 @@ public class CSVToMaps extends AbstractCSVTransformer
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
+        Reader reader = null;
+
         try
         {
-            Reader reader = this.getReader(src, encoding);
+            reader = this.getReader(src, encoding);
             CSVInputParser parser = new CSVInputParser(reader, separator, quoteCharacter, startLine);
             parser.setFirstLineLabels(firstLineLabels);
             parser.setLabels(fieldNames);
@@ -56,41 +61,31 @@ public class CSVToMaps extends AbstractCSVTransformer
         {
             throw new TransformerException(this, e);
         }
+        finally
+        {
+            IOUtils.closeQuietly(reader);
+        }
     }
 
-    protected Reader getReader(Object src, String encoding) throws Exception
+    protected Reader getReader(Object src, String encoding)
+        throws UnsupportedEncodingException, FileNotFoundException
     {
         if (src instanceof byte[])
         {
-            return getReader((byte[])src, encoding);
+            return new StringReader(new String((byte[])src, encoding));
         }
         else if (src instanceof String)
         {
-            return getReader((String)src);
+            return new StringReader((String)src);
         }
         else if (src instanceof File)
         {
-            return getReader((File)src);
+            return new BufferedReader(new FileReader((File)src));
         }
         else
         {
-            return null;
+            throw new IllegalArgumentException(src.getClass().getName());
         }
-    }
-
-    protected Reader getReader(byte[] src, String encoding) throws Exception
-    {
-        return getReader(new String(src, encoding));
-    }
-
-    protected Reader getReader(String src) throws Exception
-    {
-        return new BufferedReader(new StringReader(src));
-    }
-
-    protected Reader getReader(File src) throws Exception
-    {
-        return new BufferedReader(new FileReader(src));
     }
 
 }
