@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -43,15 +45,18 @@ import org.mule.ide.core.model.IMuleModel;
 import org.mule.ide.core.nature.MuleNature;
 import org.mule.ide.ui.IMuleImages;
 import org.mule.ide.ui.MulePlugin;
+import org.w3c.dom.Document;
 
 /**
  * Wizard for creating a new Mule project.
  */
 public class MuleProjectWizard extends Wizard implements INewWizard {
 
-	private static final String MULE_MODULE_BUILDER_NAME = "mule-module-builder";
+	private static final String MULE_MODULE_BUILDER_NAME = "module-builder";
 
-	private static final String MULE_TRANSPORT_TCP_NAME = "mule-transport-tcp";
+	private static final String MULE_TRANSPORT_TCP_NAME = "transport-tcp";
+
+	private static final String MULE_PREFIX = "mule-";
 
 	/** The workbench handle */
 	private IWorkbench workbench;
@@ -127,7 +132,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			}
 
 			public IMuleBundle[] getMuleDependencies() throws IOException {
-				return new IMuleBundle[] { distribution.getCoreModule() };
+				return new IMuleBundle[] { }; // No core, always implied
 			}
 
 			public String getName() {
@@ -166,7 +171,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			IMuleBundle[] bundles;
 			bundles = sample.getMuleDependencies();
 			for (int i=0; i<bundles.length; ++i)
-				moduleNames.add(bundles[i].getName());
+				moduleNames.add(bundles[i].getName().substring(MULE_PREFIX.length())); // skip MULE prefix
 
 			// Add mandatory modules (we can't launch without these)
 			moduleNames.add(MULE_TRANSPORT_TCP_NAME);
@@ -195,7 +200,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			File[] dirs = sample.getSourceFolders();
 			for (int i=0; i<dirs.length; ++i) {
 				File[] subs = dirs[i].listFiles();
-				for (int j = 0; i < subs.length; ++j )
+				for (int j = 0; j < subs.length; ++j )
 					copyIntoProject(subs[j], sourceFolder);
 			}
 		} catch (JavaModelException e) {
@@ -310,7 +315,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 					IFile newConfigFile = configFolder.getFile(configFile.getName());
 					newConfigFile.create(new FileInputStream(configFile), true, new NullProgressMonitor());
 	
-					if (configFile.getName().endsWith(".xml")) {
+					if (configFile.getName().endsWith(".xml") && smellsLikeMuleConfigFile(configFile)) {
 						addedConfigs.add(newConfigFile);
 					}
 				}
@@ -336,6 +341,19 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			model.addMuleConfigSet(newSet);
 		}
 		model.save();
+	}
+
+	private boolean smellsLikeMuleConfigFile(File configFile) {
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setValidating(false);
+			dbf.setNamespaceAware(true);
+			Document doc = dbf.newDocumentBuilder().parse(configFile);
+			return "mule-configuration".equals(doc.getDocumentElement().getLocalName());
+		} catch (Throwable t) {
+			// It's OK to ignore any old exception here
+		}
+		return false; // It's not a Mule Config file, then
 	}
 
 	/*

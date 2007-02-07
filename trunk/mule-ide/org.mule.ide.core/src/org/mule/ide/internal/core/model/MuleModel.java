@@ -42,10 +42,10 @@ import org.mule.ide.util.MuleIDEResourceFactoryImpl;
 public class MuleModel extends MuleModelElement implements IMuleModel {
 
     /** Map of Mule configurations hashed by unique id */
-    private Map muleConfigurations = new HashMap();
+    private Map muleConfigurations = Collections.synchronizedMap(new HashMap());
 
     /** Map of Mule config sets hashed by unique id */
-    private Map muleConfigSets = new HashMap();
+    private Map muleConfigSets = Collections.synchronizedMap(new HashMap());
 
     /** The project this model belongs to */
     private IProject project;

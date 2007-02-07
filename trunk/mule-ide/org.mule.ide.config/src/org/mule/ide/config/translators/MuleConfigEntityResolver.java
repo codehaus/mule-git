@@ -12,7 +12,7 @@ package org.mule.ide.config.translators;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -38,7 +38,7 @@ public class MuleConfigEntityResolver implements EntityResolver {
 		if (MuleConfigConstants.MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId) || MuleConfigConstants.LEGACY_MULE_CONFIG_PUBLIC_ID_1_0.equals(publicId)) {
 			Implementation plugin = MuleModelPlugin.getPlugin();
 			if (plugin != null) {
-				URL url = FileLocator.find(plugin.getBundle(), new Path("schemas/mule-configuration_1_0.dtd"), Collections.emptyMap()); //$NON-NLS-1$
+				URL url = FileLocator.find(plugin.getBundle(), new Path("schemas/mule-configuration_1_0.dtd"), new TreeMap()); //$NON-NLS-1$
 				if (url != null) return new InputSource(url.openStream());
 			}
 		}

@@ -38,7 +38,6 @@ public class MuleClasspathContainerPage extends WizardPage implements
 	public void createControl(Composite parent) {
 		chooserPanel = new MuleClasspathChooserPanel(parent, SWT.NONE, false);
 		setControl(chooserPanel);
-		chooserPanel.initializeWidgets(getSelection().getPath());
 	}
 
 	public void setVisible(boolean visible) {

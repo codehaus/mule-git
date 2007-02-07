@@ -4,7 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.mule.ide.core.distribution.IMuleBundle;
 import org.mule.ide.core.distribution.IMuleDistribution;
 import org.mule.ide.core.distribution.IMuleSample;
 import org.mule.ide.ui.panels.ProjectContentChooser;

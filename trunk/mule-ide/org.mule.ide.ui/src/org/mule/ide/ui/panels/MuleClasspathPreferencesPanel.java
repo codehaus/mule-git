@@ -3,7 +3,6 @@ package org.mule.ide.ui.panels;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -158,13 +157,13 @@ public class MuleClasspathPreferencesPanel {
 
 	private void initDistros(String[] distributions, int defaultDistribution) {
 		pathList.clear();
-		Collections.addAll(pathList, (Object[])distributions);
 		defaultIndex = defaultDistribution;
 		distros.clearAll();
 		for (int i = 0; i < distributions.length; ++i) {
 			TableItem ti = new TableItem(distros, SWT.CHECK);
 			ti.setChecked(i == defaultDistribution);
 			ti.setText(distributions[i]);
+			pathList.add(distributions[i]);
 		}
 		distros.select(defaultIndex);
 	}

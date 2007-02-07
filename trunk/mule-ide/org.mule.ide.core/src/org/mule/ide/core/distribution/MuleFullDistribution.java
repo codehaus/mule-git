@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -23,13 +22,8 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -110,68 +104,37 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 		return (File)stemToFileMap.get(trimVersion(name));
 	}
 
-	private NamespaceContext pomCtx = new NamespaceContext()
-    {
-        public String getNamespaceURI(String prefix)
-        {
-            if (prefix.equals("pom"))
-                return "http://maven.apache.org/POM/4.0.0";
-            else
-                return XMLConstants.NULL_NS_URI;
-        }
-        
-        public String getPrefix(String namespace)
-        {
-                return null;
-        }
-
-        public Iterator getPrefixes(String namespace)
-        {
-            return null;
-        }
-    };  
-    
 	public void gatherSamples(File dir, Collection dest) {
-		XPathFactory factory = XPathFactory.newInstance();
-		javax.xml.xpath.XPath xpath = factory.newXPath();
-		xpath.setNamespaceContext(pomCtx);
 		try {
-			final javax.xml.xpath.XPathExpression xpathName = xpath.compile("/pom:project/pom:name");
-			final javax.xml.xpath.XPathExpression xpathDescription = xpath.compile("/pom:project/pom:description");
-			final javax.xml.xpath.XPathExpression xpathDependencyArtifactIds = xpath.compile("/pom:project/pom:dependencies/pom:dependency/pom:artifactId");
-			final javax.xml.xpath.XPathExpression xpathModules = xpath.compile("/pom:project/pom:dependencies/pom:modules/pom:module");
-			
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setValidating(false);
 			dbf.setNamespaceAware(true);
 			File pomFile = new File(dir, "pom.xml");
 			if (! pomFile.exists()) return;
 			Document doc = dbf.newDocumentBuilder().parse(pomFile);
-			NodeList nl = (NodeList)xpathModules.evaluate(doc, XPathConstants.NODESET);
+			
+			NodeList nl = XMLUtils.queryDomNodes(doc, "project/dependencies/modules/module");
 			if (nl.getLength() > 0) {
 				// Has submodules....
 				for (int i=0; i < nl.getLength(); ++i) {
-					String subModule = nl.item(i).getTextContent();
+					String subModule = XMLUtils.text(nl.item(i));
 					gatherSamples(new File(dir, subModule), dest);
 				}
 			} else {
-				final String name = (String)xpathName.evaluate(doc);
-				final String description = (String)xpathDescription.evaluate(doc);
+				final String name = XMLUtils.queryDomString(doc, "project/name");
+				final String description = XMLUtils.queryDomString(doc, "project/description");
 				
-				NodeList depNodes = (NodeList)xpathDependencyArtifactIds.evaluate(doc, XPathConstants.NODESET);
+				NodeList depNodes = XMLUtils.queryDomNodes(doc, "project/dependencies/dependency/artifactId");
 				Set dependencies = new HashSet();
 				if (depNodes.getLength() > 0) {
 					// Has submodules....
 					for (int i=0; i < depNodes.getLength(); ++i) {
-						String dependency = depNodes.item(i).getTextContent();
+						String dependency = XMLUtils.text(depNodes.item(i));
 						dependencies.add(getMuleModule(dependency));
 					}
 				}
 				dest.add(new FullJarSample(name, description, (IMuleBundle[]) dependencies.toArray(new IMuleBundle[dependencies.size()]), dir));
 			}
-		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -199,9 +162,11 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 		for (int i = 0; i < bundles.length; ++i) {
 			try {
 				String[] optJars = bundles[i].getOtherDependencies();
-				Collections.addAll(libs, optJars);
+				for (int j = 0; j < optJars.length; ++j) libs.add(optJars[j]);
 			} catch (IOException ioe) { /* IGNORE */ }
 		}
+		// We now have all the names, now filter for version mismatches (getOptLibraryFile
+		// handles this)
 		Set files = new TreeSet();
 		for (Iterator it = libs.iterator(); it.hasNext(); )
 			files.add(getOptLibraryFile((String)it.next()));
@@ -245,22 +210,23 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 	}
 	
 	public IMuleBundle[] getTransitiveMuleDependencies(IMuleBundle[] bundles) {
-		Queue q = new LinkedList();
-		Collections.addAll(q, bundles);
+		List q = new LinkedList();
+		for (int i = 0; i < bundles.length; ++i) q.add(bundles[i]);
 		
 		Set libs = new HashSet();
 		while (q.size() > 0) {
-			IMuleBundle consider = (IMuleBundle)q.remove();
-			libs.add(consider);
-			try {
-				IMuleBundle[] directDependencies = consider.getMuleDependencies();
-				for (int i = 0; i < directDependencies.length; ++i) {
-					if (! libs.contains(directDependencies[i]))
-					{
-						q.offer(directDependencies[i]);
+			IMuleBundle consider = (IMuleBundle)q.remove(0);
+			if (libs.add(consider)) {
+				try {
+					IMuleBundle[] directDependencies = consider.getMuleDependencies();
+					for (int i = 0; i < directDependencies.length; ++i) {
+						if (! libs.contains(directDependencies[i]))
+						{
+							q.add(directDependencies[i]);
+						}
 					}
-				}
-			} catch (IOException ioe) { /* IGNORE */ }
+				} catch (IOException ioe) { /* IGNORE */ }
+			}
 		}
 		return (IMuleBundle[])libs.toArray(new IMuleBundle[libs.size()]);
 	}

@@ -162,6 +162,7 @@ public class MuleClasspathChooserPanel extends Composite {
 		initDistributions();
 		setDistributionSelection(hint);
 		if (! omitModuleSelection) {
+			initializeBundleTable(getChosenDistribution());
 			setModuleSelection(MuleClasspathUtils.commaStringToSet(bundleSelectString));
 			
 			addDistributionChangeListener(new IDistributionChangeListener() {

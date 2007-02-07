@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -226,7 +227,7 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
     public static URL findResourceURL(String bundleId, String path) {
         Bundle bundle = Platform.getBundle(bundleId);
         if (bundle == null) return null;
-        return Platform.find(bundle, new Path(path));
+        return FileLocator.find(bundle, new Path(path), null);
     }
 
     public static URL findResourceURL(String path) {
