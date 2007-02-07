@@ -36,6 +36,7 @@ public class CSVToMaps extends AbstractCSVTransformer
     {
         registerSourceType(String.class);
         registerSourceType(byte[].class);
+        registerSourceType(File.class);
         setReturnClass(List.class);
     }
 
