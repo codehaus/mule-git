@@ -128,12 +128,12 @@ public abstract class AbstractConnector
     /**
      * The name that identifies the endpoint
      */
-    protected String name = null;
+    protected String name;
 
     /**
      * The exception strategy used by this connector
      */
-    protected ExceptionListener exceptionListener = null;
+    protected ExceptionListener exceptionListener;
 
     /**
      * Determines in the connector is alive and well
@@ -163,12 +163,12 @@ public abstract class AbstractConnector
     /**
      * Defines the dispatcher threading model
      */
-    private ThreadingProfile dispatcherThreadingProfile = null;
+    private ThreadingProfile dispatcherThreadingProfile;
 
     /**
      * Defines the receiver threading model
      */
-    private ThreadingProfile receiverThreadingProfile = null;
+    private ThreadingProfile receiverThreadingProfile;
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
@@ -184,19 +184,19 @@ public abstract class AbstractConnector
      * The service descriptor can define a default inbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultInboundTransformer = null;
+    protected UMOTransformer defaultInboundTransformer;
 
     /**
      * The service descriptor can define a default outbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultOutboundTransformer = null;
+    protected UMOTransformer defaultOutboundTransformer;
 
     /**
      * For some connectors such as http, a response transformer is required or where
      * a replyTo needs a trnasformer
      */
-    protected UMOTransformer defaultResponseTransformer = null;
+    protected UMOTransformer defaultResponseTransformer;
 
     private ConnectionStrategy connectionStrategy;
 
@@ -212,26 +212,26 @@ public abstract class AbstractConnector
 
     /**
      * Whether to fire message notifications for every message that is sent or
-     * received from this connector
+     * received from this connector. Default is {@code false}.
      */
-    private boolean enableMessageEvents = false;
+    private boolean enableMessageEvents;
 
     private final List supportedProtocols;
 
     /**
      * A shared work manager for all receivers registered with this connector.
      */
-    private UMOWorkManager receiverWorkManager = null;
+    private UMOWorkManager receiverWorkManager;
 
     /**
      * A shared work manager for all dispatchers created for this connector.
      */
-    private UMOWorkManager dispatcherWorkManager = null;
+    private UMOWorkManager dispatcherWorkManager;
 
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    private ScheduledExecutorService scheduler = null;
+    private ScheduledExecutorService scheduler;
 
     /**
      * Holds the service configuration for this connector
