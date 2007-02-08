@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id$ 
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,17 +10,18 @@
 
 package org.mule.providers.jms.filters;
 
+import org.mule.umo.UMOFilter;
+import org.mule.umo.UMOMessage;
+import org.mule.util.StringUtils;
+
 import java.util.regex.Pattern;
 
 import javax.jms.Message;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
-import org.mule.util.StringUtils;
 
-public class JmsPropertyFilter implements UMOFilter 
+public class JmsPropertyFilter implements UMOFilter
 {
     /**
      * Logger used by this class
@@ -49,86 +50,104 @@ public class JmsPropertyFilter implements UMOFilter
 
     public boolean accept(UMOMessage message)
     {
-        if (StringUtils.isBlank(propertyName)) {
+        if (StringUtils.isBlank(propertyName))
+        {
             logger.warn("No property name was specified");
             return false;
         }
-        
-        if (StringUtils.isBlank(expression) && pattern == null) {
+
+        if (StringUtils.isBlank(expression) && pattern == null)
+        {
             logger.warn("Either no expression or pattern was specified");
             return false;
         }
 
-        if (message.getPayload() instanceof javax.jms.Message) {
+        if (message.getPayload() instanceof javax.jms.Message)
+        {
             try
-        {
-                Message m = (javax.jms.Message)message.getPayload();
+            {
+                Message m = (javax.jms.Message) message.getPayload();
 
-        if (StringUtils.isBlank(propertyClass)) {
-            Object object = m.getObjectProperty(propertyName);
-            if (object == null) return false;
-            String value = object.toString();
+                if (StringUtils.isBlank(propertyClass))
+                {
+                    Object object = m.getObjectProperty(propertyName);
+                    if (object == null)
+                    {
+                        return false;
+                    }
+                    String value = object.toString();
 
-            if (pattern != null)
-            {
-            return pattern.matcher(value).find();
-            }
-            else
-            {
-            return value.equals(expression);
-            }
-        }
-        else if (propertyClass.equals("java.lang.String"))
-        {
-            String value = m.getStringProperty(propertyName);
-            if (value == null) return false;
+                    if (pattern != null)
+                    {
+                        return pattern.matcher(value).find();
+                    }
+                    else
+                    {
+                        return value.equals(expression);
+                    }
+                }
+                else if (propertyClass.equals("java.lang.String"))
+                {
+                    String value = m.getStringProperty(propertyName);
+                    if (value == null)
+                    {
+                        return false;
+                    }
 
-            if (pattern != null)
-            {
-            return pattern.matcher(value).find();
+                    if (pattern != null)
+                    {
+                        return pattern.matcher(value).find();
+                    }
+                    else
+                    {
+                        return value.equals(expression);
+                    }
+                }
+                else if (propertyClass.equals("java.lang.Integer"))
+                {
+                    int value = m.getIntProperty(propertyName);
+                    int match = Integer.parseInt(expression);
+                    return (value == match);
+                }
+                else if (propertyClass.equals("java.lang.Short"))
+                {
+                    short value = m.getShortProperty(propertyName);
+                    short match = Short.parseShort(expression);
+                    return (value == match);
+                }
             }
-            else
+            catch (NumberFormatException nfe)
             {
-            return value.equals(expression);
+                logger.warn("Unable to convert expression " +
+                            expression + " to " + propertyClass + ": " +
+                            nfe.toString());
             }
-        } else if (propertyClass.equals("java.lang.Integer")) {
-            int value = m.getIntProperty(propertyName);
-            int match = Integer.parseInt(expression);
-            return (value == match);
-        } else if (propertyClass.equals("java.lang.Short")) {
-            short value = m.getShortProperty(propertyName);
-            short match = Short.parseShort(expression);
-            return (value == match);
+            catch (Exception e)
+            {
+                logger.warn("Error filtering on property " + propertyName
+                            + ": " + e.toString());
+            }
         }
-        } catch (NumberFormatException nfe) {
-            logger.warn("Unable to convert expression " +
-            expression + " to " + propertyClass + ": " +
-                nfe.toString());
-        }
-        catch (Exception e)
+        else
         {
-        logger.warn("Error filtering on property " + propertyName
-            + ": " + e.toString());
-        }
-        } else {
             logger.warn("Expected a payload of javax.jms.Message but instead received " + message.getPayload().getClass().getName());
         }
 
-         return false;
+        return false;
     }
 
     /**
      * Sets the match expression
      */
-    public void setExpression(String expression) 
+    public void setExpression(String expression)
     {
         this.expression = expression;
     }
-    
+
     /**
      * Returns the match expression
      */
-    public String getExpression() 
+    public String getExpression()
     {
         return expression;
     }
@@ -136,15 +155,15 @@ public class JmsPropertyFilter implements UMOFilter
     /**
      * Sets the name of the property
      */
-    public void setPropertyName(String propertyName) 
+    public void setPropertyName(String propertyName)
     {
         this.propertyName = propertyName;
     }
-    
+
     /**
      * Returns the name of the property
      */
-    public String getPropertyName() 
+    public String getPropertyName()
     {
         return propertyName;
     }
@@ -152,15 +171,15 @@ public class JmsPropertyFilter implements UMOFilter
     /**
      * Sets the class type of the property
      */
-    public void setPropertyClass(String propertyClass) 
+    public void setPropertyClass(String propertyClass)
     {
         this.propertyClass = propertyClass;
     }
-    
+
     /**
      * Returns the class type of the property
      */
-    public String getPropertyClass() 
+    public String getPropertyClass()
     {
         return propertyClass;
     }

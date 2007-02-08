@@ -40,8 +40,6 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 import java.util.Map;
@@ -60,6 +58,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.UnhandledException;
 
 /**
