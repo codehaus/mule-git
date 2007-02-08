@@ -1350,11 +1350,11 @@ public abstract class AbstractConnector
     {
         if (scheduler == null)
         {
-            ThreadFactory stf = new NamedThreadFactory(this.getName() + ".scheduler");
-            ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(1, stf);
-            stpe.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-            stpe.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
-            scheduler = stpe;
+            ThreadFactory threadFactory = new NamedThreadFactory(this.getName() + ".scheduler");
+            ScheduledThreadPoolExecutor threadExecutor = new ScheduledThreadPoolExecutor(1, threadFactory);
+            threadExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+            threadExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
+            scheduler = threadExecutor;
         }
 
         return scheduler;
