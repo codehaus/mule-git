@@ -111,6 +111,11 @@ public abstract class AbstractConnector
     implements UMOConnector, ExceptionListener, UMOConnectable, WorkListener
 {
     /**
+     * Default number of concurrent transactional receivers.
+     */
+    public static final int DEFAULT_NUM_CONCURRENT_TX_RECEIVERS = 4;
+
+    /**
      * logger used by this class
      */
     protected transient Log logger = LogFactory.getLog(getClass());
@@ -178,7 +183,7 @@ public abstract class AbstractConnector
     /**
      * @see {@link #getNumberOfConcurrentTransactedReceivers()}
      */
-    protected int numberOfConcurrentTransactedReceivers = 4;
+    protected int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
     /**
      * The service descriptor can define a default inbound transformer to be used on
@@ -1186,7 +1191,7 @@ public abstract class AbstractConnector
     /**
      * Returns the number of concurrent receivers that will be launched when
      * {@link #isCreateMultipleTransactedReceivers()} returns <code>true</code>.
-     * By default the number is <strong>4</strong>.
+     * @see #DEFAULT_NUM_CONCURRENT_TX_RECEIVERS
      */
     public int getNumberOfConcurrentTransactedReceivers()
     {
