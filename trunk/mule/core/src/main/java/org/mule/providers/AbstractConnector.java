@@ -250,6 +250,7 @@ public abstract class AbstractConnector
      */
     protected UMOSessionHandler sessionHandler = new MuleSessionHandler();
 
+    /** Constructs a new AbstractConnector. */
     public AbstractConnector()
     {
         super();
@@ -278,21 +279,13 @@ public abstract class AbstractConnector
         receivers = new ConcurrentHashMap();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOConnector#getName()
-     */
+    /** {@inheritDoc} */
     public String getName()
     {
         return name;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOConnector#setName(java.lang.String)
-     */
+    /** {@inheritDoc} */
     public void setName(String newName)
     {
         if (newName == null)
@@ -308,11 +301,7 @@ public abstract class AbstractConnector
         name = newName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOConnector#create(java.util.HashMap)
-     */
+    /** {@inheritDoc} */
     public final synchronized void initialise() throws InitialisationException
     {
         if (initialised.get())
@@ -343,13 +332,10 @@ public abstract class AbstractConnector
         initialised.set(true);
     }
 
+    /** {@inheritDoc} */
     public abstract String getProtocol();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#start()
-     */
+    /** {@inheritDoc} */
     public final synchronized void startConnector() throws UMOException
     {
         checkDisposed();
@@ -398,21 +384,13 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#isStarted()
-     */
+    /** {@inheritDoc} */
     public boolean isStarted()
     {
         return started.get();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#stop()
-     */
+    /** {@inheritDoc} */
     public final synchronized void stopConnector() throws UMOException
     {
         if (isDisposed())
@@ -468,11 +446,7 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#shutdown()
-     */
+    /** {@inheritDoc} */
     public final synchronized void dispose()
     {
         disposing.set(true);
@@ -547,22 +521,13 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#isAlive()
-     */
+    /** {@inheritDoc} */
     public boolean isDisposed()
     {
         return disposed.get();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#handleException(java.lang.Object,
-     *      java.lang.Throwable)
-     */
+    /** {@inheritDoc} */
     public void handleException(Exception exception)
     {
         if (exceptionListener == null)
@@ -576,11 +541,7 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.util.ExceptionListener#onException(java.lang.Throwable)
-     */
+    /** {@inheritDoc} */
     public void exceptionThrown(Exception e)
     {
         handleException(e);
@@ -704,6 +665,7 @@ public abstract class AbstractConnector
         }
     }
 
+    /** {@inheritDoc} */
     public UMOMessageReceiver registerListener(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         if (endpoint == null)
@@ -756,6 +718,7 @@ public abstract class AbstractConnector
             .getEndpointURI().getAddress());
     }
 
+    /** {@inheritDoc} */
     public final void unregisterListener(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         if (component == null)
@@ -792,6 +755,11 @@ public abstract class AbstractConnector
         }
     }
 
+    /**
+     * Getter for property 'dispatcherThreadingProfile'.
+     *
+     * @return Value for property 'dispatcherThreadingProfile'.
+     */
     public synchronized ThreadingProfile getDispatcherThreadingProfile()
     {
         if (dispatcherThreadingProfile == null)
@@ -802,11 +770,21 @@ public abstract class AbstractConnector
         return dispatcherThreadingProfile;
     }
 
+    /**
+     * Setter for property 'dispatcherThreadingProfile'.
+     *
+     * @param dispatcherThreadingProfile Value to set for property 'dispatcherThreadingProfile'.
+     */
     public synchronized void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
     {
         this.dispatcherThreadingProfile = dispatcherThreadingProfile;
     }
 
+    /**
+     * Getter for property 'receiverThreadingProfile'.
+     *
+     * @return Value for property 'receiverThreadingProfile'.
+     */
     public synchronized ThreadingProfile getReceiverThreadingProfile()
     {
         if (receiverThreadingProfile == null)
@@ -817,6 +795,11 @@ public abstract class AbstractConnector
         return receiverThreadingProfile;
     }
 
+    /**
+     * Setter for property 'receiverThreadingProfile'.
+     *
+     * @param receiverThreadingProfile Value to set for property 'receiverThreadingProfile'.
+     */
     public synchronized void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
@@ -848,6 +831,11 @@ public abstract class AbstractConnector
      */
     protected abstract void doStop() throws UMOException;
 
+    /**
+     * Getter for property 'defaultInboundTransformer'.
+     *
+     * @return Value for property 'defaultInboundTransformer'.
+     */
     public UMOTransformer getDefaultInboundTransformer()
     {
         if (defaultInboundTransformer != null)
@@ -865,11 +853,21 @@ public abstract class AbstractConnector
         return null;
     }
 
+    /**
+     * Setter for property 'defaultInboundTransformer'.
+     *
+     * @param defaultInboundTransformer Value to set for property 'defaultInboundTransformer'.
+     */
     public void setDefaultInboundTransformer(UMOTransformer defaultInboundTransformer)
     {
         this.defaultInboundTransformer = defaultInboundTransformer;
     }
 
+    /**
+     * Getter for property 'defaultResponseTransformer'.
+     *
+     * @return Value for property 'defaultResponseTransformer'.
+     */
     public UMOTransformer getDefaultResponseTransformer()
     {
         if (defaultResponseTransformer != null)
@@ -887,6 +885,11 @@ public abstract class AbstractConnector
         return null;
     }
 
+    /**
+     * Getter for property 'defaultOutboundTransformer'.
+     *
+     * @return Value for property 'defaultOutboundTransformer'.
+     */
     public UMOTransformer getDefaultOutboundTransformer()
     {
         if (defaultOutboundTransformer != null)
@@ -904,16 +907,31 @@ public abstract class AbstractConnector
         return null;
     }
 
+    /**
+     * Setter for property 'defaultOutboundTransformer'.
+     *
+     * @param defaultOutboundTransformer Value to set for property 'defaultOutboundTransformer'.
+     */
     public void setDefaultOutboundTransformer(UMOTransformer defaultOutboundTransformer)
     {
         this.defaultOutboundTransformer = defaultOutboundTransformer;
     }
 
+    /**
+     * Setter for property 'defaultResponseTransformer'.
+     *
+     * @param defaultResponseTransformer Value to set for property 'defaultResponseTransformer'.
+     */
     public void setDefaultResponseTransformer(UMOTransformer defaultResponseTransformer)
     {
         this.defaultResponseTransformer = defaultResponseTransformer;
     }
 
+    /**
+     * Getter for property 'replyToHandler'.
+     *
+     * @return Value for property 'replyToHandler'.
+     */
     public ReplyToHandler getReplyToHandler()
     {
         return new DefaultReplyToHandler(defaultResponseTransformer);
@@ -935,6 +953,11 @@ public abstract class AbstractConnector
         MuleManager.getInstance().fireNotification(notification);
     }
 
+    /**
+     * Getter for property 'connectionStrategy'.
+     *
+     * @return Value for property 'connectionStrategy'.
+     */
     public ConnectionStrategy getConnectionStrategy()
     {
         // not happy with this but each receiver needs its own instance
@@ -950,16 +973,23 @@ public abstract class AbstractConnector
         }
     }
 
+    /**
+     * Setter for property 'connectionStrategy'.
+     *
+     * @param connectionStrategy Value to set for property 'connectionStrategy'.
+     */
     public void setConnectionStrategy(ConnectionStrategy connectionStrategy)
     {
         this.connectionStrategy = connectionStrategy;
     }
 
+    /** {@inheritDoc} */
     public boolean isDisposing()
     {
         return disposing.get();
     }
 
+    /** {@inheritDoc} */
     public boolean isRemoteSyncEnabled()
     {
         return false;
@@ -970,6 +1000,11 @@ public abstract class AbstractConnector
         return (AbstractMessageReceiver)receivers.get(getReceiverKey(component, endpoint));
     }
 
+    /**
+     * Getter for property 'receivers'.
+     *
+     * @return Value for property 'receivers'.
+     */
     public Map getReceivers()
     {
         return Collections.unmodifiableMap(receivers);
@@ -1004,6 +1039,7 @@ public abstract class AbstractConnector
         return (AbstractMessageReceiver[])temp.toArray(result);
     }
 
+    /** {@inheritDoc} */
     public void connect() throws Exception
     {
         if (connected.get())
@@ -1064,6 +1100,7 @@ public abstract class AbstractConnector
         }
     }
 
+    /** {@inheritDoc} */
     public void disconnect() throws Exception
     {
         startOnConnect.set(isStarted());
@@ -1085,11 +1122,13 @@ public abstract class AbstractConnector
         logger.info("Disconnected: " + getConnectionDescription());
     }
 
+    /** {@inheritDoc} */
     public String getConnectionDescription()
     {
         return toString();
     }
 
+    /** {@inheritDoc} */
     public final boolean isConnected()
     {
         return connected.get();
@@ -1286,6 +1325,7 @@ public abstract class AbstractConnector
 
     /**
      * Returns a work manager for message dispatchers.
+     * @throws UMOException in case of error
      */
     protected synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
@@ -1300,6 +1340,7 @@ public abstract class AbstractConnector
         return dispatcherWorkManager;
     }
 
+    /** {@inheritDoc} */
     public synchronized ScheduledExecutorService getScheduler()
     {
         if (scheduler == null)
@@ -1314,31 +1355,45 @@ public abstract class AbstractConnector
         return scheduler;
     }
 
+    /**
+     * Getter for property 'sessionHandler'.
+     *
+     * @return Value for property 'sessionHandler'.
+     */
     public UMOSessionHandler getSessionHandler()
     {
         return sessionHandler;
     }
 
+    /**
+     * Setter for property 'sessionHandler'.
+     *
+     * @param sessionHandler Value to set for property 'sessionHandler'.
+     */
     public void setSessionHandler(UMOSessionHandler sessionHandler)
     {
         this.sessionHandler = sessionHandler;
     }
 
+    /** {@inheritDoc} */
     public void workAccepted(WorkEvent event)
     {
         handleWorkException(event, "workAccepted");
     }
 
+    /** {@inheritDoc} */
     public void workRejected(WorkEvent event)
     {
         handleWorkException(event, "workRejected");
     }
 
+    /** {@inheritDoc} */
     public void workStarted(WorkEvent event)
     {
         handleWorkException(event, "workStarted");
     }
 
+    /** {@inheritDoc} */
     public void workCompleted(WorkEvent event)
     {
         handleWorkException(event, "workCompleted");
@@ -1378,6 +1433,7 @@ public abstract class AbstractConnector
     // TODO HH: the following methods should probably be lifecycle-enabled;
     // for now they are only stubs to get the refactoring going.
 
+    /** {@inheritDoc} */
     public void dispatch(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
@@ -1401,11 +1457,13 @@ public abstract class AbstractConnector
         }
     }
 
+    /** {@inheritDoc} */
     public UMOMessage receive(UMOEndpointURI endpointUri, long timeout) throws Exception
     {
         return this.receive(new ImmutableMuleEndpoint(endpointUri.toString(), true), timeout);
     }
 
+    /** {@inheritDoc} */
     public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
     {
         UMOMessageDispatcher dispatcher = null;
@@ -1421,6 +1479,7 @@ public abstract class AbstractConnector
         }
     }
 
+    /** {@inheritDoc} */
     public UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
