@@ -428,8 +428,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             }
             else
             {
-                // TODO AP: this does not handle topics under 1.0.2b, address it ASAP! 
-                return this.getSession(false, false);
+                final boolean topic = getTopicResolver().isTopic(endpoint);
+                return this.getSession(false, topic);
             }
         }
         catch (Exception e)
