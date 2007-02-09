@@ -44,7 +44,7 @@ public class OracleJmsConnection implements TopicConnection, QueueConnection
      * Instead of a single JMS Connection, the Oracle JMS Connector maintains a list
      * of open connections.
      * 
-     * @see OracleJmsConnector.multipleSessionsPerConnection
+     * @see OracleJmsConnector#multipleSessionsPerConnection
      */
     private List connections;
 
