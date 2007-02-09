@@ -14,9 +14,26 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import javax.jms.Destination;
 
+/**
+ * A strategy interface to detect a {@code javax.jms.Topic} in,
+ * possibly, a vendor-specific way.
+ */
 public interface JmsTopicResolver
 {
+    /**
+     * Use endpoint configuration to detect a topic.
+     * @param endpoint endpoint to test
+     * @return true if endpoint's config tells it's a topic
+     */
     boolean isTopic(UMOImmutableEndpoint endpoint);
+
+    /**
+     * Use any means suitable to detect a topic. This can
+     * be as simple as an {@code instanceof} call or utilize
+     * reflection and/or vendor API instead. 
+     * @param destination a jms destination to test
+     * @return {@code true} for topic
+     */
     boolean isTopic(Destination destination);
 }
 
