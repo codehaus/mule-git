@@ -13,6 +13,7 @@ package org.mule.providers.jms;
 import org.mule.providers.DefaultReplyToHandler;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.MapUtils;
 
 import javax.jms.Destination;
 import javax.jms.Queue;
@@ -60,14 +61,29 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
 
     /**
      * Will use endpoint's resource info to detect a topic,
-     * as in {@code jms://topic:trade/PriceUpdatesTopic}.
+     * as in {@code jms://topic:trade/PriceUpdatesTopic}. This
+     * method will call {@link #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean)}
+     * with fallback flag set to <strong>false</false>. 
      * @param endpoint endpoint to test
-     * @return true if the endpoint has a topic configuration 
+     * @return true if the endpoint has a topic configuration
+     * @see #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean) 
      */
     public boolean isTopic (UMOImmutableEndpoint endpoint)
     {
+        return isTopic(endpoint, false);
+    }
+
+    /** {@inheritDoc} */
+    public boolean isTopic (UMOImmutableEndpoint endpoint, boolean fallbackToEndpointProperties)
+    {
         final String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-        return JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo);
+        boolean topic = JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo);
+        if (!topic && fallbackToEndpointProperties)
+        {
+            topic = MapUtils.getBooleanValue(endpoint.getProperties(), JmsConstants.TOPIC_PROPERTY, false);
+        }
+
+        return topic;
     }
 
     /**

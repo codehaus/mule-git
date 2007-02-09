@@ -34,7 +34,6 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import org.apache.commons.collections.MapUtils;
 
 /**
  * <code>JmsMessageDispatcher</code> is responsible for dispatching messages to JMS
@@ -141,13 +140,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             // determine if endpointUri is a queue or topic
             // the format is topic:destination
-            boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint());
-            if (!topic)
-            {
-                // TODO AP should this drill-down be moved into the resolver as well?
-                topic = MapUtils.getBooleanValue(event.getEndpoint().getProperties(),
-                    JmsConstants.TOPIC_PROPERTY, false);
-            }
+            boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint(), true);
 
             Destination dest = connector.getJmsSupport().createDestination(session, endpointUri.getAddress(),
                 topic);

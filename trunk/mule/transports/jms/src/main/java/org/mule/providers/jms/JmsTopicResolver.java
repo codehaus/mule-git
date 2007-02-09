@@ -24,8 +24,21 @@ public interface JmsTopicResolver
      * Use endpoint configuration to detect a topic.
      * @param endpoint endpoint to test
      * @return true if endpoint's config tells it's a topic
+     * @see #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean)
      */
     boolean isTopic(UMOImmutableEndpoint endpoint);
+
+    /**
+     * Use endpoint configuration to detect a topic. Additionally,
+     * specify a fallback mechanism to search in endpoint's properties
+     * in case resource info yields {@code false}. In case resource info
+     * returned {@code true} no endpoint properties would be consulted.
+     * @param endpoint endpoint to test
+     * @param fallbackToEndpointProperties  whether to check endpoint's properties if
+     *        resource info returned false
+     * @return true if endpoint's config tells it's a topic
+     */
+    boolean isTopic(UMOImmutableEndpoint endpoint, boolean fallbackToEndpointProperties);
 
     /**
      * Use any means suitable to detect a topic. This can

@@ -36,16 +36,28 @@ public class DefaultJmsTopicResolverTestCase extends AbstractMuleTestCase
         assertSame(connector, resolver.getConnector());
     }
 
-    public void testEndpointNotTopic() throws Exception
+    public void testEndpointNotTopicNoFallback() throws Exception
     {
-        UMOEndpoint endpoint = new MuleEndpoint("jms://queue/NotATopic", true);
+        UMOEndpoint endpoint = new MuleEndpoint("jms://queue.NotATopic", true);
         assertFalse(resolver.isTopic(endpoint));
     }
 
-    public void testEndpointTopic() throws Exception
+    public void testEndpointTopicNoFallback() throws Exception
     {
-        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:topic/ThisIsATopic", true);
-        assertFalse(resolver.isTopic(endpoint));
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic", true);
+        assertTrue(resolver.isTopic(endpoint));
+    }
+
+    public void testEndpointNotTopicWithFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://context.aTopic?topic=true", true);
+        assertTrue(resolver.isTopic(endpoint, true));
+    }
+
+    public void testEndpointTopicFallbackNotUsed() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic?topic=false", true);
+        assertTrue(resolver.isTopic(endpoint, true));
     }
 
     public void testDestinationNotTopic() throws Exception

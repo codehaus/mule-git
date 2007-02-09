@@ -30,7 +30,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import javax.jms.Topic;
 
 import org.apache.commons.collections.MapUtils;
 
@@ -330,9 +329,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
 
             // Get the durable subscriber name if there is one
             String durableName = (String)endpoint.getProperties().get("durableName");
-            // TODO AP: to be replaced with a more intelligent topic detection,
-            // instanceof does not always work as needed
-            if (durableName == null && durable && dest instanceof Topic)
+            if (durableName == null && durable && topic)
             {
                 durableName = "mule." + connector.getName() + "." + endpoint.getEndpointURI().getAddress();
                 logger.debug("Jms Connector for this receiver is durable but no durable name has been specified. Defaulting to: "

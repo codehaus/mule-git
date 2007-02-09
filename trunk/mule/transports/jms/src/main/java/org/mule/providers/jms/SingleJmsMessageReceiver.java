@@ -184,13 +184,7 @@ public class SingleJmsMessageReceiver extends AbstractMessageReceiver implements
                 session = this.connector.getSession(endpoint);
             }
 
-            boolean topic = connector.getTopicResolver().isTopic(endpoint);
-
-            // TODO AP should this drill-down be moved into the resolver as well?
-            if (!topic)
-            {
-                topic = MapUtils.getBooleanValue(endpoint.getProperties(), JmsConstants.TOPIC_PROPERTY, false);
-            }
+            boolean topic = connector.getTopicResolver().isTopic(endpoint, true);
 
             // Create destination
             Destination dest = jmsSupport.createDestination(session, endpoint.getEndpointURI().getAddress(),
