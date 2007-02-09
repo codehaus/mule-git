@@ -96,10 +96,9 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
             }
 
             // Create destination
-            String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-            boolean topic = (resourceInfo != null && JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo));
+            boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
-            // todo MULE20 remove resource Info support
+            // TODO AP should this drill-down be moved into the resolver as well?
             if (!topic)
             {
                 topic = MapUtils.getBooleanValue(endpoint.getProperties(), JmsConstants.TOPIC_PROPERTY, false);

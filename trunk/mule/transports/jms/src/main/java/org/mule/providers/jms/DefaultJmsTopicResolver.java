@@ -1,0 +1,104 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.providers.jms;
+
+import org.mule.providers.DefaultReplyToHandler;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.util.StringMessageUtils;
+
+import javax.jms.Destination;
+import javax.jms.Queue;
+import javax.jms.Topic;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * A default implementation of the resolver uses endpoint's
+ * resource info and Java's {@code instanceof} operator to
+ * detect JMS topics.
+ */
+public class DefaultJmsTopicResolver implements JmsTopicResolver
+{
+    /**
+     * logger used by this class
+     */
+    protected static final Log logger = LogFactory.getLog(DefaultReplyToHandler.class);
+
+    /**
+     * Connector back-reference.
+     */
+    private JmsConnector connector;
+
+    /**
+     * Create an instance of the resolver.
+     * @param connector owning connector
+     */
+    public DefaultJmsTopicResolver (final JmsConnector connector)
+    {
+        this.connector = connector;
+    }
+
+
+    /**
+     * Getter for property 'connector'.
+     *
+     * @return Value for property 'connector'.
+     */
+    public JmsConnector getConnector ()
+    {
+        return connector;
+    }
+
+    /**
+     * Will use endpoint's resource info to detect a topic,
+     * as in {@code jms://topic:trade/PriceUpdatesTopic}.
+     * @param endpoint endpoint to test
+     * @return true if the endpoint has a topic configuration 
+     */
+    public boolean isTopic (UMOImmutableEndpoint endpoint)
+    {
+        final String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
+        return JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo);
+    }
+
+    /**
+     * Will use an {@code instanceof} operator. Keep in mind
+     * that may fail for JMS systems implementing both a
+     * {@code javax.jms.Topic} and {@code javax.jms.Queue} in
+     * a single destination class implementation.
+     * @param destination a jms destination to test
+     * @return {@code true} if the destination is a topic
+     */
+    public boolean isTopic (Destination destination)
+    {
+        checkInvariants(destination);
+
+        return destination instanceof Topic;
+    }
+
+    /**
+     * Perform some sanity checks, will complain in the log.
+     * @param destination destination to test
+     */
+    protected void checkInvariants (final Destination destination)
+    {
+        if (destination instanceof Topic && destination instanceof Queue
+            && connector.getJmsSupport() instanceof Jms102bSupport)
+        {
+            logger.error(StringMessageUtils.getBoilerPlate(
+                    "ReplyTo destination implements both Queue and Topic "
+                    + "while complying with JMS 1.0.2b specification. "
+                    + "Please report your application server or JMS vendor name and version "
+                    + "to dev<_at_>mule.codehaus.org or http://mule.mulesource.org/jira"));
+        }
+    }
+}

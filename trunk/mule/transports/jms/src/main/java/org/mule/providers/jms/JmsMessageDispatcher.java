@@ -141,12 +141,10 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             // determine if endpointUri is a queue or topic
             // the format is topic:destination
-            boolean topic = false;
-            String resourceInfo = endpointUri.getResourceInfo();
-            topic = (resourceInfo != null && JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo));
-            // TODO MULE20 remove resource info support
+            boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint());
             if (!topic)
             {
+                // TODO AP should this drill-down be moved into the resolver as well?
                 topic = MapUtils.getBooleanValue(event.getEndpoint().getProperties(),
                     JmsConstants.TOPIC_PROPERTY, false);
             }
@@ -184,13 +182,14 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
+                        // TODO AP should this drill-down be moved into the resolver as well?
                         boolean replyToTopic = false;
                         String reply = tempReplyTo.toString();
                         int i = reply.indexOf(":");
                         if (i > -1)
                         {
                             String qtype = reply.substring(0, i);
-                            replyToTopic = "topic".equalsIgnoreCase(qtype);
+                            replyToTopic = JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(qtype);
                             reply = reply.substring(i + 1);
                         }
                         replyTo = connector.getJmsSupport().createDestination(session, reply, replyToTopic);
@@ -355,9 +354,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
         try
         {
-            String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-            boolean topic = (resourceInfo != null && JmsConstants.TOPIC_PROPERTY
-                .equalsIgnoreCase(resourceInfo));
+            final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
             JmsSupport support = connector.getJmsSupport();
             session = connector.getSession(false, topic);
@@ -367,7 +364,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             try
             {
-                Message message = null;
+                Message message;
 
                 if (timeout == RECEIVE_NO_WAIT)
                 {

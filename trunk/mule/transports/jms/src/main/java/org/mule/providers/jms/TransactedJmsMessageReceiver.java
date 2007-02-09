@@ -68,12 +68,12 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         }
     }
 
-    public TransactedJmsMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public TransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
         // TODO AP: check how frequency=0 works with the scheduler, see setFrequency(long)
-        super(connector, component, endpoint, 0);
-        this.connector = (JmsConnector)connector;
+        super(umoConnector, component, endpoint, 0);
+        this.connector = (JmsConnector) umoConnector;
         this.timeout = endpoint.getTransactionConfig().getTimeout();
 
         // If reconnection is set, default reuse strategy to false
@@ -94,8 +94,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         // if we are in transactional mode.
         // If true, set receiveMessagesInTransaction to true.
         // It will start multiple threads, depending on the threading profile.
-        String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-        boolean topic = (resourceInfo != null && "topic".equalsIgnoreCase(resourceInfo));
+        final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
         // If we're using topics We dont want to use multiple receivers as we'll get
         // the same message
@@ -306,8 +305,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
             }
 
             // Create destination
-            String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-            boolean topic = (resourceInfo != null && "topic".equalsIgnoreCase(resourceInfo));
+            final boolean topic = connector.getTopicResolver().isTopic(endpoint);
             Destination dest = jmsSupport.createDestination(ctx.session, endpoint.getEndpointURI()
                 .getAddress(), topic);
 

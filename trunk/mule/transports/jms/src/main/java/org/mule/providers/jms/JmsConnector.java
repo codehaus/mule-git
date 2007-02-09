@@ -41,6 +41,7 @@ import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -123,9 +124,12 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     private boolean recoverJmsConnections = true;
 
+    private JmsTopicResolver topicResolver;
+
     public JmsConnector()
     {
         receivers = new ConcurrentHashMap();
+        topicResolver = new DefaultJmsTopicResolver(this);
     }
 
     protected void doInitialise() throws InitialisationException
@@ -449,8 +453,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     public Session getSession(UMOImmutableEndpoint endpoint) throws Exception
     {
-        String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-        boolean topic = (resourceInfo != null && JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo));
+        final boolean topic = getTopicResolver().isTopic(endpoint);
         return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
     }
 
@@ -469,9 +472,13 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
         if (logger.isDebugEnabled())
         {
-            logger.debug("Retrieving new jms session from connection: topic=" + topic + ", transacted="
-                         + (transacted || tx != null) + ", ack mode=" + acknowledgementMode + ", nolocal="
-                         + noLocal);
+            logger.debug(MessageFormat.format(
+                    "Retrieving new jms session from connection: " +
+                    "topic={0}, transacted={1}, ack mode={2}, nolocal={3}",
+                    new Object[]{Boolean.valueOf(topic),
+                                 Boolean.valueOf(transacted || tx != null),
+                                 new Integer(acknowledgementMode),
+                                 Boolean.valueOf(noLocal)}));
         }
 
         session = jmsSupport.createSession(connection, topic, transacted || tx != null, acknowledgementMode,
@@ -811,6 +818,27 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     public boolean isRemoteSyncEnabled()
     {
         return true;
+    }
+
+
+    /**
+     * Getter for property 'topicResolver'.
+     *
+     * @return Value for property 'topicResolver'.
+     */
+    public JmsTopicResolver getTopicResolver ()
+    {
+        return topicResolver;
+    }
+
+    /**
+     * Setter for property 'topicResolver'.
+     *
+     * @param topicResolver Value to set for property 'topicResolver'.
+     */
+    public void setTopicResolver (final JmsTopicResolver topicResolver)
+    {
+        this.topicResolver = topicResolver;
     }
 
     public void onNotification(UMOServerNotification notification)
