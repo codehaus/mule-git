@@ -188,11 +188,13 @@ public class Jms102bSupport extends Jms11Support
 
         if (topic)
         {
-            return session.createTopic(name);
+            // DO NOT REMOVE THE CAST, BREAKS WEBLOGIC 8.X
+            return ((TopicSession) session).createTopic(name);
         }
         else
         {
-            return session.createQueue(name);
+            // DO NOT REMOVE THE CAST, BREAKS WEBLOGIC 8.X
+            return ((QueueSession) session).createQueue(name);
         }
     }
 
@@ -205,11 +207,13 @@ public class Jms102bSupport extends Jms11Support
 
         if (topic)
         {
-            return session.createTemporaryTopic();
+            // DO NOT REMOVE THE CAST, BREAKS WEBLOGIC 8.X
+            return ((TopicSession) session).createTemporaryTopic();
         }
         else
         {
-            return session.createTemporaryQueue();
+            // DO NOT REMOVE THE CAST, BREAKS WEBLOGIC 8.X
+            return ((QueueSession) session).createTemporaryQueue();
         }
     }
 
