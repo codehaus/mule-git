@@ -43,7 +43,7 @@ public class WeblogicJmsTopicResolver extends DefaultJmsTopicResolver
      */
     public boolean isTopic(final Destination destination)
     {
-        checkInvariants(destination);
+        // don't check the invariants, we already handle Weblogic's case here
 
         boolean topic = destination instanceof Topic;
 
