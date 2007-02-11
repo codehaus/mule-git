@@ -115,10 +115,10 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
             && connector.getJmsSupport() instanceof Jms102bSupport)
         {
             logger.error(StringMessageUtils.getBoilerPlate(
-                    "ReplyTo destination implements both Queue and Topic "
+                    "Destination implements both Queue and Topic "
                     + "while complying with JMS 1.0.2b specification. "
                     + "Please report your application server or JMS vendor name and version "
-                    + "to dev<_at_>mule.codehaus.org or http://mule.mulesource.org/jira"));
+                    + "to dev<_at_>mule.codehaus.org or http://www.mulesource.org/jira"));
         }
     }
 }
