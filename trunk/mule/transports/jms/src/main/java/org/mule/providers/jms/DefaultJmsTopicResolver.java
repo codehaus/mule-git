@@ -32,7 +32,7 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
     /**
      * logger used by this class
      */
-    protected static final Log logger = LogFactory.getLog(DefaultReplyToHandler.class);
+    protected static final Log logger = LogFactory.getLog(DefaultJmsTopicResolver.class);
 
     /**
      * Connector back-reference.
