@@ -31,7 +31,7 @@ import org.apache.commons.lang.ObjectUtils;
 
 /**
  * <code>JmsReplyToHandler</code> will process a JMS replyTo or hand off to the
- * default replyTo handler if the replyTo is a URL
+ * default replyTo handler if the replyTo is a URL.
  */
 public class JmsReplyToHandler extends DefaultReplyToHandler
 {
@@ -70,7 +70,7 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
                 }
                 else if (logger.isDebugEnabled())
                 {
-                    logger.debug("transformer for replyTo Handler: " + getTransformer().toString()
+                    logger.debug("Transformer for replyTo Handler: " + getTransformer().toString()
                                  + " does not support source type: " + payload.getClass()
                                  + ". Not doing a transform");
                 }
