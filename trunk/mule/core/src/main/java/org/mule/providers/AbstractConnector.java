@@ -271,9 +271,6 @@ public abstract class AbstractConnector
 
         // container for dispatchers
         dispatchers = new GenericKeyedObjectPool();
-
-        // TODO HH: dispatcher pool configuration needs to be extracted, maybe even
-        // moved into the factory?
         // NOTE: testOnBorrow MUST be FALSE. this is a bit of a design bug in
         // commons-pool since validate is used for both activation and passivation,
         // but has no way of knowing which way it is going.
@@ -600,6 +597,28 @@ public abstract class AbstractConnector
         // we keep a reference to the unadapted factory, otherwise people might end
         // up with ClassCastExceptions on downcast to their implementation (sigh)
         this.dispatcherFactory = dispatcherFactory;
+    }
+
+    /**
+     * Returns the maximum number of dispatchers that can be concurrently active per
+     * endpoint.
+     * 
+     * @return max. number of active dispatchers
+     */
+    public int getMaxDispatchersActive()
+    {
+        return this.dispatchers.getMaxActive();
+    }
+
+    /**
+     * Configures the maximum number of dispatchers that can be concurrently active
+     * per endpoint
+     * 
+     * @param maxActive max. number of active dispatchers
+     */
+    public void setMaxDispatchersActive(int maxActive)
+    {
+        this.dispatchers.setMaxActive(maxActive);
     }
 
     private UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
