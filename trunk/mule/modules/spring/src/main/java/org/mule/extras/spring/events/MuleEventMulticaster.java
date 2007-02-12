@@ -60,6 +60,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -117,7 +118,7 @@ import org.springframework.context.support.AbstractApplicationContext;
  * @see ApplicationEventMulticaster
  */
 
-public class MuleEventMulticaster implements ApplicationEventMulticaster, ApplicationContextAware
+public class MuleEventMulticaster implements ApplicationEventMulticaster, ApplicationContextAware, DisposableBean
 {
     public static final String EVENT_MULTICASTER_DESCRIPTOR_NAME = "muleEventMulticasterDescriptor";
 
@@ -924,5 +925,11 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         {
             logger.error(e.getMessage(), e);
         }
+    }
+
+
+    public void destroy() throws Exception
+    {
+        MuleManager.getInstance().dispose();
     }
 }
