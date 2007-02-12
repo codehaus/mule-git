@@ -110,6 +110,11 @@
 <!ATTLIST mule-environment-properties enableMessageEvents           (true | false)          "false">
 
 <!--
+    The type of model used for the internal system model where system created services are registered
+-->
+<!ATTLIST mule-environment-properties systemModelType           CDATA        "seda">
+
+<!--
 A pooling profile is used to configure the pooling behaviour of UMO components.
 each descriptor can set it's own pooling profile or a default one can be set
 on the mule-configuration.

@@ -19,10 +19,10 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOSession;
-import org.mule.umo.model.UMOModel;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOManager;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
@@ -248,7 +248,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         }
     }
 
-    protected void disposeManager()
+    protected void disposeManager() throws UMOException
     {
         log("disposing manager. disposeManagerPerSuite=" + getTestInfo().isDisposeManagerPerSuite());
         if (MuleManager.isInstanciated())

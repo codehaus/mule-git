@@ -255,7 +255,7 @@ public class MuleManager implements UMOManager
         notificationManager.registerEventType(ConnectionNotification.class,
             ConnectionNotificationListener.class);
 
-        // This is obviously just a workaround until extension modules can register
+        // TODO RM*: This is obviously just a workaround until extension modules can register
         // their own classes for notifications. Need to revisit this when the
         // ManagementContext is implemented properly.
         try
@@ -289,9 +289,6 @@ public class MuleManager implements UMOManager
             {
                 //There should always be a defualt system model registered
                 instance = (UMOManager)clazz.newInstance();
-                UMOModel model = ModelFactory.createModel(ModelHelper.getSystemModelType());
-                model.setName(ModelHelper.SYSTEM_MODEL);
-                instance.registerModel(model);
             }
             catch (Exception e)
             {
@@ -369,7 +366,7 @@ public class MuleManager implements UMOManager
      *             initialised.
      * @deprecated this will go away soon.
      */
-    public static synchronized void setConfiguration(MuleConfiguration config)
+    public static synchronized void setConfiguration(MuleConfiguration config) throws UMOException
     {
         if (config == null)
         {
@@ -378,6 +375,24 @@ public class MuleManager implements UMOManager
         }
 
         MuleManager.config = config;
+        registerSystemModel(config.getSystemModelType());
+
+    }
+
+    protected static void registerSystemModel(String type) throws UMOException
+    {
+        if(instance!=null)
+        {
+            //Initialise the system model
+            UMOModel model = instance.lookupModel(type);
+            if(model != null && model.getComponentNames().hasNext())
+            {
+                throw new IllegalStateException("System model is already registered and contains components. Cannot overwrite");
+            }
+            model = ModelFactory.createModel(config.getSystemModelType());
+            model.setName(ModelHelper.SYSTEM_MODEL);
+            instance.registerModel(model);
+        }
     }
 
     // Implementation methods
@@ -718,6 +733,8 @@ public class MuleManager implements UMOManager
             {
                 logger.warn("No unique id has been set on this manager");
             }
+
+
             try
             {
                 if (securityManager != null)

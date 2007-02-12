@@ -107,6 +107,8 @@ public class MuleConfiguration
 
     public static final int DEFAULT_TRANSACTION_TIMEOUT = 30000;
 
+    public static final String DEFAULT_SYSTEM_MODEL_TYPE = "seda";
+
     /**
      * Where Mule stores any runtime files to disk
      */
@@ -121,6 +123,12 @@ public class MuleConfiguration
      * holds the value for SYNCHRONOUS
      */
     private boolean synchronous = DEFAULT_SYNCHRONOUS;
+
+
+    /**
+     * The type of model used for the internal system model where system created services are registered
+     */
+    private String systemModelType = DEFAULT_SYSTEM_MODEL_TYPE;
 
     /**
      * Whether Mule should fire message events for every message sent and received
@@ -253,7 +261,7 @@ public class MuleConfiguration
     {
         this.synchronous = synchronous;
     }
-
+    
     public String getModel()
     {
         return model;
@@ -673,5 +681,16 @@ public class MuleConfiguration
     private void updateApplicationProperty(String name, Object value)
     {
         if(MuleManager.isInstanciated()) MuleManager.getInstance().setProperty(name, value);
+    }
+
+
+    public String getSystemModelType()
+    {
+        return systemModelType;
+    }
+
+    public void setSystemModelType(String systemModelType)
+    {
+        this.systemModelType = systemModelType;
     }
 }
