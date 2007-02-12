@@ -1746,4 +1746,22 @@ public abstract class AbstractConnector
     {
         throw new UnsupportedOperationException(new Message(Messages.STREAMING_NOT_SUPPORTED_FOR_X, getProtocol()).toString());
     }
+
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("AbstractConnector");
+        sb.append("{hash=").append(hashCode());
+        sb.append(", started=").append(started);
+        sb.append(", initialised=").append(initialised);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", disposed=").append(disposed);
+        sb.append(", numberOfConcurrentTransactedReceivers=").append(numberOfConcurrentTransactedReceivers);
+        sb.append(", createMultipleTransactedReceivers=").append(createMultipleTransactedReceivers);
+        sb.append(", connected=").append(connected);
+        sb.append(", supportedProtocols=").append(supportedProtocols);
+        sb.append(", serviceOverrides=").append(serviceOverrides);
+        sb.append('}');
+        return sb.toString();
+    }
 }
