@@ -98,7 +98,11 @@ public class Jms102bSupport extends Jms11Support
         }
         else if (connection instanceof QueueConnection)
         {
-            return ((QueueConnection) connection).createQueueSession(transacted, ackMode);
+            // for transacted sessions the ackMode is always ignored, but
+            // set it for readability (SESSION_TRANSACTION is recommented
+            // for this case).
+            return ((QueueConnection) connection).createQueueSession(
+                    transacted, (transacted ? Session.SESSION_TRANSACTED : ackMode));
         }
         else
         {
