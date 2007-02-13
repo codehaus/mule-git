@@ -12,7 +12,7 @@ import org.mule.ide.ui.project.MuleClasspathChooserPanel;
 /**
  * First page of the wizard to create a new Mule project
  * 
- * @author Derek Adams
+ * @author Derek Adams, Jesper Steen Møller
  */
 public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 
@@ -92,7 +92,7 @@ public class MuleWizardProjectPage extends WizardNewProjectCreationPage {
 	}
 
 	public IMuleDistribution getMuleDistribution() {
-		return chosenDistribution;
+		return chosenDistribution != null ? chosenDistribution : classpathChooser.getChosenDistribution();
 	}
 
 	public String getDistributionHint() {

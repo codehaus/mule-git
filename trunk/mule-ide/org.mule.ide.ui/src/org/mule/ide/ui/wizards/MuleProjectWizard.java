@@ -210,8 +210,23 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 		// Copy configuration files
 		try {
 			copyConfigSets(sample, project.getProject());
+			copyGenericConfig(projectPage.getMuleDistribution(), project);
 		} catch (CoreException e) {
 			MuleCorePlugin.getDefault().logException("Unable to create config folder.", e);
+		}
+	}
+
+	private void copyGenericConfig(IMuleDistribution muleDistribution, IJavaProject project) {
+		try {
+			IContainer sourceFolder = getSourceContainer(project);
+			File confFolder = new File(muleDistribution.getLocation(), "conf");
+			File log4Config = new File(confFolder, "log4j.properties");
+			if (log4Config.exists() && log4Config.isFile()) {
+				IFile newLog4j = sourceFolder.getFile(new Path("log4j.properties"));
+				newLog4j.create(new FileInputStream(log4Config), true, null);
+			}
+		} catch (Exception e) {
+			MuleCorePlugin.getDefault().logException("Unable to copy log4j configuration file into new project.", e);
 		}
 	}
 
