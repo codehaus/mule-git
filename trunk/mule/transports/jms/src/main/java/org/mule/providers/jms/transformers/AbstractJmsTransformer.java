@@ -154,8 +154,6 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
     {
         if (endpoint != null)
         {
-            // TODO AP: use the right JMS session creation method, throw when
-            // the endpoint's connector is not a JmsConnector
             return ((JmsConnector)endpoint.getConnector()).getDelegateSession(endpoint);
         }
         else
