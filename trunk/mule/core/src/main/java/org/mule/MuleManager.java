@@ -289,6 +289,7 @@ public class MuleManager implements UMOManager
             {
                 //There should always be a defualt system model registered
                 instance = (UMOManager)clazz.newInstance();
+                registerSystemModel(config.getSystemModelType());
             }
             catch (Exception e)
             {
@@ -375,6 +376,7 @@ public class MuleManager implements UMOManager
         }
 
         MuleManager.config = config;
+        // TODO this call might cause a problem, but the whole setConfiguration() method is doomed anyway
         registerSystemModel(config.getSystemModelType());
 
     }
