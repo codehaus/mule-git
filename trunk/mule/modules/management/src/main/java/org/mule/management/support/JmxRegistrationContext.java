@@ -9,13 +9,14 @@
  */
 package org.mule.management.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.umo.manager.UMOServerNotification;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Stores JMX info pertinent to the currently intialising Mule manager with
@@ -33,18 +34,24 @@ public class JmxRegistrationContext
     /**
      * The logger used for this class
      */
-    protected final transient Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * Normally ThreadLocal is fine, as Mule is being initialised and destroyed
      * by a single thread. We only need to share this info between random agents
      * during startup.
      */
-    private static final ThreadLocal contexts = new ThreadLocal();
+    private static final ThreadLocal contexts = new ThreadLocal()
+    {
+        // @Override
+        protected Object initialValue()
+        {
+            return new JmxRegistrationContext();
+        }
+    };
 
 
-
-    private String resolvedDomain;
+    private volatile String resolvedDomain;
 
     /** Do not instantiate JmxRegistrationContext. */
     protected JmxRegistrationContext()
@@ -85,13 +92,7 @@ public class JmxRegistrationContext
      */
     public static JmxRegistrationContext getCurrent()
     {
-        JmxRegistrationContext ctx = (JmxRegistrationContext) contexts.get();
-        if (ctx == null)
-        {
-            ctx = new JmxRegistrationContext();
-        }
-        contexts.set(ctx);
-        return ctx;
+        return (JmxRegistrationContext)contexts.get();
     }
 
     /**
