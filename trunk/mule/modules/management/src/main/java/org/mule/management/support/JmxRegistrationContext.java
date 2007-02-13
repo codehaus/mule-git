@@ -50,8 +50,7 @@ public class JmxRegistrationContext
         }
     };
 
-
-    private volatile String resolvedDomain;
+    private String resolvedDomain;
 
     /** Do not instantiate JmxRegistrationContext. */
     protected JmxRegistrationContext()
