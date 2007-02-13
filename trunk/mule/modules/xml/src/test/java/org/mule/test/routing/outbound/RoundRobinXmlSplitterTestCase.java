@@ -10,11 +10,6 @@
 
 package org.mule.test.routing.outbound;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.routing.outbound.RoundRobinXmlSplitter;
@@ -29,6 +24,12 @@ import com.mockobjects.constraint.Constraint;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+
 public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
 {
     private UMOEndpoint endpoint1;
@@ -36,6 +37,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
     private UMOEndpoint endpoint3;
     private RoundRobinXmlSplitter xmlSplitter;
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         // setup endpoints

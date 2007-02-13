@@ -10,7 +10,6 @@
 
 package org.mule.routing.outbound;
 
-import org.dom4j.Document;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleMessage;
 import org.mule.umo.UMOException;
@@ -25,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.dom4j.Document;
+
 /**
  * This router will split the Xml message into parts based on the xpath expression
  * and route each new event to the endpoints on the router, one after the other.
@@ -32,10 +33,10 @@ import java.util.Map;
 public class RoundRobinXmlSplitter extends FilteringXmlMessageSplitter
 {
     // We have to do some additional checks if we're going to allow filters on the
-    // round robin endpoints
-    // So for performance lets turn it off by default
+    // round robin endpoints, so for performance lets turn it off by default
     protected volatile boolean enableEndpointFiltering = false;
 
+    // @Override
     public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
         throws RoutingException
     {
@@ -43,19 +44,24 @@ public class RoundRobinXmlSplitter extends FilteringXmlMessageSplitter
         {
             String correlationId = (String)propertyExtractor.getProperty(
                 MuleProperties.MULE_CORRELATION_ID_PROPERTY, message);
-            initialise(message);
+            
+            this.initialise(message);
 
             UMOEndpoint endpoint;
             UMOMessage result = null;
             Document part;
-            List parts = (List)nodes.get();
+
+            List parts = (List)nodesContext.get();
+
             if (parts == null)
             {
                 logger.error("There are no parts for current message. No events were routed: " + message);
                 return null;
             }
+
             int correlationSequence = 1;
             int epCounter = 0;
+
             for (Iterator iterator = parts.iterator(); iterator.hasNext(); epCounter++)
             {
                 part = (Document)iterator.next();
@@ -64,7 +70,7 @@ public class RoundRobinXmlSplitter extends FilteringXmlMessageSplitter
                     epCounter = 0;
                 }
                 // Create the message
-                Map theProperties = (Map)properties.get();
+                Map theProperties = (Map)propertiesContext.get();
                 message = new MuleMessage(part, new HashMap(theProperties));
 
                 if (enableEndpointFiltering)
@@ -118,8 +124,8 @@ public class RoundRobinXmlSplitter extends FilteringXmlMessageSplitter
         }
         finally
         {
-            nodes.set(null);
-            properties.set(null);
+            nodesContext.set(null);
+            propertiesContext.set(null);
         }
     }
 
