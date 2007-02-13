@@ -55,7 +55,7 @@ public class FilteringListMessageSplitter extends AbstractMessageSplitter
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("java.util.List payload detected, setting correlation group size to "
-                                 + groupSize);
+                                    + groupSize);
                 }
             }
         }
@@ -94,16 +94,12 @@ public class FilteringListMessageSplitter extends AbstractMessageSplitter
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Endpoint filter matched. Routing message over: "
-                                 + endpoint.getEndpointURI().toString());
+                                    + endpoint.getEndpointURI().toString());
                 }
                 i.remove();
                 return result;
             }
         }
-
-        // we are done with the list of payloads: clean up
-        payloadContext.set(null);
-        propertiesContext.set(null);
 
         return null;
     }
