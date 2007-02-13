@@ -656,6 +656,9 @@ public abstract class AbstractConnector
         }
         catch (Exception ex)
         {
+            // TODO HH Dispatcher pool leak? If, e.g. dispatcher.toString() throws a NPE while logging,
+            // the dispatcher will hang around for 'inactivity' time period. Same for generic
+            // exception
             throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
         }
     }
