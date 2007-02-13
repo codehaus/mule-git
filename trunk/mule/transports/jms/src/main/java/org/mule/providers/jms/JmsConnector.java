@@ -402,6 +402,11 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return component.getDescriptor().getName() + "~" + endpoint.getEndpointURI().getAddress();
     }
 
+    /**
+     * TODO AP Is it dead meat?
+     * @param endpoint
+     * @return
+     */
     public Object getSessionFactory(UMOEndpoint endpoint)
     {
         if (endpoint.getTransactionConfig() != null

@@ -430,7 +430,7 @@ public class JdbcConnector extends AbstractConnector
         this.providerProperties = providerProperties;
     }
 
-    /*
+    /* TODO AP Is it dead meat?
      * (non-Javadoc)
      * 
      * @see org.mule.providers.TransactionEnabledConnector#getSessionFactory(org.mule.umo.endpoint.UMOEndpoint)
