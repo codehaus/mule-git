@@ -37,7 +37,6 @@ Assembly descriptor for the Mule JCA distribution.
                 <include>org.mule.transports:mule-transport-email</include>
                 <include>org.mule.transports:mule-transport-file</include>
                 <include>org.mule.transports:mule-transport-ftp</include>
-                <include>org.mule.transports:mule-transport-gigaspaces</include>
                 <include>org.mule.transports:mule-transport-glue</include>
                 <include>org.mule.transports:mule-transport-http</include>
                 <include>org.mule.transports:mule-transport-jbi</include>
