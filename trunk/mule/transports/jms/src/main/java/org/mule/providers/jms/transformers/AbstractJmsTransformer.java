@@ -72,6 +72,11 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
 
             return result;
         }
+        catch (TransformerException tex)
+        {
+            // rethrow
+            throw tex;
+        }
         catch (Exception e)
         {
             throw new TransformerException(this, e);
@@ -150,11 +155,11 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
         }
     }
 
-    protected Session getSession() throws UMOException
+    protected Session getSession() throws TransformerException, JMSException
     {
         if (endpoint != null)
         {
-            return ((JmsConnector)endpoint.getConnector()).getDelegateSession(endpoint);
+            return ((JmsConnector)endpoint.getConnector()).getSession(endpoint);
         }
         else
         {

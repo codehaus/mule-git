@@ -86,8 +86,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
         try
         {
-            // Retrieve the session from the current transaction.
-            // TODO AP: clean up to use getDelegateSession()
             session = connector.getSessionFromTransaction();
             if (session != null)
             {
@@ -112,16 +110,12 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
                 else
                 {
-                    // Retrieve a session from the connector
-                    // TODO AP: clean up to use getDelegateSession()
                     session = connector.getSession(event.getEndpoint());
                     cachedSession = session;
                 }
             }
             else
             {
-                // Retrieve a session from the connector
-                // TODO AP: clean up to use getDelegateSession()
                 session = connector.getSession(event.getEndpoint());
                 if (event.getEndpoint().getTransactionConfig().isTransacted())
                 {
@@ -298,8 +292,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             connector.closeQuietly(consumer);
             connector.closeQuietly(producer);
 
-            // TODO I wonder if those temporary destinations also implement BOTH
-            // interfaces...keep it 'simple' for now
             if (replyTo != null && (replyTo instanceof TemporaryQueue || replyTo instanceof TemporaryTopic))
             {
                 if (replyTo instanceof TemporaryQueue)

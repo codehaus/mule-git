@@ -420,29 +420,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
     }
 
-    // TODO AP: merge this and the various getSession(..) methods
-    public Session getDelegateSession(UMOImmutableEndpoint endpoint) throws UMOException
-    {
-        try
-        {
-            // Return the session bound to the current transaction, if possible
-            Session session = this.getSessionFromTransaction();
-            if (session != null)
-            {
-                return session;
-            }
-            else
-            {
-                final boolean topic = getTopicResolver().isTopic(endpoint);
-                return this.getSession(false, topic);
-            }
-        }
-        catch (Exception e)
-        {
-            throw new MuleException(new org.mule.config.i18n.Message("jms", 3), e);
-        }
-    }
-
     public Session getSessionFromTransaction()
     {
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
@@ -450,13 +427,18 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             if (tx.hasResource(connection))
             {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Retrieving jms session from current transaction " + tx);
+                }
+
                 return (Session)tx.getResource(connection);
             }
         }
         return null;
     }
 
-    public Session getSession(UMOImmutableEndpoint endpoint) throws Exception
+    public Session getSession(UMOImmutableEndpoint endpoint) throws JMSException
     {
         final boolean topic = getTopicResolver().isTopic(endpoint);
         return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
@@ -468,13 +450,14 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             throw new JMSException("Not connected");
         }
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
         Session session = getSessionFromTransaction();
         if (session != null)
         {
-            logger.debug("Retrieving jms session from current transaction");
             return session;
         }
+
+        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+
         if (logger.isDebugEnabled())
         {
             logger.debug(MessageFormat.format(

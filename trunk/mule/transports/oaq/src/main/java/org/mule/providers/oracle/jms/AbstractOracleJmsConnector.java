@@ -118,7 +118,6 @@ public abstract class AbstractOracleJmsConnector extends JmsConnector
             // Check to see if we are already in a session.
             Session session = getSessionFromTransaction();
             if (session != null) {
-                logger.debug("Retrieving jms session from current transaction");
                 return session;
             }
 
