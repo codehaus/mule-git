@@ -41,14 +41,7 @@ public class JmxRegistrationContext
      * by a single thread. We only need to share this info between random agents
      * during startup.
      */
-    private static final ThreadLocal contexts = new ThreadLocal()
-    {
-        // @Override
-        protected Object initialValue()
-        {
-            return new JmxRegistrationContext();
-        }
-    };
+    private static final ThreadLocal contexts = new ThreadLocal();
 
     private String resolvedDomain;
 
@@ -91,7 +84,13 @@ public class JmxRegistrationContext
      */
     public static JmxRegistrationContext getCurrent()
     {
-        return (JmxRegistrationContext)contexts.get();
+        JmxRegistrationContext ctx = (JmxRegistrationContext) contexts.get();
+        if (ctx == null)
+        {
+            ctx = new JmxRegistrationContext();
+        }
+        contexts.set(ctx);
+        return ctx;
     }
 
     /**
