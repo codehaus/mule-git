@@ -402,24 +402,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return component.getDescriptor().getName() + "~" + endpoint.getEndpointURI().getAddress();
     }
 
-    /**
-     * TODO AP Is it dead meat?
-     * @param endpoint
-     * @return
-     */
-    public Object getSessionFactory(UMOEndpoint endpoint)
-    {
-        if (endpoint.getTransactionConfig() != null
-            && endpoint.getTransactionConfig().getFactory() instanceof JmsClientAcknowledgeTransactionFactory)
-        {
-            throw new MuleRuntimeException(new org.mule.config.i18n.Message("jms", 9));
-        }
-        else
-        {
-            return connection;
-        }
-    }
-
     public Session getSessionFromTransaction()
     {
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
