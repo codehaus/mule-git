@@ -607,7 +607,6 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
 
     protected void setSubscriptionsOnDescriptor(MuleDescriptor descriptor) throws UMOException
     {
-        String[] subscriptions;
         List endpoints = new ArrayList();
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
@@ -618,7 +617,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
             }
             if (listener instanceof MuleSubscriptionEventListener)
             {
-                subscriptions = ((MuleSubscriptionEventListener)listener).getSubscriptions();
+                String[] subscriptions = ((MuleSubscriptionEventListener)listener).getSubscriptions();
                 for (int i = 0; i < subscriptions.length; i++)
                 {
                     if (subscriptions[i].indexOf("*") == -1 && MuleEndpointURI.isMuleUri(subscriptions[i]))
@@ -635,10 +634,9 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         }
         if (endpoints.size() > 0)
         {
-            String endpoint;
             for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
             {
-                endpoint = (String)iterator.next();
+                String endpoint = (String)iterator.next();
                 descriptor.getInboundRouter().addEndpoint(new MuleEndpoint(endpoint, true));
             }
         }
