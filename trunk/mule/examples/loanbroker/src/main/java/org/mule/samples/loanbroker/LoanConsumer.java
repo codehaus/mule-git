@@ -211,9 +211,9 @@ public class LoanConsumer
         int response = 0;
         String provider = "axis";
 
-        while (response != 'a' && response != 'g' && response != 'x')
+        while (response != 'a' && response != 'x')
         {
-            System.out.println("\nWhich SOAP stack would you like to use: [a]xis, [g]lue or [x]fire?");
+            System.out.println("\nWhich SOAP stack would you like to use: [a]xis or [x]fire?");
             response = readCharacter();
             switch (response)
             {
@@ -222,13 +222,6 @@ public class LoanConsumer
                     provider = "axis";
                     break;
                 }
-
-                case 'g' :
-                {
-                    provider = "glue";
-                    break;
-                }
-
                 case 'x' :
                 {
                     provider = "xfire";
