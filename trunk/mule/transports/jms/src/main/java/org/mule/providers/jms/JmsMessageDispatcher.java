@@ -125,8 +125,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 
-            // determine if endpointUri is a queue or topic
-            // the format is topic:destination
             boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint(), true);
 
             Destination dest = connector.getJmsSupport().createDestination(session, endpointUri.getAddress(),
