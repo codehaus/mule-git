@@ -57,18 +57,98 @@
 
         <!-- ActiveMQ for JMS -->
         <dependency>
-            <groupId>activemq</groupId>
-            <artifactId>activemq</artifactId>
-            <version>3.2.4</version>
+            <groupId>org.apache.activemq</groupId> 
+			<artifactId>apache-activemq</artifactId> 
+			<version>4.1.0-incubator</version> 
             <scope>provided</scope>
             <exclusions>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-console</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-jaas</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-optional</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-web-demo</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-core</artifactId>
+				</exclusion>
                 <exclusion>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq-core</artifactId>
+                    <groupId>commons-dbcp</groupId>
+                    <artifactId>commons-dbcp</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq-core-test</artifactId>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-full</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javacc</groupId>
+                    <artifactId>javacc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>activeio</groupId>
+                    <artifactId>activeio</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jmock</groupId>
+                    <artifactId>jmock</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>howl</groupId>
+                    <artifactId>howl-logger</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>axion</groupId>
+                    <artifactId>axion</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>activecluster</groupId>
+                    <artifactId>activecluster</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derby</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derbynet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xmlbeans</groupId>
+                    <artifactId>xmlbeans-jsr173-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>commons-dbcp</groupId>

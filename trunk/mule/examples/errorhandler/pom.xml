@@ -42,19 +42,35 @@
             <version>${version}</version>
         </dependency>
         <dependency>
-            <groupId>activemq</groupId>
-            <artifactId>activemq</artifactId>
-            <version>3.2.4</version>
+            <groupId>org.apache.activemq</groupId> 
+			<artifactId>apache-activemq</artifactId> 
+			<version>4.1.0-incubator</version> 
             <scope>provided</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq-core-test</artifactId>
-                </exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-console</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-jaas</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-optional</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-web-demo</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId> 
+					<artifactId>activemq-core</artifactId>
+				</exclusion>
                 <exclusion>
                     <groupId>commons-dbcp</groupId>
                     <artifactId>commons-dbcp</artifactId>
