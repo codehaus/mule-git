@@ -10,6 +10,7 @@
 
 package org.mule.test.util.concurrent;
 
+import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitPolicy;
 
@@ -139,17 +140,17 @@ public class WaitPolicyTestCase extends TestCase
         this.execute(new SleepyTask("franz", 1000));
 
         // task 3 is initially rejected but waits forever
-        Runnable s3 = new SleepyTask("beavis", 1000);
+        Runnable s3 = new SleepyTask("beavis", 0);
         this.execute(s3);
 
         // at least one task should have been queued
-        assertFalse(_executor.awaitTermination(4000, TimeUnit.MILLISECONDS));
+        assertFalse(_executor.awaitTermination(5000, TimeUnit.MILLISECONDS));
         assertEquals(s3, policy.lastRejectedRunnable());
         assertEquals(0, SleepyTask.activeTasks.get());
 
         // shutdown & try again
         _executor.shutdown();
-        assertTrue(_executor.awaitTermination(4000, TimeUnit.MILLISECONDS));
+        assertTrue(_executor.awaitTermination(3000, TimeUnit.MILLISECONDS));
         assertEquals(s3, policy.lastRejectedRunnable());
         assertEquals(0, SleepyTask.activeTasks.get());
     }
@@ -262,7 +263,7 @@ class SleepyTask extends Object implements Runnable
 
     public String toString()
     {
-        return this.getClass().getName() + "{" + _name + ", " + _sleepTime + "}";
+        return ClassUtils.getClassName(this.getClass()) + "{" + _name + ", " + _sleepTime + "}";
     }
 
     public void run()
