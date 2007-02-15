@@ -38,11 +38,6 @@
                         
                         <exclude>org/mule/test/integration/routing/replyto/ReplytoChainIntegration2TestCase.java</exclude>
                         <exclude>org/mule/test/integration/routing/replyto/ReplytoChainIntegration4TestCase.java</exclude>
-
-                        <!-- Todo MULE-1192 -->
-                        <exclude>org/mule/test/usecases/dlq/DLQExceptionHandlerTestCase.java</exclude>
-
-
                     </excludes>
                 </configuration>
             </plugin>
