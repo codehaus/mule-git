@@ -15,10 +15,10 @@
         <muleVersion>1.4-SNAPSHOT</muleVersion>
     </properties>
 
-	<modules>
-		<module>credit-agency</module>
-		<module>loanbroker</module>
-	</modules>
+    <modules>
+        <module>credit-agency</module>
+        <module>loanbroker</module>
+    </modules>
 
     <dependencies>
         <dependency>

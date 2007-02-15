@@ -59,11 +59,11 @@
                     <filter expectedType="org.mule.samples.loanbroker.LoanQuote" className="org.mule.routing.filters.PayloadTypeFilter"/>
                 </router>
             </inbound-router>
-			<outbound-router>
-				<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-					<endpoint address="CreditAgency"/>
-				</router>
-			</outbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="CreditAgency"/>
+                </router>
+            </outbound-router>
         </mule-descriptor>
 
         <!--
