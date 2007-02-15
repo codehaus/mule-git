@@ -39,11 +39,11 @@
             <property name="specification" value="1.1"/>
         </properties>
     </connector>
-	
-	<transformers>
-		<transformer name="jmsmessagetoobject" className="org.mule.providers.jms.transformers.JMSMessageToObject"/>
-		<transformer name="inboundtransformer" className="org.mule.transformers.simple.ByteArrayToString"/>
-		<transformer name="responsetransformer" className="org.mule.transformers.simple.StringToByteArray"/>
+
+    <transformers>
+        <transformer name="jmsmessagetoobject" className="org.mule.providers.jms.transformers.JMSMessageToObject"/>
+        <transformer name="inboundtransformer" className="org.mule.transformers.simple.ByteArrayToString"/>
+        <transformer name="responsetransformer" className="org.mule.transformers.simple.StringToByteArray"/>
     </transformers>
 
     <model name="model">
@@ -62,7 +62,7 @@
         <mule-descriptor name="JMSReplyProvider"
             implementation="org.mule.test.integration.service.TestReceiver"
             inboundEndpoint="jms://queue_in" 
-			inboundTransformer="jmsmessagetoobject inboundtransformer"/>
+            inboundTransformer="jmsmessagetoobject inboundtransformer"/>
     </model>
 
 </mule-configuration>
