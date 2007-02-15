@@ -48,6 +48,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ClassUtils;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
@@ -76,6 +77,7 @@ import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkListener;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -630,7 +632,7 @@ public abstract class AbstractConnector
             throw new IllegalArgumentException("Endpoint must not be null");
         }
 
-        if (!supportsProtocol(endpoint.getConnector().getProtocol()))
+        if (!this.supportsProtocol(endpoint.getConnector().getProtocol()))
         {
             throw new IllegalArgumentException(new Message(
                 Messages.CONNECTOR_SCHEME_X_INCOMPATIBLE_WITH_ENDPOINT_SCHEME_X, getProtocol(), endpoint
@@ -643,23 +645,36 @@ public abstract class AbstractConnector
             {
                 logger.debug("Borrowing a dispatcher for endpoint: " + endpoint.getEndpointURI());
             }
-
-            UMOMessageDispatcher dispatcher = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
-
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Borrowed a dispatcher for endpoint: " + endpoint.getEndpointURI() + " = "
-                                + dispatcher.toString());
-            }
-
-            return dispatcher;
         }
         catch (Exception ex)
         {
-            // TODO HH Dispatcher pool leak? If, e.g. dispatcher.toString() throws a NPE while logging,
-            // the dispatcher will hang around for 'inactivity' time period. Same for generic
-            // exception
             throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+        }
+
+        UMOMessageDispatcher dispatcher = null;
+
+        try
+        {
+             dispatcher = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
+             return dispatcher;
+        }
+        catch (Exception ex)
+        {
+            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+        }
+        finally
+        {
+            try
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Borrowed dispatcher: " + ObjectUtils.toString(dispatcher, "null"));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+            }
         }
     }
 
@@ -672,14 +687,23 @@ public abstract class AbstractConnector
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Returning dispatcher for endpoint: " + endpoint.getEndpointURI() + " = "
-                                    + dispatcher.toString());
+                                    + ObjectUtils.toString(dispatcher, "null"));
                 }
-
-                dispatchers.returnObject(endpoint, dispatcher);
             }
             catch (Exception ex)
             {
-                // ignored; this will go away in commons-pool
+                // ignore - if the dispatcher is broken, it will likely get cleaned up by the factory
+            }
+            finally
+            {
+                try
+                {
+                    dispatchers.returnObject(endpoint, dispatcher);
+                }
+                catch (Exception ex)
+                {
+                    // returnObject() never throws; this will go away in commons-pool
+                }
             }
         }
     }
@@ -1752,8 +1776,8 @@ public abstract class AbstractConnector
 
     public String toString()
     {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("AbstractConnector");
+        final StringBuffer sb = new StringBuffer(120);
+        sb.append(ClassUtils.getClassName(this.getClass()));
         sb.append("{hash=").append(hashCode());
         sb.append(", started=").append(started);
         sb.append(", initialised=").append(initialised);

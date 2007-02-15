@@ -31,6 +31,7 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.util.ClassUtils;
 
 import java.beans.ExceptionListener;
 
@@ -580,8 +581,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     public String toString()
     {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("MessageDispatcher");
+        final StringBuffer sb = new StringBuffer(80);
+        sb.append(ClassUtils.getClassName(this.getClass()));
         sb.append("{endpoint=").append(endpoint.getEndpointURI());
         sb.append('}');
         return sb.toString();
