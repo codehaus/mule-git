@@ -78,28 +78,40 @@
                     <version>2.1_3</version>
                 </dependency>
                 <dependency>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq</artifactId>
-                    <version>3.2.4</version>
+                    <groupId>org.apache.activemq</groupId> 
+					<artifactId>apache-activemq</artifactId> 
+					<version>4.1.0-incubator</version> 
                     <!-- These transitive dependencies are either just plain wrong or
                         not found on ibiblio, causing the build to fail -->
                     <exclusions>
-                        <exclusion>
-                            <groupId>activemq</groupId>
-                            <artifactId>activemq-core</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>activemq</groupId>
-                            <artifactId>activemq-core-test</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>activemq</groupId>
-                            <artifactId>smack</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>activemq</groupId>
-                            <artifactId>smackx</artifactId>
-                        </exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-console</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-jaas</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-optional</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-web</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId>
+							<artifactId>activemq-web-demo</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-core-test</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-core</artifactId>
+						</exclusion>
                         <exclusion>
                             <groupId>activesoap</groupId>
                             <artifactId>jaxp-api</artifactId>
@@ -153,12 +165,40 @@
                     <version>2.1_3</version>
                 </dependency>
                 <dependency>
-                    <groupId>activemq</groupId>
-                    <artifactId>activemq</artifactId>
-                    <version>3.2.4</version>
+                    <groupId>org.apache.activemq</groupId> 
+					<artifactId>apache-activemq</artifactId> 
+					<version>4.1.0-incubator</version> 
                     <!-- These transitive dependencies are either just plain wrong or
                         not found on ibiblio, causing the build to fail -->
                     <exclusions>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-console</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-jaas</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-optional</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-web</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId>
+							<artifactId>activemq-web-demo</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-core-test</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.activemq</groupId> 
+							<artifactId>activemq-core</artifactId>
+						</exclusion>
                         <exclusion>
                             <groupId>activemq</groupId>
                             <artifactId>activemq-core</artifactId>

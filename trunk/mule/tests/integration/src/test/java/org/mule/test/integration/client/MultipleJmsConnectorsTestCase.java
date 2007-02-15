@@ -13,9 +13,7 @@ package org.mule.test.integration.client;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
 
-import org.activemq.ActiveMQConnectionFactory;
-import org.activemq.broker.impl.BrokerContainerFactoryImpl;
-import org.activemq.store.vm.VMPersistenceAdapter;
+import org.apache.activemq.ActiveMQConnectionFactory;
 
 /**
  * @author <a href="mailto:ross.mason@cubis.co.uk">Ross Mason</a>
@@ -26,8 +24,7 @@ public class MultipleJmsConnectorsTestCase extends AbstractMuleTestCase
     public void testMultipleJmsClientConnections() throws Exception
     {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL("vm://localhost");
-        factory.setBrokerContainerFactory(new BrokerContainerFactoryImpl(new VMPersistenceAdapter()));
+        factory.setBrokerURL("vm://localhost?broker.persistent=false");
 
         MuleClient client = new MuleClient();
         client.setProperty("jms.connectionFactory", factory);

@@ -12,9 +12,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
                 <beans>
                 <bean id="jmsConnectionFactory"
-        class="org.activemq.ActiveMQConnectionFactory">
+        class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL"><value>vm://localhost</value></property>
-        <property name="useEmbeddedBroker"><value>true</value></property>
     </bean>
                 </beans>
                 ]]>
@@ -104,7 +103,7 @@
                 <router className="org.mule.routing.outbound.StaticRecipientList" enableCorrelation="ALWAYS">
                     <properties>
                         <list name="recipients">
-                            <entry value="jms://cn=endpoint3connector=jmsConnector1"/>
+                            <entry value="jms://cn=endpoint3?connector=jmsConnector1"/>
                         </list>
                     </properties>
                 </router>
