@@ -12,6 +12,7 @@ package org.mule.providers.jms;
 
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.UMOEvent;
@@ -160,17 +161,16 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
-                        // TODO AP should this drill-down be moved into the resolver as well?
-                        boolean replyToTopic = false;
-                        String reply = tempReplyTo.toString();
-                        int i = reply.indexOf(":");
+                        String address = tempReplyTo.toString();
+                        final ImmutableMuleEndpoint replyToEndpoint = new ImmutableMuleEndpoint(address, false);
+                        final boolean replyToTopic =  connector.getTopicResolver().isTopic(replyToEndpoint);
+                        // extract a queue/topic name to create a temp replyTo destination
+                        int i = address.indexOf(":");
                         if (i > -1)
                         {
-                            String qtype = reply.substring(0, i);
-                            replyToTopic = JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(qtype);
-                            reply = reply.substring(i + 1);
+                            address = address.substring(i + 1);
                         }
-                        replyTo = connector.getJmsSupport().createDestination(session, reply, replyToTopic);
+                        replyTo = connector.getJmsSupport().createDestination(session, address, replyToTopic);
                     }
                 }
                 // Are we going to wait for a return event ?
