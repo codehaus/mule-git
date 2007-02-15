@@ -316,6 +316,10 @@
                     <artifactId>activemq-core</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>activemq</groupId>
+                    <artifactId>jmdns</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>activesoap</groupId>
                     <artifactId>jaxp-api</artifactId>
                 </exclusion>
@@ -416,6 +420,5 @@
             <artifactId>cglib-nodep</artifactId>
             <version>2.1_3</version>
         </dependency>
-        
     </dependencies>
 </project>
