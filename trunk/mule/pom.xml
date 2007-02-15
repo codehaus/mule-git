@@ -200,67 +200,79 @@
                     <encoding>ISO-8859-1</encoding>
                 </configuration>
             </plugin>
-
+            
             <!-- Add index to generated JARs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-
+                    
                     <archive>
-
+                        
                         <!--
-                            Disabled for http://mule.mulesource.org/jira/browse/MULE-1153
-                            and http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
-                         -->
+                        Disabled for http://mule.mulesource.org/jira/browse/MULE-1153
+                        and http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+                        -->
                         <index>false</index>
                         <!-- List dependencies in the MANIFEST.MF -->
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-
+                            <addDefaultSpecificationEntries>
+                                true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>
+                                true</addDefaultImplementationEntries>
+                            
                         </manifest>
                         <!-- Custom Entries -->
                         <manifestEntries>
-                            <More-Info>For more information go to ${pom.url}</More-Info>
-                            <Support>Get commercial support: ${pom.organization.url}/support</Support>
-                            <Description>Mule ESB and Integration Platform</Description>
-                            <License>MulesSource MPL http://www.mulesource.com/MSPL/</License>
+                            <More-Info>For more information go to
+                                ${pom.url}</More-Info>
+                            <Support>Get commercial support:
+                                ${pom.organization.url}/support</Support>
+                            <Description>Mule ESB and Integration
+                                Platform</Description>
+                            <License>MulesSource MPL
+                                http://www.mulesource.com/MSPL/</License>
                             <Vendor-Url>${pom.organization.url}</Vendor-Url>
                             <Product-Url>${pom.url}</Product-Url>
-                            <Dtd-Public-Id>-//${pom.organization.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
+                            <Dtd-Public-Id>-//${pom.organization.name} //DTD
+                                mule-configuration XML V1.0//EN</Dtd-Public-Id>
                             <Dtd-System-Id>${pom.url}/dtds</Dtd-System-Id>
+                            
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
-                            <Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
+                            <Build-Date>
+                                ${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
                         </manifestEntries>
-
+                        
                     </archive>
-
+                    
                 </configuration>
             </plugin>
-
+            
             <!-- Global test exclusions -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <!--
-                    Fix surefire-report:report goal, which failed to
-                    complete if there were test errors (no report was
-                    generated).
+                Fix surefire-report:report goal, which failed to
+                complete if there were test errors (no report was
+                generated).
                 -->
                 <version>RELEASE</version>
                 <!--<version>2.3-SNAPSHOT</version>-->
                 <configuration>
                     <argLine>-Xms64m -Xmx256m</argLine>
                     <excludes>
-                        <exclude implementation="java.lang.String">**/Abstract*.*</exclude>
+                        <exclude implementation="java.lang.String">
+                            **/Abstract*.*</exclude>
+                        
                         <!-- The org.mule.tck classes are in the test directory but are not runnable tests. -->
-                        <exclude implementation="java.lang.String">org/mule/tck/**</exclude>
+                        <exclude implementation="java.lang.String">
+                            org/mule/tck/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-
+            
             <!-- Checkstyle plug-in -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -273,8 +285,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-
+            
             <!-- Delete code coverage database when 'mvn clean' is executed -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -283,6 +294,7 @@
                 <!--<instrumentation>-->
                 <!--<ignore>com.example.boringcode.*</ignore>-->
                 <!--<excludes>-->
+                
                 <!--<exclude implementation="java.lang.String">**/*TestCase.class</exclude>-->
                 <!--</excludes>-->
                 <!--</instrumentation>-->
@@ -296,7 +308,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+            
             <!-- Bind Clover Coverage instrumentation to the site generation -->
             <!-- Blocked by http://jira.codehaus.org/browse/MCLOVER-50 -->
             <!--<plugin>-->
@@ -311,13 +323,21 @@
             <!--</execution>-->
             <!--</executions>-->
             <!--</plugin>-->
-
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>2.0-SNAPSHOT</version>
             </plugin>
-
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <!-- by default download all sources when generating eclipse project files -->
+                    <downloadSources>true</downloadSources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
