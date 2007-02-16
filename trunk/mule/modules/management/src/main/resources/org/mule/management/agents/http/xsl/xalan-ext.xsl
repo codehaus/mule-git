@@ -16,7 +16,7 @@
  See the terms of the MX4J License in the documentation provided with this software.
 
  Author: Carlos Quiroz (tibu@users.sourceforge.net)
-				 Brett Knights
+                 Brett Knights
  Revision: $Revision: 1.2 $
 -->
 

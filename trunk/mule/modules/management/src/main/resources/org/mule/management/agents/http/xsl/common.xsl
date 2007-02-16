@@ -368,7 +368,7 @@
                      </xsl:call-template>
                   </xsl:otherwise>
                </xsl:choose>
-				 -
+                 -
                <xsl:choose>
                   <xsl:when test="$isfirst='false'">
                      <xsl:variable name="previndex" select="($start - $step)"/>
@@ -388,7 +388,7 @@
                      </xsl:call-template>
                   </xsl:otherwise>
                </xsl:choose>
-				 -
+                 -
                <xsl:choose>
                   <xsl:when test="$islast='false'">
                      <xsl:variable name="nextindex" select="($start + $step)"/>
@@ -408,7 +408,7 @@
                      </xsl:call-template>
                   </xsl:otherwise>
                </xsl:choose>
-				 -
+                 -
                <xsl:choose>
                   <xsl:when test="$islast='false'">
                      <xsl:variable name="lastindex" select="($total - ($total mod $step))"/>
