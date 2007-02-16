@@ -3,28 +3,15 @@
 <beans>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL"><value>vm://localhost</value></property>
-        <!-- TODO No such property in AMQ 4.1, migrate -->
-        <property name="useEmbeddedBroker"><value>true</value></property>
-        <!-- TODO No such property in AMQ 4.1, migrate -->
-        <property name="brokerContainerFactory">
-            <bean id="bcf" class="org.activemq.broker.impl.BrokerContainerFactoryImpl">
-                <constructor-arg index="0">
-                    <bean id="vmp" class="org.apache.activemq.store.memory.MemoryPersistenceAdapter"/>
-                </constructor-arg>
-            </bean>
-        </property>
+        <constructor-arg>
+            <value>vm://localhost?broker.persistent=false&amp;broker.useJmx=false</value>
+        </constructor-arg>
     </bean>
 
     <!-- the jms server connector config -->
     <bean id="jmsConnector" class="org.mule.providers.jms.JmsConnector">
-           <property name="connectionFactory"><ref local="jmsConnectionFactory"/></property>
-           <property name="specification"><value>1.1</value></property>
-        <property name="jndiProviderProperties">
-            <map>
-                <entry key="brokerURL"><value>vm://localhost</value></entry>
-            </map>
-        </property>
+        <property name="connectionFactory"><ref local="jmsConnectionFactory"/></property>
+        <property name="specification"><value>1.1</value></property>
     </bean>
 
    <!-- The Mule implementation of the Spring ApplicationEventMulticaster.  On startup the
