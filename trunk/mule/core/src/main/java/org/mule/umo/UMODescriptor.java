@@ -175,6 +175,9 @@ public interface UMODescriptor extends UMOImmutableDescriptor
      * Sets the initial state of this component
      *
      * @param state the initial state of this component
+     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_STARTED
+     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_STOPPED
+     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_PAUSED
      */
     void setInitialState(String state);
 
