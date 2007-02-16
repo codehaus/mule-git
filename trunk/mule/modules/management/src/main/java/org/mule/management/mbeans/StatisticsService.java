@@ -11,6 +11,7 @@
 package org.mule.management.mbeans;
 
 import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.util.Collection;
 
 import org.apache.commons.logging.Log;
@@ -89,40 +90,35 @@ public class StatisticsService implements StatisticsServiceMBean
         stats.logSummary();
     }
 
-    public void logCSVSummary()
+    public String printCSVSummary ()
     {
-        CSVPrinter printer = new CSVPrinter(System.out);
+        StringWriter w = new StringWriter(2048);
+        CSVPrinter printer = new CSVPrinter(w);
         printer.setPrintHeaders(true);
         stats.logSummary(printer);
+        final String summary = w.toString();
+        System.out.println(summary);
+        return summary;
     }
 
-    /**
-     * @return
-     * @deprecated Use getHtmlSummary
-     */
-    public String printHtmlSummary()
+    public String printHtmlSummary ()
     {
-        StringWriter w = new StringWriter();
+        StringWriter w = new StringWriter(8192);
         HtmlTablePrinter printer = new HtmlTablePrinter(w);
         stats.logSummary(printer);
+        final String summary = w.toString();
+        System.out.println(summary);
         return w.toString();
     }
 
-    public String getHtmlSummary()
+    public String printXmlSummary ()
     {
-        return printHtmlSummary();
-    }
-
-    public String printXMLSummary()
-    {
-        StringWriter w = new StringWriter();
+        StringWriter w = new StringWriter(8192);
         XMLPrinter printer = new XMLPrinter(w);
+        stats.logSummary(new PrintWriter(System.out));
         stats.logSummary(printer);
+        final String summary = w.toString();
+        System.out.println(summary);
         return w.toString();
-    }
-
-    public String getXMLSummary()
-    {
-        return printXMLSummary();
     }
 }
