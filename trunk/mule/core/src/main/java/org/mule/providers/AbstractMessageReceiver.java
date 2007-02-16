@@ -593,7 +593,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             if (transformer.isAcceptNull())
             {
-                returnMessage = new MuleMessage(new NullPayload(), RequestContext.getEventContext()
+                returnMessage = new MuleMessage(NullPayload.getInstance(), RequestContext.getEventContext()
                     .getMessage());
             }
             else

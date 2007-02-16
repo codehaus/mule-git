@@ -325,7 +325,7 @@ public class TransportServiceDescriptor
     {
         if (message == null)
         {
-            message = new NullPayload();
+            message = NullPayload.getInstance();
         }
         if (messageAdapter != null)
         {

@@ -8,52 +8,49 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers;
+package org.mule.impl;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
-/**
- * <code>NullPayload</code> represents a null event payload
- */
 // @Immutable
-public class NullPayload implements Serializable
+public class VoidResult implements Serializable
 {
     /**
      * Serial version
      */
-    private static final long serialVersionUID = 3530905899811505080L;
+    private static final long serialVersionUID = -3828573682818093673L;
 
-    private static class NullPayloadHolder
+    private static class VoidResultHolder
     {
-        private static final NullPayload instance = new NullPayload();
+        private static final VoidResult instance = new VoidResult();
     }
 
-    public static NullPayload getInstance()
+    public static VoidResult getInstance()
     {
-        return NullPayloadHolder.instance;
+        return VoidResultHolder.instance;
     }
 
-    private NullPayload()
+    private VoidResult()
     {
         super();
     }
 
     private Object readResolve() throws ObjectStreamException
     {
-        return NullPayloadHolder.instance;
+        return VoidResultHolder.instance;
     }
 
     // @Override
     public boolean equals(Object obj)
     {
-        return obj instanceof NullPayload;
+        return obj instanceof VoidResult;
     }
 
     // @Override
     public String toString()
     {
-        return "{NullPayload}";
+        return "{VoidResult}";
     }
 
 }

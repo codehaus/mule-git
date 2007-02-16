@@ -36,7 +36,7 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
     protected InputStream in;
     protected OutputStream out;
     protected OutputHandler handler;
-    private NullPayload nullPayload = new NullPayload();
+    private NullPayload nullPayload = NullPayload.getInstance();
 
     public StreamMessageAdapter(InputStream in)
     {

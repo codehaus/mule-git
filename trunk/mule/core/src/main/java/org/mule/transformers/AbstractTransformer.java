@@ -244,7 +244,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         Object result = doTransform(src, encoding);
         if (result == null)
         {
-            result = new NullPayload();
+            result = NullPayload.getInstance();
         }
 
         if (logger.isDebugEnabled())
