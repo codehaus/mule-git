@@ -12,6 +12,7 @@ package org.mule.management.support;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
+import java.io.ObjectStreamException;
 
 import javax.management.ObjectName;
 
@@ -96,4 +97,13 @@ public class AutoDiscoveryJmxSupportFactory implements JmxSupportFactory
         return  method != null;
     }
 
+    /**
+     * Safe deserialization.
+     * @throws ObjectStreamException will never throw it for this class
+     * @return singleton instance for this classloader/JVM
+     */
+    private Object readResolve() throws ObjectStreamException
+    {
+        return instance;
+    }
 }
