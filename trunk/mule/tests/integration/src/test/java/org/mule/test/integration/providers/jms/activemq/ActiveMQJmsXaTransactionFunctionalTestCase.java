@@ -32,7 +32,7 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
     {
         if (factory == null)
         {
-            factory = new ActiveMQXAConnectionFactory("vm://localhost?broker.persistent=false&useJmx=false");
+            factory = new ActiveMQXAConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
         }
         return factory;
     }
