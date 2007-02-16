@@ -38,7 +38,7 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
     protected int callbackCount = 0;
     protected boolean transacted = false;
 
-    private final Object lock = new Object();
+    private final Object callbackLock = new Object();
 
     protected MuleDescriptor descriptor;
 
@@ -156,7 +156,7 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
         {
             public void eventReceived(UMOEventContext context, Object Component)
             {
-                synchronized (lock)
+                synchronized (callbackLock)
                 {
                     callbackCalled = true;
                     callbackCount++;
