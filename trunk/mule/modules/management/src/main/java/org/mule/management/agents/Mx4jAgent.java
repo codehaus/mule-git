@@ -42,6 +42,7 @@ import org.mule.umo.manager.UMOAgent;
 import org.mule.util.BeanUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
+import org.mule.util.ClassUtils;
 import org.mule.MuleManager;
 
 /**
@@ -53,6 +54,9 @@ import org.mule.MuleManager;
 public class Mx4jAgent implements UMOAgent
 {
     public static final String HTTP_ADAPTER_OBJECT_NAME = "name=Mx4jHttpAdapter";
+
+    protected static final String DEFAULT_PATH_IN_JAR = ClassUtils.getPackageName(Mx4jAgent.class) +
+                                                        "http/xsl";
 
     private static final org.apache.commons.logging.Log logger = LogFactory.getLog(Mx4jAgent.class);
 
@@ -78,10 +82,11 @@ public class Mx4jAgent implements UMOAgent
 
     private String authenticationMethod = "basic";
 
+    // TODO AH check how an embedded scenario can be handled (no mule home) 
     private String xslFilePath = System.getProperty("mule.home") + "/lib/mule/mule-module-management-" +
             MuleManager.getConfiguration().getProductVersion() + ".jar";
 
-    private String pathInJar = "org/mule/management/agents/http/xsl";
+    private String pathInJar = DEFAULT_PATH_IN_JAR;
 
     private boolean cacheXsl = true;
 
