@@ -317,7 +317,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
             else if (endpoint.getProperties() != null)
             {
                 // still allow the selector to be set as a property on the endpoint
-                // to be backward compatable
+                // to be backward compatible
                 selector = (String)endpoint.getProperties().get(JmsConstants.JMS_SELECTOR_PROPERTY);
             }
             String tempDurable = (String)endpoint.getProperties().get("durable");
