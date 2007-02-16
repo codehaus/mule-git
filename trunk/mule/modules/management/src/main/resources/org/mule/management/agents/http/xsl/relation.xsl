@@ -16,7 +16,7 @@
  See the terms of the MX4J License in the documentation provided with this software.
 
  Author: Bronwen Cassidy (shadow12@users.sourceforge.net)
- Revision: $Revision: 1.2 $
+ Revision: $Revision$
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">

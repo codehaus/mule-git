@@ -17,7 +17,7 @@
 
  Author: Carlos Quiroz (tibu@users.sourceforge.net)
  Contribution: Lachezar Dobrev (l.dobrev@lsnsoft.com)
- Revision: $Revision: 1.2 $
+ Revision: $Revision$
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
