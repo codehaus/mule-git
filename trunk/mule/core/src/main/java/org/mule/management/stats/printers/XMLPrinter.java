@@ -10,19 +10,17 @@
 
 package org.mule.management.stats.printers;
 
-import org.apache.commons.lang.StringUtils;
+import org.mule.management.stats.RouterStatistics;
+import org.mule.util.StringUtils;
 
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Collection;
 
-import org.mule.management.stats.RouterStatistics;
 
 /**
  * <code>XMLPrinter</code> prints event processing stats as a XML document
  * 
- * @author <a href="mailto:artashes.hovasapyan@ricston.com">Artashes Hovasapyan</a>
- * @version $Revision$
  */
 public class XMLPrinter extends AbstractTablePrinter
 {
