@@ -43,8 +43,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
 
     protected void suitePreSetUp() throws Exception
     {
-        factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL("vm://localhost?broker.persistent=false");
+        factory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
 
         session = factory.createConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
     }

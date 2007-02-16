@@ -59,6 +59,7 @@ public class JmsReconnectionTestCase extends AbstractJmsFunctionalTestCase
     {
         if (factory == null)
         {
+            // TODO should be non-persistent
             factory = new ActiveMQConnectionFactory();
             //factory.setBrokerContainerFactory(new BrokerContainerFactoryImpl(new VMPersistenceAdapter()));
             factory.setBrokerURL(BROKER_URL);

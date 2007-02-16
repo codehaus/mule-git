@@ -33,15 +33,14 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
         if (factory == null)
         {
             factory = new ActiveMQXAConnectionFactory();
-            factory.setBrokerURL("vm://localhost?broker.persistent=false");
+            factory.setBrokerURL("vm://localhost?broker.persistent=false&useJmx=false");
         }
         return factory;
     }
 
     public Connection getSenderConnection() throws Exception
     {
-        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL("vm://localhost?broker.persistent=false");
+        factory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
         return factory.createConnection();
     }
 

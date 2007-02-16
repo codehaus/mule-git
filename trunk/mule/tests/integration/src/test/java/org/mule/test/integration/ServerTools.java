@@ -49,10 +49,7 @@ public class ServerTools
 
     public static ActiveMQConnectionFactory launchEmbeddedActiveMq() throws JMSException
     {
-        embeddedFactory = new ActiveMQConnectionFactory();
-        //embeddedFactory.setUseEmbeddedBroker(true);
-        //embeddedFactory.start();
-        return embeddedFactory;
+        return new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
     }
 
     public static void killEmbeddedActiveMq()

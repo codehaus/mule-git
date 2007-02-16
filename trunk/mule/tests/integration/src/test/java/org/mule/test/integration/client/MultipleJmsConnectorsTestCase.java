@@ -23,8 +23,8 @@ public class MultipleJmsConnectorsTestCase extends AbstractMuleTestCase
 {
     public void testMultipleJmsClientConnections() throws Exception
     {
-        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL("vm://localhost?broker.persistent=false");
+        ActiveMQConnectionFactory factory =
+                new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
 
         MuleClient client = new MuleClient();
         client.setProperty("jms.connectionFactory", factory);

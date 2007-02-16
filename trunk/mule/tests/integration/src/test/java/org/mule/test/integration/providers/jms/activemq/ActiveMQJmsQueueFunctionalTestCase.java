@@ -28,8 +28,7 @@ public class ActiveMQJmsQueueFunctionalTestCase extends AbstractJmsQueueFunction
     {
         if (factory == null)
         {
-            factory = new ActiveMQConnectionFactory();
-            factory.setBrokerURL("vm://localhost?broker.persistent=false");
+            factory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
         }
         return factory;
     }
