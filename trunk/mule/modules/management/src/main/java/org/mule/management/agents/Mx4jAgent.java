@@ -42,6 +42,7 @@ import org.mule.umo.manager.UMOAgent;
 import org.mule.util.BeanUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
+import org.mule.MuleManager;
 
 /**
  * <code>Mx4jAgent</code> configures an Mx4J Http Adaptor for Jmx management,
@@ -77,9 +78,10 @@ public class Mx4jAgent implements UMOAgent
 
     private String authenticationMethod = "basic";
 
-    private String xslFilePath;
+    private String xslFilePath = System.getProperty("mule.home") + "/lib/mule/mule-module-management-" +
+            MuleManager.getConfiguration().getProductVersion() + ".jar";
 
-    private String pathInJar;
+    private String pathInJar = "org/mule/management/agents/http/xsl";
 
     private boolean cacheXsl = true;
 
