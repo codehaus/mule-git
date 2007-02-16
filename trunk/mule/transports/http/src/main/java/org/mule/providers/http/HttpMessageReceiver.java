@@ -243,7 +243,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                         }
                         else
                         {
-                            tempResponse = new NullPayload();
+                            tempResponse = NullPayload.getInstance();
                         }
                         // This removes the need for users to explicitly adding
                         // the response transformer ObjectToHttpResponse in
