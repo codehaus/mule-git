@@ -459,7 +459,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Disposing Connector: " + this);
+            logger.info("Disposing: " + this);
         }
 
         try
@@ -479,7 +479,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Disposed Connector: " + this);
+            logger.info("Disposed: " + this);
         }
     }
 
