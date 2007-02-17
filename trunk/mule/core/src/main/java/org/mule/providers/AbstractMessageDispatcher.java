@@ -402,32 +402,33 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     public synchronized void connect() throws Exception
     {
-        if (connected)
-        {
-            return;
-        }
-
         if (disposed)
         {
             throw new IllegalStateException("Dispatcher has been disposed; cannot connect to resource");
         }
 
-        if (logger.isDebugEnabled())
+        if (connected)
         {
-            logger.debug("Attempting to connect to: " + endpoint.getEndpointURI());
+            return;
         }
 
         if (!connecting)
         {
             connecting = true;
             connectionStrategy.connect(this);
-            logger.info("Successfully connected to: " + endpoint.getEndpointURI());
+            logger.info("Successfully connected " + this.toString() + " to: " + endpoint.getEndpointURI());
             return;
         }
 
         try
         {
-            doConnect();
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Attempting to connect " + this.toString() + " to: " + endpoint.getEndpointURI());
+            }
+
+            this.doConnect();
+
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
                 ConnectionNotification.CONNECTION_CONNECTED));
         }
@@ -435,6 +436,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
                 ConnectionNotification.CONNECTION_FAILED));
+
             if (e instanceof ConnectException)
             {
                 throw (ConnectException)e;
@@ -453,19 +455,21 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("Disconnecting from: " + endpoint.getEndpointURI());
+            logger.debug("Disconnecting " + this.toString() + " from: " + endpoint.getEndpointURI());
         }
 
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
             ConnectionNotification.CONNECTION_DISCONNECTED));
+
         connected = false;
-        doDisconnect();
-        logger.info("Disconnected from: " + endpoint.getEndpointURI());
+        this.doDisconnect();
+
+        logger.info("Disconnected " + this.toString() + " from: " + endpoint.getEndpointURI());
     }
 
     protected String getConnectEventId(UMOImmutableEndpoint endpoint)
     {
-        return connector.getName() + ".dispatcher (" + endpoint.getEndpointURI() + ")";
+        return connector.getName() + ".dispatcher(" + endpoint.getEndpointURI() + ")";
     }
 
     public final boolean isConnected()
@@ -514,7 +518,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     private class Worker implements Work
     {
-        private UMOEvent event;
+        private final UMOEvent event;
 
         public Worker(UMOEvent event)
         {
@@ -533,7 +537,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 RequestContext.setEvent(event);
                 // Make sure we are connected
                 connectionStrategy.connect(AbstractMessageDispatcher.this);
-                doDispatch(event);
+                AbstractMessageDispatcher.this.doDispatch(event);
+
                 if (connector.isEnableMessageEvents())
                 {
                     String component = null;
@@ -541,13 +546,14 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     {
                         component = event.getComponent().getDescriptor().getName();
                     }
+
                     connector.fireNotification(new MessageNotification(event.getMessage(), event
                         .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
                 }
             }
             catch (Exception e)
             {
-                getConnector().handleException(e);
+                AbstractMessageDispatcher.this.getConnector().handleException(e);
             }
         }
 
@@ -579,11 +585,13 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return false;
     }
 
+    //  @Override
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(80);
-        sb.append(ClassUtils.getClassName(this.getClass()));
-        sb.append("{endpoint=").append(endpoint.getEndpointURI());
+        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
+        sb.append(", endpoint=").append(endpoint.getEndpointURI());
         sb.append('}');
         return sb.toString();
     }
