@@ -37,6 +37,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.security.SecurityException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.concurrent.WaitableBoolean;
 
@@ -649,6 +650,17 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     public String getReceiverKey()
     {
         return receiverKey;
+    }
+
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer(80);
+        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
+        sb.append(", receiverKey=").append(receiverKey);
+        sb.append(", endpoint=").append(endpoint.getEndpointURI());
+        sb.append('}');
+        return sb.toString();
     }
 
     protected abstract void doStart() throws UMOException;
