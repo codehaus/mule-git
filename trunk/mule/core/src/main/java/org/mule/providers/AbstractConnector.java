@@ -1053,9 +1053,9 @@ public abstract class AbstractConnector
         return false;
     }
 
-    public AbstractMessageReceiver getReceiver(UMOComponent component, UMOEndpoint endpoint)
+    public UMOMessageReceiver getReceiver(UMOComponent component, UMOEndpoint endpoint)
     {
-        return (AbstractMessageReceiver)receivers.get(getReceiverKey(component, endpoint));
+        return (UMOMessageReceiver)receivers.get(this.getReceiverKey(component, endpoint));
     }
 
     /**
