@@ -416,7 +416,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             connecting = true;
             connectionStrategy.connect(this);
-            logger.info("Successfully connected " + this.toString() + " to: " + endpoint.getEndpointURI());
+            logger.info("Connected: " + this);
             return;
         }
 
@@ -424,7 +424,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug("Attempting to connect " + this.toString() + " to: " + endpoint.getEndpointURI());
+                logger.debug("Connecting: " + this);
             }
 
             this.doConnect();
@@ -455,7 +455,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("Disconnecting " + this.toString() + " from: " + endpoint.getEndpointURI());
+            logger.debug("Disconnecting: " + this);
         }
 
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
@@ -464,7 +464,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         connected = false;
         this.doDisconnect();
 
-        logger.info("Disconnected " + this.toString() + " from: " + endpoint.getEndpointURI());
+        logger.info("Disconnected: " + this);
     }
 
     protected String getConnectEventId(UMOImmutableEndpoint endpoint)

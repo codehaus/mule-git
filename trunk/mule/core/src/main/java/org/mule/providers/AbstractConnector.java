@@ -316,10 +316,11 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Initialising " + getClass().getName());
+            logger.info("Initialising: " + this);
         }
+
         // Initialise the structure of this connector
-        initFromServiceDescriptor();
+        this.initFromServiceDescriptor();
 
         // we clear out any registered dispatchers and receivers without resetting
         // the actual containers since this it might actually be a re-initialise
@@ -343,11 +344,11 @@ public abstract class AbstractConnector
     /** {@inheritDoc} */
     public final synchronized void startConnector() throws UMOException
     {
-        checkDisposed();
+        this.checkDisposed();
 
-        if (!isStarted())
+        if (!this.isStarted())
         {
-            if (!isConnected())
+            if (!this.isConnected())
             {
                 startOnConnect.set(true);
                 this.getConnectionStrategy().connect(this);
@@ -357,7 +358,7 @@ public abstract class AbstractConnector
 
             if (logger.isInfoEnabled())
             {
-                logger.info("Starting Connector: " + getClass().getName());
+                logger.info("Starting: " + this);
             }
 
             // the scheduler is recreated after stopConnector()
@@ -384,7 +385,7 @@ public abstract class AbstractConnector
 
             if (logger.isInfoEnabled())
             {
-                logger.info("Connector: " + getClass().getName() + " has been started");
+                logger.info("Started: " + this);
             }
         }
     }
@@ -398,16 +399,16 @@ public abstract class AbstractConnector
     /** {@inheritDoc} */
     public final synchronized void stopConnector() throws UMOException
     {
-        if (isDisposed())
+        if (this.isDisposed())
         {
             return;
         }
 
-        if (isStarted())
+        if (this.isStarted())
         {
             if (logger.isInfoEnabled())
             {
-                logger.info("Stopping Connector: " + getClass().getName());
+                logger.info("Stopping: " + this);
             }
 
             this.doStop();
@@ -433,11 +434,11 @@ public abstract class AbstractConnector
             scheduler = null;
         }
 
-        if (isConnected())
+        if (this.isConnected())
         {
             try
             {
-                disconnect();
+                this.disconnect();
             }
             catch (Exception e)
             {
@@ -447,7 +448,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Connector " + getClass().getName() + " has been stopped");
+            logger.info("Stopped: " + this);
         }
     }
 
@@ -458,7 +459,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Disposing Connector: " + getClass().getName());
+            logger.info("Disposing Connector: " + this);
         }
 
         try
@@ -478,7 +479,7 @@ public abstract class AbstractConnector
 
         if (logger.isInfoEnabled())
         {
-            logger.info("Connector " + getClass().getName() + " has been disposed.");
+            logger.info("Disposed Connector: " + this);
         }
     }
 
@@ -1789,6 +1790,7 @@ public abstract class AbstractConnector
             getProtocol()).toString());
     }
 
+    // @Override
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(120);
