@@ -31,7 +31,7 @@ public class XFireCustomHttpHeaderTestCase extends FunctionalTestCase implements
     protected void doPostFunctionalSetUp() throws Exception
     {
         super.doPostFunctionalSetUp();
-        MuleManager.getInstance().registerListener(this);// , "TestComponent");
+        MuleManager.getInstance().registerListener(this);
     }
 
     // @Override
