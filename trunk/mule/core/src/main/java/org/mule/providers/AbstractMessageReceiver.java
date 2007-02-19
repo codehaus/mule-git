@@ -386,24 +386,32 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug(this + " Attempting to connect to: " + endpoint.getEndpointURI());
+                logger.debug("Connecting: " + this);
             }
 
             connectionStrategy.connect(this);
-            logger.info("Successfully connected to: " + endpoint.getEndpointURI());
+
+            logger.info("Connected: " + this);
             return;
         }
 
         try
         {
-            doConnect();
+            this.doConnect();
+            connected.set(true);
+            connecting.set(false);
+
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_CONNECTED));
         }
         catch (Exception e)
         {
+            connected.set(false);
+            connecting.set(false);
+
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_FAILED));
+
             if (e instanceof ConnectException)
             {
                 throw (ConnectException)e;
@@ -413,21 +421,22 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 throw new ConnectException(e, this);
             }
         }
-        connected.set(true);
-        connecting.set(false);
     }
 
     public void disconnect() throws Exception
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("Disconnecting from: " + endpoint.getEndpointURI());
+            logger.debug("Disconnecting: " + this);
         }
+
+        this.doDisconnect();
+        connected.set(false);
+
+        logger.info("Disconnected: " + this);
+
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
             ConnectionNotification.CONNECTION_DISCONNECTED));
-        connected.set(false);
-        doDisconnect();
-        logger.info("Disconnected from: " + endpoint.getEndpointURI());
     }
 
     public String getConnectionDescription()

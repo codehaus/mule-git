@@ -1113,7 +1113,13 @@ public abstract class AbstractConnector
 
         if (connecting.compareAndSet(false, true))
         {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Connecting: " + this);
+            }
+
             connectionStrategy.connect(this);
+
             logger.info("Connected: " + getConnectionDescription());
             // This method calls itself so the connecting flag is set first, then
             // the connection is made on the second call
@@ -1123,11 +1129,17 @@ public abstract class AbstractConnector
         try
         {
             this.doConnect();
+            connected.set(true);
+            connecting.set(false);
+
             this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_CONNECTED));
         }
         catch (Exception e)
         {
+            connected.set(false);
+            connecting.set(false);
+
             this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_FAILED));
 
@@ -1140,9 +1152,6 @@ public abstract class AbstractConnector
                 throw new ConnectException(e, this);
             }
         }
-
-        connected.set(true);
-        connecting.set(false);
 
         if (startOnConnect.get())
         {

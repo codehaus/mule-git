@@ -330,13 +330,15 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             {
                 try
                 {
-                    disconnect();
+                    this.disconnect();
                 }
                 catch (Exception e)
                 {
                     logger.warn(e.getMessage(), e);
                 }
-                doDispose();
+
+                this.doDispose();
+
                 if (workManager != null)
                 {
                     workManager.dispose();
@@ -415,25 +417,32 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         if (!connecting)
         {
             connecting = true;
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Connecting: " + this);
+            }
+
             connectionStrategy.connect(this);
+
             logger.info("Connected: " + this);
             return;
         }
 
         try
         {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Connecting: " + this);
-            }
-
             this.doConnect();
+            connected = true;
+            connecting = false;
 
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
                 ConnectionNotification.CONNECTION_CONNECTED));
         }
         catch (Exception e)
         {
+            connected = false;
+            connecting = false;
+
             connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
                 ConnectionNotification.CONNECTION_FAILED));
 
@@ -446,25 +455,27 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 throw new ConnectException(e, this);
             }
         }
-
-        connected = true;
-        connecting = false;
     }
 
     public synchronized void disconnect() throws Exception
     {
+        if (!connected)
+        {
+            return;
+        }
+
         if (logger.isDebugEnabled())
         {
             logger.debug("Disconnecting: " + this);
         }
 
-        connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
-            ConnectionNotification.CONNECTION_DISCONNECTED));
-
-        connected = false;
         this.doDisconnect();
+        connected = false;
 
         logger.info("Disconnected: " + this);
+
+        connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
+            ConnectionNotification.CONNECTION_DISCONNECTED));
     }
 
     protected String getConnectEventId(UMOImmutableEndpoint endpoint)
