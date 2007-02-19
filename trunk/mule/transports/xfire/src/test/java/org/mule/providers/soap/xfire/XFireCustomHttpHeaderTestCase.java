@@ -57,7 +57,10 @@ public class XFireCustomHttpHeaderTestCase extends FunctionalTestCase implements
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
         assertEquals("Test String Received", reply.getPayloadAsString());
-        
+
+        // make sure all notifications have trickled in
+        Thread.sleep(3000);
+
         // make sure we received a notification on xfire
         assertNotNull(notificationMsg);
 
