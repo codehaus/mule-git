@@ -10,6 +10,11 @@
 
 package org.mule.providers.http;
 
+import org.mule.providers.AbstractConnector;
+import org.mule.umo.UMOComponent;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.lifecycle.InitialisationException;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -23,17 +28,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 
 import org.apache.commons.lang.StringUtils;
-import org.mule.providers.AbstractConnector;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 
 /**
- * <code>HttpsMessageReceiver</code> is a Https server implementation used to
- * receive incoming requests over https
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>HttpsMessageReceiver</code> is a server implementation used to receive
+ * incoming requests over HTTPS.
  */
 
 public class HttpsMessageReceiver extends HttpMessageReceiver
@@ -44,6 +42,7 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
         super(connector, component, endpoint);
     }
 
+    // @Override
     protected ServerSocket createSocket(URI uri)
         throws IOException, NoSuchAlgorithmException, KeyManagementException
     {
@@ -55,10 +54,9 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
         SSLContext sslc = SSLContext.getInstance(cnn.getSslType(), cnn.getProvider());
 
         // Initialize the SSLContext to work with our key managers
-        sslc.init(cnn.getKeyManagerFactory().getKeyManagers(), cnn.getTrustManagerFactory()
-            .getTrustManagers(),
         // TODO provide more secure seed (othen than the default one)
-            new SecureRandom());
+        sslc.init(cnn.getKeyManagerFactory().getKeyManagers(), cnn.getTrustManagerFactory()
+            .getTrustManagers(), new SecureRandom());
 
         ssf = sslc.getServerSocketFactory();
 
@@ -68,7 +66,7 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
 
         InetAddress inetAddress = InetAddress.getByName(host);
         if (inetAddress.equals(InetAddress.getLocalHost()) || inetAddress.isLoopbackAddress()
-            || host.trim().equals("localhost"))
+                        || host.trim().equals("localhost"))
         {
             serverSocket = (SSLServerSocket)ssf.createServerSocket(uri.getPort(), backlog);
         }
@@ -76,8 +74,10 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
         {
             serverSocket = (SSLServerSocket)ssf.createServerSocket(uri.getPort(), backlog, inetAddress);
         }
+
         // Authenticate the client?
         serverSocket.setNeedClientAuth(cnn.isRequireClientAuthentication());
         return serverSocket;
     }
+
 }
