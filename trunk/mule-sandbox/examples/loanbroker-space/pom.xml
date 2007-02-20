@@ -42,10 +42,5 @@
             <artifactId>mule-transport-javaspaces</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-gigaspaces</artifactId>
-            <version>${version}</version>
-        </dependency>
     </dependencies>
 </project>
