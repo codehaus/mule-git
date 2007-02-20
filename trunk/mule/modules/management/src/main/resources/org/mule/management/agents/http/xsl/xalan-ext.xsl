@@ -17,7 +17,7 @@
 
  Author: Carlos Quiroz (tibu@users.sourceforge.net)
                  Brett Knights
- Revision: $Revision$
+ Revision: 1.2
 -->
 
 <xsl:stylesheet
