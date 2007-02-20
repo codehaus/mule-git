@@ -285,6 +285,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         finally
         {
             connector.closeQuietly(producer);
+            connector.closeQuietly(consumer);
 
             // TODO AP check if TopicResolver is to be utilized for temp destinations as well
             if (replyTo != null && (replyTo instanceof TemporaryQueue || replyTo instanceof TemporaryTopic))
