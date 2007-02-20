@@ -55,8 +55,8 @@ public class Mx4jAgent implements UMOAgent
 {
     public static final String HTTP_ADAPTER_OBJECT_NAME = "name=Mx4jHttpAdapter";
 
-    protected static final String DEFAULT_PATH_IN_JAR = ClassUtils.getPackageName(Mx4jAgent.class) +
-                                                        "http/xsl";
+    protected static final String DEFAULT_PATH_IN_JAR = StringUtils.replaceChars(ClassUtils.getPackageName(Mx4jAgent.class), '.', '/') +
+                                                        "/http/xsl";
 
     private static final org.apache.commons.logging.Log logger = LogFactory.getLog(Mx4jAgent.class);
 
