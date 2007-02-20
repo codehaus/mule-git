@@ -127,7 +127,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
             // consumer
             // to receive the message!
             //Antoine Borg 08 Dec 2006 - Uncommented for MULE-1150
-             createConsumer();
+            // createConsumer();
             // if we comment this line, if one tries to restart the service through
             // JMX,
             // this will fail...
