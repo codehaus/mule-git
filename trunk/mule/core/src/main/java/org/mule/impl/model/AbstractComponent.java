@@ -155,13 +155,6 @@ public abstract class AbstractComponent implements UMOComponent
         MuleManager.getInstance().fireNotification(new ComponentNotification(descriptor, action));
     }
 
-    void finaliseEvent(UMOEvent event)
-    {
-        logger.debug("Finalising event for: " + descriptor.getName() + " event endpointUri is: "
-                     + event.getEndpoint().getEndpointURI());
-        // queue.remove(event);
-    }
-
     public void forceStop() throws UMOException
     {
         if (!stopped.get())
