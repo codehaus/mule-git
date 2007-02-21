@@ -47,8 +47,10 @@ public class MuleComponentTestCase extends AbstractMuleTestCase
                 }
                 catch (InterruptedException e)
                 {
-                    // ignore
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
                 }
+
                 try
                 {
                     comp.resume();

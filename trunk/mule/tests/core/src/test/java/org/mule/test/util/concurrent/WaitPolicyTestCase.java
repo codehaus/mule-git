@@ -22,13 +22,14 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 import edu.emory.mathcs.backport.java.util.concurrent.locks.Lock;
 import edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.apache.commons.lang.StringUtils;
 
 public class WaitPolicyTestCase extends TestCase
@@ -42,6 +43,7 @@ public class WaitPolicyTestCase extends TestCase
         super(name);
     }
 
+    // @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -56,6 +58,7 @@ public class WaitPolicyTestCase extends TestCase
         SleepyTask.activeTasks = new AtomicInteger(0);
     }
 
+    // @Override
     protected void tearDown() throws Exception
     {
         _executor.shutdown();
@@ -119,7 +122,8 @@ public class WaitPolicyTestCase extends TestCase
         List exceptions = _asyncGroup.collectedExceptions();
         assertEquals(1, exceptions.size());
 
-        Map.Entry threadFailure = (Map.Entry)((Map)exceptions.get(0)).entrySet().iterator().next();
+        Map.Entry threadFailure = (Map.Entry)exceptions.iterator().next();
+        assertNotNull(threadFailure);
         assertEquals(failedThread, threadFailure.getKey());
         assertEquals(RejectedExecutionException.class, threadFailure.getValue().getClass());
         assertEquals(0, SleepyTask.activeTasks.get());
@@ -202,7 +206,8 @@ public class WaitPolicyTestCase extends TestCase
         List exceptions = _asyncGroup.collectedExceptions();
         assertEquals(1, exceptions.size());
 
-        Map.Entry threadFailure = (Map.Entry)((Map)exceptions.get(0)).entrySet().iterator().next();
+        Map.Entry threadFailure = (Map.Entry)exceptions.iterator().next();
+        assertNotNull(threadFailure);
         assertEquals(failedThread, threadFailure.getKey());
         assertEquals(RejectedExecutionException.class, threadFailure.getValue().getClass());
 
@@ -234,6 +239,7 @@ class LastRejectedWaitPolicy extends WaitPolicy
         return _lastRejected;
     }
 
+    // @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor e)
     {
         _lastRejected = r;
@@ -261,6 +267,7 @@ class SleepyTask extends Object implements Runnable
         _sleepTime = sleepTime;
     }
 
+    // @Override
     public String toString()
     {
         return ClassUtils.getClassName(this.getClass()) + "{" + _name + ", " + _sleepTime + "}";
@@ -276,7 +283,8 @@ class SleepyTask extends Object implements Runnable
         }
         catch (InterruptedException iex)
         {
-            // ignore
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(iex);
         }
 
         activeTasks.decrementAndGet();
@@ -287,24 +295,24 @@ class SleepyTask extends Object implements Runnable
 // ThreadGroup wrapper that collects uncaught exceptions
 class ExceptionCollectingThreadGroup extends ThreadGroup
 {
-    private final List _exceptions;
+    private final List _exceptions = Collections.synchronizedList(new LinkedList());
 
     public ExceptionCollectingThreadGroup()
     {
         super("asyncGroup");
-        _exceptions = new ArrayList();
     }
 
-    // collected Map(Thread, Throwable) associations
+    // collected Map.Entry(Thread, Throwable) associations
     public List collectedExceptions()
     {
         return _exceptions;
     }
 
     // all uncaught Thread exceptions end up here
+    // @Override
     public void uncaughtException(Thread t, Throwable e)
     {
-        _exceptions.add(Collections.singletonMap(t, e));
+        _exceptions.add(new DefaultMapEntry(t, e));
     }
 
 }
