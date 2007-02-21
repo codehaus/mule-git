@@ -22,12 +22,6 @@ import org.mule.util.ObjectPool;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-/**
- * <code>AbstractPoolTestCase</code> TODO (document class)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 {
     public static final byte FAIL_WHEN_EXHAUSTED = 0;
@@ -43,6 +37,7 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 
     }
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         // Initialise the manager
@@ -73,7 +68,6 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 
     public void testFailOnExhaust() throws Exception
     {
-
         ObjectPool pool = createPool(getTestDescriptor("orange", Orange.class.getName()), FAIL_WHEN_EXHAUSTED);
         Object borrowed = null;
 
@@ -87,7 +81,7 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
         try
         {
             borrowed = pool.borrowObject();
-            fail("Should throw an Exception");
+            fail("Should have thrown an Exception");
         }
         catch (Exception e)
         {
@@ -110,21 +104,14 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
         assertNotNull(borrowed);
         assertEquals(3, pool.getSize());
 
-        // TODO
-        // long starttime = System.currentTimeMillis();
         try
         {
             borrowed = pool.borrowObject();
-            fail("Should throw an Exception");
+            fail("Should have thrown an Exception");
         }
         catch (Exception e)
         {
-            // TODO
-            // long totalTime = System.currentTimeMillis() - starttime;
-            // Need to allow for alittle variance in system time
-            // This is unreliable
-            // assertTrue(totalTime < (DEFAULT_WAIT + 300) && totalTime >
-            // (DEFAULT_WAIT - 300));
+            // expected
         }
     }
 
@@ -140,29 +127,14 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
         borrowed = pool.borrowObject();
         assertEquals(2, pool.getSize());
 
-        // TODO
-        // long starttime = System.currentTimeMillis();
         long borrowerWait = 500;
         Borrower borrower = new Borrower(pool, borrowerWait);
         borrower.start();
+
         // Make sure the borrower borrows first
-        try
-        {
-            Thread.sleep(200);
-        }
-        catch (InterruptedException e)
-        {
-            // ignore
-        }
+        Thread.sleep(200);
 
         borrowed = pool.borrowObject();
-        // TODO
-        // long totalTime = System.currentTimeMillis() - starttime;
-        // Need to allow for alittle variance in system time
-        // This is unreliable
-        // assertTrue(totalTime < (borrowerWait + 300) && totalTime >
-        // (borrowerWait -300));
-
         assertNotNull(borrowed);
     }
 
@@ -185,7 +157,6 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 
     public void testClearPool() throws Exception
     {
-
         ObjectPool pool = createPool(getTestDescriptor("orange", Orange.class.getName()), FAIL_WHEN_EXHAUSTED);
 
         Object borrowed = pool.borrowObject();
@@ -214,7 +185,6 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 
         assertNotNull(pool);
         assertEquals(0, pool.getSize());
-
     }
 
     private class Borrower extends Thread
@@ -247,14 +217,7 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
             try
             {
                 Object object = pool.borrowObject();
-                try
-                {
-                    sleep(time);
-                }
-                catch (InterruptedException e)
-                {
-                    // ignore
-                }
+                sleep(time);
                 pool.returnObject(object);
             }
             catch (Exception e)
