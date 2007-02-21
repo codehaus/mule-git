@@ -61,10 +61,7 @@
                      </xsl:if>
                      <xsl:if test="@result='error'">
                         <xsl:call-template name="str">
-                           <xsl:with-param name="id">invoke.operation.success.error</xsl:with-param>
-                           <xsl:with-param name="p0">
-                              <xsl:value-of select="@errorMsg"/>
-                           </xsl:with-param>
+                           <xsl:with-param name="id">invoke.operation.error</xsl:with-param>
                         </xsl:call-template>
                      </xsl:if>
                   </div>
@@ -87,6 +84,21 @@
                      <xsl:if test="@return=''">
                         <xsl:call-template name="str">
                            <xsl:with-param name="id">invoke.operation.success.noresult</xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:if>
+                  </xsl:if>
+                  <xsl:if test="@result='error'">
+                     <xsl:if test="not (@return='')">
+                        <xsl:call-template name="str">
+                           <xsl:with-param name="id">invoke.operation.error.message</xsl:with-param>
+                           <xsl:with-param name="p0">
+                              <xsl:value-of select="@errorMsg"/>
+                           </xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:if>
+                     <xsl:if test="@return=''">
+                        <xsl:call-template name="str">
+                           <xsl:with-param name="id">invoke.operation.error.noresult</xsl:with-param>
                         </xsl:call-template>
                      </xsl:if>
                   </xsl:if>

@@ -204,7 +204,9 @@
     <str id="invoke.operation.success">Invocation successful</str>
     <str id="invoke.operation.success.result">Result value: <pre>{0}</pre></str>
     <str id="invoke.operation.success.noresult">No result</str>
-    <str id="invoke.operation.success.error">Error during MBean operation invocation<br/>Message: {0}</str>
+    <str id="invoke.operation.error">Error during MBean operation invocation</str>
+    <str id="invoke.operation.error.message">Message: <pre>{0}</pre></str>
+    <str id="invoke.operation.error.noresult">No result</str>
 
     <str id="about.title">Mule: JMX Management Console - About</str>
     <str id="about.main.title">About Mule JMX Management Console:</str>

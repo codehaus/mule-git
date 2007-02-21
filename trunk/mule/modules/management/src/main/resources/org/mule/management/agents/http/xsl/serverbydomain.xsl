@@ -57,7 +57,7 @@
                      <xsl:call-template name="str">
                         <xsl:with-param name="id">serverbydomain.domain.label</xsl:with-param>
                      </xsl:call-template>
-                     <xsl:variable name="url" select="concat('getattribute?objectname=', @name, ':type=org.mule.Statistics,name=AllStatistics&amp;attribute=HtmlSummary&amp;template=statistics')"/>
+                     <xsl:variable name="url" select="concat('invoke?operation=printHtmlSummary&amp;objectname=', @name, ':type=org.mule.Statistics,name=AllStatistics&amp;template=statistics')"/>
                      <a href="{$url}" class="serverbydomain_statistics" title="Domain Statistics"><xsl:value-of select="@name"/></a>
                   </xsl:when>
                   <xsl:otherwise>

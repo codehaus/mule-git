@@ -17,12 +17,47 @@
    <xsl:param name="html.stylesheet.type">text/css</xsl:param>
    <xsl:param name="head.title">statistics.title</xsl:param>
 
-   <xsl:template match="Attribute" name="statistics">
-      <xsl:value-of select="Attribute/@value" disable-output-escaping="yes"/>
+   <xsl:template name="operation">
+      <xsl:for-each select="Operation">
+         <xsl:if test="@result='success'">
+            <xsl:value-of select="@return" disable-output-escaping="yes"/>
+         </xsl:if>
+         <xsl:if test="@result='error'">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+               <tr class="darkline">
+                  <td>
+                     <div class="tableheader">
+                        <xsl:call-template name="str">
+                           <xsl:with-param name="id">invoke.operation.error</xsl:with-param>
+                        </xsl:call-template>
+                     </div>
+                  </td>
+               </tr>
+               <tr class="clearline">
+                  <td class="serverbydomain_row">
+                     <xsl:if test="not (@return='')">
+                        <xsl:call-template name="str">
+                           <xsl:with-param name="id">invoke.operation.error.message</xsl:with-param>
+                           <xsl:with-param name="p0">
+                              <xsl:value-of select="@errorMsg"/>
+                           </xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:if>
+                     <xsl:if test="@return=''">
+                        <xsl:call-template name="str">
+                           <xsl:with-param name="id">invoke.operation.error.noresult</xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:if>
+                  </td>
+               </tr>
+               <xsl:call-template name="serverview"/>
+            </table>
+         </xsl:if>
+      </xsl:for-each>
    </xsl:template>
 
    <!-- Main template -->
-   <xsl:template match="MBean">
+   <xsl:template match="MBeanOperation">
       <html>
       <xsl:call-template name="head"/>
          <body>
@@ -39,11 +74,11 @@
                               <xsl:call-template name="str">
                                  <xsl:with-param name="id">statistics.subtitle</xsl:with-param>
                               </xsl:call-template>
-                              <xsl:value-of select="substring-before(@objectname,':')"/>
+                              <xsl:value-of select="substring-before(Operation/@objectname,':')"/>
                            </td>
                         </tr>
                      </table>
-                     <xsl:call-template name="statistics"/>
+                     <xsl:call-template name="operation"/>
                      <xsl:call-template name="bottom"/>
                   </td>
                </tr>

@@ -22,13 +22,13 @@
       <html>
          <xsl:call-template name="head"/>
          <script type="text/javascript">
-         function queryStatistics()
+         function constructObjectname()
          {
             var objectname = document.getElementsByName("objectname")
-            var s = objectname[0].value + ":type=org.mule.Statistics,name=AllStatistics"
-            objectname[0].value = s
-            var form = document.getElementsByName("getattribute")
-            form[0].submit()
+            if (objectname[0].value.indexOf(":type=org.mule.Statistics,name=AllStatistics") == -1)
+            {
+               objectname[0].value = objectname[0].value + ":type=org.mule.Statistics,name=AllStatistics"
+            }
          }
          </script>
          <body>
@@ -48,7 +48,7 @@
                            </td>
                         </tr>
                         <tr>
-                           <form name="getattribute" action="/getattribute">
+                           <form name="invoke" action="/invoke" onsubmit="constructObjectname()">
                               <td class="input_title" align="right">
                                  <xsl:call-template name="str">
                                     <xsl:with-param name="id">emptystatistics.querystatistics</xsl:with-param>
@@ -58,9 +58,9 @@
                                        <xsl:with-param name="id">emptystatistics.query</xsl:with-param>
                                     </xsl:call-template>
                                  </xsl:variable>
+                                 <input type="hidden" name="operation" value="printHtmlSummary"/>
                                  <input type="input" name="objectname"/>
-                                 <input type="button" value="{$str.query}" onclick="queryStatistics()"/>
-                                 <input type="hidden" name="attribute" value="HtmlSummary"/>
+                                 <input type="submit" value="{$str.query}"/>
                                  <input type="hidden" name="template" value="statistics"/>
                               </td>
                            </form>
