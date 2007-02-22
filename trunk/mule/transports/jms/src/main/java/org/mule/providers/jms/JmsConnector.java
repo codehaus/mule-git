@@ -25,6 +25,7 @@ import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.FatalConnectException;
 import org.mule.providers.ReplyToHandler;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
+import org.mule.providers.service.TransportFactoryException;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.MessagingException;
 import org.mule.umo.TransactionException;
@@ -138,10 +139,18 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         try
         {
             MuleManager.getInstance().registerListener(this, getName());
+            //since transformers are stateful and have the endpoint set on them,we should have different transformers for each connector
+            defaultInboundTransformer = serviceDescriptor.createNewInboundTransformer();
+            defaultOutboundTransformer = serviceDescriptor.createNewOutboundTransformer();
+            defaultResponseTransformer = serviceDescriptor.createNewResponseTransformer();
         }
         catch (NotificationException nex)
         {
             throw new InitialisationException(nex, this);
+        }
+        catch (TransportFactoryException tex)
+        {
+            throw new InitialisationException(tex, this);
         }
     }
 
