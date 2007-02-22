@@ -623,6 +623,8 @@ public abstract class AbstractConnector
     public void setMaxDispatchersActive(int maxActive)
     {
         this.dispatchers.setMaxActive(maxActive);
+        // adjust maxIdle in tandem to avoid thrashing
+        this.dispatchers.setMaxIdle(maxActive);
     }
 
     private UMOMessageDispatcher getDispatcher(UMOImmutableEndpoint endpoint) throws UMOException
