@@ -21,5 +21,5 @@ public interface IMuleImages {
 	public static final String PATH_MULE_CONFIG = "META-INF/icons/config.gif";
 
 	/** Path for Mule wizard banner image */
-	public static final String PATH_MULE_WIZARD_BANNER = "META-INF/icons/mule_wizban.gif";
+	public static final String PATH_MULE_WIZARD_BANNER = "META-INF/icons/mule_wizban.png";
 }
