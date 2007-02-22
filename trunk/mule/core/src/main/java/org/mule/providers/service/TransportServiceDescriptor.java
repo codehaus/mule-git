@@ -550,6 +550,26 @@ public class TransportServiceDescriptor
         }
         return null;
     }
+    
+    public UMOTransformer createNewInboundTransformer() throws TransportFactoryException
+    {
+        if (getDefaultInboundTransformer() != null)
+        {
+            logger.info("Loading default inbound transformer: " + getDefaultInboundTransformer());
+            try
+            {
+                inboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                    getDefaultInboundTransformer(), ClassUtils.NO_ARGS);
+                return inboundTransformer;
+            }
+            catch (Exception e)
+            {
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "inbound", getDefaultInboundTransformer()), e);
+            }
+        }
+        return null;
+    }
 
     public UMOTransformer createOutboundTransformer() throws TransportFactoryException
     {
@@ -574,6 +594,26 @@ public class TransportServiceDescriptor
         }
         return null;
     }
+    
+    public UMOTransformer createNewOutboundTransformer() throws TransportFactoryException
+    {
+        if (getDefaultOutboundTransformer() != null)
+        {
+            logger.info("Loading default outbound transformer: " + getDefaultOutboundTransformer());
+            try
+            {
+                outboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                    getDefaultOutboundTransformer(), ClassUtils.NO_ARGS);
+                return outboundTransformer;
+            }
+            catch (Exception e)
+            {
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "outbound", getDefaultOutboundTransformer()), e);
+            }
+        }
+        return null;
+    }
 
     public UMOTransformer createResponseTransformer() throws TransportFactoryException
     {
@@ -581,6 +621,26 @@ public class TransportServiceDescriptor
         {
             return responseTransformer;
         }
+        if (getDefaultResponseTransformer() != null)
+        {
+            logger.info("Loading default response transformer: " + getDefaultResponseTransformer());
+            try
+            {
+                responseTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                    getDefaultResponseTransformer(), ClassUtils.NO_ARGS);
+                return responseTransformer;
+            }
+            catch (Exception e)
+            {
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "response", getDefaultResponseTransformer()), e);
+            }
+        }
+        return null;
+    }
+    
+    public UMOTransformer createNewResponseTransformer() throws TransportFactoryException
+    {
         if (getDefaultResponseTransformer() != null)
         {
             logger.info("Loading default response transformer: " + getDefaultResponseTransformer());

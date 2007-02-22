@@ -16,6 +16,7 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -29,6 +30,7 @@ import org.mule.util.ObjectFactory;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.SpiUtils;
+import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,19 +187,39 @@ public class TransportFactory
             }
 
             String scheme = url.getSchemeMetaInfo();
-
-            TransportServiceDescriptor csd = getServiceDescriptor(scheme, overrides);
-            if (type == 0)
+            
+            //check if there is a transformer associated with connector allready...
+            //if not, get it from the ServiceDescriptor
+            if(cnn instanceof AbstractConnector)
             {
-                trans = csd.createInboundTransformer();
+                AbstractConnector aconn=(AbstractConnector)cnn;
+                if(type==0)
+                {
+                    trans=aconn.getDefaultInboundTransformer();
+                }else if(type==1)
+                {
+                    trans=aconn.getDefaultOutboundTransformer();
+                }else
+                {
+                    trans=aconn.getDefaultResponseTransformer();
+                }
             }
-            else if (type == 1)
+            
+            if(trans==null)
             {
-                trans = csd.createOutboundTransformer();
-            }
-            else
-            {
-                trans = csd.createResponseTransformer();
+                TransportServiceDescriptor csd = getServiceDescriptor(scheme, overrides);
+                if (type == 0)
+                {
+                    trans = csd.createInboundTransformer();
+                }
+                else if (type == 1)
+                {
+                    trans = csd.createOutboundTransformer();
+                }
+                else
+                {
+                    trans = csd.createResponseTransformer();
+                }
             }
         }
         return trans;
