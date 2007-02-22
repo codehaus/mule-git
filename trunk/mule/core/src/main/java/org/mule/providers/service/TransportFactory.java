@@ -192,20 +192,23 @@ public class TransportFactory
             //if not, get it from the ServiceDescriptor
             if(cnn instanceof AbstractConnector)
             {
-                AbstractConnector aconn=(AbstractConnector)cnn;
-                if(type==0)
+                AbstractConnector aconn = (AbstractConnector) cnn;
+                // TODO MCR use the constants for the type, there should be on already
+                if (type == 0)
                 {
                     trans=aconn.getDefaultInboundTransformer();
-                }else if(type==1)
+                }
+                else if (type == 1)
                 {
                     trans=aconn.getDefaultOutboundTransformer();
-                }else
+                }
+                else
                 {
                     trans=aconn.getDefaultResponseTransformer();
                 }
             }
             
-            if(trans==null)
+            if (trans == null)
             {
                 TransportServiceDescriptor csd = getServiceDescriptor(scheme, overrides);
                 if (type == 0)
