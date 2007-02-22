@@ -46,7 +46,7 @@ public class AxisWsSecurityOnInboundTestCase extends FunctionalTestCase
         Properties props = new Properties();
 
         // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
+        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.ENCRYPT);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "myBadAlias");
         // Callback used to retrive password for given user.
