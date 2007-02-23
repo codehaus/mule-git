@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IContainer;
@@ -21,20 +22,26 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPage;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.mule.ide.core.MuleClasspathUtils;
 import org.mule.ide.core.MuleCorePlugin;
+import org.mule.ide.core.builder.MuleDTDResolverHandler;
 import org.mule.ide.core.distribution.IMuleBundle;
 import org.mule.ide.core.distribution.IMuleDistribution;
 import org.mule.ide.core.distribution.IMuleSample;
@@ -55,8 +62,6 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	private static final String MULE_MODULE_BUILDER_NAME = "module-builder";
 
 	private static final String MULE_TRANSPORT_TCP_NAME = "transport-tcp";
-
-	private static final String MULE_PREFIX = "mule-";
 
 	/** The workbench handle */
 	private IWorkbench workbench;
@@ -93,30 +98,54 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		try {
 			// Set up the Java project according to entries on Java page.
-			getContainer().run(false, true, javaPage.getRunnable());
+			getContainer().run(false, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						monitor.beginTask("Setting up Mule project", 100);
+						
+						// Run the Java project task in a sub-progress by itself 
+						SubProgressMonitor subMonitor= new SubProgressMonitor(monitor, 50);
+				        try {
+				        	javaPage.getRunnable().run(subMonitor);
+				        } finally {
+			        	  subMonitor.done();
+				        }
+				        
+				        // Add the Mule nature.
+						MuleCorePlugin.getDefault().setMuleNature(projectPage.getProjectHandle(), true);
 
-			// Add the Mule nature.
-			MuleCorePlugin.getDefault().setMuleNature(projectPage.getProjectHandle(), true);
+						// Add the Mule classpath container.
+						IProject project = projectPage.getProjectHandle();
+						IJavaProject javaProject = JavaCore.create(project);
+						IMuleSample sampleChosen = projectPage.getSelectedSample();
+						IMuleSample sample = sampleChosen;
+						if (sample == null) sample = createEmptyProject(projectPage.getMuleDistribution());
+						
+						addMuleLibraries(javaProject, sample);
+						monitor.worked(25);
 
-			// Add the Mule classpath container.
-			IProject project = projectPage.getProjectHandle();
-			IJavaProject javaProject = JavaCore.create(project);
-			IMuleSample sampleChosen = projectPage.getSelectedSample();
-			IMuleSample sample = sampleChosen;
-			if (sample == null) sample = createEmptyProject(projectPage.getMuleDistribution());
-			addMuleLibraries(javaProject, sampleChosen);
-			addFromSample(sampleChosen, javaProject);
-			return true;
+						addFromSample(sample, javaProject);
+						monitor.worked(25);
+				    } catch (CoreException e) {
+				    	throw new InvocationTargetException(e);
+					} finally {
+				    	monitor.done();
+					}
+				}});
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				MulePlugin.getDefault().showError("Unable to create project.",
+				MulePlugin.getDefault().showError("Unable to create project." + e.getCause().getLocalizedMessage(),
 						((CoreException) e.getCause()).getStatus());
+			} else {
+				MulePlugin.getDefault().showError("Unable to create project: " + e.getCause().getMessage(), MulePlugin.getDefault().createStatus(IStatus.ERROR, "Error creating Mule project", e.getCause()));
 			}
 		} catch (InterruptedException e) {
-		} catch (CoreException e) {
-			MulePlugin.getDefault().showError("Unable to create project.", e.getStatus());
+			if (getWorkbench().getActiveWorkbenchWindow() != null) {
+				MessageDialog.openInformation(getWorkbench().getActiveWorkbenchWindow().getShell(), "Interrupted", "Project creation interrupted");
+			}
 		}
-		return false;
+		// Even if there was a problem, we return true, otherwise the user will be stuck in the wizard
+		return true;
 	}
 
 	/**
@@ -171,7 +200,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			IMuleBundle[] bundles;
 			bundles = sample.getMuleDependencies();
 			for (int i=0; i<bundles.length; ++i)
-				moduleNames.add(bundles[i].getName().substring(MULE_PREFIX.length())); // skip MULE prefix
+				moduleNames.add(bundles[i].getName()); // skip MULE prefix
 
 			// Add mandatory modules (we can't launch without these)
 			moduleNames.add(MULE_TRANSPORT_TCP_NAME);
@@ -198,10 +227,12 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 		try {
 			IContainer sourceFolder = getSourceContainer(project);
 			File[] dirs = sample.getSourceFolders();
-			for (int i=0; i<dirs.length; ++i) {
-				File[] subs = dirs[i].listFiles();
-				for (int j = 0; j < subs.length; ++j )
-					copyIntoProject(subs[j], sourceFolder);
+			if (dirs != null) {
+				for (int i=0; i<dirs.length; ++i) {
+					File[] subs = dirs[i].listFiles();
+					for (int j = 0; j < subs.length; ++j )
+						copyIntoProject(subs[j], sourceFolder);
+				}
 			}
 		} catch (JavaModelException e) {
 			MuleCorePlugin.getDefault().logException("Unable to find a source folder.", e);
@@ -286,7 +317,13 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	private IFolder createConfigFolder(IProject project) throws CoreException {
 		IFolder configFolder = project.getFolder(CONFIG_FOLDER_NAME);
 		configFolder.create(true, true, new NullProgressMonitor());
-		
+		try {
+			//TODO - remove!
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return configFolder;
 	}
 	
@@ -306,44 +343,47 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 		try {
 			IFolder configFolder = createConfigFolder(project);
 			if (configs == null) {
+				// This is a fairly simple minded XML entity escaping for strings.
+				String projectName = project.getName().replaceAll("\"", "\'").replaceAll("<", "&qout;").replaceAll("--", " - - ");
 				String emptyConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
 						"\r\n" + 
 						"<!DOCTYPE mule-configuration PUBLIC \"-//MuleSource //DTD mule-configuration XML V1.0//EN\"\r\n" + 
 						"                                \"http://mule.mulesource.org/dtds/mule-configuration.dtd\">\r\n" + 
 						"\r\n" + 
-						"<!--  This is a blank configuration file for the " + project.getName() + " project -->\r\n" + 
+						"<!--  This is a blank configuration file for the " + projectName + " project -->\r\n" + 
 						"\r\n" + 
-						"<mule-configuration id=\"" + project.getName() + "-config\" version=\"1.0\">\r\n" + 
+						"<mule-configuration id=\"" + projectName + "-config\" version=\"1.0\">\r\n" + 
 						"\r\n" + 
 						"    <description>\r\n" +
-						"        Configuration for the the \"" + project.getName() + "\" project" +
+						"        Configuration for the the \"" + projectName + "\" project" +
 						"    </description>\r\n" + 
 						"\r\n" + 
-						"</mule-configuration";
+						"</mule-configuration>\r\n";
 				// Make an empty one...
-				IFile blankConfigFile = configFolder.getFile("mule-config.xml");
-					blankConfigFile.create(new ByteArrayInputStream(emptyConfig.getBytes("UTF-8")), true, new NullProgressMonitor());
-			addedConfigs.add(blankConfigFile);
+				try {
+					IFile blankConfigFile = configFolder.getFile("mule-config.xml");
+						blankConfigFile.create(new ByteArrayInputStream(emptyConfig.getBytes("UTF-8")), true, new NullProgressMonitor());
+					addedConfigs.add(blankConfigFile);
+				} catch (UnsupportedEncodingException e) {
+					throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "UTF-8 not supported should not ever occur", e)); 
+				}
 			} else {
 				for (int i = 0; i < configs.length; i++) {
 					File configFile = configs[i];
 					IFile newConfigFile = configFolder.getFile(configFile.getName());
-					newConfigFile.create(new FileInputStream(configFile), true, new NullProgressMonitor());
-	
+					try {
+						newConfigFile.create(new FileInputStream(configFile), true, new NullProgressMonitor());
+					} catch (FileNotFoundException e) {
+						throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "Sample file not found: " + configFile, e)); 
+					}
+
 					if (configFile.getName().endsWith(".xml") && smellsLikeMuleConfigFile(configFile)) {
 						addedConfigs.add(newConfigFile);
 					}
 				}
 			}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "Unsupported endocing", e)); 
 		}
 		
 		for (Iterator configIt = addedConfigs.iterator(); configIt.hasNext();) {
@@ -363,7 +403,9 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setValidating(false);
 			dbf.setNamespaceAware(true);
-			Document doc = dbf.newDocumentBuilder().parse(configFile);
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			db.setEntityResolver(new MuleDTDResolverHandler());
+			Document doc = db.parse(configFile);
 			return "mule-configuration".equals(doc.getDocumentElement().getLocalName());
 		} catch (Throwable t) {
 			// It's OK to ignore any old exception here
@@ -379,6 +421,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.workbench = workbench;
+		setNeedsProgressMonitor(true);
 	}
 
 	/**

@@ -11,6 +11,7 @@
 package org.mule.ide.ui;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -112,6 +113,18 @@ public class MulePlugin extends AbstractUIPlugin {
 	public Image getImage(String key) {
 		return getImageRegistry().get(key);
 	}
+
+	/**
+     * Create a status of a given type.
+     *
+     * @param type the IStatus constant
+     * @param message the message
+     * @param exception the exception (may be null)
+     * @return the status
+     */
+    public IStatus createStatus(int type, String message, Throwable exception) {
+        return new Status(type, PLUGIN_ID, 0, message, exception);
+    }
 
 	/**
 	 * Show an error dialog with the given message.

@@ -185,11 +185,12 @@ public class MuleDistributionPreferencePanel extends Composite {
 	 * Browse for the external root.
 	 */
 	protected void addJarDistribution() {
-		FileDialog dialog = new FileDialog(parentPage.getShell());
-		dialog.setText("Choose a Mule single-file distribution (JAR or RAR)");
-		dialog.setFilterNames (new String [] {"Java Archive", "Resource Adapter Archive"});
-		dialog.setFilterExtensions (new String [] {"*.jar", "*.rar"});
-		tryAddDistribution(dialog.open());
+		MessageDialog.openConfirm(parentPage.getShell(), "Single Archive Mule Distribution", "Sorry, this feature has not been implemented yet...");
+//		FileDialog dialog = new FileDialog(parentPage.getShell());
+//		dialog.setText("Choose a Mule single-file distribution (JAR or RAR)");
+//		dialog.setFilterNames (new String [] {"Java Archive", "Resource Adapter Archive"});
+//		dialog.setFilterExtensions (new String [] {"*.jar", "*.rar"});
+//		tryAddDistribution(dialog.open());
 	}
 
 	private IMuleDistribution getValidDistribution(String path) {
