@@ -26,9 +26,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
+import org.mule.ide.core.MuleCorePlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -36,6 +38,8 @@ import org.xml.sax.SAXException;
 public class MuleFullDistribution extends AbstractMuleDistribution {
 	private static final String MODULE_PREFIX = "module-";
 	private static final String TRANSPORT_PREFIX = "transport-";
+
+	private static final String MULE_PREFIX = "mule-";
 
 	private Map nameToBundle = Collections.synchronizedMap(new HashMap());
 	
@@ -100,6 +104,15 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 			stemToFileMap = new HashMap();
 			File optLibs[] = new File(getLocation(),"lib/opt").listFiles();
 			for (int i=0; i < optLibs.length; ++i) stemToFileMap.put(trimVersion(optLibs[i].getName()), optLibs[i]);
+			try
+			{
+				File userLibs[] = new File(getLocation(),"lib/user").listFiles();
+				for (int i=0; i < userLibs.length; ++i) stemToFileMap.put(trimVersion(userLibs[i].getName()), userLibs[i]);
+			}
+			catch (Throwable t)
+			{
+				MuleCorePlugin.getDefault().logException("Can't read Mule distro 'user' library folder", t);
+			}
 		}
 		return (File)stemToFileMap.get(trimVersion(name));
 	}
@@ -130,7 +143,8 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 					// Has submodules....
 					for (int i=0; i < depNodes.getLength(); ++i) {
 						String dependency = XMLUtils.text(depNodes.item(i));
-						dependencies.add(getMuleModule(dependency));
+						if (dependency.startsWith(MULE_PREFIX))
+							dependencies.add(getMuleModule(dependency.substring(MULE_PREFIX.length())));
 					}
 				}
 				dest.add(new FullJarSample(name, description, (IMuleBundle[]) dependencies.toArray(new IMuleBundle[dependencies.size()]), dir));

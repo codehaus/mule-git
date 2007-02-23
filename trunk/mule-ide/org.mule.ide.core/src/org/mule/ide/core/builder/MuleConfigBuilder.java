@@ -10,7 +10,6 @@
 
 package org.mule.ide.core.builder;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
@@ -41,19 +40,20 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.mule.ide.core.MuleCorePlugin;
 import org.osgi.framework.Bundle;
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 public class MuleConfigBuilder extends IncrementalProjectBuilder {
 
     public static final String BUILDER_ID = "org.mule.ide.core.muleConfig";
     public static final String PLUGIN_ID = "org.mule.ide.core";
 
-    private static final String SYMPHONY_SOFT_DTD_MULE_CONFIGURATION_XML_V1_0_EN = "-//SymphonySoft //DTD mule-configuration XML V1.0//EN";
-    private static final String HTTP_WWW_SYMPHONYSOFT_COM_DTDS_MULE = "http://www.symphonysoft.com/dtds/mule/";
+    static final String SYMPHONY_SOFT_DTD_MULE_CONFIGURATION_XML_V1_0_EN = "-//SymphonySoft //DTD mule-configuration XML V1.0//EN";
+    static final String HTTP_WWW_SYMPHONYSOFT_COM_DTDS_MULE = "http://www.symphonysoft.com/dtds/mule/";
+
+    static final String MULESOURCE_DTD_MULE_CONFIGURATION_XML_V1_0_EN = "-//MuleSource //DTD mule-configuration XML V1.0//EN";
+    static final String HTTP_MULESOURCE_COM_DTDS_MULE = "http://mule.mulesource.org/dtds/";
 
     class SampleDeltaVisitor implements IResourceDeltaVisitor {
         /*
@@ -89,42 +89,7 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
         }
     }
 
-    class DTDResolverHandler extends DefaultHandler {
-        private boolean seenRoot = false;
-
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
-            if (publicId.equals(SYMPHONY_SOFT_DTD_MULE_CONFIGURATION_XML_V1_0_EN) ||
-                systemId.startsWith(HTTP_WWW_SYMPHONYSOFT_COM_DTDS_MULE)) {
-
-                URL dtdURL = findResourceURL("dtd/" + systemId.substring(HTTP_WWW_SYMPHONYSOFT_COM_DTDS_MULE.length()));
-                try {
-                    if (dtdURL != null) {
-                        return new InputSource(dtdURL.openStream());
-                    }
-                } catch (IOException ioex) {
-                    throw new SAXException(ioex);
-                }
-            }
-            throw new WrongRootException(systemId + " will not be loaded as part of build");
-        }
-
-        /* (non-Javadoc)
-         * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
-         */
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (seenRoot) {
-                super.startElement(uri, localName, qName, attributes);
-            } else {
-                // Will, this must be the root, then
-                if (! qName.equals("mule-configuration"))
-                    throw new WrongRootException("Only Mule Configurations are checked here, root-element '"+qName + "' not supported");
-
-                seenRoot = true;
-            }
-        }
-    }
-
-    class XMLErrorHandler extends DTDResolverHandler {
+    class XMLErrorHandler extends MuleDTDResolverHandler {
 
         private IJavaModel getJavaModel() {
             return JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
@@ -196,7 +161,7 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
         }
     }
 
-    class CheckValidHandler extends DTDResolverHandler {
+    class CheckValidHandler extends MuleDTDResolverHandler {
 
         public CheckValidHandler() {
         }
@@ -212,16 +177,6 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
         public void warning(SAXParseException exception) throws SAXException {
             throw new SAXException(exception);
         }
-    }
-
-    class WrongRootException extends SAXException {
-
-        private static final long serialVersionUID = 3L;
-
-        WrongRootException(String messageText) {
-            super(messageText);
-        }
-
     }
 
     public static URL findResourceURL(String bundleId, String path) {
