@@ -16,7 +16,6 @@ import org.mule.impl.RequestContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 
 import org.apache.commons.lang.SerializationUtils;
 
@@ -27,7 +26,7 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class MuleMessageProtocol extends DefaultProtocol
 {
-    public Serializable read(InputStream is) throws IOException
+    public Object read(InputStream is) throws IOException
     {
         byte[] tmp = (byte[])super.read(is);
 

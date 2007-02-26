@@ -34,7 +34,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -322,20 +321,20 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                 {
                     try
                     {
-                        if(endpoint.isStreaming())
+                        if (endpoint.isStreaming())
                         {
                             UMOMessageAdapter adapter = connector.getStreamMessageAdapter(dataIn, dataOut);
                             routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), null);
                         }
                         else
                         {
-                            Serializable readMsg = protocol.read(dataIn);
+                            Object readMsg = protocol.read(dataIn);
                             if (readMsg == null)
                             {
                                 break;
                             }
 
-                            Serializable result = processData(readMsg);
+                            Object result = processData(readMsg);
                             if (result != null)
                             {
                                 protocol.write(dataOut, result);
@@ -363,7 +362,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
         }
 
-        protected Serializable processData(Serializable data) throws Exception
+        protected Object processData(Object data) throws Exception
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);
             OutputStream os = new ResponseOutputStream(socket.getOutputStream(), socket);
@@ -388,10 +387,10 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             super(socket);
         }
 
-
         public void run()
         {
-            super.run();    //To change body of overridden methods use File | Settings | File Templates.
+            super.run(); // To change body of overridden methods use File |
+                            // Settings | File Templates.
         }
     }
 

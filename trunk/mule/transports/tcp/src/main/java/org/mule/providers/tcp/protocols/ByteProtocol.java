@@ -26,15 +26,24 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public abstract class ByteProtocol implements TcpProtocol
 {
-    public void write(OutputStream os, Serializable data) throws IOException
+    public void write(OutputStream os, Object data) throws IOException
     {
         if (data instanceof byte[])
         {
             write(os, (byte[])data);
         }
+        else if (data instanceof String)
+        {
+            write(os, ((String)data).getBytes());
+        }
+        else if (data instanceof Serializable)
+        {
+            write(os, SerializationUtils.serialize((Serializable)data));
+        }
         else
         {
-            write(os, SerializationUtils.serialize(data));
+            // TODO SF Throw Exception since have no idea how to serialize!!! Which
+            // exception should we throw?
         }
     }
 }

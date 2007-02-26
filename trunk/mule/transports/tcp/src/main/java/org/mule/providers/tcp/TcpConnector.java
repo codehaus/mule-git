@@ -241,7 +241,7 @@ public class TcpConnector extends AbstractConnector
             {
                 // This shouldn't happen
                 throw new IllegalStateException("could not get socket for endpoint: "
-                                + endpoint.getEndpointURI().getAddress());
+                                                + endpoint.getEndpointURI().getAddress());
             }
             return new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }
@@ -322,17 +322,17 @@ public class TcpConnector extends AbstractConnector
         Socket socket = createSocket(port, inetAddress);
         socket.setReuseAddress(true);
         if (getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-                        && socket.getReceiveBufferSize() != getBufferSize())
+            && socket.getReceiveBufferSize() != getBufferSize())
         {
             socket.setReceiveBufferSize(getBufferSize());
         }
         if (getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-                        && socket.getSendBufferSize() != getBufferSize())
+            && socket.getSendBufferSize() != getBufferSize())
         {
             socket.setSendBufferSize(getBufferSize());
         }
         if (getReceiveTimeout() != UMOConnector.INT_VALUE_NOT_SET
-                        && socket.getSoTimeout() != getReceiveTimeout())
+            && socket.getSoTimeout() != getReceiveTimeout())
         {
             socket.setSoTimeout(getReceiveTimeout());
         }
