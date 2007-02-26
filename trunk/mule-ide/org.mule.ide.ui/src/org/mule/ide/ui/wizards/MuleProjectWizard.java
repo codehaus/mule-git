@@ -41,6 +41,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.mule.ide.core.MuleClasspathUtils;
 import org.mule.ide.core.MuleCorePlugin;
+import org.mule.ide.core.builder.MuleConfigBuilder;
 import org.mule.ide.core.builder.MuleDTDResolverHandler;
 import org.mule.ide.core.distribution.IMuleBundle;
 import org.mule.ide.core.distribution.IMuleDistribution;
@@ -377,7 +378,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 						throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "Sample file not found: " + configFile, e)); 
 					}
 
-					if (configFile.getName().endsWith(".xml") && smellsLikeMuleConfigFile(configFile)) {
+					if (configFile.getName().endsWith(".xml") && MuleConfigBuilder.smellsLikeMuleConfigFile(configFile)) {
 						addedConfigs.add(newConfigFile);
 					}
 				}
@@ -396,21 +397,6 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			model.addMuleConfigSet(newSet);
 		}
 		model.save();
-	}
-
-	private boolean smellsLikeMuleConfigFile(File configFile) {
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			dbf.setValidating(false);
-			dbf.setNamespaceAware(true);
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			db.setEntityResolver(new MuleDTDResolverHandler());
-			Document doc = db.parse(configFile);
-			return "mule-configuration".equals(doc.getDocumentElement().getLocalName());
-		} catch (Throwable t) {
-			// It's OK to ignore any old exception here
-		}
-		return false; // It's not a Mule Config file, then
 	}
 
 	/*

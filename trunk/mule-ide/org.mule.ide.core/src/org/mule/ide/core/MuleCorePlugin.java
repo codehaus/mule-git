@@ -43,9 +43,10 @@ public class MuleCorePlugin extends Plugin {
     /** Eclipse plugin id */
     public static final String PLUGIN_ID = "org.mule.ide.core";
 
-    /** Unique for the Mule classpath container */
-    public static final String ID_MULE_CLASSPATH_CONTAINER = PLUGIN_ID + ".MULE_CONTAINER";
-
+    /** Unique for the Mule classpath container. This matches the id in the 
+     * classpathContainerInitializer extension in plugin.xml */
+    public static final String ID_MULE_CLASSPATH_CONTAINER = "org.mule.ide.core.muleClasspath";
+    
     /** Eclipse variable that holds the Mule external root folder location */
     public static final String ID_MULE_EXTERNAL_ROOT = "MULEROOT";
 
@@ -127,7 +128,11 @@ public class MuleCorePlugin extends Plugin {
      * @return true if has nature, false if not
      */
     public boolean hasMuleNature(IProject project) {
-        return (getMuleNature(project) != null);
+        try {
+            return project.hasNature(MuleNature.NATURE_ID);
+        } catch (CoreException e) {
+            return false;
+        }
     }
 
     /**

@@ -10,9 +10,12 @@
 
 package org.mule.ide.core.builder;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -39,6 +42,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.mule.ide.core.MuleCorePlugin;
 import org.osgi.framework.Bundle;
+import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -279,4 +283,21 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
         // the visitor does the work.
         delta.accept(new SampleDeltaVisitor());
     }
+    
+
+	static public boolean smellsLikeMuleConfigFile(File configFile) {
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setValidating(false);
+			dbf.setNamespaceAware(true);
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			db.setEntityResolver(new MuleDTDResolverHandler());
+			Document doc = db.parse(configFile);
+			return "mule-configuration".equals(doc.getDocumentElement().getLocalName());
+		} catch (Throwable t) {
+			// It's OK to ignore any old exception here
+		}
+		return false; // It's not a Mule Config file, then
+	}
+
 }

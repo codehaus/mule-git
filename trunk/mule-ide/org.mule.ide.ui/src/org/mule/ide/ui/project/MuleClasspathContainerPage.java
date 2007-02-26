@@ -6,6 +6,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.mule.ide.core.MuleClasspathUtils;
+import org.mule.ide.ui.IMuleImages;
+import org.mule.ide.ui.MulePlugin;
 
 public class MuleClasspathContainerPage extends WizardPage implements
 		IClasspathContainerPage {
@@ -16,6 +18,8 @@ public class MuleClasspathContainerPage extends WizardPage implements
 		super("Mule Classpath");
 		this.setTitle("Mule Distribution and Modules");
 		this.setDescription("Please choose the Mule distribution to use for this project, and choose which modules and transports to include");
+		this.setImageDescriptor(MulePlugin.getDefault().getImageRegistry().getDescriptor(
+				IMuleImages.KEY_MULE_WIZARD_BANNER));
 	}
 	
 	public boolean finish() {

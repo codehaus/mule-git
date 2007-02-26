@@ -157,6 +157,12 @@ public class MuleClasspathChooserPanel extends Composite {
 		
 	}
 
+	/**
+	 * Reset the panel's contents to the chosen distribution and bundle selection
+	 * 
+	 * @param hint Hint from the 
+	 * @param bundleSelectString
+	 */
 	public void reset(String hint, String bundleSelectString) {
 		initCombo();
 		initDistributions();
@@ -165,7 +171,7 @@ public class MuleClasspathChooserPanel extends Composite {
 			initializeBundleTable(getChosenDistribution());
 			setModuleSelection(MuleClasspathUtils.commaStringToSet(bundleSelectString));
 			
-			addDistributionChangeListener(new IDistributionChangeListener() {
+			if (listener == null) addDistributionChangeListener(new IDistributionChangeListener() {
 				public void distributionChanged(IMuleDistribution newDist) {
 					resetBundleTable(newDist);
 				}

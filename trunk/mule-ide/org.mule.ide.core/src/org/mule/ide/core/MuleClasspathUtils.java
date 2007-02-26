@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.JavaCore;
 public class MuleClasspathUtils {
 
 	public static IClasspathEntry createMuleClasspathContainer(String hint, Collection selectedBundles) {
-		IPath path = new Path("org.mule.ide.core.muleClasspath");
+		IPath path = new Path(MuleCorePlugin.ID_MULE_CLASSPATH_CONTAINER);
 		path = path.append(collectionToCommaString(selectedBundles));
 		if (hint != null)
 			path = path.append(hint);
@@ -43,7 +43,7 @@ public class MuleClasspathUtils {
 	public static Set commaStringToSet(String bundleSelectString2) {
 		Set selection = new HashSet();
 		StringTokenizer st = new StringTokenizer(bundleSelectString2, ",");
-		while (st.hasMoreTokens()) selection.add(st.nextToken());
+		while (st.hasMoreTokens()) selection.add(st.nextToken().trim());
 		return selection;
 	}
 

@@ -13,7 +13,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -285,8 +284,8 @@ public class MuleDistributionPreferencePanel extends Composite {
 		if (idx >= 0 && idx < pathList.size()) {
 			IMuleDistribution dist = getValidDistribution((String)pathList.get(idx));
 			if (dist != null) {
-				this.textDistributionVersion.setText("Version: " + dist.getVersion());
-				this.textDistributionDescription.setText("Location: " + dist.getLocation().toString());
+				this.textDistributionVersion.setText(dist.getVersion());
+				this.textDistributionDescription.setText(dist.getLocation().toString());
 				return true;
 			} else {
 				this.textDistributionVersion.setText("Error");

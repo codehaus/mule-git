@@ -29,7 +29,6 @@
       <page
             adaptable="true"
             class="org.mule.ide.ui.properties.MulePropertiesPage"
-            icon="META-INF/icons/mule16.gif"
             id="org.mule.ide.ui.properties.mulePropertyPage"
             name="Mule"
             objectClass="org.eclipse.core.resources.IProject">
@@ -55,16 +54,29 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.mule.ide.ui.MuleProjectWizard"
+            id="org.mule.ide.ui.MuleProjectWizards"
             name="Mule"/>
       <wizard
             canFinishEarly="false"
-            category="org.mule.ide.ui.MuleProjectWizard"
+            category="org.mule.ide.ui.MuleProjectWizards"
             class="org.mule.ide.ui.wizards.MuleProjectWizard"
             hasPages="true"
             icon="META-INF/icons/mule16.gif"
             id="org.mule.ide.ui.MuleProjectWizard"
             name="Mule Project"
+            project="true">
+         <description>
+            Create a Mule project
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.mule.ide.ui.MuleProjectWizards"
+            class="org.mule.ide.ui.wizards.AddMuleSupportWizard"
+            hasPages="true"
+            icon="META-INF/icons/mule16.gif"
+            id="org.mule.ide.ui.AddMuleSupportWizard"
+            name="Add Mule Support to Existing Project"
             project="true">
          <description>
             Create a Mule project
