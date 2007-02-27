@@ -195,9 +195,9 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>woodstox</groupId>
+            <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <version>3.0.2</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!-- Better testing of XML -->        
