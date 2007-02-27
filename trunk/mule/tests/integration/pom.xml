@@ -286,6 +286,7 @@
             <version>1.6.5</version>
         </dependency>
 
+        <!-- TODO remove it when JMS tests are moved into the transport project -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>apache-activemq</artifactId>
