@@ -75,7 +75,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JmxAgent implements UMOAgent
 {
-    public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
+    public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://127.0.0.1:1099/server";
     // populated with values below in a static initializer
     public static final Map DEFAULT_CONNECTOR_SERVER_PROPERTIES;
 
