@@ -41,7 +41,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
     private static ActiveMQConnectionFactory factory = null;
     private static Session session = null;
 
-    protected void suitePreSetUp() throws Exception
+    protected void doSetUp() throws Exception
     {
         factory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
 
@@ -51,16 +51,12 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
     protected void doTearDown() throws Exception
     {
         RequestContext.setEvent(null);
-    }
-
-    protected void suitePostTearDown() throws Exception
-    {
         session.close();
         session = null;
         factory = null;
     }
 
-    public void testTransObjectMessage() throws Exception
+    public void testTransformObjectMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
 
@@ -77,7 +73,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
         assertTrue("Transformed object should be an object message", result2 instanceof ObjectMessage);
     }
 
-    public void testTransTextMessage() throws Exception
+    public void testTransformTextMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
 
@@ -95,7 +91,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
         assertTrue("Transformed object should be a TextMessage", result2 instanceof TextMessage);
     }
 
-    public void testTransMapMessage() throws Exception
+    public void testTransformMapMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
 
@@ -116,7 +112,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
         assertTrue("Transformed object should be a Map", result instanceof Map);
     }
 
-    public void testTransByteMessage() throws Exception
+    public void testTransformByteMessage() throws Exception
     {
         RequestContext.setEvent(getTestEvent("test"));
 
@@ -193,6 +189,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
     /*
      * This class overrides getSession() to return the specified test Session;
      * otherwise we would need a full-fledged JMS connector with dispatchers etc.
+     * TODO check if we really need this stateful transformer now
      */
     public static class SessionEnabledObjectToJMSMessage extends ObjectToJMSMessage
     {
