@@ -22,7 +22,7 @@ import org.mule.util.counters.CounterFactory.Type;
  * @author Nodet To change the template for this generated type comment go to Window -
  *         Preferences - Java - Code Generation - Code and Comments
  */
-public class TestCounters extends TestCase
+public class CountersTestCase extends TestCase
 {
 
     private static final double delta = 1E-10;
