@@ -26,6 +26,8 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class MuleMessageProtocol extends DefaultProtocol
 {
+
+    // @Override
     public Object read(InputStream is) throws IOException
     {
         byte[] tmp = (byte[])super.read(is);
@@ -36,14 +38,16 @@ public class MuleMessageProtocol extends DefaultProtocol
         }
         else
         {
-            return (MuleMessage)SerializationUtils.deserialize(tmp);
+            return SerializationUtils.deserialize(tmp);
         }
     }
 
+    // @Override
     public void write(OutputStream os, byte[] data) throws IOException
     {
         MuleMessage msg = (MuleMessage)RequestContext.getEvent().getMessage();
         data = SerializationUtils.serialize(msg);
         super.write(os, data);
     }
+
 }

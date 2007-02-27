@@ -15,12 +15,13 @@ import org.mule.providers.tcp.protocols.DefaultProtocol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 
 import org.apache.commons.lang.SerializationUtils;
 
 public class CustomSerializationProtocol extends DefaultProtocol
 {
+
+    // @Override
     public void write(OutputStream os, Object data) throws IOException
     {
         if (data instanceof NonSerializableMessageObject)
@@ -30,10 +31,12 @@ public class CustomSerializationProtocol extends DefaultProtocol
             // do serialization... will use normal Serialization to simplify code...
             MessageObject serializableObject = new MessageObject(in.i, in.s, in.b);
 
-            write(os, SerializationUtils.serialize((Serializable)serializableObject));
+            write(os, SerializationUtils.serialize(serializableObject));
         }
+        // TODO SF: isn't the "else" branch missing here? :)
     }
 
+    // @Override
     public Object read(InputStream is) throws IOException
     {
         byte[] tmp = (byte[])super.read(is);
@@ -49,4 +52,5 @@ public class CustomSerializationProtocol extends DefaultProtocol
                 serializableObject.b);
         }
     }
+
 }
