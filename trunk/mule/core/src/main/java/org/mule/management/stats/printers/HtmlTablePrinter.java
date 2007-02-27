@@ -101,7 +101,7 @@ public class HtmlTablePrinter extends AbstractTablePrinter
 
     protected String getProviderStatsHtml(String stats)
     {
-        if (StringUtils.isEmpty(StringUtils.trim(stats)))
+        if (StringUtils.isBlank(stats))
         {
             return "";
         }

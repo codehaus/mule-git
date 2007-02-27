@@ -216,7 +216,7 @@ public class XMLPrinter extends AbstractTablePrinter
 
     protected void printProviderStatsXml(String stats, int indentLevel)
     {
-        if (StringUtils.isEmpty(StringUtils.trim(stats)))
+        if (StringUtils.isBlank(stats))
         {
             return;
         }
