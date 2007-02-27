@@ -10,18 +10,14 @@
 
 package org.mule.test.util.counters;
 
-import java.util.Iterator;
-
-import junit.framework.TestCase;
-
 import org.mule.util.counters.Counter;
 import org.mule.util.counters.CounterFactory;
 import org.mule.util.counters.CounterFactory.Type;
 
-/**
- * @author Nodet To change the template for this generated type comment go to Window -
- *         Preferences - Java - Code Generation - Code and Comments
- */
+import java.util.Iterator;
+
+import junit.framework.TestCase;
+
 public class CountersTestCase extends TestCase
 {
 
