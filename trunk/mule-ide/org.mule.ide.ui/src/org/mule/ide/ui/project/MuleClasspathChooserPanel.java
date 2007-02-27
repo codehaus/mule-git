@@ -181,10 +181,12 @@ public class MuleClasspathChooserPanel extends Composite {
 	
 	public Set getModuleSelection() {
 		Set selection = new HashSet();
-		int itemCount = tableSelectedModules.getItemCount();
-		for (int i = 0; i < itemCount; ++i) {
-			TableItem item = tableSelectedModules.getItem(i);
-			if (item.getChecked()) selection.add(item.getText());
+		if (tableSelectedModules != null) {
+			int itemCount = tableSelectedModules.getItemCount();
+			for (int i = 0; i < itemCount; ++i) {
+				TableItem item = tableSelectedModules.getItem(i);
+				if (item.getChecked()) selection.add(item.getText());
+			}
 		}
 		return selection;
 	}
@@ -236,7 +238,7 @@ public class MuleClasspathChooserPanel extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				String hint = selectedDistribution > 0 ? distributions[selectedDistribution] : null;
 				PreferencesUtil.createPreferenceDialogOn(getShell(), IPreferenceConstants.DISTRIBUTION_PREFERENCES_ID, null, null).open();
-				setDistributionSelection(hint); // Give the UI a chance to react to prefs changes...
+				reset(hint, MuleClasspathUtils.collectionToCommaString(getModuleSelection())); // Give the UI a chance to react to prefs changes...
 			}
 		});
 	}

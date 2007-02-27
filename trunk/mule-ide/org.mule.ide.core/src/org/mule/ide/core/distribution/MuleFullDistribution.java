@@ -149,21 +149,25 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 				dest.add(new FullJarSample(name, description, (IMuleBundle[]) dependencies.toArray(new IMuleBundle[dependencies.size()]), dir));
 			}
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// OK: We swallow this exception - thereby ignoring any parse errors in the XML
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// OK: Same goes for missing files
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// OK: This is so unlikely that it's not worth catching here.
 		}
 	}
 
 	public IMuleSample[] getSuppliedSamples() {
 		List muleSamples = new ArrayList();
 
-		File[] allSamples = new File(getLocation(), "examples/maven").listFiles();
+		File[] allSamples = null;
+		File examplesDir = new File(getLocation(), "examples");
+		File mavenDir = new File(examplesDir, "maven");
+		if (mavenDir.exists() && mavenDir.isDirectory())
+			allSamples = mavenDir.listFiles();
+		else
+			allSamples = examplesDir.listFiles();
+		
 		for (int i = 0; i < allSamples.length; ++i) {
 				gatherSamples(allSamples[i], muleSamples);
 		}

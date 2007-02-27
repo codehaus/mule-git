@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -42,7 +39,6 @@ import org.eclipse.ui.IWorkbench;
 import org.mule.ide.core.MuleClasspathUtils;
 import org.mule.ide.core.MuleCorePlugin;
 import org.mule.ide.core.builder.MuleConfigBuilder;
-import org.mule.ide.core.builder.MuleDTDResolverHandler;
 import org.mule.ide.core.distribution.IMuleBundle;
 import org.mule.ide.core.distribution.IMuleDistribution;
 import org.mule.ide.core.distribution.IMuleSample;
@@ -53,7 +49,6 @@ import org.mule.ide.core.model.IMuleModel;
 import org.mule.ide.core.nature.MuleNature;
 import org.mule.ide.ui.IMuleImages;
 import org.mule.ide.ui.MulePlugin;
-import org.w3c.dom.Document;
 
 /**
  * Wizard for creating a new Mule project.
@@ -318,13 +313,6 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 	private IFolder createConfigFolder(IProject project) throws CoreException {
 		IFolder configFolder = project.getFolder(CONFIG_FOLDER_NAME);
 		configFolder.create(true, true, new NullProgressMonitor());
-		try {
-			//TODO - remove!
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return configFolder;
 	}
 	

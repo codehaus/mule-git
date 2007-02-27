@@ -6,10 +6,12 @@ package org.mule.ide.internal.core.model;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -42,10 +44,10 @@ import org.mule.ide.util.MuleIDEResourceFactoryImpl;
 public class MuleModel extends MuleModelElement implements IMuleModel {
 
     /** Map of Mule configurations hashed by unique id */
-    private Map muleConfigurations = Collections.synchronizedMap(new HashMap());
+    private Map muleConfigurations = new HashMap();
 
     /** Map of Mule config sets hashed by unique id */
-    private Map muleConfigSets = Collections.synchronizedMap(new HashMap());
+    private Map muleConfigSets = new HashMap();
 
     /** The project this model belongs to */
     private IProject project;
@@ -166,7 +168,11 @@ public class MuleModel extends MuleModelElement implements IMuleModel {
      * @see org.mule.ide.core.model.IMuleModel#getMuleConfigurations()
      */
     public Collection getMuleConfigurations() {
-        return muleConfigurations.values();
+        synchronized (this.muleConfigurations) {
+	    	List configs = new ArrayList();
+	    	configs.addAll(muleConfigurations.values());
+	        return configs;
+        }
     }
 
     /*
@@ -175,12 +181,14 @@ public class MuleModel extends MuleModelElement implements IMuleModel {
      * @see org.mule.ide.core.model.IMuleModel#getMuleConfigurationForPath(org.eclipse.core.runtime.IPath)
      */
     public IMuleConfiguration getMuleConfigurationForPath(IPath path) {
-        Iterator it = getMuleConfigurations().iterator();
-        while (it.hasNext()) {
-            IMuleConfiguration config = (IMuleConfiguration) it.next();
-            if (path.equals(config.getFilePath())) {
-                return config;
-            }
+        synchronized (this.muleConfigurations) {
+        	Iterator it = muleConfigurations.values().iterator();
+	        while (it.hasNext()) {
+	            IMuleConfiguration config = (IMuleConfiguration) it.next();
+	            if (path.equals(config.getFilePath())) {
+	                return config;
+	            }
+	        }
         }
         return null;
     }
@@ -205,7 +213,9 @@ public class MuleModel extends MuleModelElement implements IMuleModel {
      * @see org.mule.ide.core.model.IMuleModel#getMuleConfiguration(java.lang.String)
      */
     public IMuleConfiguration getMuleConfiguration(String id) {
-        return (IMuleConfiguration) this.muleConfigurations.get(id);
+        synchronized (this.muleConfigurations) {
+        	return (IMuleConfiguration) this.muleConfigurations.get(id);
+        }
     }
 
     /*

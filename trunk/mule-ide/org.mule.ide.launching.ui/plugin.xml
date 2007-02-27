@@ -18,7 +18,7 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             configTypeID="org.mule.ide.launching.localMuleServer"
-            icon="META-INF/icons/mule16.gif"
+            icon="META-INF/icons/mule_config_set_16x16.png"
             id="org.mule.ide.launching.configTypeImage"/>
    </extension>
   <extension

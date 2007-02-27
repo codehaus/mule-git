@@ -1,4 +1,11 @@
 --------------
+Mule IDE 1.3.0
+--------------
+
+The release notes are now found online, at:
+http://mule.mulesource.org/wiki/display/MULE/Mule+IDE+Release+Notes
+  
+--------------
 Mule IDE 1.2.1
 --------------
 

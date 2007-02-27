@@ -112,4 +112,5 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XsltFilter" eSuperTypes="#//AbstractFilter"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NotFilter" eSuperTypes="#//AbstractFilter"/>
 </ecore:EPackage>

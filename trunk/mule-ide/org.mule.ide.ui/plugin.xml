@@ -19,6 +19,7 @@
             class="org.mule.ide.ui.preferences.MulePreferencePage"
             id="org.mule.ide.ui.preferences.MulePreferencePage"
             name="Mule">
+         
          <keywordReference id="org.mule.ide.ui.keyword.mule"/>
       </page>
    </extension>
@@ -47,7 +48,7 @@
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
-            icon="META-INF/icons/mule_overlay.gif"
+            icon="META-INF/icons/mule_overlay_9x9.png"
             id="org.mule.ide.ui.ProjectNatureImage"
             natureId="org.mule.ide.core.muleConfigNature"/>
    </extension>
@@ -61,12 +62,12 @@
             category="org.mule.ide.ui.MuleProjectWizards"
             class="org.mule.ide.ui.wizards.MuleProjectWizard"
             hasPages="true"
-            icon="META-INF/icons/mule16.gif"
+            icon="META-INF/icons/mule_config_set_16x16.png"
             id="org.mule.ide.ui.MuleProjectWizard"
             name="Mule Project"
             project="true">
          <description>
-            Create a Mule project
+            Create a Mule project, optionally importing an example from the Mule distribution
          </description>
       </wizard>
       <wizard
@@ -74,12 +75,12 @@
             category="org.mule.ide.ui.MuleProjectWizards"
             class="org.mule.ide.ui.wizards.AddMuleSupportWizard"
             hasPages="true"
-            icon="META-INF/icons/mule16.gif"
+            icon="META-INF/icons/convert_prj_16x16.png"
             id="org.mule.ide.ui.AddMuleSupportWizard"
             name="Add Mule Support to Existing Project"
             project="true">
          <description>
-            Create a Mule project
+            Use this wizard to add Mule support to existing Java project(s), setting up the Mule class path and the Mule launch configurations.
          </description>
       </wizard>
    </extension>

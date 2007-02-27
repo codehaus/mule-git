@@ -63,7 +63,7 @@ public class AddMuleSupportWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		try {
 			// Set up the Java project according to entries on Java page.
-			getContainer().run(true, true, new IRunnableWithProgress() {
+			getContainer().run(false, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					
 					IJavaProject[] projects = referencePage.getReferencedProjects();

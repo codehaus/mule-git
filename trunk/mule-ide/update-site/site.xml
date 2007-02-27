@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.mule.ide_1.3.0.200702072016.jar" id="org.mule.ide" version="1.3.0.200702072016">
+   <feature url="features/org.mule.ide_1.3.0.200702271439.jar" id="org.mule.ide" version="1.3.0.200702271439">
       <category name="Mule IDE"/>
    </feature>
    <category-def name="Mule IDE" label="Mule IDE">

@@ -48,7 +48,6 @@ public class MuleDistributionClasspathInitializer extends ClasspathContainerInit
 				for (int i=0; i<distributions.length; ++i) {
 					if (hint.equals(pathify(distributions[i]))) candidate = distributions[i];
 				}
-				// TODO: Perhaps we should suppress the default/fallback if the hint is set?  
 			}
 		}
 		// We should have a candidate either way.

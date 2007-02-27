@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.mule.ide"
-      label="Mule IDE BETA"
+      label="Mule IDE"
       version="1.3.0.qualifier"
       provider-name="MuleSource, Inc."
       plugin="org.mule.ide.core">
@@ -206,7 +206,6 @@ Redistributions of the Covered Code in binary form or source code form, must ens
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.emf.ecore"/>
