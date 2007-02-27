@@ -10,43 +10,32 @@
 
 package org.mule.providers.tcp;
 
-import java.util.Arrays;
-
 import org.mule.MuleManager;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
-import org.mule.impl.MuleSession;
-import org.mule.impl.NullSessionHandler;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.util.StringUtils;
+
+import java.util.Arrays;
 
 public class TcpSyncTestCase extends FunctionalTestCase
 {
 
-    private static final String endpointUri = "tcp://localhost:4544";
+    public TcpSyncTestCase()
+    {
+        setDisposeManagerPerSuite(true);
+    }
 
     protected String getConfigResources()
     {
         return "tcp-sync.xml";
     }
 
-    protected UMOMessage send(Object payload) throws Exception
-    {
-        UMOMessage message = new MuleMessage(payload);
-        UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(new MuleEndpointURI(endpointUri),
-            UMOEndpoint.ENDPOINT_TYPE_SENDER);
-        MuleSession session = new MuleSession(message, new NullSessionHandler());
-        MuleEvent event = new MuleEvent(message, endpoint, session, true);
-        event.setTimeout(60000);
-        return event.getSession().sendEvent(event);
-    }
-
     public void testSendString() throws Exception
     {
-        UMOMessage message = send("data");
+        MuleClient client = new MuleClient();
+
+        UMOMessage message = client.send("clientEndpoint", "data", null);
         assertNotNull(message);
         String response = message.getPayloadAsString();
         assertEquals("data", response);
@@ -54,20 +43,25 @@ public class TcpSyncTestCase extends FunctionalTestCase
 
     public void testSyncResponseOfBufferSize() throws Exception
     {
+        MuleClient client = new MuleClient();
+
         TcpConnector tcp = (TcpConnector)MuleManager.getInstance().lookupConnector("tcpConnector");
         tcp.setBufferSize(1024 * 16);
-        byte[] data = new byte[tcp.getBufferSize()];
-        UMOMessage message = send(data);
+        byte[] data = StringUtils.repeat("0123456789", tcp.getBufferSize() / 10).getBytes();
+        UMOMessage message = client.send("clientEndpoint", data, null);
         assertNotNull(message);
         byte[] response = message.getPayloadAsBytes();
+
         assertEquals(data.length, response.length);
         assertTrue(Arrays.equals(data, response));
     }
 
     public void testSyncResponseVeryBig() throws Exception
     {
-        byte[] data = new byte[1024 * 1024];
-        UMOMessage message = send(data);
+        MuleClient client = new MuleClient();
+        byte[] data = StringUtils.repeat("0123456789", 10000).getBytes();
+
+        UMOMessage message = client.send("clientEndpoint", data, null);
         assertNotNull(message);
         byte[] response = message.getPayloadAsBytes();
         assertEquals(data.length, response.length);
