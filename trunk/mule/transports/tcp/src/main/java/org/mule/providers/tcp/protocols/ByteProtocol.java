@@ -11,6 +11,7 @@
 package org.mule.providers.tcp.protocols;
 
 import org.mule.providers.tcp.TcpProtocol;
+import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,6 +29,15 @@ public abstract class ByteProtocol implements TcpProtocol
 {
     public void write(OutputStream os, Object data) throws IOException
     {
+        //By default the UMOMessageAdapter object itself is passed in, I guess so that
+        //The whole adapter can be serialised if necessary.  I'm doing the check here
+        //to extract the real payload, rather than extracting it in the TcpMessageReceiver where the
+        //protocol is called
+        if(data instanceof UMOMessageAdapter)
+        {
+            data = ((UMOMessageAdapter)data).getPayload();
+        }
+        
         if (data instanceof byte[])
         {
             write(os, (byte[])data);
