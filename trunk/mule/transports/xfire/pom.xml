@@ -91,11 +91,16 @@
             <version>1.4</version>
             <scope>provided</scope>
         </dependency>
+        <!-- use new jaxen/jdom versions for xfire-core -->
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1</version>
+        </dependency>
         <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
         <!-- re-add woodstox with newer groupId & version -->
         <dependency>
