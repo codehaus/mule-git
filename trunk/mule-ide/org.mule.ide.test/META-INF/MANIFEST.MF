@@ -8,4 +8,4 @@ Bundle-Vendor: MuleSource, Inc.
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.mule.ide.core
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

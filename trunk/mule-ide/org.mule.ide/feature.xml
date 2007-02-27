@@ -12,7 +12,8 @@
 
    <copyright url="http://www.mulesource.com/products/licensing.php">
       Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
-The software in this package is published under the terms of the MuleSource MPL license, a copy of which has been included with this distribution in the MULE_LICENSE.txt file.
+The software in this package is published under the terms of the MuleSource MPL license,
+a copy of which has been included with this distribution in the MULE_LICENSE.txt file.
    </copyright>
 
    <license url="http://www.mulesource.com/products/licensing.php">
@@ -201,10 +202,6 @@ Redistributions of the Covered Code in binary form or source code form, must ens
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.jdt.launching"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.jdt.debug.ui"/>
-      <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jdt.ui"/>

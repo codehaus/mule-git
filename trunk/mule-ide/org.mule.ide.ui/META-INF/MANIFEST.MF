@@ -20,4 +20,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
  org.mule.ide.core
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

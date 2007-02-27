@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.debug.core,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
  org.mule.ide.core
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

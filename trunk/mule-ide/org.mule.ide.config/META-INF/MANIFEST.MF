@@ -17,5 +17,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.emfworkbench.integration,
  org.eclipse.jem.workbench,
  org.eclipse.jem.util
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
 Bundle-Activator: org.mule.ide.config.mulemodel.MuleModelPlugin$Implementation

@@ -10,6 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.mule.ide.config,
  org.eclipse.emf.ecore
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
 Export-Package: org.mule.ide.config.palette,
  org.mule.ide.config.palette.views

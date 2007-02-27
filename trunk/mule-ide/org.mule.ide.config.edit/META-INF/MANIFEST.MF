@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.emf,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.edit;visibility:=reexport
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
