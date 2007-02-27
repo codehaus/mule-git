@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mule Configuration Model Plugin
+Bundle-SymbolicName: org.mule.ide.config; singleton:=true
+Bundle-Version: 1.3.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: MuleSource, Inc.
+Bundle-Localization: plugin
+Export-Package: org.mule.ide.config.mulemodel,
+ org.mule.ide.config.mulemodel.impl,
+ org.mule.ide.config.mulemodel.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.wst.common.emf,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.common.emfworkbench.integration,
+ org.eclipse.jem.workbench,
+ org.eclipse.jem.util
+Eclipse-AutoStart: true
+Bundle-Activator: org.mule.ide.config.mulemodel.MuleModelPlugin$Implementation
