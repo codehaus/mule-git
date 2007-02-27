@@ -45,6 +45,11 @@
             <version>1.2.2</version>
             <exclusions>
                 <exclusion>
+                    <!-- we want the newer version below -->
+                    <groupId>woodstox</groupId>
+                    <artifactId>wstx-asl</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>xerces</groupId>
                     <artifactId>xmlParserAPIs</artifactId>
                 </exclusion>
@@ -92,10 +97,11 @@
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- re-add woodstox with newer groupId & version -->
         <dependency>
-            <groupId>woodstox</groupId>
+            <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <version>3.0.2</version>
+            <version>3.2.0</version>
         </dependency>
     </dependencies>
 </project>
