@@ -14,7 +14,6 @@
     <name>Mule Tests</name>
 
     <modules>
-        <module>core</module>
         <module>functional</module>
     </modules>
 

@@ -198,6 +198,14 @@
             <artifactId>wstx-asl</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+        <!-- Better testing of XML -->        
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
    
 </project>

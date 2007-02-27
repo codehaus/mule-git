@@ -95,11 +95,6 @@
             <classifier>asl</classifier>
         </dependency>
 
-        <!--
-        ****************************************************************
-        Optional Dependencies
-        ******************************************************************
-        -->
         <!-- Used by mules default component pooling mechanism -->
         <dependency>
             <groupId>commons-pool</groupId>
@@ -114,13 +109,16 @@
             <version>1.2.14</version>
         </dependency>
 
-        <!-- Although there are no tests to run, we need to include this otherwise we'll get a
-            "No Java test frameworks found" error when building. -->
+        <!-- These are used by the TCK -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.2</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <version>0.09</version>
         </dependency>
     </dependencies>
 
@@ -130,6 +128,7 @@
             <id>java14</id>
             <activation>
                 <jdk>1.4</jdk>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <!--
