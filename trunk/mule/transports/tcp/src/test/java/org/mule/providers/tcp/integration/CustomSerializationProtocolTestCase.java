@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.tcp;
+package org.mule.providers.tcp.integration;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
@@ -45,7 +45,7 @@ public class CustomSerializationProtocolTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/providers/tcp/CustomSerialisation-mule-config.xml";
+        return "CustomSerialisation-mule-config.xml";
     }
 
 }

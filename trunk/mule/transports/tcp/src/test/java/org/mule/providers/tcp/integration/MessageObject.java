@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.tcp;
+package org.mule.providers.tcp.integration;
 
 import java.io.Serializable;
 

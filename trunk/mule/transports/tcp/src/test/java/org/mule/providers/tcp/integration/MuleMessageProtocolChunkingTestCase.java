@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.tcp;
+package org.mule.providers.tcp.integration;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
@@ -40,7 +40,7 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
     {
         StringBuffer message = new StringBuffer();
         // send 50K of stuff;
-        for (int i = 10000; i < 20000; i++)
+        for (int i = 1000; i < 2000; i++)
         {
             message.append(i);
         }
@@ -91,7 +91,7 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/providers/tcp/MuleMessageProtocol-mule-config.xml";
+        return "MuleMessageProtocol-mule-config.xml";
     }
 
 }

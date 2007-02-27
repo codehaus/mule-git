@@ -4,8 +4,10 @@
 	"http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
 <mule-configuration id="test" version="1.0">
-	
-	<connector name="quedvm" className="org.mule.providers.vm.VMConnector">
+
+    <mule-environment-properties serverUrl=""/>
+    
+    <connector name="quedvm" className="org.mule.providers.vm.VMConnector">
 		<properties>
 			<property name="queueEvents" value="true"/>
 		</properties>
@@ -15,7 +17,7 @@
 		className="org.mule.providers.tcp.TcpConnector">
 		<properties>
 			<property name="tcpProtocolClassName"
-				value="org.mule.test.integration.providers.tcp.CustomSerializationProtocol"/>
+				value="org.mule.providers.tcp.integration.CustomSerializationProtocol"/>
 		</properties>
 	</connector>
 	

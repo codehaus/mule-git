@@ -12,4 +12,19 @@
     <packaging>jar</packaging>
     <name>Tcp Transport</name>
     <description>A Mule transport for Tcp Connectivity. This transport supplies a tcp Server and client implementation.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+         <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
