@@ -18,7 +18,7 @@ import javax.management.remote.rmi.RMIConnectorServer;
 
 public class DefaultJmxSupportAgentTestCase extends AbstractMuleTestCase
 {
-    public void testFactory() throws Exception
+    public void testHostPropertyEnablesClientSocketFactory () throws Exception
     {
         DefaultJmxSupportAgent agent = new DefaultJmxSupportAgent();
         agent.setHost("127.0.0.1");
