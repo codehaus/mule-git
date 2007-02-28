@@ -221,7 +221,7 @@ public class QuickConfigurationBuilderTestCase extends AbstractScriptConfigBuild
             if (StringUtils.isBlank(m.getId()))
             {
                 // if running with JMX agent, manager ID is mandatory
-                m.setId("" + System.currentTimeMillis());
+                m.setId(String.valueOf(System.currentTimeMillis()));
             }
             m.start();
         }
