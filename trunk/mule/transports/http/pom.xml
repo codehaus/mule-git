@@ -56,5 +56,12 @@
             <artifactId>commons-logging</artifactId>
             <version>1.0.4</version>
         </dependency>
+
+        <!-- for functional tests only -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
 </project>
