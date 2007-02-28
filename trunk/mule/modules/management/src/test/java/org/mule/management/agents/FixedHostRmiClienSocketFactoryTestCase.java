@@ -13,20 +13,32 @@ package org.mule.management.agents;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 
 public class FixedHostRmiClienSocketFactoryTestCase extends AbstractMuleTestCase
 {
     private static final int TEST_PORT = 60504;
+    protected volatile ServerSocket serverSocket;
 
     protected void doSetUp () throws Exception
     {
         super.doSetUp();
-        // let's have a Mule admin agent to hit
-        getManager(false).start();
+        setupDummyServer();
     }
 
-    public void testHostConstructorOverride() throws Exception
+    protected void doTearDown () throws Exception
+    {
+        super.doTearDown();
+        if (null != serverSocket)
+        {
+            serverSocket.close();
+        }
+    }
+
+    public void testHostConstructorOverride () throws Exception
     {
         final String overrideHost = "127.0.0.1";
         final FixedHostRmiClientSocketFactory factory =
@@ -35,14 +47,14 @@ public class FixedHostRmiClienSocketFactoryTestCase extends AbstractMuleTestCase
         assertEquals(overrideHost, factory.getOverrideHost());
         final Socket clientSocket = factory.createSocket("www.example.com", TEST_PORT);
         final InetAddress address = clientSocket.getInetAddress();
-        final String socketHost = address.getHostAddress()  ;
+        final String socketHost = address.getHostAddress();
         assertEquals(overrideHost, socketHost);
     }
 
     /**
      * Setter property may be used to dynamically switch the client socket host.
      */
-    public void testHostSetterOverride() throws Exception
+    public void testHostSetterOverride () throws Exception
     {
         final String overrideHost = "127.0.0.1";
         final FixedHostRmiClientSocketFactory factory =
@@ -55,7 +67,7 @@ public class FixedHostRmiClienSocketFactoryTestCase extends AbstractMuleTestCase
         {
             clientSocket = factory.createSocket("www.example.com", TEST_PORT);
             final InetAddress address = clientSocket.getInetAddress();
-            final String socketHost = address.getHostAddress()  ;
+            final String socketHost = address.getHostAddress();
             assertEquals(overrideHost, socketHost);
         }
         finally
@@ -67,4 +79,14 @@ public class FixedHostRmiClienSocketFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
+    /**
+     * Simple socket to have something to ping.
+     */
+    protected void setupDummyServer () throws Exception
+    {
+        ServerSocketChannel ssChannel = ServerSocketChannel.open();
+        ssChannel.configureBlocking(false);
+        serverSocket = ssChannel.socket();
+        serverSocket.bind(new InetSocketAddress(TEST_PORT));
+    }
 }

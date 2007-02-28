@@ -28,6 +28,7 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-management</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
