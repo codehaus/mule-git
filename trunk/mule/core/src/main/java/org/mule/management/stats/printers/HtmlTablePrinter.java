@@ -19,9 +19,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>HtmlTablePrinter</code> prints event processing stats as a HTML table
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class HtmlTablePrinter extends AbstractTablePrinter
 {
@@ -36,6 +33,7 @@ public class HtmlTablePrinter extends AbstractTablePrinter
         super(out);
     }
 
+    // @Override
     public void print(Collection stats)
     {
         println("<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
