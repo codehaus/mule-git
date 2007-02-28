@@ -25,6 +25,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import javax.management.remote.rmi.RMIConnectorServer;
 
 public class JmxAgentTestCase extends AbstractMuleTestCase
 {
@@ -40,8 +41,11 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
         RmiRegistryAgent rmiRegistryAgent = new RmiRegistryAgent();
         jmxAgent = new JmxAgent();
         jmxAgent.setConnectorServerUrl(JmxAgent.DEFAULT_REMOTING_URI);
+        // make multi-NIC dev box happy by sticking RMI clients to a single
+        // local ip address
         Map props = new HashMap();
-        props.put("jmx.remote.rmi.client.socket.factory", new ForceLocalhostRmiClientSocketFactory());
+        props.put(RMIConnectorServer.RMI_CLIENT_SOCKET_FACTORY_ATTRIBUTE,
+                  new FixedHostRmiClientSocketFactory("127.0.0.1"));
         jmxAgent.setConnectorServerProperties(props);
         manager = (MuleManager) getManager(true);
         manager.registerAgent(rmiRegistryAgent);
@@ -101,26 +105,4 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
         return credentials;
     }
 
-    /**
-     * Until we find a generic solution (the holy one-fits-all) for multi-NIC servers,
-     * enforce RMI tests to resolve to localhost.
-     */
-    private static class ForceLocalhostRmiClientSocketFactory implements RMIClientSocketFactory, Serializable
-    {
-        private static final String LOCAL = "127.0.0.1";
-
-        /**
-         * Create a client socket connected to the specified host and port.
-         *
-         * @param host the host name
-         * @param port the port number
-         * @return a socket connected to the specified host and port.
-         * @throws java.io.IOException if an I/O error occurs during socket creation
-         * @since 1.2
-         */
-        public Socket createSocket(String host, int port) throws IOException
-        {
-            return new Socket(LOCAL, port);
-        }
-    }
 }

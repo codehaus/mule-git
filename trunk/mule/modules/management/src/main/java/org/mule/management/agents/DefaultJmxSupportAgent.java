@@ -19,6 +19,11 @@ import org.mule.util.StringUtils;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.HashMap;
+import java.rmi.server.RMIClientSocketFactory;
+
+import javax.management.remote.rmi.RMIConnectorServer;
+
+import org.apache.commons.collections.map.HashedMap;
 
 /**
  * TODO document.
@@ -172,18 +177,33 @@ public class DefaultJmxSupportAgent implements UMOAgent
     protected JmxAgent createJmxAgent()
     {
         JmxAgent agent = new JmxAgent();
-        String remotingUri;
+        String remotingUri = null;
         if (StringUtils.isBlank(host) && StringUtils.isBlank(port))
         {
             remotingUri = JmxAgent.DEFAULT_REMOTING_URI;
         }
-        else
+        else if (StringUtils.isNotBlank(host))
+        {
+            // enable support for multi-NIC servers by configuring
+            // a custom RMIClientSocketFactory
+            Map props = agent.getConnectorServerProperties();
+            Map mergedProps = new HashedMap(props.size() + 1);
+            mergedProps.putAll(props);
+            RMIClientSocketFactory factory = new FixedHostRmiClientSocketFactory(host);
+            mergedProps.put(RMIConnectorServer.RMI_CLIENT_SOCKET_FACTORY_ATTRIBUTE,
+                            factory);
+            agent.setConnectorServerProperties(mergedProps);
+        }
+
+        // if defaults haven't been used
+        if (StringUtils.isBlank(remotingUri))
         {
             remotingUri =
                     MessageFormat.format("service:jmx:rmi:///jndi/rmi://{0}:{1}/server",
                                          new Object[] {StringUtils.defaultString(host, DEFAULT_HOST),
                                                        StringUtils.defaultString(port, DEFAULT_PORT)});
         }
+
         if (credentials != null && !credentials.isEmpty())
         {
             agent.setCredentials(credentials);

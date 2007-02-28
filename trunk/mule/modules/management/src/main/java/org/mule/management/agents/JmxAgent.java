@@ -109,6 +109,14 @@ public class JmxAgent implements UMOAgent
     private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
 
     /**
+     * Default constructor.
+     */
+    public JmxAgent ()
+    {
+        connectorServerProperties = DEFAULT_CONNECTOR_SERVER_PROPERTIES;
+    }
+
+    /**
      * Username/password combinations for JMX Remoting
      * authentication.
      */
