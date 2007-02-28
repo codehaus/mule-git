@@ -50,10 +50,21 @@ public class FixedHostRmiClienSocketFactoryTestCase extends AbstractMuleTestCase
         factory.setOverrideHost(overrideHost);
 
         assertEquals(overrideHost, factory.getOverrideHost());
-        final Socket clientSocket = factory.createSocket("www.example.com", TEST_PORT);
-        final InetAddress address = clientSocket.getInetAddress();
-        final String socketHost = address.getHostAddress()  ;
-        assertEquals(overrideHost, socketHost);
+        Socket clientSocket = null;
+        try
+        {
+            clientSocket = factory.createSocket("www.example.com", TEST_PORT);
+            final InetAddress address = clientSocket.getInetAddress();
+            final String socketHost = address.getHostAddress()  ;
+            assertEquals(overrideHost, socketHost);
+        }
+        finally
+        {
+            if (null != clientSocket && !clientSocket.isClosed())
+            {
+                clientSocket.close();
+            }
+        }
     }
 
 }
