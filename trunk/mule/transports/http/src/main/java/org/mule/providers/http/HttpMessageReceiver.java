@@ -93,7 +93,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
     }
 
 
-    //@Override
+    // @Override
     protected UMOMessage handleUnacceptedFilter(UMOMessage message)
     {
         if(logger.isDebugEnabled())
@@ -101,7 +101,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             logger.debug("Message request '" + message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY)
                 + "' is being rejected since it does not match the filter on this endpoint: " + endpoint);
         }
-        message.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, "" + HttpConstants.SC_NOT_ACCEPTABLE);
+        message.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, String.valueOf(HttpConstants.SC_NOT_ACCEPTABLE));
         return message;
     }
 
