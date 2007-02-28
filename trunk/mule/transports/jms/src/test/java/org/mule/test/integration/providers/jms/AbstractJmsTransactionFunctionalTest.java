@@ -63,7 +63,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFunctionalTestCase
 {
 
-    protected UMOTransaction currentTx;
+    protected volatile UMOTransaction currentTx;
 
     protected void doSetUp() throws Exception
     {

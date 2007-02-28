@@ -50,10 +50,10 @@ public abstract class AbstractJmsFunctionalTestCase extends AbstractMuleTestCase
     public static final long LOCK_WAIT = 20000;
 
     protected JmsConnector connector;
-    protected boolean callbackCalled = false;
+    protected volatile boolean callbackCalled = false;
     protected Connection cnn;
-    protected Message currentMsg;
-    protected int eventCount = 0;
+    protected volatile Message currentMsg;
+    protected volatile int eventCount = 0;
     protected UMOModel model;
 
     protected final transient Log logger = LogFactory.getLog(getClass());
