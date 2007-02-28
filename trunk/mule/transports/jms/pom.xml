@@ -127,14 +127,14 @@
                     <groupId>xmlpull</groupId>
                     <artifactId>xmlpull</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>mx4j</groupId>
-                    <artifactId>mx4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>mx4j</groupId>
-                    <artifactId>mx4j-remote</artifactId>
-                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>mx4j</groupId>-->
+                    <!--<artifactId>mx4j</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>mx4j</groupId>-->
+                    <!--<artifactId>mx4j-remote</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
                     <groupId>backport-util-concurrent</groupId>
                     <artifactId>backport-util-concurrent</artifactId>
