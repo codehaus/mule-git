@@ -16,14 +16,12 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.util.StringUtils;
 
-import java.text.MessageFormat;
-import java.util.Map;
-import java.util.HashMap;
 import java.rmi.server.RMIClientSocketFactory;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.remote.rmi.RMIConnectorServer;
-
-import org.apache.commons.collections.map.HashedMap;
 
 /**
  * TODO document.
@@ -187,7 +185,7 @@ public class DefaultJmxSupportAgent implements UMOAgent
             // enable support for multi-NIC servers by configuring
             // a custom RMIClientSocketFactory
             Map props = agent.getConnectorServerProperties();
-            Map mergedProps = new HashedMap(props.size() + 1);
+            Map mergedProps = new HashMap(props.size() + 1);
             mergedProps.putAll(props);
             RMIClientSocketFactory factory = new FixedHostRmiClientSocketFactory(host);
             mergedProps.put(RMIConnectorServer.RMI_CLIENT_SOCKET_FACTORY_ATTRIBUTE,
