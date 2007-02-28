@@ -553,7 +553,8 @@ public class JmxAgent implements UMOAgent
     /**
      * Setter for property 'connectorServerProperties'. Set to
      * {@code null} to use defaults ({@link #DEFAULT_CONNECTOR_SERVER_PROPERTIES}).
-     * Pass in an empty map to use no parameters.
+     * Pass in an empty map to use no parameters. Passing a non-empty map will
+     * replace defaults.
      *
      * @param connectorServerProperties Value to set for property 'connectorServerProperties'.
      */
