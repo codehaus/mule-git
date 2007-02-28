@@ -334,6 +334,7 @@
                 <artifactId>maven-idea-plugin</artifactId>
                 <configuration>
                     <downloadSources>true</downloadSources>
+                    <jdkName>1.4</jdkName>
                 </configuration>
             </plugin>
 
