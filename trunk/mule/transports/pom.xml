@@ -44,6 +44,12 @@
             <artifactId>mule-core</artifactId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- need to explicitly mark javax.activation as provided -->
         <dependency>

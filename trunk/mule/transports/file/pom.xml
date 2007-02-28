@@ -14,15 +14,4 @@
     <description>A Mule transport for File Connectivity. This transport allows files to be read and written to
         directories on the local file system. The transport can be configured to filter the file it reads and the way
         files are written, such as whether binary output is used or the file is appended to.</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-    </dependencies>
-
 </project>
