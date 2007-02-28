@@ -16,6 +16,7 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
+import org.mule.impl.NullSessionHandler;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.internal.notifications.ConnectionNotification;
@@ -304,8 +305,13 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             if (!endpoint.getFilter().accept(message))
             {
-                handleUnacceptedFilter(message);
-                return null;
+                //TODO RM* This ain't pretty, we don't yet have an event context since the message hasn't gon to the 
+                //message listener yet. So we need to create a new context so that EventAwareTransformers can be applied
+                //to response messages where the filter denied the message
+                //Maybe the filter should be checked in the MessageListener...
+                RequestContext.setEvent(new MuleEvent(message, endpoint,
+                        new MuleSession(message, new NullSessionHandler()), synchronous));
+                return handleUnacceptedFilter(message);
             }
         }
         return listener.onMessage(message, trans, synchronous, outputStream);
@@ -313,7 +319,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     protected UMOMessage handleUnacceptedFilter(UMOMessage message)
     {
-        String messageId = null;
+        String messageId;
         messageId = message.getUniqueId();
 
         if (logger.isDebugEnabled())
