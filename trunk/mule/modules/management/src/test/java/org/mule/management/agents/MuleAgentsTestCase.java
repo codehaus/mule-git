@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule;
+package org.mule.management.agents;
 
 import org.mule.management.agents.JmxAgent;
 import org.mule.management.agents.Mx4jAgent;
@@ -76,7 +76,7 @@ public class MuleAgentsTestCase extends AbstractMuleTestCase
         manager.setId("MuleAgentsTestCase.jmxAgentInjectedMBeanServer");
         JmxAgent jmxAgent = new JmxAgent();
         List servers = MBeanServerFactory.findMBeanServer(null);
-        MBeanServer server = null;
+        MBeanServer server;
         server = servers == null || servers.isEmpty()
                 ? MBeanServerFactory.createMBeanServer()
                 : (MBeanServer) servers.get(0);
