@@ -273,9 +273,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportServiceException(
-                		new Message(Messages.CANT_INSTANCIATE_FINDER_X, serviceFinder),
-                		e);
+                throw new TransportServiceException(new Message(Messages.CANT_INSTANCIATE_FINDER_X,
+                    serviceFinder), e);
             }
         }
         return transportServiceFinder;
@@ -316,9 +315,8 @@ public class TransportServiceDescriptor
         }
         catch (Exception e)
         {
-            throw new TransportServiceException(
-            		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Adapter", streamMessageAdapter),
-            		e);
+            throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                "Message Adapter", streamMessageAdapter), e);
         }
     }
 
@@ -337,15 +335,14 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportServiceException(
-                		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Adapter", clazz),
-                		e);
+                throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                    "Message Adapter", clazz), e);
             }
         }
         else
         {
-            throw new TransportServiceException(
-            		new Message(Messages.X_NOT_SET_IN_SERVICE_X, "Message Adapter", getProtocol()));
+            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
+                "Message Adapter", getProtocol()));
         }
     }
 
@@ -367,9 +364,8 @@ public class TransportServiceDescriptor
         }
         catch (Throwable e)
         {
-            throw new TransportServiceException(
-            		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "SessionHandler", sessionHandler),
-            		e);
+            throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                "SessionHandler", sessionHandler), e);
         }
     }
 
@@ -425,16 +421,15 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportServiceException(
-                		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Receiver", getProtocol()), 
-                		e);
+                throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                    "Message Receiver", getProtocol()), e);
             }
 
         }
         else
         {
-            throw new TransportServiceException(
-            		new Message(Messages.X_NOT_SET_IN_SERVICE_X, "Message Receiver", getProtocol()));
+            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
+                "Message Receiver", getProtocol()));
         }
     }
 
@@ -449,9 +444,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportServiceException(
-                		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Dispatcher Factory", dispatcherFactory), 
-                		e);
+                throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                    "Message Dispatcher Factory", dispatcherFactory), e);
             }
         }
         else
@@ -472,9 +466,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportServiceException(
-                		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Transaction Factory", transactionFactory), 
-                		e);
+                throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X,
+                    "Transaction Factory", transactionFactory), e);
             }
         }
         else
@@ -522,9 +515,8 @@ public class TransportServiceDescriptor
         }
         catch (Exception e)
         {
-            throw new TransportServiceException(
-            		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Connector", getConnector()), 
-            		e);
+            throw new TransportServiceException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Connector",
+                getConnector()), e);
 
         }
 
@@ -552,9 +544,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "inbound", getDefaultInboundTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "inbound", getDefaultInboundTransformer()), e);
             }
         }
         return null;
@@ -573,9 +564,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "inbound", getDefaultInboundTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "inbound", getDefaultInboundTransformer()), e);
             }
         }
         return null;
@@ -598,9 +588,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "outbound", getDefaultOutboundTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "outbound", getDefaultOutboundTransformer()), e);
             }
         }
         return null;
@@ -619,9 +608,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "outbound", getDefaultOutboundTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "outbound", getDefaultOutboundTransformer()), e);
             }
         }
         return null;
@@ -644,9 +632,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "response", getDefaultResponseTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "response", getDefaultResponseTransformer()), e);
             }
         }
         return null;
@@ -665,9 +652,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "response", getDefaultResponseTransformer()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X,
+                    "response", getDefaultResponseTransformer()), e);
             }
         }
         return null;
@@ -690,9 +676,8 @@ public class TransportServiceDescriptor
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_LOAD_X, "Endpoint Builder: " + getEndpointBuilder()), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_LOAD_X,
+                    "Endpoint Builder: " + getEndpointBuilder()), e);
             }
         }
     }

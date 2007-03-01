@@ -117,9 +117,8 @@ public class Log4jNotificationLoggerAgent extends AbstractNotificationLoggerAgen
             }
             catch (IOException e)
             {
-                throw new InitialisationException(
-                		new Message(Messages.FAILED_LOAD_X, "Log4j configuration"),
-                		e, this);
+                throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "Log4j configuration"),
+                    e, this);
             }
         }
     }

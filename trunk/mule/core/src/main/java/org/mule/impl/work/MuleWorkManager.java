@@ -148,8 +148,7 @@ public class MuleWorkManager implements UMOWorkManager
         }
         catch (UMOException e)
         {
-            logger.warn("Error while disposing Work Manager, continuing (details at debug level): " + e.getMessage());
-            logger.debug(e.getMessage(), e);
+            logger.warn("Error while disposing Work Manager: " + e.getMessage(), e);
         }
     }
 

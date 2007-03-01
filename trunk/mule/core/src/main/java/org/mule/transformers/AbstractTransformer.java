@@ -321,9 +321,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         }
         catch (Exception e)
         {
-            throw (CloneNotSupportedException)new CloneNotSupportedException(
-            		"Failed to clone transformer: " + e.getMessage()
-            		).initCause(e);
+            throw new CloneNotSupportedException("Failed to clone transformer: " + e.getMessage());
         }
     }
 

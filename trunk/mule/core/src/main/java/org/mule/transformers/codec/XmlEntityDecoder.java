@@ -52,9 +52,8 @@ public class XmlEntityDecoder extends AbstractTransformer
         }
         catch (Exception ex)
         {
-            throw new TransformerException(
-            		new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, src.getClass().getName(), "XML"), 
-            		this, ex);
+            throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, src.getClass()
+                .getName(), "XML"), this, ex);
 
         }
     }

@@ -49,6 +49,7 @@ public class OutStreamMessageAdapter extends AbstractMessageAdapter
             {
                 out = new ByteArrayOutputStream(((byte[])message).length);
                 out.write((byte[])message);
+
             }
             else
             {

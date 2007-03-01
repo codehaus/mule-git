@@ -49,8 +49,7 @@ public class WireTap extends SelectiveConsumer
         }
         catch (UMOException e)
         {
-        	logger.error("Failure while dispatching event, continuing (details at debug level): " + e.getMessage());
-        	logger.debug(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return super.process(event);
     }

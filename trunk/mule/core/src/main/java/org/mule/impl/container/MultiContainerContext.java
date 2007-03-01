@@ -73,8 +73,7 @@ public class MultiContainerContext implements UMOContainerContext
     {
         // first see if a particular container has been requested
         ContainerKeyPair realKey = null;
-        StringBuffer causes = new StringBuffer();
-        Throwable lastThrowable = null;
+        String cause = null;
         if (key instanceof String)
         {
             realKey = new ContainerKeyPair(null, key);
@@ -110,19 +109,12 @@ public class MultiContainerContext implements UMOContainerContext
             {
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("Object: '" + realKey + "' not found in container: " + container.getName());
+                    logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
+                        e.getCause());
                 }
-                // this logic modified to return more information on failure
-                // (i) always record some error (even if no cause)
-                // (ii) return last error in the thrown exception
-                // this may be wrong - perhaps empty ObjectNotFoundExceptions should be ignored
-                // if so, please document as such
-                lastThrowable = null == e.getCause() ? e : e.getCause();
-                if (causes.length() > 0)
-                {
-                	causes.append("; ");
+                if (e.getCause() != null){
+                    cause = cause + " " + e.getCause().toString();
                 }
-                causes.append(lastThrowable.toString());
             }
             if (component != null)
             {
@@ -135,13 +127,14 @@ public class MultiContainerContext implements UMOContainerContext
         }
         if (component == null)
         {
-        	if (logger.isDebugEnabled())
-            {
-                logger.debug("Component reference not found: " + realKey.toFullString());
-            }
             if (realKey.isRequired())
             {
-                throw new ObjectNotFoundException(realKey.toString() + ": " + causes.toString(), lastThrowable);
+                throw new ObjectNotFoundException(realKey.toString() + " " + cause);
+            }
+            else if (logger.isDebugEnabled())
+            {
+                logger.debug("Component reference not found: " + realKey.toFullString());
+                return null;
             }
         }
         return component;

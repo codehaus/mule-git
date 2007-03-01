@@ -76,10 +76,8 @@ public class ContainerReference
         }
         catch (Exception e)
         {
-            throw new ContainerException(
-            		new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X,
-            				propertyName, object.getClass().getName(), comp.getClass().getName()),
-            				e);
+            throw new ContainerException(new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName,
+                object.getClass().getName(), comp.getClass().getName()));
         }
     }
 }

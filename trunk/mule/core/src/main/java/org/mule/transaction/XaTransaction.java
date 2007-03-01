@@ -72,9 +72,7 @@ public class XaTransaction extends AbstractTransaction
         }
         catch (Exception e)
         {
-            throw new TransactionException(
-            		new Message(Messages.TX_CANT_START_X_TRANSACTION, "XA"), 
-            		e);
+            throw new TransactionException(new Message(Messages.TX_CANT_START_X_TRANSACTION, "XA"), e);
         }
     }
 
@@ -168,9 +166,7 @@ public class XaTransaction extends AbstractTransaction
         }
         catch (SystemException e)
         {
-            throw (IllegalStateException)new IllegalStateException(
-            		"Failed to set transaction to rollback only: " + e.getMessage()
-            		).initCause(e);
+            throw new IllegalStateException("Failed to set transaction to rollback only: " + e.getMessage());
         }
     }
 

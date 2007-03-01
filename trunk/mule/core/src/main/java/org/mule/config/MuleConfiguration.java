@@ -488,7 +488,7 @@ public class MuleConfiguration
             InputStream is = null;
             try
             {
-                // We want to load the MANIFEST.MF from the mule-core jar. Since we
+                // We want to load the MANIFEST.MF from the mule-core jar. Sine we
                 // don't the version we're using
                 // we have to search for the jar on the classpath
                 URL url = (URL)AccessController.doPrivileged(new PrivilegedAction()
@@ -510,8 +510,7 @@ public class MuleConfiguration
                         }
                         catch (IOException e1)
                         {
-                        	logger.warn("Failed to retrieve manifest URL, manifest will not display correctly: " + e1.getMessage());
-                            logger.debug(e1.getMessage(), e1);
+                            e1.printStackTrace();
                         }
                         return null;
                     }
@@ -530,8 +529,8 @@ public class MuleConfiguration
             }
             catch (IOException e)
             {
-                logger.warn("Failed to read manifest, manifest will not display correctly: " + e.getMessage());
-                logger.debug(e.getMessage(), e);
+                logger.warn("Failed to read manifest Info, Manifest information will not display correctly: "
+                            + e.getMessage());
             }
         }
         return manifest;
@@ -591,8 +590,7 @@ public class MuleConfiguration
         }
         catch (Exception e)
         {
-            throw new MuleRuntimeException(
-            		new Message(Messages.FAILED_TO_CLONE_X, "Connection Strategy"), e);
+            throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CLONE_X, "Connection Strategy"), e);
         }
     }
 

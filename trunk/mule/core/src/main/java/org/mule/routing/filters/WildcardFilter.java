@@ -52,8 +52,7 @@ public class WildcardFilter implements UMOFilter, ObjectFilter
         }
         catch (Exception e)
         {
-            logger.warn("An exception occured while filtering, continuing (details at debug level): " + e.getMessage());
-            logger.debug(e.getMessage(), e);
+            logger.warn("An exception occured while filtering", e);
             return false;
         }
     }

@@ -10,7 +10,6 @@
 
 package org.mule.transformers.compression;
 
-import org.mule.config.i18n.Message;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.compression.GZipCompression;
 
@@ -50,8 +49,8 @@ public class GZipUncompressTransformer extends GZipCompressTransformer
         }
         catch (IOException e)
         {
-            throw new TransformerException(
-            		Message.createStaticMessage("Failed to uncompress message"), this, e);
+            logger.error("Failed to uncompress message:", e);
+            throw new TransformerException(this, e);
         }
 
         if (!getReturnClass().equals(byte[].class))

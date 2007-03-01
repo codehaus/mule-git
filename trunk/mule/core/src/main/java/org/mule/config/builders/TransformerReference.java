@@ -82,11 +82,9 @@ public class TransformerReference
         }
         catch (Exception e)
         {
-            throw new InitialisationException(
-            		new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName, 
-            				object != null ? object.getClass().getName() : "null", 
-            				trans != null ? trans.getClass().getName() : "null"),
-            		e);
+            throw new InitialisationException(new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X,
+                propertyName, (object != null ? object.getClass().getName() : "null"), (trans != null
+                                ? trans.getClass().getName() : "null")), e);
         }
     }
 }

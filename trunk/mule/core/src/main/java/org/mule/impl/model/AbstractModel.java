@@ -245,12 +245,11 @@ public abstract class AbstractModel implements UMOModel
             try
             {
                 component.dispose();
-                logger.info("Component '" + component + "' has been destroyed successfully");
+                logger.info(component + " has been destroyed successfully");
             }
             catch (Exception e1)
             {
-                logger.warn("Failed to dispose component '" + component + "', continuing (details at debug level): " + e1.getMessage());
-                logger.debug(e1.getMessage(), e1);
+                logger.warn("Failed to dispose component: " + e1.getMessage());
             }
         }
 

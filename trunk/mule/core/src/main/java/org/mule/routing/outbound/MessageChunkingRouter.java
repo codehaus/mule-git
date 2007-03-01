@@ -68,9 +68,8 @@ public class MessageChunkingRouter extends FilteringOutboundRouter
             }
             catch (Exception e)
             {
-                throw new RoutingException(
-                		new Message(Messages.FAILED_TO_READ_PAYLOAD), 
-                		message, getEndpoint(0, message), e);
+                throw new RoutingException(new Message(Messages.FAILED_TO_READ_PAYLOAD), message,
+                    getEndpoint(0, message), e);
             }
 
             int parts = data.length / chunkSize;

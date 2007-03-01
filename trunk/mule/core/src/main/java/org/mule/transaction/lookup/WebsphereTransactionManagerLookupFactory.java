@@ -75,7 +75,7 @@ public class WebsphereTransactionManagerLookupFactory implements UMOTransactionM
                     logger.debug("Could not find WebSphere 4 TransactionManager factory class", ex3);
                     throw new RuntimeException(
                         "Couldn't find any WebSphere TransactionManager factory class, "
-                                        + "neither for WebSphere version 5.1 nor 5.0 nor 4", ex3);
+                                        + "neither for WebSphere version 5.1 nor 5.0 nor 4");
                 }
             }
         }

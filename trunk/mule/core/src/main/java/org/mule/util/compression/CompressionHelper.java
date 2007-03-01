@@ -55,8 +55,7 @@ public class CompressionHelper
                     }
                     catch (Exception e)
                     {
-                        logger.warn("Failed to build compression strategy, continuing (details at debug level): " + e.getMessage());
-                        logger.debug(e.getMessage(), e);
+                        logger.warn("Failed to build compression strategy: " + e.getMessage());
                     }
                     return null;
                 }

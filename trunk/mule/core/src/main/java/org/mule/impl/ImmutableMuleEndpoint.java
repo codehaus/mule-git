@@ -419,8 +419,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             {
                 // this really should never happen as the endpoint is already
                 // initialised
-                logger.error("Ingnoring unexpected initialisation problem (details at debug level): " + e.getMessage());
-                logger.debug(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -654,9 +653,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                 }
                 catch (TransportFactoryException e)
                 {
-                    throw new InitialisationException(
-                    		new Message(Messages.FAILED_TO_CREATE_CONNECTOR_FROM_URI_X, endpointUri),
-                    		e, this);
+                    throw new InitialisationException(new Message(
+                        Messages.FAILED_TO_CREATE_CONNECTOR_FROM_URI_X, endpointUri), e, this);
                 }
             }
 

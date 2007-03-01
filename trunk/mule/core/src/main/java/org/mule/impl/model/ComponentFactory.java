@@ -64,10 +64,8 @@ public class ComponentFactory
         }
         catch (Exception e)
         {
-            throw new InitialisationException(
-            		new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X,
-            				"Component '" + descriptor.getName() + "'"), 
-            		e, descriptor);
+            throw new InitialisationException(new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X,
+                "Component '" + descriptor.getName() + "'"), e, descriptor);
         }
 
         // Call any custom initialisers

@@ -78,6 +78,7 @@ public class NestedRouter extends AbstractRouter implements UMONestedRouter
         }
         catch (Exception e)
         {
+            logger.error(e);
             throw new RuntimeException(e);
         }
     }

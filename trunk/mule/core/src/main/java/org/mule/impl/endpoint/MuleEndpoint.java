@@ -107,9 +107,9 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
             }
             catch (InitialisationException e)
             {
-                // this really should never happen as the endpoint is already initialised
-                logger.error("Ignoring unexpected initialisation problem (details at debug level): " + e.getMessage());
-                logger.debug(e.getMessage(), e);
+                // this really should never happen as the endpoint is already
+                // initialised
+                logger.error(e.getMessage(), e);
             }
         }
 

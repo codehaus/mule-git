@@ -293,9 +293,8 @@ public class MuleManager implements UMOManager
             }
             catch (Exception e)
             {
-                throw new MuleRuntimeException(
-                		new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X, clazz.getName()), 
-                		e);
+                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X,
+                    clazz.getName()), e);
             }
         }
 
@@ -419,8 +418,7 @@ public class MuleManager implements UMOManager
         }
         catch (UMOException e)
         {
-            logger.error("Failed to stop manager, continuing (details at debug level): " + e.getMessage());
-            logger.debug(e.getMessage(), e);
+            logger.error("Failed to stop manager: " + e.getMessage(), e);
         }
         disposed.set(true);
         disposeConnectors();
@@ -585,9 +583,8 @@ public class MuleManager implements UMOManager
             }
             catch (Exception e)
             {
-                throw new MuleRuntimeException(
-                		new Message(Messages.FAILED_TO_CLONE_X, "Transformer: " + trans.getName()), 
-                		e);
+                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CLONE_X, "Transformer: "
+                                                                                       + trans.getName()), e);
             }
         }
         return null;
@@ -758,9 +755,8 @@ public class MuleManager implements UMOManager
                     }
                     catch (Exception e)
                     {
-                        throw new InitialisationException(
-                        		new Message(Messages.INITIALISATION_FAILURE_X, "QueueManager"), 
-                        		e);
+                        throw new InitialisationException(new Message(Messages.INITIALISATION_FAILURE_X,
+                            "QueueManager"), e);
                     }
                 }
 

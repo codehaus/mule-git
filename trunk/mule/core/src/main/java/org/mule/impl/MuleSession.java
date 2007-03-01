@@ -460,9 +460,8 @@ public final class MuleSession implements UMOSession
         }
         catch (Exception e)
         {
-            throw new DispatchException(
-            		new Message(Messages.FAILED_TO_CREATE_X, "Event"), 
-            		message, endpoint, e);
+            throw new DispatchException(new Message(Messages.FAILED_TO_CREATE_X, "Event"), message, endpoint,
+                e);
         }
     }
 

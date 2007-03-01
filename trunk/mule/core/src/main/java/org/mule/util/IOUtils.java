@@ -160,7 +160,7 @@ public class IOUtils extends org.apache.commons.io.IOUtils
             }
             catch (Exception e)
             {
-                logger.debug("Unable to load resource from the file system: " + e.getMessage(), e);
+                logger.debug("Unable to load resource from the file system: " + e.getMessage());
             }
         }
 
@@ -183,7 +183,7 @@ public class IOUtils extends org.apache.commons.io.IOUtils
             }
             catch (Exception e)
             {
-                logger.debug("Unable to load resource from the classpath: " + e.getMessage(), e);
+                logger.debug("Unable to load resource from the classpath: " + e.getMessage());
             }
         }
 

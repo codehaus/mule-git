@@ -75,7 +75,7 @@ public class IdempotentReceiver extends SelectiveConsumer
             }
             catch (IllegalArgumentException e)
             {
-                throw new RoutingException(event.getMessage(), event.getEndpoint(), e);
+                throw new RoutingException(event.getMessage(), event.getEndpoint());
             }
 
             Object id = this.getIdForEvent(event);
@@ -86,9 +86,8 @@ public class IdempotentReceiver extends SelectiveConsumer
             }
             catch (IOException e)
             {
-                throw new RoutingException(
-                		new Message(Messages.FAILED_TO_WRITE_X_TO_STORE_X, id, idStore.getAbsolutePath()), 
-                		event.getMessage(), event.getEndpoint(), e);
+                throw new RoutingException(new Message(Messages.FAILED_TO_WRITE_X_TO_STORE_X, id,
+                    idStore.getAbsolutePath()), event.getMessage(), event.getEndpoint(), e);
             }
         }
         else
@@ -156,9 +155,8 @@ public class IdempotentReceiver extends SelectiveConsumer
         }
         catch (IOException e)
         {
-            throw new RoutingException(
-            		new Message(Messages.FAILED_TO_READ_FROM_STORE_X, idStore.getAbsolutePath()), 
-            		event.getMessage(), event.getEndpoint(), e);
+            throw new RoutingException(new Message(Messages.FAILED_TO_READ_FROM_STORE_X,
+                idStore.getAbsolutePath()), event.getMessage(), event.getEndpoint(), e);
         }
     }
 

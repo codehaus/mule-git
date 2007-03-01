@@ -192,9 +192,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
         }
         catch (Exception e)
         {
-        	throw (CloneNotSupportedException)new CloneNotSupportedException(
-        			"Failed to clone transformer: " + e.getMessage()
-        			).initCause(e);
+            throw new CloneNotSupportedException("Failed to clone transformer: " + e.getMessage());
         }
     }
 

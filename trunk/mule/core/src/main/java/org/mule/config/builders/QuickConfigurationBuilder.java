@@ -10,8 +10,6 @@
 
 package org.mule.config.builders;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
@@ -49,7 +47,6 @@ import java.util.Properties;
  */
 public class QuickConfigurationBuilder implements ConfigurationBuilder
 {
-    private static final Log logger = LogFactory.getLog(TransformerReference.class);
     private static final String MODEL_NOT_SET = "not set";
 
     private UMOManager manager;
@@ -102,9 +99,7 @@ public class QuickConfigurationBuilder implements ConfigurationBuilder
             }
             catch (UMOException e)
             {
-                logger.info("Ignoring problem while unregistering "
-                		+ MuleAdminAgent.AGENT_NAME + ": " + e.getMessage());
-                logger.debug(e.getMessage(), e);
+                // ignore
             }
         }
     }

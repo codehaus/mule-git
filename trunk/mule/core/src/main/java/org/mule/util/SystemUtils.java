@@ -66,8 +66,7 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
         }
         catch (Exception ex)
         {
-            logger.error("Could not access OS environment, continuing (details at debug level): " + ex.getMessage());
-            logger.debug(ex.getMessage(), ex);
+            logger.error("Could not access OS environment: ", ex);
         }
 
         return env;
@@ -177,7 +176,7 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
         }
         catch (ParseException p)
         {
-            throw new MuleException("Unable to parse the Mule command line because of: " + p.toString(), p);
+            throw new MuleException("Unable to parse the Mule command line because of: " + p.toString());
         }
     }
 

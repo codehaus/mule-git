@@ -94,9 +94,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             catch (UMOException e)
             {
                 dispose();
-                throw new MuleRuntimeException(
-                		new Message(Messages.FAILED_TO_START_X, "WorkManager"),
-                		e);
+                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_START_X, "WorkManager"), e);
             }
         }
     }
@@ -123,9 +121,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
             catch (org.mule.umo.security.SecurityException e)
             {
-                logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage());
-                connector.fireNotification(
-                		new SecurityNotification(e, SecurityNotification.ADMIN_EVENT_ACTION_START_RANGE));
+                logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage(), e);
+                connector.fireNotification(new SecurityNotification(e,
+                    SecurityNotification.ADMIN_EVENT_ACTION_START_RANGE));
                 connector.handleException(e);
                 return;
             }
@@ -198,9 +196,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
             catch (org.mule.umo.security.SecurityException e)
             {
-                logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage());
-                connector.fireNotification(
-                		new SecurityNotification(e, SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
+                logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage(), e);
+                connector.fireNotification(new SecurityNotification(e,
+                    SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
                 connector.handleException(e);
                 return event.getMessage();
             }
@@ -336,8 +334,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 }
                 catch (Exception e)
                 {
-                	logger.warn("Failure while disconnecting, continuing (details at debug level): " + e.getMessage());
-                	logger.debug(e.getMessage(), e);
+                    logger.warn(e.getMessage(), e);
                 }
 
                 this.doDispose();
@@ -594,8 +591,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         }
         catch (TransactionException e)
         {
-        	logger.warn("Failure while querying transaction rollback status, continuing (details at debug level): " + e.getMessage());
-        	logger.debug(e.getMessage(), e);
+            logger.warn(e.getMessage());
         }
         return false;
     }

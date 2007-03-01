@@ -98,8 +98,7 @@ public class TransactionalQueueManager extends AbstractXAResourceManager impleme
         }
         catch (ResourceManagerException e)
         {
-            logger.error("Error disposing manager, continuing (details at debug level): " + e.getMessage());
-            logger.debug(e.getMessage(), e);
+            logger.error("Error disposing manager", e);
         }
     }
 
@@ -129,8 +128,7 @@ public class TransactionalQueueManager extends AbstractXAResourceManager impleme
         }
         catch (IOException e)
         {
-            logger.error("Error closing persistent store, continuing (details at debug level): " + e.getMessage());
-            logger.debug(e.getMessage(), e);
+            logger.error("Error closing persistent store", e);
         }
         return super.shutdown(mode, timeoutMSecs);
     }

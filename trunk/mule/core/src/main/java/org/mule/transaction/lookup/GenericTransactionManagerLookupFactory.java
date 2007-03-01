@@ -132,9 +132,8 @@ public class GenericTransactionManagerLookupFactory implements UMOTransactionMan
         }
         catch (NamingException e)
         {
-            throw new InitialisationException(
-            		new Message(Messages.FAILED_TO_CREATE_X, "Jndi context"), 
-            		e, this);
+            throw new InitialisationException(new Message(Messages.FAILED_TO_CREATE_X, "Jndi context"), e,
+                this);
         }
     }
 }

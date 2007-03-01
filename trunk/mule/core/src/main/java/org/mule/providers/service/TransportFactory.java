@@ -292,9 +292,8 @@ public class TransportFactory
         }
         catch (Exception e)
         {
-            throw new TransportFactoryException(
-            		new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", url), 
-            		e);
+            throw new TransportFactoryException(new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint",
+                url), e);
         }
 
         connector.setName(ObjectNameHelper.getConnectorName(connector));
@@ -368,9 +367,8 @@ public class TransportFactory
             }
             catch (IOException e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_TO_ENDPOINT_FROM_LOCATION_X, location + "/" + protocol), 
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_TO_ENDPOINT_FROM_LOCATION_X,
+                    location + "/" + protocol), e);
             }
         }
         return csd;
@@ -404,9 +402,8 @@ public class TransportFactory
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(
-                		new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X, "Connector"),
-                		e);
+                throw new TransportFactoryException(new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X,
+                    "Connector"), e);
             }
         }
         else if (create == NEVER_CREATE_CONNECTOR && connector == null)

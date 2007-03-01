@@ -124,9 +124,8 @@ public class ExceptionHelper
         }
         catch (IOException e)
         {
-            throw new MuleRuntimeException(
-            		Message.createStaticMessage("Failed to load Exception resources"),
-            		e);
+            throw new MuleRuntimeException(Message.createStaticMessage("Failed to load Exception resources"),
+                e);
         }
     }
 
@@ -156,8 +155,7 @@ public class ExceptionHelper
             }
             catch (ClassNotFoundException e)
             {
-            	logger.error("Could not load error class " + clazz.toString());
-                logger.debug(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
                 return null;
             }
             reverseErrorCodes.put(key, clazz);

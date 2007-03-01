@@ -37,148 +37,144 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DeferredOutputStream extends OutputStream
 {
-	/**
-	 * logger used by this class
-	 */
-	protected transient final Log logger = LogFactory.getLog(DeferredOutputStream.class);
-	private UMOEventContext event;
-	private OutputStream out = null;
-	private int buffer = 0;
+    /**
+     * logger used by this class
+     */
+    protected transient final Log logger = LogFactory.getLog(DeferredOutputStream.class);
+    private UMOEventContext event;
+    private OutputStream out = null;
+    private int buffer = 0;
 
 
-	public DeferredOutputStream(UMOEventContext event)
-	{
-		this.event = event;
-	}
+    public DeferredOutputStream(UMOEventContext event)
+    {
+        this.event = event;
+    }
 
 
-	public DeferredOutputStream(UMOEventContext event, int buffer)
-	{
-		this.event = event;
-		this.buffer = buffer;
-	}
+    public DeferredOutputStream(UMOEventContext event, int buffer)
+    {
+        this.event = event;
+        this.buffer = buffer;
+    }
 
-	public void write(int b) throws IOException
-	{
-		if (out == null)
-		{
-			out = getOutputStream();
-		}
-		out.write(b);
-	}
-
-
-	public void flush() throws IOException
-	{
-		//out could be null if the stream hasn't been written to yet
-		if(out!=null)
-		{
-			out.flush();
-		}
-	}
-
-	public void close() throws IOException
-	{
-		//out could be null if the stream hasn't been written to yet
-		if(out!=null)
-		{
-			out.close();
-		}
-	}
-
-	protected OutputStream getOutputStream() throws IOException
-	{
-		StreamMessageAdapter adapter = (StreamMessageAdapter) event.getMessage().getAdapter();
-		OutputStream temp = getOutputStreamFromRouter();
-		if (temp == null)
-		{
-			temp = adapter.getOutputStream();
-		}
-		if (temp == null)
-		{
-			throw new IOException("No output stream was found for the current event: " + event);
-		}
-		else if (getBuffer() > 0)
-		{
-			return new BufferedOutputStream(temp, getBuffer());
-		}
-		else
-		{
-			return temp;
-		}
-	}
+    public void write(int b) throws IOException
+    {
+        if (out == null)
+        {
+            out = getOutputStream();
+        }
+        out.write(b);
+    }
 
 
-	public int getBuffer()
-	{
-		return buffer;
-	}
+    public void flush() throws IOException
+    {
+        //out could be null if the stream hasn't been written to yet
+        if(out!=null)
+        {
+            out.flush();
+        }
+    }
 
-	public void setBuffer(int buffer)
-	{
-		if(out!=null)
-		{
-			throw new IllegalStateException("The stream buffer cannot be set after the stream has been written to");
-		}
-		this.buffer = buffer;
-	}
+    public void close() throws IOException
+    {
+        //out could be null if the stream hasn't been written to yet
+        if(out!=null)
+        {
+            out.close();
+        }
+    }
 
-	protected OutputStream getOutputStreamFromRouter() throws IOException
-	{
-		UMODescriptor descriptor = event.getComponentDescriptor();
-		UMOEndpointURI endpoint = event.getEndpointURI();
+    protected OutputStream getOutputStream() throws IOException
+    {
+        StreamMessageAdapter adapter = (StreamMessageAdapter) event.getMessage().getAdapter();
+        OutputStream temp = getOutputStreamFromRouter();
+        if (temp == null)
+        {
+            temp = adapter.getOutputStream();
+        }
+        if (temp == null)
+        {
+            throw new IOException("No output stream was found for the current event: " + event);
+        }
+        else if (getBuffer() > 0)
+        {
+            return new BufferedOutputStream(temp, getBuffer());
+        }
+        else
+        {
+            return temp;
+        }
+    }
 
-		UMOOutboundRouterCollection messageRouter = descriptor.getOutboundRouter();
-		if (messageRouter.hasEndpoints())
-		{
-			for (Iterator iterator = messageRouter.getRouters().iterator(); iterator.hasNext();)
-			{
-				UMOOutboundRouter router = (UMOOutboundRouter) iterator.next();
-				boolean match = false;
-				try
-				{
-					match = router.isMatch(event.getMessage());
-				}
-				catch (MessagingException e)
-				{
-					throw (IOException)new IOException(e.toString()).initCause(e);
-				}
-				if (match)
-				{
-					if (router.getEndpoints().size() != 1)
-					{
-						throw (IOException)new IOException(
-								new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT, 
-										descriptor.getName()).toString());
-					}
-					else
-					{
-						UMOEndpoint ep = (UMOEndpoint) router.getEndpoints().get(0);
-						try
-						{
-							return ep.getConnector().getOutputStream(ep, event.getMessage());
-						}
-						catch (UMOException e)
-						{
-							// IOException constructor cannot take a cause
-							throw new IOException(
-									new Message(Messages.STREAMING_FAILED_FOR_ENDPOINT_X, 
-											endpoint.toString()).toString());
-						}
-					}
-				}
-			}
-			// If we got to here there are no matching outbound Routers
-			// IOException constructor cannot take a cause
-			throw new IOException(new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT,
-					descriptor.getName()).toString());
-		}
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("there are no outbound endpoints configured on this component, the otput stream provided from the message adapter will be used");
-		}
 
-		// Use the response output stream on the StreamingMessage adapter
-		return null;
-	}
+    public int getBuffer()
+    {
+        return buffer;
+    }
+
+    public void setBuffer(int buffer)
+    {
+        if(out!=null)
+        {
+            throw new IllegalStateException("The stream buffer cannot be set after the stream has been written to");
+        }
+        this.buffer = buffer;
+    }
+
+    protected OutputStream getOutputStreamFromRouter() throws IOException
+    {
+        UMODescriptor descriptor = event.getComponentDescriptor();
+        UMOEndpointURI endpoint = event.getEndpointURI();
+
+        UMOOutboundRouterCollection messageRouter = descriptor.getOutboundRouter();
+        if (messageRouter.hasEndpoints())
+        {
+            for (Iterator iterator = messageRouter.getRouters().iterator(); iterator.hasNext();)
+            {
+                UMOOutboundRouter router = (UMOOutboundRouter) iterator.next();
+                boolean match = false;
+                try
+                {
+                    match = router.isMatch(event.getMessage());
+                }
+                catch (MessagingException e)
+                {
+                    throw new IOException(e.toString());
+                }
+                if (match)
+                {
+                    if (router.getEndpoints().size() != 1)
+                    {
+                        throw new IOException(new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT,
+                                descriptor.getName()).toString());
+                    }
+                    else
+                    {
+                        UMOEndpoint ep = (UMOEndpoint) router.getEndpoints().get(0);
+                        try
+                        {
+                            return ep.getConnector().getOutputStream(ep, event.getMessage());
+                        }
+                        catch (UMOException e)
+                        {
+                            throw new IOException(new Message(Messages.STREAMING_FAILED_FOR_ENDPOINT_X,
+                                    endpoint.toString()).toString());
+                        }
+                    }
+                }
+            }
+            //If we got to here there are no matching outbound Routers
+            throw new IOException(new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT,
+                        descriptor.getName()).toString());
+        }
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("there are no outbound endpoints configured on this component, the otput stream provided from the message adapter will be used");
+        }
+
+        //Use the response output stream on the StreamingMessage adapter
+        return null;
+    }
 }
