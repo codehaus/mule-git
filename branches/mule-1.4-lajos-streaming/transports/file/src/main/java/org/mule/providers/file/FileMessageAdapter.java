@@ -34,9 +34,10 @@ public class FileMessageAdapter extends AbstractMessageAdapter
      */
     private static final long serialVersionUID = 4127485947547548996L;
 
+    private FileConnector connector = null;
     private static final FileToByteArray transformer = new FileToByteArray();
 
-    private File file = null;
+    protected File file = null;
     private byte[] contents = null;
 
     public FileMessageAdapter(Object message) throws MessagingException

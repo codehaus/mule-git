@@ -16,6 +16,7 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.providers.ConnectException;
+import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -165,6 +166,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             try
             {
                 msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(sourceFile), null);
+                ((StreamMessageAdapter)msgAdapter).setSource(sourceFile);
             }
             catch (FileNotFoundException e)
             {
@@ -193,6 +195,16 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // don't use new File() directly, see MULE-1112
             destinationFile = FileUtils.newFile(moveDir, destinationFileName);
         }
+        /*
+        else if (endpoint.isStreaming())
+        {
+            // If we are in streaming mode and there was no moveTo directory,
+            // we will use TMP_DIR just to get the file out of the way
+
+            moveDir = System.getProperty("java.io.tmpdir");
+            destinationFile = FileUtils.newFile(moveDir, sourceFileOriginalName);
+        }
+        */
 
         boolean fileWasMoved = false;
 
@@ -222,6 +234,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 if(endpoint.isStreaming())
                 {
                     msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(destinationFile), null);
+                    ((StreamMessageAdapter)msgAdapter).setSource(destinationFile);
                 }
                 else
                 {
@@ -236,7 +249,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             
             // at this point msgAdapter either points to the old sourceFile
             // or the new destinationFile.
-            if (((FileConnector) connector).isAutoDelete())
+            //
+            // We can't delete the file in streaming mode!
+            if (!endpoint.isStreaming() && ((FileConnector) connector).isAutoDelete())
             {
                 // no moveTo directory
                 if (destinationFile == null)
@@ -289,6 +304,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         boolean fileCanBeLocked = false;
         try
         {
+            System.out.println("Trying to get lock");
             channel = new RandomAccessFile(sourceFile, "rw").getChannel();
 
             // Try acquiring the lock without blocking. This method returns
@@ -298,6 +314,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         catch (IOException e)
         {
             // unable to create a lock
+            System.out.println("Lock failure: " + e.toString());
         }
         finally {
             if (lock != null)
@@ -306,6 +323,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 fileCanBeLocked = true;
                 try
                 {
+                    System.out.println("About to release lock");
                     // Release the lock
                     lock.release();
                 }

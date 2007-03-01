@@ -47,6 +47,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
      */
     protected void doDispatch(UMOEvent event) throws Exception
     {
+        System.out.println("FileMessageDispatcher doDispatch start");
         Object data = event.getTransformedMessage();
         // Wrap the transformed message before passing it to the filename parser
         UMOMessage message = new MuleMessage(data, event.getMessage());
@@ -67,6 +68,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
             event.getMessage().setStringProperty(FileConnector.PROPERTY_FILENAME,
                 message.getStringProperty(FileConnector.PROPERTY_FILENAME, ""));
         }
+
         try
         {
             fos.write(buf);
@@ -75,6 +77,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         {
             fos.close();
         }
+
     }
     
     /**

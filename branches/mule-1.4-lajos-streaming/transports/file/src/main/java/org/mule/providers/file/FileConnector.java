@@ -26,6 +26,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
 
@@ -532,4 +533,31 @@ public class FileConnector extends AbstractConnector
         }
         return getFilenameParser().getFilename(message, pattern);
     }
+
+    public void disposeMessage(Object source)
+    {
+        // If this is a streaming message adapter and if the connector is set
+        // we need to call the connector with the File object to properly
+        // dispose of it. This can either be deleting it or possibly renaming it.
+        System.out.println("disposeMessage source is " + source.getClass().getName());
+
+        if (source instanceof File)
+        {
+            File file = (File)source;
+
+            if (isAutoDelete())
+            {
+                try 
+                {
+                    System.out.println("About to delete file");
+                    file.delete();
+                }
+                catch (Exception e)
+                {
+                    logger.error("Unable to delete the file " + file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
 }
