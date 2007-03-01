@@ -550,7 +550,7 @@ public class FileConnector extends AbstractConnector
                 try 
                 {
                     System.out.println("About to delete file");
-                    file.delete();
+                    FileUtils.forceDelete(file);
                 }
                 catch (Exception e)
                 {
