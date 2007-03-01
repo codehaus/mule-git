@@ -135,10 +135,13 @@
                     <!--<groupId>mx4j</groupId>-->
                     <!--<artifactId>mx4j-remote</artifactId>-->
                 <!--</exclusion>-->
+                <!-- m2 bug - if this transient dependency is excluded, the normal
+                     dependency for spring is not included either.
                 <exclusion>
                     <groupId>backport-util-concurrent</groupId>
                     <artifactId>backport-util-concurrent</artifactId>
                 </exclusion>
+                -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jsp_2.0_spec</artifactId>
@@ -147,6 +150,8 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-j2ee-jacc_1.0_spec</artifactId>
                 </exclusion>
+                <!-- m2 bug - if this transient dependency is excluded, the normal
+                     dependency for spring is not included either.
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jms_1.1_spec</artifactId>
@@ -155,6 +160,7 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
                 </exclusion>
+                 -->
                 <exclusion>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty</artifactId>
@@ -167,10 +173,13 @@
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
+                <!-- m2 bug - if this transient dependency is excluded, the normal
+                     dependency for spring is not included either.
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                -->
                 <!-- This exclusion is to force use of the new cglib -->
                 <exclusion>
                     <groupId>cglib</groupId>
