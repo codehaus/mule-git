@@ -10,10 +10,6 @@
 
 package org.mule.providers.http;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.tcp.TcpConnector;
@@ -21,6 +17,10 @@ import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <code>HttpConnector</code> provides a way of receiving and sending http requests
@@ -53,7 +53,12 @@ public class HttpConnector extends TcpConnector
     public static final String HTTP_CUSTOM_HEADERS_MAP_PROPERTY = "http.custom.headers";
     public static final String HTTP_METHOD_PROPERTY = "http.method";
     public static final String HTTP_REQUEST_PROPERTY = "http.request";
-    public static final String HTTP_PARAMS = "http.params";
+
+    /**
+     * Allows the user to set a {@link org.apache.commons.httpclient.params.HttpMethodParams} object in the client
+     * request to be set on the HttpMethod request object
+     */
+    public static final String HTTP_PARAMS_PROPERTY = "http.params";
     public static final String HTTP_GET_BODY_PARAM_PROPERTY = "http.get.body.param";
     public static final String DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY = "body";
     public static final String HTTP_POST_BODY_PARAM_PROPERTY = "http.post.body.param";
