@@ -130,19 +130,6 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-        <!-- Local module repository -->
-        <repository>
-            <id>local (Maven 1)</id>
-            <name>Local module repository (lib)</name>
-            <url>file://lib</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <layout>legacy</layout>
-        </repository>
     </repositories>
 
     <pluginRepositories>
