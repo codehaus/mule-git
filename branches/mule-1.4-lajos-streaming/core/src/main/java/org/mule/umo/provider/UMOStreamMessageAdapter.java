@@ -70,4 +70,10 @@ public interface UMOStreamMessageAdapter extends UMOMessageAdapter
      * StreamAdapter may have associated with it.
      */
     public void release();
+
+    public void setSourceConnector(UMOConnector connector);
+
+    public void setSource(Object source);
+
+    public Object getSource();
 }

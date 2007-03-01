@@ -15,7 +15,9 @@ import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOExceptionPayload;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.MapUtils;
 import org.mule.util.UUID;
@@ -55,6 +57,45 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
 
     protected UMOExceptionPayload exceptionPayload;
     protected String id = UUID.getUUID();
+    protected boolean initialised = false;
+
+    /*
+    public AbstractMessageAdapter()
+    {
+        try
+        {
+            initialise();
+            initialised = true;
+        }
+        catch (InitialisationException ie)
+        {
+            initialised = false;
+        }
+    }
+    */
+
+    public void initialise() throws InitialisationException
+    {
+        // Nothing to do - may be overriden by concrete implementations
+        logger.warn("Initialising " + id);
+        initialised = true;
+    }
+
+    public void dispose()
+    {
+        // Nothing to do - may be overriden by concrete implementations
+        logger.warn("Disposing " + id);
+    }
+
+    public boolean isInitialised()
+    {
+        return initialised;
+    }
+
+    public boolean isStreaming()
+    {
+        return (this instanceof UMOStreamMessageAdapter);
+    }
 
     public String toString()
     {

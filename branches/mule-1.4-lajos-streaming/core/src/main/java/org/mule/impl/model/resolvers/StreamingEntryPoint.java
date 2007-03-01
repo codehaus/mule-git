@@ -117,6 +117,7 @@ public class StreamingEntryPoint implements UMOEntryPoint
             try
             {
                 out.flush();
+                adapter.dispose();
             }
             catch (IOException e)
             {

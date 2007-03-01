@@ -1518,6 +1518,7 @@ public abstract class AbstractConnector
         try
         {
             dispatcher = this.getDispatcher(endpoint);
+            event.getMessage().getAdapter().dispose();
             dispatcher.dispatch(event);
         }
         catch (DispatchException dex)
@@ -1564,6 +1565,7 @@ public abstract class AbstractConnector
         try
         {
             dispatcher = this.getDispatcher(endpoint);
+            event.getMessage().getAdapter().dispose();
             return dispatcher.send(event);
         }
         catch (DispatchException dex)
@@ -1726,7 +1728,15 @@ public abstract class AbstractConnector
     {
         try
         {
-            return serviceDescriptor.createMessageAdapter(message);
+            //return serviceDescriptor.createMessageAdapter(message);
+            UMOMessageAdapter adapter = serviceDescriptor.createMessageAdapter(message);
+            adapter.initialise();
+            return adapter;
+        }
+        catch (InitialisationException ie)
+        {
+            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Message Adapter"),
+                message, ie);
         }
         catch (TransportServiceException e)
         {
@@ -1751,7 +1761,16 @@ public abstract class AbstractConnector
     {
         try
         {
-            return serviceDescriptor.createStreamMessageAdapter(in, out);
+            //return serviceDescriptor.createStreamMessageAdapter(in, out);
+            UMOStreamMessageAdapter adapter = serviceDescriptor.createStreamMessageAdapter(in, out);
+            adapter.setSourceConnector(this);
+            adapter.initialise();
+            return adapter;
+        }
+        catch (InitialisationException ie)
+        {
+            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Stream Message Adapter"),
+                in, ie);
         }
         catch (TransportServiceException e)
         {
@@ -1819,4 +1838,11 @@ public abstract class AbstractConnector
         sb.append('}');
         return sb.toString();
     }
+
+    public void disposeMessage(Object message)
+    {
+        // Meant to be overriden so that the connector can do any resource
+        // releasing from stream adapters
+    }
+
 }

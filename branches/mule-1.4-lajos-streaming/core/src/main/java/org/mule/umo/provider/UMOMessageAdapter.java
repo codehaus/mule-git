@@ -11,6 +11,8 @@
 package org.mule.umo.provider;
 
 import org.mule.umo.UMOExceptionPayload;
+import org.mule.umo.lifecycle.Disposable;
+import org.mule.umo.lifecycle.Initialisable;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -22,7 +24,7 @@ import javax.activation.DataHandler;
  * <code>UMOMessageAdapter</code> provides a common abstraction of different
  * message implementations provided by different underlying technologies.
  */
-public interface UMOMessageAdapter extends Serializable
+public interface UMOMessageAdapter extends Initialisable, Disposable, Serializable
 {
 
     /**
@@ -322,4 +324,5 @@ public interface UMOMessageAdapter extends Serializable
      */
     void setEncoding(String encoding);
 
+    boolean isInitialised();
 }

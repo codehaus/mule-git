@@ -14,6 +14,7 @@ import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.provider.OutputHandler;
+import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 
 import java.io.IOException;
@@ -35,7 +36,9 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
 
     protected InputStream in;
     protected OutputStream out;
+    protected Object source = null;
     protected OutputHandler handler;
+    protected UMOConnector sourceConnector = null;
     private NullPayload nullPayload = NullPayload.getInstance();
 
     public StreamMessageAdapter(InputStream in)
@@ -65,6 +68,32 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
         this.in = in;
         this.out = out;
         this.handler = handler;
+    }
+
+    public void dispose()
+    {
+        logger.warn("Disposing " + id);
+
+        if (out != null) 
+        {
+            try
+            {
+                out.close();
+            }
+            catch (IOException ioe)
+            {
+                logger.error("Unable to close output stream: " + ioe.toString());
+            }
+        }
+
+        if (sourceConnector != null)
+        {
+            sourceConnector.disposeMessage(source);
+        }
+        else
+        {
+            logger.warn("sourceConnector is null");
+        }
     }
 
     /**
@@ -141,6 +170,21 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
     public void release()
     {
         // nothing to do?
+    }
+
+    public void setSourceConnector(UMOConnector sourceConnector)
+    {
+        this.sourceConnector = sourceConnector;
+    }
+
+    public void setSource(Object source)
+    {
+        this.source = source;
+    }
+
+    public Object getSource()
+    {
+        return source;
     }
 
 }

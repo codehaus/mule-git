@@ -16,6 +16,7 @@ import org.mule.config.i18n.Messages;
 import org.mule.providers.DefaultMessageAdapter;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.util.Iterator;
@@ -38,6 +39,8 @@ public class MuleMessage implements UMOMessage
 
     private UMOMessageAdapter adapter;
 
+    private boolean initialised = false;
+
     protected UMOExceptionPayload exceptionPayload;
 
     public MuleMessage(Object message)
@@ -55,6 +58,20 @@ public class MuleMessage implements UMOMessage
         {
             adapter = new DefaultMessageAdapter(message);
         }
+
+        if (!adapter.isInitialised())
+        {
+            try 
+            {
+                adapter.initialise();
+            }
+            catch (InitialisationException ie) 
+            {
+                // This should not happen, as there is nothing the DefaultMessageAdapter
+                // does in its initialise() method
+            }
+        }
+
         addProperties(properties);
     }
 
@@ -68,6 +85,20 @@ public class MuleMessage implements UMOMessage
         {
             adapter = new DefaultMessageAdapter(message, previous);
         }
+
+        if (!adapter.isInitialised())
+        {
+            try 
+            {
+                adapter.initialise();
+            }
+            catch (InitialisationException ie) 
+            {
+                // This should not happen, as there is nothing the DefaultMessageAdapter
+                // does in its initialise() method
+            }
+        }
+
         if (previous.getExceptionPayload() != null)
         {
             setExceptionPayload(previous.getExceptionPayload());
@@ -98,6 +129,22 @@ public class MuleMessage implements UMOMessage
     public UMOMessageAdapter getAdapter()
     {
         return adapter;
+    }
+
+    public void initialise() throws InitialisationException
+    {
+        initialised = true;
+        // Nothing to do, but required from UMOMessageAdapter
+    }
+
+    public void dispose()
+    {
+        // Nothing to do, but required from UMOMessageAdapter
+    }
+
+    public boolean isInitialised()
+    {
+        return initialised;
     }
 
     /**
