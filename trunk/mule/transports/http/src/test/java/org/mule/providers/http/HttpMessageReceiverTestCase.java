@@ -21,11 +21,6 @@ import org.mule.umo.provider.UMOMessageReceiver;
 
 import com.mockobjects.dynamic.Mock;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
-
 public class HttpMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
     public UMOMessageReceiver getMessageReceiver() throws Exception
