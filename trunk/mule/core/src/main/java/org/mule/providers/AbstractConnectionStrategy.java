@@ -64,6 +64,10 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
                             if (connectable instanceof AbstractMessageReceiver)
                             {
                                 ((AbstractMessageReceiver)connectable).handleException(e);
+                            } else {
+                            	logger.warn("Cannot handle exception as connectable not an AbstractMessageReceiver instance (details at debug level): " 
+                            			+ e.getMessage());
+                            	logger.debug(e.getMessage(), e);
                             }
                         }
                     }

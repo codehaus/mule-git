@@ -140,7 +140,8 @@ public class TransactionTemplate
             {
                 if (tx != null)
                 {
-                    logger.info("Error caught: rollback transaction", e);
+                    logger.info("Error caught, rollback transaction (details at debug level): " + e.getMessage());
+                    logger.debug(e.getMessage(), e);
                     tx.rollback();
                 }
                 throw e;

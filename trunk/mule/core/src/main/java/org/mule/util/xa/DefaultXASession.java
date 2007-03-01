@@ -148,8 +148,7 @@ public class DefaultXASession implements XAResource
                 }
                 catch (Exception e)
                 {
-                    logger.error("Could not create new transactional resource", e);
-                    throw new XAException(e.getMessage());
+                    throw (XAException)new XAException(e.getMessage()).initCause(e);
                 }
                 break;
             case TMRESUME :

@@ -90,8 +90,9 @@ public class UCDecoder extends AbstractTransformer
         }
         catch (IOException e)
         {
-            throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X, "UU Encoding"),
-                this, e);
+            throw new TransformerException(
+            		new Message(Messages.TRANSFORM_FAILED_FROM_X, "UU Encoding"),
+            		this, e);
         }
     }
 }

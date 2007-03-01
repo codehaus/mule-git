@@ -150,7 +150,8 @@ public class ServerNotificationManager implements Work, Disposable
             {
                 if (!disposed)
                 {
-                    logger.error("Failed to queue notification: " + notification, e);
+                    logger.error("Failed to queue notification (" + notification + "), continuing (details at debug level).");
+                    logger.debug(e.getMessage(), e);
                 }
             }
         }
@@ -217,7 +218,8 @@ public class ServerNotificationManager implements Work, Disposable
             {
                 if (!disposed)
                 {
-                    logger.error("Failed to take notification from queue", e);
+                    logger.error("Failed to take notification from queue, continuing (details at debug level).");
+                    logger.debug(e.getMessage(), e);
                 }
             }
         }

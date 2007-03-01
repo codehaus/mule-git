@@ -61,7 +61,9 @@ public class TransformerPairWireFormat implements WireFormat
             }
             catch (IOException e)
             {
-                throw new MuleException(new Message(Messages.FAILED_TO_READ_PAYLOAD, e));
+                throw new MuleException(
+                		new Message(Messages.FAILED_TO_READ_PAYLOAD),
+                		e);
             }
         }
     }
@@ -112,7 +114,9 @@ public class TransformerPairWireFormat implements WireFormat
         }
         catch (IOException e)
         {
-            throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X, o.getClass(), e));
+            throw new TransformerException(
+            		new Message(Messages.TRANSFORM_FAILED_FROM_X, o.getClass()), 
+            		e);
         }
     }
 

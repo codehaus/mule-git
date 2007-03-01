@@ -18,6 +18,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <code>Multicaster</code> is a utility that can call a given method on a
  * collection of objects that implement one or more common interfaces. The create
@@ -51,6 +54,11 @@ public class Multicaster
 
     private static class CastingHandler implements InvocationHandler
     {
+        /**
+         * logger used by this class
+         */
+        protected transient Log logger = LogFactory.getLog(getClass());
+        
         private final Collection objects;
         private final InvokeListener listener;
 
@@ -95,6 +103,9 @@ public class Multicaster
                         {
                             throw t;
                         }
+                    } else {
+                    	logger.info("Discarding exception as no listener registered (details at debug level): " + t.getMessage());
+                    	logger.debug(t.getMessage(), t);
                     }
                 }
             }

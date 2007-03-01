@@ -166,10 +166,12 @@ public class Messages implements CoreMessageConstants
             {
                 bundle = ResourceBundle.getBundle(path, locale);
             }
+            // TODO - MULE-1448
             catch (MissingResourceException e)
             {
                 logger.warn("Failed to find resource bundle using default Locale: " + locale.toString()
-                            + ", defaulting to Locale.US. Error was: " + e.getMessage());
+                            + ", defaulting to Locale.US.");
+                logger.debug(e.getMessage(), e);
                 bundle = ResourceBundle.getBundle(path);
             }
             bundles.put(name, bundle);

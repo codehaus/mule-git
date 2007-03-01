@@ -473,7 +473,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(), e);
+           	logger.error("Failure while disconnecting, continuing (details at debug level): " + e.getMessage());
+        	logger.debug(e.getMessage(), e);
         }
 
         if (stopped.compareAndSet(false, true))
@@ -484,7 +485,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             catch (UMOException e)
             {
-                logger.error(e.getMessage(), e);
+            	logger.error("Failure while stopping, continuing (details at debug level): " + e.getMessage());
+            	logger.debug(e.getMessage(), e);
             }
 
         }
@@ -542,7 +544,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 }
                 catch (SecurityException e)
                 {
-                    logger.warn("Request was made but was not authenticated: " + e.getMessage(), e);
+                    logger.warn("Request was made but was not authenticated: " + e.getMessage());
                     connector.fireNotification(new SecurityNotification(e,
                         SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
                     handleException(e);

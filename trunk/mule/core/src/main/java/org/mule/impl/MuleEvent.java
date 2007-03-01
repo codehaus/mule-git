@@ -333,8 +333,9 @@ public class MuleEvent extends EventObject implements UMOEvent
         }
         catch (Exception e)
         {
-            throw new MuleException(new Message(Messages.CANT_READ_PAYLOAD_AS_BYTES_TYPE_IS_X,
-                message.getPayload().getClass().getName()), e);
+            throw new MuleException(
+            		new Message(Messages.CANT_READ_PAYLOAD_AS_BYTES_TYPE_IS_X, message.getPayload().getClass().getName()),
+            		e);
         }
     }
 
@@ -390,8 +391,9 @@ public class MuleEvent extends EventObject implements UMOEvent
             }
             catch (UnsupportedEncodingException e)
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X, msg.getClass()
-                    .getName(), e));
+                throw new TransformerException(
+                		new Message(Messages.TRANSFORM_FAILED_FROM_X, msg.getClass().getName()),
+                		e);
             }
         }
         else if (msg instanceof Serializable)
@@ -402,8 +404,9 @@ public class MuleEvent extends EventObject implements UMOEvent
             }
             catch (Exception e)
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X,
-                    msg.getClass().getName(), "byte[]"), e);
+                throw new TransformerException(
+                		new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, msg.getClass().getName(), "byte[]"), 
+                		e);
             }
         }
         else
@@ -479,8 +482,9 @@ public class MuleEvent extends EventObject implements UMOEvent
         }
         catch (Exception e)
         {
-            throw new MuleException(new Message(Messages.CANT_READ_PAYLOAD_AS_STRING_TYPE_IS_X,
-                message.getClass().getName()), e);
+            throw new MuleException(
+            		new Message(Messages.CANT_READ_PAYLOAD_AS_STRING_TYPE_IS_X,  message.getClass().getName()),
+            		e);
         }
     }
 
@@ -690,7 +694,7 @@ public class MuleEvent extends EventObject implements UMOEvent
         }
         catch (UMOException e)
         {
-            throw (IOException)new IOException().initCause(e);
+            throw (IOException)new IOException(e.getMessage()).initCause(e);
         }
     }
 

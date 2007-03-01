@@ -50,7 +50,8 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
-            logger.warn("Failed to find service for spi: " + spi.getName());
+            logger.warn("Failed to find service for spi '" + spi.getName() + "', continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
             return null;
         }
     }
@@ -82,7 +83,8 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
-            logger.warn("Failed to find service for spi: " + spi.getName());
+            logger.warn("Failed to find service for spi '" + spi.getName() + "', continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
             return null;
         }
     }
@@ -106,7 +108,8 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
-            logger.warn("Failed to find service for spi: " + spi.getName());
+            logger.warn("Failed to find service for spi '" + spi.getName() + "', continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
             return null;
         }
     }
@@ -132,7 +135,8 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
-            logger.warn("Failed to find service for spi: " + spi.getName());
+            logger.warn("Failed to find service for spi '" + spi.getName() + "', continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
             return null;
         }
     }

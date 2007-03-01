@@ -122,8 +122,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             }
             catch (Exception e)
             {
-                throw new MuleException(new Message(Messages.FAILED_TO_START_X, "UMO Component: "
-                        + descriptor.getName()), e);
+                throw new MuleException(
+                		new Message(Messages.FAILED_TO_START_X, "UMO Component: " + descriptor.getName()),
+                		e);
             }
         }
         started = true;
@@ -144,8 +145,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             }
             catch (Exception e)
             {
-                throw new MuleException(new Message(Messages.FAILED_TO_STOP_X, "UMO Component: "
-                        + descriptor.getName()), e);
+                throw new MuleException(
+                		new Message(Messages.FAILED_TO_STOP_X, "UMO Component: " + descriptor.getName()),
+                		e);
             }
         }
         started = false;
@@ -166,7 +168,8 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             }
             catch (Exception e)
             {
-                logger.error("failed to dispose: " + descriptor.getName(), e);
+                logger.error("Failed to dispose '" + descriptor.getName() + "', continuing (details at debug level): " + e.getMessage());
+                logger.debug(e.getMessage(), e);
             }
         }
         disposed = true;
@@ -216,8 +219,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         catch (Exception e)
         {
             // should all Exceptions caught here be a ComponentException?!?
-            throw new ComponentException(new Message(Messages.FAILED_TO_INVOKE_X, component.getClass()
-                    .getName()), invocation.getMessage(), event.getComponent(), e);
+            throw new ComponentException(
+            		new Message(Messages.FAILED_TO_INVOKE_X, component.getClass().getName()), 
+            		invocation.getMessage(), event.getComponent(), e);
         }
 
         UMOMessage resultMessage = null;
@@ -297,8 +301,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
                     }
                     catch (Exception e)
                     {
-                        throw new InitialisationException(new Message(Messages.FAILED_TO_SET_PROXY_X_ON_SERVICE_X,
-                                nestedRouter, component.getClass().getName()), this);
+                        throw new InitialisationException(
+                        		new Message(Messages.FAILED_TO_SET_PROXY_X_ON_SERVICE_X, nestedRouter, component.getClass().getName()),
+                        		e, this);
                     }
 
                 }

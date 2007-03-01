@@ -68,7 +68,11 @@ public class MuleSessionHandler implements UMOSessionHandler
             }
             catch (UnsupportedEncodingException e)
             {
-                e.printStackTrace();
+            	// StringMessageUtils doesn't seem applicable here as this is the message 
+            	// encoding, not the system encoding.
+                throw (IllegalStateException)new IllegalStateException(
+                		"The session header cannot be decoded: " + sessionHeader
+                		).initCause(e);
             }
             if (logger.isDebugEnabled())
             {

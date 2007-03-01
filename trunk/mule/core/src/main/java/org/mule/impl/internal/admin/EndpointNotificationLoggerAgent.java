@@ -74,8 +74,10 @@ public class EndpointNotificationLoggerAgent extends AbstractNotificationLoggerA
             }
             catch (Exception e1)
             {
-                logger.error("Failed to dispatch event: " + e.toString() + " over endpoint: " + logEndpoint
-                             + ". Error is: " + e1.getMessage(), e1);
+                logger.error("Failed to dispatch event: " + e.toString() 
+                		+ " over log endpoint: " + logEndpoint
+                		+ ". Error (details at debug level) is: " + e1.getMessage());
+                logger.debug(e1.getMessage(), e1);
             }
         }
     }

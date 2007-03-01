@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Class for monitoring changes in disk files. Usage: 1. Implement the FileListener
  * interface. 2. Create a FileMonitor instance. 3. Add the file(s)/directory(ies) to
@@ -33,6 +36,11 @@ import java.util.TimerTask;
  */
 public class FileMonitor
 {
+    /**
+     * logger used by this class
+     */
+    protected static final Log logger = LogFactory.getLog(ExpiryMonitor.class);
+    
     private Timer timer;
     private Map files;
     private List listeners;
@@ -192,6 +200,9 @@ public class FileMonitor
                                 if (exceptionListener != null)
                                 {
                                     exceptionListener.exceptionThrown(e);
+                                } else {
+                                	logger.info("Discarding exception as no listener registered (details at debug level): " + e.getMessage());
+                                	logger.debug(e.getMessage(), e);
                                 }
                             }
                         }

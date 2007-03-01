@@ -146,7 +146,9 @@ public class MuleDescriptor extends ImmutableMuleDescriptor implements UMODescri
             catch (Exception e)
             {
                 logger.warn(MULE_PROPERTY_DOT_PROPERTIES + " was set  to " + delegate
-                            + " but the file could not be read, exception is: " + e.getMessage());
+                            + " but the file could not be read, continuing (details at debug level): " 
+                            + e.getMessage());
+                logger.debug(e.getMessage(), e);
             }
         }
     }

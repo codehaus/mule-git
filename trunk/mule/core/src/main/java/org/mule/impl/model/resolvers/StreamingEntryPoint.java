@@ -10,6 +10,8 @@
 
 package org.mule.impl.model.resolvers;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.impl.NoSatisfiableMethodsException;
 import org.mule.impl.TooManySatisfiableMethodsException;
 import org.mule.impl.VoidResult;
@@ -37,6 +39,11 @@ import java.util.List;
  */
 public class StreamingEntryPoint implements UMOEntryPoint
 {
+    /**
+     * logger used by this class
+     */
+    protected static final Log logger = LogFactory.getLog(EntryPoint.class);
+
     private Method streamingMethod;
     private boolean inAndOut = false;
 
@@ -120,7 +127,8 @@ public class StreamingEntryPoint implements UMOEntryPoint
             }
             catch (IOException e)
             {
-                // ignore
+                logger.info("Ignoring error while flushing output (details at debug level): " + e.getMessage());
+                logger.debug(e.getMessage(), e);
             }
         }
     }

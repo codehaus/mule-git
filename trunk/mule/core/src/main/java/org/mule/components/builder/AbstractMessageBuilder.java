@@ -102,7 +102,7 @@ public abstract class AbstractMessageBuilder implements UMODescriptorAware, Call
                         }
                         catch (Exception e)
                         {
-                            // ignore
+                            // ignore (cannot log logging errors)
                         }
                     }
                     builtMessage = buildMessage(requestMessage, responseMessage);

@@ -123,7 +123,7 @@ public class ExpiryMonitor extends TimerTask implements Disposable
 
     public void dispose()
     {
-        logger.info("disposing monitor");
+        logger.info("Disposing monitor");
         timer.cancel();
         ExpirableHolder holder;
         for (Iterator iterator = monitors.values().iterator(); iterator.hasNext();)
@@ -136,7 +136,8 @@ public class ExpiryMonitor extends TimerTask implements Disposable
             }
             catch (Exception e)
             {
-                logger.debug(e.getMessage());
+            	logger.info("Failure while expiring monitor, continuing (details at debug level): " + e.getMessage());
+                logger.debug(e.getMessage(), e);
             }
         }
     }

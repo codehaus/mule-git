@@ -190,8 +190,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"), e,
-                this);
+            throw new InitialisationException(
+            		new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"), 
+            		e, this);
         }
     }
 
@@ -229,7 +230,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             }
             catch (Exception e)
             {
-                logger.error("Failed to stop component pool: " + e.getMessage(), e);
+                logger.error("Failed to stop component pool, continuing (details at debug level): " + e.getMessage());
+                logger.debug(e.getMessage(), e);
             }
             poolInitialised.set(false);
         }
@@ -260,15 +262,14 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new LifecycleException(new Message(Messages.FAILED_TO_START_X, "Component: "
-                                                                                 + descriptor.getName()), e,
-                this);
+            throw new LifecycleException(
+            		new Message(Messages.FAILED_TO_START_X, "Component: " + descriptor.getName()),
+            		e, this);
         }
     }
 
     protected void doDispose()
     {
-
         try
         {
             // threadPool.awaitTerminationAfterShutdown();
@@ -279,7 +280,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            logger.error("Component Thread Pool did not close properly: " + e);
+            logger.error("Component Thread Pool did not close properly, continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
         }
         try
         {
@@ -294,7 +296,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            logger.error("Proxy Pool did not close properly: " + e);
+            logger.error("Proxy Pool did not close properly, continuing (details at debug level): " + e.getMessage());
+            logger.debug(e.getMessage(), e);
         }
     }
 
@@ -322,8 +325,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            FailedToQueueEventException e1 = new FailedToQueueEventException(new Message(
-                Messages.INTERRUPTED_QUEUING_EVENT_FOR_X, getName()), event.getMessage(), this, e);
+            FailedToQueueEventException e1 = 
+            	new FailedToQueueEventException(
+            			new Message(Messages.INTERRUPTED_QUEUING_EVENT_FOR_X, getName()),
+            			event.getMessage(), this, e);
             handleException(e1);
         }
 
@@ -486,7 +491,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     }
                     catch (Exception e2)
                     {
-                        logger.info("Failed to return proxy to pool", e2);
+                        logger.info("Failed to return proxy to pool, continuing (details at debug level): " + e2.getMessage());
+                        logger.debug(e2.getMessage(), e2);
                     }
                 }
 
@@ -497,8 +503,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof NoSuchElementException)
                 {
-                    handleException(new ComponentException(new Message(Messages.PROXY_POOL_TIMED_OUT),
-                        (event == null ? null : event.getMessage()), this, e));
+                    handleException(
+                    		new ComponentException(
+                    				new Message(Messages.PROXY_POOL_TIMED_OUT),
+                    				event == null ? null : event.getMessage(), this, e));
                 }
                 else if (e instanceof UMOException)
                 {
@@ -506,14 +514,17 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof WorkException)
                 {
-                    handleException(new ComponentException(new Message(
-                        Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()), (event == null
-                                    ? null : event.getMessage()), this, e));
+                    handleException(
+                    		new ComponentException(
+                    				new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()),
+                    				event == null ? null : event.getMessage(), this, e));
                 }
                 else
                 {
-                    handleException(new ComponentException(new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
-                        (event == null ? null : event.getMessage()), this, e));
+                    handleException(
+                    		new ComponentException(
+                    				new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
+                    				event == null ? null : event.getMessage(), this, e));
                 }
             }
             finally

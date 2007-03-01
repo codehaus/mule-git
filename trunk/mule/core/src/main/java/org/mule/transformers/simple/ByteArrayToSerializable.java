@@ -52,8 +52,9 @@ public class ByteArrayToSerializable extends AbstractTransformer
         }
         catch (Exception e)
         {
-            throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, "byte[]",
-                "Object"), this, e);
+            throw new TransformerException(
+            		new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, "byte[]", "Object"), 
+            		this, e);
         }
     }
 

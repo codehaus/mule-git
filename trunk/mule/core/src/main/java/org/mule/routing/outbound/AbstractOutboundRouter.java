@@ -308,7 +308,9 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         }
         catch (Exception ex)
         {
-            throw new IllegalArgumentException("Couldn't instanciate property extractor class " + className);
+        	throw (IllegalArgumentException)new IllegalArgumentException(
+        			"Couldn't instanciate property extractor class " + className
+        		).initCause(ex);
         }
     }
 
