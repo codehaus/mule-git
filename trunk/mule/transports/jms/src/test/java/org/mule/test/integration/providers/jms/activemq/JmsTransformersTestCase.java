@@ -38,8 +38,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class JmsTransformersTestCase extends AbstractMuleTestCase
 {
-    private static ActiveMQConnectionFactory factory = null;
-    private static Session session = null;
+    private ActiveMQConnectionFactory factory = null;
+    private Session session = null;
 
     protected void doSetUp() throws Exception
     {
