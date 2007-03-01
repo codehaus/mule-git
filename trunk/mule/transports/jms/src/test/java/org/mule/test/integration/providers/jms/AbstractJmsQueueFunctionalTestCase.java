@@ -33,7 +33,7 @@ import javax.jms.TopicConnection;
 
 public abstract class AbstractJmsQueueFunctionalTestCase extends AbstractJmsFunctionalTestCase
 {
-    protected CountDownLatch receiverIsUp;
+    protected static CountDownLatch receiverIsUp;
 
     public void testSend() throws Exception
     {
@@ -144,7 +144,7 @@ public abstract class AbstractJmsQueueFunctionalTestCase extends AbstractJmsFunc
         return false;
     }
 
-    protected class JmsMessageReceiverSynchronous extends JmsMessageReceiver
+    protected static class JmsMessageReceiverSynchronous extends JmsMessageReceiver
     {
         public JmsMessageReceiverSynchronous(UMOConnector connector,
                                              UMOComponent component,
