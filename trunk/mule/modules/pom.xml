@@ -54,13 +54,11 @@
             <scope>test</scope>
         </dependency>
         -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.2</version>
-            <scope>test</scope>
-        </dependency>
+
         <!-- need to explicitly mark javax.activation as provided -->
+        <!-- TODO HH: now that m2 dependency resolution works, activation
+             should ONLY come via core or (in the future) core-api.
+        -->
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
