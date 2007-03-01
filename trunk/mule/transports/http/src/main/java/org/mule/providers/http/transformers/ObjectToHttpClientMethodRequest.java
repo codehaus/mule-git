@@ -216,14 +216,14 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             else
             {
                 //TODO we should propbably set other propserties here
-                String httpVersion = msg.getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, HttpConstants.HTTP10);
-                if(HttpConstants.HTTP11.equals(httpVersion))
+                String httpVersion = msg.getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, HttpConstants.HTTP11);
+                if(HttpConstants.HTTP10.equals(httpVersion))
                 {
-                    httpMethod.getParams().setVersion(HttpVersion.HTTP_1_1);
+                    httpMethod.getParams().setVersion(HttpVersion.HTTP_1_0);
                 }
                 else
                 {
-                    httpMethod.getParams().setVersion(HttpVersion.HTTP_1_0);
+                    httpMethod.getParams().setVersion(HttpVersion.HTTP_1_1);
                 }                
             }
             return httpMethod;
