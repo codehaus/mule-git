@@ -41,6 +41,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
     private ActiveMQConnectionFactory factory = null;
     private Session session = null;
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         factory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
@@ -48,6 +49,7 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
         session = factory.createConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
+    // @Override
     protected void doTearDown() throws Exception
     {
         RequestContext.setEvent(null);
@@ -131,13 +133,13 @@ public class JmsTransformersTestCase extends AbstractMuleTestCase
         assertEquals("Source and result should be equal", text, res);
     }
 
-    // The following test is disabled because - belive it or not - ActiveMQ 3.2.4
+    // The following test was disabled for ActiveMQ 3.x because ActiveMQ 3.2.4
     // unconditionally uncompresses BytesMessages for reading, even if it is not
     // supposed to do so (the layer doing the message reading seems to have no access
     // to the Broker configuration and seems to assume that compressed data was
-    // compressed by ActiveMQ for more efficient wire transport). This may or may not
-    // be fixed in 4.x.
-    // For more information why this is VERY BAD read:
+    // compressed by ActiveMQ for more efficient wire transport).
+    // This was fixed in 4.x.
+    // For more information why this was VERY BAD read:
     // http://en.wikipedia.org/wiki/Zip_of_death
     public void testCompressedBytesMessage() throws Exception
     {
