@@ -20,9 +20,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class DefaultXASession implements XAResource
 {
