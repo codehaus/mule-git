@@ -12,8 +12,13 @@ package org.mule.test.integration.providers.jms.activemq;
 
 import org.mule.MuleManager;
 import org.mule.providers.jms.JmsConnector;
+import org.mule.providers.jms.TransactedJmsMessageReceiver;
+import org.mule.providers.jms.JmsConstants;
 import org.mule.transaction.XaTransactionFactory;
 import org.mule.umo.UMOTransactionFactory;
+
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -61,6 +66,10 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
     public JmsConnector createConnector() throws Exception
     {
         JmsConnector connector = super.createConnector();
+        Map overrides = new HashMap();
+        overrides.put("transacted.message.receiver", TransactedJmsMessageReceiver.class.getName());
+        connector.setServiceOverrides(overrides);
+        connector.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
         connector.setConnectionFactoryJndiName("XAJmsQueueConnectionFactory");
         return connector;
     }
