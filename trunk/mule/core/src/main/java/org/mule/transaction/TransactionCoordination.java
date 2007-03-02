@@ -39,20 +39,6 @@ public class TransactionCoordination
         return instance;
     }
 
-    // TODO this method is unused, nuke it
-    public static synchronized void setInstance(TransactionCoordination txSync)
-    {
-        // TODO this lock is different from whatever other places use
-        synchronized (instance)
-        {
-            if (instance.txCounter != 0)
-            {
-                throw new IllegalStateException("there are currently " + instance.txCounter
-                                + "transactions associated with this manager, cannot replace the manager");
-            }
-        }
-    }
-
     public UMOTransaction getTransaction()
     {
         return (UMOTransaction)transactions.get();
