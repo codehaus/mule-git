@@ -15,10 +15,6 @@ import org.mule.tck.AbstractMuleTestCase;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-/**
- * @author <a href="mailto:ross.mason@cubis.co.uk">Ross Mason</a>
- * @version $Revision$
- */
 public class MultipleJmsConnectorsTestCase extends AbstractMuleTestCase
 {
     public void testMultipleJmsClientConnections() throws Exception
