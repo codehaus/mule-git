@@ -16,6 +16,9 @@ import org.mule.umo.lifecycle.Callable;
 /**
  * <code>PassThroughComponent</code> will simply return the payload back as the
  * result.
+ *
+ * @deprecated The {@link BridgeComponent} should be used since is removes the the slight overhead of invoking the service object
+ * by never acutally causig an invocation
  */
 public class PassThroughComponent implements Callable
 {
