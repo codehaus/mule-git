@@ -164,6 +164,13 @@ public class ClassUtilsTestCase extends TestCase
         assertNotNull(methods);
         assertEquals(1, methods.size());
         assertEquals("doSomethingElse", ((Method)methods.get(0)).getName());
+
+        // Test object param being acceptible by interface Type
+        methods = ClassUtils.getSatisfiableMethods(FruitBowl.class, new Class[]{WaterMelon[].class}, true,
+            true, ignoreMethods);
+        assertNotNull(methods);
+        assertEquals(1, methods.size());
+        assertEquals("setFruit", ((Method)methods.get(0)).getName());
     }
 
     private static class DummyObject
