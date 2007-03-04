@@ -16,7 +16,6 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -30,7 +29,6 @@ import org.mule.util.ObjectFactory;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.SpiUtils;
-import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -417,13 +415,21 @@ public class TransportFactory
     public static UMOConnector getConnectorByProtocol(String protocol)
     {
         UMOConnector connector;
+        UMOConnector resultConnector = null;
         Map connectors = MuleManager.getInstance().getConnectors();
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
             connector = (UMOConnector)iterator.next();
             if (connector.supportsProtocol(protocol))
             {
-                return connector;
+                if(resultConnector==null)
+                {
+                    resultConnector = connector;
+                }
+                else
+                {
+                    throw new IllegalStateException(new Message(Messages.MORE_THAN_ONE_CONNECTOR_WITH_PROTOCOL, protocol).getMessage());
+                }
             }
         }
         return null;
