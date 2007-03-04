@@ -1,6 +1,8 @@
 /**
     Recursively scan for pom.xml files and report excluded tests for each project.
     Run from the Mule project root for best results.
+
+    $Id$
 */
 def parser = new XmlSlurper()
 
