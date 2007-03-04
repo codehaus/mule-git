@@ -77,7 +77,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
     {
         filename = filename.replaceAll("<", "(");
         filename = filename.replaceAll(">", ")");
-        filename = filename.replaceAll("[/\\*?|:;]", "-");
+        filename = filename.replaceAll("[/\\*?|:;\\]\\[\"]", "-");
         return filename;
     }
 

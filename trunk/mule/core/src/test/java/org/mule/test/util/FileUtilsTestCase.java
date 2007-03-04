@@ -10,11 +10,11 @@
 
 package org.mule.test.util;
 
+import org.mule.util.FileUtils;
+
 import java.io.File;
 
 import junit.framework.TestCase;
-
-import org.mule.util.FileUtils;
 
 public class FileUtilsTestCase extends TestCase
 {
@@ -83,9 +83,13 @@ public class FileUtilsTestCase extends TestCase
         String result = FileUtils.prepareWinFilename(filename);
         assertEquals("Blah(Blah).txt", result);
 
-        filename = "Blah<Blah:a;b|c?d=e_f*g>.txt";
+        filename = "Bla]h<Blah:a;b|c?d=e_f*g>.txt";
         result = FileUtils.prepareWinFilename(filename);
-        assertEquals("Blah(Blah-a-b-c-d=e_f-g).txt", result);
+        assertEquals("Bla-h(Blah-a-b-c-d=e_f-g).txt", result);
+
+        filename = "B\"la-h<Blah:a;b|c?d=e_f*g>.txt";
+        result = FileUtils.prepareWinFilename(filename);
+        assertEquals("B-la-h(Blah-a-b-c-d=e_f-g).txt", result);
     }
 
     public void testDirectoryTools() throws Exception
