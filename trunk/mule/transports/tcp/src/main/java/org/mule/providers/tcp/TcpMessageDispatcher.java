@@ -89,6 +89,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @param event event
      * @throws Exception in case of any error
+     * @return the socket being written to
      */
     protected Socket dispatchToSocket(UMOEvent event) throws Exception
     {

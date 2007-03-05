@@ -53,9 +53,15 @@ public class TcpConnector extends AbstractConnector
 
     protected int receiveTimeout = DEFAULT_SOCKET_TIMEOUT;
 
-    protected int bufferSize = DEFAULT_BUFFER_SIZE;
+    protected int sendBufferSize = DEFAULT_BUFFER_SIZE;
 
-    protected int backlog = DEFAULT_BACKLOG;
+    protected int receiveBufferSize = DEFAULT_BUFFER_SIZE;
+
+    protected int receiveBacklog = DEFAULT_BACKLOG;
+
+    protected boolean sendTcpNoDelay;
+
+    protected int socketLinger = INT_VALUE_NOT_SET;
 
     protected String tcpProtocolClassName = DefaultProtocol.class.getName();
 
@@ -120,6 +126,7 @@ public class TcpConnector extends AbstractConnector
 
     /**
      * A shorthand property setting timeout for both SEND and RECEIVE sockets.
+     * @deprecated The time out should be set explicitly for each
      */
     public void setTimeout(int timeout)
     {
@@ -158,28 +165,105 @@ public class TcpConnector extends AbstractConnector
         this.receiveTimeout = timeout;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Should use {@link #getSendBufferSize()} or {@link #getReceiveBufferSize()}
+     */
     public int getBufferSize()
     {
-        return bufferSize;
+        return sendBufferSize;
     }
 
+    /**
+     *
+     * @param bufferSize
+     * @deprecated Should use {@link #setSendBufferSize(int)} or {@link #setReceiveBufferSize(int)}
+     */
     public void setBufferSize(int bufferSize)
     {
         if (bufferSize < 1)
         {
             bufferSize = DEFAULT_BUFFER_SIZE;
         }
-        this.bufferSize = bufferSize;
+        this.sendBufferSize = bufferSize;
     }
 
+
+    public int getSendBufferSize()
+    {
+        return sendBufferSize;
+    }
+
+    public void setSendBufferSize(int sendBufferSize)
+    {
+        if (sendBufferSize < 1)
+        {
+            sendBufferSize = DEFAULT_BUFFER_SIZE;
+        }
+        this.sendBufferSize = sendBufferSize;
+    }
+
+    public int getReceiveBufferSize()
+    {
+        return receiveBufferSize;
+    }
+
+    public void setReceiveBufferSize(int receiveBufferSize)
+    {
+        if (receiveBufferSize < 1)
+        {
+            receiveBufferSize = DEFAULT_BUFFER_SIZE;
+        }
+        this.receiveBufferSize = receiveBufferSize;
+    }
+
+    public int getReceiveBacklog()
+    {
+        return receiveBacklog;
+    }
+
+    public void setReceiveBacklog(int receiveBacklog)
+    {
+        if(receiveBacklog < 0)
+        {
+            receiveBacklog = DEFAULT_BACKLOG;
+        }
+        this.receiveBacklog = receiveBacklog;
+    }
+
+    public int getSendSocketLinger()
+    {
+        return socketLinger;
+    }
+
+    public void setSendSocketLinger(int soLinger)
+    {
+        if(soLinger < 0)
+        {
+            soLinger = INT_VALUE_NOT_SET;
+        }
+        this.socketLinger = soLinger;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated should use {@link #getReceiveBacklog()}
+     */
     public int getBacklog()
     {
-        return backlog;
+        return receiveBacklog;
     }
 
+    /**
+     *
+     * @param backlog
+     * @deprecated should use {@link #setReceiveBacklog(int)}
+     */
     public void setBacklog(int backlog)
     {
-        this.backlog = backlog;
+        this.receiveBacklog = backlog;
     }
 
     public TcpProtocol getTcpProtocol()
@@ -321,26 +405,41 @@ public class TcpConnector extends AbstractConnector
         InetAddress inetAddress = InetAddress.getByName(endpoint.getHost());
         Socket socket = createSocket(port, inetAddress);
         socket.setReuseAddress(true);
-        if (getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-            && socket.getReceiveBufferSize() != getBufferSize())
+        //There is some overhead in stting socket timeout and buffer size, so we're
+        //careful here only to set if needed
+        if (getReceiveBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+            && socket.getReceiveBufferSize() != getReceiveBufferSize())
         {
-            socket.setReceiveBufferSize(getBufferSize());
+            socket.setReceiveBufferSize(getReceiveBufferSize());
         }
-        if (getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-            && socket.getSendBufferSize() != getBufferSize())
+        if (getSendBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+            && socket.getSendBufferSize() != getSendBufferSize())
         {
-            socket.setSendBufferSize(getBufferSize());
+            socket.setSendBufferSize(getSendBufferSize());
         }
         if (getReceiveTimeout() != UMOConnector.INT_VALUE_NOT_SET
             && socket.getSoTimeout() != getReceiveTimeout())
         {
-            socket.setSoTimeout(getReceiveTimeout());
+            socket.setSoTimeout(getSendTimeout());
         }
+        socket.setTcpNoDelay(isSendTcpNoDelay());
+        socket.setKeepAlive(isKeepAlive());
         return socket;
     }
 
     protected Socket createSocket(int port, InetAddress inetAddress) throws IOException
     {
         return new Socket(inetAddress, port);
+    }
+
+
+    public boolean isSendTcpNoDelay()
+    {
+        return sendTcpNoDelay;
+    }
+
+    public void setSendTcpNoDelay(boolean sendTcpNoDelay)
+    {
+        this.sendTcpNoDelay = sendTcpNoDelay;
     }
 }

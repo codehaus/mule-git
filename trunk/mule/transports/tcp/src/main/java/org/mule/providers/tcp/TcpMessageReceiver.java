@@ -122,7 +122,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
     protected ServerSocket createSocket(URI uri) throws Exception
     {
         String host = StringUtils.defaultIfEmpty(uri.getHost(), "localhost");
-        int backlog = ((TcpConnector)connector).getBacklog();
+        int backlog = ((TcpConnector)connector).getReceiveBacklog();
         InetAddress inetAddress = InetAddress.getByName(host);
         if (inetAddress.equals(InetAddress.getLocalHost()) || inetAddress.isLoopbackAddress()
             || host.trim().equals("localhost"))
@@ -137,6 +137,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
     /**
      * Obtain the serverSocket
+     * @return the server socket for this server
      */
     public ServerSocket getServerSocket()
     {
@@ -246,15 +247,17 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
             try
             {
-                if (tcpConnector.getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-                    && socket.getReceiveBufferSize() != tcpConnector.getBufferSize())
+                //There is some overhead in stting socket timeout and buffer size, so we're
+                //careful here only to set if needed
+                if (tcpConnector.getReceiveBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+                    && socket.getReceiveBufferSize() != tcpConnector.getReceiveBufferSize())
                 {
-                    socket.setReceiveBufferSize(tcpConnector.getBufferSize());
+                    socket.setReceiveBufferSize(tcpConnector.getReceiveBufferSize());
                 }
-                if (tcpConnector.getBufferSize() != UMOConnector.INT_VALUE_NOT_SET
-                    && socket.getSendBufferSize() != tcpConnector.getBufferSize())
+                if (tcpConnector.getSendBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+                    && socket.getSendBufferSize() != tcpConnector.getSendBufferSize())
                 {
-                    socket.setSendBufferSize(tcpConnector.getBufferSize());
+                    socket.setSendBufferSize(tcpConnector.getSendBufferSize());
                 }
                 if (tcpConnector.getReceiveTimeout() != UMOConnector.INT_VALUE_NOT_SET
                     && socket.getSoTimeout() != tcpConnector.getReceiveTimeout())
@@ -262,7 +265,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                     socket.setSoTimeout(tcpConnector.getReceiveTimeout());
                 }
 
-                socket.setTcpNoDelay(true);
+                socket.setTcpNoDelay(tcpConnector.isSendTcpNoDelay());
                 socket.setKeepAlive(tcpConnector.isKeepAlive());
             }
             catch (SocketException e)
