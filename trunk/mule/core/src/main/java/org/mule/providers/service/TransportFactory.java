@@ -428,11 +428,11 @@ public class TransportFactory
                 }
                 else
                 {
-                    throw new IllegalStateException(new Message(Messages.MORE_THAN_ONE_CONNECTOR_WITH_PROTOCOL, protocol).getMessage());
+                    throw new IllegalStateException(new Message(Messages.MORE_THAN_ONE_CONNECTOR_WITH_PROTOCOL_X, protocol).getMessage());
                 }
             }
         }
-        return null;
+        return resultConnector;
     }
 
     private static class CSDKey
