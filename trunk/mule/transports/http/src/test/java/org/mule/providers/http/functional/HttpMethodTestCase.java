@@ -23,6 +23,9 @@ import org.apache.commons.httpclient.methods.TraceMethod;
 
 public class HttpMethodTestCase extends FunctionalTestCase
 {
+
+    private HttpMethodBase method;
+
     public HttpMethodTestCase()
     {
         setDisposeManagerPerSuite(true);
@@ -33,151 +36,81 @@ public class HttpMethodTestCase extends FunctionalTestCase
         return "http-method-test.xml";
     }
 
+    protected void doFunctionalTearDown () throws Exception
+    {
+        if (method != null)
+        {
+            method.releaseConnection();
+        }
+    }
+
     public void testHead() throws Exception
     {
         HttpClient client = new HttpClient();
-        HeadMethod method = new HeadMethod("http://localhost:60198");
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_OK), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            // Catch it here and rethrow...
-            throw e;
-        }
-        finally
-        {
-            // ...to eliminate potential connection leak.
-            method.releaseConnection();
-        }
+        method = new HeadMethod("http://localhost:60198");
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_OK), Integer.toString(statusCode));
+
     }
 
     public void testOptions() throws Exception
     {
         HttpClient client = new HttpClient();
-        OptionsMethod method = new OptionsMethod("http://localhost:60198");
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        method = new OptionsMethod("http://localhost:60198");
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
     }
 
     public void testPut() throws Exception
     {
         HttpClient client = new HttpClient();
-        PutMethod method = new PutMethod("http://localhost:60198");
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        method = new PutMethod("http://localhost:60198");
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
     }
 
     public void testDelete() throws Exception
     {
         HttpClient client = new HttpClient();
-        DeleteMethod method = new DeleteMethod("http://localhost:60198");
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        method = new DeleteMethod("http://localhost:60198");
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
     }
 
     public void testTrace() throws Exception
     {
         HttpClient client = new HttpClient();
-        TraceMethod method = new TraceMethod("http://localhost:60198");
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        method = new TraceMethod("http://localhost:60198");
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
     }
 
     public void testConnect() throws Exception
     {
         HttpClient client = new HttpClient();
-        HttpMethodBase method = new HttpMethodBase("http://localhost:60198")
+        method = new HttpMethodBase("http://localhost:60198")
         {
             public String getName()
             {
                 return "CONNECT";
             }
         };
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_METHOD_NOT_ALLOWED), Integer.toString(statusCode));
     }
 
     public void testFoo() throws Exception
     {
         HttpClient client = new HttpClient();
-        HttpMethodBase method = new HttpMethodBase("http://localhost:60198")
+        method = new HttpMethodBase("http://localhost:60198")
         {
             public String getName()
             {
                 return "FOO";
             }
         };
-        try
-        {
-            int statusCode = client.executeMethod(method);
-            assertEquals(Integer.toString(HttpStatus.SC_BAD_REQUEST), Integer.toString(statusCode));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            method.releaseConnection();
-        }
+        int statusCode = client.executeMethod(method);
+        assertEquals(Integer.toString(HttpStatus.SC_BAD_REQUEST), Integer.toString(statusCode));
     }
 }
 
