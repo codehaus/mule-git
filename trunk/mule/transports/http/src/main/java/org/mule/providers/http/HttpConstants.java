@@ -33,9 +33,14 @@ public class HttpConstants
     public static final int DEFAULT_HTTP_PORT = 80;
 
     // HTTP Methods
+    public static final String METHOD_OPTIONS = "OPTIONS";
+    public static final String METHOD_GET = "GET";
+    public static final String METHOD_HEAD = "HEAD";
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
-    public static final String METHOD_GET = "GET";
+    public static final String METHOD_DELETE = "DELETE";
+    public static final String METHOD_TRACE = "TRACE";
+    public static final String METHOD_CONNECT = "CONNECT";
 
     // Date header format
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy hh:mm:ss zzz";
