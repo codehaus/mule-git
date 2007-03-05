@@ -10,40 +10,14 @@
 
 package org.mule.test.util.compression;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.compression.CompressionHelper;
 import org.mule.util.compression.CompressionStrategy;
 
 import java.util.Arrays;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
-public class CompressionTestCase extends TestCase
+public class CompressionTestCase extends AbstractMuleTestCase
 {
-
-    public static void main(String[] args)
-    {
-        TestRunner.run(suite());
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(CompressionTestCase.class);
-    }
-
-    public CompressionTestCase(String testName)
-    {
-        super(testName);
-    }
-
-    // Test cases
-    // -------------------------------------------------------------------------
 
     public void testCompressDefaultGZip() throws Exception
     {
@@ -51,8 +25,7 @@ public class CompressionTestCase extends TestCase
         CompressionStrategy strategy = CompressionHelper.getDefaultCompressionStrategy();
         byte[] compressed = strategy.compressByteArray(temp.getBytes());
 
-        // For small test data the compressed data will be bigger than the real
-        // data
+        // For small test data the compressed data will be bigger than the real data
         assertTrue(compressed.length > temp.getBytes().length);
 
         byte[] uncompressed = strategy.uncompressByteArray(compressed);
