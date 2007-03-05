@@ -122,7 +122,6 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         if (connector.isConnected())
         {
             // TODO Fix Bug
-
             // creating this consumer now would prevent from the actual worker
             // consumer
             // to receive the message!
@@ -131,6 +130,12 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
             // if we comment this line, if one tries to restart the service through
             // JMX,
             // this will fail...
+            //This Line seems to be the root to a number of problems and differences between
+            //Jms providers. A which point the consumer is created changes how the conneciton can be managed.
+            //For example, WebsphereMQ needs the consumer created here, otherwise ReconnectionStrategies don't work properly
+            //(See MULE-1150) However, is the consumer is created here for Active MQ, The worker thread cannot actually
+            //receive the message.  We need to test with a few more Jms providers and transactions to see which behaviour
+            // is correct.  My gut feeling is that the consumer should be created here and there is a bug in ActiveMQ
         }
     }
 
