@@ -170,10 +170,10 @@ public class CountersTestCase extends TestCase
 
         assertEquals("Rate", 0.0, rsec.nextValue(), delta);
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 5; i++)
         {
-            ct.setRawValue(1);
-            Thread.sleep(100);
+            ct.setRawValue(10);
+            Thread.sleep(1000);
         }
 
         assertEquals("RatePerSecond", 10.0, rsec.nextValue(), 10.0 * 0.20);
