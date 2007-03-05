@@ -30,8 +30,6 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-import org.apache.commons.collections.MapUtils;
-
 /**
  * Registers a single Jms MessageListener for an endpoint
  */

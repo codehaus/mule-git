@@ -10,9 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.MuleException;
 import org.mule.MuleManager;
-import org.mule.MuleRuntimeException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
@@ -41,6 +39,8 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Hashtable;
@@ -60,7 +60,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.UnhandledException;
 
 /**
