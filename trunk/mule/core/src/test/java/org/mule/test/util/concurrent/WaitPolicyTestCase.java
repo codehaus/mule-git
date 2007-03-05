@@ -10,6 +10,7 @@
 
 package org.mule.test.util.concurrent;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitPolicy;
@@ -27,26 +28,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.apache.commons.lang.StringUtils;
 
-public class WaitPolicyTestCase extends TestCase
+public class WaitPolicyTestCase extends AbstractMuleTestCase
 {
     private ExceptionCollectingThreadGroup _asyncGroup;
     private ThreadPoolExecutor _executor;
     private Lock _executorLock;
 
-    public WaitPolicyTestCase(String name)
-    {
-        super(name);
-    }
-
     // @Override
-    protected void setUp() throws Exception
+    protected void doSetUp() throws Exception
     {
-        super.setUp();
+        super.doSetUp();
 
         // allow 1 active & 1 queued Thread
         _executor = new ThreadPoolExecutor(1, 1, 10000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(1));
@@ -59,11 +53,11 @@ public class WaitPolicyTestCase extends TestCase
     }
 
     // @Override
-    protected void tearDown() throws Exception
+    protected void doTearDown() throws Exception
     {
         _executor.shutdown();
         _asyncGroup.destroy();
-        super.tearDown();
+        super.doTearDown();
     }
 
     // Submit the given Runnable to an ExecutorService, but do so in a separate

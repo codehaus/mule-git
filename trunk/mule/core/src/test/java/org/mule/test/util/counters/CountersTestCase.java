@@ -10,15 +10,14 @@
 
 package org.mule.test.util.counters;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.counters.Counter;
 import org.mule.util.counters.CounterFactory;
 import org.mule.util.counters.CounterFactory.Type;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
-public class CountersTestCase extends TestCase
+public class CountersTestCase extends AbstractMuleTestCase
 {
 
     private static final double delta = 1E-10;
@@ -132,7 +131,8 @@ public class CountersTestCase extends TestCase
     }
 
     /**
-     * Serious non-portable timing issues :( 
+     * Serious non-portable timing issues :(
+     * 
      * @throws InterruptedException
      */
     public void _disabled_testInstantRate() throws InterruptedException

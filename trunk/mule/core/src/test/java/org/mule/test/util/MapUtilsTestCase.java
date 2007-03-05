@@ -10,18 +10,18 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.util.MapUtils;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.SystemUtils;
-import org.mule.util.MapUtils;
 
-public class MapUtilsTestCase extends TestCase
+public class MapUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testMapCreationNullClass()

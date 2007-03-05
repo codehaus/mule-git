@@ -10,21 +10,16 @@
 
 package org.mule.test.util.timer;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.timer.EventTimerTask;
 import org.mule.util.timer.TimeEvent;
 import org.mule.util.timer.TimeEventListener;
 
 import java.util.Timer;
 
-import junit.framework.TestCase;
-
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
-public class TimerTestCase extends TestCase implements TimeEventListener
+public class TimerTestCase extends AbstractMuleTestCase implements TimeEventListener
 {
-    boolean fired;
+    volatile boolean fired;
 
     public void testTimer() throws Exception
     {

@@ -10,16 +10,15 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.util.TemplateParser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-import org.mule.util.TemplateParser;
-
-public class TemplateParserTestCase extends TestCase
+public class TemplateParserTestCase extends AbstractMuleTestCase
 {
 
     public void testStringParserSquareBraces()

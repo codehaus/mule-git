@@ -10,14 +10,13 @@
 
 package org.mule.test.util;
 
-import java.util.Arrays;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.ArrayUtils;
 import org.mule.util.StringUtils;
 
-public class StringUtilsTestCase extends TestCase
+import java.util.Arrays;
+
+public class StringUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testSplitWithTrimming()
@@ -34,7 +33,8 @@ public class StringUtilsTestCase extends TestCase
         assertTrue(Arrays.equals(new String[]{""}, result));
 
         String[] inputValues = new String[]{"foo", "bar", "baz", "kaboom"};
-        String inputString = new StringBuffer(40).append(inputValues[0])
+        String inputString = new StringBuffer(40)
+            .append(inputValues[0])
             .append(" ,")
             .append(",  ")
             .append(inputValues[1])

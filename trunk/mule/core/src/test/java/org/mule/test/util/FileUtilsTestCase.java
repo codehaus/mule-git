@@ -10,13 +10,12 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.FileUtils;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
-public class FileUtilsTestCase extends TestCase
+public class FileUtilsTestCase extends AbstractMuleTestCase
 {
     private final String TEST_FILE = "testFile.txt";
 

@@ -10,13 +10,12 @@
 
 package org.mule.test.util;
 
-import java.util.Map;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.SystemUtils;
 
-public class SystemUtilsTestCase extends TestCase
+import java.util.Map;
+
+public class SystemUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testEnvironment() throws Exception

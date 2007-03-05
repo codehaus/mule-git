@@ -10,11 +10,10 @@
 
 package org.mule.test.util;
 
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.UUID;
 
-public class UUIDTestCase extends TestCase
+public class UUIDTestCase extends AbstractMuleTestCase
 {
 
     public void testUUID()
@@ -22,7 +21,7 @@ public class UUIDTestCase extends TestCase
         assertNotNull(UUID.getUUID());
         String id = UUID.getUUID();
         assertNotNull(id);
-        assertTrue(!id.equals(UUID.getUUID()));
+        assertFalse(id.equals(UUID.getUUID()));
     }
 
 }

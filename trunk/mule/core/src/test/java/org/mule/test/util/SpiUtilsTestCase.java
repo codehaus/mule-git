@@ -10,18 +10,17 @@
 
 package org.mule.test.util;
 
-import java.io.InputStream;
-import java.util.Properties;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.Fruit;
 import org.mule.util.IOUtils;
 import org.mule.util.SpiUtils;
 
-public class SpiUtilsTestCase extends TestCase
+import java.io.InputStream;
+import java.util.Properties;
+
+public class SpiUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testDiscoverDefault() throws Exception

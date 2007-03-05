@@ -10,13 +10,12 @@
 
 package org.mule.test.util;
 
-import java.util.Calendar;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.NumberUtils;
 
-public class NumberUtilsTestCase extends TestCase
+import java.util.Calendar;
+
+public class NumberUtilsTestCase extends AbstractMuleTestCase
 {
     static final long l = 1000000000;
 
