@@ -442,6 +442,7 @@ public abstract class AbstractConnector
             }
             catch (Exception e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to disconnect: " + e.getMessage(), e);
             }
         }
@@ -468,6 +469,7 @@ public abstract class AbstractConnector
         }
         catch (UMOException e)
         {
+            // TODO MULE-863: What should we really do?
             logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
         }
 
@@ -499,6 +501,7 @@ public abstract class AbstractConnector
                 }
                 catch (Throwable e)
                 {
+                    // TODO MULE-863: What should we really do?
                     logger.error("Failed to destroy receiver: " + receiver, e);
                 }
             }
@@ -520,6 +523,7 @@ public abstract class AbstractConnector
             }
             catch (Exception ex)
             {
+                // TODO MULE-863: What should we really do?
                 // ignored
             }
 
@@ -696,6 +700,7 @@ public abstract class AbstractConnector
             }
             catch (Exception ex)
             {
+                // TODO MULE-863: What should we really do?
                 // ignore - if the dispatcher is broken, it will likely get cleaned
                 // up by the factory
             }
@@ -707,6 +712,7 @@ public abstract class AbstractConnector
                 }
                 catch (Exception ex)
                 {
+                    // TODO MULE-863: What should we really do?
                     // returnObject() never throws; this will go away in commons-pool
                 }
             }
@@ -904,6 +910,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Inbound transformer");
             }
         }
@@ -937,6 +944,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Outbound transformer");
             }
         }
@@ -959,6 +967,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Outbound transformer");
             }
         }

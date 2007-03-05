@@ -121,6 +121,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
             catch (org.mule.umo.security.SecurityException e)
             {
+                // TODO MULE-863: Do we need this warning?
                 logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage(), e);
                 connector.fireNotification(new SecurityNotification(e,
                     SecurityNotification.ADMIN_EVENT_ACTION_START_RANGE));
@@ -334,6 +335,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 }
                 catch (Exception e)
                 {
+                    // TODO MULE-863: What should we really do?
                     logger.warn(e.getMessage(), e);
                 }
 
@@ -591,6 +593,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         }
         catch (TransactionException e)
         {
+            // TODO MULE-863: What should we really do?
             logger.warn(e.getMessage());
         }
         return false;

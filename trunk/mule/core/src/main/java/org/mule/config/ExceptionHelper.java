@@ -124,7 +124,8 @@ public class ExceptionHelper
         }
         catch (IOException e)
         {
-            throw new MuleRuntimeException(Message.createStaticMessage("Failed to load Exception resources"),
+            throw new MuleRuntimeException(
+                Message.createStaticMessage("Failed to load Exception resources"),
                 e);
         }
     }
@@ -155,6 +156,7 @@ public class ExceptionHelper
             }
             catch (ClassNotFoundException e)
             {
+                // TODO MULE-863: Either we handle this, or we don't
                 logger.error(e.getMessage(), e);
                 return null;
             }

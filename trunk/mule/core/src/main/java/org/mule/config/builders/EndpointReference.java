@@ -205,8 +205,10 @@ public class EndpointReference
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X,
-                propertyName, object.getClass().getName(), UMOEndpoint.class.getName()), e, this);
+            throw new InitialisationException(
+                new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName, 
+                    object.getClass().getName(), UMOEndpoint.class.getName()), 
+                e, this);
         }
     }
 

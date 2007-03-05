@@ -69,16 +69,19 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
             {
                 // If we were interrupted it's probably because the server is
                 // shutting down
-                throw new FatalConnectException(new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X,
-                    getClass().getName(), getDescription(connectable)), ie, connectable);
+                throw new FatalConnectException(
+                    new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, 
+                        getClass().getName(), getDescription(connectable)), 
+                    ie, connectable);
             }
             catch (Exception e)
             {
                 if (currentCount == retryCount)
                 {
-                    throw new FatalConnectException(new Message(
-                        Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, getClass().getName(),
-                        getDescription(connectable)), e, connectable);
+                    throw new FatalConnectException(
+                        new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, 
+                            getClass().getName(), getDescription(connectable)),
+                        e, connectable);
                 }
 
                 if (logger.isErrorEnabled())
@@ -103,9 +106,10 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 }
                 catch (InterruptedException e1)
                 {
-                    throw new FatalConnectException(new Message(
-                        Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, getClass().getName(),
-                        getDescription(connectable)), e, connectable);
+                    throw new FatalConnectException(
+                        new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, 
+                            getClass().getName(), getDescription(connectable)), 
+                        e, connectable);
                 }
             }
         }

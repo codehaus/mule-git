@@ -60,6 +60,7 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
                             {
                                 resetState();
                             }
+                            // TODO MULE-863: And if it's not?
                             // TODO: this cast is evil
                             if (connectable instanceof AbstractMessageReceiver)
                             {

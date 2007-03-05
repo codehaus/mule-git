@@ -99,7 +99,7 @@ public class QuickConfigurationBuilder implements ConfigurationBuilder
             }
             catch (UMOException e)
             {
-                // ignore
+                // TODO MULE-863: fix API or handle
             }
         }
     }
