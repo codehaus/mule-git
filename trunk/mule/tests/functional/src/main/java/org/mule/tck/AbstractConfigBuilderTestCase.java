@@ -42,10 +42,10 @@ import org.mule.umo.UMOInterceptorStack;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.model.UMOModel;
-import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMOInboundRouter;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
+import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouter;
+import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ObjectPool;
 
@@ -279,7 +279,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         MuleEndpoint inEndpoint = (MuleEndpoint)descriptor.getInboundRouter().getEndpoint(
             "transactedInboundEndpoint");
         assertNotNull(inEndpoint);
-        assertEquals(TransportFactory.ALWAYS_CREATE_CONNECTOR, inEndpoint.getCreateConnector());
+        assertEquals(TransportFactory.NEVER_CREATE_CONNECTOR, inEndpoint.getCreateConnector());
         assertNotNull(inEndpoint.getProperties());
         assertEquals("Prop1", inEndpoint.getProperties().get("testEndpointProperty"));
     }
