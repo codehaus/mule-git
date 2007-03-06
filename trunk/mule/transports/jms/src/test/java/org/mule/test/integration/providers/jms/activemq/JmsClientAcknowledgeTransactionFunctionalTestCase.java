@@ -26,10 +26,13 @@ public class JmsClientAcknowledgeTransactionFunctionalTestCase extends
 
     public JmsConnector createConnector() throws Exception
     {
+        // TODO MULE-1476 use a dedicated ActiveMQ connector
         JmsConnector connector = new JmsConnector();
         connector.setName(CONNECTOR_NAME);
         connector.setAcknowledgementMode(Session.CLIENT_ACKNOWLEDGE);
         connector.getDispatcherThreadingProfile().setDoThreading(false);
+        // Employ ActiveMQ hack, must be disabled for this vendor
+        connector.setEagerConsumer(false);
         return connector;
     }
 
