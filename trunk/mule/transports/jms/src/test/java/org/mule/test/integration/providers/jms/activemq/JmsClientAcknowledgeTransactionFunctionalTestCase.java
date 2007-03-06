@@ -12,6 +12,7 @@ package org.mule.test.integration.providers.jms.activemq;
 
 import org.mule.providers.jms.JmsClientAcknowledgeTransactionFactory;
 import org.mule.providers.jms.JmsConnector;
+import org.mule.providers.jms.activemq.ActiveMqJmsConnector;
 import org.mule.umo.UMOTransactionFactory;
 
 import javax.jms.Session;
@@ -26,13 +27,10 @@ public class JmsClientAcknowledgeTransactionFunctionalTestCase extends
 
     public JmsConnector createConnector() throws Exception
     {
-        // TODO MULE-1476 use a dedicated ActiveMQ connector
-        JmsConnector connector = new JmsConnector();
+        ActiveMqJmsConnector connector = new ActiveMqJmsConnector();
         connector.setName(CONNECTOR_NAME);
         connector.setAcknowledgementMode(Session.CLIENT_ACKNOWLEDGE);
         connector.getDispatcherThreadingProfile().setDoThreading(false);
-        // Employ ActiveMQ hack, must be disabled for this vendor
-        connector.setEagerConsumer(false);
         return connector;
     }
 

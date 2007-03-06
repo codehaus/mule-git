@@ -10,7 +10,11 @@
 
 package org.mule.test.integration.providers.jms.activemq;
 
-import org.mule.providers.jms.*;
+import org.mule.providers.jms.JmsConnector;
+import org.mule.providers.jms.JmsConstants;
+import org.mule.providers.jms.JmsTransactionFactory;
+import org.mule.providers.jms.TransactedSingleResourceJmsMessageReceiver;
+import org.mule.providers.jms.activemq.ActiveMqJmsConnector;
 import org.mule.test.integration.providers.jms.AbstractJmsTransactionFunctionalTest;
 import org.mule.umo.UMOTransactionFactory;
 
@@ -47,7 +51,7 @@ public class ActiveMQJmsTransactionFunctionalTestCase extends AbstractJmsTransac
 
     public JmsConnector createConnector() throws Exception
     {
-        JmsConnector connector = new JmsConnector();
+        ActiveMqJmsConnector connector = new ActiveMqJmsConnector();
         connector.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
         connector.setName(CONNECTOR_NAME);
         connector.getDispatcherThreadingProfile().setDoThreading(false);
