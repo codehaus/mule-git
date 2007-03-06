@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.jms.weblogic;
+package org.mule.providers.jms.weblogic;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.providers.jms.weblogic.WeblogicJmsConnector;
