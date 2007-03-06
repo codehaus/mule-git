@@ -14,6 +14,7 @@ import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.ConnectException;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
 import org.mule.providers.streaming.StreamMessageAdapter;
@@ -29,7 +30,6 @@ import org.mule.umo.transformer.UMOTransformer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -49,6 +49,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -89,9 +90,15 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             client.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 
             // test the connection via HEAD
-            // MULE-1402: disabled until we can talk to ourself without blowing up
-            // HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
-            // client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
+            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
+            try
+            {
+                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
+            }
+            catch (Exception e)
+            {
+                throw new ConnectException(new Message("http", 13, endpoint.getEndpointURI().getUri()), e, this);
+            }
         }
 
     }
@@ -188,10 +195,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             return httpMethod;
         }
-        catch (ConnectException cex)
+        catch (IOException e)
         {
             // TODO employ dispatcher reconnection strategy at this point
-            throw new DispatchException(event.getMessage(), event.getEndpoint(), cex);
+            throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
         catch (Exception e)
         {
