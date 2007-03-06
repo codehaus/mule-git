@@ -20,6 +20,8 @@ public class WeblogicJmsConnectorTestCase extends AbstractMuleTestCase
     public void testConfigurationDefaults()
     {
         WeblogicJmsConnector c = new WeblogicJmsConnector();
+        // TODO has to be confirmed for Weblogic
+        assertTrue(c.isEagerConsumer());
         JmsTopicResolver resolver = c.getTopicResolver();
         assertNotNull("Topic resolver must not be null.", resolver);
         assertTrue("Wrong topic resolver configured on the connector.",
