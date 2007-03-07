@@ -121,142 +121,145 @@ public abstract class AbstractConnector
     /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * Specifies if the endpoint started
      */
-    protected AtomicBoolean started = new AtomicBoolean(false);
+    protected final AtomicBoolean started = new AtomicBoolean(false);
 
     /**
      * True once the endpoint has been initialsed
      */
-    protected AtomicBoolean initialised = new AtomicBoolean(false);
+    protected final AtomicBoolean initialised = new AtomicBoolean(false);
 
     /**
      * The name that identifies the endpoint
      */
-    protected String name;
+    protected volatile String name;
 
     /**
      * The exception strategy used by this connector
      */
-    protected ExceptionListener exceptionListener;
+    protected volatile ExceptionListener exceptionListener;
 
     /**
      * Determines in the connector is alive and well
      */
-    protected AtomicBoolean disposed = new AtomicBoolean(false);
+    protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
     /**
      * Determines in connector has been told to dispose
      */
-    protected AtomicBoolean disposing = new AtomicBoolean(false);
+    protected final AtomicBoolean disposing = new AtomicBoolean(false);
 
     /**
      * Factory used to create dispatchers for this connector
      */
-    protected UMOMessageDispatcherFactory dispatcherFactory;
+    protected volatile UMOMessageDispatcherFactory dispatcherFactory;
 
     /**
      * A pool of dispatchers for this connector, the pool is keyed on endpointUri
      */
-    protected GenericKeyedObjectPool dispatchers;
+    protected final GenericKeyedObjectPool dispatchers;
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
      */
-    protected ConcurrentMap receivers;
+    protected final ConcurrentMap receivers;
 
     /**
      * Defines the dispatcher threading model
      */
-    private ThreadingProfile dispatcherThreadingProfile;
+    private volatile ThreadingProfile dispatcherThreadingProfile;
 
     /**
      * Defines the receiver threading model
      */
-    private ThreadingProfile receiverThreadingProfile;
+    private volatile ThreadingProfile receiverThreadingProfile;
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
      */
-    protected boolean createMultipleTransactedReceivers = true;
+    protected volatile boolean createMultipleTransactedReceivers = true;
 
     /**
      * @see {@link #getNumberOfConcurrentTransactedReceivers()}
      */
-    protected int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
+    protected volatile int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
     /**
      * The service descriptor can define a default inbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultInboundTransformer;
+    protected volatile UMOTransformer defaultInboundTransformer;
 
     /**
      * The service descriptor can define a default outbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultOutboundTransformer;
+    protected volatile UMOTransformer defaultOutboundTransformer;
 
     /**
      * For some connectors such as http, a response transformer is required or where
      * a replyTo needs a trnasformer
      */
-    protected UMOTransformer defaultResponseTransformer;
+    protected volatile UMOTransformer defaultResponseTransformer;
 
-    private ConnectionStrategy connectionStrategy;
+    protected volatile ConnectionStrategy connectionStrategy;
 
-    protected WaitableBoolean connected = new WaitableBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
 
-    protected WaitableBoolean connecting = new WaitableBoolean(false);
+    protected final WaitableBoolean connecting = new WaitableBoolean(false);
 
     /**
      * If the connect method was called via the start method, this will be set so
      * that when the connector comes on line it will be started
      */
-    protected WaitableBoolean startOnConnect = new WaitableBoolean(false);
+    protected final WaitableBoolean startOnConnect = new WaitableBoolean(false);
 
     /**
      * Whether to fire message notifications for every message that is sent or
      * received from this connector. Default is {@code false}.
      */
-    private boolean enableMessageEvents;
+    private volatile boolean enableMessageEvents;
 
     private final List supportedProtocols;
 
     /**
      * A shared work manager for all receivers registered with this connector.
      */
-    private UMOWorkManager receiverWorkManager;
+    // TODO HH: use AtomicReference to make lazy but atomic
+    private volatile UMOWorkManager receiverWorkManager;
 
     /**
      * A shared work manager for all dispatchers created for this connector.
      */
-    private UMOWorkManager dispatcherWorkManager;
+    // TODO HH: use AtomicReference to make lazy but atomic
+    private volatile UMOWorkManager dispatcherWorkManager;
 
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    private ScheduledExecutorService scheduler;
+    // TODO HH: use AtomicReference to make lazy but atomic
+    private volatile ScheduledExecutorService scheduler;
 
     /**
      * Holds the service configuration for this connector
      */
-    protected TransportServiceDescriptor serviceDescriptor;
+    protected volatile TransportServiceDescriptor serviceDescriptor;
 
     /**
      * The map of service overrides that can e used to extend the capabilities of the
      * connector
      */
-    protected Properties serviceOverrides;
+    protected volatile Properties serviceOverrides;
 
     /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
-    protected UMOSessionHandler sessionHandler = new MuleSessionHandler();
+    protected volatile UMOSessionHandler sessionHandler = new MuleSessionHandler();
 
     /** Constructs a new AbstractConnector. */
     public AbstractConnector()
@@ -411,6 +414,10 @@ public abstract class AbstractConnector
                 logger.info("Stopping: " + this);
             }
 
+            // shutdown our scheduler service
+            scheduler.shutdown();
+            scheduler = null;
+
             this.doStop();
             started.set(false);
 
@@ -428,10 +435,6 @@ public abstract class AbstractConnector
                     mr.stop();
                 }
             }
-
-            // shutdown our scheduler service
-            scheduler.shutdown();
-            scheduler = null;
         }
 
         if (this.isConnected())
@@ -822,13 +825,13 @@ public abstract class AbstractConnector
      * 
      * @return Value for property 'dispatcherThreadingProfile'.
      */
-    public synchronized ThreadingProfile getDispatcherThreadingProfile()
+    public ThreadingProfile getDispatcherThreadingProfile()
     {
         if (dispatcherThreadingProfile == null)
         {
-            dispatcherThreadingProfile = MuleManager.getConfiguration()
-                .getMessageDispatcherThreadingProfile();
+            dispatcherThreadingProfile = MuleManager.getConfiguration().getMessageDispatcherThreadingProfile();
         }
+
         return dispatcherThreadingProfile;
     }
 
@@ -838,7 +841,7 @@ public abstract class AbstractConnector
      * @param dispatcherThreadingProfile Value to set for property
      *            'dispatcherThreadingProfile'.
      */
-    public synchronized void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
+    public void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
     {
         this.dispatcherThreadingProfile = dispatcherThreadingProfile;
     }
@@ -848,7 +851,7 @@ public abstract class AbstractConnector
      * 
      * @return Value for property 'receiverThreadingProfile'.
      */
-    public synchronized ThreadingProfile getReceiverThreadingProfile()
+    public ThreadingProfile getReceiverThreadingProfile()
     {
         if (receiverThreadingProfile == null)
         {
@@ -864,7 +867,7 @@ public abstract class AbstractConnector
      * @param receiverThreadingProfile Value to set for property
      *            'receiverThreadingProfile'.
      */
-    public synchronized void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
+    public void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
@@ -1394,7 +1397,7 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message receivers.
      */
-    protected synchronized UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
+    protected UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
         if (receiverWorkManager == null)
@@ -1412,7 +1415,7 @@ public abstract class AbstractConnector
      * 
      * @throws UMOException in case of error
      */
-    protected synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
+    protected UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
         if (dispatcherWorkManager == null)
@@ -1426,7 +1429,7 @@ public abstract class AbstractConnector
     }
 
     /** {@inheritDoc} */
-    public synchronized ScheduledExecutorService getScheduler()
+    public ScheduledExecutorService getScheduler()
     {
         if (scheduler == null)
         {
@@ -1464,43 +1467,44 @@ public abstract class AbstractConnector
     /** {@inheritDoc} */
     public void workAccepted(WorkEvent event)
     {
-        handleWorkException(event, "workAccepted");
+        this.handleWorkException(event, "workAccepted");
     }
 
     /** {@inheritDoc} */
     public void workRejected(WorkEvent event)
     {
-        handleWorkException(event, "workRejected");
+        this.handleWorkException(event, "workRejected");
     }
 
     /** {@inheritDoc} */
     public void workStarted(WorkEvent event)
     {
-        handleWorkException(event, "workStarted");
+        this.handleWorkException(event, "workStarted");
     }
 
     /** {@inheritDoc} */
     public void workCompleted(WorkEvent event)
     {
-        handleWorkException(event, "workCompleted");
+        this.handleWorkException(event, "workCompleted");
     }
 
     protected void handleWorkException(WorkEvent event, String type)
     {
-        Throwable e;
-
-        if (event != null && event.getException() != null)
-        {
-            e = event.getException();
-        }
-        else
+        if (event == null)
         {
             return;
         }
 
-        if (event.getException().getCause() != null)
+        Throwable e = event.getException();
+
+        if (e == null)
         {
-            e = event.getException().getCause();
+            return;
+        }
+
+        if (e.getCause() != null)
+        {
+            e = e.getCause();
         }
 
         logger.error("Work caused exception on '" + type + "'. Work being executed was: "
@@ -1508,7 +1512,7 @@ public abstract class AbstractConnector
 
         if (e instanceof Exception)
         {
-            handleException((Exception)e);
+            this.handleException((Exception)e);
         }
         else
         {
