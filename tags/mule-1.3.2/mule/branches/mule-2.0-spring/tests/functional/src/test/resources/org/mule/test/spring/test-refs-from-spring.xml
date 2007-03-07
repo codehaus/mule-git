@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration version="1.0">
+
+    <mule-environment-properties serverUrl=""/>
+    
+    <container-context className="org.mule.config.spring.SpringContainerContext">
+        <properties>
+            <text-property name="configuration">
+                <![CDATA[
+                <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+                <beans>
+                    <bean id="springTestConnector" class="org.mule.tck.testmodels.mule.TestConnector">
+                        <property name="exceptionListener">
+                            <bean id="connectorES" class="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
+                        </property>
+                    </bean>
+                    <!-- transaformer -->
+                    <bean id="springTestTransformer" singleton="false" class="org.mule.tck.testmodels.mule.TestCompressionTransformer">
+                        <property name="name"><value>TestCompressionTransformer</value></property>
+                        <property name="containerProperty"><value> </value></property>
+                        <property name="returnClass"><value>java.lang.String</value></property>
+                        <property name="beanProperty2"><value>12</value></property>
+                    </bean>
+                </beans>
+                ]]>
+            </text-property>
+        </properties>
+    </container-context>
+
+    <connector name="testConnector" ref="springTestConnector"/>
+
+    <transformers>
+        <transformer name="testTransformer" ref="springTestTransformer"/>
+    </transformers>
+
+    <global-endpoints>
+        <endpoint name="foo" address="test://foo" connector="testConnector" transformers="testTransformer">
+            <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+                <properties>
+                    <property name="retryCount" value="4"/>
+                    <property name="retryFrequency" value="3000"/>
+                </properties>
+            </connection-strategy>
+        </endpoint>
+    </global-endpoints>
+
+</mule-configuration>

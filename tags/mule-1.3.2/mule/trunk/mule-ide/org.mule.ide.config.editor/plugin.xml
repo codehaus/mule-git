@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  - $Id$
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  - Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+  -
+  - The software in this package is published under the terms of the MuleSource MPL
+  - license, a copy of which has been included with this distribution in the
+  - LICENSE.txt file.
+ -->
+
+<plugin>
+
+
+  <extension
+    point = "org.eclipse.ui.newWizards">
+    <category
+      id = "org.eclipse.emf.ecore.Wizard.category.ID"
+      name="%_UI_Wizard_category">
+    </category>
+    <wizard
+      id = "org.mule.ide.config.mulemodel.presentation.MuleModelWizardID"
+      name = "%_UI_MuleModelWizard_label"
+      class = "org.mule.ide.config.mulemodel.presentation.MuleModelWizard"
+      category = "org.eclipse.emf.ecore.Wizard.category.ID"
+      icon = "icons/full/obj16/MuleModelFile.gif">
+      <description>%_UI_MuleModelWizard_description</description>
+      <selection class = "org.eclipse.core.resources.IResource" />
+    </wizard>
+  </extension>
+
+  <extension point = "org.eclipse.ui.editors">
+    <editor
+        id = "org.mule.ide.config.mulemodel.presentation.MuleEditorID"
+        name = "%_UI_MuleEditor_label"
+        icon = "icons/full/obj16/MuleModelFile.gif"
+        extensions = "xml"
+        class = "org.mule.ide.config.mulemodel.presentation.MuleEditor" 
+        contributorClass="org.mule.ide.config.mulemodel.presentation.MuleActionBarContributor" >
+    </editor>
+  </extension>    
+</plugin>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+  - $Id$
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  - Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+  -
+  - The software in this package is published under the terms of the MuleSource MPL
+  - license, a copy of which has been included with this distribution in the
+  - LICENSE.txt file.
+ -->
+
+<plugin>
+   <extension-point id="org.mule.ide.config.palette.paletteEntries" name="paletteFolder" schema="schema/org.mule.ide.config.palette.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Mule IDE"
+            id="org.mule.ide.config.palette">
+      </category>
+      <view
+            name="Mule Component Palette"
+            icon="icons/mule16.GIF"
+            category="org.mule.ide.config.palette"
+            class="org.mule.ide.config.palette.views.ToolPalette"
+            id="org.mule.ide.config.palette.views.ToolPalette">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.mule.ide.config.palette.views.Tool Palette">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.mule.ide.config.palette.paletteEntries">
+         <folder
+               folderId="org.mule.ide.config.palette.components.Simple"
+               icon="icons/folder.gif"
+               name="Atomic Components">
+          <folder
+               folderId="org.mule.ide.config.palette.components.Application"
+               icon="icons/folder.gif"
+               name="Application">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Database"
+               icon="icons/folder.gif"
+               name="Database">
+               <connector name="JdbcConnector"
+                     className="org.mule.transports.jdbc.JdbcConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Email"
+               icon="icons/folder.gif"
+               name="Email">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.File"
+               icon="icons/folder.gif"
+               name="File">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.File"
+               icon="icons/folder.gif"
+               name="Generic">
+	         <folder
+	               folderId="org.mule.ide.config.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Filters">
+	               <filter name="EqualsFilter"
+	                     className="org.mule.routing.filter.EqualsFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="ExceptionTypeFilter"
+	                     className="org.mule.routing.filter.ExceptionTypeFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="MessagePropertyFilter"
+	                     className="org.mule.routing.filter.MessagePropertyFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="ObjectFilter"
+	                     className="org.mule.routing.filter.ObjectFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="PayloadTypeFilter"
+	                     className="org.mule.routing.filter.PayloadTypeFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="RegExFilter"
+	                     className="org.mule.routing.filter.RegExFilter"
+	                     icon="icons/component.gif"/>
+	               <filter name="WildcardFilter"
+	                     className="org.mule.routing.filter.WildcardFilter"
+	                     icon="icons/component.gif"/>
+               </folder>
+	         <folder
+	               folderId="org.mule.ide.config.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Inbound Routers">
+               </folder>
+	         <folder
+	               folderId="org.mule.ide.config.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Outbound Routers">
+               </folder>
+	         <folder
+	               folderId="org.mule.ide.config.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Response Routers">
+               </folder>
+	         <folder
+	               folderId="org.mule.ide.config.palette.components.File"
+	               icon="icons/folder.gif"
+	               name="Transformers">
+               </folder>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Java"
+               icon="icons/folder.gif"
+               name="Java">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.JavaSpaces"
+               icon="icons/folder.gif"
+               name="JavaSpaces">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.JBI"
+               icon="icons/folder.gif"
+               name="JBI">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Messaging"
+               icon="icons/folder.gif"
+               name="Messaging">
+               <!--
+               <component type="transformer"
+                     className="org.mule.transports.jms.transformer.JmsMessageToObject"
+                     icon="icons/component.gif"/>
+               <component type="transformer"
+                     className="org.mule.transports.jms.transformer.ObjectToJmsMessage"
+                     icon="icons/component.gif"/>
+               -->
+               <filter name="JmsSelectorFilter"
+                     className="org.mule.transports.jms.filter.JmsSelectorFilter"
+                     icon="icons/component.gif"/>
+               <connector name="JmsConnector"
+                     className="org.mule.transports.jms.JmsConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Network"
+               icon="icons/folder.gif"
+               name="Network">
+               <connector name="MulticastConnector"
+                     className="org.mule.transports.multicast.MulticastConnector"
+                     icon="icons/component.gif"/>
+               <connector name="TcpConnector"
+                     className="org.mule.transports.tcp.TcpConnector"
+                     icon="icons/component.gif"/>
+               <connector name="UdpConnector"
+                     className="org.mule.transports.udp.UdpConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.RMI"
+               icon="icons/folder.gif"
+               name="RMI">
+               <connector name="RmiConnector"
+                     className="org.mule.transports.rmi.RmiConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Scheduling"
+               icon="icons/folder.gif"
+               name="Scheduling">
+               <connector name="QuartzConnector"
+                     className="org.mule.transports.quartz.QuartzConnector"
+                     icon="icons/component.gif"/>
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.SSL"
+               icon="icons/folder.gif"
+               name="SSL">
+         </folder>
+         <folder
+               folderId="org.mule.ide.config.palette.components.Web"
+               icon="icons/folder.gif"
+               name="Web">
+            <folder
+                  folderId="org.mule.ide.config.palette.components.HTTP"
+                  icon="icons/sample.gif"
+                  name="HTTP">
+               <connector name="HttpConnector"
+                     className="org.mule.transports.http.HttpConnector"
+                     icon="icons/component.gif"/>
+               <connector name="HttpsConnector"
+                     className="org.mule.transports.http.HttpsConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+            <folder
+                  folderId="org.mule.ide.config.palette.components.J2EE"
+                  icon="icons/sample.gif"
+                  name="J2EE">
+               <connector name="JettyConnector"
+                     className="org.mule.transports.http.jetty.JettyConnector"
+                     icon="icons/component.gif"/>
+               <connector name="ServletConnector"
+                     className="org.mule.transports.http.servlet.ServletConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+            <folder
+                  folderId="org.mule.ide.config.palette.components.SOAP"
+                  icon="icons/sample.gif"
+                  name="SOAP">
+               <connector name="AxisConnector"
+                     className="org.mule.transports.soap.axis.AxisConnector"
+                     icon="icons/component.gif"/>
+               <connector name="AxisWsdlConnector"
+                     className="org.mule.transports.soap.axis.wsd.AxisWsdlConnector"
+                     icon="icons/component.gif"/>
+               <connector name="GlueConnector"
+                     className="org.mule.transports.soap.glue.GlueConnector"
+                     icon="icons/component.gif"/>
+               <connector name="XFireConnector"
+                     className="org.mule.transports.soap.xfire.XFireConnector"
+                     icon="icons/component.gif"/>
+               <connector name="XfireWsdlConnector"
+                     className="org.mule.transports.soap.xfire.wsdl.XFireWsdlConnector"
+                     icon="icons/component.gif"/>
+            </folder>
+        </folder>
+      </folder>
+ 	  <folder
+               folderId="org.mule.ide.config.palette.components.Complex"
+               icon="icons/folder.gif"
+               name="Complex Components">
+          <component name="Simple (Bridging) Route"
+               type="bridge"
+               className="org.mule.components.simple.BridgeComponent"
+               icon="icons/component.gif"/>
+          <component name="Processing Route"
+               type="processing"
+               className=""
+               icon="icons/component.gif"/>
+      </folder>
+   </extension>
+
+</plugin>

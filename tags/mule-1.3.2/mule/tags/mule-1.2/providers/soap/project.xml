@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
+    <artifactId>mule-soap-provider</artifactId>
+    <name>Mule Soap Provider</name>
+    <description>A Mule provider for Soap Connectivity. The provider will use Axis or Glue depending on which is on the
+        classpath. for more information see the
+        <a href="http://wiki.muleumo.org/display/MULE/Providers+Guide">Providers Guide</a>.
+    </description>
+    <shortDescription>soap</shortDescription>
+    <url>http://www.muleumo.org/doc/providers/soap/</url>
+    <dependencies>
+        <dependency>
+            <artifactId>glue</artifactId>
+            <groupId>glue</groupId>
+            <version>${glue_version}</version>
+            <properties>
+                <!-- cannot ship Glue jar due to license restrictions -->
+                <ignore>true</ignore>
+            </properties>
+        </dependency>
+        <dependency>
+            <artifactId>axis</artifactId>
+            <groupId>axis</groupId>
+            <version>${axis_version}</version>
+            <url>http://ws.apache.org</url>
+        </dependency>
+        <dependency>
+            <artifactId>axis-jaxrpc</artifactId>
+            <groupId>axis</groupId>
+            <version>${axis_jaxrpc_version}</version>
+            <url>http://ws.apache.org</url>
+        </dependency>
+        <dependency>
+            <artifactId>axis-saaj</artifactId>
+            <groupId>axis</groupId>
+            <version>${axis_saaj_version}</version>
+            <url>http://ws.apache.org</url>
+        </dependency>
+        <dependency>
+            <artifactId>axis-wsdl4j</artifactId>
+            <groupId>axis</groupId>
+            <version>${axis_wsdl4j_version}</version>
+            <url>http://ws.apache.org</url>
+        </dependency>
+        <!-- needed by the Axis Service component -->
+        <dependency>
+            <groupId>mule</groupId>
+            <artifactId>mule-http-provider</artifactId>
+            <version>${pom.currentVersion}</version>
+            <url>http://www.muleumo.org</url>
+            <properties>
+                <mule.core.jar>true</mule.core.jar>
+            	<eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>mule</groupId>
+            <artifactId>mule-extras-client</artifactId>
+            <version>${pom.currentVersion}</version>
+            <url>http://www.muleumo.org</url>
+            <properties>
+                <mule.core.jar>true</mule.core.jar>
+            	<eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>commons-httpclient</id>
+            <version>${commons_httpclient_version}</version>
+            <url>http://jakarta.apache.org/commons/httpclient/index.html</url>
+            <properties>
+                <war.bundle.jar>true</war.bundle.jar>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>commons-codec</id>
+            <version>${commons_codec_version}</version>
+            <url>http://jakarta.apache.org/commons/codec/index.html</url>
+            <properties>
+                <war.bundle.jar>true</war.bundle.jar>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>mule</groupId>
+            <artifactId>mule-tcp-provider</artifactId>
+            <version>${pom.currentVersion}</version>
+            <url>http://www.muleumo.org</url>
+            <properties>
+                <mule.core.jar>true</mule.core.jar>
+            	<eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>javamail</groupId>
+            <artifactId>javamail</artifactId>
+            <version>${javamail_version}</version>
+            <url>http://java.sun.com/products/javamail/</url>
+        </dependency>
+
+        <!-- XFire Deps -->
+<!--        <dependency>-->
+<!--            <groupId>stax</groupId>-->
+<!--            <artifactId>stax</artifactId>-->
+<!--            <version>${stax_version}</version>-->
+<!--            <url>http://jcp.org/en/jsr/detail?id=173</url>-->
+<!--        </dependency>-->
+<!---->
+<!--        <dependency>-->
+<!--            <groupId>stax</groupId>-->
+<!--            <artifactId>stax-api</artifactId>-->
+<!--            <version>${stax_api_version}</version>-->
+<!--            <url>http://jcp.org/en/jsr/detail?id=173</url>-->
+<!--        </dependency>-->
+<!---->
+<!--        <dependency>-->
+<!--            <groupId>wsdl4j</groupId>-->
+<!--            <artifactId>wsdl4j</artifactId>-->
+<!--            <version>${wsdl4j_version}</version>-->
+<!--            <url>http://www-124.ibm.com/developerworks/projects/wsdl4j/</url>-->
+<!--        </dependency>-->
+<!---->
+<!--        <dependency>-->
+<!--            <groupId>wsdl4j</groupId>-->
+<!--            <artifactId>wsdl4j-qname</artifactId>-->
+<!--            <version>${wsdl4j_qname_version}</version>-->
+<!--            <url>http://www-124.ibm.com/developerworks/projects/wsdl4j/</url>-->
+<!--        </dependency>-->
+<!---->
+<!--        <dependency>-->
+<!--            <groupId>xfire</groupId>-->
+<!--            <artifactId>xfire-core</artifactId>-->
+<!--            <version>${xfire-core_version}</version>-->
+<!--            <url>http://xfire.codehaus.org</url>-->
+<!--        </dependency>-->
+<!---->
+<!--        <dependency>-->
+<!--            <groupId>yom</groupId>-->
+<!--            <artifactId>yom</artifactId>-->
+<!--            <version>${yom_version}</version>-->
+<!--            <url>http://yom.codehaus.org</url>-->
+<!--        </dependency>-->
+        
+   </dependencies>
+</project>

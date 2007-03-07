@@ -1,0 +1,34 @@
+package com.example.service.${serviceName.toLowerCase()}.ejb;
+
+import com.example.service.ejb.exampleApplicationServiceBean;
+import com.example.service.${serviceName.toLowerCase()}.${serviceName}Service;
+import com.example.service.${serviceName.toLowerCase()}.criteria.${serviceName}SearchCriteria;
+import com.example.service.${serviceName.toLowerCase()}.documentcode.${serviceName}Code;
+import com.example.service.${serviceName.toLowerCase()}.dto.${serviceName}DTO;
+import com.example.service.${serviceName.toLowerCase()}.exceptions.${serviceName}ServiceException;
+import com.example.exception.ConcurrencyException;
+
+import java.util.List;
+
+/**
+ * EJB implementation class for ${serviceName}Service.
+ */
+public class ${serviceName}ServiceBean extends exampleApplicationServiceBean
+                                       implements ${serviceName}Service {
+
+    public ${serviceName}Code create${serviceName} (${serviceName}DTO dto) throws ${serviceName}ServiceException, ConcurrencyException {
+        return null;
+    }
+
+    public ${serviceName}DTO get${serviceName} (${serviceName}Code code) throws ${serviceName}ServiceException {
+        return null;
+    }
+
+    public void update${serviceName} (${serviceName}DTO dto) throws ${serviceName}ServiceException, ConcurrencyException {
+
+    }
+
+    public List find${serviceName}s (${serviceName}SearchCriteria criteria) throws ${serviceName}ServiceException {
+        return null;
+    }
+}

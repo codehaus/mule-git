@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.modules</groupId>
+        <artifactId>mule-modules</artifactId>
+        <version>2.0-REGISTRY</version>
+    </parent>
+    <artifactId>mule-module-scripting</artifactId>
+    <packaging>bundle</packaging>
+    <name>JSR-223 Scripting</name>
+    <description>Support for Scripting Mule Services and embedding Mule inside scripts</description>
+
+    <build>
+         <plugins>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <!-- TODO This module needs reorganization in order to properly export its packages. -->
+                        <Export-Package>
+                            org.mule.components.script.*,
+                            org.mule.transformers.script.*
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
+    </build>
+
+    <dependencies>
+        <!-- TODO This can't be in the parent pom.xml because it creates a cyclic dependency: 
+                mule-tests-functional -> mule-module-builders -> mule-tests-functional -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Used by ScriptConfigurationBuilder -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-builders</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.script</groupId>
+            <artifactId>script-api</artifactId>
+            <version>1.0</version>
+            <!-- we use our own retrotranslated version -->
+            <classifier>jdk14</classifier>
+        </dependency>
+
+        <!-- required for script-api and the retrotranslated groovy-engine -->
+        <dependency>
+            <groupId>net.sf.retrotranslator</groupId>
+            <artifactId>retrotranslator-runtime</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <!-- For unit tests only -->
+        <dependency>
+            <groupId>com.sun.script</groupId>
+            <artifactId>groovy</artifactId>
+            <version>20061114</version>
+            <classifier>jdk14</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-tcp</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,8 @@
+target
+.classpath
+.project
+bin
+mule-multicast-provider.iml
+.mule
+.fbprefs
+.fbwarnings

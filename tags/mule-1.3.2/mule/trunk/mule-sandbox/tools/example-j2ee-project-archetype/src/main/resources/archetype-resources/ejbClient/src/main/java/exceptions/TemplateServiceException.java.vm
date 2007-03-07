@@ -1,0 +1,36 @@
+package com.example.service.${serviceName.toLowerCase()}.exceptions;
+
+import com.example.exception.exampleException;
+
+/**
+ * TODO should extend exampleApplicationServiceException, which
+   in turn should subclass exampleException.
+ */
+public class ${serviceName}ServiceException extends exampleException {
+
+    /**
+     *
+     */
+    public ${serviceName}ServiceException() {
+        super();
+    }
+
+    public ${serviceName}ServiceException(exampleException e) {
+        super(e);
+    }
+
+    /**
+     * @param message
+     * @param t
+     */
+    public ${serviceName}ServiceException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    /**
+     * @param message
+     */
+    public ${serviceName}ServiceException(String message) {
+        super(message);
+    }
+}

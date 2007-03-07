@@ -1,0 +1,18 @@
+<project>
+    <extend>${basedir}/../mule/project.xml</extend>
+    <name>Mule Providers</name>
+    <id>mule-providers</id>
+    <package>org.mule.providers</package>
+    <dependencies>
+        <dependency>
+            <groupId>mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${pom.currentVersion}</version>
+            <url>http://www.muleumo.org</url>
+            <properties>
+                <mule.core.jar>true</mule.core.jar>
+            	<eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+    </dependencies>
+</project>

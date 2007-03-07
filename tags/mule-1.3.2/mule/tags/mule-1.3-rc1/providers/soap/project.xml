@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project>
+    <extend>${basedir}/../project2.xml</extend>
+    <pomVersion>3</pomVersion>
+    <artifactId>mule-soap-provider</artifactId>
+    <name>Mule Soap Provider</name>
+    <description>A Mule provider for Soap Connectivity. The provider will use Axis or Glue depending on which is on the
+        classpath. for more information see the
+        <a href="http://wiki.muleumo.org/display/MULE/Providers+Guide">Providers Guide</a>.
+    </description>
+    <shortDescription>soap</shortDescription>
+    <url>http://www.muleumo.org/doc/providers/soap/</url>
+    <dependencies>
+
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-saaj</artifactId>
+            <version>${geronimo_spec_saaj_version}</version>
+            <url>http://java.sun.com/products/saaj/</url>
+        </dependency>
+        
+   </dependencies>
+</project>
