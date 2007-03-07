@@ -17,7 +17,7 @@ import org.mule.providers.jms.JmsConnector;
  */
 public class ActiveMqJmsConnector extends JmsConnector
 {
-    /** Constructs a new WeblogicJmsConnector. */
+    /** Constructs a new ActiveMqJmsConnector. */
     public ActiveMqJmsConnector ()
     {
         setEagerConsumer(false);
