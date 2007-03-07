@@ -113,7 +113,7 @@ public class JmxAgent implements UMOAgent
      */
     public JmxAgent ()
     {
-        connectorServerProperties = DEFAULT_CONNECTOR_SERVER_PROPERTIES;
+        connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
     }
 
     /**
