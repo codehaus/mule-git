@@ -59,7 +59,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * The Component with which this receiver is associated with
@@ -78,13 +78,13 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
      */
     protected AbstractConnector connector = null;
 
-    protected AtomicBoolean disposing = new AtomicBoolean(false);
+    protected final AtomicBoolean disposing = new AtomicBoolean(false);
 
-    protected WaitableBoolean connected = new WaitableBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
 
-    protected WaitableBoolean stopped = new WaitableBoolean(true);
+    protected final WaitableBoolean stopped = new WaitableBoolean(true);
 
-    protected AtomicBoolean connecting = new AtomicBoolean(false);
+    protected final AtomicBoolean connecting = new AtomicBoolean(false);
 
     /**
      * Stores the key to this receiver, as used by the Connector to
