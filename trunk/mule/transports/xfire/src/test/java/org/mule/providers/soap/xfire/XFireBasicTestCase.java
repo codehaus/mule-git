@@ -15,6 +15,8 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
+import org.custommonkey.xmlunit.XMLUnit;
+
 public class XFireBasicTestCase extends FunctionalTestCase
 {
     private String echoWsdl;
@@ -23,6 +25,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
     {
         super.doPostFunctionalSetUp();
         echoWsdl = IOUtils.getResourceAsString("xfire-echo-service.wsdl", getClass());
+        XMLUnit.setIgnoreWhitespace(true);
     }
 
     public void testEchoService() throws Exception
@@ -37,7 +40,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         UMOMessage result = client.receive("http://localhost:10081/services/echoService?wsdl", 5000);
         assertNotNull(result.getPayload());
-        assertEquals(echoWsdl, result.getPayload());
+        XMLUnit.compareXML(echoWsdl, result.getPayload().toString());
     }
 
     protected String getConfigResources()
