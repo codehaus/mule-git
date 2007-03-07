@@ -19,8 +19,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <forkMode>pertest</forkMode>
                     <excludes>
-                        <exclude implementation="java.lang.String">**/ActiveMQ*.*</exclude>
+                        <!-- exclude implementation="java.lang.String">**/ActiveMQ*.*</exclude -->
                     </excludes>
                 </configuration>
             </plugin>
