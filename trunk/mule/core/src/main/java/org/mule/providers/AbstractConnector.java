@@ -416,7 +416,6 @@ public abstract class AbstractConnector
 
             // shutdown our scheduler service
             scheduler.shutdown();
-            scheduler = null;
 
             this.doStop();
             started.set(false);
@@ -449,6 +448,9 @@ public abstract class AbstractConnector
                 logger.error("Failed to disconnect: " + e.getMessage(), e);
             }
         }
+
+        // make sure the scheduler is gone
+        scheduler = null;
 
         if (logger.isInfoEnabled())
         {
