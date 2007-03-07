@@ -62,6 +62,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecuto
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import java.beans.ExceptionListener;
 import java.io.InputStream;
@@ -159,24 +160,26 @@ public abstract class AbstractConnector
     protected volatile UMOMessageDispatcherFactory dispatcherFactory;
 
     /**
-     * A pool of dispatchers for this connector, the pool is keyed on endpointUri
+     * A pool of dispatchers for this connector, keyed by endpoint
      */
-    protected final GenericKeyedObjectPool dispatchers;
+    protected final GenericKeyedObjectPool dispatchers = new GenericKeyedObjectPool();
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
      */
-    protected final ConcurrentMap receivers;
+    protected final ConcurrentMap receivers = new ConcurrentHashMap();
 
     /**
-     * Defines the dispatcher threading model
+     * Defines the dispatcher threading profile
      */
-    private volatile ThreadingProfile dispatcherThreadingProfile;
+    private volatile ThreadingProfile dispatcherThreadingProfile = MuleManager.getConfiguration()
+        .getMessageDispatcherThreadingProfile();
 
     /**
-     * Defines the receiver threading model
+     * Defines the receiver threading profile
      */
-    private volatile ThreadingProfile receiverThreadingProfile;
+    private volatile ThreadingProfile receiverThreadingProfile = MuleManager.getConfiguration()
+        .getMessageReceiverThreadingProfile();
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
@@ -229,20 +232,17 @@ public abstract class AbstractConnector
     /**
      * A shared work manager for all receivers registered with this connector.
      */
-    // TODO HH: use AtomicReference to make lazy but atomic
-    private volatile UMOWorkManager receiverWorkManager;
+    private final AtomicReference/*<UMOWorkManager>*/ receiverWorkManager = new AtomicReference();
 
     /**
      * A shared work manager for all dispatchers created for this connector.
      */
-    // TODO HH: use AtomicReference to make lazy but atomic
-    private volatile UMOWorkManager dispatcherWorkManager;
+    private final AtomicReference/*<UMOWorkManager>*/ dispatcherWorkManager = new AtomicReference();
 
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    // TODO HH: use AtomicReference to make lazy but atomic
-    private volatile ScheduledExecutorService scheduler;
+    private final AtomicReference/*<ScheduledExecutorService>*/ scheduler = new AtomicReference();
 
     /**
      * Holds the service configuration for this connector
@@ -275,16 +275,11 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        // container for dispatchers
-        dispatchers = new GenericKeyedObjectPool();
         // NOTE: testOnBorrow MUST be FALSE. this is a bit of a design bug in
         // commons-pool since validate is used for both activation and passivation,
         // but has no way of knowing which way it is going.
         dispatchers.setTestOnBorrow(false);
         dispatchers.setTestOnReturn(true);
-
-        // container for receivers
-        receivers = new ConcurrentHashMap();
     }
 
     /** {@inheritDoc} */
@@ -365,9 +360,10 @@ public abstract class AbstractConnector
             }
 
             // the scheduler is recreated after stopConnector()
-            if (scheduler == null || scheduler.isShutdown())
+            ScheduledExecutorService currentScheduler = (ScheduledExecutorService)scheduler.get();
+            if (currentScheduler == null || currentScheduler.isShutdown())
             {
-                scheduler = this.getScheduler();
+                scheduler.set(this.getScheduler());
             }
 
             this.doStart();
@@ -415,7 +411,7 @@ public abstract class AbstractConnector
             }
 
             // shutdown our scheduler service
-            scheduler.shutdown();
+            ((ScheduledExecutorService)scheduler.get()).shutdown();
 
             this.doStop();
             started.set(false);
@@ -450,7 +446,7 @@ public abstract class AbstractConnector
         }
 
         // make sure the scheduler is gone
-        scheduler = null;
+        scheduler.set(null);
 
         if (logger.isInfoEnabled())
         {
@@ -829,11 +825,6 @@ public abstract class AbstractConnector
      */
     public ThreadingProfile getDispatcherThreadingProfile()
     {
-        if (dispatcherThreadingProfile == null)
-        {
-            dispatcherThreadingProfile = MuleManager.getConfiguration().getMessageDispatcherThreadingProfile();
-        }
-
         return dispatcherThreadingProfile;
     }
 
@@ -855,11 +846,6 @@ public abstract class AbstractConnector
      */
     public ThreadingProfile getReceiverThreadingProfile()
     {
-        if (receiverThreadingProfile == null)
-        {
-            receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-        }
-
         return receiverThreadingProfile;
     }
 
@@ -1402,14 +1388,18 @@ public abstract class AbstractConnector
     protected UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (receiverWorkManager == null)
+        if (receiverWorkManager.get() == null)
         {
-            receiverWorkManager = this.getReceiverThreadingProfile().createWorkManager(
+            UMOWorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
                 this.getName() + '.' + receiverName);
-            receiverWorkManager.start();
+
+            if (receiverWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
         }
 
-        return receiverWorkManager;
+        return (UMOWorkManager)receiverWorkManager.get();
     }
 
     /**
@@ -1420,30 +1410,39 @@ public abstract class AbstractConnector
     protected UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (dispatcherWorkManager == null)
+        if (dispatcherWorkManager.get() == null)
         {
-            dispatcherWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
+            UMOWorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
                 getName() + ".dispatcher");
-            dispatcherWorkManager.start();
+
+            if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
         }
 
-        return dispatcherWorkManager;
+        return (UMOWorkManager)dispatcherWorkManager.get();
     }
 
     /** {@inheritDoc} */
     public ScheduledExecutorService getScheduler()
     {
-        if (scheduler == null)
+        if (scheduler.get() == null)
         {
             ThreadFactory threadFactory = new NamedThreadFactory(this.getName() + ".scheduler");
-            ScheduledThreadPoolExecutor threadExecutor = new ScheduledThreadPoolExecutor(1, threadFactory);
-            threadExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-            threadExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(),
+            ScheduledThreadPoolExecutor newExecutor = new ScheduledThreadPoolExecutor(1, threadFactory);
+            newExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+            newExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(),
                 TimeUnit.MILLISECONDS);
-            scheduler = threadExecutor;
+
+            if (!scheduler.compareAndSet(null, newExecutor))
+            {
+                // someone else was faster, ditch our copy.
+                newExecutor.shutdown();
+            }
         }
 
-        return scheduler;
+        return (ScheduledExecutorService)scheduler.get();
     }
 
     /**
