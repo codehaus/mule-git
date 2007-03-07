@@ -10,11 +10,13 @@
 
 package org.mule.samples.stockquote;
 
+import java.io.Serializable;
+
 /**
  * A stock Quote object that is crated from the xml returned from the
  * http://www.webservicex.net/stockquote.asmx service
  */
-public class StockQuote
+public class StockQuote implements Serializable
 {
     private String symbol;
     private String last;
