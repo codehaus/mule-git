@@ -1,1 +1,0 @@
-call mvn com.javaforge.bobber:bobber-archetype:create -DarchetypeGroupId=com.example -DarchetypeArtifactId=project-archetype -DarchetypeVersion=1.0-SNAPSHOT -DgroupId=com.example -DartifactId=MyProject %*
