@@ -22,6 +22,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.MapUtils;
 
 import java.util.List;
 
@@ -30,8 +31,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-
-import org.apache.commons.collections.MapUtils;
 
 public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
