@@ -26,6 +26,10 @@
                     <groupId>javax.transaction</groupId>
                     <artifactId>jta</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--Instead of the javax.resource j2ee connector-->

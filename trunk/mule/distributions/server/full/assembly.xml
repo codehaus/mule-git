@@ -866,6 +866,8 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.distributions:mule-full</exclude>
         <exclude>javax.activation:activation</exclude>
         <exclude>javax.mail:mail</exclude>
+
+        <exclude>commons-logging:commons-logging</exclude>
       </excludes>
     </dependencySet>
 
