@@ -66,7 +66,7 @@ public class MultiContainerContext implements UMOContainerContext
 
     public UMOContainerContext removeContainer(String name)
     {
-        return (UMOContainerContext)containers.remove(name);
+        return (UMOContainerContext) containers.remove(name);
     }
 
     public Object getComponent(Object key) throws ObjectNotFoundException
@@ -103,7 +103,7 @@ public class MultiContainerContext implements UMOContainerContext
 
         for (Iterator iterator = containers.values().iterator(); iterator.hasNext();)
         {
-            container = (UMOContainerContext)iterator.next();
+            container = (UMOContainerContext) iterator.next();
             try
             {
                 component = container.getComponent(realKey);
@@ -113,14 +113,20 @@ public class MultiContainerContext implements UMOContainerContext
                 if (e.getCause() != null)
                 {
                     finalCause = e.getCause();
-                } else {
-                    finalCause = e;
-                }
-                if (logger.isDebugEnabled())
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
+                            finalCause);
+                    }
+                } else
                 {
-                    logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
-                        finalCause);
+                    finalCause = e;
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName());
+                    }
                 }
+
                 if (cause.length() > 0)
                 {
                     cause.append("; ");
