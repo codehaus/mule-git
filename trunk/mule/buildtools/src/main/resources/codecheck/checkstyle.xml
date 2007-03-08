@@ -22,9 +22,9 @@
         <property name="tabWidth" value="4"/>
         
         <!-- http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <!--<module name="JavadocMethod"/>-->
+        <!--<module name="JavadocType"/>-->
+        <!--<module name="JavadocVariable"/>-->
 
 
         <!-- http://checkstyle.sf.net/config_naming.html -->
@@ -74,7 +74,7 @@
         </module>
 
         <!-- http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!--<module name="AvoidInlineConditionals"/>-->
         <module name="DoubleCheckedLocking"/>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
