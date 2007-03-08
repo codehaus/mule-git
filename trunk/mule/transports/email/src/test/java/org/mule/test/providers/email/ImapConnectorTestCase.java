@@ -1,5 +1,5 @@
 /*
- * $Id: Pop3ConnectorTestCase.java 4517 2007-01-03 23:14:53Z holger $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
