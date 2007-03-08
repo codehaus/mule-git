@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: Pop3ConnectorTestCase.java 4517 2007-01-03 23:14:53Z holger $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,16 +10,16 @@
 
 package org.mule.test.providers.email;
 
-import org.mule.providers.email.Pop3Connector;
+import org.mule.providers.email.ImapConnector;
 import org.mule.umo.provider.UMOConnector;
 
-public class Pop3ConnectorTestCase extends AbstractReceivingMailConnectorTestCase
+public class ImapConnectorTestCase extends AbstractReceivingMailConnectorTestCase
 {
 
     public UMOConnector getConnector() throws Exception
     {
-        Pop3Connector connector = new Pop3Connector();
-        connector.setName("Pop3Connector");
+        ImapConnector connector = new ImapConnector();
+        connector.setName("ImapConnector");
         connector.setCheckFrequency(1000l);
         connector.initialise();
         return connector;
@@ -27,7 +27,7 @@ public class Pop3ConnectorTestCase extends AbstractReceivingMailConnectorTestCas
 
     public String getTestEndpointURI()
     {
-        return getPop3TestEndpointURI();
+        return getImapTestEndpointURI();
     }
 
 }
