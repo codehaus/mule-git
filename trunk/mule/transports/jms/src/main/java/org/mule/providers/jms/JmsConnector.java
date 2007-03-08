@@ -38,6 +38,7 @@ import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -231,8 +232,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
         else
         {
-            throw new InitialisationException(new Message(Messages.JNDI_RESOURCE_X_NOT_FOUND,
-                connectionFactoryJndiName), this);
+            throw new InitialisationException(new Message(Messages.INVALID_RESOURCE_TYPE_X_EXPECTED_X,
+                ConnectionFactory.class, temp == null ? null : temp.getClass()), this);
         }
     }
 
