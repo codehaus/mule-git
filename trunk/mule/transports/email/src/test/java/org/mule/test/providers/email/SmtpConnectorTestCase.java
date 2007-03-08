@@ -13,7 +13,7 @@ package org.mule.test.providers.email;
 import org.mule.providers.email.SmtpConnector;
 import org.mule.umo.provider.UMOConnector;
 
-public class SmtpConnectorTestCase extends Pop3ConnectorTestCase
+public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
 
     public UMOConnector getConnector() throws Exception
@@ -32,6 +32,11 @@ public class SmtpConnectorTestCase extends Pop3ConnectorTestCase
     public void testReceiver() throws Exception
     {
         // override to disable parent implementation
+    }
+
+    public void testConnectorListenerSupport() throws Exception
+    {
+        // TODO
     }
 
 }
