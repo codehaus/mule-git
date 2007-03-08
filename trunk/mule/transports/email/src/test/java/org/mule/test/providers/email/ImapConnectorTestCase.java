@@ -13,6 +13,9 @@ package org.mule.test.providers.email;
 import org.mule.providers.email.ImapConnector;
 import org.mule.umo.provider.UMOConnector;
 
+/**
+ * Simple tests for pulling from an IMAP server.
+ */
 public class ImapConnectorTestCase extends AbstractReceivingMailConnectorTestCase
 {
 

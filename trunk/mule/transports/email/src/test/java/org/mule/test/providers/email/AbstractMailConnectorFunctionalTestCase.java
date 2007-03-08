@@ -97,7 +97,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         return new ServerSetup[]{SMTP, SMTPS, POP3, POP3S, IMAP, IMAPS};
     }
 
-    protected void stopServers() throws Exception
+    private void stopServers() throws Exception
     {
         if (null != servers)
         {

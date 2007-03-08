@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 /**
  * Given an endpoint ({@link #getTestEndpointURI()}) this waits for up to 10 seconds,
- * hoping to receive the message stroed in the mail server.  It also runs the unit tests
+ * hoping to receive the message stored in the mail server.  It also runs the unit tests
  * defined way down in {@link AbstractConnectorTestCase}.
  */
 public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
