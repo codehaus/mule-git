@@ -36,6 +36,13 @@
                     <groupId>commons-digester</groupId>
                     <artifactId>commons-digester</artifactId>
                     <version>1.7</version>
+                    <exclusions>
+                        <!-- we like slf4j -->
+                        <exclusion>
+                            <groupId>commons-logging</groupId>
+                            <artifactId>commons-logging</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
@@ -51,6 +58,11 @@
                     <artifactId>commons-digester</artifactId>
                     <version>1.7</version>
                     <exclusions>
+                        <!-- we like slf4j -->
+                        <exclusion>
+                            <groupId>commons-logging</groupId>
+                            <artifactId>commons-logging</artifactId>
+                        </exclusion>
                         <exclusion>
                             <groupId>xml-apis</groupId>
                             <artifactId>xml-apis</artifactId>
