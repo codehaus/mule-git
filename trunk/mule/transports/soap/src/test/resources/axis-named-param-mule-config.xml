@@ -24,7 +24,7 @@
             </outbound-router>
         </mule-descriptor>
         <mule-descriptor name="mycomponent2"
-            implementation="org.mule.test.integration.service.TestServiceComponent">
+            implementation="org.mule.tck.testmodels.services.TestServiceComponent">
             <inbound-router>
                 <endpoint address="axis:http://localhost:38011/mule" synchronous="true">
                 </endpoint>

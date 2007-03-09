@@ -8,7 +8,7 @@
     <mule-environment-properties serverUrl=""/>
     <model name="test">
         <mule-descriptor name="mycomponent"
-            implementation="org.mule.test.integration.service.TestServiceComponent"
+            implementation="org.mule.tck.testmodels.services.TestServiceComponent"
             inboundEndpoint="axis:http://localhost:38008/mule">
             <properties>
                 <property name="style" value="Document"/>

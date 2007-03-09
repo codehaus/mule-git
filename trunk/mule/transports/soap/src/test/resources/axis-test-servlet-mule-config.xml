@@ -13,7 +13,7 @@
 
     <model name="test">
         <mule-descriptor name="mycomponent"
-            implementation="org.mule.test.integration.service.TestServiceComponent"
+            implementation="org.mule.tck.testmodels.services.TestServiceComponent"
             inboundEndpoint="axis:servlet://mycomponent">
         </mule-descriptor>
     </model>
