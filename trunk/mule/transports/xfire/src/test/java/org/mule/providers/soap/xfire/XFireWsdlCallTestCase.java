@@ -110,6 +110,6 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "xfire-wsdl-test-conf.xml";
+        return "xfire-wsdl-conf.xml";
     }
 }

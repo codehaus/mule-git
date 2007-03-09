@@ -34,7 +34,7 @@ public class XFireSoapRequestNoMethodParamTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "mule-xfire-soap-request.xml";
+        return "xfire-soap-request-conf.xml";
     }
 
 }

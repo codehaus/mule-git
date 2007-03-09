@@ -32,7 +32,7 @@ public class XFireBadSoapRequestTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "mule-xfire-soap-request.xml";
+        return "xfire-soap-request-conf.xml";
     }
 
     public void testSoapDocumentError() throws Exception

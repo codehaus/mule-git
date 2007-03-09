@@ -56,7 +56,7 @@ public class XFireServiceUsingAxisEndpointTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "mule-config-xfire-using-axis.xml";
+        return "xfire-using-axis-conf.xml";
     }
 
 }
