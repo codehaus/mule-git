@@ -35,11 +35,13 @@
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
+<!--
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-http</artifactId>
             <version>${version}</version>
         </dependency>
+-->
 
         <!-- TODO remove it when JMS tests are moved into the transport project -->
         <dependency>
