@@ -44,7 +44,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
@@ -87,7 +86,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             client = new HttpClient();
             client.setState(state);
-            client.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
+            client.setHttpConnectionManager(connector.getClientConnectionManager());
 
             // test the connection via HEAD
             HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
@@ -249,10 +248,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             {
                 ObjectToHttpClientMethodRequest trans = new ObjectToHttpClientMethodRequest();
                 httpMethod = (HttpMethod)trans.transform(body.toString());
-            }
-            else if (body instanceof HttpMethod)
-            {
-                httpMethod = (HttpMethod)body;
             }
             else if (body instanceof UMOStreamMessageAdapter)
             {
