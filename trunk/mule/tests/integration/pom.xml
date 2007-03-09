@@ -260,6 +260,11 @@
                     <groupId>commons-collections</groupId>
                     <artifactId>commons-collections</artifactId>
                 </exclusion>
+                <!-- we like slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
                 <!-- We've already got the geronimo-jta spec -->
                 <exclusion>
                     <groupId>javax.transaction</groupId>
