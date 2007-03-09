@@ -64,7 +64,7 @@ public class AxisMuleSession implements Session
 
     public void setTimeout(int i)
     {
-         //TODO not supported
+         // TODO not supported
     }
 
     public int getTimeout()
@@ -74,6 +74,7 @@ public class AxisMuleSession implements Session
 
     public void touch()
     {
+        // nothing here to touch
     }
 
     public void invalidate()
