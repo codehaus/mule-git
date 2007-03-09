@@ -13,6 +13,15 @@
     <endpoint address="xfire:http://localhost:10081/services"/>
    </inbound-router>
   </mule-descriptor>
-
+  <mule-descriptor name="echoService2" implementation="org.mule.components.simple.EchoComponent">
+   <inbound-router>
+    <endpoint address="xfire:http://localhost:10082/services">
+     <properties>
+      <property name="wsdlUrl" value="file://xfire-blat"/>
+     </properties>
+    </endpoint>
+   </inbound-router>
+  </mule-descriptor>
  </model>
+
 </mule-configuration> 
