@@ -67,7 +67,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     public HttpClientMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (HttpConnector)endpoint.getConnector();
+        this.connector = (HttpConnector) endpoint.getConnector();
         this.receiveTransformer = new HttpClientMethodResponseToObject();
     }
 
@@ -157,7 +157,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             if (httpMethod.getStatusCode() == HttpStatus.SC_OK)
             {
-                return (UMOMessage)receiveTransformer.transform(httpMethod);
+                return (UMOMessage) receiveTransformer.transform(httpMethod);
             }
             else
             {
@@ -215,10 +215,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     protected void processCookies(UMOEvent event)
     {
         UMOMessage msg = event.getMessage();
-        Cookie[] cookies = (Cookie[])msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
+        Cookie[] cookies = (Cookie[]) msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
         if (cookies != null && cookies.length > 0)
         {
-            String policy = (String)msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
+            String policy = (String) msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
             client.getParams().setCookiePolicy(CookieHelper.getCookiePolicy(policy));
             client.getState().addCookies(cookies);
         }
