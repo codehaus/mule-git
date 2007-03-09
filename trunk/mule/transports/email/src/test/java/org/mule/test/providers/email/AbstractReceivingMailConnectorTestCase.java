@@ -15,7 +15,6 @@ import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.UMOEventContext;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
@@ -30,6 +29,9 @@ import java.util.HashMap;
  */
 public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
+    
+    public static final int POLL_PERIOD_MS = 1000; 
+    public static final int WAIT_PERIOD_MS = 3 * POLL_PERIOD_MS;
 
     public void testReceiver() throws Exception
     {
@@ -64,7 +66,7 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         MuleManager.getInstance().start();
 
         logger.debug("waiting for count down");
-        assertTrue(countDown.await(10, TimeUnit.SECONDS));
+        assertTrue(countDown.await(WAIT_PERIOD_MS, TimeUnit.MILLISECONDS));
     }
     
 }

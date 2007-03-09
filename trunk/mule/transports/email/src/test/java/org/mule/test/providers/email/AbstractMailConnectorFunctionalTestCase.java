@@ -36,6 +36,8 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractConnectorTestCase
 {
 
+    public static final int INITIAL_SERVER_PORT = 9000;
+    
     private static final Log staticLogger = LogFactory.getLog(AbstractMailConnectorFunctionalTestCase.class);
     private static final String LOCALHOST = "127.0.0.1";
     private static final String USER = "bob";
@@ -43,7 +45,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     private static final String EMAIL = USER + "@" + PROVIDER;
     private static final String PASSWORD = "secret";
     private static final String MESSAGE = "Test Email Message";
-    private static AtomicInteger nextPort = new AtomicInteger(9000);
+    private static AtomicInteger nextPort = new AtomicInteger(INITIAL_SERVER_PORT);
 
     private MimeMessage message;
     private Servers servers;
@@ -75,7 +77,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         userManager.createUser(EMAIL, USER, PASSWORD);
         GreenMailUser bob = userManager.getUser(USER);
         assertNotNull("Failure in greenmail - see comments in test code.", bob);
-        bob.deliver((MimeMessage)getValidMessage());
+        bob.deliver((MimeMessage) getValidMessage());
         assertEquals(1, servers.getReceivedMessages().length);
     }
     
@@ -88,13 +90,13 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     private static ServerSetup[] getSetups()
     {
         staticLogger.debug("generating news servers from: " + nextPort.get());
-        ServerSetup SMTP = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTP);
-        ServerSetup SMTPS = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTPS);
-        ServerSetup POP3 = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3);
-        ServerSetup POP3S = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3S);
-        ServerSetup IMAP = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAP);
-        ServerSetup IMAPS = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAPS);
-        return new ServerSetup[]{SMTP, SMTPS, POP3, POP3S, IMAP, IMAPS};
+        ServerSetup smtp = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTP);
+        ServerSetup smtps = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTPS);
+        ServerSetup pop3 = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3);
+        ServerSetup pop3s = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3S);
+        ServerSetup imap = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAP);
+        ServerSetup imaps = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAPS);
+        return new ServerSetup[]{smtp, smtps, pop3, pop3s, imap, imaps};
     }
 
     private void stopServers() throws Exception
@@ -139,12 +141,12 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     protected void assertMessageOk(Object message) throws Exception
     {
         assertTrue("Did not receive a MimeMessage", message instanceof MimeMessage);
-        MimeMessage received = (MimeMessage)message;
+        MimeMessage received = (MimeMessage) message;
         // for some reason, something is adding a newline at the end of messages
         // so we need to strip that out for comparison
         assertTrue("Did not receive a message with String contents",
             received.getContent() instanceof String);
-        String receivedText = ((String)received.getContent()).trim();
+        String receivedText = ((String) received.getContent()).trim();
         assertEquals(MESSAGE, receivedText);
     }
 

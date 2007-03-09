@@ -23,7 +23,7 @@ public class Pop3ConnectorTestCase extends AbstractReceivingMailConnectorTestCas
     {
         Pop3Connector connector = new Pop3Connector();
         connector.setName("Pop3Connector");
-        connector.setCheckFrequency(1000l);
+        connector.setCheckFrequency(POLL_PERIOD_MS);
         connector.initialise();
         return connector;
     }
