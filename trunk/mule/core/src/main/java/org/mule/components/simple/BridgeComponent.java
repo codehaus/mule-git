@@ -20,11 +20,11 @@ import org.mule.umo.routing.UMOInboundRouter;
 import java.util.Iterator;
 
 /**
-  * The BridgeComponent is a standard Mule component that enables a bridge between an inbound and outbound endpoint.
- * Transformers can be used on the endpoints to convert the data being received in  order to 'bridge' from one
+ * The BridgeComponent is a standard Mule component that enables a bridge between an inbound and outbound endpoints.
+ * Transformers can be used on the endpoints to convert the data being received in order to 'bridge' from one
  * endpoint transport to another.  When the BridgeComponent is used, it configures itself so that it will
  * not actually be invoked, instead it tells Mule to bypass invocation of the component, which has a slight performance
- * improvement. Note that because the compoennt is never actually invoked any interceptors configured on the component
+ * improvement. Note that because the component is never actually invoked any interceptors configured on the component
  * will not be invoked either.
  */
 public class BridgeComponent implements UMODescriptorAware, Callable
@@ -39,7 +39,7 @@ public class BridgeComponent implements UMODescriptorAware, Callable
         boolean registered = false;
         for (Iterator iterator = descriptor.getInboundRouter().getRouters().iterator(); iterator.hasNext();)
         {
-            UMOInboundRouter router = (UMOInboundRouter)iterator.next();
+            UMOInboundRouter router = (UMOInboundRouter) iterator.next();
             if (router instanceof ForwardingConsumer)
             {
                 registered = true;
