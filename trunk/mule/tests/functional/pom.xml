@@ -30,6 +30,16 @@
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
+            <version>${version}</version>
+        </dependency>
 
         <!-- TODO remove it when JMS tests are moved into the transport project -->
         <dependency>
@@ -140,10 +150,12 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jms_1.1_spec</artifactId>
                 </exclusion>
+<!-- Exclude this for now
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
                 </exclusion>
+-->
                 <exclusion>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty</artifactId>
