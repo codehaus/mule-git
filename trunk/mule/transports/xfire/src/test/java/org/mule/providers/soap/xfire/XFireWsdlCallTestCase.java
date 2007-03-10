@@ -97,7 +97,7 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send("http://localhost:82/xfireService?wsdl", null, props);
+        UMOMessage reply = client.send("http://localhost:18082/xfireService?wsdl", null, props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
