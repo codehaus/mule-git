@@ -39,35 +39,20 @@
     </modules>
 
     <dependencies>
+        <!-- every transport depends at least on core -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>${version}</version>
         </dependency>
+
+        <!-- many transports use FunctionalTestCase -->
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-functional</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- need to explicitly mark javax.activation as provided -->
-        <!-- TODO HH: now that m2 dependency resolution works, activation
-             should ONLY come via core or (in the future) core-api.
-        -->
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- used for functional tests-->
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-builders</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
+
 </project>
