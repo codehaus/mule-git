@@ -36,35 +36,15 @@
     </modules>
 
     <dependencies>
+        <!-- every module depends at least on core -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>${version}</version>
         </dependency>
         <!--
-            This creates a cyclic dependency:
-            mule-tests-functional -> mule-module-builders -> mule-tests-functional
-            Any modules that need the functional tests can include them with scope=test
+            NOTE: modules that need the functional tests can include them with scope=test
         -->
-        <!-- 
-        <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        -->
-
-        <!-- need to explicitly mark javax.activation as provided -->
-        <!-- TODO HH: now that m2 dependency resolution works, activation
-             should ONLY come via core or (in the future) core-api.
-        -->
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>
