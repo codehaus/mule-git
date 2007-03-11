@@ -37,8 +37,9 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
     private Server httpServer;
 
     // @Override
-    protected void suitePostSetUp() throws Exception
+    protected void doPreFunctionalSetUp() throws Exception
     {
+        super.doPreFunctionalSetUp();
         httpServer = new Server();
         SocketListener socketListener = new SocketListener(new InetAddrPort(HTTP_PORT));
         httpServer.addListener(socketListener);
@@ -55,9 +56,13 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
     }
 
     // @Override
-    protected void suitePostTearDown() throws Exception
+    protected void doFunctionalTearDown() throws Exception
     {
-        httpServer.stop();
+        super.doFunctionalTearDown();
+        if (httpServer != null && httpServer.isStarted())
+        {
+            httpServer.stop();
+        }
     }
 
     public void testRequestWsdlWithServlets() throws Exception
