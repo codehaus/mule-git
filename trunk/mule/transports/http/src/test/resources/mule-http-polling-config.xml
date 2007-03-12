@@ -13,6 +13,8 @@
         </properties>
     </connector>
 
+    <connector name="HttpConnector" className="org.mule.providers.http.HttpConnector"/>
+
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
         <properties>
             <property name="queueEvents" value="true"/>
@@ -37,6 +39,12 @@
                     <endpoint address="vm://toclient"/>
                 </router>
             </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="SecureUMO" implementation="org.mule.tck.functional.FunctionalTestComponent">
+            <inbound-router>
+                <endpoint address="http://localhost:4567" connector="HttpConnector"/>
+            </inbound-router>
         </mule-descriptor>
     </model>
 </mule-configuration>

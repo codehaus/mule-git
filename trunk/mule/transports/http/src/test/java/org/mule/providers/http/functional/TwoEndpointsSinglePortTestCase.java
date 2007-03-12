@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.http;
+package org.mule.providers.http.functional;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -18,10 +18,6 @@ import org.mule.umo.UMOMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class TwoEndpointsSinglePortTestCase extends FunctionalTestCase
 {
     public TwoEndpointsSinglePortTestCase()
@@ -31,7 +27,7 @@ public class TwoEndpointsSinglePortTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/providers/http/two-endpoints-single-port.xml";
+        return "two-endpoints-single-port.xml";
     }
 
     public void testSendToEach() throws Exception
