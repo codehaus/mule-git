@@ -248,4 +248,6 @@ public interface CoreMessageConstants
 
     // post Mule 1.4
     int INVALID_RESOURCE_TYPE_X_EXPECTED_X = 222;
+
+    int FAILED_TO_GET_OUTPUT_STREAM = 223;
 }

@@ -204,30 +204,13 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doConnect() throws Exception
     {
-        // Just test that we can connect. If we are keeping send sockets open, this
-        // will get cached
+        //Test the connectionw
         Socket socket = connector.getSocket(endpoint);
         connector.releaseSocket(socket, endpoint);
     }
 
     protected void doDisconnect() throws Exception
     {
-        Socket socket = connector.lookupSocket(endpoint);
-
-        if (null != socket && !socket.isClosed())
-        {
-            try
-            {
-                socket.close();
-            }
-            catch (IOException e)
-            {
-                logger.warn("ConnectedSocked.close() raised exception. Reason: " + e.getMessage());
-            }
-            finally
-            {
-                connector.releaseSocket(socket, endpoint);
-            }
-        }
+        //nothing to do
     }
 }
