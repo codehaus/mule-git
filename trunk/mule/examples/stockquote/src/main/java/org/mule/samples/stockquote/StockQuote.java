@@ -18,6 +18,8 @@ import java.io.Serializable;
  */
 public class StockQuote implements Serializable
 {
+    private static final long serialVersionUID = -3579080716991795218L;
+
     private String symbol;
     private String last;
     private String change;
