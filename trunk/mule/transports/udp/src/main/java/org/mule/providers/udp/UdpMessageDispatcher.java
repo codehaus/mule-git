@@ -39,14 +39,14 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doConnect() throws Exception
     {
-        //Test the connectionw
+        // Test the connection
         DatagramSocket socket = connector.getSocket(endpoint);
         connector.releaseSocket(socket, endpoint);
     }
 
     protected void doDisconnect() throws Exception
     {
-
+        // nothing to do
     }
 
 
