@@ -520,7 +520,18 @@ public abstract class AbstractConnector
 
             try
             {
-                dispatchers.clear();
+                // disposeDispatcher() is also called from initialise() and
+                // JMSConnector.onNotification(), so we need to handle this
+                // differently
+                if (this.isDisposing())
+                {
+                    // close() implies clear()
+                    dispatchers.close();
+                }
+                else
+                {
+                    dispatchers.clear();
+                }
             }
             catch (Exception ex)
             {
