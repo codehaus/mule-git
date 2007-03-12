@@ -98,7 +98,7 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
 
     public boolean validateObject(Object key, Object object)
     {
-        Socket socket = (Socket)object;
+        DatagramSocket socket = (DatagramSocket)object;
         return !socket.isClosed();
     }
 
