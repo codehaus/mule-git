@@ -10,8 +10,6 @@
 
 package org.mule.providers.multicast;
 
-import java.net.DatagramPacket;
-
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
@@ -19,6 +17,8 @@ import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
+
+import java.net.DatagramPacket;
 
 public class MulticastConnectorTestCase extends AbstractConnectorTestCase
 {
@@ -86,13 +86,13 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
     {
         MulticastConnector c = new MulticastConnector();
         c.initialise();
-        c.setBufferSize(1024);
-        assertEquals(1024, c.getBufferSize());
-        c.setBufferSize(0);
-        assertEquals(MulticastConnector.DEFAULT_BUFFER_SIZE, c.getBufferSize());
+        c.setReceiveBufferSize(1024);
+        assertEquals(1024, c.getReceiveBufferSize());
+        c.setReceiveBufferSize(0);
+        assertEquals(MulticastConnector.DEFAULT_BUFFER_SIZE, c.getReceiveBufferSize());
 
-        c.setTimeout(-1);
-        assertEquals(MulticastConnector.DEFAULT_SOCKET_TIMEOUT, c.getTimeout());
+        c.setReceiveTimeout(-1);
+        assertEquals(MulticastConnector.DEFAULT_SOCKET_TIMEOUT, c.getReceiveTimeout());
 
         c.setLoopback(true);
         assertTrue(c.isLoopback());
