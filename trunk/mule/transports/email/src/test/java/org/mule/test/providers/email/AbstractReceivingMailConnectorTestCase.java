@@ -32,6 +32,11 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
     
     public static final int POLL_PERIOD_MS = 1000; 
     public static final int WAIT_PERIOD_MS = 3 * POLL_PERIOD_MS;
+    
+    protected AbstractReceivingMailConnectorTestCase() 
+    {
+        super(true);
+    }
 
     public void testReceiver() throws Exception
     {

@@ -36,26 +36,36 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractConnectorTestCase
 {
 
-    public static final int INITIAL_SERVER_PORT = 9000;
+    public static final int INITIAL_SERVER_PORT = 50001;
+    public static final String LOCALHOST = "127.0.0.1";
+    public static final String USER = "bob";
+    public static final String PROVIDER = "example.com";
+    public static final String EMAIL = USER + "@" + PROVIDER;
+    public static final String PASSWORD = "secret";
+    public static final String MESSAGE = "Test Email Message";
+    public static final long STARTUP_PERIOD_MS = 100;
     
+    private static final AtomicInteger nextPort = new AtomicInteger(INITIAL_SERVER_PORT);
     private static final Log staticLogger = LogFactory.getLog(AbstractMailConnectorFunctionalTestCase.class);
-    private static final String LOCALHOST = "127.0.0.1";
-    private static final String USER = "bob";
-    private static final String PROVIDER = "example.com";
-    private static final String EMAIL = USER + "@" + PROVIDER;
-    private static final String PASSWORD = "secret";
-    private static final String MESSAGE = "Test Email Message";
-    private static AtomicInteger nextPort = new AtomicInteger(INITIAL_SERVER_PORT);
 
     private MimeMessage message;
     private Servers servers;
+    private boolean initialEmail = false;
+    
+    protected AbstractMailConnectorFunctionalTestCase(boolean initialEmail)
+    {
+        this.initialEmail = initialEmail;
+    }
     
     // @Override
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
         startServers();
-        storeEmail();
+        if (initialEmail)
+        {
+            storeEmail();
+        }
     }
     
     // @Override
@@ -133,7 +143,17 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         return buildEndpoint("imap", servers.getImap().getPort());
     }
     
-    private String buildEndpoint(String protocol, int port) 
+    protected String getImapsTestEndpointURI()
+    {
+        return buildEndpoint("imaps", servers.getImaps().getPort());
+    }
+    
+    protected String getSmtpTestEndpointURI()
+    {
+        return buildEndpoint("smtp", servers.getSmtp().getPort());
+    }
+    
+   private static String buildEndpoint(String protocol, int port) 
     {
         return protocol + "://" + USER + ":" + PASSWORD + "@" + LOCALHOST + ":" + port;
     }
