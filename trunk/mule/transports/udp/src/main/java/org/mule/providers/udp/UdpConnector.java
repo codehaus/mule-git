@@ -52,7 +52,7 @@ public class UdpConnector extends AbstractConnector
         dispatcherSocketsPool.setFactory(new UdpSocketFactory());
         dispatcherSocketsPool.setTestOnBorrow(true);
         dispatcherSocketsPool.setTestOnReturn(true);
-        //TODO RM*: Check that this means 1 object per key and not one object for the whole pool!
+        //There should only be one pooled instance per socket (key)
         dispatcherSocketsPool.setMaxActive(1);
     }
 

@@ -96,7 +96,7 @@ public class TcpConnector extends AbstractConnector
         dispatcherSocketsPool.setFactory(new TcpSocketFactory());
         dispatcherSocketsPool.setTestOnBorrow(true);
         dispatcherSocketsPool.setTestOnReturn(true);
-        //TODO RM*: Check that this means 1 object per key
+        //There should only be one pooled instance per socket (key)        
         dispatcherSocketsPool.setMaxActive(1);
     }
 
