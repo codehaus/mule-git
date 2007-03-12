@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.udp;
+package org.mule.providers.udp.functional;
 
 import org.mule.tck.FunctionalTestCase;
 
@@ -28,7 +28,7 @@ public class UdpRoundTripTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/providers/udp/udp-roundtrip-test-config.xml";
+        return "udp-roundtrip-test-config.xml";
     }
 
     public void testSendAndReceiveUDP() throws IOException

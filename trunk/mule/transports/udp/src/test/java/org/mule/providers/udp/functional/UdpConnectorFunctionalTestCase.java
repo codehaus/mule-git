@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.udp;
+package org.mule.providers.udp.functional;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;

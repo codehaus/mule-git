@@ -20,18 +20,19 @@
         </transformer>
     </transformers>
     
-    <mule-descriptor name="PassingThrough"
-        implementation="org.mule.components.simple.PassThroughComponent">
-        <inbound-router>
-            <!-- adding the transformer to this endpoint makes the test succeed (wrongly) -->
-            <!-- <endpoint address="udp://${hostname}:9001" transformers="SerializableToByteArray" -->
-            <endpoint address="udp://${hostname}:9001"/>
-        </inbound-router>
-        <outbound-router>
-            <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                <endpoint address="udp://${hostname}:9002"/>
-            </router>
-        </outbound-router>
-    </mule-descriptor>
-    
+    <model name="main">
+        <mule-descriptor name="PassingThrough"
+            implementation="org.mule.components.simple.PassThroughComponent">
+            <inbound-router>
+                <!-- adding the transformer to this endpoint makes the test succeed (wrongly) -->
+                <!-- <endpoint address="udp://${hostname}:9001" transformers="SerializableToByteArray" -->
+                <endpoint address="udp://${hostname}:9001"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="udp://${hostname}:9002"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
 </mule-configuration>
