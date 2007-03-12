@@ -58,7 +58,14 @@ public class UdpConnector extends AbstractConnector
 
     protected void doDispose()
     {
-        // template method
+        try
+        {
+            dispatcherSocketsPool.close();
+        }
+        catch (Exception e)
+        {
+            logger.warn("Failed to close dispatcher socket pool: " + e.getMessage());
+        }
     }
 
     protected void doConnect() throws Exception
@@ -68,7 +75,7 @@ public class UdpConnector extends AbstractConnector
 
     protected void doDisconnect() throws Exception
     {
-        dispatcherSocketsPool.close();
+        dispatcherSocketsPool.clear();
     }
 
     protected void doStart() throws UMOException
