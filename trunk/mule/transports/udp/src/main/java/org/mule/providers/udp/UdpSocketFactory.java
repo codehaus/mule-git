@@ -63,7 +63,6 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
             //If this is a client socket create a default instance
             socket = createSocket();
         }
-        socket.setReuseAddress(true);
 
         UdpConnector connector = (UdpConnector)ep.getConnector();
         //There is some overhead in stting socket timeout and buffer size, so we're
