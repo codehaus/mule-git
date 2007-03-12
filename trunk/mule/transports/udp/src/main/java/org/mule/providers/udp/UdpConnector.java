@@ -50,9 +50,9 @@ public class UdpConnector extends AbstractConnector
     protected void doInitialise() throws InitialisationException
     {
         dispatcherSocketsPool.setFactory(new UdpSocketFactory());
-        dispatcherSocketsPool.setTestOnBorrow(false);
+        dispatcherSocketsPool.setTestOnBorrow(true);
         dispatcherSocketsPool.setTestOnReturn(true);
-        //TODO RM*: Check that this means 1 object per key
+        //TODO RM*: Check that this means 1 object per key and not one object for the whole pool!
         dispatcherSocketsPool.setMaxActive(1);
     }
 

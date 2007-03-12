@@ -98,6 +98,17 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
 
     public boolean validateObject(Object key, Object object)
     {
+        Socket socket = (Socket)object;
+        return !socket.isClosed();
+    }
+
+    public void activateObject(Object key, Object object) throws Exception
+    {
+
+    }
+
+    public void passivateObject(Object key, Object object) throws Exception
+    {
         UMOImmutableEndpoint ep = (UMOImmutableEndpoint)key;
 
         boolean keepSocketOpen = MapUtils.getBooleanValue(ep.getProperties(),
@@ -111,17 +122,6 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
                 socket.close();
             }
         }
-        return !socket.isClosed();
-    }
-
-    public void activateObject(Object key, Object object) throws Exception
-    {
-
-    }
-
-    public void passivateObject(Object key, Object object) throws Exception
-    {
-
     }
 
     protected DatagramSocket createSocket() throws IOException
