@@ -10,8 +10,6 @@
 
 package org.mule.providers.udp;
 
-import java.net.DatagramPacket;
-
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
@@ -19,6 +17,8 @@ import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
+
+import java.net.DatagramPacket;
 
 public class UdpConnectorTestCase extends AbstractConnectorTestCase
 {
@@ -87,13 +87,13 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
     {
         UdpConnector connector = (UdpConnector)this.connector;
 
-        connector.setBufferSize(1024);
-        assertEquals(1024, connector.getBufferSize());
-        connector.setBufferSize(0);
-        assertEquals(UdpConnector.DEFAULT_BUFFER_SIZE, connector.getBufferSize());
+        connector.setReceiveBufferSize(1024);
+        assertEquals(1024, connector.getReceiveBufferSize());
+        connector.setReceiveBufferSize(0);
+        assertEquals(UdpConnector.DEFAULT_BUFFER_SIZE, connector.getReceiveBufferSize());
 
-        connector.setTimeout(-1);
-        assertEquals(UdpConnector.DEFAULT_SOCKET_TIMEOUT, connector.getTimeout());
+        connector.setReceiveTimeout(-1);
+        assertEquals(UdpConnector.DEFAULT_SOCKET_TIMEOUT, connector.getReceiveTimeout());
     }
 
 }

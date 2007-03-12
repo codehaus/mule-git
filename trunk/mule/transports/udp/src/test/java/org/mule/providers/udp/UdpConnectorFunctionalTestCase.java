@@ -10,116 +10,49 @@
 
 package org.mule.providers.udp;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.URI;
+import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.tck.functional.AbstractProviderFunctionalTestCase;
-import org.mule.umo.endpoint.MalformedEndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.provider.UMOConnector;
-
-public class UdpConnectorFunctionalTestCase extends AbstractProviderFunctionalTestCase
+public class UdpConnectorFunctionalTestCase extends FunctionalTestCase
 {
-    private static final String MESSAGE = "Hello";
 
-    DatagramSocket s = null;
-    URI serverUri = null;
+    public static final String MESSAGE = "hello";
 
-    protected void doSetUp() throws Exception
+
+    protected String getConfigResources()
     {
-        super.doSetUp();
-        serverUri = getInDest().getUri();
+        return "udp-functional-test.xml";
     }
 
-    protected void doTearDown() throws Exception
+    public void testSendTestData() throws Exception
     {
-        try
-        {
-            s.close();
-        }
-        catch (Exception e)
-        {
-            // ignore
-        }
-        super.doTearDown();
-    }
+        final int numberOfMessages = 100;
+        MuleClient client = new MuleClient();
 
-    protected void sendTestData(int iterations) throws Exception
-    {
-        InetAddress inet = InetAddress.getByName(serverUri.getHost());
-
-        s = new DatagramSocket(0);
-        s.setSoTimeout(2000);
-
-        for (int sentPackets = 0; sentPackets < iterations; sentPackets++)
+        for (int sentPackets = 0; sentPackets < numberOfMessages; sentPackets++)
         {
             String msg = MESSAGE + sentPackets;
-            DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), inet,
-                serverUri.getPort());
-            s.send(packet);
-        }
-    }
-
-    protected void receiveAndTestResults() throws Exception
-    {
-        URI uri = getOutDest().getUri();
-        InetAddress inet = InetAddress.getByName(uri.getHost());
-        Set receivedMessages = new HashSet(NUM_MESSAGES_TO_SEND);
-        int receivedPackets;
-
-        for (receivedPackets = 0; receivedPackets < NUM_MESSAGES_TO_SEND; receivedPackets++)
-        {
-            DatagramPacket packet = new DatagramPacket(new byte[32], 32, inet, serverUri.getPort());
-            s.receive(packet);
-            receivedMessages.add(new UdpMessageAdapter(packet).getPayloadAsString());
+            client.dispatch("serverEndpoint", msg, null);
         }
 
-        assertEquals(NUM_MESSAGES_TO_SEND, receivedPackets);
+        Set receivedMessages = new HashSet(numberOfMessages);
 
-        for (int i = 0; i < receivedMessages.size(); i++)
+        int receivedPackets = 0;
+        for (; receivedPackets < numberOfMessages; receivedPackets++)
         {
-            String message = MESSAGE + i + " Received";
+            receivedMessages.add(client.receive("vm://foo", 2000).getPayloadAsString());
+
+        }
+
+        assertEquals(numberOfMessages, receivedPackets);
+
+        for (int x = 0; numberOfMessages < receivedMessages.size(); x++)
+        {
+            String message = MESSAGE + x + " Received";
             assertTrue("checking for received message '" + message + "'", receivedMessages.contains(message));
         }
     }
-
-    protected UMOEndpointURI getInDest()
-    {
-        try
-        {
-            return new MuleEndpointURI("udp://localhost:60131");
-        }
-        catch (MalformedEndpointException e)
-        {
-            fail(e.getMessage());
-            return null;
-        }
-    }
-
-    protected UMOEndpointURI getOutDest()
-    {
-        try
-        {
-            return new MuleEndpointURI("udp://localhost:60132");
-        }
-        catch (MalformedEndpointException e)
-        {
-            fail(e.getMessage());
-            return null;
-        }
-    }
-
-    public UMOConnector createConnector() throws Exception
-    {
-        UdpConnector connector = new UdpConnector();
-        connector.setName("testUdp");
-        connector.getDispatcherThreadingProfile().setDoThreading(false);
-        return connector;
-    }
-
 }
