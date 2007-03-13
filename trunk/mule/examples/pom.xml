@@ -19,7 +19,6 @@
         <module>errorhandler</module>
         <module>hello</module>
         <module>loanbroker</module>
-        <module>loanbroker-esb</module>
         <module>scripting</module>
         <module>stockquote</module>
         <module>voipservice</module>
