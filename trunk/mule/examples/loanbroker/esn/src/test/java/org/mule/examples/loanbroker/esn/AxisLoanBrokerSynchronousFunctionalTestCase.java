@@ -8,18 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.examples.loanbroker.credit;
+package org.mule.examples.loanbroker.esn;
 
-import java.rmi.RemoteException;
+import org.mule.examples.loanbroker.tests.AbstractLoanBrokerTestCase;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
-
-/**
- * <code>CreditAgencyHome</code> the home inteface for the credit agency service
- */
-public interface CreditAgencyHome extends EJBHome
+public class AxisLoanBrokerSynchronousFunctionalTestCase extends AbstractLoanBrokerTestCase
 {
-    public abstract CreditAgency create() throws RemoteException, CreateException;
-
+    protected String getConfigResources()
+    {
+        return "loan-broker-axis-sync-config.xml";
+    }
 }

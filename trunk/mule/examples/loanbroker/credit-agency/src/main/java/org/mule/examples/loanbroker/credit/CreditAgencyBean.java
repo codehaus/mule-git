@@ -8,18 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.samples.loanbroker.esb.ca;
+package org.mule.examples.loanbroker.credit;
+
+import java.text.MessageFormat;
 
 import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
-import java.text.MessageFormat;
 
 /**
  * <code>CreditAgencyBean</code> obtains a credit historey record for a customer.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class CreditAgencyBean implements SessionBean
 {

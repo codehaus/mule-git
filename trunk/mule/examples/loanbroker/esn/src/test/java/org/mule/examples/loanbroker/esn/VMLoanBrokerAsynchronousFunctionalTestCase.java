@@ -8,18 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.examples.loanbroker.credit;
+package org.mule.examples.loanbroker.esn;
 
-import java.rmi.RemoteException;
+import org.mule.examples.loanbroker.tests.AbstractAsynchronousLoanBrokerTestCase;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
 
-/**
- * <code>CreditAgencyHome</code> the home inteface for the credit agency service
- */
-public interface CreditAgencyHome extends EJBHome
+public class VMLoanBrokerAsynchronousFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase
 {
-    public abstract CreditAgency create() throws RemoteException, CreateException;
-
+    // @Override
+    protected String getConfigResources()
+    {
+        return "loan-broker-vm-async-config.xml";
+    }
 }

@@ -8,16 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.samples.loanbroker.esb.ca;
+package org.mule.examples.loanbroker.credit;
+
+import java.rmi.RemoteException;
 
 import javax.ejb.EJBObject;
-import java.rmi.RemoteException;
 
 /**
  * <code>CreditAgency</code> defines the interface for the credit agency service
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface CreditAgency extends EJBObject
 {

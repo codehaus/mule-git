@@ -8,18 +8,13 @@
  * LICENSE.txt file.
  */
 
-package org.mule.examples.loanbroker.credit;
+package org.mule.examples.loanbroker.esb;
 
-import java.rmi.RemoteException;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBHome;
-
-/**
- * <code>CreditAgencyHome</code> the home inteface for the credit agency service
- */
-public interface CreditAgencyHome extends EJBHome
+public class LoanBrokerEsbContainerTestCase extends AbstractLoanBrokerEsbTestCase
 {
-    public abstract CreditAgency create() throws RemoteException, CreateException;
-
+    protected String getConfigResources()
+    {
+        return "loan-broker-esb-mule-config-with-ejb-container.xml";
+    }
 }
