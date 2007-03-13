@@ -117,6 +117,8 @@ public class MuleManager implements UMOManager
 
     /**
      * Endpoints registry
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     private Map endpointIdentifiers = new HashMap();
 
@@ -525,6 +527,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public String lookupEndpointIdentifier(String logicalName, String defaultName)
     {
@@ -623,6 +627,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public void registerEndpointIdentifier(String logicalName, String endpoint)
     {
@@ -631,6 +637,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public void unregisterEndpointIdentifier(String logicalName)
     {
@@ -1083,6 +1091,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public Map getEndpointIdentifiers()
     {

@@ -53,6 +53,7 @@ public interface UMOManager extends Lifecycle
      *            more descriptive name such as <i>The System Administrator</i>
      * @param defaultName
      * @return the actual endpointUri value or null if it is not found
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     String lookupEndpointIdentifier(String logicalName, String defaultName);
 
@@ -92,6 +93,7 @@ public interface UMOManager extends Lifecycle
      * 
      * @param logicalName the name of the endpointUri
      * @param endpoint the physical endpointUri value
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     void registerEndpointIdentifier(String logicalName, String endpoint) throws InitialisationException;
 
@@ -99,6 +101,7 @@ public interface UMOManager extends Lifecycle
      * unregisters an endpointUri with a logical name
      * 
      * @param logicalName the name of the endpointUri
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     void unregisterEndpointIdentifier(String logicalName);
 
@@ -192,6 +195,7 @@ public interface UMOManager extends Lifecycle
      * Gets an unmodifiable collection of endpoints registered with the UMOManager
      * 
      * @return All endpoints registered on the Manager
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     Map getEndpointIdentifiers();
 
