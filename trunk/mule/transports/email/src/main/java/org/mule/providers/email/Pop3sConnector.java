@@ -12,19 +12,19 @@ package org.mule.providers.email;
 
 import org.mule.umo.lifecycle.InitialisationException;
 
+import java.io.IOException;
+
 /**
  * Creates a secure connection to a POP3 mailbox
  */
 public class Pop3sConnector extends Pop3Connector
 {
     public static final String DEFAULT_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    public static final int DEFAULT_POP3S_PORT = 995;
 
     private String socketFactory = DEFAULT_SOCKET_FACTORY;
     private String socketFactoryFallback = "false";
-    private String trustStore = null;
-    private String trustStorePassword = null;
-
-    public static final int DEFAULT_POP3S_PORT = 995;
+    private TlsSupport tlsSupport = new TlsSupport();
 
     public String getProtocol()
     {
@@ -38,19 +38,12 @@ public class Pop3sConnector extends Pop3Connector
 
     protected void doInitialise() throws InitialisationException
     {
+        tlsSupport.initialiseFactories(true);
         super.doInitialise();
         System.setProperty("mail." + getProtocol() + ".ssl", "true");
         System.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
         System.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
-
-        if (getTrustStore() != null)
-        {
-            System.setProperty("javax.net.ssl.trustStore", getTrustStore());
-            if (getTrustStorePassword() != null)
-            {
-                System.setProperty("javax.net.ssl.trustStorePassword", getTrustStorePassword());
-            }
-        }
+        tlsSupport.initialiseStores();
     }
 
     public String getSocketFactory()
@@ -75,21 +68,22 @@ public class Pop3sConnector extends Pop3Connector
 
     public String getTrustStore()
     {
-        return trustStore;
-    }
-
-    public void setTrustStore(String trustStore)
-    {
-        this.trustStore = trustStore;
+        return tlsSupport.getTrustStore();
     }
 
     public String getTrustStorePassword()
     {
-        return trustStorePassword;
+        return tlsSupport.getTrustStorePassword();
+    }
+
+    public void setTrustStore(String trustStore) throws IOException
+    {
+        tlsSupport.setTrustStore(trustStore);
     }
 
     public void setTrustStorePassword(String trustStorePassword)
     {
-        this.trustStorePassword = trustStorePassword;
+        tlsSupport.setTrustStorePassword(trustStorePassword);
     }
+
 }

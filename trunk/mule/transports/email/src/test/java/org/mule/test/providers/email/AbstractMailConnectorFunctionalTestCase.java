@@ -138,6 +138,11 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         return buildEndpoint("pop3", servers.getPop3().getPort());
     }
 
+    protected String getPop3sTestEndpointURI()
+    {
+        return buildEndpoint("pop3s", servers.getPop3s().getPort());
+    }
+
     protected String getImapTestEndpointURI()
     {
         return buildEndpoint("imap", servers.getImap().getPort());
@@ -151,6 +156,11 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     protected String getSmtpTestEndpointURI()
     {
         return buildEndpoint("smtp", servers.getSmtp().getPort());
+    }
+    
+    protected String getSmtpsTestEndpointURI()
+    {
+        return buildEndpoint("smtps", servers.getSmtps().getPort());
     }
     
    private static String buildEndpoint(String protocol, int port) 
