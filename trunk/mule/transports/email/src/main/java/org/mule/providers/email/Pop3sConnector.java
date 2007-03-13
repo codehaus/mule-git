@@ -11,6 +11,7 @@
 package org.mule.providers.email;
 
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.security.TlsSupport;
 
 import java.io.IOException;
 
