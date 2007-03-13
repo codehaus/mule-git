@@ -71,7 +71,7 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
         UMOMessage result = client.send("http://localhost:" + HTTP_PORT
-                                        + "/services/mycomponent/mycomponent?wsdl", null, props);
+                                        + "/services/mycomponent?wsdl", null, props);
 
         assertNotNull(result);
         if (logger.isDebugEnabled())

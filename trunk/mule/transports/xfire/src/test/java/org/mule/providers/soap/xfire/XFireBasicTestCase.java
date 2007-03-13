@@ -43,6 +43,14 @@ public class XFireBasicTestCase extends FunctionalTestCase
         XMLUnit.compareXML(echoWsdl, result.getPayload().toString());
     }
 
+    public void testEchoWsdl2() throws Exception
+    {
+        MuleClient client = new MuleClient();
+    	UMOMessage result = client.send("xfire:http://127.0.0.1:10081/services/echoService?wsdl&method=echo", "Hello!", null);
+        System.out.println(result.toString());
+        System.out.println(result.getPayload());
+    }
+
     protected String getConfigResources()
     {
         return "xfire-basic-conf.xml";
