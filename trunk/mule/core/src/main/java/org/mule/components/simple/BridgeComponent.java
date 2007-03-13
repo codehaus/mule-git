@@ -10,6 +10,7 @@
 
 package org.mule.components.simple;
 
+import org.mule.config.ConfigurationException;
 import org.mule.impl.UMODescriptorAware;
 import org.mule.routing.inbound.ForwardingConsumer;
 import org.mule.umo.UMODescriptor;
@@ -30,7 +31,7 @@ import java.util.Iterator;
 public class BridgeComponent implements UMODescriptorAware, Callable
 {
 
-    public void setDescriptor(UMODescriptor descriptor)
+    public void setDescriptor(UMODescriptor descriptor) throws ConfigurationException
     {
         // Adding a forwarding consumer will cause the inbound routing to
         // directly invoke the outbound router, bypassing the component
