@@ -622,7 +622,7 @@ public abstract class AbstractConnector
     /**
      * Returns the maximum number of dispatchers that can be concurrently active per
      * endpoint.
-     * 
+     *
      * @return max. number of active dispatchers
      */
     public int getMaxDispatchersActive()
@@ -633,7 +633,7 @@ public abstract class AbstractConnector
     /**
      * Configures the maximum number of dispatchers that can be concurrently active
      * per endpoint
-     * 
+     *
      * @param maxActive max. number of active dispatchers
      */
     public void setMaxDispatchersActive(int maxActive)
@@ -781,7 +781,7 @@ public abstract class AbstractConnector
 
     /**
      * The method determines the key used to store the receiver against.
-     * 
+     *
      * @param component the component for which the endpoint is being registered
      * @param endpoint the endpoint being registered for the component
      * @return the key to store the newly created receiver against
@@ -831,7 +831,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'dispatcherThreadingProfile'.
-     * 
+     *
      * @return Value for property 'dispatcherThreadingProfile'.
      */
     public ThreadingProfile getDispatcherThreadingProfile()
@@ -841,7 +841,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'dispatcherThreadingProfile'.
-     * 
+     *
      * @param dispatcherThreadingProfile Value to set for property
      *            'dispatcherThreadingProfile'.
      */
@@ -852,7 +852,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'receiverThreadingProfile'.
-     * 
+     *
      * @return Value for property 'receiverThreadingProfile'.
      */
     public ThreadingProfile getReceiverThreadingProfile()
@@ -862,7 +862,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'receiverThreadingProfile'.
-     * 
+     *
      * @param receiverThreadingProfile Value to set for property
      *            'receiverThreadingProfile'.
      */
@@ -885,21 +885,21 @@ public abstract class AbstractConnector
 
     /**
      * Template method to perform any work when starting the connectoe
-     * 
+     *
      * @throws UMOException if the method fails
      */
     protected abstract void doStart() throws UMOException;
 
     /**
      * Template method to perform any work when stopping the connectoe
-     * 
+     *
      * @throws UMOException if the method fails
      */
     protected abstract void doStop() throws UMOException;
 
     /**
      * Getter for property 'defaultInboundTransformer'.
-     * 
+     *
      * @return Value for property 'defaultInboundTransformer'.
      */
     public UMOTransformer getDefaultInboundTransformer()
@@ -922,7 +922,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultInboundTransformer'.
-     * 
+     *
      * @param defaultInboundTransformer Value to set for property
      *            'defaultInboundTransformer'.
      */
@@ -933,7 +933,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'defaultResponseTransformer'.
-     * 
+     *
      * @return Value for property 'defaultResponseTransformer'.
      */
     public UMOTransformer getDefaultResponseTransformer()
@@ -956,7 +956,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'defaultOutboundTransformer'.
-     * 
+     *
      * @return Value for property 'defaultOutboundTransformer'.
      */
     public UMOTransformer getDefaultOutboundTransformer()
@@ -979,7 +979,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultOutboundTransformer'.
-     * 
+     *
      * @param defaultOutboundTransformer Value to set for property
      *            'defaultOutboundTransformer'.
      */
@@ -990,7 +990,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultResponseTransformer'.
-     * 
+     *
      * @param defaultResponseTransformer Value to set for property
      *            'defaultResponseTransformer'.
      */
@@ -1001,7 +1001,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'replyToHandler'.
-     * 
+     *
      * @return Value for property 'replyToHandler'.
      */
     public ReplyToHandler getReplyToHandler()
@@ -1013,7 +1013,7 @@ public abstract class AbstractConnector
      * Fires a server notification to all registered
      * {@link org.mule.impl.internal.notifications.CustomNotificationListener}
      * eventManager.
-     * 
+     *
      * @param notification the notification to fire. This must be of type
      *            {@link org.mule.impl.internal.notifications.CustomNotification}
      *            otherwise an exception will be thrown.
@@ -1027,7 +1027,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'connectionStrategy'.
-     * 
+     *
      * @return Value for property 'connectionStrategy'.
      */
     public ConnectionStrategy getConnectionStrategy()
@@ -1047,7 +1047,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'connectionStrategy'.
-     * 
+     *
      * @param connectionStrategy Value to set for property 'connectionStrategy'.
      */
     public void setConnectionStrategy(ConnectionStrategy connectionStrategy)
@@ -1074,7 +1074,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'receivers'.
-     * 
+     *
      * @return Value for property 'receivers'.
      */
     public Map getReceivers()
@@ -1124,6 +1124,18 @@ public abstract class AbstractConnector
             return;
         }
 
+        /*
+            Until the recursive startConnector() -> connect() -> doConnect() -> connect()
+            calls are unwound between a connector and connection strategy, this call has
+            to be here, and not below (commented out currently). Otherwise, e.g. WebspherMQ
+            goes into an endless reconnect thrashing loop, see MULE-1150 for more details.
+        */
+
+        if (connecting.get())
+        {
+            this.doConnect();
+        }
+
         if (connecting.compareAndSet(false, true))
         {
             if (logger.isDebugEnabled())
@@ -1141,7 +1153,8 @@ public abstract class AbstractConnector
 
         try
         {
-            this.doConnect();
+            // see the explanation above
+            //this.doConnect();
             connected.set(true);
             connecting.set(false);
 
@@ -1221,7 +1234,7 @@ public abstract class AbstractConnector
 
     /**
      * Template method where any connections should be made for the connector
-     * 
+     *
      * @throws Exception
      */
     protected abstract void doConnect() throws Exception;
@@ -1229,14 +1242,14 @@ public abstract class AbstractConnector
     /**
      * Template method where any connected resources used by the connector should be
      * disconnected
-     * 
+     *
      * @throws Exception
      */
     protected abstract void doDisconnect() throws Exception;
 
     /**
      * The resource id used when firing ConnectEvents from this connector
-     * 
+     *
      * @return the resource id used when firing ConnectEvents from this connector
      */
     protected String getConnectEventId()
@@ -1250,7 +1263,7 @@ public abstract class AbstractConnector
      * {@link #getNumberOfConcurrentTransactedReceivers()}. This property is used by
      * transports that support transactions, specifically receivers that extend the
      * TransactedPollingMessageReceiver.
-     * 
+     *
      * @return true if multiple receivers will be enabled for this connection
      */
     public boolean isCreateMultipleTransactedReceivers()
@@ -1271,7 +1284,7 @@ public abstract class AbstractConnector
     /**
      * Returns the number of concurrent receivers that will be launched when
      * {@link #isCreateMultipleTransactedReceivers()} returns <code>true</code>.
-     * 
+     *
      * @see #DEFAULT_NUM_CONCURRENT_TX_RECEIVERS
      */
     public int getNumberOfConcurrentTransactedReceivers()
@@ -1300,7 +1313,7 @@ public abstract class AbstractConnector
     /**
      * Whether to fire message notifications for every message that is sent or
      * received from this connector
-     * 
+     *
      * @param enableMessageEvents
      */
     public void setEnableMessageEvents(boolean enableMessageEvents)
@@ -1315,7 +1328,7 @@ public abstract class AbstractConnector
      * be axis:jms. Here, 'axis' is the scheme meta info and 'jms' is the protocol.
      * If the protocol argument does not start with the connector's protocol, it will
      * be appended.
-     * 
+     *
      * @param protocol the supported protocol to register
      */
     public void registerSupportedProtocol(String protocol)
@@ -1340,7 +1353,7 @@ public abstract class AbstractConnector
      * 'finder' transport that will use Axis, Xfire or Glue to create the WSDL
      * client. These transport protocols would be wsdl-axis, wsdl-xfire and
      * wsdl-glue, but they can all support 'wsdl' protocol too.
-     * 
+     *
      * @param protocol the supported protocol to register
      */
     protected void registerSupportedProtocolWithoutPrefix(String protocol)
@@ -1371,7 +1384,7 @@ public abstract class AbstractConnector
 
     /**
      * Returns an unmodifiable list of the protocols supported by this connector
-     * 
+     *
      * @return an unmodifiable list of the protocols supported by this connector
      */
     public List getSupportedProtocols()
@@ -1381,7 +1394,7 @@ public abstract class AbstractConnector
 
     /**
      * Sets A list of protocols that the connector can accept
-     * 
+     *
      * @param supportedProtocols
      */
     public void setSupportedProtocols(List supportedProtocols)
@@ -1415,7 +1428,7 @@ public abstract class AbstractConnector
 
     /**
      * Returns a work manager for message dispatchers.
-     * 
+     *
      * @throws UMOException in case of error
      */
     protected UMOWorkManager getDispatcherWorkManager() throws UMOException
@@ -1458,7 +1471,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'sessionHandler'.
-     * 
+     *
      * @return Value for property 'sessionHandler'.
      */
     public UMOSessionHandler getSessionHandler()
@@ -1468,7 +1481,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'sessionHandler'.
-     * 
+     *
      * @param sessionHandler Value to set for property 'sessionHandler'.
      */
     public void setSessionHandler(UMOSessionHandler sessionHandler)
@@ -1613,7 +1626,7 @@ public abstract class AbstractConnector
      * determine the connector type is passed to this method so that any properties
      * set on the endpoint that can be used to initialise the connector are made
      * available.
-     * 
+     *
      * @param endpointUri the {@link UMOEndpointURI} use to create this connector
      * @throws InitialisationException If there are any problems with the
      *             configuration set on the Endpoint or if another exception is
@@ -1657,7 +1670,7 @@ public abstract class AbstractConnector
     /**
      * Initialises this connector from its {@link TransportServiceDescriptor} This
      * will be called before the {@link #doInitialise()} method is called.
-     * 
+     *
      * @throws InitialisationException InitialisationException If there are any
      *             problems with the configuration or if another exception is thrown
      *             it is wrapped in an InitialisationException.
@@ -1705,7 +1718,7 @@ public abstract class AbstractConnector
      * null if the connector was created by the developer. To create a connector the
      * proper way the developer should use the {@link TransportFactory} and pass in
      * an endpoint.
-     * 
+     *
      * @return the {@link TransportServiceDescriptor} for this connector
      */
     protected TransportServiceDescriptor getServiceDescriptor()
@@ -1719,7 +1732,7 @@ public abstract class AbstractConnector
 
     /**
      * Create a Message receiver for this connector
-     * 
+     *
      * @param component the component that will receive events from this receiver,
      *            the listener
      * @param endpoint the endpoint that defies this inbound communication
@@ -1739,7 +1752,7 @@ public abstract class AbstractConnector
     /**
      * Gets a <code>UMOMessageAdapter</code> for the endpoint for the given message
      * (data)
-     * 
+     *
      * @param message the data with which to initialise the
      *            <code>UMOMessageAdapter</code>
      * @return the <code>UMOMessageAdapter</code> for the endpoint
@@ -1764,7 +1777,7 @@ public abstract class AbstractConnector
      * Gets a {@link UMOStreamMessageAdapter} from the connector for the given
      * message. This Adapter will correctly handle data streaming for this type of
      * connector
-     * 
+     *
      * @param in the input stream to read the data from
      * @param out the outputStream to write data to. This can be null.
      * @return the {@link UMOStreamMessageAdapter} for the endpoint
@@ -1788,7 +1801,7 @@ public abstract class AbstractConnector
     /**
      * A map of fully qualified class names that should override those in the
      * connectors' service descriptor This map will be null if there are no overrides
-     * 
+     *
      * @return a map of override values or null
      */
     public Map getServiceOverrides()
@@ -1798,7 +1811,7 @@ public abstract class AbstractConnector
 
     /**
      * Set the Service overrides on this connector.
-     * 
+     *
      * @param serviceOverrides the override values to use
      */
     public void setServiceOverrides(Map serviceOverrides)
@@ -1812,7 +1825,7 @@ public abstract class AbstractConnector
      * will be called only when Streaming is being used on an outbound endpoint. If
      * Streaming is not supported by this transport an
      * {@link UnsupportedOperationException} is thrown
-     * 
+     *
      * @param endpoint the endpoint that releates to this Dispatcher
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport

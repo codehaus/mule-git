@@ -38,6 +38,11 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
             ((AtomicInteger)get()).set(0);
         }
 
+        public AtomicInteger current()
+        {
+            return (AtomicInteger) get();
+        }
+
         // @Override
         protected Object initialValue()
         {
@@ -54,7 +59,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
     {
         while (true)
         {
-            int currentCount = retryCounter.countRetry();
+            retryCounter.countRetry();
 
             try
             {
@@ -76,7 +81,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
             }
             catch (Exception e)
             {
-                if (currentCount == retryCount)
+                if (retryCounter.current().get() == retryCount)
                 {
                     throw new FatalConnectException(
                         new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, 
@@ -97,7 +102,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 if (logger.isInfoEnabled())
                 {
                     logger.info("Waiting for " + frequency + "ms before reconnecting. Failed attempt "
-                                + currentCount + " of " + retryCount);
+                                + retryCounter.current().get() + " of " + retryCount);
                 }
 
                 try
