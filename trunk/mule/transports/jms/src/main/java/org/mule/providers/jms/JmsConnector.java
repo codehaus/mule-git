@@ -38,7 +38,6 @@ import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
-import org.mule.util.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
