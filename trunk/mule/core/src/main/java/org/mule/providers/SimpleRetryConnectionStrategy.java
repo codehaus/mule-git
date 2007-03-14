@@ -81,7 +81,12 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
             }
             catch (Exception e)
             {
-                if (retryCounter.current().get() == retryCount)
+                if (e instanceof FatalConnectException)
+                {
+                    // rethrow
+                    throw (FatalConnectException) e;
+                }
+                if (retryCounter.current().get() >= retryCount)
                 {
                     throw new FatalConnectException(
                         new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X, 

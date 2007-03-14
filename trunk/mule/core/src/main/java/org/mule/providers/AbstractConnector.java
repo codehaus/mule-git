@@ -1130,29 +1130,29 @@ public abstract class AbstractConnector
             to be here, and not below (commented out currently). Otherwise, e.g. WebspherMQ
             goes into an endless reconnect thrashing loop, see MULE-1150 for more details.
         */
-
-        if (connecting.get())
-        {
-            this.doConnect();
-        }
-
-        if (connecting.compareAndSet(false, true))
-        {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Connecting: " + this);
-            }
-
-            connectionStrategy.connect(this);
-
-            logger.info("Connected: " + getConnectionDescription());
-            // This method calls itself so the connecting flag is set first, then
-            // the connection is made on the second call
-            return;
-        }
-
         try
         {
+            if (connecting.get())
+            {
+                this.doConnect();
+            }
+
+            if (connecting.compareAndSet(false, true))
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Connecting: " + this);
+                }
+
+                connectionStrategy.connect(this);
+
+                logger.info("Connected: " + getConnectionDescription());
+                // This method calls itself so the connecting flag is set first, then
+                // the connection is made on the second call
+                return;
+            }
+
+
             // see the explanation above
             //this.doConnect();
             connected.set(true);
@@ -1169,9 +1169,10 @@ public abstract class AbstractConnector
             this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_FAILED));
 
-            if (e instanceof ConnectException)
+            if (e instanceof ConnectException || e instanceof FatalConnectException)
             {
-                throw (ConnectException)e;
+                // rethrow
+                throw e;
             }
             else
             {
