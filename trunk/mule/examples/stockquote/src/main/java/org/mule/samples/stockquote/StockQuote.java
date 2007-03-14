@@ -10,6 +10,8 @@
 
 package org.mule.samples.stockquote;
 
+import org.mule.config.i18n.Message;
+
 import java.io.Serializable;
 
 /**
@@ -133,9 +135,15 @@ public class StockQuote implements Serializable
 
     public String toString()
     {
+        String[] params = { symbol, name, date, last, change, open, high,
+            low, volume, previousClose };
+        return new Message("stockquote-example", 1, params).getMessage();
+
+        /*
         return "StockQuote{" + "symbol=" + symbol + ", name=" + name + ", date=" + date + ", last=" + last
                + ", change=" + change + ", open=" + open + ", high=" + high + ", low=" + low + ", volume="
                + volume + ", previousClose=" + previousClose + "}";
+        */
     }
 
 }
