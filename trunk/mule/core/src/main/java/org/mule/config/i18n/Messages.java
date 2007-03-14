@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>Messages</code> provides facilities for constructing <code>Message</code>
  * objects and access to core message constants.
  */
-public class Messages implements CoreMessageConstants
+public final class Messages implements CoreMessageConstants
 {
     /**
      * logger used by this class
@@ -33,20 +33,28 @@ public class Messages implements CoreMessageConstants
 
     public static final String DEFAULT_BUNDLE = "core";
 
-    private static Map bundles = new HashMap();
+    private static final Map BUNDLES = new HashMap();
 
-    private static Object[] emptyArgs = new Object[]{};
+    private static final Object[] EMPTY_ARGS = new Object[]{};
+
+    /**
+     * Do not instantiate.
+     */
+    private Messages ()
+    {
+        // no op
+    }
 
     public static String get(int code)
     {
-        return getString(DEFAULT_BUNDLE, code, emptyArgs);
+        return getString(DEFAULT_BUNDLE, code, EMPTY_ARGS);
     }
 
     public static String get(int code, Object[] args)
     {
         if (args == null)
         {
-            args = Messages.emptyArgs;
+            args = Messages.EMPTY_ARGS;
         }
         return getString(DEFAULT_BUNDLE, code, args);
     }
@@ -92,14 +100,14 @@ public class Messages implements CoreMessageConstants
 
     public static String get(String bundleName, int code)
     {
-        return getString(bundleName, code, emptyArgs);
+        return getString(bundleName, code, EMPTY_ARGS);
     }
 
     public static String get(String bundleName, int code, Object[] args)
     {
         if (args == null)
         {
-            args = Messages.emptyArgs;
+            args = Messages.EMPTY_ARGS;
         }
         return getString(bundleName, code, args);
     }
@@ -167,9 +175,12 @@ public class Messages implements CoreMessageConstants
         }
     }
 
-    protected static ResourceBundle getBundle(String bundleName) throws MissingResourceException
+    /**
+     * @throws MissingResourceException if resource is missing
+     */
+    protected static ResourceBundle getBundle(String bundleName)
     {
-        ResourceBundle bundle = (ResourceBundle)bundles.get(bundleName);
+        ResourceBundle bundle = (ResourceBundle) BUNDLES.get(bundleName);
         if (bundle == null)
         {
             String path = "META-INF.services.org.mule.i18n." + bundleName + "-messages";
@@ -177,7 +188,7 @@ public class Messages implements CoreMessageConstants
                     Locale.getDefault());
             Locale locale = Locale.getDefault();
             bundle = ResourceBundle.getBundle(path, locale);
-            bundles.put(bundleName, bundle);
+            BUNDLES.put(bundleName, bundle);
         }
         return bundle;
     }
