@@ -145,13 +145,22 @@ public class Messages implements CoreMessageConstants
 
     public static String getString(String bundle, int code, Object[] args)
     {
-        String m = getBundle(bundle).getString(String.valueOf(code));
-        if (m == null)
+        try
+        {
+            String m = getBundle(bundle).getString(String.valueOf(code));
+            if (m == null)
+            {
+                logger.error("Failed to find message for id " + code + " in resource bundle " + bundle);
+                return "";
+            }
+
+            return MessageFormat.format(m, args);
+        }
+        catch (MissingResourceException e)
         {
             logger.error("Failed to find message for id " + code + " in resource bundle " + bundle);
             return "";
         }
-        return MessageFormat.format(m, args);
     }
 
     protected static ResourceBundle getBundle(String name)
