@@ -90,30 +90,30 @@ public class Messages implements CoreMessageConstants
         return getString(DEFAULT_BUNDLE, code, new Object[]{arg1, arg2, arg3});
     }
 
-    public static String get(String bundle, int code)
+    public static String get(String bundleName, int code)
     {
-        return getString(bundle, code, emptyArgs);
+        return getString(bundleName, code, emptyArgs);
     }
 
-    public static String get(String bundle, int code, Object[] args)
+    public static String get(String bundleName, int code, Object[] args)
     {
         if (args == null)
         {
             args = Messages.emptyArgs;
         }
-        return getString(bundle, code, args);
+        return getString(bundleName, code, args);
     }
 
-    public static String get(String bundle, int code, Object arg1)
+    public static String get(String bundleName, int code, Object arg1)
     {
         if (arg1 == null)
         {
             arg1 = "null";
         }
-        return getString(bundle, code, new Object[]{arg1});
+        return getString(bundleName, code, new Object[]{arg1});
     }
 
-    public static String get(String bundle, int code, Object arg1, Object arg2)
+    public static String get(String bundleName, int code, Object arg1, Object arg2)
     {
         if (arg1 == null)
         {
@@ -123,10 +123,10 @@ public class Messages implements CoreMessageConstants
         {
             arg2 = "null";
         }
-        return getString(bundle, code, new Object[]{arg1, arg2});
+        return getString(bundleName, code, new Object[]{arg1, arg2});
     }
 
-    public static String get(String bundle, int code, Object arg1, Object arg2, Object arg3)
+    public static String get(String bundleName, int code, Object arg1, Object arg2, Object arg3)
     {
         if (arg1 == null)
         {
@@ -140,17 +140,21 @@ public class Messages implements CoreMessageConstants
         {
             arg3 = "null";
         }
-        return getString(bundle, code, new Object[]{arg1, arg2, arg3});
+        return getString(bundleName, code, new Object[]{arg1, arg2, arg3});
     }
 
-    public static String getString(String bundle, int code, Object[] args)
+    public static String getString(String bundleName, int code, Object[] args)
     {
+        // We will throw a MissingResourceException if the bundle name is invalid
+        // This happens if the code references a bundle name that just doesn't exist
+        ResourceBundle bundle = getBundle(bundleName);
+
         try
         {
-            String m = getBundle(bundle).getString(String.valueOf(code));
+            String m = bundle.getString(String.valueOf(code));
             if (m == null)
             {
-                logger.error("Failed to find message for id " + code + " in resource bundle " + bundle);
+                logger.error("Failed to find message for id " + code + " in resource bundle " + bundleName);
                 return "";
             }
 
@@ -158,22 +162,22 @@ public class Messages implements CoreMessageConstants
         }
         catch (MissingResourceException e)
         {
-            logger.error("Failed to find message for id " + code + " in resource bundle " + bundle);
+            logger.error("Failed to find message for id " + code + " in resource bundle " + bundleName);
             return "";
         }
     }
 
-    protected static ResourceBundle getBundle(String name) throws MissingResourceException
+    protected static ResourceBundle getBundle(String bundleName) throws MissingResourceException
     {
-        ResourceBundle bundle = (ResourceBundle)bundles.get(name);
+        ResourceBundle bundle = (ResourceBundle)bundles.get(bundleName);
         if (bundle == null)
         {
-            String path = "META-INF.services.org.mule.i18n." + name + "-messages";
+            String path = "META-INF.services.org.mule.i18n." + bundleName + "-messages";
             logger.debug("Loading resource bundle: " + path + " for locale " +
                     Locale.getDefault());
             Locale locale = Locale.getDefault();
             bundle = ResourceBundle.getBundle(path, locale);
-            bundles.put(name, bundle);
+            bundles.put(bundleName, bundle);
         }
         return bundle;
     }
