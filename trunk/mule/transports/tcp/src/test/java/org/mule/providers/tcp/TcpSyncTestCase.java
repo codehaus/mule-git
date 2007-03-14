@@ -46,8 +46,8 @@ public class TcpSyncTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
         TcpConnector tcp = (TcpConnector)MuleManager.getInstance().lookupConnector("tcpConnector");
-        tcp.setBufferSize(1024 * 16);
-        byte[] data = StringUtils.repeat("0123456789", tcp.getBufferSize() / 10).getBytes();
+        tcp.setSendBufferSize(1024 * 16);
+        byte[] data = StringUtils.repeat("0123456789", tcp.getSendBufferSize() / 10).getBytes();
         UMOMessage message = client.send("clientEndpoint", data, null);
         assertNotNull(message);
         byte[] response = message.getPayloadAsBytes();

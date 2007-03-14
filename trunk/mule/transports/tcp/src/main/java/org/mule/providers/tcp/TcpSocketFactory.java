@@ -85,7 +85,7 @@ public class TcpSocketFactory implements KeyedPoolableObjectFactory
 
     public void activateObject(Object key, Object object) throws Exception
     {
-
+        // cannot really activate a Socket
     }
 
     public void passivateObject(Object key, Object object) throws Exception
