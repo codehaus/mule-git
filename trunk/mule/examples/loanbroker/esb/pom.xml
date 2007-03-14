@@ -21,6 +21,9 @@
                     <!-- This is needed so that the ActiveMQ tests don't trip over each other
                         during startup/shutdown. -->
                     <forkMode>pertest</forkMode>
+                    <excludes>
+                        <exclude implementation="java.lang.String">**/*LoanBrokerEsb*.*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
