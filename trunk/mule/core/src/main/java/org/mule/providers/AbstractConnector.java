@@ -349,7 +349,9 @@ public abstract class AbstractConnector
             if (!this.isConnected())
             {
                 startOnConnect.set(true);
-                this.getConnectionStrategy().connect(this);
+                // Don't call getConnectionStrategy(), it clones the connection strategy.
+                // Connectors should have a single reconnection thread, unlike per receiver/dispatcher
+                connectionStrategy.connect(this);
                 // Only start once we are connected
                 return;
             }
