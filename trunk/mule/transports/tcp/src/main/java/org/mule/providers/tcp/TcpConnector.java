@@ -154,14 +154,11 @@ public class TcpConnector extends AbstractConnector
 
     }
 
-    // not used because a socket is connected when created inside the socket factory
     protected void doConnect() throws Exception
     {
         // template method
     }
 
-    // not used because a socket is disconnected when returned to the socket factory
-    // (unless "keep socket open" is set).
     protected void doDisconnect() throws Exception
     {
         dispatcherSocketsPool.clear();
