@@ -25,7 +25,7 @@ public class SmtpsConnector extends SmtpConnector
 
     private String socketFactory = DEFAULT_SOCKET_FACTORY;
     private String socketFactoryFallback = "false";
-    private TlsSupport tlsSupport = new TlsSupport();
+    private TlsSupport tlsSupport = new TlsSupport(TlsSupport.DEFAULT_KEYSTORE);
 
     public static final int DEFAULT_SMTPS_PORT = 465;
 
@@ -46,11 +46,10 @@ public class SmtpsConnector extends SmtpConnector
 
     protected void doInitialise() throws InitialisationException
     {
-        tlsSupport.initialiseFactories(true);
+        tlsSupport.initialise(true);
         System.setProperty("mail.smtps.ssl", "true");
         System.setProperty("mail.smtps.socketFactory.class", getSocketFactory());
         System.setProperty("mail.smtps.socketFactory.fallback", getSocketFactoryFallback());
-        tlsSupport.initialiseStores();
     }
 
     public String getSocketFactory()

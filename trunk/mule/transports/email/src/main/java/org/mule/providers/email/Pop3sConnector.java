@@ -25,7 +25,7 @@ public class Pop3sConnector extends Pop3Connector
 
     private String socketFactory = DEFAULT_SOCKET_FACTORY;
     private String socketFactoryFallback = "false";
-    private TlsSupport tlsSupport = new TlsSupport();
+    private TlsSupport tlsSupport = new TlsSupport(TlsSupport.DEFAULT_KEYSTORE);
 
     public String getProtocol()
     {
@@ -39,12 +39,11 @@ public class Pop3sConnector extends Pop3Connector
 
     protected void doInitialise() throws InitialisationException
     {
-        tlsSupport.initialiseFactories(true);
+        tlsSupport.initialise(true);
         super.doInitialise();
         System.setProperty("mail." + getProtocol() + ".ssl", "true");
         System.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
         System.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
-        tlsSupport.initialiseStores();
     }
 
     public String getSocketFactory()
