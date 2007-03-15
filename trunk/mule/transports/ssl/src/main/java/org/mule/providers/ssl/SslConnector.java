@@ -35,9 +35,8 @@ public class SslConnector extends TcpConnector
         // the original logic here was slightly different to other uses of the TlsSupport code -
         // it appeared to be equivalent to switching anon by whether or not a keyStore was defined
         // (which seems to make sense), so that is used here.
-        tlsSupport.initialiseFactories(null == getKeyStore());
+        tlsSupport.initialise(null == getKeyStore());
         super.doInitialise();
-        tlsSupport.initialiseStores();
     }
 
     public String getProtocol()
@@ -165,7 +164,7 @@ public class SslConnector extends TcpConnector
         tlsSupport.setKeyPassword(keyPassword);
     }
 
-    public void setKeyStore(String keyStore)
+    public void setKeyStore(String keyStore) throws IOException
     {
         tlsSupport.setKeyStore(keyStore);
     }
