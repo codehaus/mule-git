@@ -337,9 +337,6 @@ public abstract class AbstractConnector
     }
 
     /** {@inheritDoc} */
-    public abstract String getProtocol();
-
-    /** {@inheritDoc} */
     public final synchronized void startConnector() throws UMOException
     {
         this.checkDisposed();
