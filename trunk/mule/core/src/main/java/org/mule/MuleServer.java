@@ -22,6 +22,7 @@ import org.mule.util.SystemUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class MuleServer implements Runnable
     {
         MuleServer server = new MuleServer();
 
-        Map options = null;
+        Map options = Collections.EMPTY_MAP;
 
         try 
         {
@@ -117,6 +118,7 @@ public class MuleServer implements Runnable
                 config = configUrl.toExternalForm();
             }
         }
+
         if (config != null)
         {
             server.setConfigurationResources(config);
