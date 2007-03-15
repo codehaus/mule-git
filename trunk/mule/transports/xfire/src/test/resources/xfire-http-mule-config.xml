@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="xfire_test" version="1.0">
+
+    <mule-environment-properties serverUrl="">
+        <threading-profile maxThreadsActive="2"/>
+    </mule-environment-properties>
+
+    <model name="test">
+        <mule-descriptor name="mycomponent"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:18008/mule?method=echo"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent2"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:18009/mule/services?method=echo"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent3"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:18009"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent4"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:18010" synchronous="false"/>
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>
