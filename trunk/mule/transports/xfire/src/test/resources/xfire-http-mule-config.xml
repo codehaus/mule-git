@@ -6,35 +6,35 @@
 <mule-configuration id="xfire_test" version="1.0">
 
     <mule-environment-properties serverUrl="">
-        <threading-profile maxThreadsActive="2"/>
+        <threading-profile maxThreadsActive="4"/>
     </mule-environment-properties>
 
     <model name="test">
         <mule-descriptor name="mycomponent"
                          implementation="org.mule.tck.testmodels.services.TestServiceComponent">
             <inbound-router>
-                <endpoint address="xfire:http://localhost:18008/mule?method=echo"/>
+                <endpoint address="xfire:http://localhost:38008/mule"/>
             </inbound-router>
         </mule-descriptor>
 
         <mule-descriptor name="mycomponent2"
                          implementation="org.mule.tck.testmodels.services.TestServiceComponent">
             <inbound-router>
-                <endpoint address="xfire:http://localhost:18009/mule/services?method=echo"/>
+                <endpoint address="xfire:http://localhost:38009/mule/services"/>
             </inbound-router>
         </mule-descriptor>
 
         <mule-descriptor name="mycomponent3"
                          implementation="org.mule.tck.testmodels.services.TestServiceComponent">
             <inbound-router>
-                <endpoint address="xfire:http://localhost:18009"/>
+                <endpoint address="xfire:http://localhost:38009"/>
             </inbound-router>
         </mule-descriptor>
 
         <mule-descriptor name="mycomponent4"
                          implementation="org.mule.tck.testmodels.services.TestServiceComponent">
             <inbound-router>
-                <endpoint address="xfire:http://localhost:18010" synchronous="false"/>
+                <endpoint address="xfire:http://localhost:38010" synchronous="false"/>
             </inbound-router>
         </mule-descriptor>
     </model>
