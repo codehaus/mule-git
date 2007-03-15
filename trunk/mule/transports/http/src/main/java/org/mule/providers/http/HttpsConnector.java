@@ -25,13 +25,12 @@ import javax.net.ssl.TrustManagerFactory;
  */
 public class HttpsConnector extends HttpConnector
 {
-    private TlsSupport tlsSupport = new TlsSupport();
+    private TlsSupport tlsSupport = new TlsSupport(TlsSupport.DEFAULT_KEYSTORE);
 
     protected void doInitialise() throws InitialisationException
     {
-        tlsSupport.initialiseFactories(false);
+        tlsSupport.initialise(false);
         super.doInitialise();
-        tlsSupport.initialiseStores();
     }
 
     public String getProtocol()
@@ -159,7 +158,7 @@ public class HttpsConnector extends HttpConnector
         tlsSupport.setKeyPassword(keyPassword);
     }
 
-    public void setKeyStore(String keyStore)
+    public void setKeyStore(String keyStore) throws IOException
     {
         tlsSupport.setKeyStore(keyStore);
     }
