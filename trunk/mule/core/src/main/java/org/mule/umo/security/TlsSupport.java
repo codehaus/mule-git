@@ -26,6 +26,7 @@ import java.security.KeyStore;
 import java.security.Provider;
 import java.security.Security;
 
+import javax.net.SocketFactory;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -45,53 +46,75 @@ public final class TlsSupport
     public static final String DEFAULT_SSL_TYPE = "SSLv3";
 
     private Log logger = LogFactory.getLog(getClass());
+
     private SecurityProviderFactory spFactory = new AutoDiscoverySecurityProviderFactory();
     private SecurityProviderInfo spInfo = spFactory.getSecurityProviderInfo();
-    private String keyStore;
+    private Provider provider = spFactory.getProvider();
+
+    private String sslType = DEFAULT_SSL_TYPE;
+
+    // global
+    private String protocolHandler = spInfo.getProtocolHandler();
+
+    // this is the key store used to construct sockets explicitly (via the callback)
+    // it is local to the socket.
+    private String keyStoreName;
     private String keyPassword = null;
-    private String storePassword = null;
+    private String keyStorePassword = null;
     private String keystoreType = DEFAULT_KEYSTORE_TYPE;
     private String keyManagerAlgorithm = spInfo.getKeyManagerAlgorithm();
-    private String sslType = DEFAULT_SSL_TYPE;
-    private Provider provider = spFactory.getProvider();
-    private String protocolHandler = spInfo.getProtocolHandler();
-    private String clientKeyStore = null;
+    private KeyManagerFactory keyManagerFactory = null;
+
+    // this is the key store used by default; it is global to the jvm.
+    // it is also used as the global trust store if no other trust store is given and 
+    // explicitTrustStoreOnly is false
+    private String clientKeyStoreName = null;
     private String clientKeyStorePassword = null;
-    private String trustStore = null;
+
+    // this is the trust store used to construct sockets both explicitly
+    // and globally (if not set, see client key above) via the jvm defaults.
+    private String trustStoreName = null;
     private String trustStorePassword = null;
     private String trustStoreType = DEFAULT_KEYSTORE_TYPE;
-    // default to key manager algorithm, overridable
     private String trustManagerAlgorithm = spInfo.getKeyManagerAlgorithm();
     private TrustManagerFactory trustManagerFactory;
     private boolean explicitTrustStoreOnly = false;
-    private KeyManagerFactory keyManagerFactory = null;
     private boolean requireClientAuthentication = false;
 
-    
-    /**
-     * Support for TLS connections with a default initial value for the key store
-     * (normal use)
-     */
-    public TlsSupport()
-    {
-        this(DEFAULT_KEYSTORE);
-    }
-    
+
     /**
      * Support for TLS connections with a given initial value for the key store
-     * @param keySTore initiall value for the key store
+     * @param keyStore initial value for the key store
      */
     public TlsSupport(String keyStore)
     {
-        this.keyStore = keyStore;
+        this.keyStoreName = keyStore;
     }
-    
+
+    public void initialise(boolean anon) throws InitialisationException
+    {
+        initialise(anon, null);
+    }
+
     /**
-     * This should be called before the connector's superclass is initialised
      * @param anon If the connection is anonymous then we don't care about client keys
      * @throws InitialisationException
      */
-    public void initialiseFactories(boolean anon) throws InitialisationException
+    public void initialise(boolean anon, SocketFactoryCallback callback) throws InitialisationException
+    {
+        logger.debug("initialising: anon " + anon + "; callback " + (null != callback));
+        validate(anon, callback);
+        initDefaultProtocolHandler();
+        initDefaultKeyStore();
+        initDefaultTrustStore();
+        if (! anon) 
+        {
+            initKeyManagerFactory();
+        }
+        initTrustManagerFactory();
+    }
+
+    private void validate(boolean anon, SocketFactoryCallback callback) throws InitialisationException
     {
         assertNotNull(getProvider(), "The security provider cannot be null");
         if (! anon)
@@ -100,34 +123,22 @@ public final class TlsSupport
             assertNotNull(getKeyPassword(), "The Key password cannot be null");
             assertNotNull(getStorePassword(), "The KeyStore password cannot be null");
             assertNotNull(getKeyManagerAlgorithm(), "The Key Manager Algorithm cannot be null");
-            initKeyManagerFactory();
         }
-
-        initTrustManagerFactory();
-    }
-
-    /**
-     * This should be called after the connector's superclass is initialised
-     * @throws InitialisationException
-     */
-    public void initialiseStores() throws InitialisationException 
-    {
-        if (protocolHandler != null)
-        {
-            System.setProperty("java.protocol.handler.pkgs", protocolHandler);
-        }
-        initClientKeyStore();
-        initTrustStore();
     }
 
     public String getKeyStore()
     {
-        return keyStore;
+        return keyStoreName;
     }
 
-    public void setKeyStore(String keyStore)
+    public void setKeyStore(String name) throws IOException
     {
-        this.keyStore = keyStore;
+        keyStoreName = name;
+        if (null != keyStoreName)
+        {
+            keyStoreName = FileUtils.getResourcePath(keyStoreName, getClass());
+            logger.debug("Normalised keyStore path to: " + keyStoreName);
+        }
     }
 
     public String getKeyPassword()
@@ -142,12 +153,12 @@ public final class TlsSupport
 
     public String getStorePassword()
     {
-        return storePassword;
+        return keyStorePassword;
     }
 
     public void setStorePassword(String storePassword)
     {
-        this.storePassword = storePassword;
+        this.keyStorePassword = storePassword;
     }
 
     public String getTrustStoreType()
@@ -247,16 +258,16 @@ public final class TlsSupport
 
     public String getClientKeyStore()
     {
-        return clientKeyStore;
+        return clientKeyStoreName;
     }
 
-    public void setClientKeyStore(String clientKeyStore) throws IOException
+    public void setClientKeyStore(String name) throws IOException
     {
-        this.clientKeyStore = clientKeyStore;
-        if (this.clientKeyStore != null)
+        clientKeyStoreName = name;
+        if (null != clientKeyStoreName)
         {
-            this.clientKeyStore = FileUtils.getResourcePath(clientKeyStore, getClass());
-            logger.debug("Normalised clientKeyStore path to: " + getClientKeyStore());
+            clientKeyStoreName = FileUtils.getResourcePath(clientKeyStoreName, getClass());
+            logger.debug("Normalised clientKeyStore path to: " + clientKeyStoreName);
         }
     }
 
@@ -272,16 +283,16 @@ public final class TlsSupport
 
     public String getTrustStore()
     {
-        return trustStore;
+        return trustStoreName;
     }
 
-    public void setTrustStore(String trustStore) throws IOException
+    public void setTrustStore(String name) throws IOException
     {
-        this.trustStore = trustStore;
-        if (this.trustStore != null)
+        trustStoreName = name;
+        if (null != trustStoreName)
         {
-            this.trustStore = FileUtils.getResourcePath(trustStore, getClass());
-            logger.debug("Normalised trustStore path to: " + getTrustStore());
+            trustStoreName = FileUtils.getResourcePath(trustStoreName, getClass());
+            logger.debug("Normalised trustStore path to: " + trustStoreName);
         }
     }
 
@@ -323,33 +334,36 @@ public final class TlsSupport
         }
     }
 
+    // note - in what follows i'm using "raw" variables rather than accessors because
+    // i think the names are clearer.  the API names fo the accessors are historical
+    // and not a close fit to actual use (imho).
+
     private void initKeyManagerFactory() throws InitialisationException
     {
-        KeyStore store;
+        logger.debug("initialising key manager factory from keystore data");
+        KeyStore tempKeyStore;
         try
         {
-            Security.addProvider(getProvider());
-            // Create keyStore
-            store = KeyStore.getInstance(keystoreType);
-            InputStream is = IOUtils.getResourceAsStream(getKeyStore(), getClass());
-            if (is == null)
+            Security.addProvider(provider);
+            tempKeyStore = KeyStore.getInstance(keystoreType);
+            InputStream is = IOUtils.getResourceAsStream(keyStoreName, getClass());
+            if (null == is)
             {
                 throw new FileNotFoundException(new Message(Messages.CANT_LOAD_X_FROM_CLASSPATH_FILE,
-                    "Keystore: " + getKeyStore()).getMessage());
+                    "Keystore: " + keyStoreName).getMessage());
             }
-            store.load(is, getStorePassword().toCharArray());
+            tempKeyStore.load(is, keyStorePassword.toCharArray());
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "KeyStore: "
-                + getKeyStore()), e, this);
+            throw new InitialisationException(
+                new Message(Messages.FAILED_LOAD_X, "KeyStore: " + keyStoreName), 
+                e, this);
         }
         try
         {
-            // Get key manager
             keyManagerFactory = KeyManagerFactory.getInstance(getKeyManagerAlgorithm());
-            // Initialize the KeyManagerFactory to work with our keyStore
-            keyManagerFactory.init(store, getKeyPassword().toCharArray());
+            keyManagerFactory.init(tempKeyStore, keyPassword.toCharArray());
         }
         catch (Exception e)
         {
@@ -359,89 +373,87 @@ public final class TlsSupport
 
     private void initTrustManagerFactory() throws InitialisationException 
     {
-        if (getTrustStore() != null)
+        logger.debug("initialising key manager factory from truststore data");
+        if (null != trustStoreName)
         {
-            KeyStore truststore;
+            KeyStore tempTruststore;
             try
             {
-                truststore = KeyStore.getInstance(trustStoreType);
-                InputStream is = IOUtils.getResourceAsStream(getTrustStore(), getClass());
-                if (is == null)
+                tempTruststore = KeyStore.getInstance(trustStoreType);
+                InputStream is = IOUtils.getResourceAsStream(trustStoreName, getClass());
+                if (null == is)
                 {
                     throw new FileNotFoundException(
-                        "Failed to load truststore from classpath or local file: " + getTrustStore());
+                        "Failed to load truststore from classpath or local file: " + trustStoreName);
                 }
-                truststore.load(is, getTrustStorePassword().toCharArray());
+                tempTruststore.load(is, trustStorePassword.toCharArray());
             }
             catch (Exception e)
             {
-                throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "TrustStore: "
-                    + getTrustStore()), e,
-                    this);
+                throw new InitialisationException(
+                    new Message(Messages.FAILED_LOAD_X, "TrustStore: " + trustStoreName), 
+                    e, this);
             }
 
             try
             {
-                trustManagerFactory = TrustManagerFactory.getInstance(getTrustManagerAlgorithm());
-                trustManagerFactory.init(truststore);
+                trustManagerFactory = TrustManagerFactory.getInstance(trustManagerAlgorithm);
+                trustManagerFactory.init(tempTruststore);
             }
             catch (Exception e)
             {
-                throw new InitialisationException(new Message(Messages.FAILED_LOAD_X,
-                    "Trust Manager (" + getTrustManagerAlgorithm() + ")"), e, this);
+                throw new InitialisationException(
+                    new Message(Messages.FAILED_LOAD_X, "Trust Manager (" + trustManagerAlgorithm + ")"), 
+                    e, this);
             }
         }
     }
 
-    private void initClientKeyStore() throws InitialisationException
+    private void initDefaultKeyStore() throws InitialisationException
     {
-        if (clientKeyStore != null)
+        if (null != clientKeyStoreName)
         {
-            try
-            {
-                String clientPath = FileUtils.getResourcePath(clientKeyStore, getClass());
-                if (clientPath == null)
-                {
-                    throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "ClientKeyStore: "
-                        + clientKeyStore),
-                        this);
-                }
-                System.setProperty("javax.net.ssl.keyStore", clientPath);
-                System.setProperty("javax.net.ssl.keyStorePassword", clientKeyStorePassword);
-
-                logger.info("Set Client Key store: javax.net.ssl.keyStore=" + clientPath);
-            }
-            catch (IOException e)
-            {
-                throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "ClientKeyStore: "
-                    + clientKeyStore), this);
-            }
+            System.setProperty("javax.net.ssl.keyStore", clientKeyStoreName);
+            System.setProperty("javax.net.ssl.keyStorePassword", clientKeyStorePassword);
+            logger.info("Set Client Key store: javax.net.ssl.keyStore=" + clientKeyStoreName);
         }
     }
 
-    private void initTrustStore() 
+    private void initDefaultTrustStore() 
     {
-        if (trustStore != null)
+        if (null == trustStoreName && !isExplicitTrustStoreOnly())
         {
-            System.setProperty("javax.net.ssl.trustStore", getTrustStore());
-            if (getTrustStorePassword() != null)
-            {
-                System.setProperty("javax.net.ssl.trustStorePassword", getTrustStorePassword());
-            }
-            logger.debug("Set Trust store: javax.net.ssl.trustStore=" + getTrustStore());
+            logger.info("Defaulting global trust store to client Key Store");
+            trustStoreName = clientKeyStoreName;
+            trustStorePassword = clientKeyStorePassword;
         }
-        else if (!isExplicitTrustStoreOnly())
+        if (null != trustStoreName)
         {
-            logger.info("Defaulting trust store to client Key Store");
-            trustStore = getClientKeyStore();
-            trustStorePassword = getClientKeyStorePassword();
-            if (trustStore != null)
+            System.setProperty("javax.net.ssl.trustStore", trustStoreName);
+            if (null != trustStorePassword)
             {
-                System.setProperty("javax.net.ssl.trustStore", getTrustStore());
-                System.setProperty("javax.net.ssl.trustStorePassword", getTrustStorePassword());
-                logger.debug("Set Trust store: javax.net.ssl.trustStore=" + getTrustStore());
+                System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
             }
+            logger.debug("Set Trust store: javax.net.ssl.trustStore=" + trustStoreName);
         }
+    }
+
+    private void initDefaultProtocolHandler()
+    {
+        if (null != protocolHandler )
+        {
+            System.setProperty("java.protocol.handler.pkgs", protocolHandler);
+        }
+    }
+
+    /**
+     * This interface must be provided to 
+     */
+    public static interface SocketFactoryCallback
+    {
+
+        public void setSocketFactory(SocketFactory socketFactory);
+
     }
 
 }
