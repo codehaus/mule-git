@@ -19,7 +19,6 @@ import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.ConnectException;
-import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.FatalConnectException;
 import org.mule.providers.ReplyToHandler;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
