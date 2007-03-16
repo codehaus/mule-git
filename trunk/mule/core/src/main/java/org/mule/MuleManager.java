@@ -1565,7 +1565,7 @@ public class MuleManager implements UMOManager
      * Obtains a workManager instance that can be used to schedule work in a thread
      * pool. This will be used primarially by UMOAgents wanting to schedule work.
      * This work Manager must <b>never</b> be used by provider implementations as
-     * they have their own workManager accible on the connector. If a workManager has
+     * they have their own workManager accessible on the connector. If a workManager has
      * not been set by the time the <code>initialise()</code> method has been
      * called a default <code>MuleWorkManager</code> will be created using the
      * <i>DefaultThreadingProfile</i> on the <code>MuleConfiguration</code>
