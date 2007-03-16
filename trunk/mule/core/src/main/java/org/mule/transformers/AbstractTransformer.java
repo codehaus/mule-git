@@ -22,7 +22,8 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
-import java.util.ArrayList;
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -59,10 +60,10 @@ public abstract class AbstractTransformer implements UMOTransformer
     protected UMOImmutableEndpoint endpoint = null;
 
     /**
-     * A list of support Class types that the source payload passed into this
+     * A list of supported Class types that the source payload passed into this
      * transformer
      */
-    protected List sourceTypes = new ArrayList();
+    protected List sourceTypes = new CopyOnWriteArrayList();
 
     /**
      * This is the following transformer in the chain of transformers.
@@ -103,7 +104,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         return object;
     }
 
-    protected synchronized void registerSourceType(Class aClass)
+    protected void registerSourceType(Class aClass)
     {
         if (aClass.equals(Object.class))
         {
@@ -113,7 +114,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         sourceTypes.add(aClass);
     }
 
-    protected synchronized void unregisterSourceType(Class aClass)
+    protected void unregisterSourceType(Class aClass)
     {
         sourceTypes.remove(aClass);
     }
@@ -321,9 +322,8 @@ public abstract class AbstractTransformer implements UMOTransformer
         }
         catch (Exception e)
         {
-            throw (CloneNotSupportedException)new CloneNotSupportedException(
-                "Failed to clone transformer: " + e.getMessage()
-                ).initCause(e);
+            throw (CloneNotSupportedException)new CloneNotSupportedException("Failed to clone transformer: "
+                            + e.getMessage()).initCause(e);
         }
     }
 
@@ -410,10 +410,18 @@ public abstract class AbstractTransformer implements UMOTransformer
         this.ignoreBadInput = ignoreBadInput;
     }
 
+    // @Override
     public String toString()
     {
-        return "Transformer{" + "name='" + name + "'" + ", ignoreBadInput=" + ignoreBadInput
-                        + ", returnClass=" + returnClass + ", sourceTypes=" + sourceTypes + "}";
+        StringBuffer sb = new StringBuffer(80);
+        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", ignoreBadInput=").append(ignoreBadInput);
+        sb.append(", returnClass=").append(returnClass);
+        sb.append(", sourceTypes=").append(sourceTypes);
+        sb.append('}');
+        return sb.toString();                        
     }
 
     public boolean isAcceptNull()
