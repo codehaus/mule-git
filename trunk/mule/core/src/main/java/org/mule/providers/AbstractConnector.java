@@ -1346,7 +1346,7 @@ public abstract class AbstractConnector
 
     /**
      * Registers other protocols 'understood' by this connector. These must contain
-     * scheme meta info. Unlike the <code>registerSupportedProtolcol</code> method,
+     * scheme meta info. Unlike the {@link #registerSupportedProtocol(String)} method,
      * this allows you to register protocols that are not prefixed with the connector
      * protocol. This is useful where you use a Service Finder to discover which
      * Transport implementation to use. For example the 'wsdl' transport is a generic
