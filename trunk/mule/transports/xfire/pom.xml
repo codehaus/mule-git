@@ -12,6 +12,20 @@
     <name>XFire Transport</name>
     <description>A Mule transport for SOAP connectivity using XFire, a STaX-based SOAP stack.</description>
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/XFireConnectorVMFunctionalTestCase.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>xfire</id>
