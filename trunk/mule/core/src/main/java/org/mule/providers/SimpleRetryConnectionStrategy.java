@@ -83,6 +83,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 // If we were interrupted it's probably because the server is
                 // shutting down
                 throw new FatalConnectException(
+                        // TODO it's not only endpoint that is reconnected, connectors too
                         new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X,
                                     getClass().getName(), getDescription(connectable)),
                         ie, connectable);
@@ -97,6 +98,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 if (retryCounter.current().get() >= retryCount)
                 {
                     throw new FatalConnectException(
+                            // TODO it's not only endpoint that is reconnected, connectors too
                             new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X,
                                         getClass().getName(), getDescription(connectable)),
                             e, connectable);
@@ -105,7 +107,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 if (logger.isErrorEnabled())
                 {
                     StringBuffer msg = new StringBuffer(512);
-                    msg.append("Failed to connect/reconnect on endpoint: ").append(
+                    msg.append("Failed to connect/reconnect: ").append(
                             getDescription(connectable));
                     Throwable t = ExceptionHelper.getRootException(e);
                     msg.append(". Root Exception was: ").append(ExceptionHelper.writeException(t));
@@ -125,6 +127,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
                 catch (InterruptedException e1)
                 {
                     throw new FatalConnectException(
+                            // TODO it's not only endpoint that is reconnected, connectors too
                             new Message(Messages.RECONNECT_STRATEGY_X_FAILED_ENDPOINT_X,
                                         getClass().getName(), getDescription(connectable)),
                             e, connectable);
