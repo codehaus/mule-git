@@ -12,14 +12,12 @@ package org.mule.umo.transformer;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Initialisable;
 
-import java.io.Serializable;
-
 /**
  * <code>UMOTransformer</code> can be chained together to covert message payloads from one
  * object type to another.
 
  */
-public interface UMOBaseTransformer extends Initialisable, Serializable, Cloneable
+public interface UMOBaseTransformer extends Initialisable, Cloneable
 {
     /**
      * The endpoint that this transformer is attached to
