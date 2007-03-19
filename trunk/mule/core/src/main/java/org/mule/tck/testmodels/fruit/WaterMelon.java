@@ -46,9 +46,9 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
     public WaterMelon(HashMap props) throws UMOException
     {
         logger.info("Initialisaing Water melon with hashmap constructor");
-        setBrand((String)props.get("namespace.brand"));
-        setRadius((Double)props.get("another.namespace.radius"));
-        setSeeds((Integer)props.get("seeds"));
+        setBrand((String) props.get("namespace.brand"));
+        setRadius((Double) props.get("another.namespace.radius"));
+        setSeeds((Integer) props.get("seeds"));
         state = "initialised";
     }
 
@@ -146,7 +146,7 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
     {
         if (obj instanceof WaterMelon)
         {
-            WaterMelon melon = (WaterMelon)obj;
+            WaterMelon melon = (WaterMelon) obj;
             return (getBrand().equals(melon.getBrand()) && getRadius().equals(melon.getRadius())
                     && getSeeds().equals(melon.getSeeds()) && getState().equals(getState()));
         }
@@ -154,4 +154,14 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
         return super.equals(obj);
     }
 
+    public int hashCode ()
+    {
+        int result;
+        result = (bitten ? 1 : 0);
+        result = 31 * result + seeds.hashCode();
+        result = 31 * result + radius.hashCode();
+        result = 31 * result + (brand != null ? brand.hashCode() : 0);
+        result = 31 * result + state.hashCode();
+        return result;
+    }
 }
