@@ -56,4 +56,24 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         return resultData;
     }
 
+    // @Override
+    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
+    {
+        // TODO MULE-1511: need to access the clone's private parts but cannot
+        // because we're in a different package..
+
+        /*
+        XsltTransformer t1 = (XsltTransformer)original;
+        XsltTransformer t2 = (XsltTransformer)clone;
+
+        // The transformerPool must be different 
+        if (t1.transformerPool == t2.transformerPool)
+        {
+            return false;
+        }
+        */
+
+        return super.compareClone(original, clone);
+    }
+
 }
