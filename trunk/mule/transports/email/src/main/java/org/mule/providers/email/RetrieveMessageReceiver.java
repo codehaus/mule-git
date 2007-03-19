@@ -227,7 +227,6 @@ implements MessageCountListener, Startable, Stoppable
                 }
                 catch (MessagingException ignore)
                 {
-                    // ignore
                     logger.debug("ignoring exception: " + ignore.getMessage());
                 }
             }
@@ -298,7 +297,10 @@ implements MessageCountListener, Startable, Stoppable
             }
             filename = FileUtils.prepareWinFilename(filename);
             filename = backupFolder + filename + ".msg";
-            logger.debug("Writing message to: " + filename);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Writing message to: " + filename);
+            }
             File f = FileUtils.createFile(filename);
             FileOutputStream fos = new FileOutputStream(f);
             msg.writeTo(fos);
@@ -318,8 +320,10 @@ implements MessageCountListener, Startable, Stoppable
             }
             catch (Exception e)
             {
-                // ignore
-                logger.debug("ignoring exception: " + e.getMessage());
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("ignoring exception: " + e.getMessage());
+                }
             }
 
             int count = folder.getMessageCount();

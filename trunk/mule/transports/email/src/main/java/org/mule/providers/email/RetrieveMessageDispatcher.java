@@ -95,8 +95,10 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
                 }
                 catch (MessagingException e)
                 {
-                    // maybe next time.
-                    logger.debug("ignoring exception on expunge: " + e.getMessage());
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("ignoring exception on expunge: " + e.getMessage());
+                    }
                 }
                 if (folder.isOpen())
                 {
@@ -182,6 +184,7 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
             }
             else
             {
+
                 logger.debug("Timeout");
                 return null;
             }

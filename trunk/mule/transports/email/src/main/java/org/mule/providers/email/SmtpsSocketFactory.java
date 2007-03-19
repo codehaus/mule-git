@@ -10,10 +10,14 @@
 
 package org.mule.providers.email;
 
-import org.mule.umo.security.TlsPropertiesSocketFactory;
+import org.mule.umo.security.tls.TlsPropertiesSocketFactory;
 
 import javax.net.SocketFactory;
 
+/**
+ * A socket factor that reads "indirect" configuration (see {@link org.mule.umo.security.tls.TlsConfiguration})
+ * for SMTPS from System properties.
+ */
 public class SmtpsSocketFactory extends TlsPropertiesSocketFactory
 {
     

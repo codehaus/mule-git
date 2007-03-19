@@ -11,14 +11,17 @@
 package org.mule.providers.email;
 
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.TlsConfiguration;
+import org.mule.umo.security.TlsIndirectKeyStore;
+import org.mule.umo.security.TlsIndirectTrustStore;
+import org.mule.umo.security.tls.TlsConfiguration;
 
 import java.io.IOException;
 
 /**
  * Creates a secure connection to a POP3 mailbox
  */
-public abstract class TlsRetrievalMailConnector extends RetrieveMailConnector
+public abstract class TlsRetrievalMailConnector 
+extends RetrieveMailConnector implements TlsIndirectTrustStore, TlsIndirectKeyStore
 {
 
     private String namespace;
@@ -80,6 +83,39 @@ public abstract class TlsRetrievalMailConnector extends RetrieveMailConnector
     public void setTrustStorePassword(String trustStorePassword)
     {
         tls.setTrustStorePassword(trustStorePassword);
+    }
+
+    // these were not present before, but could be set implicitly via global proeprties
+    // that is no longer true, so i have added them in here
+
+    public String getClientKeyStore()
+    {
+        return this.tls.getClientKeyStore();
+    }
+
+    public String getClientKeyStorePassword()
+    {
+        return this.tls.getClientKeyStorePassword();
+    }
+
+    public String getClientKeyStoreType()
+    {
+        return this.tls.getClientKeyStoreType();
+    }
+
+    public void setClientKeyStore(String name) throws IOException
+    {
+        this.tls.setClientKeyStore(name);
+    }
+
+    public void setClientKeyStorePassword(String clientKeyStorePassword)
+    {
+        this.tls.setClientKeyStorePassword(clientKeyStorePassword);
+    }
+
+    public void setClientKeyStoreType(String clientKeyStoreType)
+    {
+        this.tls.setClientKeyStoreType(clientKeyStoreType);
     }
 
 }
