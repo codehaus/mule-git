@@ -15,8 +15,8 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
 
 /**
- * <code>Pop3Connector</code> is used to connect and receive mail from a POP3
- * mailbox.
+ * Support for connecting to and receiving email from a mailbox (the exact protocol depends on
+ * the subclass).
  */
 public abstract class RetrieveMailConnector extends AbstractMailConnector
 {

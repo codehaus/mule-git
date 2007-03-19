@@ -18,7 +18,8 @@ import org.mule.umo.security.tls.TlsConfiguration;
 import java.io.IOException;
 
 /**
- * Creates a secure connection to a POP3 mailbox
+ * Support for connecting to and receiving email from a secure mailbox (the exact protocol depends on
+ * the subclass).
  */
 public abstract class TlsRetrievalMailConnector 
 extends RetrieveMailConnector implements TlsIndirectTrustStore, TlsIndirectKeyStore

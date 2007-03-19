@@ -16,8 +16,8 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
 
 /**
- * <code>Pop3MessageDispatcherFactory</code> creates a Pop3 Message dispatcher. For
- * Pop3 connections the dispatcher can only be used to receive message (as apposed to
+ * A source of mail receiving message dispatchers. 
+ * The dispatcher can only be used to receive message (as apposed to
  * listening for them). Trying to send or dispatch will throw an
  * {@link UnsupportedOperationException}.
  */
@@ -25,7 +25,7 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 public class RetrieveMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
     /**
-     * By default client connections to POP3 are closed after the request.
+     * By default client connections are closed after the request.
      */
     // @Override
     public boolean isCreateDispatcherPerRequest()

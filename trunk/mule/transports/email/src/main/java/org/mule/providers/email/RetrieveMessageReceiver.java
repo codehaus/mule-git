@@ -48,8 +48,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * <code>Pop3MessageReceiver</code> polls a POP3 mailbox for messages, removes the
- * messages and routes them as events into Mule.
+ * Poll a mailbox for messages, remove the messages and route them as events into Mule.
  */
 
 public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver

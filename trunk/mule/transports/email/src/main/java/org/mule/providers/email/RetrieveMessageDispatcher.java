@@ -26,9 +26,8 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 /**
- * <code>Pop3MessageDispatcher</code> For Pop3 connections the dispatcher can only
- * be used to receive message (as opposed to listening for them). Trying to send or
- * dispatch will throw an UnsupportedOperationException.
+ * This dispatcher can only be used to receive message (as opposed to listening for them).
+ * Trying to send or dispatch will throw an UnsupportedOperationException.
  */
 
 public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
