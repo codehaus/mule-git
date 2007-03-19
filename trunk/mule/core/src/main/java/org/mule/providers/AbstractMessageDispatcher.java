@@ -80,7 +80,15 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             // We don't want to do threading in the dispatcher because we're either
             // already running in a worker thread (asynchronous) or we need to
             // complete the operation in a single thread
-            ((AbstractConnectionStrategy)connectionStrategy).setDoThreading(false);
+            final AbstractConnectionStrategy connStrategy = (AbstractConnectionStrategy) connectionStrategy;
+            if (connStrategy.isDoThreading())
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Overriding doThreading to false on " + connStrategy);
+                }
+                connStrategy.setDoThreading(false);
+            }
         }
 
         ThreadingProfile profile = connector.getDispatcherThreadingProfile();
