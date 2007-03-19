@@ -62,6 +62,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecuto
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import java.beans.ExceptionListener;
 import java.io.InputStream;
@@ -121,142 +122,144 @@ public abstract class AbstractConnector
     /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * Specifies if the endpoint started
      */
-    protected AtomicBoolean started = new AtomicBoolean(false);
+    protected final AtomicBoolean started = new AtomicBoolean(false);
 
     /**
      * True once the endpoint has been initialsed
      */
-    protected AtomicBoolean initialised = new AtomicBoolean(false);
+    protected final AtomicBoolean initialised = new AtomicBoolean(false);
 
     /**
      * The name that identifies the endpoint
      */
-    protected String name;
+    protected volatile String name;
 
     /**
      * The exception strategy used by this connector
      */
-    protected ExceptionListener exceptionListener;
+    protected volatile ExceptionListener exceptionListener;
 
     /**
      * Determines in the connector is alive and well
      */
-    protected AtomicBoolean disposed = new AtomicBoolean(false);
+    protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
     /**
      * Determines in connector has been told to dispose
      */
-    protected AtomicBoolean disposing = new AtomicBoolean(false);
+    protected final AtomicBoolean disposing = new AtomicBoolean(false);
 
     /**
      * Factory used to create dispatchers for this connector
      */
-    protected UMOMessageDispatcherFactory dispatcherFactory;
+    protected volatile UMOMessageDispatcherFactory dispatcherFactory;
 
     /**
-     * A pool of dispatchers for this connector, the pool is keyed on endpointUri
+     * A pool of dispatchers for this connector, keyed by endpoint
      */
-    protected GenericKeyedObjectPool dispatchers;
+    protected final GenericKeyedObjectPool dispatchers = new GenericKeyedObjectPool();
 
     /**
      * The collection of listeners on this connector. Keyed by entrypoint
      */
-    protected ConcurrentMap receivers;
+    protected final ConcurrentMap receivers = new ConcurrentHashMap();
 
     /**
-     * Defines the dispatcher threading model
+     * Defines the dispatcher threading profile
      */
-    private ThreadingProfile dispatcherThreadingProfile;
+    private volatile ThreadingProfile dispatcherThreadingProfile = MuleManager.getConfiguration()
+        .getMessageDispatcherThreadingProfile();
 
     /**
-     * Defines the receiver threading model
+     * Defines the receiver threading profile
      */
-    private ThreadingProfile receiverThreadingProfile;
+    private volatile ThreadingProfile receiverThreadingProfile = MuleManager.getConfiguration()
+        .getMessageReceiverThreadingProfile();
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
      */
-    protected boolean createMultipleTransactedReceivers = true;
+    protected volatile boolean createMultipleTransactedReceivers = true;
 
     /**
      * @see {@link #getNumberOfConcurrentTransactedReceivers()}
      */
-    protected int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
+    protected volatile int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
     /**
      * The service descriptor can define a default inbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultInboundTransformer;
+    protected volatile UMOTransformer defaultInboundTransformer;
 
     /**
      * The service descriptor can define a default outbound transformer to be used on
      * an endpoint if no other is set
      */
-    protected UMOTransformer defaultOutboundTransformer;
+    protected volatile UMOTransformer defaultOutboundTransformer;
 
     /**
      * For some connectors such as http, a response transformer is required or where
      * a replyTo needs a trnasformer
      */
-    protected UMOTransformer defaultResponseTransformer;
+    protected volatile UMOTransformer defaultResponseTransformer;
 
-    private ConnectionStrategy connectionStrategy;
+    protected volatile ConnectionStrategy connectionStrategy;
 
-    protected WaitableBoolean connected = new WaitableBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
 
-    protected WaitableBoolean connecting = new WaitableBoolean(false);
+    protected final WaitableBoolean connecting = new WaitableBoolean(false);
 
     /**
      * If the connect method was called via the start method, this will be set so
      * that when the connector comes on line it will be started
      */
-    protected WaitableBoolean startOnConnect = new WaitableBoolean(false);
+    protected final WaitableBoolean startOnConnect = new WaitableBoolean(false);
 
     /**
      * Whether to fire message notifications for every message that is sent or
      * received from this connector. Default is {@code false}.
      */
-    private boolean enableMessageEvents;
+    private volatile boolean enableMessageEvents;
 
     private final List supportedProtocols;
 
     /**
      * A shared work manager for all receivers registered with this connector.
      */
-    private UMOWorkManager receiverWorkManager;
+    private final AtomicReference/*<UMOWorkManager>*/ receiverWorkManager = new AtomicReference();
 
     /**
      * A shared work manager for all dispatchers created for this connector.
      */
-    private UMOWorkManager dispatcherWorkManager;
+    private final AtomicReference/*<UMOWorkManager>*/ dispatcherWorkManager = new AtomicReference();
 
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    private ScheduledExecutorService scheduler;
+    private final AtomicReference/*<ScheduledExecutorService>*/ scheduler = new AtomicReference();
 
     /**
      * Holds the service configuration for this connector
      */
-    protected TransportServiceDescriptor serviceDescriptor;
+    protected volatile TransportServiceDescriptor serviceDescriptor;
 
     /**
      * The map of service overrides that can e used to extend the capabilities of the
      * connector
      */
-    protected Properties serviceOverrides;
+    protected volatile Properties serviceOverrides;
 
     /**
      * The strategy used for reading and writing session information to and fromt he
      * transport
      */
-    protected UMOSessionHandler sessionHandler = new MuleSessionHandler();
+    protected volatile UMOSessionHandler sessionHandler = new MuleSessionHandler();
 
     /** Constructs a new AbstractConnector. */
     public AbstractConnector()
@@ -272,16 +275,11 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        // container for dispatchers
-        dispatchers = new GenericKeyedObjectPool();
         // NOTE: testOnBorrow MUST be FALSE. this is a bit of a design bug in
         // commons-pool since validate is used for both activation and passivation,
         // but has no way of knowing which way it is going.
         dispatchers.setTestOnBorrow(false);
         dispatchers.setTestOnReturn(true);
-
-        // container for receivers
-        receivers = new ConcurrentHashMap();
     }
 
     /** {@inheritDoc} */
@@ -339,9 +337,6 @@ public abstract class AbstractConnector
     }
 
     /** {@inheritDoc} */
-    public abstract String getProtocol();
-
-    /** {@inheritDoc} */
     public final synchronized void startConnector() throws UMOException
     {
         this.checkDisposed();
@@ -351,7 +346,9 @@ public abstract class AbstractConnector
             if (!this.isConnected())
             {
                 startOnConnect.set(true);
-                this.getConnectionStrategy().connect(this);
+                // Don't call getConnectionStrategy(), it clones the connection strategy.
+                // Connectors should have a single reconnection thread, unlike per receiver/dispatcher
+                connectionStrategy.connect(this);
                 // Only start once we are connected
                 return;
             }
@@ -362,9 +359,10 @@ public abstract class AbstractConnector
             }
 
             // the scheduler is recreated after stopConnector()
-            if (scheduler == null || scheduler.isShutdown())
+            ScheduledExecutorService currentScheduler = (ScheduledExecutorService)scheduler.get();
+            if (currentScheduler == null || currentScheduler.isShutdown())
             {
-                scheduler = this.getScheduler();
+                scheduler.set(this.getScheduler());
             }
 
             this.doStart();
@@ -411,6 +409,9 @@ public abstract class AbstractConnector
                 logger.info("Stopping: " + this);
             }
 
+            // shutdown our scheduler service
+            ((ScheduledExecutorService)scheduler.get()).shutdown();
+
             this.doStop();
             started.set(false);
 
@@ -428,10 +429,6 @@ public abstract class AbstractConnector
                     mr.stop();
                 }
             }
-
-            // shutdown our scheduler service
-            scheduler.shutdown();
-            scheduler = null;
         }
 
         if (this.isConnected())
@@ -442,9 +439,13 @@ public abstract class AbstractConnector
             }
             catch (Exception e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to disconnect: " + e.getMessage(), e);
             }
         }
+
+        // make sure the scheduler is gone
+        scheduler.set(null);
 
         if (logger.isInfoEnabled())
         {
@@ -468,6 +469,7 @@ public abstract class AbstractConnector
         }
         catch (UMOException e)
         {
+            // TODO MULE-863: What should we really do?
             logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
         }
 
@@ -499,6 +501,7 @@ public abstract class AbstractConnector
                 }
                 catch (Throwable e)
                 {
+                    // TODO MULE-863: What should we really do?
                     logger.error("Failed to destroy receiver: " + receiver, e);
                 }
             }
@@ -516,10 +519,22 @@ public abstract class AbstractConnector
 
             try
             {
-                dispatchers.clear();
+                // disposeDispatcher() is also called from initialise() and
+                // JMSConnector.onNotification(), so we need to handle this
+                // differently
+                if (this.isDisposing())
+                {
+                    // close() implies clear()
+                    dispatchers.close();
+                }
+                else
+                {
+                    dispatchers.clear();
+                }
             }
             catch (Exception ex)
             {
+                // TODO MULE-863: What should we really do?
                 // ignored
             }
 
@@ -606,7 +621,7 @@ public abstract class AbstractConnector
     /**
      * Returns the maximum number of dispatchers that can be concurrently active per
      * endpoint.
-     * 
+     *
      * @return max. number of active dispatchers
      */
     public int getMaxDispatchersActive()
@@ -617,7 +632,7 @@ public abstract class AbstractConnector
     /**
      * Configures the maximum number of dispatchers that can be concurrently active
      * per endpoint
-     * 
+     *
      * @param maxActive max. number of active dispatchers
      */
     public void setMaxDispatchersActive(int maxActive)
@@ -696,6 +711,7 @@ public abstract class AbstractConnector
             }
             catch (Exception ex)
             {
+                // TODO MULE-863: What should we really do?
                 // ignore - if the dispatcher is broken, it will likely get cleaned
                 // up by the factory
             }
@@ -707,6 +723,7 @@ public abstract class AbstractConnector
                 }
                 catch (Exception ex)
                 {
+                    // TODO MULE-863: What should we really do?
                     // returnObject() never throws; this will go away in commons-pool
                 }
             }
@@ -763,7 +780,7 @@ public abstract class AbstractConnector
 
     /**
      * The method determines the key used to store the receiver against.
-     * 
+     *
      * @param component the component for which the endpoint is being registered
      * @param endpoint the endpoint being registered for the component
      * @return the key to store the newly created receiver against
@@ -813,52 +830,42 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'dispatcherThreadingProfile'.
-     * 
+     *
      * @return Value for property 'dispatcherThreadingProfile'.
      */
-    public synchronized ThreadingProfile getDispatcherThreadingProfile()
+    public ThreadingProfile getDispatcherThreadingProfile()
     {
-        if (dispatcherThreadingProfile == null)
-        {
-            dispatcherThreadingProfile = MuleManager.getConfiguration()
-                .getMessageDispatcherThreadingProfile();
-        }
         return dispatcherThreadingProfile;
     }
 
     /**
      * Setter for property 'dispatcherThreadingProfile'.
-     * 
+     *
      * @param dispatcherThreadingProfile Value to set for property
      *            'dispatcherThreadingProfile'.
      */
-    public synchronized void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
+    public void setDispatcherThreadingProfile(ThreadingProfile dispatcherThreadingProfile)
     {
         this.dispatcherThreadingProfile = dispatcherThreadingProfile;
     }
 
     /**
      * Getter for property 'receiverThreadingProfile'.
-     * 
+     *
      * @return Value for property 'receiverThreadingProfile'.
      */
-    public synchronized ThreadingProfile getReceiverThreadingProfile()
+    public ThreadingProfile getReceiverThreadingProfile()
     {
-        if (receiverThreadingProfile == null)
-        {
-            receiverThreadingProfile = MuleManager.getConfiguration().getMessageReceiverThreadingProfile();
-        }
-
         return receiverThreadingProfile;
     }
 
     /**
      * Setter for property 'receiverThreadingProfile'.
-     * 
+     *
      * @param receiverThreadingProfile Value to set for property
      *            'receiverThreadingProfile'.
      */
-    public synchronized void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
+    public void setReceiverThreadingProfile(ThreadingProfile receiverThreadingProfile)
     {
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
@@ -877,21 +884,21 @@ public abstract class AbstractConnector
 
     /**
      * Template method to perform any work when starting the connectoe
-     * 
+     *
      * @throws UMOException if the method fails
      */
     protected abstract void doStart() throws UMOException;
 
     /**
      * Template method to perform any work when stopping the connectoe
-     * 
+     *
      * @throws UMOException if the method fails
      */
     protected abstract void doStop() throws UMOException;
 
     /**
      * Getter for property 'defaultInboundTransformer'.
-     * 
+     *
      * @return Value for property 'defaultInboundTransformer'.
      */
     public UMOTransformer getDefaultInboundTransformer()
@@ -904,6 +911,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Inbound transformer");
             }
         }
@@ -913,7 +921,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultInboundTransformer'.
-     * 
+     *
      * @param defaultInboundTransformer Value to set for property
      *            'defaultInboundTransformer'.
      */
@@ -924,7 +932,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'defaultResponseTransformer'.
-     * 
+     *
      * @return Value for property 'defaultResponseTransformer'.
      */
     public UMOTransformer getDefaultResponseTransformer()
@@ -937,6 +945,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Outbound transformer");
             }
         }
@@ -946,7 +955,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'defaultOutboundTransformer'.
-     * 
+     *
      * @return Value for property 'defaultOutboundTransformer'.
      */
     public UMOTransformer getDefaultOutboundTransformer()
@@ -959,6 +968,7 @@ public abstract class AbstractConnector
             }
             catch (CloneNotSupportedException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error("Failed to clone default Outbound transformer");
             }
         }
@@ -968,7 +978,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultOutboundTransformer'.
-     * 
+     *
      * @param defaultOutboundTransformer Value to set for property
      *            'defaultOutboundTransformer'.
      */
@@ -979,7 +989,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'defaultResponseTransformer'.
-     * 
+     *
      * @param defaultResponseTransformer Value to set for property
      *            'defaultResponseTransformer'.
      */
@@ -990,7 +1000,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'replyToHandler'.
-     * 
+     *
      * @return Value for property 'replyToHandler'.
      */
     public ReplyToHandler getReplyToHandler()
@@ -1002,7 +1012,7 @@ public abstract class AbstractConnector
      * Fires a server notification to all registered
      * {@link org.mule.impl.internal.notifications.CustomNotificationListener}
      * eventManager.
-     * 
+     *
      * @param notification the notification to fire. This must be of type
      *            {@link org.mule.impl.internal.notifications.CustomNotification}
      *            otherwise an exception will be thrown.
@@ -1016,7 +1026,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'connectionStrategy'.
-     * 
+     *
      * @return Value for property 'connectionStrategy'.
      */
     public ConnectionStrategy getConnectionStrategy()
@@ -1036,7 +1046,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'connectionStrategy'.
-     * 
+     *
      * @param connectionStrategy Value to set for property 'connectionStrategy'.
      */
     public void setConnectionStrategy(ConnectionStrategy connectionStrategy)
@@ -1063,7 +1073,7 @@ public abstract class AbstractConnector
 
     /**
      * Getter for property 'receivers'.
-     * 
+     *
      * @return Value for property 'receivers'.
      */
     public Map getReceivers()
@@ -1113,24 +1123,37 @@ public abstract class AbstractConnector
             return;
         }
 
-        if (connecting.compareAndSet(false, true))
-        {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Connecting: " + this);
-            }
-
-            connectionStrategy.connect(this);
-
-            logger.info("Connected: " + getConnectionDescription());
-            // This method calls itself so the connecting flag is set first, then
-            // the connection is made on the second call
-            return;
-        }
-
+        /*
+            Until the recursive startConnector() -> connect() -> doConnect() -> connect()
+            calls are unwound between a connector and connection strategy, this call has
+            to be here, and not below (commented out currently). Otherwise, e.g. WebspherMQ
+            goes into an endless reconnect thrashing loop, see MULE-1150 for more details.
+        */
         try
         {
-            this.doConnect();
+            if (connecting.get())
+            {
+                this.doConnect();
+            }
+
+            if (connecting.compareAndSet(false, true))
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Connecting: " + this);
+                }
+
+                connectionStrategy.connect(this);
+
+                logger.info("Connected: " + getConnectionDescription());
+                // This method calls itself so the connecting flag is set first, then
+                // the connection is made on the second call
+                return;
+            }
+
+
+            // see the explanation above
+            //this.doConnect();
             connected.set(true);
             connecting.set(false);
 
@@ -1145,9 +1168,10 @@ public abstract class AbstractConnector
             this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_FAILED));
 
-            if (e instanceof ConnectException)
+            if (e instanceof ConnectException || e instanceof FatalConnectException)
             {
-                throw (ConnectException)e;
+                // rethrow
+                throw e;
             }
             else
             {
@@ -1210,7 +1234,7 @@ public abstract class AbstractConnector
 
     /**
      * Template method where any connections should be made for the connector
-     * 
+     *
      * @throws Exception
      */
     protected abstract void doConnect() throws Exception;
@@ -1218,14 +1242,14 @@ public abstract class AbstractConnector
     /**
      * Template method where any connected resources used by the connector should be
      * disconnected
-     * 
+     *
      * @throws Exception
      */
     protected abstract void doDisconnect() throws Exception;
 
     /**
      * The resource id used when firing ConnectEvents from this connector
-     * 
+     *
      * @return the resource id used when firing ConnectEvents from this connector
      */
     protected String getConnectEventId()
@@ -1239,7 +1263,7 @@ public abstract class AbstractConnector
      * {@link #getNumberOfConcurrentTransactedReceivers()}. This property is used by
      * transports that support transactions, specifically receivers that extend the
      * TransactedPollingMessageReceiver.
-     * 
+     *
      * @return true if multiple receivers will be enabled for this connection
      */
     public boolean isCreateMultipleTransactedReceivers()
@@ -1260,7 +1284,7 @@ public abstract class AbstractConnector
     /**
      * Returns the number of concurrent receivers that will be launched when
      * {@link #isCreateMultipleTransactedReceivers()} returns <code>true</code>.
-     * 
+     *
      * @see #DEFAULT_NUM_CONCURRENT_TX_RECEIVERS
      */
     public int getNumberOfConcurrentTransactedReceivers()
@@ -1289,7 +1313,7 @@ public abstract class AbstractConnector
     /**
      * Whether to fire message notifications for every message that is sent or
      * received from this connector
-     * 
+     *
      * @param enableMessageEvents
      */
     public void setEnableMessageEvents(boolean enableMessageEvents)
@@ -1304,7 +1328,7 @@ public abstract class AbstractConnector
      * be axis:jms. Here, 'axis' is the scheme meta info and 'jms' is the protocol.
      * If the protocol argument does not start with the connector's protocol, it will
      * be appended.
-     * 
+     *
      * @param protocol the supported protocol to register
      */
     public void registerSupportedProtocol(String protocol)
@@ -1322,14 +1346,14 @@ public abstract class AbstractConnector
 
     /**
      * Registers other protocols 'understood' by this connector. These must contain
-     * scheme meta info. Unlike the <code>registerSupportedProtolcol</code> method,
+     * scheme meta info. Unlike the {@link #registerSupportedProtocol(String)} method,
      * this allows you to register protocols that are not prefixed with the connector
      * protocol. This is useful where you use a Service Finder to discover which
      * Transport implementation to use. For example the 'wsdl' transport is a generic
      * 'finder' transport that will use Axis, Xfire or Glue to create the WSDL
      * client. These transport protocols would be wsdl-axis, wsdl-xfire and
      * wsdl-glue, but they can all support 'wsdl' protocol too.
-     * 
+     *
      * @param protocol the supported protocol to register
      */
     protected void registerSupportedProtocolWithoutPrefix(String protocol)
@@ -1360,7 +1384,7 @@ public abstract class AbstractConnector
 
     /**
      * Returns an unmodifiable list of the protocols supported by this connector
-     * 
+     *
      * @return an unmodifiable list of the protocols supported by this connector
      */
     public List getSupportedProtocols()
@@ -1370,7 +1394,7 @@ public abstract class AbstractConnector
 
     /**
      * Sets A list of protocols that the connector can accept
-     * 
+     *
      * @param supportedProtocols
      */
     public void setSupportedProtocols(List supportedProtocols)
@@ -1385,56 +1409,69 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message receivers.
      */
-    protected synchronized UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
+    protected UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (receiverWorkManager == null)
+        if (receiverWorkManager.get() == null)
         {
-            receiverWorkManager = this.getReceiverThreadingProfile().createWorkManager(
+            UMOWorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
                 this.getName() + '.' + receiverName);
-            receiverWorkManager.start();
+
+            if (receiverWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
         }
 
-        return receiverWorkManager;
+        return (UMOWorkManager)receiverWorkManager.get();
     }
 
     /**
      * Returns a work manager for message dispatchers.
-     * 
+     *
      * @throws UMOException in case of error
      */
-    protected synchronized UMOWorkManager getDispatcherWorkManager() throws UMOException
+    protected UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (dispatcherWorkManager == null)
+        if (dispatcherWorkManager.get() == null)
         {
-            dispatcherWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
+            UMOWorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
                 getName() + ".dispatcher");
-            dispatcherWorkManager.start();
+
+            if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
         }
 
-        return dispatcherWorkManager;
+        return (UMOWorkManager)dispatcherWorkManager.get();
     }
 
     /** {@inheritDoc} */
-    public synchronized ScheduledExecutorService getScheduler()
+    public ScheduledExecutorService getScheduler()
     {
-        if (scheduler == null)
+        if (scheduler.get() == null)
         {
             ThreadFactory threadFactory = new NamedThreadFactory(this.getName() + ".scheduler");
-            ScheduledThreadPoolExecutor threadExecutor = new ScheduledThreadPoolExecutor(1, threadFactory);
-            threadExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-            threadExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(),
+            ScheduledThreadPoolExecutor newExecutor = new ScheduledThreadPoolExecutor(1, threadFactory);
+            newExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+            newExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(),
                 TimeUnit.MILLISECONDS);
-            scheduler = threadExecutor;
+
+            if (!scheduler.compareAndSet(null, newExecutor))
+            {
+                // someone else was faster, ditch our copy.
+                newExecutor.shutdown();
+            }
         }
 
-        return scheduler;
+        return (ScheduledExecutorService)scheduler.get();
     }
 
     /**
      * Getter for property 'sessionHandler'.
-     * 
+     *
      * @return Value for property 'sessionHandler'.
      */
     public UMOSessionHandler getSessionHandler()
@@ -1444,7 +1481,7 @@ public abstract class AbstractConnector
 
     /**
      * Setter for property 'sessionHandler'.
-     * 
+     *
      * @param sessionHandler Value to set for property 'sessionHandler'.
      */
     public void setSessionHandler(UMOSessionHandler sessionHandler)
@@ -1455,43 +1492,44 @@ public abstract class AbstractConnector
     /** {@inheritDoc} */
     public void workAccepted(WorkEvent event)
     {
-        handleWorkException(event, "workAccepted");
+        this.handleWorkException(event, "workAccepted");
     }
 
     /** {@inheritDoc} */
     public void workRejected(WorkEvent event)
     {
-        handleWorkException(event, "workRejected");
+        this.handleWorkException(event, "workRejected");
     }
 
     /** {@inheritDoc} */
     public void workStarted(WorkEvent event)
     {
-        handleWorkException(event, "workStarted");
+        this.handleWorkException(event, "workStarted");
     }
 
     /** {@inheritDoc} */
     public void workCompleted(WorkEvent event)
     {
-        handleWorkException(event, "workCompleted");
+        this.handleWorkException(event, "workCompleted");
     }
 
     protected void handleWorkException(WorkEvent event, String type)
     {
-        Throwable e;
-
-        if (event != null && event.getException() != null)
-        {
-            e = event.getException();
-        }
-        else
+        if (event == null)
         {
             return;
         }
 
-        if (event.getException().getCause() != null)
+        Throwable e = event.getException();
+
+        if (e == null)
         {
-            e = event.getException().getCause();
+            return;
+        }
+
+        if (e.getCause() != null)
+        {
+            e = e.getCause();
         }
 
         logger.error("Work caused exception on '" + type + "'. Work being executed was: "
@@ -1499,7 +1537,7 @@ public abstract class AbstractConnector
 
         if (e instanceof Exception)
         {
-            handleException((Exception)e);
+            this.handleException((Exception)e);
         }
         else
         {
@@ -1590,7 +1628,7 @@ public abstract class AbstractConnector
      * determine the connector type is passed to this method so that any properties
      * set on the endpoint that can be used to initialise the connector are made
      * available.
-     * 
+     *
      * @param endpointUri the {@link UMOEndpointURI} use to create this connector
      * @throws InitialisationException If there are any problems with the
      *             configuration set on the Endpoint or if another exception is
@@ -1634,7 +1672,7 @@ public abstract class AbstractConnector
     /**
      * Initialises this connector from its {@link TransportServiceDescriptor} This
      * will be called before the {@link #doInitialise()} method is called.
-     * 
+     *
      * @throws InitialisationException InitialisationException If there are any
      *             problems with the configuration or if another exception is thrown
      *             it is wrapped in an InitialisationException.
@@ -1682,7 +1720,7 @@ public abstract class AbstractConnector
      * null if the connector was created by the developer. To create a connector the
      * proper way the developer should use the {@link TransportFactory} and pass in
      * an endpoint.
-     * 
+     *
      * @return the {@link TransportServiceDescriptor} for this connector
      */
     protected TransportServiceDescriptor getServiceDescriptor()
@@ -1696,7 +1734,7 @@ public abstract class AbstractConnector
 
     /**
      * Create a Message receiver for this connector
-     * 
+     *
      * @param component the component that will receive events from this receiver,
      *            the listener
      * @param endpoint the endpoint that defies this inbound communication
@@ -1716,7 +1754,7 @@ public abstract class AbstractConnector
     /**
      * Gets a <code>UMOMessageAdapter</code> for the endpoint for the given message
      * (data)
-     * 
+     *
      * @param message the data with which to initialise the
      *            <code>UMOMessageAdapter</code>
      * @return the <code>UMOMessageAdapter</code> for the endpoint
@@ -1749,7 +1787,7 @@ public abstract class AbstractConnector
      * Gets a {@link UMOStreamMessageAdapter} from the connector for the given
      * message. This Adapter will correctly handle data streaming for this type of
      * connector
-     * 
+     *
      * @param in the input stream to read the data from
      * @param out the outputStream to write data to. This can be null.
      * @return the {@link UMOStreamMessageAdapter} for the endpoint
@@ -1782,7 +1820,7 @@ public abstract class AbstractConnector
     /**
      * A map of fully qualified class names that should override those in the
      * connectors' service descriptor This map will be null if there are no overrides
-     * 
+     *
      * @return a map of override values or null
      */
     public Map getServiceOverrides()
@@ -1792,7 +1830,7 @@ public abstract class AbstractConnector
 
     /**
      * Set the Service overrides on this connector.
-     * 
+     *
      * @param serviceOverrides the override values to use
      */
     public void setServiceOverrides(Map serviceOverrides)
@@ -1806,7 +1844,7 @@ public abstract class AbstractConnector
      * will be called only when Streaming is being used on an outbound endpoint. If
      * Streaming is not supported by this transport an
      * {@link UnsupportedOperationException} is thrown
-     * 
+     *
      * @param endpoint the endpoint that releates to this Dispatcher
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport

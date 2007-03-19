@@ -277,7 +277,7 @@
             <ref local="dummyConnector"/>
         </property>
         <property name="createConnector">
-            <value>1</value>
+            <value>2</value>
         </property>
         <property name="endpointURI">
             <bean class="org.mule.impl.endpoint.MuleEndpointURI" singleton="false">

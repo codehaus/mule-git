@@ -10,33 +10,13 @@
 
 package org.mule.test.util.concurrent;
 
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.concurrent.WaitableBoolean;
 
-public class WaitableBooleanTestCase extends TestCase
+public class WaitableBooleanTestCase extends AbstractMuleTestCase
 {
-    private WaitableBoolean TRUE;
-    private WaitableBoolean FALSE;
-
-    public WaitableBooleanTestCase(String name)
-    {
-        super(name);
-    }
-
-    // @Override
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        TRUE = new WaitableBoolean(true);
-        FALSE = new WaitableBoolean(false);
-    }
-
-    // @Override
-    protected void tearDown() throws Exception
-    {
-        super.tearDown();
-    }
+    protected final WaitableBoolean TRUE = new WaitableBoolean(true);
+    protected final WaitableBoolean FALSE = new WaitableBoolean(false);
 
     public void testCompareToBoolean()
     {

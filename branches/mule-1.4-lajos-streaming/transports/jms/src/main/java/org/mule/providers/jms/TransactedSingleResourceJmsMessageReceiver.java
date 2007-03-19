@@ -35,8 +35,6 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import javax.resource.spi.work.Work;
 
-import org.apache.commons.collections.MapUtils;
-
 public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageReceiver
     implements MessageListener
 {

@@ -11,11 +11,9 @@
 package org.mule.providers.email;
 
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.StringUtils;
 
@@ -71,11 +69,21 @@ public class SmtpConnector extends AbstractMailConnector
 
     private String contentType = DEFAULT_CONTENT_TYPE;
 
-    //todo RM*: This doesn't look right. The init should be done in the super class in initialise
-//    public SmtpConnector() throws InitialisationException
-//    {
-//        initFromServiceDescriptor();
-//    }
+    
+    public SmtpConnector()
+    {
+        this(DEFAULT_SMTP_PORT);
+    }
+    
+    SmtpConnector(int defaultPort)
+    {
+        super(defaultPort);
+    }
+    
+    public String getProtocol()
+    {
+        return "smtp";
+    }
 
     /*
      * (non-Javadoc)
@@ -86,42 +94,6 @@ public class SmtpConnector extends AbstractMailConnector
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         throw new UnsupportedOperationException("Listeners cannot be registered on a SMTP endpoint");
-    }
-
-
-    protected void doInitialise() throws InitialisationException
-    {
-        //template method, nothing to do
-    }
-
-    protected void doDispose()
-    {
-        // template method, nothing to do
-    }
-
-    protected void doConnect() throws Exception
-    {
-        // template method, nothing to do
-    }
-
-    protected void doDisconnect() throws Exception
-    {
-        // template method, nothing to do
-    }
-
-    protected void doStart() throws UMOException
-    {
-        // template method, nothing to do
-    }
-
-    protected void doStop() throws UMOException
-    {
-        // template method, nothing to do
-    }
-
-    public String getProtocol()
-    {
-        return "smtp";
     }
 
     /**

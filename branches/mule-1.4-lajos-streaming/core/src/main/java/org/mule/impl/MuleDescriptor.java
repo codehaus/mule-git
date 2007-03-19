@@ -145,6 +145,7 @@ public class MuleDescriptor extends ImmutableMuleDescriptor implements UMODescri
             }
             catch (Exception e)
             {
+                // TODO MULE-863: Sufficient?  Correct level?
                 logger.warn(MULE_PROPERTY_DOT_PROPERTIES + " was set  to " + delegate
                             + " but the file could not be read, exception is: " + e.getMessage());
             }

@@ -10,6 +10,7 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.CollectionUtils;
 import org.mule.util.StringUtils;
 
@@ -18,11 +19,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.lang.SystemUtils;
 
-public class CollectionUtilsTestCase extends TestCase
+public class CollectionUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testToArrayOfComponentTypeNullCollection()

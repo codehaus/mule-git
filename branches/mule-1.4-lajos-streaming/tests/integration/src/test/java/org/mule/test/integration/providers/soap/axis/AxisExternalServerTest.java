@@ -15,6 +15,7 @@ import org.mule.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapMethod;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
@@ -22,13 +23,11 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
-
 /**
  * Requires an external Axis server running in Tomcat with the Calculator.jws service
  * deployed to it.
  */
-public class AxisExternalServerTest extends TestCase
+public class AxisExternalServerTest extends AbstractMuleTestCase
 {
 
     public void testAxisServiceRPC() throws Exception
@@ -39,7 +38,6 @@ public class AxisExternalServerTest extends TestCase
         assertNotNull(result);
 
         assertEquals(result.getPayload(), new Integer(7));
-
     }
 
     public void testAxisServiceDocLitWrapped() throws Exception

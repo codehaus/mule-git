@@ -29,7 +29,6 @@ public class TransactionCoordinationTestCase extends AbstractMuleTestCase
     protected void doTearDown() throws Exception
     {
         tc.unbindTransaction(tc.getTransaction());
-        TransactionCoordination.setInstance(null);
     }
 
     public void testBindTransaction() throws Exception
@@ -81,18 +80,8 @@ public class TransactionCoordinationTestCase extends AbstractMuleTestCase
         UMOTransaction tx = (UMOTransaction)mockTx.proxy();
 
         tc.bindTransaction(tx);
-        try
-        {
-            TransactionCoordination.setInstance(null);
-            fail();
-        }
-        catch (IllegalStateException e)
-        {
-            // expected
-        }
 
         tc.unbindTransaction(tx);
-        TransactionCoordination.setInstance(null);
     }
 
 }

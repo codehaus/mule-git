@@ -125,8 +125,10 @@ public class DefaultMuleProxy implements MuleProxy
                 }
                 catch (Exception e)
                 {
-                    throw new ModelException(new Message(Messages.X_FAILED_TO_INITIALISE,
-                        "Component '" + descriptor.getName() + "'"), e);
+                    throw new ModelException(
+                        new Message(Messages.X_FAILED_TO_INITIALISE,
+                            "Component '" + descriptor.getName() + "'"), 
+                        e);
                 }
             }
         }
@@ -144,7 +146,8 @@ public class DefaultMuleProxy implements MuleProxy
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_START_X, "Component '" + descriptor.getName() + "'"), e);
+                    new Message(Messages.FAILED_TO_START_X, "Component '" + descriptor.getName() + "'"), 
+                    e);
             }
         }
 
@@ -167,7 +170,8 @@ public class DefaultMuleProxy implements MuleProxy
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_STOP_X, "Component '" + descriptor.getName() + "'"), e);
+                    new Message(Messages.FAILED_TO_STOP_X, "Component '" + descriptor.getName() + "'"),
+                    e);
             }
         }
     }
@@ -186,8 +190,11 @@ public class DefaultMuleProxy implements MuleProxy
                 }
                 catch (Exception e)
                 {
-                    logger.error(new Message(Messages.FAILED_TO_DISPOSE_X, "Component '"
-                                                                           + descriptor.getName() + "'"), e);
+                    // TODO MULE-863: If this is an error, do something
+                    logger.error(
+                        new Message(Messages.FAILED_TO_DISPOSE_X, "Component '" 
+                            + descriptor.getName() + "'"), 
+                        e);
                 }
             }
         }
@@ -323,8 +330,10 @@ public class DefaultMuleProxy implements MuleProxy
             }
             else
             {
-                handleException(new MessagingException(new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X,
-                    descriptor.getName()), event.getMessage(), e));
+                handleException(
+                    new MessagingException(
+                        new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()), 
+                        event.getMessage(), e));
             }
 
             if (returnMessage == null)
@@ -511,8 +520,10 @@ public class DefaultMuleProxy implements MuleProxy
             }
             else
             {
-                handleException(new MessagingException(new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X,
-                    descriptor.getName()), event.getMessage(), e));
+                handleException(
+                    new MessagingException(
+                        new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()), 
+                        event.getMessage(), e));
             }
         }
         finally
@@ -523,6 +534,7 @@ public class DefaultMuleProxy implements MuleProxy
             }
             catch (Exception e2)
             {
+                // TODO MULE-863: If this is an error, do something about it
                 logger.error("Failed to return proxy: " + e2.getMessage(), e2);
             }
             //TODO RM* clean this up

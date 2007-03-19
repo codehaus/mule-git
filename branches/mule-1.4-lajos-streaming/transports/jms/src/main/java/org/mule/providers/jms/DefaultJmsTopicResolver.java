@@ -10,10 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.providers.DefaultReplyToHandler;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.util.StringMessageUtils;
 import org.mule.util.MapUtils;
+import org.mule.util.StringMessageUtils;
 
 import javax.jms.Destination;
 import javax.jms.Queue;

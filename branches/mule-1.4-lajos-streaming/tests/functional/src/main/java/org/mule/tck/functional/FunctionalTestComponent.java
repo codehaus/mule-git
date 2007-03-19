@@ -35,6 +35,7 @@ public class FunctionalTestComponent implements Callable
 
     private EventCallback eventCallback;
     private Object returnMessage = null;
+    private boolean appendComponentName = false;
     private boolean throwException = false;
 
     public Object onCall(UMOEventContext context) throws Exception
@@ -58,7 +59,7 @@ public class FunctionalTestComponent implements Callable
         }
         else
         {
-            replyMessage = contents + " Received";
+            replyMessage = contents + " Received" + (appendComponentName ?  " " + context.getComponentDescriptor().getName() : "");
         }
 
         MuleManager.getInstance().fireNotification(
@@ -139,4 +140,14 @@ public class FunctionalTestComponent implements Callable
         this.throwException = throwException;
     }
 
+
+    public boolean isAppendComponentName()
+    {
+        return appendComponentName;
+    }
+
+    public void setAppendComponentName(boolean appendComponentName)
+    {
+        this.appendComponentName = appendComponentName;
+    }
 }

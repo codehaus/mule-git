@@ -117,6 +117,8 @@ public class MuleManager implements UMOManager
 
     /**
      * Endpoints registry
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     private Map endpointIdentifiers = new HashMap();
 
@@ -293,8 +295,9 @@ public class MuleManager implements UMOManager
             }
             catch (Exception e)
             {
-                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X,
-                    clazz.getName()), e);
+                throw new MuleRuntimeException(
+                    new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X, clazz.getName()),
+                    e);
             }
         }
 
@@ -418,6 +421,7 @@ public class MuleManager implements UMOManager
         }
         catch (UMOException e)
         {
+            // TODO MULE-863: What should we really do?
             logger.error("Failed to stop manager: " + e.getMessage(), e);
         }
         disposed.set(true);
@@ -523,6 +527,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public String lookupEndpointIdentifier(String logicalName, String defaultName)
     {
@@ -583,8 +589,9 @@ public class MuleManager implements UMOManager
             }
             catch (Exception e)
             {
-                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CLONE_X, "Transformer: "
-                                                                                       + trans.getName()), e);
+                throw new MuleRuntimeException(
+                    new Message(Messages.FAILED_TO_CLONE_X, "Transformer: " + trans.getName()),
+                    e);
             }
         }
         return null;
@@ -620,6 +627,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public void registerEndpointIdentifier(String logicalName, String endpoint)
     {
@@ -628,6 +637,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public void unregisterEndpointIdentifier(String logicalName)
     {
@@ -755,8 +766,9 @@ public class MuleManager implements UMOManager
                     }
                     catch (Exception e)
                     {
-                        throw new InitialisationException(new Message(Messages.INITIALISATION_FAILURE_X,
-                            "QueueManager"), e);
+                        throw new InitialisationException(
+                            new Message(Messages.INITIALISATION_FAILURE_X, "QueueManager"),
+                            e);
                     }
                 }
 
@@ -1079,6 +1091,8 @@ public class MuleManager implements UMOManager
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated endpoint-identifiers have been deprecated in favor of global-endpoints
      */
     public Map getEndpointIdentifiers()
     {
@@ -1551,7 +1565,7 @@ public class MuleManager implements UMOManager
      * Obtains a workManager instance that can be used to schedule work in a thread
      * pool. This will be used primarially by UMOAgents wanting to schedule work.
      * This work Manager must <b>never</b> be used by provider implementations as
-     * they have their own workManager accible on the connector. If a workManager has
+     * they have their own workManager accessible on the connector. If a workManager has
      * not been set by the time the <code>initialise()</code> method has been
      * called a default <code>MuleWorkManager</code> will be created using the
      * <i>DefaultThreadingProfile</i> on the <code>MuleConfiguration</code>

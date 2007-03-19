@@ -12,12 +12,10 @@ package org.mule.routing.outbound;
 
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutingException;
 
@@ -124,7 +122,6 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
 
     protected UMOEndpoint getRecipientEndpoint(UMOMessage message, String recipient) throws RoutingException
     {
-        UMOEndpointURI endpointUri = null;
         UMOEndpoint endpoint = (UMOEndpoint)recipientCache.get(recipient);
 
         if (endpoint != null)
@@ -134,8 +131,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
 
         try
         {
-            endpointUri = new MuleEndpointURI(recipient);
-            endpoint = MuleEndpoint.getOrCreateEndpointForUri(endpointUri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+            endpoint = MuleEndpoint.getOrCreateEndpointForUri(recipient, UMOEndpoint.ENDPOINT_TYPE_SENDER);
         }
         catch (UMOException e)
         {

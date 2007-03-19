@@ -10,17 +10,16 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.MapUtils;
 import org.mule.util.PropertiesUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 
-public class PropertiesUtilsTestCase extends TestCase
+public class PropertiesUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testRemoveNameSpacePrefix()

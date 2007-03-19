@@ -109,6 +109,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
             {
                 // this really should never happen as the endpoint is already
                 // initialised
+                // TODO Mule-863: Then die or be quiet!
                 logger.error(e.getMessage(), e);
             }
         }

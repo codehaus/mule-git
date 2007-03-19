@@ -35,13 +35,13 @@ import javax.mail.URLName;
 public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 {
     private final SmtpConnector connector;
-    protected volatile Transport transport;
-    protected volatile Session session;
+    private volatile Transport transport;
+    private volatile Session session;
 
     public SmtpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (SmtpConnector)endpoint.getConnector();
+        this.connector = (SmtpConnector) endpoint.getConnector();
     }
 
     protected void doConnect() throws Exception
@@ -130,7 +130,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             else
             {
                 // Check the message for any unset data and use defaults
-                sendMailMessage((Message)data);
+                sendMailMessage((Message) data);
             }
         }
         catch (Exception e)
@@ -166,16 +166,11 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         // sent date
         message.setSentDate(Calendar.getInstance().getTime());
 
-        // These getAllRecipients() and similar methods always return null???
-        // Seems like JavaMail 1.3.3 is setting headers only
-        // transport.sendMessage(message, message.getAllRecipients());
-
-        // this call at least preserves the TO field
-        // TODO handle CC and BCC
-        Transport.send(message);
+        transport.sendMessage(message, message.getAllRecipients());
+        
         if (logger.isDebugEnabled())
         {
-            StringBuffer msg = new StringBuffer(200);
+            StringBuffer msg = new StringBuffer();
             msg.append("Email message sent with subject'").append(message.getSubject()).append("' sent- ");
             msg.append(", From: ").append(MailUtils.mailAddressesToString(message.getFrom())).append(" ");
             msg.append(", To: ").append(

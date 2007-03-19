@@ -406,8 +406,9 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
             }
             catch (Exception e)
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X,
-                    object.getClass().getName(), "byte[]"), e);
+                throw new TransformerException(
+                    new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, object.getClass().getName(), "byte[]"),
+                    e);
             }
         }
         else

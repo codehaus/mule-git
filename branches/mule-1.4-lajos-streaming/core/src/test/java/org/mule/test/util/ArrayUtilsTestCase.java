@@ -10,14 +10,13 @@
 
 package org.mule.test.util;
 
-import java.util.List;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.ArrayUtils;
 import org.mule.util.StringUtils;
 
-public class ArrayUtilsTestCase extends TestCase
+import java.util.List;
+
+public class ArrayUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testToArrayOfComponentType()

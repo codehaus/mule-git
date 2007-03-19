@@ -39,19 +39,17 @@
     </modules>
 
     <dependencies>
+        <!-- every transport depends at least on core -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- need to explicitly mark javax.activation as provided -->
+        <!-- Now that m2 dependency resolution works, activation
+             should ONLY come via core or (in the future) core-api, but there is
+             OF COURSE a bug with m2's handling of provided dependencies:
+             http://jira.codehaus.org/browse/MNG-2205
+        -->
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
@@ -59,35 +57,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--
-            TODO this is a hack. Duplicate declaration (original is in the top pom.xml)
-            makes JMS transport happy to compile when run from the project root folder,
-            otherwise it cannot find classes from commons-collections.
-
-            At the same time, running either from the transports or jms folder works fine
-            without this hack.
-
-            It seems m2 dependency visibility hierarchy is limited to 1 level deep.
-        -->
+        <!-- many transports use FunctionalTestCase -->
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.2</version>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- used for functional tests-->
- 
+        <!-- required for ConfigurationBuilders at runtime -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-builders</artifactId>
@@ -95,4 +72,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

@@ -10,13 +10,12 @@
 
 package org.mule.test.util;
 
-import java.util.Date;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.DateUtils;
 
-public class DateUtilsTestCase extends TestCase
+import java.util.Date;
+
+public class DateUtilsTestCase extends AbstractMuleTestCase
 {
     private final String TEST_DATE_FORMAT = "dd/MM/yyyy hh:mm:ss";
     private final String TEST_DATE_FORMAT_2 = "dd-MM-yy, hh:mm";

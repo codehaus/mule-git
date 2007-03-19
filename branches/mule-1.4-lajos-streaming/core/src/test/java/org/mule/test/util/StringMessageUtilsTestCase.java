@@ -10,6 +10,7 @@
 
 package org.mule.test.util;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 
@@ -17,10 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
 import org.apache.commons.lang.SystemUtils;
 
-public class StringMessageUtilsTestCase extends TestCase
+public class StringMessageUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testToString() throws Exception

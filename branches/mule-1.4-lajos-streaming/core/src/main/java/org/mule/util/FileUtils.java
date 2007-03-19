@@ -77,7 +77,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
     {
         filename = filename.replaceAll("<", "(");
         filename = filename.replaceAll(">", ")");
-        filename = filename.replaceAll("[/\\*?|:;]", "-");
+        filename = filename.replaceAll("[/\\*?|:;\\]\\[\"]", "-");
         return filename;
     }
 
@@ -285,7 +285,8 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         catch (IOException e)
         {
             throw new MuleRuntimeException(
-                    Message.createStaticMessage("Unable to create a canonical file for " + pathName), e);
+                    Message.createStaticMessage("Unable to create a canonical file for " + pathName), 
+                    e);
         }
     }
 
@@ -309,7 +310,8 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         catch (IOException e)
         {
             throw new MuleRuntimeException(
-                    Message.createStaticMessage("Unable to create a canonical file for " + uri), e);
+                    Message.createStaticMessage("Unable to create a canonical file for " + uri),
+                    e);
         }
     }
 
@@ -333,8 +335,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         catch (IOException e)
         {
             throw new MuleRuntimeException(
-                    Message.createStaticMessage("Unable to create a canonical file for parent: " +
-                            parent + " and child: " + child), e);
+                    Message.createStaticMessage("Unable to create a canonical file for parent: " 
+                        + parent + " and child: " + child),
+                    e);
         }
     }
 
@@ -358,8 +361,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         catch (IOException e)
         {
             throw new MuleRuntimeException(
-                    Message.createStaticMessage("Unable to create a canonical file for parent: " +
-                            parent + " and child: " + child), e);
+                    Message.createStaticMessage("Unable to create a canonical file for parent: " 
+                        + parent + " and child: " + child),
+                    e);
         }
     }
 }

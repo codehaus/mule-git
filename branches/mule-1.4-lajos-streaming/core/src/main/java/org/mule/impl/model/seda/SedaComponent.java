@@ -190,8 +190,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"), e,
-                this);
+            throw new InitialisationException(
+                new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"), 
+                e, this);
         }
     }
 
@@ -229,6 +230,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             }
             catch (Exception e)
             {
+                // TODO MULE-863: If this is an error, do something about it
                 logger.error("Failed to stop component pool: " + e.getMessage(), e);
             }
             poolInitialised.set(false);
@@ -260,9 +262,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new LifecycleException(new Message(Messages.FAILED_TO_START_X, "Component: "
-                                                                                 + descriptor.getName()), e,
-                this);
+            throw new LifecycleException(
+                new Message(Messages.FAILED_TO_START_X, "Component: " + descriptor.getName()), 
+                e, this);
         }
     }
 
@@ -279,6 +281,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
+            // TODO MULE-863: So what are we going to do about it?
             logger.error("Component Thread Pool did not close properly: " + e);
         }
         try
@@ -294,6 +297,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
+            // TODO MULE-863: So what are we going to do about it?
             logger.error("Proxy Pool did not close properly: " + e);
         }
     }
@@ -322,8 +326,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            FailedToQueueEventException e1 = new FailedToQueueEventException(new Message(
-                Messages.INTERRUPTED_QUEUING_EVENT_FOR_X, getName()), event.getMessage(), this, e);
+            FailedToQueueEventException e1 = 
+                new FailedToQueueEventException(
+                    new Message(Messages.INTERRUPTED_QUEUING_EVENT_FOR_X, getName()), 
+                    event.getMessage(), this, e);
             handleException(e1);
         }
 
@@ -486,6 +492,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     }
                     catch (Exception e2)
                     {
+                        // TODO MULE-863: What should we do here?  Die?
                         logger.info("Failed to return proxy to pool", e2);
                     }
                 }
@@ -506,14 +513,17 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof WorkException)
                 {
-                    handleException(new ComponentException(new Message(
-                        Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()), (event == null
-                                    ? null : event.getMessage()), this, e));
+                    handleException(
+                        new ComponentException(
+                            new Message(Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()),
+                            (event == null ? null : event.getMessage()), this, e));
                 }
                 else
                 {
-                    handleException(new ComponentException(new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
-                        (event == null ? null : event.getMessage()), this, e));
+                    handleException(
+                        new ComponentException(
+                            new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
+                            (event == null ? null : event.getMessage()), this, e));
                 }
             }
             finally
@@ -592,7 +602,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         else
         {
-            throw new MuleRuntimeException(new Message(Messages.COMPONENT_CAUSED_ERROR_IS_X, getName()), e);
+            throw new MuleRuntimeException(
+                new Message(Messages.COMPONENT_CAUSED_ERROR_IS_X, getName()), 
+                e);
         }
     }
 

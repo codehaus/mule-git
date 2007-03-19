@@ -55,8 +55,10 @@ public class HttpConnectorTestCase extends AbstractConnectorTestCase
             fail("cannot register with null endpointUri");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            /* expected */
         }
+
         endpoint.setEndpointURI(null);
         try
         {
@@ -64,7 +66,8 @@ public class HttpConnectorTestCase extends AbstractConnectorTestCase
             fail("cannot register with empty endpointUri");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            /* expected */
         }
 
         endpoint.setEndpointURI(new MuleEndpointURI("http://localhost:0"));
@@ -75,8 +78,10 @@ public class HttpConnectorTestCase extends AbstractConnectorTestCase
             fail("cannot register on the same endpointUri");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            /* expected */
         }
+
         connector.dispose();
     }
 
@@ -84,10 +89,10 @@ public class HttpConnectorTestCase extends AbstractConnectorTestCase
     {
         HttpConnector c = (HttpConnector)getConnector();
 
-        c.setBufferSize(1024);
-        assertEquals(1024, c.getBufferSize());
-        c.setBufferSize(0);
-        assertEquals(TcpConnector.DEFAULT_BUFFER_SIZE, c.getBufferSize());
+        c.setSendBufferSize(1024);
+        assertEquals(1024, c.getSendBufferSize());
+        c.setSendBufferSize(0);
+        assertEquals(TcpConnector.DEFAULT_BUFFER_SIZE, c.getSendBufferSize());
 
         c.dispose();
 

@@ -50,6 +50,7 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
+            // TODO MULE-863: Is logging necessary and correct level?
             logger.warn("Failed to find service for spi: " + spi.getName());
             return null;
         }
@@ -82,6 +83,7 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
+            // TODO MULE-863: What should we really do? (Not as documentation)
             logger.warn("Failed to find service for spi: " + spi.getName());
             return null;
         }
@@ -106,6 +108,7 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
+            // TODO MULE-863:Necessary?  Level?
             logger.warn("Failed to find service for spi: " + spi.getName());
             return null;
         }
@@ -132,6 +135,7 @@ public class SpiUtils
         }
         catch (DiscoveryException e)
         {
+            // TODO MULE-863: Necessary?  Level?
             logger.warn("Failed to find service for spi: " + spi.getName());
             return null;
         }

@@ -13,6 +13,7 @@
     <connector name="tcpConnector" className="org.mule.providers.tcp.TcpConnector">
         <properties>
             <property name="tcpProtocolClassName" value="org.mule.providers.tcp.protocols.MuleMessageProtocol"/>
+            <property name="keepSendSocketOpen" value="false"/>
         </properties>
     </connector>
 

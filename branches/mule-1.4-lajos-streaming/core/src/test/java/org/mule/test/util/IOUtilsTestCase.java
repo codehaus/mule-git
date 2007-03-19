@@ -10,13 +10,12 @@
 
 package org.mule.test.util;
 
-import java.io.InputStream;
-
-import junit.framework.TestCase;
-
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.IOUtils;
 
-public class IOUtilsTestCase extends TestCase
+import java.io.InputStream;
+
+public class IOUtilsTestCase extends AbstractMuleTestCase
 {
 
     public void testLoadingResourcesAsStream() throws Exception

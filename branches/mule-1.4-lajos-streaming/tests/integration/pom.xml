@@ -260,6 +260,11 @@
                     <groupId>commons-collections</groupId>
                     <artifactId>commons-collections</artifactId>
                 </exclusion>
+                <!-- we like slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
                 <!-- We've already got the geronimo-jta spec -->
                 <exclusion>
                     <groupId>javax.transaction</groupId>
@@ -347,13 +352,11 @@
                     <groupId>org.apache.derby</groupId>
                     <artifactId>derbynet</artifactId>
                 </exclusion>
-                <!-- m2 bug - if this transient dependency is excluded, the normal
-                     dependency for spring is not included either.
-                 -->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework</groupId>-->
-                    <!--<artifactId>spring</artifactId>-->
-                <!--</exclusion>-->
+                <!-- Mule ships a more recent version -->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>xerces</groupId>
                     <artifactId>xmlParserAPIs</artifactId>
@@ -414,9 +417,18 @@
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
+                <!-- we want newer beanutils via core -->
+                <exclusion>
+                    <groupId>commons-beanutils</groupId>
+                    <artifactId>commons-beanutils</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
                 </exclusion>
                 <!-- This exclusion is to force use of the new cglib -->
                 <exclusion>
@@ -435,6 +447,13 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.0.1</version>
+            <exclusions>
+                <!-- we like slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>                
+            </exclusions>
         </dependency>
         <!-- Better testing of XML -->        
         <dependency>
@@ -444,4 +463,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

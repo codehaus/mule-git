@@ -66,14 +66,17 @@ public class MultiContainerContext implements UMOContainerContext
 
     public UMOContainerContext removeContainer(String name)
     {
-        return (UMOContainerContext)containers.remove(name);
+        return (UMOContainerContext) containers.remove(name);
     }
 
     public Object getComponent(Object key) throws ObjectNotFoundException
     {
-        // first see if a particular container has been requested
         ContainerKeyPair realKey = null;
-        String cause = null;
+        StringBuffer cause = new StringBuffer();
+        Throwable finalCause = null;
+        
+        // first see if a particular container has been requested
+        // TODO MULE-863: possible class cast exception below.  Document?
         if (key instanceof String)
         {
             realKey = new ContainerKeyPair(null, key);
@@ -100,21 +103,35 @@ public class MultiContainerContext implements UMOContainerContext
 
         for (Iterator iterator = containers.values().iterator(); iterator.hasNext();)
         {
-            container = (UMOContainerContext)iterator.next();
+            container = (UMOContainerContext) iterator.next();
             try
             {
                 component = container.getComponent(realKey);
             }
             catch (ObjectNotFoundException e)
             {
-                if (logger.isDebugEnabled())
+                if (e.getCause() != null)
                 {
-                    logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
-                        e.getCause());
+                    finalCause = e.getCause();
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
+                            finalCause);
+                    }
+                } else
+                {
+                    finalCause = e;
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName());
+                    }
                 }
-                if (e.getCause() != null){
-                    cause = cause + " " + e.getCause().toString();
+
+                if (cause.length() > 0)
+                {
+                    cause.append("; ");
                 }
+                cause.append(finalCause.toString());
             }
             if (component != null)
             {
@@ -125,11 +142,12 @@ public class MultiContainerContext implements UMOContainerContext
                 break;
             }
         }
+        
         if (component == null)
         {
             if (realKey.isRequired())
             {
-                throw new ObjectNotFoundException(realKey.toString() + " " + cause);
+                throw new ObjectNotFoundException(realKey.toString() + " " + cause, finalCause);
             }
             else if (logger.isDebugEnabled())
             {

@@ -12,6 +12,22 @@
     <packaging>jar</packaging>
     <name>Jms Transport</name>
     <description>A Mule transport for Jms Connectivity.</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                    <excludes>
+                        <exclude implementation="java.lang.String">**/ActiveMQ*.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -100,13 +116,11 @@
                     <groupId>org.apache.derby</groupId>
                     <artifactId>derbynet</artifactId>
                 </exclusion>
-                <!-- m2 bug - if this transient dependency is excluded, the normal
-                     dependency for spring is not included either.
-                 -->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework</groupId>-->
-                    <!--<artifactId>spring</artifactId>-->
-                <!--</exclusion>-->
+                <!-- Mule ships a more recent version -->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>xerces</groupId>
                     <artifactId>xmlParserAPIs</artifactId>
@@ -135,13 +149,10 @@
                     <!--<groupId>mx4j</groupId>-->
                     <!--<artifactId>mx4j-remote</artifactId>-->
                 <!--</exclusion>-->
-                <!-- m2 bug - if this transient dependency is excluded, the normal
-                     dependency for spring is not included either.
                 <exclusion>
                     <groupId>backport-util-concurrent</groupId>
                     <artifactId>backport-util-concurrent</artifactId>
                 </exclusion>
-                -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jsp_2.0_spec</artifactId>
@@ -150,8 +161,6 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-j2ee-jacc_1.0_spec</artifactId>
                 </exclusion>
-                <!-- m2 bug - if this transient dependency is excluded, the normal
-                     dependency for spring is not included either.
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jms_1.1_spec</artifactId>
@@ -160,7 +169,6 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
                 </exclusion>
-                 -->
                 <exclusion>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty</artifactId>
@@ -173,13 +181,19 @@
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
-                <!-- m2 bug - if this transient dependency is excluded, the normal
-                     dependency for spring is not included either.
+                <!-- we want newer beanutils via core -->
+                <exclusion>
+                    <groupId>commons-beanutils</groupId>
+                    <artifactId>commons-beanutils</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
-                -->
+                <exclusion>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
                 <!-- This exclusion is to force use of the new cglib -->
                 <exclusion>
                     <groupId>cglib</groupId>

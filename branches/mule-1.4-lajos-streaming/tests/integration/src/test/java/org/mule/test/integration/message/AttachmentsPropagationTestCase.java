@@ -13,6 +13,7 @@ package org.mule.test.integration.message;
 import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.email.transformers.PlainTextDataSource;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
@@ -21,18 +22,16 @@ import org.mule.umo.endpoint.UMOEndpoint;
 
 import javax.activation.DataHandler;
 
-import junit.framework.TestCase;
-
-/**
- * @author jbraam
- */
-public class AttachmentsPropagationTestCase extends TestCase implements EventCallback
+public class AttachmentsPropagationTestCase extends AbstractMuleTestCase implements EventCallback
 {
 
     QuickConfigurationBuilder builder;
 
-    protected void setUp() throws Exception
+    // @Override
+    protected void doSetUp() throws Exception
     {
+        super.doSetUp();
+
         builder = new QuickConfigurationBuilder();
         builder.createStartedManager(false, null);
 
@@ -44,14 +43,15 @@ public class AttachmentsPropagationTestCase extends TestCase implements EventCal
         FunctionalTestComponent chained = new FunctionalTestComponent();
         chained.setEventCallback(this);
         builder.registerComponentInstance(single, "SINGLE", vmSingle.getEndpointURI());
-        builder.registerComponentInstance(chained, "CHAINED", vmChained.getEndpointURI(),
-            vmSingle.getEndpointURI());
-
+        builder.registerComponentInstance(chained, "CHAINED", vmChained.getEndpointURI(), vmSingle
+            .getEndpointURI());
     }
 
-    protected void tearDown() throws Exception
+    // @Override
+    protected void doTearDown() throws Exception
     {
         builder.disposeCurrent();
+        super.doTearDown();
     }
 
     public void eventReceived(UMOEventContext context, Object Component) throws Exception

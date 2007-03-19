@@ -10,6 +10,10 @@
 
 package org.mule.test.umo;
 
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.umo.FutureMessageResult;
+import org.mule.umo.transformer.TransformerException;
+
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutionException;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
@@ -17,12 +21,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionException;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 
-import junit.framework.TestCase;
-
-import org.mule.umo.FutureMessageResult;
-import org.mule.umo.transformer.TransformerException;
-
-public class FutureMessageResultTestCase extends TestCase
+public class FutureMessageResultTestCase extends AbstractMuleTestCase
 {
     private static Callable Dummy = new Callable()
     {
@@ -34,20 +33,10 @@ public class FutureMessageResultTestCase extends TestCase
 
     volatile boolean wasCalled;
 
-    public FutureMessageResultTestCase(String name)
+    protected void doSetUp() throws Exception
     {
-        super(name);
-    }
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
+        super.doSetUp();
         wasCalled = false;
-    }
-
-    protected void tearDown() throws Exception
-    {
-        super.tearDown();
     }
 
     public void testCreation()

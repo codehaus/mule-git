@@ -12,6 +12,7 @@ package org.mule.test.integration.providers.jms.activemq;
 
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
+import org.mule.providers.jms.activemq.ActiveMqJmsConnector;
 import org.mule.test.integration.providers.jms.AbstractJmsQueueFunctionalTestCase;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class ActiveMQJmsQueueFunctionalTestCase extends AbstractJmsQueueFunction
 
     public JmsConnector createConnector() throws Exception
     {
-        JmsConnector connector = new JmsConnector();
+        ActiveMqJmsConnector connector = new ActiveMqJmsConnector();
         connector.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
         connector.setName(CONNECTOR_NAME);
         connector.getDispatcherThreadingProfile().setDoThreading(false);

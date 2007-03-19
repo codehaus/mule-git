@@ -59,7 +59,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /**
      * logger used by this class
      */
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * The Component with which this receiver is associated with
@@ -78,13 +78,13 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
      */
     protected AbstractConnector connector = null;
 
-    protected AtomicBoolean disposing = new AtomicBoolean(false);
+    protected final AtomicBoolean disposing = new AtomicBoolean(false);
 
-    protected WaitableBoolean connected = new WaitableBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
 
-    protected WaitableBoolean stopped = new WaitableBoolean(true);
+    protected final WaitableBoolean stopped = new WaitableBoolean(true);
 
-    protected AtomicBoolean connecting = new AtomicBoolean(false);
+    protected final AtomicBoolean connecting = new AtomicBoolean(false);
 
     /**
      * Stores the key to this receiver, as used by the Connector to
@@ -473,6 +473,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
         catch (Exception e)
         {
+            // TODO MULE-863: What should we really do?
             logger.error(e.getMessage(), e);
         }
 
@@ -484,6 +485,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             catch (UMOException e)
             {
+                // TODO MULE-863: What should we really do?
                 logger.error(e.getMessage(), e);
             }
 
@@ -542,6 +544,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 }
                 catch (SecurityException e)
                 {
+                    // TODO MULE-863: Do we need to warn?
                     logger.warn("Request was made but was not authenticated: " + e.getMessage(), e);
                     connector.fireNotification(new SecurityNotification(e,
                         SecurityNotification.SECURITY_AUTHENTICATION_FAILED));

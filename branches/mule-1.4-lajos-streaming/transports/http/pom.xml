@@ -27,6 +27,13 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.0.1</version>
+            <exclusions>
+                <!-- we like slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jetty</groupId>
@@ -37,30 +44,24 @@
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-servlet_2.4_spec</artifactId>
             <version>1.0.1</version>
-            <!-- TODO MULE-10221 
+            <!-- TODO MULE-1021
                 This library causes conflicts when Mule is deployed to a Web/J2EE server but is
                 needed otherwise.
             <scope>provided</scope> 
             -->
         </dependency>
 
-        <!--
-            TODO this is a hack. Duplicate declaration (original is in the top pom.xml)
-            makes me happy to compile when run from the project root folder,
-            otherwise it cannot find classes from commons-logging.
-
-            It seems m2 dependency visibility hierarchy is limited to 1 level deep.
-        -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
-        </dependency>
-
         <!-- for functional tests only -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
