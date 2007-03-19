@@ -164,16 +164,13 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     protected int createConnector = TransportFactory.GET_OR_CREATE_CONNECTOR;
 
     /**
-     * Default ctor
+     * Default constructor.
      */
     private ImmutableMuleEndpoint()
     {
         super();
     }
 
-    /**
-     * Default constructor
-     */
     public ImmutableMuleEndpoint(String name,
                                  UMOEndpointURI endpointUri,
                                  UMOConnector connector,
@@ -500,7 +497,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             return false;
         }
 
-        final ImmutableMuleEndpoint immutableMuleProviderDescriptor = (ImmutableMuleEndpoint)o;
+        final ImmutableMuleEndpoint immutableMuleProviderDescriptor = (ImmutableMuleEndpoint) o;
 
         if (!connector.getName().equals(immutableMuleProviderDescriptor.connector.getName()))
         {
@@ -693,16 +690,16 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             {
                 if (UMOEndpoint.ENDPOINT_TYPE_SENDER.equals(type))
                 {
-                    transformer = ((AbstractConnector)connector).getDefaultOutboundTransformer();
+                    transformer = ((AbstractConnector) connector).getDefaultOutboundTransformer();
                 }
                 else if (UMOEndpoint.ENDPOINT_TYPE_SENDER_AND_RECEIVER.equals(type))
                 {
-                	transformer = ((AbstractConnector)connector).getDefaultOutboundTransformer();
-                	responseTransformer = ((AbstractConnector)connector).getDefaultInboundTransformer();
+                    transformer = ((AbstractConnector) connector).getDefaultOutboundTransformer();
+                    responseTransformer = ((AbstractConnector) connector).getDefaultInboundTransformer();
                 }
                 else
                 {
-                    transformer = ((AbstractConnector)connector).getDefaultInboundTransformer();
+                    transformer = ((AbstractConnector) connector).getDefaultInboundTransformer();
                 }
             }
         }
@@ -727,7 +724,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         {
             if (connector instanceof AbstractConnector)
             {
-                responseTransformer = ((AbstractConnector)connector).getDefaultResponseTransformer();
+                responseTransformer = ((AbstractConnector) connector).getDefaultResponseTransformer();
             }
         }
         if (responseTransformer != null)
@@ -742,13 +739,13 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
 
         // Allow remote sync values to be set as params on the endpoint URI
-        String rs = (String)endpointUri.getParams().remove("remoteSync");
+        String rs = (String) endpointUri.getParams().remove("remoteSync");
         if (rs != null)
         {
             remoteSync = Boolean.valueOf(rs);
         }
 
-        String rsTimeout = (String)endpointUri.getParams().remove("remoteSyncTimeout");
+        String rsTimeout = (String) endpointUri.getParams().remove("remoteSyncTimeout");
         if (rsTimeout != null)
         {
             remoteSyncTimeout = Integer.valueOf(rsTimeout);

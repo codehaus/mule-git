@@ -26,12 +26,12 @@ public class CommonsPoolFactory implements UMOPoolFactory
 {
     public ObjectPool createPool(UMODescriptor descriptor, UMOModel model, ObjectFactory factory, PoolingProfile pp)
     {
-        return new CommonsPoolProxyPool((MuleDescriptor)descriptor, model, factory, pp);
+        return new CommonsPoolProxyPool((MuleDescriptor) descriptor, model, factory, pp);
     }
 
     public ObjectPool createPool(UMODescriptor descriptor, UMOModel model, PoolingProfile pp)
     {
-        return new CommonsPoolProxyPool((MuleDescriptor)descriptor, model, new CommonsPoolProxyFactory(
-            (MuleDescriptor)descriptor, model), pp);
+        return new CommonsPoolProxyPool((MuleDescriptor) descriptor, model, new CommonsPoolProxyFactory(
+            (MuleDescriptor) descriptor, model), pp);
     }
 }

@@ -82,7 +82,7 @@ public class ServerNotificationManager implements Work, Disposable
     {
         if (UMOServerNotification.class.isAssignableFrom(eventType))
         {
-            Class previousEventType = (Class)eventsMap.putIfAbsent(listenerType, eventType);
+            Class previousEventType = (Class) eventsMap.putIfAbsent(listenerType, eventType);
             if (previousEventType != null)
             {
                 eventType = previousEventType;
@@ -92,8 +92,7 @@ public class ServerNotificationManager implements Work, Disposable
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Registered event type: " + eventType);
-                    logger.debug("Binding listener type '" + listenerType + "' to event type '" + eventType
-                                    + "'");
+                    logger.debug("Binding listener type '" + listenerType + "' to event type '" + eventType + "'");
                 }
             }
         }
@@ -120,7 +119,7 @@ public class ServerNotificationManager implements Work, Disposable
     {
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            Listener l = (Listener)iterator.next();
+            Listener l = (Listener) iterator.next();
             if (l.getListenerObject().equals(listener))
             {
                 listeners.remove(l);
@@ -180,7 +179,7 @@ public class ServerNotificationManager implements Work, Disposable
 
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            Listener listener = (Listener)iterator.next();
+            Listener listener = (Listener) iterator.next();
             if (listener.matches(notification))
             {
                 listener.getListenerObject().onNotification(notification);
@@ -208,7 +207,7 @@ public class ServerNotificationManager implements Work, Disposable
         {
             try
             {
-                UMOServerNotification notification = (UMOServerNotification)eventQueue.take();
+                UMOServerNotification notification = (UMOServerNotification) eventQueue.take();
                 if (notification != null)
                 {
                     this.notifyListeners(notification);
@@ -244,7 +243,7 @@ public class ServerNotificationManager implements Work, Disposable
 
             for (Iterator iterator = eventsMap.keySet().iterator(); iterator.hasNext();)
             {
-                Class clazz = (Class)iterator.next();
+                Class clazz = (Class) iterator.next();
                 if (clazz.isAssignableFrom(listener.getClass()))
                 {
                     notificationClasses.add(eventsMap.get(clazz));
@@ -273,7 +272,7 @@ public class ServerNotificationManager implements Work, Disposable
             {
                 for (Iterator iterator = notificationClasses.iterator(); iterator.hasNext();)
                 {
-                    Class notificationClass = (Class)iterator.next();
+                    Class notificationClass = (Class) iterator.next();
                     if (notificationClass.isAssignableFrom(notification.getClass()))
                     {
                         return true;

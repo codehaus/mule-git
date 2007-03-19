@@ -34,6 +34,6 @@ public class OptimisedProxyFactory extends CommonsPoolProxyFactory
             throw new IllegalArgumentException("Components for the Optimised Mule proxy must implement: "
                                                + Callable.class.getName());
         }
-        return new OptimisedMuleProxy((Callable)component, descriptor, pool);
+        return new OptimisedMuleProxy((Callable) component, descriptor, pool);
     }
 }

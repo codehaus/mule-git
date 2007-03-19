@@ -54,7 +54,7 @@ public class SerializableToByteArray extends AbstractEventAwareTransformer
 
         try
         {
-            return SerializationUtils.serialize((Serializable)src);
+            return SerializationUtils.serialize((Serializable) src);
         }
         catch (Exception e)
         {

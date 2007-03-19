@@ -52,7 +52,7 @@ public class MessagePropertiesTransformer extends AbstractEventAwareTransformer
         {
             for (Iterator iterator = addProperties.entrySet().iterator(); iterator.hasNext();)
             {
-                Map.Entry entry = (Map.Entry)iterator.next();
+                Map.Entry entry = (Map.Entry) iterator.next();
                 if (entry.getKey() == null)
                 {
                     logger.error("Setting Null property keys is not supported, this entry is being ignored");

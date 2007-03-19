@@ -220,7 +220,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             if (connector instanceof AbstractConnector)
             {
-                this.connector = (AbstractConnector)connector;
+                this.connector = (AbstractConnector) connector;
             }
             else
             {
@@ -420,7 +420,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
             if (e instanceof ConnectException)
             {
-                throw (ConnectException)e;
+                throw (ConnectException) e;
             }
             else
             {
@@ -522,7 +522,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             {
                 if (outputStream instanceof ResponseOutputStream)
                 {
-                    ros = (ResponseOutputStream)outputStream;
+                    ros = (ResponseOutputStream) outputStream;
                 }
                 else
                 {
@@ -627,7 +627,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             Object result = transformer.transform(returnPayload);
             if (result instanceof UMOMessage)
             {
-                returnMessage = (UMOMessage)result;
+                returnMessage = (UMOMessage) result;
             }
             else
             {

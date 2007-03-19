@@ -291,35 +291,23 @@ public class ThreadingProfile
         switch (poolExhaustPolicy)
         {
             case WHEN_EXHAUSTED_DISCARD_OLDEST :
-            {
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
                 break;
-            }
             case WHEN_EXHAUSTED_RUN :
-            {
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
                 break;
-            }
             case WHEN_EXHAUSTED_ABORT :
-            {
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
                 break;
-            }
             case WHEN_EXHAUSTED_DISCARD :
-            {
                 pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
                 break;
-            }
             case WHEN_EXHAUSTED_WAIT :
-            {
                 pool.setRejectedExecutionHandler(new WaitPolicy(threadWaitTimeout, TimeUnit.MILLISECONDS));
                 break;
-            }
             default :
-            {
                 pool.setRejectedExecutionHandler(new WaitPolicy(threadWaitTimeout, TimeUnit.MILLISECONDS));
                 break;
-            }
         }
 
         return pool;

@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 
-public class TransportFactory
+public final class TransportFactory
 {
     public static final String PROVIDER_SERVICES_PATH = "org/mule/providers";
 
@@ -64,6 +64,12 @@ public class TransportFactory
 
     // @GuardedBy("TransportFactory.class")
     private static Map csdCache = new HashMap();
+
+    /** Do not instanciate. */
+    private TransportFactory ()
+    {
+        // no-op
+    }
 
     public static UMOEndpoint createEndpoint(UMOEndpointURI uri, String type) throws EndpointException
     {
@@ -177,7 +183,7 @@ public class TransportFactory
             Properties overrides = new Properties();
             if (cnn instanceof AbstractConnector)
             {
-                Map so = ((AbstractConnector)cnn).getServiceOverrides();
+                Map so = ((AbstractConnector) cnn).getServiceOverrides();
                 if (so != null)
                 {
                     overrides.putAll(so);
@@ -185,27 +191,27 @@ public class TransportFactory
             }
 
             String scheme = url.getSchemeMetaInfo();
-            
+
             //check if there is a transformer associated with connector allready...
             //if not, get it from the ServiceDescriptor
-            if(cnn instanceof AbstractConnector)
+            if (cnn instanceof AbstractConnector)
             {
                 AbstractConnector aconn = (AbstractConnector) cnn;
                 // TODO MCR use the constants for the type, there should be on already
                 if (type == 0)
                 {
-                    trans=aconn.getDefaultInboundTransformer();
+                    trans = aconn.getDefaultInboundTransformer();
                 }
                 else if (type == 1)
                 {
-                    trans=aconn.getDefaultOutboundTransformer();
+                    trans = aconn.getDefaultOutboundTransformer();
                 }
                 else
                 {
-                    trans=aconn.getDefaultResponseTransformer();
+                    trans = aconn.getDefaultResponseTransformer();
                 }
             }
-            
+
             if (trans == null)
             {
                 TransportServiceDescriptor csd = getServiceDescriptor(scheme, overrides);
@@ -262,19 +268,19 @@ public class TransportFactory
         {
             if (csd.getConnectorFactory() != null)
             {
-                ObjectFactory factory = (ObjectFactory)ClassUtils.loadClass(csd.getConnectorFactory(),
-                    TransportFactory.class).newInstance();
-                connector = (UMOConnector)factory.create();
+                ObjectFactory factory = (ObjectFactory) ClassUtils.loadClass(csd.getConnectorFactory(),
+                                                                             TransportFactory.class).newInstance();
+                connector = (UMOConnector) factory.create();
             }
             else
             {
                 if (csd.getConnector() != null)
                 {
-                    connector = (UMOConnector)ClassUtils.loadClass(csd.getConnector(), TransportFactory.class)
+                    connector = (UMOConnector) ClassUtils.loadClass(csd.getConnector(), TransportFactory.class)
                         .newInstance();
                     if (connector instanceof AbstractConnector)
                     {
-                        ((AbstractConnector)connector).initialiseFromUrl(url);
+                        ((AbstractConnector) connector).initialiseFromUrl(url);
                     }
                 }
                 else
@@ -321,11 +327,9 @@ public class TransportFactory
     public static synchronized TransportServiceDescriptor getServiceDescriptor(String protocol, Properties overrides)
         throws TransportFactoryException
     {
-        TransportServiceDescriptor csd = (TransportServiceDescriptor)csdCache.get(new CSDKey(protocol,
-            overrides));
+        TransportServiceDescriptor csd = (TransportServiceDescriptor) csdCache.get(new CSDKey(protocol, overrides));
         if (csd == null)
         {
-
             String location = SpiUtils.SERVICE_ROOT + PROVIDER_SERVICES_PATH;
             InputStream is = SpiUtils.findServiceDescriptor(PROVIDER_SERVICES_PATH, protocol + ".properties",
                 TransportFactory.class);
@@ -422,10 +426,10 @@ public class TransportFactory
         Map connectors = MuleManager.getInstance().getConnectors();
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
-            connector = (UMOConnector)iterator.next();
+            connector = (UMOConnector) iterator.next();
             if (connector.supportsProtocol(protocol))
             {
-                if(resultConnector==null)
+                if (resultConnector == null)
                 {
                     resultConnector = connector;
                 }
@@ -461,7 +465,7 @@ public class TransportFactory
                 return false;
             }
 
-            final CSDKey csdKey = (CSDKey)o;
+            final CSDKey csdKey = (CSDKey) o;
 
             if (overrides != null ? !overrides.equals(csdKey.overrides) : csdKey.overrides != null)
             {

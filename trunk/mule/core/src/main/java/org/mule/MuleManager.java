@@ -290,7 +290,7 @@ public class MuleManager implements UMOManager
             try
             {
                 //There should always be a defualt system model registered
-                instance = (UMOManager)clazz.newInstance();
+                instance = (UMOManager) clazz.newInstance();
                 registerSystemModel(config.getSystemModelType());
             }
             catch (Exception e)
@@ -386,11 +386,11 @@ public class MuleManager implements UMOManager
 
     protected static void registerSystemModel(String type) throws UMOException
     {
-        if(instance!=null)
+        if (instance != null)
         {
             //Initialise the system model
             UMOModel model = instance.lookupModel(type);
-            if(model != null && model.getComponentNames().hasNext())
+            if (model != null && model.getComponentNames().hasNext())
             {
                 throw new IllegalStateException("System model is already registered and contains components. Cannot overwrite");
             }
@@ -487,7 +487,7 @@ public class MuleManager implements UMOManager
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSING_CONNECTORS));
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
-            UMOConnector c = (UMOConnector)iterator.next();
+            UMOConnector c = (UMOConnector) iterator.next();
             c.dispose();
         }
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED_CONNECTORS));
@@ -522,7 +522,7 @@ public class MuleManager implements UMOManager
      */
     public UMOConnector lookupConnector(String name)
     {
-        return (UMOConnector)connectors.get(name);
+        return (UMOConnector) connectors.get(name);
     }
 
     /**
@@ -532,7 +532,7 @@ public class MuleManager implements UMOManager
      */
     public String lookupEndpointIdentifier(String logicalName, String defaultName)
     {
-        String name = (String)endpointIdentifiers.get(logicalName);
+        String name = (String) endpointIdentifiers.get(logicalName);
         if (name == null)
         {
             return defaultName;
@@ -545,10 +545,10 @@ public class MuleManager implements UMOManager
      */
     public UMOEndpoint lookupEndpoint(String logicalName)
     {
-        UMOEndpoint endpoint = (UMOEndpoint)endpoints.get(logicalName);
+        UMOEndpoint endpoint = (UMOEndpoint) endpoints.get(logicalName);
         if (endpoint != null)
         {
-            return (UMOEndpoint)endpoint.clone();
+            return (UMOEndpoint) endpoint.clone();
         }
         else
         {
@@ -568,7 +568,7 @@ public class MuleManager implements UMOManager
             Iterator iterator = endpoints.keySet().iterator();
             while (!found && iterator.hasNext())
             {
-                endpoint = (UMOEndpoint)endpoints.get(iterator.next());
+                endpoint = (UMOEndpoint) endpoints.get(iterator.next());
                 found = (address.equals(endpoint.getEndpointURI().toString()));
             }
         }
@@ -580,18 +580,18 @@ public class MuleManager implements UMOManager
      */
     public UMOTransformer lookupTransformer(String name)
     {
-        UMOTransformer trans = (UMOTransformer)transformers.get(name);
+        UMOTransformer trans = (UMOTransformer) transformers.get(name);
         if (trans != null)
         {
             try
             {
-                return (UMOTransformer)trans.clone();
+                return (UMOTransformer) trans.clone();
             }
             catch (Exception e)
             {
                 throw new MuleRuntimeException(
-                    new Message(Messages.FAILED_TO_CLONE_X, "Transformer: " + trans.getName()),
-                    e);
+                        new Message(Messages.FAILED_TO_CLONE_X, "Transformer: " + trans.getName()),
+                        e);
             }
         }
         return null;
@@ -618,7 +618,7 @@ public class MuleManager implements UMOManager
      */
     public void unregisterConnector(String connectorName) throws UMOException
     {
-        UMOConnector c = (UMOConnector)connectors.remove(connectorName);
+        UMOConnector c = (UMOConnector) connectors.remove(connectorName);
         if (c != null)
         {
             c.dispose();
@@ -658,7 +658,7 @@ public class MuleManager implements UMOManager
      */
     public void unregisterEndpoint(String endpointName)
     {
-        UMOEndpoint p = (UMOEndpoint)endpoints.get(endpointName);
+        UMOEndpoint p = (UMOEndpoint) endpoints.get(endpointName);
         if (p != null)
         {
             endpoints.remove(p);
@@ -863,7 +863,7 @@ public class MuleManager implements UMOManager
         UMOEndpoint ep;
         for (Iterator iterator = this.endpoints.values().iterator(); iterator.hasNext();)
         {
-            ep = (UMOEndpoint)iterator.next();
+            ep = (UMOEndpoint) iterator.next();
             ep.initialise();
             // the connector has been created for this endpoint so lets
             // set the create connector to 0 so that every time this endpoint
@@ -941,7 +941,7 @@ public class MuleManager implements UMOManager
     {
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
-            UMOConnector c = (UMOConnector)iterator.next();
+            UMOConnector c = (UMOConnector) iterator.next();
             c.startConnector();
         }
         logger.info("Connectors have been started successfully");
@@ -951,7 +951,7 @@ public class MuleManager implements UMOManager
     {
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
-            UMOConnector c = (UMOConnector)iterator.next();
+            UMOConnector c = (UMOConnector) iterator.next();
             c.initialise();
         }
         logger.info("Connectors have been initialised successfully");
@@ -999,7 +999,7 @@ public class MuleManager implements UMOManager
         logger.debug("Stopping connectors...");
         for (Iterator iterator = connectors.values().iterator(); iterator.hasNext();)
         {
-            UMOConnector c = (UMOConnector)iterator.next();
+            UMOConnector c = (UMOConnector) iterator.next();
             c.stopConnector();
         }
         logger.info("Connectors have been stopped successfully");
@@ -1033,7 +1033,7 @@ public class MuleManager implements UMOManager
 
     public UMOModel lookupModel(String name)
     {
-        return (UMOModel)models.get(name);
+        return (UMOModel) models.get(name);
     }
 
     public void registerModel(UMOModel model) throws UMOException
@@ -1053,7 +1053,7 @@ public class MuleManager implements UMOManager
     public void unregisterModel(String name)
     {
         UMOModel model = lookupModel(name);
-        if(model!=null)
+        if (model != null)
         {
             models.remove(model);
             model.dispose();
@@ -1078,7 +1078,7 @@ public class MuleManager implements UMOManager
      */
     public UMOInterceptorStack lookupInterceptorStack(String name)
     {
-        return (UMOInterceptorStack)interceptorsMap.get(name);
+        return (UMOInterceptorStack) interceptorsMap.get(name);
     }
 
     /**
@@ -1220,7 +1220,7 @@ public class MuleManager implements UMOManager
             UMOAgent umoAgent;
             for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
             {
-                umoAgent = (UMOAgent)iterator.next();
+                umoAgent = (UMOAgent) iterator.next();
                 message.add("  " + umoAgent.getDescription());
             }
         }
@@ -1265,7 +1265,7 @@ public class MuleManager implements UMOManager
 
     public UMOAgent lookupAgent(String name)
     {
-        return (UMOAgent)agents.get(name);
+        return (UMOAgent) agents.get(name);
     }
 
     /**
@@ -1277,7 +1277,7 @@ public class MuleManager implements UMOManager
         {
             return null;
         }
-        UMOAgent agent = (UMOAgent)agents.remove(name);
+        UMOAgent agent = (UMOAgent) agents.remove(name);
         if (agent != null)
         {
             agent.dispose();
@@ -1344,7 +1344,8 @@ public class MuleManager implements UMOManager
                     // update agents map with a new order in case we want to re-initialise
                     // MuleManager on the fly
                     this.agents.clear();
-                    for (Iterator it = agentRegistrationQueue.iterator(); it.hasNext();) {
+                    for (Iterator it = agentRegistrationQueue.iterator(); it.hasNext();)
+                    {
                         UMOAgent theAgent = (UMOAgent) it.next();
                         this.agents.put(theAgent.getName(), theAgent);
                     }
@@ -1368,7 +1369,7 @@ public class MuleManager implements UMOManager
         logger.info("Starting agents...");
         for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
         {
-            umoAgent = (UMOAgent)iterator.next();
+            umoAgent = (UMOAgent) iterator.next();
             logger.info("Starting agent: " + umoAgent.getDescription());
             umoAgent.start();
 
@@ -1384,7 +1385,7 @@ public class MuleManager implements UMOManager
         logger.info("Stopping agents...");
         for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
         {
-            UMOAgent umoAgent = (UMOAgent)iterator.next();
+            UMOAgent umoAgent = (UMOAgent) iterator.next();
             logger.debug("Stopping agent: " + umoAgent.getName());
             umoAgent.stop();
         }
@@ -1400,7 +1401,7 @@ public class MuleManager implements UMOManager
         logger.info("disposing agents...");
         for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
         {
-            umoAgent = (UMOAgent)iterator.next();
+            umoAgent = (UMOAgent) iterator.next();
             logger.debug("Disposing agent: " + umoAgent.getName());
             umoAgent.dispose();
         }

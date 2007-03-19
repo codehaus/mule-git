@@ -49,7 +49,7 @@ public abstract class AbstractEncryptionTransformer extends AbstractTransformer
         }
         else
         {
-            buf = (byte[])src;
+            buf = (byte[]) src;
         }
         try
         {

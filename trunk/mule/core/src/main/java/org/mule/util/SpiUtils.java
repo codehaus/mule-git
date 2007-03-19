@@ -23,11 +23,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 // @ThreadSafe
-public class SpiUtils
+public final class SpiUtils
 {
     private static final Log logger = LogFactory.getLog(SpiUtils.class);
 
     public static final String SERVICE_ROOT = "META-INF/services/";
+
+    /** Do not instanciate. */
+    private SpiUtils ()
+    {
+        // no-op
+    }
 
     /**
      * Find class implementing a specified SPI.
@@ -69,7 +75,7 @@ public class SpiUtils
      */
     public static Class findService(final Class spi, final String defaultImpl, final Class currentClass)
     {
-        ClassLoaders loaders = (ClassLoaders)AccessController.doPrivileged(new PrivilegedAction()
+        ClassLoaders loaders = (ClassLoaders) AccessController.doPrivileged(new PrivilegedAction()
         {
             public Object run()
             {

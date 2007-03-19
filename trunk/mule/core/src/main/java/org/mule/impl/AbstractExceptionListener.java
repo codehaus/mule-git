@@ -66,7 +66,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
     {
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            addEndpoint((UMOEndpoint)iterator.next());
+            addEndpoint((UMOEndpoint) iterator.next());
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         Throwable t = getExceptionType(e, RoutingException.class);
         if (t != null)
         {
-            RoutingException re = (RoutingException)t;
+            RoutingException re = (RoutingException) t;
             handleRoutingException(re.getUmoMessage(), re.getEndpoint(), e);
             return;
         }
@@ -97,7 +97,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         t = getExceptionType(e, MessagingException.class);
         if (t != null)
         {
-            MessagingException me = (MessagingException)t;
+            MessagingException me = (MessagingException) t;
             handleMessagingException(me.getUmoMessage(), e);
             return;
         }
@@ -105,7 +105,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         t = getExceptionType(e, LifecycleException.class);
         if (t != null)
         {
-            LifecycleException le = (LifecycleException)t;
+            LifecycleException le = (LifecycleException) t;
             handleLifecycleException(le.getComponent(), e);
             if (RequestContext.getEventContext() != null)
             {
@@ -145,7 +145,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      * 
      * @throws InitialisationException
      */
-    public synchronized final void initialise() throws InitialisationException
+    public final synchronized void initialise() throws InitialisationException
     {
         if (!initialised.get())
         {
@@ -159,7 +159,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         logger.info("Initialising exception listener: " + toString());
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            UMOEndpoint umoEndpoint = (UMOEndpoint)iterator.next();
+            UMOEndpoint umoEndpoint = (UMOEndpoint) iterator.next();
             umoEndpoint.initialise();
         }
     }
@@ -285,7 +285,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
     {
         if (endpoints.size() > 0)
         {
-            return (UMOEndpoint)endpoints.get(0);
+            return (UMOEndpoint) endpoints.get(0);
         }
         else
         {

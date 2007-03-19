@@ -22,11 +22,11 @@ import org.apache.commons.logging.LogFactory;
 public class NestedInvocationHandler implements InvocationHandler
 {
 
-    static Log logger = LogFactory.getLog(NestedInvocationHandler.class);
-
     public static final String DEFAULT_METHOD_NAME_TOKEN = "default";
 
-    private Map routers = new ConcurrentHashMap();
+    protected static Log logger = LogFactory.getLog(NestedInvocationHandler.class);
+
+    protected Map routers = new ConcurrentHashMap();
 
     protected NestedInvocationHandler(UMONestedRouter router)
     {
@@ -35,9 +35,9 @@ public class NestedInvocationHandler implements InvocationHandler
 
     public void addRouterForInterface(UMONestedRouter router)
     {
-        if(router.getMethod()==null)
+        if (router.getMethod() == null)
         {
-            if(routers.size()==0)
+            if (routers.size() == 0)
             {
                 routers.put(DEFAULT_METHOD_NAME_TOKEN, router);
             }
@@ -56,13 +56,13 @@ public class NestedInvocationHandler implements InvocationHandler
     {
 
         UMOMessage message = new MuleMessage(args[0]);
-        UMONestedRouter router = (UMONestedRouter)routers.get(method.getName());
-        if(router==null)
+        UMONestedRouter router = (UMONestedRouter) routers.get(method.getName());
+        if (router == null)
         {
-            router = (UMONestedRouter)routers.get(DEFAULT_METHOD_NAME_TOKEN);
+            router = (UMONestedRouter) routers.get(DEFAULT_METHOD_NAME_TOKEN);
         }
 
-        if(router==null)
+        if (router == null)
         {
             throw new IllegalArgumentException(new Message(Messages.CANNOT_FINDE_BINDING_FOR_METHOD_X, method.getName()).toString());
         }

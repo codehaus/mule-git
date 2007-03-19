@@ -108,7 +108,7 @@ public final class MuleSession implements UMOSession
 
         properties = new HashMap();
         requestSessionHandler.retrieveSessionInfoFromMessage(message, this);
-        id = (String)getProperty(requestSessionHandler.getSessionIDKey());
+        id = (String) getProperty(requestSessionHandler.getSessionIDKey());
         if (id == null)
         {
             id = UUID.getUUID();
@@ -245,7 +245,7 @@ public final class MuleSession implements UMOSession
 
                 if (connector instanceof AbstractConnector)
                 {
-                    ((AbstractConnector)connector).getSessionHandler().storeSessionInfoToMessage(this,
+                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(this,
                         event.getMessage());
                 }
                 else
@@ -314,7 +314,7 @@ public final class MuleSession implements UMOSession
 
                 if (connector instanceof AbstractConnector)
                 {
-                    ((AbstractConnector)connector).getSessionHandler().storeSessionInfoToMessage(this,
+                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(this,
                         event.getMessage());
                 }
                 else
@@ -364,7 +364,10 @@ public final class MuleSession implements UMOSession
      */
     protected void processResponse(UMOMessage response)
     {
-        if (response == null) return;
+        if (response == null)
+        {
+            return;
+        }
         response.removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
         response.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
     }
@@ -441,7 +444,7 @@ public final class MuleSession implements UMOSession
         {
             if (endpoint.getConnector() instanceof AbstractConnector)
             {
-                ((UMOEndpoint)endpoint).setTransformer(((AbstractConnector)endpoint.getConnector()).getDefaultOutboundTransformer());
+                ((UMOEndpoint)endpoint).setTransformer(((AbstractConnector) endpoint.getConnector()).getDefaultOutboundTransformer());
                 logger.debug("Using default connector outbound transformer: " + endpoint.getTransformer());
             }
         }

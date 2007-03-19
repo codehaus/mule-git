@@ -157,7 +157,7 @@ public class TransportServiceDescriptor
 
     private String removeProperty(String name)
     {
-        String temp = (String)properties.remove(name);
+        String temp = (String) properties.remove(name);
         if (StringUtils.isEmpty(StringUtils.trim(temp)))
         {
             return null;
@@ -268,7 +268,7 @@ public class TransportServiceDescriptor
         {
             try
             {
-                transportServiceFinder = (TransportServiceFinder)ClassUtils.instanciateClass(serviceFinder,
+                transportServiceFinder = (TransportServiceFinder) ClassUtils.instanciateClass(serviceFinder,
                     ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -305,12 +305,12 @@ public class TransportServiceDescriptor
         {
             if (out == null)
             {
-                return (UMOStreamMessageAdapter)ClassUtils.instanciateClass(streamMessageAdapter,
+                return (UMOStreamMessageAdapter) ClassUtils.instanciateClass(streamMessageAdapter,
                     new Object[]{in});
             }
             else
             {
-                return (UMOStreamMessageAdapter)ClassUtils.instanciateClass(streamMessageAdapter,
+                return (UMOStreamMessageAdapter) ClassUtils.instanciateClass(streamMessageAdapter,
                     new Object[]{in, out});
             }
         }
@@ -333,7 +333,7 @@ public class TransportServiceDescriptor
         {
             try
             {
-                return (UMOMessageAdapter)ClassUtils.instanciateClass(clazz, new Object[]{message});
+                return (UMOMessageAdapter) ClassUtils.instanciateClass(clazz, new Object[]{message});
             }
             catch (Exception e)
             {
@@ -362,7 +362,7 @@ public class TransportServiceDescriptor
         }
         try
         {
-            return (UMOSessionHandler)ClassUtils.instanciateClass(getSessionHandler(), ClassUtils.NO_ARGS,
+            return (UMOSessionHandler) ClassUtils.instanciateClass(getSessionHandler(), ClassUtils.NO_ARGS,
                 getClass());
         }
         catch (Throwable e)
@@ -421,7 +421,7 @@ public class TransportServiceDescriptor
 
             try
             {
-                return (UMOMessageReceiver)ClassUtils.instanciateClass(receiverClass, newArgs);
+                return (UMOMessageReceiver) ClassUtils.instanciateClass(receiverClass, newArgs);
             }
             catch (Exception e)
             {
@@ -444,7 +444,7 @@ public class TransportServiceDescriptor
         {
             try
             {
-                return (UMOMessageDispatcherFactory)ClassUtils.instanciateClass(dispatcherFactory,
+                return (UMOMessageDispatcherFactory) ClassUtils.instanciateClass(dispatcherFactory,
                     ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -467,7 +467,7 @@ public class TransportServiceDescriptor
         {
             try
             {
-                return (UMOTransactionFactory)ClassUtils.instanciateClass(transactionFactory,
+                return (UMOTransactionFactory) ClassUtils.instanciateClass(transactionFactory,
                     ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -498,15 +498,15 @@ public class TransportServiceDescriptor
         {
             if (getConnectorFactory() != null)
             {
-                ObjectFactory factory = (ObjectFactory)ClassUtils.loadClass(getConnectorFactory(),
+                ObjectFactory factory = (ObjectFactory) ClassUtils.loadClass(getConnectorFactory(),
                     TransportFactory.class).newInstance();
-                connector = (UMOConnector)factory.create();
+                connector = (UMOConnector) factory.create();
             }
             else
             {
                 if (getConnector() != null)
                 {
-                    connector = (UMOConnector)ClassUtils.loadClass(getConnector(), TransportFactory.class)
+                    connector = (UMOConnector) ClassUtils.loadClass(getConnector(), TransportFactory.class)
                         .newInstance();
                 }
                 else
@@ -547,7 +547,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default inbound transformer: " + getDefaultInboundTransformer());
             try
             {
-                inboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                inboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultInboundTransformer(), ClassUtils.NO_ARGS);
                 return inboundTransformer;
             }
@@ -568,7 +568,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default inbound transformer: " + getDefaultInboundTransformer());
             try
             {
-                inboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                inboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultInboundTransformer(), ClassUtils.NO_ARGS);
                 return inboundTransformer;
             }
@@ -593,7 +593,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default outbound transformer: " + getDefaultOutboundTransformer());
             try
             {
-                outboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                outboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultOutboundTransformer(), ClassUtils.NO_ARGS);
                 return outboundTransformer;
             }
@@ -614,7 +614,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default outbound transformer: " + getDefaultOutboundTransformer());
             try
             {
-                outboundTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                outboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultOutboundTransformer(), ClassUtils.NO_ARGS);
                 return outboundTransformer;
             }
@@ -639,7 +639,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default response transformer: " + getDefaultResponseTransformer());
             try
             {
-                responseTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                responseTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultResponseTransformer(), ClassUtils.NO_ARGS);
                 return responseTransformer;
             }
@@ -660,7 +660,7 @@ public class TransportServiceDescriptor
             logger.info("Loading default response transformer: " + getDefaultResponseTransformer());
             try
             {
-                responseTransformer = (UMOTransformer)ClassUtils.instanciateClass(
+                responseTransformer = (UMOTransformer) ClassUtils.instanciateClass(
                     getDefaultResponseTransformer(), ClassUtils.NO_ARGS);
                 return responseTransformer;
             }
@@ -687,7 +687,7 @@ public class TransportServiceDescriptor
             logger.debug("Loading endpointUri resolver: " + getEndpointBuilder());
             try
             {
-                return (EndpointBuilder)ClassUtils.instanciateClass(getEndpointBuilder(), ClassUtils.NO_ARGS);
+                return (EndpointBuilder) ClassUtils.instanciateClass(getEndpointBuilder(), ClassUtils.NO_ARGS);
             }
             catch (Exception e)
             {
@@ -709,7 +709,7 @@ public class TransportServiceDescriptor
             return false;
         }
 
-        final TransportServiceDescriptor transportServiceDescriptor = (TransportServiceDescriptor)o;
+        final TransportServiceDescriptor transportServiceDescriptor = (TransportServiceDescriptor) o;
 
         if (connector != null
                         ? !connector.equals(transportServiceDescriptor.connector)

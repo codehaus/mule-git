@@ -20,9 +20,15 @@ import java.util.Iterator;
 /**
  * @deprecated This functionality should be moved to the registry
  */
-public class ModelHelper
+public final class ModelHelper
 {
     public static final String SYSTEM_MODEL = "_system";
+
+    /** Do not instanciate. */
+    private ModelHelper ()
+    {
+        // no-op
+    }
 
     public static String getSystemModelType()
     {
@@ -33,8 +39,8 @@ public class ModelHelper
     {
         for (Iterator iterator = MuleManager.getInstance().getModels().values().iterator(); iterator.hasNext();)
         {
-            UMOModel m =  (UMOModel)iterator.next();
-            if(m.isComponentRegistered(name))
+            UMOModel m = (UMOModel) iterator.next();
+            if (m.isComponentRegistered(name))
             {
                 return true;
             }
@@ -46,8 +52,8 @@ public class ModelHelper
     {
         for (Iterator iterator = MuleManager.getInstance().getModels().values().iterator(); iterator.hasNext();)
         {
-            UMOModel m =  (UMOModel)iterator.next();
-            if(m.isComponentRegistered(name))
+            UMOModel m = (UMOModel) iterator.next();
+            if (m.isComponentRegistered(name))
             {
                 return m.getComponent(name);
             }
@@ -59,8 +65,8 @@ public class ModelHelper
     {
         for (Iterator iterator = MuleManager.getInstance().getModels().values().iterator(); iterator.hasNext();)
         {
-            UMOModel m =  (UMOModel)iterator.next();
-            if(m.isComponentRegistered(name))
+            UMOModel m = (UMOModel) iterator.next();
+            if (m.isComponentRegistered(name))
             {
                 return m.getDescriptor(name);
             }

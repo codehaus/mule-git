@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * looked up by providing the the protocol to map to and the Mule exception.
  */
 
-public class ExceptionHelper
+public final class ExceptionHelper
 {
     /**
      * This is the property to set the error code to no the message it is the
@@ -59,6 +59,11 @@ public class ExceptionHelper
      */
     protected static final Log logger = LogFactory.getLog(ExceptionHelper.class);
 
+    private static String J2SE_VERSION = "";
+
+    /** todo How do you get the j2ee version?? */
+    private static final String J2EE_VERSION = "1.3ee";
+
     private static Properties errorDocs = new Properties();
     private static Properties errorCodes = new Properties();
     private static Map reverseErrorCodes = null;
@@ -68,11 +73,6 @@ public class ExceptionHelper
     private static boolean verbose = true;
 
     private static boolean initialised = false;
-
-    private static String J2SE_VERSION = "";
-
-    /** todo How do you get the j2ee version?? */
-    private static String J2EE_VERSION = "1.3ee";
 
     /**
      * A list of the exception readers to use for different types of exceptions
@@ -87,6 +87,12 @@ public class ExceptionHelper
     static
     {
         initialise();
+    }
+
+    /** Do not instanciate. */
+    private ExceptionHelper ()
+    {
+        // no-op
     }
 
     public static void initialise()
@@ -146,7 +152,7 @@ public class ExceptionHelper
         }
         else if (clazz instanceof Class)
         {
-            return (Class)clazz;
+            return (Class) clazz;
         }
         else
         {
@@ -161,7 +167,7 @@ public class ExceptionHelper
                 return null;
             }
             reverseErrorCodes.put(key, clazz);
-            return (Class)clazz;
+            return (Class) clazz;
         }
     }
 
@@ -186,7 +192,7 @@ public class ExceptionHelper
         {
             if (m instanceof Properties)
             {
-                return (Properties)m;
+                return (Properties) m;
             }
             else
             {
@@ -394,7 +400,7 @@ public class ExceptionHelper
         {
             if (cause instanceof UMOException)
             {
-                umoException = (UMOException)cause;
+                umoException = (UMOException) cause;
             }
             cause = getExceptionReader(cause).getCause(cause);
             // address some misbehaving exceptions, avoid endless loop
@@ -454,7 +460,7 @@ public class ExceptionHelper
                 buf.append("(").append(exceptions.size() - i + 1).append(" more...)");
                 break;
             }
-            Throwable throwable = (Throwable)iterator.next();
+            Throwable throwable = (Throwable) iterator.next();
             ExceptionReader er = getExceptionReader(throwable);
             buf.append(i).append(". ").append(er.getMessage(throwable)).append(" (");
             buf.append(throwable.getClass().getName()).append(")\n");
@@ -494,7 +500,7 @@ public class ExceptionHelper
     {
         for (Iterator iterator = exceptionReaders.iterator(); iterator.hasNext();)
         {
-            ExceptionReader exceptionReader = (ExceptionReader)iterator.next();
+            ExceptionReader exceptionReader = (ExceptionReader) iterator.next();
             if (exceptionReader.getExceptionType().isInstance(t))
             {
                 return exceptionReader;

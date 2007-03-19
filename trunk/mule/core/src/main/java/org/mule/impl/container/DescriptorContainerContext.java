@@ -56,7 +56,7 @@ public class DescriptorContainerContext extends AbstractContainerContext
 
         if (key instanceof DescriptorContainerKeyPair)
         {
-            DescriptorContainerKeyPair dckp = (DescriptorContainerKeyPair)key;
+            DescriptorContainerKeyPair dckp = (DescriptorContainerKeyPair) key;
 
             UMODescriptor d = ModelHelper.getDescriptor(dckp.getDescriptorName());
             if (d == null)

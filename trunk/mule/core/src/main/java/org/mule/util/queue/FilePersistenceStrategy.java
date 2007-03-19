@@ -105,7 +105,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy
         }
         catch (ClassNotFoundException e)
         {
-            throw (IOException)new IOException("Error loading persistent object").initCause(e);
+            throw (IOException) new IOException("Error loading persistent object").initCause(e);
         }
         finally
         {
@@ -137,7 +137,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy
         }
         catch (ClassNotFoundException e)
         {
-            throw (IOException)new IOException("Could not restore").initCause(e);
+            throw (IOException) new IOException("Could not restore").initCause(e);
         }
     }
 

@@ -37,11 +37,11 @@ import org.apache.commons.logging.LogFactory;
 public class MuleServer implements Runnable
 {
     public static final String CLI_OPTIONS[][] = {
-            { "builder", "true", "Configuration Builder Type" },
-            { "config", "true", "Configuration File" },
-            { "main", "true", "Main Class"},
-            { "mode", "true", "Run Mode"},
-            { "props", "true", "Startup Properties"}
+            {"builder", "true", "Configuration Builder Type"},
+            {"config", "true", "Configuration File"},
+            {"main", "true", "Main Class"},
+            {"mode", "true", "Run Mode"},
+            {"props", "true", "Startup Properties"}
         };
 
     /**
@@ -106,7 +106,7 @@ public class MuleServer implements Runnable
             System.exit(1);
         }
 
-        String config = (String)options.get("config");
+        String config = (String) options.get("config");
         // Try default if no config file was given.
         if (config == null)
         {
@@ -131,7 +131,7 @@ public class MuleServer implements Runnable
         }
 
         // Configuration builder
-        String cfgBuilderClassName = (String)options.get("builder");
+        String cfgBuilderClassName = (String) options.get("builder");
         if (cfgBuilderClassName != null)
         {
             try
@@ -153,7 +153,7 @@ public class MuleServer implements Runnable
         }
 
         // Startup properties
-        String propertiesFile = (String)options.get("props");
+        String propertiesFile = (String) options.get("props");
         if (propertiesFile != null)
         {
             setStartupPropertiesFile(propertiesFile);
@@ -270,15 +270,15 @@ public class MuleServer implements Runnable
         // registerShutdownHook();
 
         // install an RMI security manager in case we expose any RMI objects
-        if (System.getSecurityManager() == null)
-        {
+        //if (System.getSecurityManager() == null)
+        //{
             // TODO Why is this disabled?
             // System.setSecurityManager(new RMISecurityManager());
-        }
+        //}
 
         // create a new ConfigurationBuilder that is disposed afterwards
         Class cfgBuilderClass = ClassUtils.loadClass(getConfigBuilderClassName(), MuleServer.class);
-        ConfigurationBuilder cfgBuilder = (ConfigurationBuilder)cfgBuilderClass.newInstance();
+        ConfigurationBuilder cfgBuilder = (ConfigurationBuilder) cfgBuilderClass.newInstance();
 
         if (!cfgBuilder.isConfigured())
         {

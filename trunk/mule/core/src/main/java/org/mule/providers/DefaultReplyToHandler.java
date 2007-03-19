@@ -89,7 +89,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
             {
                 logger.info("reply to sent: " + endpoint);
             }
-            ((AbstractComponent)event.getComponent()).getStatistics().incSentReplyToEvent();
+            ((AbstractComponent) event.getComponent()).getStatistics().incSentReplyToEvent();
         }
         catch (Exception e)
         {
@@ -102,7 +102,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
 
     protected synchronized UMOEndpoint getEndpoint(UMOEvent event, String endpointUri) throws UMOException
     {
-        UMOEndpoint endpoint = (UMOEndpoint)endpointCache.get(endpointUri);
+        UMOEndpoint endpoint = (UMOEndpoint) endpointCache.get(endpointUri);
         if (endpoint == null)
         {
             endpoint = MuleManager.getInstance().lookupEndpoint(endpointUri);

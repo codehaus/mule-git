@@ -29,10 +29,10 @@ public abstract class AbstractProxyPoolFactoryTestCase extends AbstractMuleTestC
     {
         Mock mockPool = new Mock(ObjectPool.class);
         MuleDescriptor descriptor = getTestDescriptor("apple", Apple.class.getName());
-        ObjectFactory factory = getProxyFactory(descriptor, (ObjectPool)mockPool.proxy());
+        ObjectFactory factory = getProxyFactory(descriptor, (ObjectPool) mockPool.proxy());
         Object result = factory.create();
         assertNotNull(result);
-        MuleProxy proxy = (MuleProxy)result;
+        MuleProxy proxy = (MuleProxy) result;
         assertEquals("apple", proxy.getDescriptor().getName());
         mockPool.verify();
     }

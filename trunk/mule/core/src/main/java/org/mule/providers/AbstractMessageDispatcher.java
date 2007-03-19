@@ -12,7 +12,6 @@ package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
-import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.RequestContext;
@@ -70,7 +69,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     public AbstractMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
-        this.connector = (AbstractConnector)endpoint.getConnector();
+        this.connector = (AbstractConnector) endpoint.getConnector();
 
         connectionStrategy = connector.getConnectionStrategy();
         if (connectionStrategy instanceof AbstractConnectionStrategy)
@@ -454,7 +453,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
             if (e instanceof ConnectException)
             {
-                throw (ConnectException)e;
+                throw (ConnectException) e;
             }
             else
             {

@@ -33,7 +33,7 @@ import java.io.OutputStream;
  */
 public interface UMOConnector extends Disposable, Initialisable
 {
-    public static final int INT_VALUE_NOT_SET = -1;
+    int INT_VALUE_NOT_SET = -1;
 
     /**
      * This creates a <code>UMOMessageReceiver</code> associated with this endpoint
@@ -159,11 +159,11 @@ public interface UMOConnector extends Disposable, Initialisable
      */
     UMOMessageDispatcherFactory getDispatcherFactory();
 
-    public void startConnector() throws UMOException;
+    void startConnector() throws UMOException;
 
-    public void stopConnector() throws UMOException;
+    void stopConnector() throws UMOException;
 
-    public boolean isRemoteSyncEnabled();
+    boolean isRemoteSyncEnabled();
 
     /**
      * Dispatches an event from the endpoint to the external system

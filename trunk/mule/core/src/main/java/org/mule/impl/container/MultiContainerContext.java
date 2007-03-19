@@ -83,14 +83,14 @@ public class MultiContainerContext implements UMOContainerContext
         }
         else
         {
-            realKey = (ContainerKeyPair)key;
+            realKey = (ContainerKeyPair) key;
         }
 
         Object component = null;
         UMOContainerContext container;
         if (realKey.getContainerName() != null)
         {
-            container = (UMOContainerContext)containers.get(realKey.getContainerName());
+            container = (UMOContainerContext) containers.get(realKey.getContainerName());
             if (container != null)
             {
                 return container.getComponent(realKey);
@@ -118,7 +118,8 @@ public class MultiContainerContext implements UMOContainerContext
                         logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
                             finalCause);
                     }
-                } else
+                }
+                else
                 {
                     finalCause = e;
                     if (logger.isDebugEnabled())
@@ -168,7 +169,7 @@ public class MultiContainerContext implements UMOContainerContext
         UMOContainerContext container;
         for (Iterator iterator = containers.values().iterator(); iterator.hasNext();)
         {
-            container = (UMOContainerContext)iterator.next();
+            container = (UMOContainerContext) iterator.next();
             container.dispose();
         }
         containers.clear();

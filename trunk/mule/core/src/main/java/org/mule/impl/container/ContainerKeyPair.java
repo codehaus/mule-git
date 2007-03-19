@@ -66,13 +66,25 @@ public class ContainerKeyPair
 
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
-        final ContainerKeyPair that = (ContainerKeyPair)o;
+        final ContainerKeyPair that = (ContainerKeyPair) o;
 
-        if (!containerName.equals(that.containerName)) return false;
-        if (!key.equals(that.key)) return false;
+        if (!containerName.equals(that.containerName))
+        {
+            return false;
+        }
+        if (!key.equals(that.key))
+        {
+            return false;
+        }
 
         return true;
     }

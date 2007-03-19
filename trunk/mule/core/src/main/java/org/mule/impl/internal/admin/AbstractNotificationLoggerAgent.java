@@ -104,7 +104,7 @@ public abstract class AbstractNotificationLoggerAgent implements UMOAgent
     {
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            UMOServerNotificationListener listener = (UMOServerNotificationListener)iterator.next();
+            UMOServerNotificationListener listener = (UMOServerNotificationListener) iterator.next();
             MuleManager.getInstance().unregisterListener(listener);
         }
     }

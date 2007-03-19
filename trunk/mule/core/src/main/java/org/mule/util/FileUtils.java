@@ -36,19 +36,27 @@ import java.util.zip.ZipFile;
 // @ThreadSafe
 public class FileUtils extends org.apache.commons.io.FileUtils
 {
-    public static synchronized void copyStreamToFile(InputStream input, File destination) throws IOException {
-        if (destination.exists() && !destination.canWrite()) {
+    public static synchronized void copyStreamToFile(InputStream input, File destination) throws IOException
+    {
+        if (destination.exists() && !destination.canWrite())
+        {
             throw new IOException("Destination file does not exist or is not writeable");
         }
 
-        try {
+        try
+        {
             FileOutputStream output = new FileOutputStream(destination);
-            try {
+            try
+            {
                 IOUtils.copy(input, output);
-            } finally {
+            }
+            finally
+            {
                 IOUtils.closeQuietly(output);
             }
-        } finally {
+        }
+        finally
+        {
             IOUtils.closeQuietly(input);
         }
     }
@@ -237,7 +245,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
             zip = new ZipFile(archive);
             for (Enumeration entries = zip.entries(); entries.hasMoreElements();)
             {
-                ZipEntry entry = (ZipEntry)entries.nextElement();
+                ZipEntry entry = (ZipEntry) entries.nextElement();
                 File f = new File(directory, entry.getName());
                 if (entry.isDirectory())
                 {

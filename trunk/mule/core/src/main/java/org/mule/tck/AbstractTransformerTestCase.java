@@ -105,7 +105,7 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleTestCase
     public void testClone() throws Exception
     {
         UMOTransformer original = this.getTransformer();
-        UMOTransformer clone = (UMOTransformer)original.clone();
+        UMOTransformer clone = (UMOTransformer) original.clone();
         assertTrue(this.compareClone(original, clone));
     }
 
@@ -131,21 +131,21 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleTestCase
 
         if (expected instanceof Object[] && result instanceof Object[])
         {
-            return Arrays.equals((Object[])expected, (Object[])result);
+            return Arrays.equals((Object[]) expected, (Object[]) result);
             // TODO check if RetroTranslating Mule to JDK 1.4 makes this method
             // available
             // return Arrays.deepEquals((Object[])src, (Object[])result);
         }
         else if (expected instanceof byte[] && result instanceof byte[])
         {
-            return Arrays.equals((byte[])expected, (byte[])result);
+            return Arrays.equals((byte[]) expected, (byte[]) result);
         }
 
         // Special case for Strings: normalize comparison arguments
         if (expected instanceof String && result instanceof String)
         {
-            expected = this.normalizeString((String)expected);
-            result = this.normalizeString((String)result);
+            expected = this.normalizeString((String) expected);
+            result = this.normalizeString((String) result);
         }
 
         return expected.equals(result);

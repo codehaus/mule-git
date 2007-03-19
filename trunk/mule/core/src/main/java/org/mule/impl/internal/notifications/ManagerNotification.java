@@ -54,7 +54,7 @@ public class ManagerNotification extends UMOServerNotification implements Blocki
 
     protected String getPayloadToString()
     {
-        return ((UMOManager)source).getId();
+        return ((UMOManager) source).getId();
     }
 
     protected String getActionName(int action)

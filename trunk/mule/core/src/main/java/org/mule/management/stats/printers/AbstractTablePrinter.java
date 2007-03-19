@@ -91,11 +91,11 @@ public class AbstractTablePrinter extends PrintWriter
 
         col[0] = stats.getName();
         //TODO RM* Handling custom stats objects
-        if(stats instanceof SedaComponentStatistics)
+        if (stats instanceof SedaComponentStatistics)
         {
-            col[1] = ((SedaComponentStatistics)stats).getComponentPoolMaxSize() + "/"
-                    + ((SedaComponentStatistics)stats).getComponentPoolAbsoluteMaxSize();
-            col[2] = String.valueOf(((SedaComponentStatistics)stats).getComponentPoolSize());
+            col[1] = ((SedaComponentStatistics) stats).getComponentPoolMaxSize() + "/"
+                    + ((SedaComponentStatistics) stats).getComponentPoolAbsoluteMaxSize();
+            col[2] = String.valueOf(((SedaComponentStatistics) stats).getComponentPoolSize());
         }
         else
         {
@@ -153,7 +153,7 @@ public class AbstractTablePrinter extends PrintWriter
             StringBuffer buf = new StringBuffer(40);
             while (it.hasNext())
             {
-                Map.Entry e = (Map.Entry)it.next();
+                Map.Entry e = (Map.Entry) it.next();
                 buf.append(e.getKey()).append('=').append(e.getValue());
                 if (it.hasNext())
                 {
@@ -181,7 +181,7 @@ public class AbstractTablePrinter extends PrintWriter
         int i = 1;
         for (Iterator iterator = stats.iterator(); iterator.hasNext(); i++)
         {
-            getColumn((ComponentStatistics)iterator.next(), table[i]);
+            getColumn((ComponentStatistics) iterator.next(), table[i]);
         }
 
         return table;
@@ -191,7 +191,7 @@ public class AbstractTablePrinter extends PrintWriter
     {
         if (obj instanceof Collection)
         {
-            print((Collection)obj);
+            print((Collection) obj);
         }
         else if (obj instanceof ComponentStatistics)
         {
@@ -220,14 +220,14 @@ public class AbstractTablePrinter extends PrintWriter
     // an abmiguously overloaded/overridden method.
     public void println(String string)
     {
-        this.println((Object)string);
+        this.println((Object) string);
     }
 
     // help IBM compiler, it complains helplessly about
     // an abmiguously overloaded/overridden method.
     public void print(String string)
     {
-        this.print((Object)string);
+        this.print((Object) string);
     }
 
 }

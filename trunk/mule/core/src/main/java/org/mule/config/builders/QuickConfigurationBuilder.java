@@ -667,7 +667,7 @@ public class QuickConfigurationBuilder implements ConfigurationBuilder
 
     protected UMOModel getModel() throws UMOException
     {
-        if(model==null)
+        if (model == null)
         {
             model = new SedaModel();
             model.setName("main");

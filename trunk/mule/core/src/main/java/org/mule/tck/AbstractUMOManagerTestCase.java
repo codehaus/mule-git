@@ -90,7 +90,7 @@ public abstract class AbstractUMOManagerTestCase extends AbstractMuleTestCase
 
     public void testManagerProperties()
     {
-        String value = (String)MuleManager.getInstance().getProperty("envProperty1");
+        String value = (String) MuleManager.getInstance().getProperty("envProperty1");
         assertEquals("value1", value);
         assertEquals(1, MuleManager.getInstance().getProperties().size());
     }

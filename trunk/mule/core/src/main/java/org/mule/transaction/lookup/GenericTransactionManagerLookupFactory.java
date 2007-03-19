@@ -97,7 +97,7 @@ public class GenericTransactionManagerLookupFactory implements UMOTransactionMan
         initialise();
         if (txManager == null)
         {
-            txManager = (TransactionManager)context.lookup(jndiName);
+            txManager = (TransactionManager) context.lookup(jndiName);
         }
 
         return txManager;

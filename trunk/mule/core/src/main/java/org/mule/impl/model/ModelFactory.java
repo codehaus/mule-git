@@ -24,12 +24,18 @@ import java.util.Properties;
  * Will locate the model service in META-INF/service using the model type as the key
  * and construct the model.
  */
-public class ModelFactory
+public final class ModelFactory
 {
 
     public static final String DEFAULT_MODEL_NAME = "main";
 
     public static final String MODEL_SERVICE_PATH = "org/mule/models";
+
+    /** Do not instanciate. */
+    private ModelFactory ()
+    {
+        // no-op
+    }
 
     public static UMOModel createModel(String type) throws ModelServiceNotFoundException
     {
@@ -44,10 +50,10 @@ public class ModelFactory
                 String clazz = props.getProperty("model");
                 try
                 {
-                    UMOModel model = (UMOModel)ClassUtils.instanciateClass(clazz, ClassUtils.NO_ARGS,
+                    UMOModel model = (UMOModel) ClassUtils.instanciateClass(clazz, ClassUtils.NO_ARGS,
                         ModelFactory.class);
                     BeanUtils.populateWithoutFail(model, props, false);
-                    if(model.getName()==null)
+                    if (model.getName() == null)
                     {
                         model.setName(DEFAULT_MODEL_NAME);
                     }

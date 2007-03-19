@@ -132,16 +132,16 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         // Create thread pool
         ThreadingProfile tp = descriptor.getThreadingProfile();
         workManager = tp.createWorkManager(descriptor.getName());
-        queueProfile = (QueueProfile)descriptor.getProperties().get(QUEUE_PROFILE_PROPERTY);
-        if(queueProfile==null)
+        queueProfile = (QueueProfile) descriptor.getProperties().get(QUEUE_PROFILE_PROPERTY);
+        if (queueProfile==null)
         {
-            queueProfile = ((SedaModel)model).getQueueProfile();
+            queueProfile = ((SedaModel) model).getQueueProfile();
         }
 
-        poolingProfile = (PoolingProfile)descriptor.getProperties().get(POOLING_PROFILE_PROPERTY);
-        if(poolingProfile==null)
+        poolingProfile = (PoolingProfile) descriptor.getProperties().get(POOLING_PROFILE_PROPERTY);
+        if (poolingProfile==null)
         {
-            poolingProfile = ((SedaModel)model).getPoolingProfile();
+            poolingProfile = ((SedaModel) model).getPoolingProfile();
         }
 
         try
@@ -202,7 +202,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         {
             Object component = lookupComponent();
             MuleProxy componentProxy = new DefaultMuleProxy(component, descriptor, model, null);
-            ((SedaComponentStatistics)getStatistics()).setComponentPoolSize(-1);
+            ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(-1);
             componentProxy.setStatistics(getStatistics());
             componentProxy.start();
             return componentProxy;
@@ -348,8 +348,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         {
             if (proxyPool != null)
             {
-                proxy = (MuleProxy)proxyPool.borrowObject();
-                ((SedaComponentStatistics)getStatistics()).setComponentPoolSize(proxyPool.getSize());
+                proxy = (MuleProxy) proxyPool.borrowObject();
+                ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
             }
             else if (componentPerRequest)
             {
@@ -366,7 +366,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             {
                 logger.debug(this + " : got proxy for " + event.getId() + " = " + proxy);
             }
-            result = (UMOMessage)proxy.onCall(event);
+            result = (UMOMessage) proxy.onCall(event);
         }
         catch (UMOException e)
         {
@@ -400,7 +400,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
             if (proxyPool != null)
             {
-                ((SedaComponentStatistics)getStatistics()).setComponentPoolSize(proxyPool.getSize());
+                ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
             }
         }
         return result;
@@ -448,7 +448,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     }
                 }
 
-                event = (MuleEvent)dequeue();
+                event = (MuleEvent) dequeue();
                 if (event != null)
                 {
                     if (stats.isEnabled())
@@ -464,8 +464,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
                     if (proxyPool != null)
                     {
-                        proxy = (MuleProxy)proxyPool.borrowObject();
-                        ((SedaComponentStatistics)getStatistics()).setComponentPoolSize(proxyPool.getSize());
+                        proxy = (MuleProxy) proxyPool.borrowObject();
+                        ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
                     }
                     else if (componentPerRequest)
                     {
@@ -552,7 +552,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
     {
         // Wait until an event is available
         QueueSession queueSession = MuleManager.getInstance().getQueueManager().getQueueSession();
-        return (UMOEvent)queueSession.getQueue(descriptorQueueName).poll(queueTimeout);
+        return (UMOEvent) queueSession.getQueue(descriptorQueueName).poll(queueTimeout);
     }
 
     public void workAccepted(WorkEvent event)
@@ -598,7 +598,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
         if (e instanceof Exception)
         {
-            handleException((Exception)e);
+            handleException((Exception) e);
         }
         else
         {

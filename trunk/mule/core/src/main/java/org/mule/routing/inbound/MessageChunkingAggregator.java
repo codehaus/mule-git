@@ -26,6 +26,7 @@ import org.apache.commons.lang.SerializationUtils;
 
 public class MessageChunkingAggregator extends CorrelationAggregator
 {
+    public static final int DEFAULT_BUFFER_SIZE = 4096;
 
     /**
      * This method is invoked if the shouldAggregate method is called and returns
@@ -43,13 +44,13 @@ public class MessageChunkingAggregator extends CorrelationAggregator
         UMOEvent[] collectedEvents = events.toArray();
         UMOEvent firstEvent = collectedEvents[0];
         Arrays.sort(collectedEvents, CorrelationSequenceComparator.getInstance());
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
 
         try
         {
             for (Iterator iterator = IteratorUtils.arrayIterator(collectedEvents); iterator.hasNext();)
             {
-                UMOEvent event = (UMOEvent)iterator.next();
+                UMOEvent event = (UMOEvent) iterator.next();
                 baos.write(event.getMessageAsBytes());
             }
 

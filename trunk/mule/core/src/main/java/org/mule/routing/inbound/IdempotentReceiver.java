@@ -37,7 +37,7 @@ import java.util.Set;
 //TODO MULE-1300: fix memory leak
 public class IdempotentReceiver extends SelectiveConsumer
 {
-    private static String DEFAULT_STORE_PATH = "./idempotent";
+    private static final String DEFAULT_STORE_PATH = "./idempotent";
 
     private Set messageIds;
     private File idStore;
@@ -48,8 +48,8 @@ public class IdempotentReceiver extends SelectiveConsumer
     public IdempotentReceiver()
     {
         messageIds = new HashSet();
-        DEFAULT_STORE_PATH = MuleManager.getConfiguration().getWorkingDirectory() + "/idempotent";
-        setStorePath(DEFAULT_STORE_PATH);
+        String path = MuleManager.getConfiguration().getWorkingDirectory() + "/idempotent";
+        setStorePath(path);
     }
 
     // @Override

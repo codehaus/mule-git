@@ -37,6 +37,8 @@ import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractTransformer implements UMOTransformer
 {
+    protected static final int DEFAULT_TRUNCATE_LENGTH = 200;
+
     /**
      * logger used by this class
      */
@@ -176,7 +178,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
         for (int i = 0; i < numTypes; i++)
         {
-            Class anotherClass = (Class)sourceTypes.get(i);
+            Class anotherClass = (Class) sourceTypes.get(i);
             if (exactMatch)
             {
                 if (anotherClass.equals(aClass))
@@ -205,8 +207,8 @@ public abstract class AbstractTransformer implements UMOTransformer
 
         if (src instanceof UMOMessage && !isSourceTypeSupported(UMOMessage.class))
         {
-            encoding = ((UMOMessage)src).getEncoding();
-            src = ((UMOMessage)src).getPayload();
+            encoding = ((UMOMessage) src).getEncoding();
+            src = ((UMOMessage) src).getPayload();
         }
 
         if (encoding == null && endpoint != null)
@@ -239,7 +241,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             logger.debug("Applying transformer " + getName() + " (" + getClass().getName() + ")");
             logger.debug("Object before transform: "
-                            + StringMessageUtils.truncate(StringMessageUtils.toString(src), 200, false));
+                            + StringMessageUtils.truncate(StringMessageUtils.toString(src), DEFAULT_TRUNCATE_LENGTH, false));
         }
 
         Object result = doTransform(src, encoding);
@@ -251,7 +253,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         if (logger.isDebugEnabled())
         {
             logger.debug("Object after transform: "
-                            + StringMessageUtils.truncate(StringMessageUtils.toString(result), 200, false));
+                            + StringMessageUtils.truncate(StringMessageUtils.toString(result), DEFAULT_TRUNCATE_LENGTH, false));
         }
 
         result = checkReturnClass(result);
@@ -322,7 +324,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         }
         catch (Exception e)
         {
-            throw (CloneNotSupportedException)new CloneNotSupportedException("Failed to clone transformer: "
+            throw (CloneNotSupportedException) new CloneNotSupportedException("Failed to clone transformer: "
                             + e.getMessage()).initCause(e);
         }
     }
@@ -391,7 +393,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         Class c = null;
         if (sourceTypes.size() > 0)
         {
-            c = (Class)sourceTypes.get(0);
+            c = (Class) sourceTypes.get(0);
         }
         if (c == null)
         {

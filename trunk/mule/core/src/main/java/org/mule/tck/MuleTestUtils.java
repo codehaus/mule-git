@@ -53,10 +53,16 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Utilities for creating test and Mock Mule objects
  */
-public class MuleTestUtils
+public final class MuleTestUtils
 {
 
     public static final String DEFAULT_MODEL_NAME = "main";
+
+    /** Do not instanciate. */
+    private MuleTestUtils ()
+    {
+        // no-op
+    }
 
     public static UMOManager getManager(boolean disableAdminService) throws Exception
     {
@@ -85,7 +91,7 @@ public class MuleTestUtils
     public static UMOModel getDefaultModel() throws UMOException
     {
         UMOModel m = MuleManager.getInstance().lookupModel(DEFAULT_MODEL_NAME);
-        if(m==null)
+        if (m == null)
         {
             m = new SedaModel();
             m.setName(DEFAULT_MODEL_NAME);
@@ -100,7 +106,7 @@ public class MuleTestUtils
         UMOEndpoint endpoint = new MuleEndpoint();
         // need to build endpoint this way to avoid depenency to any endpoint jars
         UMOConnector connector = null;
-        connector = (UMOConnector)ClassUtils.loadClass("org.mule.tck.testmodels.mule.TestConnector",
+        connector = (UMOConnector) ClassUtils.loadClass("org.mule.tck.testmodels.mule.TestConnector",
             AbstractMuleTestCase.class).newInstance();
 
         connector.setName("testConnector");

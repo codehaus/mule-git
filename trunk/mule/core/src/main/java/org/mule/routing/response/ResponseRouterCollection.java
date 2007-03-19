@@ -47,7 +47,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
         UMOResponseRouter router;
         for (Iterator iterator = getRouters().iterator(); iterator.hasNext();)
         {
-            router = (UMOResponseRouter)iterator.next();
+            router = (UMOResponseRouter) iterator.next();
             router.process(event);
             // Update stats
             if (getStatistics().isEnabled())
@@ -70,7 +70,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
             UMOResponseRouter router;
             for (Iterator iterator = getRouters().iterator(); iterator.hasNext();)
             {
-                router = (UMOResponseRouter)iterator.next();
+                router = (UMOResponseRouter) iterator.next();
                 result = router.getResponse(message);
             }
 
@@ -98,8 +98,8 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
 
     public void addRouter(UMORouter router)
     {
-        ((UMOResponseRouter)router).setTimeout(getTimeout());
-        ((UMOResponseRouter)router).setFailOnTimeout(isFailOnTimeout());
+        ((UMOResponseRouter) router).setTimeout(getTimeout());
+        ((UMOResponseRouter) router).setFailOnTimeout(isFailOnTimeout());
         routers.add(router);
     }
 
@@ -148,7 +148,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
             // Force all endpoints' type to RESPONSE just in case.
             for (Iterator it = this.endpoints.iterator(); it.hasNext();)
             {
-                ((UMOEndpoint)it.next()).setType(UMOEndpoint.ENDPOINT_TYPE_RESPONSE);
+                ((UMOEndpoint) it.next()).setType(UMOEndpoint.ENDPOINT_TYPE_RESPONSE);
             }
         }
         else
@@ -167,7 +167,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
         UMOEndpoint endpointDescriptor;
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            endpointDescriptor = (UMOEndpoint)iterator.next();
+            endpointDescriptor = (UMOEndpoint) iterator.next();
             if (endpointDescriptor.getName().equals(name))
             {
                 return endpointDescriptor;

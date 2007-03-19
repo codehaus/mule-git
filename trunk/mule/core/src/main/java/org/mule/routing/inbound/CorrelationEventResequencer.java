@@ -31,7 +31,7 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
 
     protected boolean shouldResequenceEvents(EventGroup events)
     {
-        UMOEvent event = (UMOEvent)events.iterator().next();
+        UMOEvent event = (UMOEvent) events.iterator().next();
 
         if (event == null)
         {

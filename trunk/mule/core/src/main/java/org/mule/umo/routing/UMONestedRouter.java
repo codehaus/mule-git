@@ -8,7 +8,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 public interface UMONestedRouter extends UMORouter
 {
 
-	UMOMessage route(UMOEvent event) throws MessagingException;
+    UMOMessage route(UMOEvent event) throws MessagingException;
 
     void setEndpoint(UMOEndpoint endpoint);
 
@@ -23,9 +23,9 @@ public interface UMONestedRouter extends UMORouter
     void setMethod(String method);
 
     /**
-	 * This wires the dynamic proxy to the service object.
-	 *
-	 * @param target
-	 */
-	Object createProxy(Object target);
+     * This wires the dynamic proxy to the service object.
+     *
+     * @param target
+     */
+    Object createProxy(Object target);
 }

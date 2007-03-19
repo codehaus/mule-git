@@ -18,12 +18,18 @@ import org.mule.umo.provider.UMOConnector;
  * Generates consistent objects names for Mule components
  */
 // @ThreadSafe
-public class ObjectNameHelper
+public final class ObjectNameHelper
 {
     public static final String SEPARATOR = ".";
     public static final char HASH = '#';
     public static final String CONNECTOR_PREFIX = "connector";
     public static final String ENDPOINT_PREFIX = "endpoint";
+
+    /** Do not instanciate. */
+    protected ObjectNameHelper ()
+    {
+        // no-op
+    }
 
     public static String getEndpointName(UMOImmutableEndpoint endpoint)
     {

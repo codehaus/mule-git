@@ -57,17 +57,20 @@ public class ContainerReference
     public void resolveReference(UMOContainerContext ctx) throws ContainerException
     {
         Object comp = ctx.getComponent(new ContainerKeyPair(container, containerRef, required));
-        if (comp == null) return;
+        if (comp == null)
+        {
+            return;
+        }
 
         try
         {
             if (object instanceof Map)
             {
-                ((Map)object).put(propertyName, comp);
+                ((Map) object).put(propertyName, comp);
             }
             else if (object instanceof List)
             {
-                ((List)object).add(comp);
+                ((List) object).add(comp);
             }
             else
             {

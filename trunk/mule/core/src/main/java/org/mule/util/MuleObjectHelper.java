@@ -32,8 +32,14 @@ import java.util.StringTokenizer;
  * objects, such as endpoint and transformers
  */
 // @ThreadSafe
-public class MuleObjectHelper
+public final class MuleObjectHelper
 {
+
+    /** Do not instanciate. */
+    private MuleObjectHelper ()
+    {
+        // no-op
+    }
 
     /**
      * Builds a linked list of UMOTransformers.
@@ -83,7 +89,7 @@ public class MuleObjectHelper
         Map endpoints = MuleManager.getInstance().getEndpoints();
         for (Iterator iterator = endpoints.values().iterator(); iterator.hasNext();)
         {
-            iprovider = (UMOImmutableEndpoint)iterator.next();
+            iprovider = (UMOImmutableEndpoint) iterator.next();
             if (iprovider.getProtocol().equals(protocol))
             {
                 return new MuleEndpoint(iprovider);
@@ -110,7 +116,7 @@ public class MuleObjectHelper
 
         for (Iterator iterator = endpoints.values().iterator(); iterator.hasNext();)
         {
-            iprovider = (UMOImmutableEndpoint)iterator.next();
+            iprovider = (UMOImmutableEndpoint) iterator.next();
             if (filter.accept(iprovider.getEndpointURI()))
             {
                 return new MuleEndpoint(iprovider);

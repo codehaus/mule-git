@@ -254,7 +254,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
 
         else if (exceptionListener instanceof Initialisable)
         {
-            ((Initialisable)exceptionListener).initialise();
+            ((Initialisable) exceptionListener).initialise();
         }
 
         if (inboundEndpoint != null)
@@ -263,7 +263,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             {
                 inboundEndpoint.setTransformer(inboundTransformer);
             }
-            ((MuleEndpoint)inboundEndpoint).initialise();
+            ((MuleEndpoint) inboundEndpoint).initialise();
             // If the transformer was set on the endpoint uri, it will only
             // be initialised when the endpoint is initialised, hence we make
             // this call here to ensure a consistent state
@@ -279,7 +279,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             {
                 outboundEndpoint.setTransformer(outboundTransformer);
             }
-            ((MuleEndpoint)outboundEndpoint).initialise();
+            ((MuleEndpoint) outboundEndpoint).initialise();
             // If the transformer was set on the endpoint uri, it will only
             // be initialised when the endpoint is initialised, hence we make
             // this call here to ensure a consistent state
@@ -291,7 +291,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
 
         if (exceptionListener instanceof Initialisable)
         {
-            ((Initialisable)exceptionListener).initialise();
+            ((Initialisable) exceptionListener).initialise();
         }
 
         MuleEndpoint endpoint;
@@ -307,11 +307,11 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             if (inboundRouter.getCatchAllStrategy() != null
                 && inboundRouter.getCatchAllStrategy().getEndpoint() != null)
             {
-                ((MuleEndpoint)inboundRouter.getCatchAllStrategy().getEndpoint()).initialise();
+                ((MuleEndpoint) inboundRouter.getCatchAllStrategy().getEndpoint()).initialise();
             }
             for (Iterator iterator = inboundRouter.getEndpoints().iterator(); iterator.hasNext();)
             {
-                endpoint = (MuleEndpoint)iterator.next();
+                endpoint = (MuleEndpoint) iterator.next();
                 endpoint.initialise();
             }
         }
@@ -320,7 +320,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
         {
             for (Iterator iterator = responseRouter.getEndpoints().iterator(); iterator.hasNext();)
             {
-                endpoint = (MuleEndpoint)iterator.next();
+                endpoint = (MuleEndpoint) iterator.next();
                 endpoint.initialise();
             }
         }
@@ -350,10 +350,10 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
             UMOOutboundRouter router;
             for (Iterator iterator = outboundRouter.getRouters().iterator(); iterator.hasNext();)
             {
-                router = (UMOOutboundRouter)iterator.next();
+                router = (UMOOutboundRouter) iterator.next();
                 for (Iterator iterator1 = router.getEndpoints().iterator(); iterator1.hasNext();)
                 {
-                    endpoint = (MuleEndpoint)iterator1.next();
+                    endpoint = (MuleEndpoint) iterator1.next();
                     endpoint.initialise();
                 }
             }
@@ -562,7 +562,7 @@ public class ImmutableMuleDescriptor implements UMOImmutableDescriptor
         InitialisationCallback callback;
         for (Iterator iterator = initialisationCallbacks.iterator(); iterator.hasNext();)
         {
-            callback = (InitialisationCallback)iterator.next();
+            callback = (InitialisationCallback) iterator.next();
             callback.initialise(component);
         }
     }

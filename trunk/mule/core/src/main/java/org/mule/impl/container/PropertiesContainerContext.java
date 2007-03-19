@@ -96,7 +96,7 @@ public class PropertiesContainerContext extends AbstractContainerContext
         {
             for (Iterator iterator = systemProperties.entrySet().iterator(); iterator.hasNext();)
             {
-                entry = (Map.Entry)iterator.next();
+                entry = (Map.Entry) iterator.next();
                 value = entry.getValue().toString();
                 value = templateParser.parse(systemProperties, value);
                 value = templateParser.parse(MuleManager.getInstance().getProperties(), value);
@@ -110,7 +110,7 @@ public class PropertiesContainerContext extends AbstractContainerContext
 
             for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
             {
-                entry = (Map.Entry)iterator.next();
+                entry = (Map.Entry) iterator.next();
                 value = entry.getValue().toString();
                 value = templateParser.parse(MuleManager.getInstance().getProperties(), value.toString());
                 MuleManager.getInstance().setProperty(entry.getKey(), value);
@@ -132,7 +132,7 @@ public class PropertiesContainerContext extends AbstractContainerContext
             String value;
             for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext();)
             {
-                entry = (Map.Entry)iterator.next();
+                entry = (Map.Entry) iterator.next();
                 value = entry.getValue().toString();
                 value = templateParser.parse(MuleManager.getInstance().getProperties(), value);
                 MuleManager.getInstance().setProperty(entry.getKey(), value);

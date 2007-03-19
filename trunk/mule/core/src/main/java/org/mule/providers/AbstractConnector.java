@@ -330,7 +330,7 @@ public abstract class AbstractConnector
 
         if (exceptionListener instanceof Initialisable)
         {
-            ((Initialisable)exceptionListener).initialise();
+            ((Initialisable) exceptionListener).initialise();
         }
 
         initialised.set(true);
@@ -359,7 +359,7 @@ public abstract class AbstractConnector
             }
 
             // the scheduler is recreated after stopConnector()
-            ScheduledExecutorService currentScheduler = (ScheduledExecutorService)scheduler.get();
+            ScheduledExecutorService currentScheduler = (ScheduledExecutorService) scheduler.get();
             if (currentScheduler == null || currentScheduler.isShutdown())
             {
                 scheduler.set(this.getScheduler());
@@ -372,7 +372,7 @@ public abstract class AbstractConnector
             {
                 for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
                 {
-                    UMOMessageReceiver mr = (UMOMessageReceiver)iterator.next();
+                    UMOMessageReceiver mr = (UMOMessageReceiver) iterator.next();
                     if (logger.isDebugEnabled())
                     {
                         logger.debug("Starting receiver on endpoint: " + mr.getEndpoint().getEndpointURI());
@@ -410,7 +410,7 @@ public abstract class AbstractConnector
             }
 
             // shutdown our scheduler service
-            ((ScheduledExecutorService)scheduler.get()).shutdown();
+            ((ScheduledExecutorService) scheduler.get()).shutdown();
 
             this.doStop();
             started.set(false);
@@ -421,7 +421,7 @@ public abstract class AbstractConnector
             {
                 for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
                 {
-                    UMOMessageReceiver mr = (UMOMessageReceiver)iterator.next();
+                    UMOMessageReceiver mr = (UMOMessageReceiver) iterator.next();
                     if (logger.isDebugEnabled())
                     {
                         logger.debug("Stopping receiver on endpoint: " + mr.getEndpoint().getEndpointURI());
@@ -493,7 +493,7 @@ public abstract class AbstractConnector
 
             for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
             {
-                UMOMessageReceiver receiver = (UMOMessageReceiver)iterator.next();
+                UMOMessageReceiver receiver = (UMOMessageReceiver) iterator.next();
 
                 try
                 {
@@ -603,7 +603,7 @@ public abstract class AbstractConnector
 
         if (dispatcherFactory instanceof KeyedPoolableObjectFactory)
         {
-            poolFactory = (KeyedPoolableObjectFactory)dispatcherFactory;
+            poolFactory = (KeyedPoolableObjectFactory) dispatcherFactory;
         }
         else
         {
@@ -674,7 +674,7 @@ public abstract class AbstractConnector
 
         try
         {
-            dispatcher = (UMOMessageDispatcher)dispatchers.borrowObject(endpoint);
+            dispatcher = (UMOMessageDispatcher) dispatchers.borrowObject(endpoint);
             return dispatcher;
         }
         catch (Exception ex)
@@ -819,7 +819,7 @@ public abstract class AbstractConnector
 
         if (receivers != null && !receivers.isEmpty())
         {
-            UMOMessageReceiver receiver = (UMOMessageReceiver)receivers.remove(this.getReceiverKey(component,
+            UMOMessageReceiver receiver = (UMOMessageReceiver) receivers.remove(this.getReceiverKey(component,
                 endpoint));
             if (receiver != null)
             {
@@ -907,7 +907,7 @@ public abstract class AbstractConnector
         {
             try
             {
-                return (UMOTransformer)defaultInboundTransformer.clone();
+                return (UMOTransformer) defaultInboundTransformer.clone();
             }
             catch (CloneNotSupportedException e)
             {
@@ -941,7 +941,7 @@ public abstract class AbstractConnector
         {
             try
             {
-                return (UMOTransformer)defaultResponseTransformer.clone();
+                return (UMOTransformer) defaultResponseTransformer.clone();
             }
             catch (CloneNotSupportedException e)
             {
@@ -964,7 +964,7 @@ public abstract class AbstractConnector
         {
             try
             {
-                return (UMOTransformer)defaultOutboundTransformer.clone();
+                return (UMOTransformer) defaultOutboundTransformer.clone();
             }
             catch (CloneNotSupportedException e)
             {
@@ -1036,7 +1036,7 @@ public abstract class AbstractConnector
         // implementation
         try
         {
-            return (ConnectionStrategy)BeanUtils.cloneBean(connectionStrategy);
+            return (ConnectionStrategy) BeanUtils.cloneBean(connectionStrategy);
         }
         catch (Exception e)
         {
@@ -1068,7 +1068,7 @@ public abstract class AbstractConnector
 
     public UMOMessageReceiver getReceiver(UMOComponent component, UMOEndpoint endpoint)
     {
-        return (UMOMessageReceiver)receivers.get(this.getReceiverKey(component, endpoint));
+        return (UMOMessageReceiver) receivers.get(this.getReceiverKey(component, endpoint));
     }
 
     /**
@@ -1085,7 +1085,7 @@ public abstract class AbstractConnector
     {
         if (key != null)
         {
-            return (UMOMessageReceiver)receivers.get(key);
+            return (UMOMessageReceiver) receivers.get(key);
         }
         else
         {
@@ -1102,14 +1102,14 @@ public abstract class AbstractConnector
 
         for (Iterator iterator = receivers.entrySet().iterator(); iterator.hasNext();)
         {
-            Map.Entry e = (Map.Entry)iterator.next();
+            Map.Entry e = (Map.Entry) iterator.next();
             if (filter.accept(e.getKey()))
             {
                 found.add(e.getValue());
             }
         }
 
-        return (UMOMessageReceiver[])CollectionUtils.toArrayOfComponentType(found,
+        return (UMOMessageReceiver[]) CollectionUtils.toArrayOfComponentType(found,
             UMOMessageReceiver.class);
     }
 
@@ -1187,7 +1187,7 @@ public abstract class AbstractConnector
         {
             for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
             {
-                UMOMessageReceiver receiver = (UMOMessageReceiver)iterator.next();
+                UMOMessageReceiver receiver = (UMOMessageReceiver) iterator.next();
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Connecting receiver on endpoint: "
@@ -1401,7 +1401,7 @@ public abstract class AbstractConnector
     {
         for (Iterator iterator = supportedProtocols.iterator(); iterator.hasNext();)
         {
-            String s = (String)iterator.next();
+            String s = (String) iterator.next();
             registerSupportedProtocol(s);
         }
     }
@@ -1423,7 +1423,7 @@ public abstract class AbstractConnector
             }
         }
 
-        return (UMOWorkManager)receiverWorkManager.get();
+        return (UMOWorkManager) receiverWorkManager.get();
     }
 
     /**
@@ -1445,7 +1445,7 @@ public abstract class AbstractConnector
             }
         }
 
-        return (UMOWorkManager)dispatcherWorkManager.get();
+        return (UMOWorkManager) dispatcherWorkManager.get();
     }
 
     /** {@inheritDoc} */
@@ -1466,7 +1466,7 @@ public abstract class AbstractConnector
             }
         }
 
-        return (ScheduledExecutorService)scheduler.get();
+        return (ScheduledExecutorService) scheduler.get();
     }
 
     /**
@@ -1537,7 +1537,7 @@ public abstract class AbstractConnector
 
         if (e instanceof Exception)
         {
-            this.handleException((Exception)e);
+            this.handleException((Exception) e);
         }
         else
         {
