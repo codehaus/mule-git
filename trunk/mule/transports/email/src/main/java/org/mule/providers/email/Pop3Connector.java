@@ -15,7 +15,7 @@ package org.mule.providers.email;
  * <code>Pop3Connector</code> is used to connect and receive mail from a POP3
  * mailbox.
  */
-public class Pop3Connector extends RetrieveMailConnector
+public class Pop3Connector extends AbstractRetrieveMailConnector
 {
     public static final int DEFAULT_POP3_PORT = 110;
 

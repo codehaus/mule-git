@@ -14,7 +14,7 @@ package org.mule.providers.email;
 /**
  * Creates a secure connection to a POP3 mailbox
  */
-public class Pop3sConnector extends TlsRetrievalMailConnector
+public class Pop3sConnector extends AbstractTlsRetrieveMailConnector
 {
     public static final int DEFAULT_POP3S_PORT = 995;
 

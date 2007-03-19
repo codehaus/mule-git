@@ -32,13 +32,13 @@ import javax.mail.URLName;
 
 public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
 {
-    private RetrieveMailConnector connector;
+    private AbstractRetrieveMailConnector connector;
     private Folder folder;
 
     public RetrieveMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (RetrieveMailConnector) endpoint.getConnector();
+        this.connector = (AbstractRetrieveMailConnector) endpoint.getConnector();
     }
 
     protected void doConnect() throws Exception

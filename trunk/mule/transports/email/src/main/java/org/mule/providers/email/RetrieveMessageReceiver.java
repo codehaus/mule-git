@@ -60,7 +60,7 @@ implements MessageCountListener, Startable, Stoppable
 
     private Session session;
 
-    private RetrieveMailConnector connector;
+    private AbstractRetrieveMailConnector connector;
 
     public RetrieveMessageReceiver(UMOConnector connector,
                                    UMOComponent component,
@@ -71,7 +71,7 @@ implements MessageCountListener, Startable, Stoppable
     {
         super(connector, component, endpoint, checkFrequency);
         this.backupFolder = backupFolder;
-        this.connector = (RetrieveMailConnector) connector;
+        this.connector = (AbstractRetrieveMailConnector) connector;
     }
 
     protected void doConnect() throws Exception

@@ -18,7 +18,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
  * Support for connecting to and receiving email from a mailbox (the exact protocol depends on
  * the subclass).
  */
-public abstract class RetrieveMailConnector extends AbstractMailConnector
+public abstract class AbstractRetrieveMailConnector extends AbstractMailConnector
 {
     public static final String MAILBOX = "INBOX";
     public static final int DEFAULT_CHECK_FREQUENCY = 60000;
@@ -41,7 +41,7 @@ public abstract class RetrieveMailConnector extends AbstractMailConnector
      */
     private volatile boolean deleteReadMessages = true;
 
-    protected RetrieveMailConnector(int defaultPort)
+    protected AbstractRetrieveMailConnector(int defaultPort)
     {
         super(defaultPort);
     }

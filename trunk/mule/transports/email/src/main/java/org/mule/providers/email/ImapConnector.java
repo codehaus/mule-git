@@ -13,7 +13,7 @@ package org.mule.providers.email;
 /**
  * Receives messages from an IMAP mailbox
  */
-public class ImapConnector extends RetrieveMailConnector
+public class ImapConnector extends AbstractRetrieveMailConnector
 {
     public static final int DEFAULT_IMAP_PORT = 143;
 

@@ -13,7 +13,7 @@ package org.mule.providers.email;
 /**
  * Creates a secure IMAP connection
  */
-public class ImapsConnector extends TlsRetrievalMailConnector
+public class ImapsConnector extends AbstractTlsRetrieveMailConnector
 {
     public static final int DEFAULT_IMAPS_PORT = 993;
 

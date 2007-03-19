@@ -21,8 +21,8 @@ import java.io.IOException;
  * Support for connecting to and receiving email from a secure mailbox (the exact protocol depends on
  * the subclass).
  */
-public abstract class TlsRetrievalMailConnector 
-extends RetrieveMailConnector implements TlsIndirectTrustStore, TlsIndirectKeyStore
+public abstract class AbstractTlsRetrieveMailConnector 
+extends AbstractRetrieveMailConnector implements TlsIndirectTrustStore, TlsIndirectKeyStore
 {
 
     private String namespace;
@@ -30,7 +30,7 @@ extends RetrieveMailConnector implements TlsIndirectTrustStore, TlsIndirectKeySt
     private String socketFactoryFallback = "false";
     private TlsConfiguration tls = new TlsConfiguration(TlsConfiguration.DEFAULT_KEYSTORE);
 
-    protected TlsRetrievalMailConnector(int defaultPort, String namespace, Class defaultSocketFactory)
+    protected AbstractTlsRetrieveMailConnector(int defaultPort, String namespace, Class defaultSocketFactory)
     {
         super(defaultPort);
         this.namespace = namespace;
