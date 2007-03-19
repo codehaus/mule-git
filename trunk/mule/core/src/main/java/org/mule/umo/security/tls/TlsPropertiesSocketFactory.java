@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.umo.security;
+package org.mule.umo.security.tls;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,6 +19,10 @@ import javax.net.ssl.SSLSocketFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * A socket factory that is configured via Properties, using a {@link TlsConfiguration}
+ * that has been stored via {@link TlsPropertiesMapper}.
+ */
 public class TlsPropertiesSocketFactory extends SSLSocketFactory
 {
 

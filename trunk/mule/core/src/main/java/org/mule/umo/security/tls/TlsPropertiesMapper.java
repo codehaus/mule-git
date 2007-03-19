@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.umo.security;
+package org.mule.umo.security.tls;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -16,6 +16,11 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Move a {@link TlsConfiguration} to and from Properties (typically System Properties).
+ * This can be used to store TLS/SSL configuration for a library (eg. Javamail, which
+ * reads java.mail properties) or for later retrieval by {@link TlsPropertiesSocketFactory}.
+ */
 public class TlsPropertiesMapper
 {
 

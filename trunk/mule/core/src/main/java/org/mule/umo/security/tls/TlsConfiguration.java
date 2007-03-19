@@ -8,11 +8,15 @@
  * LICENSE.txt file.
  */
 
-package org.mule.umo.security;
+package org.mule.umo.security.tls;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.security.TlsDirectKeyStore;
+import org.mule.umo.security.TlsDirectTrustStore;
+import org.mule.umo.security.TlsIndirectKeyStore;
+import org.mule.umo.security.TlsIndirectTrustStore;
 import org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory;
 import org.mule.umo.security.provider.SecurityProviderFactory;
 import org.mule.umo.security.provider.SecurityProviderInfo;
@@ -39,11 +43,76 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Support for configuring TLS/SSL connections.
+ * 
+ * <h2>Introduction</h2>
+ * 
+ * This class was introduced to centralise the work of TLS/SSL configuration.  It is intended
+ * to be backwards compatible with earlier code (as much as possible) and so is perhaps more 
+ * complex than would be necessary if starting from zero - the main source of confusion is the
+ * distinction between direct and indirect creation of sockets and stores.
+ * 
+ * <h2>Configuration</h2>
+ * 
+ * The documentation in this class is intended more for programmers than end uses.  If you are
+ * configuring a connector the interfaces {@link TlsIndirectTrustStore}, {@link TlsDirectTrustStore}, 
+ * {@link TlsDirectKeyStore} and {@link TlsIndirectKeyStore} should provide guidance to individual 
+ * properties.  In addition you should check the documentation for the specific protocol / connector 
+ * used and may also need to read the discussion on direct and indirect socket and store creation
+ * below (or, more simply, just use whichever key store interface your connector implements!).
+ * 
+ * <h2>Programming</h2>
+ * 
+ * This class is intended to be used as a delegate as we typically want to add security to an
+ * already existing connector (so we inherit from that connector, implement the appropriate
+ * interfaces from {@link TlsIndirectTrustStore}, {@link TlsDirectTrustStore}, 
+ * {@link TlsDirectKeyStore} and {@link TlsIndirectKeyStore}, and then forward calls to the 
+ * interfaces to an instance of this class).
+ * 
+ * <p>For setting System properties (and reading them) use {@link TlsPropertiesMapper}.  This
+ * can take a "namespace" which can then be used by {@link TlsPropertiesSocketFactory} to
+ * construct an appropriate socket factory.  This approach (storing to proeprties and then
+ * retrieving that information later in a socket factory) lets us pass TLS/SSL configuration
+ * into libraries that are configured by specifying on the socket factory class.</p>
+ * 
+ * <h2>Direct and Indirect Socket and Store Creation</h2>
+ * 
+ * For the SSL transport, which historically defined parameters for many different secure
+ * transports, the configuration interfaces worked as follows:
+ * 
+ * <dl>
+ * <dt>{@link TlsDirectTrustStore}</dt><dd>Used to generate trust store directly and indirectly 
+ * for all TLS/SSL conections via System properties</dd>
+ * <dt>{@link TlsDirectKeyStore}</dt><dd>Used to generate key store directly</dd>
+ * <dt>{@link TlsIndirectKeyStore}</dt><dd>Used to generate key store indirectly for all
+ * TLS/SSL conections via System properties</dd>
+ * </dl>
+ * 
+ * Historically, many other transports relied on the indirect configurations defined above.
+ * So they implemented {@link TlsIndirectTrustStore} (a superclass of {@link TlsDirectTrustStore})
+ * and relied on {@link TlsIndirectKeyStore} from the SSL configuration.  For continuity these
+ * interfaces continue to be used, even though 
+ * the configurations are now typically (see individual connector/protocol documentation) specific 
+ * to a protocol or connector.  <em>Note - these interfaces are new, but the original code had
+ * those methods, used as described.  The new interfces only make things explicit.</em>
+ * 
+ * <p><em>Note for programmers</em> One way to udnerstand the above is to see that many
+ * protocols are handled by libraries that are configured by providing either properties or
+ * a socket factory.  In both cases (the latter via {@link TlsPropertiesSocketFactory} we
+ * continue to use properties and the "indirect" interface.  Note also that the mapping
+ * in {@link TlsPropertiesMapper} correctly handles the asymmetry, so an initial call to
+ * {@link TlsConfiguration} uses the keystore defined via {@link TlsDirectKeyStore}, but
+ * when a {@link TlsConfiguration} is retrieved from System proerties using 
+ * {@link TlsPropertiesMapper#readFromProperties(TlsConfiguration, java.util.Properties)}
+ * the "indirect" proeprties are supplied as "direct" values, meaning that the "indirect"
+ * socket factory can be retrieved from {@link #getKeyManagerFactory()}.  It just works.</p>
+ * 
+ * 
  * Support for managing TLS connections.  Use as a delegate.  
  * See secure HTTP and email connectors for examples.
  * Pulled almost directly from {@link org.mule.providers.http.HttpsConnector}
  */
-public final class TlsConfiguration
+public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKeyStore, TlsIndirectKeyStore
 {
 
     public static final String DEFAULT_KEYSTORE = ".keystore";
@@ -63,7 +132,7 @@ public final class TlsConfiguration
 
     // this is the key store that is generated in-memory and available to connectors explicitly.
     // it is local to the socket.
-    private String keyStoreName = null;
+    private String keyStoreName = DEFAULT_KEYSTORE; // was default in https but not ssl
     private String keyPassword = null;
     private String keyStorePassword = null;
     private String keystoreType = DEFAULT_KEYSTORE_TYPE;
@@ -110,7 +179,10 @@ public final class TlsConfiguration
      */
     public void initialise(boolean anon, String namespace) throws InitialisationException
     {
-        logger.debug("initialising: anon " + anon);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("initialising: anon " + anon);
+        }
         validate(anon);
 
         Security.addProvider(provider);
@@ -139,7 +211,10 @@ public final class TlsConfiguration
 
     private void initKeyManagerFactory() throws InitialisationException
     {
-        logger.debug("initialising key manager factory from keystore data");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("initialising key manager factory from keystore data");
+        }
         KeyStore tempKeyStore;
         try
         {
@@ -169,58 +244,43 @@ public final class TlsConfiguration
         }
     }
 
-
-    // trust manager logic
-    // use name, type, password and algorithm either directly or via properties
-
     private void initTrustManagerFactory() throws InitialisationException 
     {
         if (null != trustStoreName)
         {
-            trustManagerFactory = buildTrustManagerFactory(
-                trustStoreName, trustStoreType, trustStorePassword, trustManagerAlgorithm, this);
-        }
-    }
+            trustStorePassword = null == trustStorePassword ? "" : trustStorePassword;
 
-    private static TrustManagerFactory 
-    buildTrustManagerFactory(String name, String type, String password, String algorithm, Object component) 
-    throws InitialisationException
-    {
-        password = null == password ? "" : password;
-
-        KeyStore trustStore;
-        try
-        {
-            trustStore = KeyStore.getInstance(type);
-            InputStream is = IOUtils.getResourceAsStream(name, component.getClass());
-            if (null == is)
+            KeyStore trustStore;
+            try
             {
-                throw new FileNotFoundException(
-                    "Failed to load truststore from classpath or local file: " + name);
+                trustStore = KeyStore.getInstance(trustStoreType);
+                InputStream is = IOUtils.getResourceAsStream(trustStoreName, getClass());
+                if (null == is)
+                {
+                    throw new FileNotFoundException(
+                        "Failed to load truststore from classpath or local file: " + trustStoreName);
+                }
+                trustStore.load(is, trustStorePassword.toCharArray());
             }
-            trustStore.load(is, password.toCharArray());
-        }
-        catch (Exception e)
-        {
-            throw new InitialisationException(
-                new Message(Messages.FAILED_LOAD_X, "TrustStore: " + name), 
-                e, component);
-        }
+            catch (Exception e)
+            {
+                throw new InitialisationException(
+                    new Message(Messages.FAILED_LOAD_X, "TrustStore: " + trustStoreName), 
+                    e, this);
+            }
 
-        TrustManagerFactory trustFactory;
-        try
-        {
-            trustFactory = TrustManagerFactory.getInstance(algorithm);
-            trustFactory.init(trustStore);
+            try
+            {
+                trustManagerFactory = TrustManagerFactory.getInstance(trustManagerAlgorithm);
+                trustManagerFactory.init(trustStore);
+            }
+            catch (Exception e)
+            {
+                throw new InitialisationException(
+                    new Message(Messages.FAILED_LOAD_X, "Trust Manager (" + trustManagerAlgorithm + ")"), 
+                    e, this);
+            }
         }
-        catch (Exception e)
-        {
-            throw new InitialisationException(
-                new Message(Messages.FAILED_LOAD_X, "Trust Manager (" + algorithm + ")"), 
-                e, component);
-        }
-
-        return trustFactory;
     }
 
 
@@ -312,7 +372,10 @@ public final class TlsConfiguration
         if (null != keyStoreName)
         {
             keyStoreName = FileUtils.getResourcePath(keyStoreName, getClass());
-            logger.debug("Normalised keyStore path to: " + keyStoreName);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Normalised keyStore path to: " + keyStoreName);
+            }
         }
     }
 
@@ -375,7 +438,10 @@ public final class TlsConfiguration
         if (null != clientKeyStoreName)
         {
             clientKeyStoreName = FileUtils.getResourcePath(clientKeyStoreName, getClass());
-            logger.debug("Normalised clientKeyStore path to: " + clientKeyStoreName);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Normalised clientKeyStore path to: " + clientKeyStoreName);
+            }
         }
     }
 
@@ -413,7 +479,10 @@ public final class TlsConfiguration
         if (null != trustStoreName)
         {
             trustStoreName = FileUtils.getResourcePath(trustStoreName, getClass());
-            logger.debug("Normalised trustStore path to: " + trustStoreName);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Normalised trustStore path to: " + trustStoreName);
+            }
         }
     }
 

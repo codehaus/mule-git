@@ -10,8 +10,8 @@
 
 package org.mule.test.umo;
 
-import org.mule.umo.security.TlsConfiguration;
-import org.mule.umo.security.TlsPropertiesSocketFactory;
+import org.mule.umo.security.tls.TlsConfiguration;
+import org.mule.umo.security.tls.TlsPropertiesSocketFactory;
 
 import junit.framework.TestCase;
 
