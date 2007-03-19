@@ -25,7 +25,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>ThreadingProfile</code> is used to configure a thread pool. Mule uses a
- * few different pools i.e. for component threds and message dispatchers. This object
+ * few different pools i.e. for component threads and message dispatchers. This object
  * makes it easier to configure the pool.
  */
 
