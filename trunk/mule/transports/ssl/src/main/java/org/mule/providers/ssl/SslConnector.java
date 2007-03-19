@@ -12,8 +12,11 @@ package org.mule.providers.ssl;
 
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.TlsConfiguration;
+import org.mule.umo.security.TlsDirectKeyStore;
+import org.mule.umo.security.TlsDirectTrustStore;
+import org.mule.umo.security.TlsIndirectKeyStore;
 import org.mule.umo.security.provider.SecurityProviderFactory;
+import org.mule.umo.security.tls.TlsConfiguration;
 
 import java.io.IOException;
 import java.security.Provider;
@@ -25,6 +28,7 @@ import javax.net.ssl.TrustManagerFactory;
  * <code>SslConnector</code> TODO document
  */
 public class SslConnector extends TcpConnector
+implements TlsDirectKeyStore, TlsIndirectKeyStore, TlsDirectTrustStore
 {
 
     // null initial keystore - see below
@@ -52,6 +56,11 @@ public class SslConnector extends TcpConnector
     public String getClientKeyStorePassword()
     {
         return tls.getClientKeyStorePassword();
+    }
+
+    public String getClientKeyStoreType()
+    {
+        return this.tls.getClientKeyStoreType();
     }
 
     public String getKeyManagerAlgorithm()
@@ -147,6 +156,11 @@ public class SslConnector extends TcpConnector
     public void setClientKeyStorePassword(String clientKeyStorePassword)
     {
         tls.setClientKeyStorePassword(clientKeyStorePassword);
+    }
+
+    public void setClientKeyStoreType(String clientKeyStoreType)
+    {
+        this.tls.setClientKeyStoreType(clientKeyStoreType);
     }
 
     public void setExplicitTrustStoreOnly(boolean explicitTrustStoreOnly)
