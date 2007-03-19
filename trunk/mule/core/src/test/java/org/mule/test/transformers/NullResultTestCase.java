@@ -55,13 +55,13 @@ public class NullResultTestCase extends AbstractTransformerTestCase
         }
     }
 
-    public final class NullResultTransformer extends AbstractTransformer
+    public static final class NullResultTransformer extends AbstractTransformer
     {
-
         public NullResultTransformer()
         {
-            registerSourceType(Object.class);
-            setReturnClass(NullPayload.class);
+            super();
+            this.registerSourceType(Object.class);
+            this.setReturnClass(NullPayload.class);
         }
 
         public Object doTransform(Object src, String encoding) throws TransformerException
