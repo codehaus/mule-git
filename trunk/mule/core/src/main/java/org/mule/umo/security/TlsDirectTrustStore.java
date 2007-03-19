@@ -10,8 +10,6 @@
 
 package org.mule.umo.security;
 
-import org.mule.umo.security.tls.TlsConfiguration;
-
 import javax.net.ssl.TrustManagerFactory;
 
 /**
@@ -25,7 +23,7 @@ import javax.net.ssl.TrustManagerFactory;
  * It may therefore be specific to a single
  * connector, or global to all connectors made by that protocol, or even (in the case of the SSL transport)
  * become a global default value.  For more information see the documentation for the connector or protocol in
- * question.  The comments in {@link TlsConfiguration} may also be useful.</p>
+ * question.  The comments in {@link org.mule.umo.security.tls.TlsConfiguration} may also be useful.</p>
  */
 public interface TlsDirectTrustStore extends TlsIndirectTrustStore
 {
@@ -33,38 +31,38 @@ public interface TlsDirectTrustStore extends TlsIndirectTrustStore
     /**
      * @return The type of keystore used to implement the trust store defined in {@link #getTrustStore()}
      */
-    public String getTrustStoreType();
+    String getTrustStoreType();
 
     /**
      * @param trustStoreType The type of keystore used to implement the trust store defined in 
      * {@link #setTrustStore(String)}
      */
-    public void setTrustStoreType(String trustStoreType);
+    void setTrustStoreType(String trustStoreType);
 
     /**
      * @return The algorithm used by the trust store.  The default comes from {
      * @link org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory}
      */
-    public String getTrustManagerAlgorithm();
+    String getTrustManagerAlgorithm();
 
     /**
      * @param trustManagerAlgorithm The algorithm used by the trust store.  The default comes from {
      * @link org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory}
      */
-    public void setTrustManagerAlgorithm(String trustManagerAlgorithm);
+    void setTrustManagerAlgorithm(String trustManagerAlgorithm);
 
     /**
      * @return Either the factory defined by {@link #setTrustManagerFactory(TrustManagerFactory)} or one
      * constructed from the parameters in this interface ({@link #setTrustStore(String)} etc).
      */
-    public TrustManagerFactory getTrustManagerFactory();
+    TrustManagerFactory getTrustManagerFactory();
 
     /**
      * @param trustManagerFactory The source of trust information if the store is accessed directly
      * (some connectors generate trust stores indirectly through System properties in which case this
      * value will be ignored - see {@link TlsConfiguration}).
      */
-    public void setTrustManagerFactory(TrustManagerFactory trustManagerFactory);
+    void setTrustManagerFactory(TrustManagerFactory trustManagerFactory);
 
     /**
      * If the trust store is undefined and the trust store generated via System properties then the
@@ -73,7 +71,7 @@ public interface TlsDirectTrustStore extends TlsIndirectTrustStore
      * @return true if the key store data should <em>not</em> be used when a trust store is otherwise 
      * undefined
      */
-    public boolean isExplicitTrustStoreOnly();
+    boolean isExplicitTrustStoreOnly();
 
     /**
      * If the trust store is undefined and the trust store generated via System properties then the
@@ -82,7 +80,7 @@ public interface TlsDirectTrustStore extends TlsIndirectTrustStore
      * @param explicitTrustStoreOnly true if the key store data should <em>not<em> be used when a trust 
      * store is otherwise undefined
      */
-    public void setExplicitTrustStoreOnly(boolean explicitTrustStoreOnly);
+    void setExplicitTrustStoreOnly(boolean explicitTrustStoreOnly);
 
     /**
      * If a server socket is constructed directly (see {@link TlsConfiguration}) then this flag will
@@ -90,7 +88,7 @@ public interface TlsDirectTrustStore extends TlsIndirectTrustStore
      * 
      * @return true if clients must be authenticated
      */
-    public boolean isRequireClientAuthentication();
+    boolean isRequireClientAuthentication();
 
     /**
      * If a server socket is constructed directly (see {@link TlsConfiguration}) then this flag will
@@ -98,7 +96,7 @@ public interface TlsDirectTrustStore extends TlsIndirectTrustStore
      * 
      * @param requireClientAuthentication true if clients must be authenticated
      */
-    public void setRequireClientAuthentication(boolean requireClientAuthentication);
+    void setRequireClientAuthentication(boolean requireClientAuthentication);
     
 }
 

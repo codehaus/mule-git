@@ -10,8 +10,6 @@
 
 package org.mule.umo.security;
 
-import org.mule.umo.security.tls.TlsConfiguration;
-
 import java.io.IOException;
 
 /**
@@ -25,7 +23,7 @@ import java.io.IOException;
  * It may therefore be specific to a single
  * connector, or global to all connectors made by that protocol, or even (in the case of the SSL transport)
  * become a global default value.  For more information see the documentation for the connector or protocol in
- * question.  The comments in {@link TlsConfiguration} may also be useful.</p>
+ * question.  The comments in {@link org.mule.umo.security.tls.TlsConfiguration} may also be useful.</p>
  */
 public interface TlsIndirectTrustStore
 {
@@ -34,24 +32,24 @@ public interface TlsIndirectTrustStore
      * @return The location (resolved relative to the current classpath and file system, if possible)
      * of the keystore that contains public certificates of trusted servers.
      */
-    public String getTrustStore();
+    String getTrustStore();
 
     /**
      * @param name The location of the keystore that contains public certificates of trusted servers.
      * @throws IOException If the location cannot be resolved via the file system or classpath
      */
-    public void setTrustStore(String name) throws IOException;
+    void setTrustStore(String name) throws IOException;
 
     /**
      * @return The password used to protected the trust store defined in {@link #getTrustStore()}
      */
-    public String getTrustStorePassword();
+    String getTrustStorePassword();
 
     /**
      * @param trustStorePassword The password used to protected the trust store defined in 
      * {@link #setTrustStore(String)}
      */
-    public void setTrustStorePassword(String trustStorePassword);
+    void setTrustStorePassword(String trustStorePassword);
 
 }
 

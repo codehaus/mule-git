@@ -10,8 +10,6 @@
 
 package org.mule.umo.security;
 
-import org.mule.umo.security.tls.TlsConfiguration;
-
 import java.io.IOException;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -24,7 +22,7 @@ import javax.net.ssl.KeyManagerFactory;
  * 
  * <p>The information specified in this interface is used to configure a key store directly.
  * For more information see the documentation for the connector or protocol in question.
- * The comments in {@link TlsConfiguration} may also be useful.</p>
+ * The comments in {@link org.mule.umo.security.tls.TlsConfiguration} may also be useful.</p>
  */
 public interface TlsDirectKeyStore
 {
@@ -33,61 +31,61 @@ public interface TlsDirectKeyStore
      * @return The location (resolved relative to the current classpath and file system, if possible)
      * of the keystore that contains public certificates and private keys for identification.
      */
-    public String getKeyStore();
+    String getKeyStore();
 
     /**
      * @param name The location of the keystore that contains public certificates  and private keys 
      * for identification.
      * @throws IOException If the location cannot be resolved via the file system or classpath
      */
-    public void setKeyStore(String name) throws IOException;
+    void setKeyStore(String name) throws IOException;
 
     /**
      * @return The password used to protect the private key(s)
      */
-    public String getKeyPassword();
+    String getKeyPassword();
 
     /**
      * @param keyPassword The password used to protect the private key(s)
      */
-    public void setKeyPassword(String keyPassword);
+    void setKeyPassword(String keyPassword);
 
     /**
      * @return The password used to protect the keystore itself
      */
-    public String getStorePassword();
+    String getStorePassword();
 
     /**
      * @param storePassword The password used to protect the keystore itself
      */
-    public void setStorePassword(String storePassword);
+    void setStorePassword(String storePassword);
 
     /**
      * @return The type of keystore used in {@link #getKeyStore()}
      */
-    public String getKeystoreType();
+    String getKeystoreType();
 
     /**
      * @param keystoreType The type of keystore used in {@link #setKeyStore(String)}
      */
-    public void setKeystoreType(String keystoreType);
+    void setKeystoreType(String keystoreType);
 
     /**
      * @return The algorithm used by the key store.  The default comes from {
      * @link org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory}
      */
-    public String getKeyManagerAlgorithm();
+    String getKeyManagerAlgorithm();
 
     /**
      * @param keyManagerAlgorithm The algorithm used by the key store.  The default comes from {
      * @link org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory}
      */
-    public void setKeyManagerAlgorithm(String keyManagerAlgorithm);
+    void setKeyManagerAlgorithm(String keyManagerAlgorithm);
 
     /**
      * @return A source of key stores generated from the parameters supplied here.
      */
-    public KeyManagerFactory getKeyManagerFactory();
+    KeyManagerFactory getKeyManagerFactory();
 
 }
 
