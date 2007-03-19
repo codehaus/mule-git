@@ -16,14 +16,21 @@ import java.net.Socket;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class TlsPropertiesSocketFactory extends SSLSocketFactory
 {
 
+    private Log logger = LogFactory.getLog(getClass());
+    private boolean anon;
     private String namespace;
     private SSLSocketFactory factory;
 
-    public TlsPropertiesSocketFactory(String namespace)
+    public TlsPropertiesSocketFactory(boolean anon, String namespace)
     {
+        logger.debug("creating: " + anon + "; " + namespace);
+        this.anon = anon;
         this.namespace = namespace;
     }
 
@@ -31,11 +38,13 @@ public class TlsPropertiesSocketFactory extends SSLSocketFactory
     {
         if (null == factory)
         {
+            logger.debug("creating factory");
             TlsPropertiesMapper propertiesMapper = new TlsPropertiesMapper(namespace);
             TlsConfiguration configuration = new TlsConfiguration(TlsConfiguration.DEFAULT_KEYSTORE); 
             propertiesMapper.readFromProperties(configuration, System.getProperties());
             try 
             {
+                configuration.initialise(anon, namespace);
                 factory = configuration.getSocketFactory();
             } 
             catch (Exception e)
@@ -95,6 +104,12 @@ public class TlsPropertiesSocketFactory extends SSLSocketFactory
         return getFactory().createSocket(arg0, arg1, arg2, arg3);
     }
 
+    // see http://forum.java.sun.com/thread.jspa?threadID=701799&messageID=4280973
+    public Socket createSocket() throws IOException
+    {
+        return getFactory().createSocket();
+    } 
+    
 }
 
 

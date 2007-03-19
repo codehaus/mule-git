@@ -27,7 +27,7 @@ public class TlsPropertiesSocketTestCase extends TestCase
         configuration.initialise(false, TlsConfiguration.JSSE_NAMESPACE);
 
         TlsPropertiesSocketFactory socketFactory = 
-            new TlsPropertiesSocketFactory(TlsConfiguration.JSSE_NAMESPACE);
+            new TlsPropertiesSocketFactory(true, TlsConfiguration.JSSE_NAMESPACE);
         assertTrue("socket is useless", socketFactory.getSupportedCipherSuites().length > 0);
     }
 

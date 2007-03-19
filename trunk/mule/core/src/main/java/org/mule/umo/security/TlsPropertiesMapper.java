@@ -53,7 +53,7 @@ public class TlsPropertiesMapper
         String trustStoreName = configuration.getTrustStore();
         String trustStorePassword = configuration.getTrustStorePassword();
 
-        if (null == trustStoreName && ! configuration.isExplicitTrustStoreOnly())
+        if (null == trustStoreName && !configuration.isExplicitTrustStoreOnly())
         {
             logger.info("Defaulting " + namespace + " trust store to client Key Store");
             trustStoreName = configuration.getClientKeyStore();
@@ -61,7 +61,7 @@ public class TlsPropertiesMapper
         }
         if (null != trustStoreName)
         {
-            synchronized(properties)
+            synchronized (properties)
             {
                 setProperty(properties, TRUST_NAME_SUFFIX, trustStoreName);
                 setProperty(properties, TRUST_TYPE_SUFFIX, configuration.getTrustStoreType());
@@ -128,6 +128,7 @@ public class TlsPropertiesMapper
         if (null != value)
         {
             properties.setProperty(namespace + suffix, value);
+            logger.debug(namespace + suffix + " <- " + value);
         }
     }
 
@@ -136,12 +137,10 @@ public class TlsPropertiesMapper
         String value = properties.getProperty(namespace + suffix);
         if (null == value)
         {
-            return deflt;
+            value = deflt;
         }
-        else
-        {
-            return value;
-        }
+        logger.debug(namespace + suffix + " -> " + value);
+        return value;
     }
 
 }

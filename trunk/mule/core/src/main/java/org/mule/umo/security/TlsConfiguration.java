@@ -116,7 +116,7 @@ public final class TlsConfiguration
         Security.addProvider(provider);
         System.setProperty("java.protocol.handler.pkgs", protocolHandler);
 
-        if (! anon) 
+        if (!anon) 
         {
             initKeyManagerFactory();
         }
@@ -128,7 +128,7 @@ public final class TlsConfiguration
     private void validate(boolean anon) throws InitialisationException
     {
         assertNotNull(getProvider(), "The security provider cannot be null");
-        if (! anon)
+        if (!anon)
         {
             assertNotNull(getKeyStore(), "The KeyStore location cannot be null");
             assertNotNull(getKeyPassword(), "The Key password cannot be null");
