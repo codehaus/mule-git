@@ -18,13 +18,13 @@ import java.util.Comparator;
  * <code>CorrelationSequenceComparator</code> is a {@link Comparator} for
  * {@link UMOEvent}s using their respective correlation sequences.
  */
-public class CorrelationSequenceComparator implements Comparator
+public final class CorrelationSequenceComparator implements Comparator
 {
-    private static final Comparator Instance = new CorrelationSequenceComparator();
+    private static final Comparator INSTANCE = new CorrelationSequenceComparator();
 
     public static Comparator getInstance()
     {
-        return Instance;
+        return INSTANCE;
     }
 
     private CorrelationSequenceComparator()
@@ -34,8 +34,8 @@ public class CorrelationSequenceComparator implements Comparator
 
     public int compare(Object o1, Object o2)
     {
-        int val1 = ((UMOEvent)o1).getMessage().getCorrelationSequence();
-        int val2 = ((UMOEvent)o2).getMessage().getCorrelationSequence();
+        int val1 = ((UMOEvent) o1).getMessage().getCorrelationSequence();
+        int val2 = ((UMOEvent) o2).getMessage().getCorrelationSequence();
 
         if (val1 == val2)
         {
