@@ -52,57 +52,39 @@ import org.apache.commons.lang.StringUtils;
  * messages and routes them as events into Mule.
  */
 
-public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
-    implements MessageCountListener, Startable, Stoppable
+public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
+implements MessageCountListener, Startable, Stoppable
 {
     private Folder folder = null;
 
     private String backupFolder = null;
 
-    protected Session session;
+    private Session session;
 
-    private Pop3Connector connector;
+    private RetrieveMailConnector connector;
 
-    public Pop3MessageReceiver(UMOConnector connector,
-                               UMOComponent component,
-                               UMOEndpoint endpoint,
-                               long checkFrequency,
-                               String backupFolder) throws InitialisationException
+    public RetrieveMessageReceiver(UMOConnector connector,
+                                   UMOComponent component,
+                                   UMOEndpoint endpoint,
+                                   long checkFrequency,
+                                   String backupFolder) 
+    throws InitialisationException
     {
         super(connector, component, endpoint, checkFrequency);
         this.backupFolder = backupFolder;
-        this.connector = (Pop3Connector)connector;
+        this.connector = (RetrieveMailConnector) connector;
     }
 
     protected void doConnect() throws Exception
     {
-        // TODO refactor inbox discovery logic into a getter method for subclasses to
-        // override
-        String inbox;
-        if (connector.getProtocol().toLowerCase().startsWith("imap"))
+        String inbox = endpoint.getEndpointURI().getPath();
+        if (inbox.length() == 0)
         {
-            inbox = endpoint.getEndpointURI().getPath();
-            if (inbox.length() == 0)
-            {
-                // TODO danger here, custom connector may not necessarily inherit
-                // ImapConnector
-                if (connector.getProtocol().toLowerCase().compareTo("imaps") == 0)
-                {
-                    inbox = ((ImapsConnector)connector).getMailboxFolder();
-                }
-                else
-                {
-                    inbox = ((ImapConnector)connector).getMailboxFolder();
-                }
-            }
-            else
-            {
-                inbox = inbox.substring(1);
-            }
+            inbox = connector.getMailboxFolder();
         }
         else
         {
-            inbox = Pop3Connector.MAILBOX;
+            inbox = inbox.substring(1);
         }
 
         UMOEndpointURI uri = endpoint.getEndpointURI();
@@ -119,8 +101,8 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
         // If user explicitly sets backup folder to "" it will disable email back up
         if (backupFolder == null)
         {
-            this.backupFolder = MuleManager.getConfiguration().getWorkingDirectory() + "/mail/"
-                                + folder.getName();
+            this.backupFolder = 
+                MuleManager.getConfiguration().getWorkingDirectory() + "/mail/" + folder.getName();
         }
         else if (StringUtils.EMPTY.equals(backupFolder))
         {
@@ -169,7 +151,7 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
                 {
                     if (!messages[i].getFlags().contains(Flags.Flag.DELETED))
                     {
-                        MimeMessage mimeMessage = new MimeMessage((MimeMessage)messages[i]);
+                        MimeMessage mimeMessage = new MimeMessage((MimeMessage) messages[i]);
                         storeMessage(mimeMessage);
                         message = new MuleMessage(connector.getMessageAdapter(mimeMessage));
 
@@ -214,7 +196,7 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
         super.handleUnacceptedFilter(message);
         if (message.getPayload() instanceof Message)
         {
-            Message msg = (Message)message.getPayload();
+            Message msg = (Message) message.getPayload();
             try
             {
                 msg.setFlag(Flags.Flag.DELETED, endpoint.isDeleteUnacceptedMessages());
@@ -246,6 +228,7 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
                 catch (MessagingException ignore)
                 {
                     // ignore
+                    logger.debug("ignoring exception: " + ignore.getMessage());
                 }
             }
         }
@@ -304,8 +287,8 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
                 if (from != null && from.length > 0)
                 {
                     filename = from[0] instanceof InternetAddress
-                            ? ((InternetAddress) from[0]).getAddress()
-                            : from[0].toString();
+                    ? ((InternetAddress) from[0]).getAddress()
+                    : from[0].toString();
                 }
                 else
                 {
@@ -336,6 +319,7 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
             catch (Exception e)
             {
                 // ignore
+                logger.debug("ignoring exception: " + e.getMessage());
             }
 
             int count = folder.getMessageCount();
@@ -349,7 +333,7 @@ public class Pop3MessageReceiver extends AbstractPollingMessageReceiver
             else if (count == -1)
             {
                 throw new MessagingException("Cannot monitor folder: " + folder.getFullName()
-                                             + " as folder is closed");
+                    + " as folder is closed");
             }
         }
         catch (MessagingException e)

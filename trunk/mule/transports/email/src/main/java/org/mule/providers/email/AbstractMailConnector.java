@@ -12,6 +12,8 @@ package org.mule.providers.email;
 
 import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractConnector;
+import org.mule.umo.UMOException;
+import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.Properties;
 
@@ -28,16 +30,24 @@ import org.apache.commons.lang.StringUtils;
 public abstract class AbstractMailConnector extends AbstractConnector
 {
 
+    private int defaultPort;
+
     /**
      * A custom authenticator to be used on any mail sessions created with this
      * connector. This will only be used if user name credendials are set on the
      * endpoint.
      */
-    protected Authenticator authenticator = null;
+    private Authenticator authenticator = null;
 
-    public AbstractMailConnector()
+    public AbstractMailConnector(int defaultPort)
     {
         super();
+        this.defaultPort = defaultPort;
+    }
+
+    public int getDefaultPort()
+    {
+        return defaultPort;
     }
 
     public Authenticator getAuthenticator()
@@ -49,8 +59,6 @@ public abstract class AbstractMailConnector extends AbstractConnector
     {
         this.authenticator = authenticator;
     }
-
-    public abstract int getDefaultPort();
 
     /**
      * Creates a new javax.mail Session based on a URL. If a password is set on the
@@ -64,10 +72,10 @@ public abstract class AbstractMailConnector extends AbstractConnector
         if (url == null)
         {
             throw new IllegalArgumentException(new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL")
-                .toString());
+            .toString());
         }
 
-        String protocol = this.getProtocol().toLowerCase();
+        String protocol = getProtocol().toLowerCase();
         boolean secure = false;
 
         if (protocol.equals("smtps"))
@@ -105,37 +113,6 @@ public abstract class AbstractMailConnector extends AbstractConnector
             if (secure)
             {
                 System.setProperty("mail." + protocol + ".socketFactory.port", String.valueOf(port));
-                if (protocol.equals("smtp"))
-                {
-                    // these following properties should not be set on the System
-                    // properties as well since they will conflict with the smtp
-                    // properties.
-                    props = (Properties)props.clone();
-
-                    // make sure I can downcast myself
-                    if (!(this instanceof SmtpsConnector))
-                    {
-                        throw new IllegalStateException("Connector " + this
-                                        + "is supposed to be secure, but not an instance of "
-                                        + SmtpsConnector.class.getName());
-                    }
-
-                    SmtpsConnector smtps = (SmtpsConnector)this;
-
-                    props.put("mail.smtp.ssl", "true");
-                    props.put("mail.smtp.socketFactory.class", smtps.getSocketFactory());
-                    props.put("mail.smtp.socketFactory.fallback", smtps.getSocketFactoryFallback());
-
-                    if (smtps.getTrustStore() != null)
-                    {
-                        System.setProperty("javax.net.ssl.trustStore", smtps.getTrustStore());
-                        if (smtps.getTrustStorePassword() != null)
-                        {
-                            System.setProperty("javax.net.ssl.trustStorePassword", smtps
-                                .getTrustStorePassword());
-                        }
-                    }
-                }
             }
 
             props.setProperty("mail." + protocol + ".rsetbeforequit", "true");
@@ -163,10 +140,42 @@ public abstract class AbstractMailConnector extends AbstractConnector
         if (logger.isDebugEnabled())
         {
             logger.debug("Creating mail session: host = " + url.getHost() + ", port = " + url.getPort()
-                            + ", user = " + url.getUsername() + ", pass = " + url.getPassword());
+                + ", user = " + url.getUsername() + ", pass = " + url.getPassword());
         }
 
         return session;
+    }
+
+    // supply these here because sub-classes are very simple
+
+    protected void doInitialise() throws InitialisationException
+    {
+        // template method, nothing to do
+    }
+
+    protected void doDispose()
+    {
+        // template method, nothing to do
+    }
+
+    protected void doConnect() throws Exception
+    {
+        // template method, nothing to do
+    }
+
+    protected void doDisconnect() throws Exception
+    {
+        // template method, nothing to do
+    }
+
+    protected void doStart() throws UMOException
+    {
+        // template method, nothing to do
+    }
+
+    protected void doStop() throws UMOException
+    {
+        // template method, nothing to do
     }
 
 }

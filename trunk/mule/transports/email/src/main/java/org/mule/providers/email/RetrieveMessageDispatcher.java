@@ -31,26 +31,26 @@ import javax.mail.URLName;
  * dispatch will throw an UnsupportedOperationException.
  */
 
-public class Pop3MessageDispatcher extends AbstractMessageDispatcher
+public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
 {
-    private Pop3Connector connector;
+    private RetrieveMailConnector connector;
     private Folder folder;
 
-    public Pop3MessageDispatcher(UMOImmutableEndpoint endpoint)
+    public RetrieveMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (Pop3Connector)endpoint.getConnector();
+        this.connector = (RetrieveMailConnector) endpoint.getConnector();
     }
 
     protected void doConnect() throws Exception
     {
         if (folder == null || !folder.isOpen())
         {
-            String inbox = (String)endpoint.getProperty("folder");
+            String inbox = (String) endpoint.getProperty("folder");
 
-            if (inbox == null || endpoint.getProtocol().toLowerCase().startsWith("pop3"))
+            if (inbox == null)
             {
-                inbox = Pop3Connector.MAILBOX;
+                inbox = connector.getMailboxFolder();
             }
 
             UMOEndpointURI uri = endpoint.getEndpointURI();
@@ -96,6 +96,7 @@ public class Pop3MessageDispatcher extends AbstractMessageDispatcher
                 catch (MessagingException e)
                 {
                     // maybe next time.
+                    logger.debug("ignoring exception on expunge: " + e.getMessage());
                 }
                 if (folder.isOpen())
                 {

@@ -21,7 +21,10 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 import java.util.Properties;
 
+import javax.mail.Message;
 import javax.mail.Session;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.logging.Log;
@@ -129,6 +132,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         {
             message = new MimeMessage(Session.getDefaultInstance(new Properties()));
             message.setContent(MESSAGE, "text/plain");
+            message.setRecipient(RecipientType.TO, new InternetAddress(EMAIL));
         }
         return message;
     }
@@ -178,6 +182,9 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
             received.getContent() instanceof String);
         String receivedText = ((String) received.getContent()).trim();
         assertEquals(MESSAGE, receivedText);
+        assertNotNull(received.getRecipients(Message.RecipientType.TO));
+        assertEquals(1, received.getRecipients(Message.RecipientType.TO).length);
+        assertEquals(received.getRecipients(Message.RecipientType.TO)[0].toString(), EMAIL);
     }
 
 }

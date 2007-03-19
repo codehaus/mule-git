@@ -10,21 +10,25 @@
 
 package org.mule.providers.email;
 
-/**
- * Receives messages from an IMAP mailbox
- */
-public class ImapConnector extends RetrieveMailConnector
-{
-    public static final int DEFAULT_IMAP_PORT = 143;
+import org.mule.umo.security.TlsPropertiesSocketFactory;
 
-    public ImapConnector()
+import javax.net.SocketFactory;
+
+public class SmtpsSocketFactory extends TlsPropertiesSocketFactory
+{
+    
+    public static final String MULE_SMTPS_NAMESPACE = "mule.email.smtps";
+
+    public SmtpsSocketFactory()
     {
-        super(DEFAULT_IMAP_PORT);
+        super(true, MULE_SMTPS_NAMESPACE);
     }
     
-    public String getProtocol()
+    public static SocketFactory getDefault() 
     {
-        return "imap";
+        return new SmtpsSocketFactory();
     }
 
 }
+
+

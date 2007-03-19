@@ -16,36 +16,30 @@ import org.mule.umo.security.TlsConfiguration;
 import java.io.IOException;
 
 /**
- * Creates a secure SMTP connection
+ * Creates a secure connection to a POP3 mailbox
  */
-public class SmtpsConnector extends SmtpConnector
+public abstract class TlsRetrievalMailConnector extends RetrieveMailConnector
 {
 
-    public static final String DEFAULT_SOCKET_FACTORY = SmtpsSocketFactory.class.getName();
-
-    private String socketFactory = DEFAULT_SOCKET_FACTORY;
+    private String namespace;
+    private String socketFactory;
     private String socketFactoryFallback = "false";
     private TlsConfiguration tls = new TlsConfiguration(TlsConfiguration.DEFAULT_KEYSTORE);
 
-    public static final int DEFAULT_SMTPS_PORT = 465;
-
-
-    public SmtpsConnector()
+    protected TlsRetrievalMailConnector(int defaultPort, String namespace, Class defaultSocketFactory)
     {
-        super(DEFAULT_SMTPS_PORT);
+        super(defaultPort);
+        this.namespace = namespace;
+        socketFactory = defaultSocketFactory.getName();
     }
     
-    public String getProtocol()
-    {
-        return "smtps";
-    }
-
     protected void doInitialise() throws InitialisationException
     {
-        tls.initialise(true, SmtpsSocketFactory.MULE_SMTPS_NAMESPACE);
-        System.setProperty("mail.smtps.ssl", "true");
-        System.setProperty("mail.smtps.socketFactory.class", getSocketFactory());
-        System.setProperty("mail.smtps.socketFactory.fallback", getSocketFactoryFallback());
+        tls.initialise(true, namespace);
+        super.doInitialise();
+        System.setProperty("mail." + getProtocol() + ".ssl", "true");
+        System.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
+        System.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
     }
 
     public String getSocketFactory()

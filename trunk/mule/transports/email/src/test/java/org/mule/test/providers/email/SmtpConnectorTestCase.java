@@ -38,11 +38,7 @@ import javax.mail.internet.MimeMessage;
 public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
     
-    /** 
-     * Javamail waits 30s before delivering, or getmail spends 30s doing nothing.
-     * I have no idea why, but it's exactly 30 seconds every time.
-     */
-    public static final long DELIVERY_DELAY_MS = 31000;
+    public static final long DELIVERY_DELAY_MS = 5000;
     
     public SmtpConnectorTestCase() 
     {

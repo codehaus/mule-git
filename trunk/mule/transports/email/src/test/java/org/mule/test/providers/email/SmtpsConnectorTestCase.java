@@ -20,7 +20,7 @@ public class SmtpsConnectorTestCase extends SmtpConnectorTestCase
     public UMOConnector getConnector() throws Exception
     {
         SmtpsConnector connector = new SmtpsConnector();
-        connector.setName("SmtpConnector");
+        connector.setName("SmtpsConnector");
         connector.setTrustStorePassword("password");
         connector.setTrustStore("greenmail-truststore");
         connector.initialise();

@@ -22,7 +22,7 @@ import org.mule.umo.provider.UMOMessageDispatcher;
  * {@link UnsupportedOperationException}.
  */
 
-public class Pop3MessageDispatcherFactory extends AbstractMessageDispatcherFactory
+public class RetrieveMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
     /**
      * By default client connections to POP3 are closed after the request.
@@ -35,7 +35,7 @@ public class Pop3MessageDispatcherFactory extends AbstractMessageDispatcherFacto
 
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        return new Pop3MessageDispatcher(endpoint);
+        return new RetrieveMessageDispatcher(endpoint);
     }
 
 }

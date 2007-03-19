@@ -22,7 +22,7 @@ public class Pop3sConnectorTestCase extends AbstractReceivingMailConnectorTestCa
     public UMOConnector getConnector() throws Exception
     {
         Pop3sConnector connector = new Pop3sConnector();
-        connector.setName("ImapsConnector");
+        connector.setName("Pop3sConnector");
         connector.setCheckFrequency(POLL_PERIOD_MS);
         connector.setTrustStorePassword("password");
         connector.setTrustStore("greenmail-truststore");
