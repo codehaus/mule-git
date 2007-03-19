@@ -62,8 +62,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     protected boolean disposed = false;
 
-    protected boolean doThreading = true;
-
     protected ConnectionStrategy connectionStrategy;
 
     protected volatile boolean connecting = false;
@@ -91,9 +89,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             }
         }
 
-        ThreadingProfile profile = connector.getDispatcherThreadingProfile();
-        doThreading = profile.isDoThreading();
-        if (doThreading)
+        if (isDoThreading())
         {
             try
             {
@@ -149,7 +145,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         try
         {
             UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
-            if (doThreading && !event.isSynchronous() && tx == null)
+            if (isDoThreading() && !event.isSynchronous() && tx == null)
             {
                 workManager.scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
             }
@@ -496,6 +492,11 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     public final boolean isConnected()
     {
         return connected;
+    }
+
+    protected boolean isDoThreading ()
+    {
+        return connector.getDispatcherThreadingProfile().isDoThreading();
     }
 
     /**
