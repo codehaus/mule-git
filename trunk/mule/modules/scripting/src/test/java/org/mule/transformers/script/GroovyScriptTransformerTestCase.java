@@ -52,4 +52,19 @@ public class GroovyScriptTransformerTestCase extends AbstractTransformerTestCase
         return list;
     }
 
+    // @Override
+    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
+    {
+        ScriptTransformer t1 = (ScriptTransformer)original;
+        ScriptTransformer t2 = (ScriptTransformer)clone;
+
+        // The Scriptable instance must be different 
+        if (t1.scriptable == t2.scriptable)
+        {
+            return false;
+        }
+
+        return super.compareClone(original, clone);
+    }
+
 }
