@@ -102,6 +102,13 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleTestCase
         }
     }
 
+    public void testClone() throws Exception
+    {
+        UMOTransformer original = this.getTransformer();
+        UMOTransformer clone = (UMOTransformer)original.clone();
+        assertTrue(this.compareClone(original, clone));
+    }
+
     public abstract UMOTransformer getTransformer() throws Exception;
 
     public abstract UMOTransformer getRoundTripTransformer() throws Exception;
@@ -147,6 +154,11 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleTestCase
     public boolean compareRoundtripResults(Object expected, Object result)
     {
         return compareResults(expected, result);
+    }
+
+    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
+    {
+        return original != clone;
     }
 
 }
