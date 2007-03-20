@@ -7,7 +7,7 @@
 
     <transformers>
         <transformer name="XmlToObject" className="org.mule.transformers.xml.XmlToObject"/>
-        <transformer name="SgmlDecoder" className="org.mule.transformers.codec.SgmlEntityDecoder"/>
+        <transformer name="XmlDecoder" className="org.mule.transformers.codec.XmlEntityDecoder"/>
         <transformer name="Xslt" className="org.mule.transformers.xml.XsltTransformer">
             <properties>
                 <property name="xslFile" value="stock.xsl"/>
@@ -17,7 +17,7 @@
 
     <mule-descriptor name="HTTPPostSample"
             inboundEndpoint="vm://stockquote"
-            responseTransformer="SgmlDecoder Xslt XmlToObject"
+            responseTransformer="XmlDecoder Xslt XmlToObject"
             implementation="org.mule.components.rest.RestServiceWrapper">
 
             <properties>
