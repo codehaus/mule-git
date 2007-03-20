@@ -24,9 +24,6 @@ import java.io.UnsupportedEncodingException;
 /**
  * <code>EncryptionTransformer</code> will transform an array of bytes or string
  * into an encrypted array of bytes
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public abstract class AbstractEncryptionTransformer extends AbstractTransformer
 {
@@ -38,6 +35,20 @@ public abstract class AbstractEncryptionTransformer extends AbstractTransformer
         registerSourceType(byte[].class);
         registerSourceType(String.class);
         setReturnClass(byte[].class);
+    }
+
+    // @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        AbstractEncryptionTransformer clone = (AbstractEncryptionTransformer) super.clone();
+        /*
+         * The actual strategy is *shared* - not sure if this is right? both shallow
+         * and deep copy make sense - think about security, passwords, required
+         * external authentication dependencies etc. :(
+         */
+        clone.setStrategy(strategy);
+        clone.setStrategyName(strategyName);
+        return clone;
     }
 
     public Object doTransform(Object src, String encoding) throws TransformerException
@@ -134,4 +145,5 @@ public abstract class AbstractEncryptionTransformer extends AbstractTransformer
     {
         this.strategyName = strategyName;
     }
+
 }

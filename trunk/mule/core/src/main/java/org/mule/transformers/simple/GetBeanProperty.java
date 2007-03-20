@@ -16,7 +16,7 @@ import org.mule.umo.transformer.TransformerException;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**
- * Looks up a property from a JavaBean using PropertyUtils.getProperty()
+ * Looks up a property from a JavaBean using PropertyUtils.getProperty().
  * Nested properties are valid, assuming they follow JavaBean conventions.
  * 
  *   <transformer name="ExtractCustomer" className="org.mule.transformers.simple.GetBeanProperty">
@@ -34,6 +34,14 @@ public class GetBeanProperty extends AbstractTransformer
         super();
         registerSourceType(Object.class);
         setReturnClass(Object.class);
+    }
+
+    // @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        GetBeanProperty clone = (GetBeanProperty) super.clone();
+        clone.setPropertyName(propertyName);
+        return clone;
     }
 
     public Object doTransform(Object src, String encoding) throws TransformerException
@@ -57,4 +65,5 @@ public class GetBeanProperty extends AbstractTransformer
     {
         this.propertyName = propertyName;
     }
+
 }
