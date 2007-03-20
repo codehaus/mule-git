@@ -53,18 +53,15 @@ public class GroovyScriptTransformerTestCase extends AbstractTransformerTestCase
     }
 
     // @Override
-    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
+    protected void doTestClone(UMOTransformer original, UMOTransformer clone) throws Exception
     {
+        super.doTestClone(original, clone);
+
         ScriptTransformer t1 = (ScriptTransformer)original;
         ScriptTransformer t2 = (ScriptTransformer)clone;
 
         // The Scriptable instance must be different 
-        if (t1.scriptable == t2.scriptable)
-        {
-            return false;
-        }
-
-        return super.compareClone(original, clone);
+        assertNotSame(t1.scriptable, t2.scriptable);
     }
 
 }
