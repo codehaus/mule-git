@@ -1801,7 +1801,6 @@ public abstract class AbstractConnector
         {
             //return serviceDescriptor.createStreamMessageAdapter(in, out);
             UMOStreamMessageAdapter adapter = serviceDescriptor.createStreamMessageAdapter(in, out);
-            adapter.setSourceConnector(this);
             adapter.initialise();
             return adapter;
         }
@@ -1875,12 +1874,6 @@ public abstract class AbstractConnector
         sb.append(", serviceOverrides=").append(serviceOverrides);
         sb.append('}');
         return sb.toString();
-    }
-
-    public void disposeMessage(Object message)
-    {
-        // Meant to be overriden so that the connector can do any resource
-        // releasing from stream adapters
     }
 
 }

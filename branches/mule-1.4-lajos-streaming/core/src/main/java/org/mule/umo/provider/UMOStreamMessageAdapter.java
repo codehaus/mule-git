@@ -71,9 +71,7 @@ public interface UMOStreamMessageAdapter extends UMOMessageAdapter
      */
     public void release();
 
-    public void setSourceConnector(UMOConnector connector);
+    public void setMessageResource(UMOMessageResource resource);
 
-    public void setSource(Object source);
-
-    public Object getSource();
+    public UMOMessageResource getMessageResource();
 }

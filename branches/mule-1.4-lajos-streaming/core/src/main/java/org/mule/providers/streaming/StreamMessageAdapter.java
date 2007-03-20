@@ -15,6 +15,7 @@ import org.mule.providers.NullPayload;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.provider.UMOMessageResource;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 
 import java.io.IOException;
@@ -36,9 +37,8 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
 
     protected InputStream in;
     protected OutputStream out;
-    protected Object source = null;
+    protected UMOMessageResource messageResource = null;
     protected OutputHandler handler;
-    protected UMOConnector sourceConnector = null;
     private NullPayload nullPayload = NullPayload.getInstance();
 
     public StreamMessageAdapter(InputStream in)
@@ -74,6 +74,18 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
     {
         logger.warn("Disposing " + id);
 
+        if (in != null) 
+        {
+            try
+            {
+                in.close();
+            }
+            catch (IOException ioe)
+            {
+                logger.error("Unable to close input stream: " + ioe.toString());
+            }
+        }
+
         if (out != null) 
         {
             try
@@ -86,14 +98,11 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
             }
         }
 
-        if (sourceConnector != null)
+        if (messageResource != null)
         {
-            sourceConnector.disposeMessage(source);
+            messageResource.dispose();
         }
-        else
-        {
-            logger.warn("sourceConnector is null");
-        }
+
     }
 
     /**
@@ -172,19 +181,14 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
         // nothing to do?
     }
 
-    public void setSourceConnector(UMOConnector sourceConnector)
+    public void setMessageResource(UMOMessageResource messageResource)
     {
-        this.sourceConnector = sourceConnector;
+        this.messageResource = messageResource;
     }
 
-    public void setSource(Object source)
+    public UMOMessageResource getMessageResource()
     {
-        this.source = source;
-    }
-
-    public Object getSource()
-    {
-        return source;
+        return messageResource;
     }
 
 }

@@ -22,9 +22,11 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.OutputHandler;
+import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.umo.provider.UMOMessageResource;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 
 import java.io.IOException;
@@ -191,6 +193,17 @@ public class TestConnector extends AbstractConnector
         {
             // nothing to do
         }
+
+        public UMOMessageResource getMessageResource()
+        {
+            return null;
+        }
+
+        public void setMessageResource(UMOMessageResource messageResource)
+        {
+            // nothing to do 
+        }
+
     }
 
 }

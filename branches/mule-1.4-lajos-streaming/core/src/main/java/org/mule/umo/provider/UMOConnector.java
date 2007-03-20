@@ -228,5 +228,4 @@ public interface UMOConnector extends Disposable, Initialisable
      */
     OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
 
-    void disposeMessage(Object message);
 }
