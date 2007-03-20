@@ -16,6 +16,7 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.apache.commons.collections.IteratorUtils;
@@ -27,6 +28,13 @@ import org.apache.commons.lang.SerializationUtils;
 public class MessageChunkingAggregator extends CorrelationAggregator
 {
     public static final int DEFAULT_BUFFER_SIZE = 4096;
+    
+    protected final Comparator eventComparator = new CorrelationSequenceComparator();
+
+    public MessageChunkingAggregator()
+    {
+        super();
+    }
 
     /**
      * This method is invoked if the shouldAggregate method is called and returns
@@ -43,7 +51,7 @@ public class MessageChunkingAggregator extends CorrelationAggregator
     {
         UMOEvent[] collectedEvents = events.toArray();
         UMOEvent firstEvent = collectedEvents[0];
-        Arrays.sort(collectedEvents, CorrelationSequenceComparator.getInstance());
+        Arrays.sort(collectedEvents, eventComparator);
         ByteArrayOutputStream baos = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
 
         try

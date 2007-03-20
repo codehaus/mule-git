@@ -26,7 +26,7 @@ public class CorrelationEventResequencer extends AbstractEventResequencer
     public CorrelationEventResequencer()
     {
         super();
-        this.setComparator(CorrelationSequenceComparator.getInstance());
+        this.setComparator(new CorrelationSequenceComparator());
     }
 
     protected boolean shouldResequenceEvents(EventGroup events)

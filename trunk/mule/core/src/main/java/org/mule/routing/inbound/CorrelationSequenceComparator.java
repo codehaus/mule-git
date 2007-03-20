@@ -20,22 +20,16 @@ import java.util.Comparator;
  */
 public final class CorrelationSequenceComparator implements Comparator
 {
-    private static final Comparator INSTANCE = new CorrelationSequenceComparator();
 
-    public static Comparator getInstance()
-    {
-        return INSTANCE;
-    }
-
-    private CorrelationSequenceComparator()
+    public CorrelationSequenceComparator()
     {
         super();
     }
 
     public int compare(Object o1, Object o2)
     {
-        int val1 = ((UMOEvent) o1).getMessage().getCorrelationSequence();
-        int val2 = ((UMOEvent) o2).getMessage().getCorrelationSequence();
+        int val1 = ((UMOEvent)o1).getMessage().getCorrelationSequence();
+        int val2 = ((UMOEvent)o2).getMessage().getCorrelationSequence();
 
         if (val1 == val2)
         {
