@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers.encryption;
+package org.mule.transformers.encryption;
 
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.tck.AbstractTransformerTestCase;

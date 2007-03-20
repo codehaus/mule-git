@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transaction;
+package org.mule.transaction;
 
 import com.mockobjects.dynamic.Mock;
 

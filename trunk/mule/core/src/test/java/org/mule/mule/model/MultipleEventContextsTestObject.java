@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule.model;
+package org.mule.mule.model;
 
 import org.mule.umo.UMOEventContext;
 

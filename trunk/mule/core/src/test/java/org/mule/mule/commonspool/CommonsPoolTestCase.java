@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule.commonspool;
+package org.mule.mule.commonspool;
 
 import org.mule.config.pool.CommonsPoolFactory;
 import org.mule.config.pool.CommonsPoolProxyPool;

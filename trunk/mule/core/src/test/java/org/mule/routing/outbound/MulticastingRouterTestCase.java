@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.routing.outbound;
+package org.mule.routing.outbound;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

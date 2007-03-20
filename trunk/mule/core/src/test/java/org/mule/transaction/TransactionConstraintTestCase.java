@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transaction;
+package org.mule.transaction;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.transaction.constraints.ConstraintFilter;

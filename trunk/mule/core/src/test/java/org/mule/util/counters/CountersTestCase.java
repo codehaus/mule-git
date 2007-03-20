@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.counters;
+package org.mule.util.counters;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.counters.Counter;

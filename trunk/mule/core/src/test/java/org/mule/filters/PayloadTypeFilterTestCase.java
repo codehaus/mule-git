@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.filters;
+package org.mule.filters;
 
 import org.mule.impl.MuleMessage;
 import org.mule.routing.filters.PayloadTypeFilter;

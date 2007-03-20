@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.filters;
+package org.mule.filters;
 
 import org.mule.routing.filters.EqualsFilter;
 import org.mule.tck.AbstractMuleTestCase;

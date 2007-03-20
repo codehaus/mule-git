@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test;
+package org.mule;
 
 import org.mule.MuleException;
 import org.mule.config.i18n.Message;

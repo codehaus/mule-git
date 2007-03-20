@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers.codec;
+package org.mule.transformers.codec;
 
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.codec.Base64Decoder;

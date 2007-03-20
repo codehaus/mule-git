@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.compression;
+package org.mule.util.compression;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.compression.CompressionHelper;

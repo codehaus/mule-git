@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule;
+package org.mule.mule;
 
 import org.mule.config.MuleConfiguration;
 import org.mule.impl.MuleDescriptor;

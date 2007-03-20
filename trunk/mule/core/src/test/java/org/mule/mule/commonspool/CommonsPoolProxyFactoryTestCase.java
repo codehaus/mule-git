@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule.commonspool;
+package org.mule.mule.commonspool;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

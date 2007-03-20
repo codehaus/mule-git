@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.routing.outbound;
+package org.mule.routing.outbound;
 
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;

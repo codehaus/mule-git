@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.umo;
+package org.mule.umo;
 
 import org.mule.umo.security.tls.TlsConfiguration;
 import org.mule.umo.security.tls.TlsPropertiesSocketFactory;

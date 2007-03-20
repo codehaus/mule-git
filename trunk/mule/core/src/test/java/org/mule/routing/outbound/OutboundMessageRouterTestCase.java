@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.routing.outbound;
+package org.mule.routing.outbound;
 
 import java.util.ArrayList;
 import java.util.List;

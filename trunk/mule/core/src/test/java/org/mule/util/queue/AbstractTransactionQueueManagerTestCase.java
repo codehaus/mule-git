@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.queue;
+package org.mule.util.queue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

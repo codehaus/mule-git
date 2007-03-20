@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers.compression;
+package org.mule.transformers.compression;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.mule.tck.AbstractTransformerTestCase;

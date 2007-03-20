@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.queue;
+package org.mule.util.queue;
 
 import org.mule.util.queue.FilePersistenceStrategy;
 import org.mule.util.queue.QueueConfiguration;

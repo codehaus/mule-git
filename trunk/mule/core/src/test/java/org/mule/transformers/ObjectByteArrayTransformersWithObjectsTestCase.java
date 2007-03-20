@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers;
+package org.mule.transformers;
 
 import org.mule.transformers.simple.ByteArrayToObject;
 import org.mule.transformers.simple.ObjectToByteArray;

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.timer;
+package org.mule.util.timer;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.timer.EventTimerTask;

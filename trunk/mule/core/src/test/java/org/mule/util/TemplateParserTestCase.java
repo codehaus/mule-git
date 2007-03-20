@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util;
+package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.TemplateParser;

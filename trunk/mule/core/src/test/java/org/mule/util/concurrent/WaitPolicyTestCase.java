@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.util.concurrent;
+package org.mule.util.concurrent;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.ClassUtils;

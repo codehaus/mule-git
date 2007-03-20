@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers;
+package org.mule.transformers;
 
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.simple.ByteArrayToHexString;

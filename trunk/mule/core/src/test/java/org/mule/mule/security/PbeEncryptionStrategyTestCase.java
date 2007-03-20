@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule.security;
+package org.mule.mule.security;
 
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.tck.AbstractMuleTestCase;

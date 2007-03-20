@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.mule.interceptors;
+package org.mule.mule.interceptors;
 
 import com.mockobjects.dynamic.Mock;
 

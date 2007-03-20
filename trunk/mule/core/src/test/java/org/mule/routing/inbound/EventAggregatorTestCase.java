@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.routing.inbound;
+package org.mule.routing.inbound;
 
 import java.util.Iterator;
 import java.util.Map;
