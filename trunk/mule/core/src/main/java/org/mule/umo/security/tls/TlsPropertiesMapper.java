@@ -133,7 +133,10 @@ public class TlsPropertiesMapper
         if (null != value)
         {
             properties.setProperty(namespace + suffix, value);
-            logger.debug(namespace + suffix + " <- " + value);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(namespace + suffix + " <- " + value);
+            }
         }
     }
 
@@ -144,7 +147,10 @@ public class TlsPropertiesMapper
         {
             value = deflt;
         }
-        logger.debug(namespace + suffix + " -> " + value);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(namespace + suffix + " -> " + value);
+        }
         return value;
     }
 

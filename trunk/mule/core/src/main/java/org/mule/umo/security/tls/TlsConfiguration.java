@@ -94,23 +94,18 @@ import org.apache.commons.logging.LogFactory;
  * interfaces continue to be used, even though 
  * the configurations are now typically (see individual connector/protocol documentation) specific 
  * to a protocol or connector.  <em>Note - these interfaces are new, but the original code had
- * those methods, used as described.  The new interfces only make things explicit.</em>
+ * those methods, used as described.  The new interfaces only make things explicit.</em>
  * 
  * <p><em>Note for programmers</em> One way to udnerstand the above is to see that many
  * protocols are handled by libraries that are configured by providing either properties or
- * a socket factory.  In both cases (the latter via {@link TlsPropertiesSocketFactory} we
+ * a socket factory.  In both cases (the latter via {@link TlsPropertiesSocketFactory}) we
  * continue to use properties and the "indirect" interface.  Note also that the mapping
  * in {@link TlsPropertiesMapper} correctly handles the asymmetry, so an initial call to
  * {@link TlsConfiguration} uses the keystore defined via {@link TlsDirectKeyStore}, but
  * when a {@link TlsConfiguration} is retrieved from System proerties using 
  * {@link TlsPropertiesMapper#readFromProperties(TlsConfiguration, java.util.Properties)}
- * the "indirect" proeprties are supplied as "direct" values, meaning that the "indirect"
+ * the "indirect" properties are supplied as "direct" values, meaning that the "indirect"
  * socket factory can be retrieved from {@link #getKeyManagerFactory()}.  It just works.</p>
- * 
- * 
- * Support for managing TLS connections.  Use as a delegate.  
- * See secure HTTP and email connectors for examples.
- * Pulled almost directly from {@link org.mule.providers.http.HttpsConnector}
  */
 public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKeyStore, TlsIndirectKeyStore
 {
