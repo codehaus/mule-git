@@ -26,7 +26,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -65,7 +64,7 @@ public abstract class AbstractTransformer implements UMOTransformer
      * A list of supported Class types that the source payload passed into this
      * transformer
      */
-    protected List sourceTypes = new CopyOnWriteArrayList();
+    protected final List sourceTypes = new CopyOnWriteArrayList();
 
     /**
      * This is the following transformer in the chain of transformers.
@@ -320,7 +319,27 @@ public abstract class AbstractTransformer implements UMOTransformer
     {
         try
         {
-            return BeanUtils.cloneBean(this);
+            /*
+             * Object.clone() is horribly broken, so we create a new instance
+             * manually. It would be much, much better to enforce the use of
+             * copy-constructors. However, UMOTransformer.clone() will go away in 2.0
+             * so there is still hope.
+             */
+            AbstractTransformer clone = (AbstractTransformer)this.getClass().newInstance();
+            clone.setName(name);
+            clone.setReturnClass(returnClass);
+
+            if (nextTransformer != null)
+            {
+                clone.setNextTransformer((UMOTransformer) nextTransformer.clone());
+            }
+
+            if (endpoint != null)
+            {
+                clone.setEndpoint((UMOImmutableEndpoint) endpoint.clone());
+            }
+
+            return clone;
         }
         catch (Exception e)
         {
