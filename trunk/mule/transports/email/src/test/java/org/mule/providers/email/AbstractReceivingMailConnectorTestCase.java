@@ -8,11 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
 import org.mule.MuleManager;
 import org.mule.config.builders.QuickConfigurationBuilder;
-import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
@@ -29,13 +28,13 @@ import java.util.HashMap;
  */
 public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
-    
+
     public static final int POLL_PERIOD_MS = 1000; 
     public static final int WAIT_PERIOD_MS = 3 * POLL_PERIOD_MS;
-    
-    protected AbstractReceivingMailConnectorTestCase() 
+
+    protected AbstractReceivingMailConnectorTestCase(String connectorName) 
     {
-        super(true);
+        super(true, connectorName);
     }
 
     public void testReceiver() throws Exception
@@ -64,8 +63,9 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         });
 
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.registerComponent(FunctionalTestComponent.class.getName(), 
-            "testComponent", new MuleEndpoint(getTestEndpointURI(), true), null, props);
+        builder.getManager().registerConnector(getConnector(false));
+        builder.registerComponent(
+            FunctionalTestComponent.class.getName(), "testComponent", getTestEndpointURI(), null, props);
 
         logger.debug("starting mule");
         MuleManager.getInstance().start();
@@ -73,5 +73,5 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         logger.debug("waiting for count down");
         assertTrue(countDown.await(WAIT_PERIOD_MS, TimeUnit.MILLISECONDS));
     }
-    
+
 }

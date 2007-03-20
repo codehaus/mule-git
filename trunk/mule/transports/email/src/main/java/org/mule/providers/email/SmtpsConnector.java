@@ -14,8 +14,12 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.TlsIndirectKeyStore;
 import org.mule.umo.security.TlsIndirectTrustStore;
 import org.mule.umo.security.tls.TlsConfiguration;
+import org.mule.umo.security.tls.TlsPropertiesMapper;
 
 import java.io.IOException;
+import java.util.Properties;
+
+import javax.mail.URLName;
 
 /**
  * Creates a secure SMTP connection
@@ -41,15 +45,29 @@ public class SmtpsConnector extends SmtpConnector implements TlsIndirectTrustSto
     {
         return "smtps";
     }
+    
+    public String getBaseProtocol()
+    {
+        return "smtp";
+    }
 
     protected void doInitialise() throws InitialisationException
     {
-        tls.initialise(true, SmtpsSocketFactory.MULE_SMTPS_NAMESPACE);
-        System.setProperty("mail.smtps.ssl", "true");
-        System.setProperty("mail.smtps.socketFactory.class", getSocketFactory());
-        System.setProperty("mail.smtps.socketFactory.fallback", getSocketFactoryFallback());
+        tls.initialise(true, null);
     }
 
+    // @Override
+    void extendPropertiesForSession(Properties properties, URLName url)
+    {
+        super.extendPropertiesForSession(properties, url);
+
+        properties.setProperty("mail." + getProtocol() + ".ssl", "true");
+        properties.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
+        properties.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
+        
+        new TlsPropertiesMapper(SmtpsSocketFactory.MULE_SMTPS_NAMESPACE).writeToProperties(properties, tls);
+    }
+    
     public String getSocketFactory()
     {
         return socketFactory;

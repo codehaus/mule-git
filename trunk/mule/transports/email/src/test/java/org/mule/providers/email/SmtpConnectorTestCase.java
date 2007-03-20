@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
 import org.mule.MuleManager;
 import org.mule.config.builders.QuickConfigurationBuilder;
@@ -18,8 +18,6 @@ import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.email.MailProperties;
-import org.mule.providers.email.SmtpConnector;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
@@ -42,14 +40,22 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     
     public SmtpConnectorTestCase() 
     {
-        super(false);
+        this("SmtpConnector");
     }
 
-    public UMOConnector getConnector() throws Exception
+    SmtpConnectorTestCase(String connectorName) 
+    {
+        super(false, connectorName);
+    }
+
+   public UMOConnector getConnector(boolean init) throws Exception
     {
         SmtpConnector c = new SmtpConnector();
-        c.setName("SmtpConnector");
-        c.initialise();
+        c.setName(getConnectorName());
+        if (init)
+        {
+            c.initialise();
+        }
         return c;
     }
 
@@ -87,8 +93,9 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     {
         HashMap props = new HashMap();
 
-        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
+        builder.getManager().registerConnector(getConnector(false));
+        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
         builder.registerComponent(FunctionalTestComponent.class.getName(), 
             "testComponent", null, endpoint, props);
 

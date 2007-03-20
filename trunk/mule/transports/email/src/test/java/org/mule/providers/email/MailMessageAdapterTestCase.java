@@ -8,9 +8,8 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
-import org.mule.providers.email.MailMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.UMOMessageAdapter;

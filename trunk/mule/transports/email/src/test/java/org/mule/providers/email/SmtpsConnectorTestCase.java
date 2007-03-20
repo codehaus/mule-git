@@ -8,31 +8,35 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
-import org.mule.providers.email.ImapsConnector;
 import org.mule.umo.provider.UMOConnector;
 
-/**
- * Simple tests for pulling from an IMAP server.
- */
-public class ImapsConnectorTestCase extends AbstractReceivingMailConnectorTestCase
+public class SmtpsConnectorTestCase extends SmtpConnectorTestCase
 {
-
-    public UMOConnector getConnector() throws Exception
+    
+    public SmtpsConnectorTestCase()
     {
-        ImapsConnector connector = new ImapsConnector();
-        connector.setName("ImapsConnector");
-        connector.setCheckFrequency(POLL_PERIOD_MS);
+        super("SmtpsConnector");
+    }
+    
+    // @Override
+    public UMOConnector getConnector(boolean init) throws Exception
+    {
+        SmtpsConnector connector = new SmtpsConnector();
+        connector.setName(getConnectorName());
         connector.setTrustStorePassword("password");
         connector.setTrustStore("greenmail-truststore");
-        connector.initialise();
+        if (init)
+        {
+            connector.initialise();
+        }
         return connector;
     }
 
     public String getTestEndpointURI()
     {
-        return getImapsTestEndpointURI();
+        return getSmtpsTestEndpointURI();
     }
 
 }

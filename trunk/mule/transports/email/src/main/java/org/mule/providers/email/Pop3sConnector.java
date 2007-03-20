@@ -27,5 +27,10 @@ public class Pop3sConnector extends AbstractTlsRetrieveMailConnector
     {
         return "pop3s";
     }
+    
+    public String getBaseProtocol()
+    {
+        return "pop3";
+    }
 
 }

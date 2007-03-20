@@ -26,5 +26,10 @@ public class ImapsConnector extends AbstractTlsRetrieveMailConnector
     {
         return "imaps";
     }
+    
+    public String getBaseProtocol()
+    {
+        return "imap";
+    }
 
 }

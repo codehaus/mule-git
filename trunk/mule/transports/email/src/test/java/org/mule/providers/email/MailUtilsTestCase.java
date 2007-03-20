@@ -8,9 +8,8 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
-import org.mule.providers.email.MailUtils;
 import org.mule.tck.AbstractMuleTestCase;
 
 import javax.mail.internet.InternetAddress;

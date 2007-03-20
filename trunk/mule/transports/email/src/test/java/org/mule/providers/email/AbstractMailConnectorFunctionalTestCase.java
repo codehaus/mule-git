@@ -8,9 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
 import org.mule.tck.providers.AbstractConnectorTestCase;
+import org.mule.umo.provider.UMOConnector;
 
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserManager;
@@ -54,10 +55,12 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     private MimeMessage message;
     private Servers servers;
     private boolean initialEmail = false;
+    private String connectorName;
     
-    protected AbstractMailConnectorFunctionalTestCase(boolean initialEmail)
+    protected AbstractMailConnectorFunctionalTestCase(boolean initialEmail, String connectorName)
     {
         this.initialEmail = initialEmail;
+        this.connectorName = connectorName;
     }
     
     // @Override
@@ -137,6 +140,18 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         return message;
     }
     
+    public String getConnectorName() 
+    {
+        return connectorName;
+    }
+    
+    public UMOConnector getConnector() throws Exception
+    {
+        return getConnector(true);
+    }
+    
+    public abstract UMOConnector getConnector(boolean init) throws Exception;
+        
     protected String getPop3TestEndpointURI()
     {
         return buildEndpoint("pop3", servers.getPop3().getPort());
@@ -167,9 +182,10 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         return buildEndpoint("smtps", servers.getSmtps().getPort());
     }
     
-   private static String buildEndpoint(String protocol, int port) 
+   private String buildEndpoint(String protocol, int port) 
     {
-        return protocol + "://" + USER + ":" + PASSWORD + "@" + LOCALHOST + ":" + port;
+        return protocol + "://" + USER + ":" + PASSWORD + "@" + LOCALHOST + ":" + port +
+        "?connector=" + connectorName;
     }
     
     protected void assertMessageOk(Object message) throws Exception

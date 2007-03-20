@@ -8,12 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email.transformers;
+package org.mule.providers.email.transformers;
 
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.providers.email.transformers.EmailMessageToString;
-import org.mule.providers.email.transformers.StringToEmailMessage;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
@@ -50,7 +48,7 @@ public class MailMessageTransformersTestCase extends AbstractTransformerTestCase
         }
         catch (AlreadyInitialisedException e)
         {
-            // ignore
+            assertNotNull(e);
         }
         final Mock mockDispatcher = new Mock(UMOMessageDispatcher.class);
         mockDispatcher.expectAndReturn("getDelegateSession", Session.getDefaultInstance(new Properties()));
@@ -91,8 +89,8 @@ public class MailMessageTransformersTestCase extends AbstractTransformerTestCase
             Object objRes = null;
             try
             {
-                objSrc = ((Message)src).getContent();
-                objRes = ((Message)result).getContent();
+                objSrc = ((Message) src).getContent();
+                objRes = ((Message) result).getContent();
             }
             catch (Exception e)
             {

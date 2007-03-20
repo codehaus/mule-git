@@ -105,9 +105,67 @@ public abstract class AbstractMailConnector extends AbstractConnector
             new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), getMailboxFolder(), 
                 uri.getUsername(), uri.getPassword());
         
+        if (url == null)
+        {
+            throw new IllegalArgumentException(
+                new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL").toString());
+        }
+
         return url;
     }
     
+    /**
+     * Some protocols (eg secure extensions) extend a "base" protocol.
+     * Subclasses for such protocols should override this method.
+     * 
+     * @return the underlying (eg non-secure) protocol
+     */
+    String getBaseProtocol()
+    {
+        return getProtocol();
+    }
+    
+    /**
+     * Subclasses should extend this to add further properties.  
+     * Synchronization is managed outside this call (so no need to synchronize further on properties)
+     * 
+     * @param properties the properties object used to construct the session
+     * @param url the endpoint url
+     */
+    void extendPropertiesForSession(Properties properties, URLName url)
+    {
+        int port = url.getPort();
+        if (port == -1)
+        {
+            port = this.getDefaultPort();
+        }
+        properties.setProperty("mail." + getBaseProtocol() + ".socketFactory.port", Integer.toString(port));
+
+        if (StringUtils.isNotBlank(url.getPassword()))
+        {
+            properties.setProperty("mail." + getBaseProtocol() + ".auth", "true");
+            if (getAuthenticator() == null)
+            {
+                setAuthenticator(new DefaultAuthenticator(url.getUsername(), url.getPassword()));
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("No Authenticator set on connector: " + getName() + "; using default.");
+                }
+            }
+        }
+        else
+        {
+            properties.setProperty("mail." + getBaseProtocol() + ".auth", "false");
+        }
+        
+        // TODO - i'm not at all certain that these properties (especially the ones
+        // using the base protocol) are needed.  they are inherited from old, gnarly
+        // code.
+
+        properties.setProperty("mail." + getBaseProtocol() + ".host", url.getHost());
+        properties.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
+    }
+
     /**
      * Creates a new javax.mail Session based on a URL. If a password is set on the
      * URL it also adds an SMTP authenticator.
@@ -118,31 +176,6 @@ public abstract class AbstractMailConnector extends AbstractConnector
     private SessionDetails newSession(UMOImmutableEndpoint endpoint)
     {
         URLName url = urlFromEndpoint(endpoint);
-        
-        if (url == null)
-        {
-            throw new IllegalArgumentException(
-                new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL").toString());
-        }
-
-        String protocol = getProtocol().toLowerCase();
-        boolean secure = false;
-
-        if (protocol.equals("smtps"))
-        {
-            protocol = "smtp";
-            secure = true;
-        }
-        else if (protocol.equals("pop3s"))
-        {
-            protocol = "pop3";
-            secure = true;
-        }
-        else if (protocol.equals("imaps"))
-        {
-            protocol = "imap";
-            secure = true;
-        }
 
         Properties props = System.getProperties();
         Session session;
@@ -150,41 +183,8 @@ public abstract class AbstractMailConnector extends AbstractConnector
         // make sure we do not mess with authentication set via system properties
         synchronized (props)
         {
-            props.put("mail." + protocol + ".host", url.getHost());
-
-            int port = url.getPort();
-            if (port == -1)
-            {
-                port = this.getDefaultPort();
-            }
-
-            props.put("mail." + protocol + ".port", String.valueOf(port));
-
-            if (secure)
-            {
-                System.setProperty("mail." + protocol + ".socketFactory.port", String.valueOf(port));
-            }
-
-            props.setProperty("mail." + protocol + ".rsetbeforequit", "true");
-
-            if (StringUtils.isNotBlank(url.getPassword()))
-            {
-                props.put("mail." + protocol + ".auth", "true");
-                Authenticator auth = this.getAuthenticator();
-                if (auth == null)
-                {
-                    auth = new DefaultAuthenticator(url.getUsername(), url.getPassword());
-                    logger.debug("No Authenticator set on connector: " + this.getName() + "; using default.");
-                }
-
-                session = Session.getInstance(props, auth);
-            }
-            else
-            {
-                // reset authentication property so smtp is not affected (MULE-464)
-                props.put("mail." + protocol + ".auth", "false");
-                session = Session.getInstance(props, null);
-            }
+            extendPropertiesForSession(props, url);
+            session = Session.getInstance(props, getAuthenticator());
         }
 
         if (logger.isDebugEnabled())
@@ -195,7 +195,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
         return new SessionDetails(session, url);
     }
-
+    
     // supply these here because sub-classes are very simple
 
     protected void doInitialise() throws InitialisationException
