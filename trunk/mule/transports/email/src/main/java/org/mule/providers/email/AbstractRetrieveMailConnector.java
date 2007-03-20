@@ -20,7 +20,6 @@ import org.mule.umo.provider.UMOMessageReceiver;
  */
 public abstract class AbstractRetrieveMailConnector extends AbstractMailConnector
 {
-    public static final String MAILBOX = "INBOX";
     public static final int DEFAULT_CHECK_FREQUENCY = 60000;
 
     /**
@@ -34,7 +33,6 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
      */
     private volatile String backupFolder = null;
 
-    private String mailboxFolder = MAILBOX;
 
     /**
      * Once a message has been read, should it be deleted
@@ -43,7 +41,7 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
 
     protected AbstractRetrieveMailConnector(int defaultPort)
     {
-        super(defaultPort);
+        super(defaultPort, MAILBOX);
     }
 
     /**
@@ -66,15 +64,6 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
         checkFrequency = l;
     }
 
-    public String getMailboxFolder()
-    {
-        return mailboxFolder;
-    }
-
-    public void setMailboxFolder(String mailboxFolder)
-    {
-        this.mailboxFolder = mailboxFolder;
-    }
     
     /**
      * @return a relative or absolute path to a directory on the file system

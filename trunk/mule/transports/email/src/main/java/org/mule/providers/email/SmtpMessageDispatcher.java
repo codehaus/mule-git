@@ -18,15 +18,12 @@ import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.util.StringUtils;
 
 import java.util.Calendar;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.URLName;
 
 /**
  * <code>SmtpMessageDispatcher</code> will dispatch Mule events as Mime email
@@ -36,7 +33,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 {
     private final SmtpConnector connector;
     private volatile Transport transport;
-    private volatile Session session;
 
     public SmtpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -48,43 +44,16 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
     {
         if (transport == null)
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
-
-            // Try to get the properties from the endpoint and use the connector
-            // properties if they are not given.
-
-            String host = uri.getHost();
-            if (host == null)
-            {
-                host = connector.getHost();
-            }
-
-            int port = uri.getPort();
-            if (port == -1)
-            {
-                port = connector.getPort();
-            }
-
-            String username = uri.getUsername();
-            if (StringUtils.isBlank(username))
-            {
-                username = connector.getUsername();
-            }
-
-            String password = uri.getPassword();
-            if (StringUtils.isBlank(password))
-            {
-                password = connector.getPassword();
-            }
-
-            URLName url = new URLName(connector.getProtocol(), host, port, null, username, password);
 
             try
             {
-                session = connector.getMailSession(url);
-                session.setDebug(logger.isDebugEnabled());
+                SessionDetails session = connector.getSession(endpoint);
+                
+                // TODO
+                session.getSession().setDebug(logger.isDebugEnabled());
 
-                transport = session.getTransport(url);
+                transport = session.newTransport();
+                UMOEndpointURI uri = endpoint.getEndpointURI();
                 transport.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());
             }
             catch (Exception e)
@@ -105,7 +74,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         finally
         {
             transport = null;
-            session = null;
         }
     }
 
@@ -189,6 +157,8 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDispose()
     {
-        session = null;
+        // TODO Auto-generated method stub
+        
     }
+
 }

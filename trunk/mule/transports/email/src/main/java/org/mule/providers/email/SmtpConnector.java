@@ -12,15 +12,9 @@ package org.mule.providers.email;
 
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
-import org.mule.util.StringUtils;
 
 import java.util.Properties;
-
-import javax.mail.Session;
-import javax.mail.URLName;
 
 /**
  * <code>SmtpConnector</code> is used to connect to and send data to an SMTP mail
@@ -77,7 +71,7 @@ public class SmtpConnector extends AbstractMailConnector
     
     SmtpConnector(int defaultPort)
     {
-        super(defaultPort);
+        super(defaultPort, null);
     }
     
     public String getProtocol()
@@ -221,46 +215,6 @@ public class SmtpConnector extends AbstractMailConnector
     public void setUsername(String username)
     {
         this.username = username;
-    }
-
-    /**
-     * Create a javax.mail.Message creation without access to connection information
-     * in the caller. This is a workaround for the dependency of StringToEmailMessage
-     * on the connection information which is only available in this class.
-     */
-    public Session getMailSession(UMOImmutableEndpoint endpoint)
-    {
-        // build required URLName
-        UMOEndpointURI uri = endpoint.getEndpointURI();
-
-        // Try to get the properties from the endpoint and use the connector
-        // properties if they are not given.
-
-        String host = uri.getHost();
-        if (host == null)
-        {
-            host = this.getHost();
-        }
-
-        int port = uri.getPort();
-        if (port == -1)
-        {
-            port = this.getPort();
-        }
-
-        String username = uri.getUsername();
-        if (StringUtils.isBlank(username))
-        {
-            username = this.getUsername();
-        }
-
-        String password = uri.getPassword();
-        if (StringUtils.isBlank(password))
-        {
-            password = this.getPassword();
-        }
-
-        return this.getMailSession(new URLName(this.getProtocol(), host, port, null, username, password));
     }
 
 }

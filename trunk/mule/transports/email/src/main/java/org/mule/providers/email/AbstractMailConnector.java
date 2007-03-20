@@ -13,6 +13,8 @@ package org.mule.providers.email;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.Properties;
@@ -30,7 +32,11 @@ import org.apache.commons.lang.StringUtils;
 public abstract class AbstractMailConnector extends AbstractConnector
 {
 
+    public static final String MAILBOX = "INBOX";
+
+    private String mailboxFolder;
     private int defaultPort;
+    private SessionManager sessionManager = new SimpleSessionManager();
 
     /**
      * A custom authenticator to be used on any mail sessions created with this
@@ -39,10 +45,11 @@ public abstract class AbstractMailConnector extends AbstractConnector
      */
     private Authenticator authenticator = null;
 
-    public AbstractMailConnector(int defaultPort)
+    public AbstractMailConnector(int defaultPort, String mailboxFolder)
     {
         super();
         this.defaultPort = defaultPort;
+        this.mailboxFolder = mailboxFolder;
     }
 
     public int getDefaultPort()
@@ -59,7 +66,48 @@ public abstract class AbstractMailConnector extends AbstractConnector
     {
         this.authenticator = authenticator;
     }
+    
+    public String getMailboxFolder()
+    {
+        return mailboxFolder;
+    }
 
+    public void setMailboxFolder(String mailboxFolder)
+    {
+        this.mailboxFolder = mailboxFolder;
+    }
+
+    public synchronized SessionDetails getSession(UMOImmutableEndpoint endpoint)
+    {
+        SessionDetails session = sessionManager.getSession(endpoint, this);
+        if (null == session)
+        {
+            sessionManager.setSession(endpoint, this, newSession(endpoint));
+            session = sessionManager.getSession(endpoint, this);
+        }
+        return session;
+    }
+    
+    public URLName urlFromEndpoint(UMOImmutableEndpoint endpoint)
+    {
+        String inbox = endpoint.getEndpointURI().getPath();
+        if (inbox.length() == 0)
+        {
+            inbox = getMailboxFolder();
+        }
+        else
+        {
+            inbox = inbox.substring(1);
+        }
+
+        UMOEndpointURI uri = endpoint.getEndpointURI();
+        URLName url = 
+            new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), getMailboxFolder(), 
+                uri.getUsername(), uri.getPassword());
+        
+        return url;
+    }
+    
     /**
      * Creates a new javax.mail Session based on a URL. If a password is set on the
      * URL it also adds an SMTP authenticator.
@@ -67,12 +115,14 @@ public abstract class AbstractMailConnector extends AbstractConnector
      * @param args a javax.mail.URLName providing properties of the required Session
      *            (host, port etc.)
      */
-    public Session getMailSession(URLName url)
+    private SessionDetails newSession(UMOImmutableEndpoint endpoint)
     {
+        URLName url = urlFromEndpoint(endpoint);
+        
         if (url == null)
         {
-            throw new IllegalArgumentException(new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL")
-            .toString());
+            throw new IllegalArgumentException(
+                new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL").toString());
         }
 
         String protocol = getProtocol().toLowerCase();
@@ -143,7 +193,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
                 + ", user = " + url.getUsername() + ", pass = " + url.getPassword());
         }
 
-        return session;
+        return new SessionDetails(session, url);
     }
 
     // supply these here because sub-classes are very simple

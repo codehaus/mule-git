@@ -21,9 +21,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.URLName;
 
 /**
  * This dispatcher can only be used to receive message (as opposed to listening for them).
@@ -45,24 +43,18 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
     {
         if (folder == null || !folder.isOpen())
         {
-            String inbox = (String) endpoint.getProperty("folder");
 
-            if (inbox == null)
-            {
-                inbox = connector.getMailboxFolder();
-            }
+            SessionDetails session = connector.getSession(endpoint);
+            
+            // TODO
+            session.getSession().setDebug(logger.isDebugEnabled());
 
+            Store store = session.newStore();
+            
             UMOEndpointURI uri = endpoint.getEndpointURI();
-            URLName url = new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), inbox,
-                uri.getUsername(), uri.getPassword());
-
-            Session session = connector.getMailSession(url);
-            session.setDebug(logger.isDebugEnabled());
-
-            Store store = session.getStore(url);
             store.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());
 
-            folder = store.getFolder(inbox);
+            folder = store.getFolder(connector.getMailboxFolder());
             if (!folder.isOpen())
             {
                 try

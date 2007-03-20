@@ -18,7 +18,6 @@ import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;
@@ -37,9 +36,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.URLName;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
@@ -58,8 +55,6 @@ implements MessageCountListener, Startable, Stoppable
 
     private String backupFolder = null;
 
-    private Session session;
-
     private AbstractRetrieveMailConnector connector;
 
     public RetrieveMessageReceiver(UMOConnector connector,
@@ -76,26 +71,14 @@ implements MessageCountListener, Startable, Stoppable
 
     protected void doConnect() throws Exception
     {
-        String inbox = endpoint.getEndpointURI().getPath();
-        if (inbox.length() == 0)
-        {
-            inbox = connector.getMailboxFolder();
-        }
-        else
-        {
-            inbox = inbox.substring(1);
-        }
+        SessionDetails session = connector.getSession(endpoint);
+        
+        // TODO - do we really want this here?
+        session.getSession().setDebug(logger.isDebugEnabled());
 
-        UMOEndpointURI uri = endpoint.getEndpointURI();
-        URLName url = new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), inbox, uri.getUsername(),
-            uri.getPassword());
-
-        session = connector.getMailSession(url);
-        session.setDebug(logger.isDebugEnabled());
-
-        Store store = session.getStore(url);
+        Store store = session.newStore();
         store.connect();
-        folder = store.getFolder(inbox);
+        folder = store.getFolder(connector.getMailboxFolder());
 
         // If user explicitly sets backup folder to "" it will disable email back up
         if (backupFolder == null)
