@@ -33,10 +33,13 @@ public class TransformerCloningTestCase extends AbstractTransformerTestCase
         NonAbstractTransformer t1 = new NonAbstractTransformer();
         t1.setName("abstract");
         t1.setReturnClass(this.getClass());
+        t1.registerSourceType(this.getClass());
 
         NonAbstractTransformer t2 = new NonAbstractTransformer();
         t2.setName("nextTransformer");
         t2.setReturnClass(this.getClass());
+        t2.registerSourceType(this.getClass());
+        t2.registerSourceType(StringBuffer.class);
         
         t1.setNextTransformer(t2);
         t1.setEndpoint(MuleTestUtils.getTestEndpoint("abstract", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER));
