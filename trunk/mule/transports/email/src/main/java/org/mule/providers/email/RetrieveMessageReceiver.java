@@ -46,16 +46,15 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Poll a mailbox for messages, remove the messages and route them as events into Mule.
+ *
+ * This contains a reference to a mail folder (and also the endpoint and connector, via superclasses)
  */
 
 public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
 implements MessageCountListener, Startable, Stoppable
 {
     private Folder folder = null;
-
     private String backupFolder = null;
-
-    private AbstractRetrieveMailConnector connector;
 
     public RetrieveMessageReceiver(UMOConnector connector,
                                    UMOComponent component,
@@ -69,16 +68,18 @@ implements MessageCountListener, Startable, Stoppable
         this.connector = (AbstractRetrieveMailConnector) connector;
     }
 
+    private AbstractRetrieveMailConnector castConnector()
+    {
+        return (AbstractRetrieveMailConnector) getConnector();
+    }
+
     protected void doConnect() throws Exception
     {
-        SessionDetails session = connector.getSession(endpoint);
-        
-        // TODO - do we really want this here?
-        session.getSession().setDebug(logger.isDebugEnabled());
+        SessionDetails session = castConnector().getSession(endpoint);
 
         Store store = session.newStore();
         store.connect();
-        folder = store.getFolder(connector.getMailboxFolder());
+        folder = store.getFolder(castConnector().getMailboxFolder());
 
         // If user explicitly sets backup folder to "" it will disable email back up
         if (backupFolder == null)
@@ -135,9 +136,9 @@ implements MessageCountListener, Startable, Stoppable
                     {
                         MimeMessage mimeMessage = new MimeMessage((MimeMessage) messages[i]);
                         storeMessage(mimeMessage);
-                        message = new MuleMessage(connector.getMessageAdapter(mimeMessage));
+                        message = new MuleMessage(castConnector().getMessageAdapter(mimeMessage));
 
-                        if (connector.isDeleteReadMessages())
+                        if (castConnector().isDeleteReadMessages())
                         {
                             // Mark as deleted
                             messages[i].setFlag(Flags.Flag.DELETED, true);
@@ -341,9 +342,21 @@ implements MessageCountListener, Startable, Stoppable
 
     protected void doDispose()
     {
-        if (folder != null)
+        if (null != folder)
         {
             folder.removeMessageCountListener(this);
+            if (folder.isOpen())
+            {
+                try
+                {
+
+                    folder.close(true);
+                }
+                catch (Exception e)
+                {
+                    logger.debug("ignoring exception: " + e.getMessage(), e);
+                }
+            }
         }
     }
 

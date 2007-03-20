@@ -33,12 +33,12 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
      */
     private volatile String backupFolder = null;
 
-
     /**
      * Once a message has been read, should it be deleted
      */
     private volatile boolean deleteReadMessages = true;
 
+    
     protected AbstractRetrieveMailConnector(int defaultPort)
     {
         super(defaultPort, MAILBOX);
@@ -52,9 +52,6 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
         return checkFrequency;
     }
 
-    /**
-     * @param l
-     */
     public void setCheckFrequency(long l)
     {
         if (l < 1)
@@ -73,9 +70,6 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
         return backupFolder;
     }
 
-    /**
-     * @param string
-     */
     public void setBackupFolder(String string)
     {
         backupFolder = string;

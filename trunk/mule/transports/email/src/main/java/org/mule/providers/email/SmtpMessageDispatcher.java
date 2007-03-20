@@ -27,32 +27,31 @@ import javax.mail.Transport;
 
 /**
  * <code>SmtpMessageDispatcher</code> will dispatch Mule events as Mime email
- * messages over an SMTP gateway
+ * messages over an SMTP gateway.
+ * 
+ * This contains a reference to a transport (and endpoint and connector, via superclasses)
  */
 public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 {
-    private final SmtpConnector connector;
     private volatile Transport transport;
 
     public SmtpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (SmtpConnector) endpoint.getConnector();
+    }
+
+    private SmtpConnector castConnector()
+    {
+        return (SmtpConnector) getConnector();
     }
 
     protected void doConnect() throws Exception
     {
         if (transport == null)
         {
-
             try
             {
-                SessionDetails session = connector.getSession(endpoint);
-                
-                // TODO
-                session.getSession().setDebug(logger.isDebugEnabled());
-
-                transport = session.newTransport();
+                transport = castConnector().getSession(endpoint).newTransport();
                 UMOEndpointURI uri = endpoint.getEndpointURI();
                 transport.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());
             }
@@ -67,13 +66,16 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDisconnect() throws Exception
     {
-        try
+        if (null != transport)
         {
-            transport.close();
-        }
-        finally
-        {
-            transport = null;
+            try
+            {
+                transport.close();
+            }
+            finally
+            {
+                transport = null;
+            }
         }
     }
 
@@ -135,7 +137,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         message.setSentDate(Calendar.getInstance().getTime());
 
         transport.sendMessage(message, message.getAllRecipients());
-        
+
         if (logger.isDebugEnabled())
         {
             StringBuffer msg = new StringBuffer();
@@ -146,8 +148,8 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             msg.append(", Cc: ").append(
                 MailUtils.mailAddressesToString(message.getRecipients(Message.RecipientType.CC))).append(" ");
             msg.append(", Bcc: ")
-                .append(MailUtils.mailAddressesToString(message.getRecipients(Message.RecipientType.BCC)))
-                .append(" ");
+            .append(MailUtils.mailAddressesToString(message.getRecipients(Message.RecipientType.BCC)))
+            .append(" ");
             msg.append(", ReplyTo: ").append(MailUtils.mailAddressesToString(message.getReplyTo()));
 
             logger.debug(msg.toString());
@@ -157,8 +159,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDispose()
     {
-        // TODO Auto-generated method stub
-        
+        // nothing doing
     }
 
 }

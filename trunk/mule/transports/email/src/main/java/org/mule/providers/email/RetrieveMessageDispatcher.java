@@ -26,17 +26,22 @@ import javax.mail.Store;
 /**
  * This dispatcher can only be used to receive message (as opposed to listening for them).
  * Trying to send or dispatch will throw an UnsupportedOperationException.
+ * 
+ * This contains a reference to a mail folder (and also the endpoint and connector, via superclasses)
  */
 
 public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
 {
-    private AbstractRetrieveMailConnector connector;
     private Folder folder;
 
     public RetrieveMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (AbstractRetrieveMailConnector) endpoint.getConnector();
+    }
+
+    private AbstractRetrieveMailConnector castConnector()
+    {
+        return (AbstractRetrieveMailConnector) getConnector();
     }
 
     protected void doConnect() throws Exception
@@ -44,17 +49,12 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
         if (folder == null || !folder.isOpen())
         {
 
-            SessionDetails session = connector.getSession(endpoint);
-            
-            // TODO
-            session.getSession().setDebug(logger.isDebugEnabled());
+            Store store = castConnector().getSession(endpoint).newStore();
 
-            Store store = session.newStore();
-            
             UMOEndpointURI uri = endpoint.getEndpointURI();
             store.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());
 
-            folder = store.getFolder(connector.getMailboxFolder());
+            folder = store.getFolder(castConnector().getMailboxFolder());
             if (!folder.isOpen())
             {
                 try
@@ -153,17 +153,18 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
                     // so we don't get the same message again
                     flagMessage(folder, message);
 
-                    return new MuleMessage(connector.getMessageAdapter(message));
+                    return new MuleMessage(castConnector().getMessageAdapter(message));
                 }
                 else if (count == -1)
                 {
                     throw new MessagingException("Cannot monitor folder: " + folder.getFullName()
-                                    + " as folder is closed");
+                        + " as folder is closed");
                 }
             }
 
-            long sleep = Math.min(this.connector.getCheckFrequency(), timeout
-                            - (System.currentTimeMillis() - t0));
+            long sleep = 
+                Math.min(castConnector().getCheckFrequency(), 
+                    timeout - (System.currentTimeMillis() - t0));
 
             if (sleep > 0)
             {
@@ -223,6 +224,18 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doDispose()
     {
-        // template method
+        if (null != folder && folder.isOpen())
+        {
+            try
+            {
+
+                folder.close(true);
+            }
+            catch (Exception e)
+            {
+                logger.debug("ignoring exception: " + e.getMessage(), e);
+            }
+        }
     }
+
 }

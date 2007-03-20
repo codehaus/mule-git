@@ -108,7 +108,7 @@ extends AbstractRetrieveMailConnector implements TlsIndirectTrustStore, TlsIndir
         tls.setTrustStorePassword(trustStorePassword);
     }
 
-    // these were not present before, but could be set implicitly via global proeprties
+    // these were not present before, but could be set implicitly via global properties
     // that is no longer true, so i have added them in here
 
     public String getClientKeyStore()

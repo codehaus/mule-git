@@ -192,6 +192,8 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
         if (logger.isDebugEnabled())
         {
+            local.setProperty("mail.debug", "true");
+            
             dumpProperties("Session local properties", local, true);
             dumpProperties("System global properties", global, true);
             logger.debug("Creating mail session: host = " + url.getHost() + ", port = " + url.getPort()
