@@ -17,6 +17,7 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -129,21 +130,22 @@ public abstract class AbstractMailConnector extends AbstractConnector
      * Subclasses should extend this to add further properties.  
      * Synchronization is managed outside this call (so no need to synchronize further on properties)
      * 
-     * @param properties the properties object used to construct the session
+     * @param global system properties 
+     * @param local local properties (specific to one session)
      * @param url the endpoint url
      */
-    void extendPropertiesForSession(Properties properties, URLName url)
+    void extendPropertiesForSession(Properties global, Properties local, URLName url)
     {
         int port = url.getPort();
         if (port == -1)
         {
             port = this.getDefaultPort();
         }
-        properties.setProperty("mail." + getBaseProtocol() + ".socketFactory.port", Integer.toString(port));
+        local.setProperty("mail." + getBaseProtocol() + ".socketFactory.port", Integer.toString(port));
 
         if (StringUtils.isNotBlank(url.getPassword()))
         {
-            properties.setProperty("mail." + getBaseProtocol() + ".auth", "true");
+            local.setProperty("mail." + getBaseProtocol() + ".auth", "true");
             if (getAuthenticator() == null)
             {
                 setAuthenticator(new DefaultAuthenticator(url.getUsername(), url.getPassword()));
@@ -155,15 +157,15 @@ public abstract class AbstractMailConnector extends AbstractConnector
         }
         else
         {
-            properties.setProperty("mail." + getBaseProtocol() + ".auth", "false");
+            local.setProperty("mail." + getBaseProtocol() + ".auth", "false");
         }
         
         // TODO - i'm not at all certain that these properties (especially the ones
         // using the base protocol) are needed.  they are inherited from old, gnarly
         // code.
 
-        properties.setProperty("mail." + getBaseProtocol() + ".host", url.getHost());
-        properties.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
+        local.setProperty("mail." + getBaseProtocol() + ".host", url.getHost());
+        local.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
     }
 
     /**
@@ -177,23 +179,50 @@ public abstract class AbstractMailConnector extends AbstractConnector
     {
         URLName url = urlFromEndpoint(endpoint);
 
-        Properties props = System.getProperties();
+        Properties global = System.getProperties();
+        Properties local = new Properties();
         Session session;
 
         // make sure we do not mess with authentication set via system properties
-        synchronized (props)
+        synchronized (global)
         {
-            extendPropertiesForSession(props, url);
-            session = Session.getInstance(props, getAuthenticator());
+            extendPropertiesForSession(global, local, url);
+            session = Session.getInstance(local, getAuthenticator());
         }
 
         if (logger.isDebugEnabled())
         {
+            dumpProperties("Session local properties", local, true);
+            dumpProperties("System global properties", global, true);
             logger.debug("Creating mail session: host = " + url.getHost() + ", port = " + url.getPort()
                 + ", user = " + url.getUsername() + ", pass = " + url.getPassword());
         }
 
         return new SessionDetails(session, url);
+    }
+    
+    private void dumpProperties(String title, Properties properties, boolean filter)
+    {
+        int skipped = 0;
+        logger.debug(title + " =============");
+        Enumeration keys = properties.keys();
+        while (keys.hasMoreElements())
+        {
+            String key = (String) keys.nextElement();
+            if (!filter || key.startsWith("mule.") || key.startsWith("mail.") || key.startsWith("javax."))
+            {
+                String value = properties.getProperty(key);
+                logger.debug(key + ": " + value);
+            }
+            else 
+            {
+                ++skipped;
+            }
+        }
+        if (filter)
+        {
+            logger.debug("skipped " + skipped);
+        }
     }
     
     // supply these here because sub-classes are very simple

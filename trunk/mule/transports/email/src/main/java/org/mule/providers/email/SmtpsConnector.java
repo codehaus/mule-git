@@ -57,15 +57,15 @@ public class SmtpsConnector extends SmtpConnector implements TlsIndirectTrustSto
     }
 
     // @Override
-    void extendPropertiesForSession(Properties properties, URLName url)
+    void extendPropertiesForSession(Properties global, Properties local, URLName url)
     {
-        super.extendPropertiesForSession(properties, url);
+        super.extendPropertiesForSession(global, local, url);
 
-        properties.setProperty("mail." + getProtocol() + ".ssl", "true");
-        properties.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
-        properties.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
+        local.setProperty("mail." + getProtocol() + ".ssl", "true");
+        local.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
+        local.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
         
-        new TlsPropertiesMapper(SmtpsSocketFactory.MULE_SMTPS_NAMESPACE).writeToProperties(properties, tls);
+        new TlsPropertiesMapper(SmtpsSocketFactory.MULE_SMTPS_NAMESPACE).writeToProperties(global, tls);
     }
     
     public String getSocketFactory()

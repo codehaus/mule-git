@@ -39,6 +39,10 @@ extends AbstractRetrieveMailConnector implements TlsIndirectTrustStore, TlsIndir
         super(defaultPort);
         this.namespace = namespace;
         socketFactory = defaultSocketFactory.getName();
+        
+        // see comment below
+//        this.namespace = TlsConfiguration.JSSE_NAMESPACE;
+//        socketFactory = SSLServerSocketFactory.class.getName();
     }
     
     protected void doInitialise() throws InitialisationException
@@ -48,15 +52,20 @@ extends AbstractRetrieveMailConnector implements TlsIndirectTrustStore, TlsIndir
     }
 
     // @Override
-    void extendPropertiesForSession(Properties properties, URLName url)
+    void extendPropertiesForSession(Properties global, Properties local, URLName url)
     {
-        super.extendPropertiesForSession(properties, url);
+        super.extendPropertiesForSession(global, local, url);
 
-        properties.setProperty("mail." + getProtocol() + ".ssl", "true");
-        properties.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
-        properties.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
+        local.setProperty("mail." + getProtocol() + ".ssl", "true");
+        local.setProperty("mail." + getProtocol() + ".socketFactory.class", getSocketFactory());
+        local.setProperty("mail." + getProtocol() + ".socketFactory.fallback", getSocketFactoryFallback());
         
-        new TlsPropertiesMapper(namespace).writeToProperties(properties, tls);
+        new TlsPropertiesMapper(namespace).writeToProperties(global, tls);
+
+        // this, instead of the line above, and with the constructor changes,
+        // would have changed to local SSL configuration, if that was possible
+        // (it didn't work)
+//        new TlsPropertiesMapper(namespace).writeToProperties(local, tls);
     }
     
     public String getSocketFactory()
