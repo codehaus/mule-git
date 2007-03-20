@@ -11,8 +11,6 @@
 package org.mule.transformers.xml;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transformers.xml.XStreamFactory;
-import org.mule.transformers.xml.XmlToObject;
 import org.mule.umo.transformer.TransformerException;
 
 import com.thoughtworks.xstream.XStream;
@@ -24,6 +22,15 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class XStreamTransformerConfigurationTestCase extends AbstractMuleTestCase
 {
     public static volatile boolean MyDriverDidInitialize;
+
+    protected static class MyDOMDriver extends DomDriver
+    {
+        public MyDOMDriver()
+        {
+            super();
+            XStreamTransformerConfigurationTestCase.MyDriverDidInitialize = true;
+        }
+    }
 
     // @Override
     protected void doSetUp() throws Exception
@@ -73,15 +80,6 @@ public class XStreamTransformerConfigurationTestCase extends AbstractMuleTestCas
         {
             // OK
             assertTrue(tex.getCause() instanceof ClassNotFoundException);
-        }
-    }
-
-    protected static class MyDOMDriver extends DomDriver
-    {
-        public MyDOMDriver()
-        {
-            super();
-            XStreamTransformerConfigurationTestCase.MyDriverDidInitialize = true;
         }
     }
 

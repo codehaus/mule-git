@@ -50,6 +50,14 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         registerSourceType(org.w3c.dom.Element.class);
     }
 
+    // @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        AbstractXmlTransformer clone = (AbstractXmlTransformer)super.clone();
+        clone.setOutputEncoding(outputEncoding);
+        return clone;
+    }
+
     public Source getXmlSource(Object src)
     {
         if (src instanceof byte[])
