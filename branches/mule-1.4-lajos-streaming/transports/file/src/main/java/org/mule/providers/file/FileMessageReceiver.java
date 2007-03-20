@@ -166,7 +166,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             try
             {
                 msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(sourceFile), null);
-                ((StreamMessageAdapter)msgAdapter).setSource(sourceFile);
+                ((StreamMessageAdapter)msgAdapter).setMessageResource(new FileMessageResource((FileConnector)connector, sourceFile));
             }
             catch (FileNotFoundException e)
             {
@@ -234,7 +234,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 if(endpoint.isStreaming())
                 {
                     msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(destinationFile), null);
-                    ((StreamMessageAdapter)msgAdapter).setSource(destinationFile);
+                    ((StreamMessageAdapter)msgAdapter).setMessageResource(new FileMessageResource((FileConnector)connector, destinationFile));
                 }
                 else
                 {
@@ -304,7 +304,6 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         boolean fileCanBeLocked = false;
         try
         {
-            System.out.println("Trying to get lock");
             channel = new RandomAccessFile(sourceFile, "rw").getChannel();
 
             // Try acquiring the lock without blocking. This method returns
@@ -320,7 +319,6 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // Unable to create a lock. This exception should only be thrown when
             // the file is already locked. No sense in repeating the message over
             // and over.
-            System.out.println("Lock failure: " + e.toString());
         }
         finally {
             if (lock != null)
@@ -329,7 +327,6 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 fileCanBeLocked = true;
                 try
                 {
-                    System.out.println("About to release lock");
                     // Release the lock
                     lock.release();
                 }
