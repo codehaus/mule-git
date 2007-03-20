@@ -164,37 +164,11 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
         assertEquals(1, count2[0]);
     }
 
-    private static class TestFilteringOutboundRouter extends FilteringOutboundRouter
-    {
-        public void setMessageProperties(UMOSession session, UMOMessage message, UMOEndpoint endpoint)
-        {
-            super.setMessageProperties(session, message, endpoint);
-        }
-    }
-
-    private static class TestMessageAdapter extends DefaultMessageAdapter
-    {
-        /**
-         * Serial version
-         */
-        private static final long serialVersionUID = 6964754557016604536L;
-
-        public TestMessageAdapter(Object message)
-        {
-            super(message);
-        }
-
-        public String getUniqueId()
-        {
-            return "123";
-        }
-    }
-
     public void testCorrelation() throws Exception
     {
-        TestFilteringOutboundRouter filterRouter = new TestFilteringOutboundRouter();
+        FilteringOutboundRouter filterRouter = new FilteringOutboundRouter();
         UMOSession session = getTestSession(getTestComponent(getTestDescriptor("test", "test")));
-        UMOMessage message = new MuleMessage(new TestMessageAdapter(new StringBuffer()));
+        UMOMessage message = new MuleMessage(new DefaultMessageAdapter(new StringBuffer()));
         UMOEndpoint endpoint = getTestEndpoint("test", "sender");
         filterRouter.setMessageProperties(session, message, endpoint);
         assertNotNull(message.getCorrelationId());
