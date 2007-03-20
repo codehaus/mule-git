@@ -10,7 +10,6 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.transformers.xml.XsltTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
@@ -31,6 +30,7 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
     {
         XsltTransformer transformer = new XsltTransformer();
         transformer.setXslFile("cdcatalog.xsl");
+        transformer.setMaxActiveTransformers(42);
         transformer.initialise();
         return transformer;
     }
@@ -57,23 +57,17 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
     }
 
     // @Override
-    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
+    protected void doTestClone(UMOTransformer original, UMOTransformer clone) throws Exception
     {
-        // TODO MULE-1511: need to access the clone's private parts but cannot
-        // because we're in a different package..
+        super.doTestClone(original, clone);
 
-        /*
-        XsltTransformer t1 = (XsltTransformer)original;
-        XsltTransformer t2 = (XsltTransformer)clone;
+        XsltTransformer t1 = (XsltTransformer) original;
+        XsltTransformer t2 = (XsltTransformer) clone;
 
-        // The transformerPool must be different 
-        if (t1.transformerPool == t2.transformerPool)
-        {
-            return false;
-        }
-        */
-
-        return super.compareClone(original, clone);
+        // The transformerPool must be a new instance
+        assertNotSame("transformerPool", t1.transformerPool, t2.transformerPool);
+        // ..but it must have the same config value
+        assertEquals("transformerPool.maxActive", t1.getMaxActiveTransformers(), t2.getMaxActiveTransformers());
     }
 
 }
