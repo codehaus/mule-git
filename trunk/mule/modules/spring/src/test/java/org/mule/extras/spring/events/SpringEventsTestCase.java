@@ -302,6 +302,15 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
             setName("dummyTrans");
         }
 
+        // @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            DummyTrans clone = (DummyTrans)super.clone();
+            // we MUST share the latch for this test since we obviously want to wait for it.
+            clone.setLatch(latch);
+            return clone;
+        }
+
         public CountDownLatch getLatch()
         {
             return latch;
