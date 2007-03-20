@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.filters;
+package org.mule.routing.filters;
 
 import org.mule.impl.MuleMessage;
 import org.mule.routing.filters.EqualsFilter;
