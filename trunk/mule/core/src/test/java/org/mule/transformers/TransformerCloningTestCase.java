@@ -13,29 +13,19 @@ package org.mule.transformers;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 
 public class TransformerCloningTestCase extends AbstractTransformerTestCase
 {
 
-    public static class NonAbstractTransformer extends AbstractTransformer
-    {
-        protected Object doTransform(Object src, String encoding) throws TransformerException
-        {
-            // nothing to do here
-            return src;
-        }
-    }
-
     public UMOTransformer getTransformer() throws Exception
     {
-        NonAbstractTransformer t1 = new NonAbstractTransformer();
+        NoActionTransformer t1 = new NoActionTransformer();
         t1.setName("abstract");
         t1.setReturnClass(this.getClass());
         t1.registerSourceType(this.getClass());
 
-        NonAbstractTransformer t2 = new NonAbstractTransformer();
+        NoActionTransformer t2 = new NoActionTransformer();
         t2.setName("nextTransformer");
         t2.setReturnClass(this.getClass());
         t2.registerSourceType(this.getClass());
@@ -67,8 +57,8 @@ public class TransformerCloningTestCase extends AbstractTransformerTestCase
     {
         super.doTestClone(original, clone);
 
-        NonAbstractTransformer t1 = (NonAbstractTransformer) original;
-        NonAbstractTransformer t2 = (NonAbstractTransformer) clone;
+        NoActionTransformer t1 = (NoActionTransformer) original;
+        NoActionTransformer t2 = (NoActionTransformer) clone;
 
         // name must be equal
         assertEquals("name", t1.name, t2.name);

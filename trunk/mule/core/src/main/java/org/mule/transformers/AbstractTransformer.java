@@ -328,6 +328,13 @@ public abstract class AbstractTransformer implements UMOTransformer
             AbstractTransformer clone = (AbstractTransformer)this.getClass().newInstance();
             clone.setName(name);
             clone.setReturnClass(returnClass);
+
+            /*
+             * We need to clear out the existing list of types since subclass
+             * constructors might have registered source types, leading to
+             * duplicates..
+             */
+            clone.sourceTypes.clear();
             clone.sourceTypes.addAll(sourceTypes);
 
             if (nextTransformer != null)
