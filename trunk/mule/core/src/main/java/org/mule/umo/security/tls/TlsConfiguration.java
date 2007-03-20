@@ -16,7 +16,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.TlsDirectKeyStore;
 import org.mule.umo.security.TlsDirectTrustStore;
 import org.mule.umo.security.TlsIndirectKeyStore;
-import org.mule.umo.security.TlsIndirectTrustStore;
 import org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory;
 import org.mule.umo.security.provider.SecurityProviderFactory;
 import org.mule.umo.security.provider.SecurityProviderInfo;
@@ -189,7 +188,10 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
         }
         initTrustManagerFactory();
 
-        new TlsPropertiesMapper(namespace).writeToProperties(System.getProperties(), this);
+        if (null != namespace)
+        {
+            new TlsPropertiesMapper(namespace).writeToProperties(System.getProperties(), this);
+        }
     }
 
     private void validate(boolean anon) throws InitialisationException
