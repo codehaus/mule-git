@@ -8,13 +8,13 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers;
+package org.mule.transformers.xml;
 
 import org.mule.transformers.xml.XsltTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
-public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
+public class XsltTransformerUTF8TestCase extends AbstractXmlTransformerTestCase
 {
 
     private String srcData;
@@ -23,8 +23,9 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
     // @Override
     protected void doSetUp() throws Exception
     {
-        srcData = IOUtils.getResourceAsString("cdcatalog.xml", getClass());
-        resultData = IOUtils.getResourceAsString("cdcatalog.html", getClass());
+        srcData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-utf-8.xml", getClass()), "UTF-8");
+        resultData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-utf-8.html", getClass()),
+            "UTF-8");
     }
 
     public UMOTransformer getTransformer() throws Exception
@@ -54,26 +55,6 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
     public Object getResultData()
     {
         return resultData;
-    }
-
-    // @Override
-    public boolean compareClone(UMOTransformer original, UMOTransformer clone)
-    {
-        // TODO MULE-1511: need to access the clone's private parts but cannot
-        // because we're in a different package..
-
-        /*
-        XsltTransformer t1 = (XsltTransformer)original;
-        XsltTransformer t2 = (XsltTransformer)clone;
-
-        // The transformerPool must be different 
-        if (t1.transformerPool == t2.transformerPool)
-        {
-            return false;
-        }
-        */
-
-        return super.compareClone(original, clone);
     }
 
 }

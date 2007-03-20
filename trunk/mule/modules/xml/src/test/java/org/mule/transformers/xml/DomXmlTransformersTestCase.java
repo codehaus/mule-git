@@ -8,43 +8,39 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers;
+package org.mule.transformers.xml;
 
-import org.mule.transformers.xml.XsltTransformer;
+import org.mule.transformers.xml.DomDocumentToXml;
+import org.mule.transformers.xml.XmlToDomDocument;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
-public class XsltTransformerUTF8TestCase extends AbstractXmlTransformerTestCase
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.DOMWriter;
+import org.w3c.dom.Document;
+
+public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
 {
 
     private String srcData;
-    private String resultData;
+    private Document resultData;
 
     // @Override
     protected void doSetUp() throws Exception
     {
-        srcData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-utf-8.xml", getClass()), "UTF-8");
-        resultData = IOUtils.toString(IOUtils.getResourceAsStream("cdcatalog-utf-8.html", getClass()),
-            "UTF-8");
+        srcData = IOUtils.getResourceAsString("cdcatalog.xml", getClass());
+        org.dom4j.Document dom4jDoc = DocumentHelper.parseText(srcData);
+        resultData = new DOMWriter().write(dom4jDoc);
     }
 
     public UMOTransformer getTransformer() throws Exception
     {
-        XsltTransformer transformer = new XsltTransformer();
-        transformer.setXslFile("cdcatalog.xsl");
-        transformer.initialise();
-        return transformer;
+        return new XmlToDomDocument();
     }
 
     public UMOTransformer getRoundTripTransformer() throws Exception
     {
-        return null;
-    }
-
-    // @Override
-    public void testRoundtripTransform() throws Exception
-    {
-        // disable this test
+        return new DomDocumentToXml();
     }
 
     public Object getTestData()

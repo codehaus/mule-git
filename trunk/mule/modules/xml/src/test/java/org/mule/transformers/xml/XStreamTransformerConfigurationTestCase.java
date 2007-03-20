@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.transformers;
+package org.mule.transformers.xml;
 
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.transformers.xml.XStreamFactory;

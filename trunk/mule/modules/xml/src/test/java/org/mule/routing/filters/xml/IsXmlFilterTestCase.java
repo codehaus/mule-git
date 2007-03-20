@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.filters.xml;
+package org.mule.routing.filters.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
