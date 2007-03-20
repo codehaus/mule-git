@@ -30,7 +30,7 @@ public class FileMessageResource implements UMOMessageResource
     /**
      * logger used by this class
      */
-    private static Log logger = LogFactory.getLog(FileConnector.class);
+    private static Log logger = LogFactory.getLog(FileMessageResource.class);
 
     private File file;
     private FileLock lock;
