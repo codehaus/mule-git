@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.samples.hello;
+package org.mule.samples.hello;
 
 import org.mule.samples.hello.ChatString;
 import org.mule.samples.hello.ChitChatter;
