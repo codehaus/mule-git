@@ -86,7 +86,7 @@ public class EmailEndpointsTestCase extends AbstractMuleTestCase
         assertEquals("test@lotsofmail.org:password", endpointUri.getUserInfo());
         assertEquals(
             "smtp://test%40lotsofmail.org:password@smtpout.secureserver.net:" + PORT +
-            "address=test@lotsofmail.org&ccAddresses=donkey@lotsofmail.org",
+            "?address=test@lotsofmail.org&ccAddresses=donkey@lotsofmail.org",
             endpointUri.toString());
         assertEquals(2, endpointUri.getParams().size());
         assertEquals("donkey@lotsofmail.org", endpointUri.getParams().get("ccAddresses"));
