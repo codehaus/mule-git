@@ -8,37 +8,36 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transformers;
+package org.mule.transformers.simple;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.simple.ByteArrayToHexString;
-import org.mule.transformers.simple.HexStringToByteArray;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.transformers.simple.ByteArrayToString;
+import org.mule.transformers.simple.StringToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Arrays;
 
-public class HexStringByteArrayTransformersTestCase extends AbstractTransformerTestCase
+public class StringByteArrayTransformersTestCase extends AbstractTransformerTestCase
 {
 
-    public UMOTransformer getTransformer()
+    public UMOTransformer getTransformer() throws Exception
     {
-        return new HexStringToByteArray();
+        return new StringToByteArray();
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public UMOTransformer getRoundTripTransformer() throws Exception
     {
-        return new ByteArrayToHexString();
+        return new ByteArrayToString();
     }
 
     public Object getTestData()
     {
-        return "01020aff";
+        return "Test";
     }
 
     public Object getResultData()
     {
-        return new byte[]{1, 2, 10, (byte)0xff};
+        return "Test".getBytes();
     }
 
     public boolean compareResults(Object src, Object result)
@@ -66,14 +65,4 @@ public class HexStringByteArrayTransformersTestCase extends AbstractTransformerT
         }
         return src.equals(result);
     }
-
-    // extra test for uppercase output
-    public void testUppercase() throws TransformerException
-    {
-        ByteArrayToHexString t = new ByteArrayToHexString();
-        t.setUpperCase(true);
-
-        assertEquals(((String)getTestData()).toUpperCase(), t.transform(getResultData()));
-    }
-
 }

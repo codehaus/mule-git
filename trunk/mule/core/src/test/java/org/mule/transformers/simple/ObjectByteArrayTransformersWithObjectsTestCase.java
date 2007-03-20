@@ -8,16 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transformers;
+package org.mule.transformers.simple;
 
-import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.transformers.simple.ByteArrayToObject;
 import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
-public class ObjectByteArrayTransformersWithStringsTestCase extends AbstractTransformerTestCase
+public class ObjectByteArrayTransformersWithObjectsTestCase extends SerialisedObjectTransformersTestCase
 {
-    private String testObject = "test";
 
     public UMOTransformer getTransformer() throws Exception
     {
@@ -29,13 +27,4 @@ public class ObjectByteArrayTransformersWithStringsTestCase extends AbstractTran
         return new ByteArrayToObject();
     }
 
-    public Object getTestData()
-    {
-        return testObject;
-    }
-
-    public Object getResultData()
-    {
-        return testObject.getBytes();
-    }
 }

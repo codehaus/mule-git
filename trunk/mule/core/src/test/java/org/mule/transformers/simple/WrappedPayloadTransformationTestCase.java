@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transformers;
+package org.mule.transformers.simple;
 
 import org.mule.impl.MuleMessage;
 import org.mule.umo.transformer.TransformerException;
