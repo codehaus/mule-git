@@ -53,11 +53,12 @@ public class TransactionTemplateTestCase extends AbstractMuleTestCase
         config.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
         TransactionTemplate template = new TransactionTemplate(config, new DefaultExceptionStrategy());
 
-        // and the callee component which should join the current XA transaction, not begin it
+        // and the callee component which should join the current XA transaction, not begin a nested one
         final UMOTransactionConfig nestedConfig = new MuleTransactionConfig();
         nestedConfig.setFactory(new XaTransactionFactory());
         nestedConfig.setAction(UMOTransactionConfig.ACTION_BEGIN_OR_JOIN);
 
+        // start the call chain
         template.execute(new TransactionCallback()
         {
             public Object doInTransaction() throws Exception
