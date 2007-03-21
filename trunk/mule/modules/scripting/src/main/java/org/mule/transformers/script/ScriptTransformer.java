@@ -53,7 +53,7 @@ public class ScriptTransformer extends AbstractEventAwareTransformer
         namespace.put("context", context);
         namespace.put("message", context.getMessage());
         namespace.put("src", src);
-        namespace.put("transformertNamespace", namespace);
+        namespace.put("transformerNamespace", namespace);
         namespace.put("log", logger);
     }
 
