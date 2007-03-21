@@ -50,7 +50,7 @@ public class ScriptTransformer extends AbstractEventAwareTransformer
 
     protected void populateBindings(Bindings namespace, UMOEventContext context, Object src)
     {
-        namespace.put("context", context);
+        namespace.put("eventContext", context);
         namespace.put("message", context.getMessage());
         namespace.put("src", src);
         namespace.put("transformerNamespace", namespace);
