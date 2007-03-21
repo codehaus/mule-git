@@ -49,7 +49,7 @@ public class ScriptComponent extends Scriptable implements Callable
         namespace.put("managementContext", MuleManager.getInstance());
         namespace.put("message", context.getMessage());
         namespace.put("descriptor", context.getComponentDescriptor());
-        namespace.put("componentNamespace", namespace);
+        namespace.put("componentNamespace", this.bindings);
         namespace.put("log", new MuleLogger(logger));
         namespace.put("result", new Object());
     }
