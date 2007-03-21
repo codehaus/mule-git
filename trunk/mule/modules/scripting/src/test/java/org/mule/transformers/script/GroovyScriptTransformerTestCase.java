@@ -57,8 +57,8 @@ public class GroovyScriptTransformerTestCase extends AbstractTransformerTestCase
     {
         super.doTestClone(original, clone);
 
-        ScriptTransformer t1 = (ScriptTransformer)original;
-        ScriptTransformer t2 = (ScriptTransformer)clone;
+        ScriptTransformer t1 = (ScriptTransformer) original;
+        ScriptTransformer t2 = (ScriptTransformer) clone;
 
         // The Scriptable instance must be different 
         assertNotSame(t1.scriptable, t2.scriptable);
