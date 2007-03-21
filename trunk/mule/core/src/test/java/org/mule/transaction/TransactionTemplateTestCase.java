@@ -80,6 +80,7 @@ public class TransactionTemplateTestCase extends AbstractMuleTestCase
 
         // nobody leaves until checked ;)
         mockTm.verify();
+        mockTx.verify();
     }
 
 }
