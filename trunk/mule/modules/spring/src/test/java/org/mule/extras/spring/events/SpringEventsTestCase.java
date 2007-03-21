@@ -10,16 +10,23 @@
 
 package org.mule.extras.spring.events;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.transformers.AbstractEventAwareTransformer;
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.UMOException;
 import org.mule.umo.transformer.TransformerException;
+import org.mule.util.concurrent.Latch;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.Executors;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,16 +34,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class SpringEventsTestCase extends AbstractMuleTestCase
 {
     private static final int NUMBER_OF_MESSAGES = 10;
-    private static int eventCount = 0;
-    private static int eventCount2 = 0;
+    private static final AtomicInteger eventCounter1 = new AtomicInteger(0);
+    private static final AtomicInteger eventCounter2 = new AtomicInteger(0);
     private static ClassPathXmlApplicationContext context;
-    public Object lock = new Object();
 
     protected void doSetUp() throws Exception
     {
         context = new ClassPathXmlApplicationContext(getConfigResources());
-        eventCount = 0;
-        eventCount2 = 0;
+        eventCounter1.set(0);
+        eventCounter2.set(0);
     }
 
     protected String getConfigResources()
@@ -50,36 +56,30 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
         assertNotNull(subscriptionBean);
         MuleEventMulticaster multicaster = (MuleEventMulticaster)context.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME);
         assertNotNull(multicaster);
-        // when an event is received by 'testEventBean1' this callback will be
-        // invoked
-        EventCallback callback = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount++;
-            }
-        };
-        subscriptionBean.setEventCallback(callback);
+
+        Latch whenFinished = new Latch();
+        subscriptionBean.setEventCallback(new CountingEventCallback(eventCounter1, 1, whenFinished));
 
         multicaster.removeApplicationListener(subscriptionBean);
         MuleClient client = new MuleClient();
         client.send("vm://event.multicaster", "Test Spring Event", null);
 
         afterPublishEvent();
-        assertEquals(0, eventCount);
+        assertEquals(0, eventCounter1.get());
 
         multicaster.addApplicationListener(subscriptionBean);
         client.send("vm://event.multicaster", "Test Spring Event", null);
 
         afterPublishEvent();
-        assertEquals(1, eventCount);
-        eventCount = 0;
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(1, eventCounter1.get());
+        eventCounter1.set(0);
 
         multicaster.removeAllListeners();
         client.send("vm://event.multicaster", "Test Spring Event", null);
 
         afterPublishEvent();
-        assertEquals(0, eventCount);
+        assertEquals(0, eventCounter1.get());
         multicaster.addApplicationListener(subscriptionBean);
         context.refresh();
         subscriptionBean.setEventCallback(null);
@@ -89,95 +89,85 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
     {
         TestMuleEventBean bean = (TestMuleEventBean)context.getBean("testNonSubscribingMuleEventBean");
         assertNotNull(bean);
-        // when an event is received by 'testEventBean1' this callback will be
-        // invoked
-        EventCallback callback = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount++;
-            }
-        };
-        bean.setEventCallback(callback);
+
+        // register a callback
+        Latch whenFinished = new Latch();
+        bean.setEventCallback(new CountingEventCallback(eventCounter1, 1, whenFinished));
+
         MuleClient client = new MuleClient();
         client.send("vm://event.multicaster", "Test Spring Event", null);
 
         afterPublishEvent();
-        assertEquals(1, eventCount);
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(1, eventCounter1.get());
     }
 
     public void testReceivingASpringEvent() throws Exception
     {
         TestApplicationEventBean bean = (TestApplicationEventBean)context.getBean("testEventSpringBean");
         assertNotNull(bean);
-        // when an event is received by 'testEventBean1' this callback will be
-        // invoked
+
         EventCallback callback = new EventCallback()
         {
             public void eventReceived(UMOEventContext context, Object o) throws Exception
             {
-                eventCount++;
+                eventCounter1.incrementAndGet();
                 assertNull(context);
                 assertTrue(o instanceof ContextRefreshedEvent);
             }
         };
+
         bean.setEventCallback(callback);
+
         context.publishEvent(new ContextRefreshedEvent(context));
 
         afterPublishEvent();
-        assertEquals(1, eventCount);
+        assertEquals(1, eventCounter1.get());
     }
 
     public void testReceivingAllEvents() throws Exception
     {
         TestAllEventBean bean = (TestAllEventBean)context.getBean("testAllEventBean");
         assertNotNull(bean);
-        // when an event is received by 'testEventBean1' this callback will be
-        // invoked
-        EventCallback callback = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount++;
-            }
-        };
-        bean.setEventCallback(callback);
+
+        Latch whenFinished = new Latch();
+        bean.setEventCallback(new CountingEventCallback(eventCounter1, 2, whenFinished));
+
         MuleClient client = new MuleClient();
         client.send("vm://event.multicaster", "Test Spring Event", null);
         context.publishEvent(new ContextRefreshedEvent(context));
         afterPublishEvent();
-        assertEquals(2, eventCount);
+
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(2, eventCounter1.get());
     }
 
     public void testReceivingASubscriptionEvent() throws Exception
     {
         TestSubscriptionEventBean subscriptionBean = (TestSubscriptionEventBean)context.getBean("testSubscribingEventBean1");
         assertNotNull(subscriptionBean);
-        // when an event is received by 'testEventBean1' this callback will be
-        // invoked
-        EventCallback callback = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount++;
-            }
-        };
-        subscriptionBean.setEventCallback(callback);
+
+        Latch whenFinished = new Latch();
+        subscriptionBean.setEventCallback(new CountingEventCallback(eventCounter1, 1, whenFinished));
+
         MuleClient client = new MuleClient();
         client.send("vm://event.multicaster", "Test Spring Event", null);
         afterPublishEvent();
-        assertEquals(1, eventCount);
+
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(1, eventCounter1.get());
     }
 
     public void testReceiveAndPublishEvent() throws Exception
     {
         TestSubscriptionEventBean bean1 = (TestSubscriptionEventBean)context.getBean("testSubscribingEventBean1");
         assertNotNull(bean1);
+
         EventCallback callback = new EventCallback()
         {
             public void eventReceived(UMOEventContext context, Object o) throws Exception
             {
-                eventCount++;
+                eventCounter1.incrementAndGet();
                 MuleApplicationEvent returnEvent = new MuleApplicationEvent("Event from a spring bean",
                     "vm://testBean2");
                 MuleApplicationEvent e = (MuleApplicationEvent)o;
@@ -188,109 +178,129 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
 
         TestSubscriptionEventBean bean2 = (TestSubscriptionEventBean)context.getBean("testSubscribingEventBean2");
         assertNotNull(bean2);
-        EventCallback callback2 = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount2++;
-                if (eventCount2 == NUMBER_OF_MESSAGES)
-                {
-                    synchronized (lock)
-                    {
-                        lock.notifyAll();
-                    }
-                }
-            }
-        };
-        bean2.setEventCallback(callback2);
 
-        MuleClient client = new MuleClient();
-        for (int i = 0; i < NUMBER_OF_MESSAGES; i++)
-        {
-            client.send("vm://event.multicaster", "Test Spring Event", null);
-        }
-        // give it a second for the event to process
-        synchronized (lock)
-        {
-            lock.wait(3000);
-        }
-        assertEquals(NUMBER_OF_MESSAGES, eventCount);
-        assertEquals(NUMBER_OF_MESSAGES, eventCount2);
+        Latch whenFinished = new Latch();
+        bean2.setEventCallback(new CountingEventCallback(eventCounter2, NUMBER_OF_MESSAGES, whenFinished));
+
+        // send asynchronously
+        this.doSend("vm://event.multicaster",  "Test Spring Event", NUMBER_OF_MESSAGES);
+
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(NUMBER_OF_MESSAGES, eventCounter1.get());
+        assertEquals(NUMBER_OF_MESSAGES, eventCounter2.get());
     }
 
     public void testPublishOnly() throws Exception
     {
-        MuleApplicationEvent event = new MuleApplicationEvent("Event from a spring bean", "vm://testBean2");
+        final MuleApplicationEvent event = new MuleApplicationEvent("Event from a spring bean", "vm://testBean2");
 
         TestSubscriptionEventBean bean2 = (TestSubscriptionEventBean)context.getBean("testSubscribingEventBean2");
         assertNotNull(bean2);
-        EventCallback callback = new EventCallback()
-        {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
-            {
-                eventCount++;
-                if (eventCount == NUMBER_OF_MESSAGES)
-                {
-                    synchronized (lock)
-                    {
-                        lock.notifyAll();
-                    }
-                }
-            }
-        };
-        bean2.setEventCallback(callback);
 
-        for (int i = 0; i < NUMBER_OF_MESSAGES; i++)
-        {
-            context.publishEvent(event);
-        }
-        // give it some time for the event to process
-        synchronized (lock)
-        {
-            lock.wait(5000);
-        }
-        assertEquals(NUMBER_OF_MESSAGES, eventCount);
+        Latch whenFinished = new Latch();
+        bean2.setEventCallback(new CountingEventCallback(eventCounter1, NUMBER_OF_MESSAGES, whenFinished));
+
+        // publish asynchronously
+        this.doPublish(event, NUMBER_OF_MESSAGES);
+
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertEquals(NUMBER_OF_MESSAGES, eventCounter1.get());
     }
 
     public void testPublishWithEventAwareTransformer() throws Exception
     {
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch transformerLatch = new CountDownLatch(1);
 
         DummyTrans trans = new DummyTrans();
-        trans.setLatch(latch);
+        trans.setLatch(transformerLatch);
         MuleManager.getInstance().registerTransformer(trans);
+
         MuleApplicationEvent event = new MuleApplicationEvent("Event from a spring bean",
             "vm://testBean2?transformers=dummyTrans");
 
         TestSubscriptionEventBean bean2 = (TestSubscriptionEventBean)context.getBean("testSubscribingEventBean2");
         assertNotNull(bean2);
-        EventCallback callback = new EventCallback()
+
+        Latch whenFinished = new Latch();
+        bean2.setEventCallback(new CountingEventCallback(eventCounter1, 1, whenFinished));
+
+        // publish asynchronously
+        this.doPublish(event, 1);
+
+        assertTrue(whenFinished.await(3000, TimeUnit.MILLISECONDS));        
+        assertTrue(transformerLatch.await(3000, TimeUnit.MILLISECONDS));
+        assertEquals(1, eventCounter1.get());
+    }
+
+    protected void afterPublishEvent() throws InterruptedException
+    {
+        // nothing to do
+    }
+
+    protected void doPublish(final ApplicationEvent event, final int count)
+    {
+        Runnable publisher = new Runnable()
         {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
+            public void run()
             {
-                eventCount++;
-                if (eventCount == 1)
+                for (int i = 0; i < count; i++)
                 {
-                    synchronized (lock)
-                    {
-                        lock.notifyAll();
-                    }
+                    context.publishEvent(event);
                 }
             }
         };
-        bean2.setEventCallback(callback);
 
-        for (int i = 0; i < 1; i++)
+        // execute in background
+        Executors.newSingleThreadExecutor().execute(publisher);
+    }
+
+    protected void doSend(final String url, final Object payload, final int count)
+    {
+        Runnable sender = new Runnable()
         {
-            context.publishEvent(event);
-        }
-        // give it some time for the event to process
-        synchronized (lock)
+            public void run()
+            {
+                try
+                {
+                    MuleClient client = new MuleClient();
+                    for (int i = 0; i < count; i++)
+                    {
+                        client.send(url, payload, null);
+                    }
+                }
+                catch (UMOException ex)
+                {
+                    fail(ExceptionUtils.getStackTrace(ex)); 
+                }
+            }
+        };
+
+        // execute in background
+        Executors.newSingleThreadExecutor().execute(sender);
+    }
+    
+   
+    public static class CountingEventCallback implements EventCallback
+    {
+        private final AtomicInteger counter;
+        private final int count;
+        private final CountDownLatch finished;
+
+        public CountingEventCallback(AtomicInteger counter, int count, CountDownLatch whenFinished)
         {
-            lock.wait(2000);
+            super();
+            this.counter = counter;
+            this.count = count;
+            this.finished = whenFinished;
         }
-        assertTrue(latch.await(3000, TimeUnit.MILLISECONDS));
-        assertEquals(1, eventCount);
+
+        public void eventReceived(UMOEventContext context, Object o) throws Exception
+        {
+            if (counter.incrementAndGet() == count && finished != null)
+            {
+                finished.countDown();
+            }
+        }
     }
 
     public static class DummyTrans extends AbstractEventAwareTransformer
@@ -305,10 +315,8 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
         // @Override
         public Object clone() throws CloneNotSupportedException
         {
-            DummyTrans clone = (DummyTrans)super.clone();
             // we MUST share the latch for this test since we obviously want to wait for it.
-            clone.setLatch(latch);
-            return clone;
+            return super.clone();
         }
 
         public CountDownLatch getLatch()
@@ -328,11 +336,6 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
             latch.countDown();
             return src;
         }
-    }
-
-    protected void afterPublishEvent() throws InterruptedException
-    {
-        Thread.sleep(200);
     }
 
 }
