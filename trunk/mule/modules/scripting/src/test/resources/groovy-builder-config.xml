@@ -21,7 +21,7 @@
 
             <properties>
                 <text-property name="scriptText">
-return request.getPayload() + response.getPayload() + " Received"
+                    return "$request.payload $response.payload Received"
                 </text-property>
                 <property name="scriptEngineName" value="groovy"/>
             </properties>
@@ -32,7 +32,7 @@ return request.getPayload() + response.getPayload() + " Received"
                          implementation="org.mule.components.script.jsr223.ScriptComponent">
             <properties>
                 <text-property name="scriptText">
-return " A"
+                    return "A"
                 </text-property>
                 <property name="scriptEngineName" value="groovy"/>
             </properties>
@@ -43,7 +43,7 @@ return " A"
                          implementation="org.mule.components.script.jsr223.ScriptComponent">
             <properties>
                 <text-property name="scriptText">
-return " B"
+                    return "B"
                 </text-property>
                 <property name="scriptEngineName" value="groovy"/>
             </properties>
