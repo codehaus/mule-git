@@ -20,9 +20,6 @@ import java.io.OutputStream;
  * <code>UMOEventContext</code> is the context object for the current request.
  * Using the context, developers can send/dispatch/receive events programmatically as
  * well as manage transactions.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface UMOEventContext
 {
