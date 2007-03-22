@@ -26,6 +26,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;
 
@@ -95,7 +96,7 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
             else
             {
                 String className = (String)serviceInterfaces.get(0);
-                exposedInterface = Class.forName(className);
+                exposedInterface = ClassUtils.loadClass(className, this.getClass());
                 logger.info(className + " class was used to expose your service");
 
                 if (serviceInterfaces.size() > 1)
@@ -135,7 +136,7 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
         }
         catch (ClassNotFoundException e)
         {
-            // will be thrown in the case that the forName() does
+            // will be thrown in the case that the ClassUtils.loadClass() does
             // not find the class to load
             throw new InitialisationException(e, this);
         }

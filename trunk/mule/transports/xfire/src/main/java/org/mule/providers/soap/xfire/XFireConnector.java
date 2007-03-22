@@ -116,7 +116,7 @@ public class XFireConnector extends AbstractConnector
             {
                 try
                 {
-                    Class clazz = Class.forName(clientServices.get(i).toString());
+                    Class clazz = ClassUtils.loadClass(clientServices.get(i).toString(), this.getClass());
                     Service service = factory.create(clazz);
                     xfire.getServiceRegistry().register(service);
                 }

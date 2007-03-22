@@ -35,6 +35,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
+import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -94,7 +95,7 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
         else
         {
             try {
-                Class transportClazz = Class.forName(transportClass);
+                Class transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
                 try{
                     Constructor constructor = transportClazz.getConstructor(new Class[]{UMOWorkManager.class});
                     transport = (Transport)constructor.newInstance(new Object[]{wm});
