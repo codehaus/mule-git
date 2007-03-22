@@ -26,6 +26,7 @@ import org.codehaus.xfire.service.Service;
  */
 public class XFireWsdlMessageDispatcher extends XFireMessageDispatcher
 {
+    public String DEFAULT_WSDL_TRANSPORT = "org.codehaus.xfire.transport.http.SoapHttpTransport";
 
     public XFireWsdlMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -51,9 +52,8 @@ public class XFireWsdlMessageDispatcher extends XFireMessageDispatcher
 
             try
             {
-                this.client = new Client(new URL(endpoint.getEndpointURI().getAddress()));
-                this.client.setXFire(xfire);
-                this.client.setEndpointUri(endpoint.getEndpointURI().toString());
+                this.client = createXFireClient(endpoint, service, xfire,
+                    DEFAULT_WSDL_TRANSPORT);
             }
             catch (Exception ex)
             {

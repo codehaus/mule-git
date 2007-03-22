@@ -111,11 +111,28 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire) throws Exception
     {
+        return createXFireClient(endpoint, service, xfire, null);
+    }
+
+    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String transportClass) throws Exception
+    {
     	Class transportClazz;
-    	if(connector.getClientTransport() == null)
-    		transportClazz = MuleUniversalTransport.class;
-    	else
-    		transportClazz = Class.forName(connector.getClientTransport());
+
+        if (connector.getClientTransport() == null)
+        {
+            if (!StringUtils.isBlank(transportClass))
+            {
+    	        transportClazz = Class.forName(transportClass);
+            }
+            else
+            {
+    	        transportClazz = MuleUniversalTransport.class;
+            }
+        }
+        else
+        {
+            transportClazz = Class.forName(connector.getClientTransport());
+        }
         
     	Transport transport = (Transport)transportClazz.getConstructor(null).newInstance(null);
         Client client = new Client(transport, service, endpoint.getEndpointURI().toString());
