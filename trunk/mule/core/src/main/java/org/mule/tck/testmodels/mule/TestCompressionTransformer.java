@@ -77,12 +77,7 @@ public class TestCompressionTransformer extends AbstractCompressionTransformer
                 "Transformer cannot be cloned until all properties have been set on it");
         }
 
-        TestCompressionTransformer clone = (TestCompressionTransformer) super.clone();
-        clone.setBeanProperty1(beanProperty1);
-        clone.setBeanProperty2(beanProperty2);
-        clone.setContainerProperty(containerProperty);
-
-        return clone;
+        return super.clone();
     }
 
 }

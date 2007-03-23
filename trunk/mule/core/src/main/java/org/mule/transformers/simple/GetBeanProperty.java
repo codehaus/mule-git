@@ -36,14 +36,6 @@ public class GetBeanProperty extends AbstractTransformer
         setReturnClass(Object.class);
     }
 
-    // @Override
-    public Object clone() throws CloneNotSupportedException
-    {
-        GetBeanProperty clone = (GetBeanProperty) super.clone();
-        clone.setPropertyName(propertyName);
-        return clone;
-    }
-
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
         try

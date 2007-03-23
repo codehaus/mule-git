@@ -19,6 +19,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -82,7 +83,7 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public AbstractTransformer()
     {
-        name = generateTransformerName();
+        name = this.generateTransformerName();
     }
 
     protected Object checkReturnClass(Object object) throws TransformerException
@@ -107,12 +108,15 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     protected void registerSourceType(Class aClass)
     {
-        if (aClass.equals(Object.class))
+        if (!sourceTypes.contains(aClass))
         {
-            logger.debug("java.lang.Object has been added as an acceptable sourcetype for this transformer, there will be no source type checking performed");
-        }
+            sourceTypes.add(aClass);
 
-        sourceTypes.add(aClass);
+            if (aClass.equals(Object.class))
+            {
+                logger.debug("java.lang.Object has been added as source type for this transformer, there will be no source type checking performed");
+            }
+        }
     }
 
     protected void unregisterSourceType(Class aClass)
@@ -125,10 +129,6 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public String getName()
     {
-        if (name == null)
-        {
-            setName(ClassUtils.getShortClassName(getClass()));
-        }
         return name;
     }
 
@@ -137,7 +137,12 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public void setName(String string)
     {
-        logger.debug("Setting transformer name to: " + name);
+        if (string == null)
+        {
+            string = ClassUtils.getShortClassName(this.getClass());
+        }
+
+        logger.debug("Setting transformer name to: " + string);
         name = string;
     }
 
@@ -321,31 +326,36 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             /*
              * Object.clone() is horribly broken, so we create a new instance
-             * manually. It would be much, much better to enforce the use of
-             * copy-constructors. However, UMOTransformer.clone() will go away in 2.0
-             * so there is still hope.
+             * manually and let BeanUtils populate all accessible "properties". That
+             * is about the best we can do to fulfill the general clone() contract
+             * (providing a mostly-correct shallow copy out of the box) even though
+             * it is obviously wrong in the face of objects with nontrivial "getter"
+             * methods. It would be much, much better to enforce the use of
+             * copy-constructors, or even better to just *not copy at all*.
+             * UMOTransformer.clone() will apparently go away in 2.0 in favor of
+             * BeanFactory-created instances so there is still hope, though I am
+             * sceptical whether his will fix all aliasing problems. It seems that
+             * the reference cycle between transformers and endpoints and the dynamic
+             * updating of copied transformers with new endpoints is the real root of
+             * the problem.
              */
-            AbstractTransformer clone = (AbstractTransformer)this.getClass().newInstance();
-            clone.setName(name);
-            clone.setReturnClass(returnClass);
+            AbstractTransformer clone = (AbstractTransformer)BeanUtils.cloneBean(this);
 
             /*
-             * We need to clear out the existing list of types since subclass
-             * constructors might have registered source types, leading to
-             * duplicates..
+             * clear out the cloned list of types since subclass constructors
+             * probably have registered their source types, leading to duplicates..
              */
             clone.sourceTypes.clear();
             clone.sourceTypes.addAll(sourceTypes);
 
+            // recursively copy any chained transformers
             if (nextTransformer != null)
             {
                 clone.setNextTransformer((UMOTransformer) nextTransformer.clone());
             }
 
-            if (endpoint != null)
-            {
-                clone.setEndpoint((UMOImmutableEndpoint) endpoint.clone());
-            }
+            // update all chained transformers to use this endpoint which is *shared*
+            clone.setEndpoint(endpoint);
 
             return clone;
         }
@@ -386,47 +396,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     protected String generateTransformerName()
     {
-        String name = getClass().getName();
-        int i = name.lastIndexOf(".");
-        if (i > -1)
-        {
-            name = name.substring(i + 1);
-        }
-        return name;
-    }
-
-    /**
-     * Convenience method to register source types using a bean property setter
-     * 
-     * @param type the fully qualified class name
-     * @throws ClassNotFoundException is thrown if the class is not on theclasspath
-     */
-    public void setSourceType(String type) throws ClassNotFoundException
-    {
-        Class clazz = ClassUtils.loadClass(type, getClass());
-        registerSourceType(clazz);
-    }
-
-    /**
-     * Where multiple source types are listed, this method only returns the first
-     * one. The full list of supported source types can also be obtained using
-     * <code>getSourceTypesIterator()</code>
-     * 
-     * @return the first SourceType on the transformer or java.lang.Object if there
-     *         is no source type set
-     */
-    public String getSourceType()
-    {
-        Class c = null;
-        if (sourceTypes.size() > 0)
-        {
-            c = (Class) sourceTypes.get(0);
-        }
-        if (c == null)
-        {
-            c = Object.class;
-        }
-        return c.getName();
+        return ClassUtils.getShortClassName(this.getClass());
     }
 
     public boolean isIgnoreBadInput()

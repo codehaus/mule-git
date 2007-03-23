@@ -55,9 +55,9 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
 
     public UMOTransformer getTransformer() throws Exception
     {
-        SerializableToByteArray trans = new SerializableToByteArray();
-        trans.setSourceType(UMOMessage.class.getName());
-        return trans;
+        SerializableToByteArray t = new SerializableToByteArray();
+        t.setAcceptUMOMessage(true);
+        return t;
     }
 
     public UMOTransformer getRoundTripTransformer() throws Exception
@@ -90,6 +90,7 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
         }
     }
 
+    // @Override
     public boolean compareResults(Object src, Object result)
     {
         if (src == null && result == null)
@@ -103,6 +104,7 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
         return Arrays.equals((byte[])src, (byte[])result);
     }
 
+    // @Override
     public boolean compareRoundtripResults(Object src, Object result)
     {
         if (src == null && result == null)
@@ -128,4 +130,12 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
             return false;
         }
     }
+
+    // @Override
+    protected void doTestClone(UMOTransformer original, UMOTransformer clone) throws Exception
+    {
+        super.doTestClone(original, clone);
+        assertTrue(((SerializableToByteArray)clone).isAcceptUMOMessage());
+    }
+    
 }
