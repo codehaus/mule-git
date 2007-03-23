@@ -201,10 +201,6 @@ public class XsltTransformer extends AbstractXmlTransformer
     public Object clone() throws CloneNotSupportedException
     {
         XsltTransformer clone = (XsltTransformer)super.clone();
-        clone.setMaxActiveTransformers(this.getMaxActiveTransformers());
-        clone.setMaxIdleTransformers(this.getMaxIdleTransformers());
-        clone.setXslFile(this.getXslFile());
-        clone.setXslt(this.getXslt());
 
         try
         {

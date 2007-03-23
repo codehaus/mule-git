@@ -15,8 +15,6 @@ import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transformers.xml.ObjectToXml;
-import org.mule.transformers.xml.XmlToObject;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.UMOTransformer;
 
@@ -53,9 +51,9 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
 
     public UMOTransformer getTransformer() throws Exception
     {
-        ObjectToXml trans = new ObjectToXml();
-        trans.setSourceType(UMOMessage.class.getName());
-        return trans;
+        ObjectToXml t = new ObjectToXml();
+        t.setAcceptUMOMessage(true);
+        return t;
     }
 
     public UMOTransformer getRoundTripTransformer() throws Exception
