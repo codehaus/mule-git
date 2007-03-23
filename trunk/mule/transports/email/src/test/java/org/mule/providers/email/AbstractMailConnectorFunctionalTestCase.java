@@ -40,7 +40,10 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractConnectorTestCase
 {
 
-    public static final int INITIAL_SERVER_PORT = 50001;
+    // something odd happening here?  50006 seems to have failed a 
+    // couple of times?
+    public static final int INITIAL_SERVER_PORT = 50007;
+
     public static final String LOCALHOST = "127.0.0.1";
     public static final String USER = "bob";
     public static final String PROVIDER = "example.com";
