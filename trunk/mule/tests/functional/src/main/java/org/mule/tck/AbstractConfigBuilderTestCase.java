@@ -54,11 +54,13 @@ import java.util.Map;
 public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {
 
+    // @Override
     public void testManagerConfig() throws Exception
     {
         assertNotNull(MuleManager.getInstance().getTransactionManager());
     }
 
+    // @Override
     public void testConnectorConfig() throws Exception
     {
         TestConnector c = (TestConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
@@ -71,6 +73,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
     }
 
+    // @Override
     public void testGlobalEndpointConfig()
     {
         UMOEndpoint endpoint = MuleManager.getInstance().lookupEndpoint("fruitBowlEndpoint");
@@ -83,6 +86,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals("http://foo.com", filter.getNamespaces().get("foo"));
     }
 
+    // @Override
     public void testEndpointConfig()
     {
         String endpointString = MuleManager.getInstance().lookupEndpointIdentifier("Test Queue", null);
@@ -96,6 +100,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertNotNull(descriptor);
     }
 
+    // @Override
     public void testInterceptorStacks()
     {
         UMOInterceptorStack stack = MuleManager.getInstance().lookupInterceptorStack("default");
@@ -110,9 +115,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         UMODescriptor descriptor = MuleManager.getInstance().lookupModel("main").getDescriptor("appleComponent");
         assertNotNull(descriptor.getExceptionListener());
         assertEquals(DefaultExceptionStrategy.class, descriptor.getExceptionListener().getClass());
-
     }
 
+    // @Override
     public void testTransformerConfig()
     {
         UMOTransformer t = MuleManager.getInstance().lookupTransformer("TestCompressionTransformer");
@@ -120,9 +125,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertTrue(t instanceof TestCompressionTransformer);
         assertEquals(t.getReturnClass(), java.lang.String.class);
         assertNotNull(((TestCompressionTransformer)t).getContainerProperty());
-        assertTrue(((TestCompressionTransformer)t).isSourceTypeSupported(String.class, true));
     }
 
+    // @Override
     public void testModelConfig() throws Exception
     {
         UMOModel model = MuleManager.getInstance().lookupModel("main");
