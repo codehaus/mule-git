@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-core</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.5</version>
             <exclusions>
                 <!-- we like slf4j -->
                 <exclusion>
@@ -96,12 +96,12 @@
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-aegis</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-annotations</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>qdox</groupId>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-java5</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.5</version>
         </dependency>
         <!-- need to explicitly mark javax.mail as provided -->
         <dependency>
@@ -140,6 +140,13 @@
             <artifactId>jdom</artifactId>
             <version>1.0</version>
         </dependency>
+<!-- testing
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+-->
         <!-- re-add woodstox with newer groupId & version -->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
