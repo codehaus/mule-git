@@ -12,6 +12,7 @@ package org.mule.providers.soap.xfire.wsdl;
 
 import org.mule.providers.soap.xfire.XFireMessageDispatcher;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.util.StringUtils;
 
 import java.net.URL;
 
@@ -40,7 +41,19 @@ public class XFireWsdlMessageDispatcher extends XFireMessageDispatcher
         {
             XFire xfire = connector.getXfire();
             String wsdlUrl = endpoint.getEndpointURI().getAddress();
-            String serviceName = wsdlUrl.substring(0, wsdlUrl.lastIndexOf('?'));
+            String serviceName = endpoint.getEndpointURI().getAddress();
+
+            // If the property specified an alternative WSDL url, use it
+            if (endpoint.getProperty("wsdlUrl") != null && StringUtils.isNotBlank(endpoint.getProperty("wsdlUrl").toString()))
+            {
+                wsdlUrl = (String)endpoint.getProperty("wsdlUrl");
+            }
+
+            if (serviceName.indexOf("?") > -1)
+            {
+                serviceName = serviceName.substring(0, serviceName.lastIndexOf('?'));
+            }
+
             Service service = xfire.getServiceRegistry().getService(new QName(serviceName));
 
             if (service == null)
