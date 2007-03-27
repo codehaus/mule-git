@@ -5,7 +5,7 @@ Assembly descriptor for the full Mule distribution.
   <id>full</id>
   <formats>
     <format>zip</format>
-    <format>tar.gz</format>
+    <!--<format>tar.gz</format>-->
   </formats>
 
   <fileSets>
@@ -768,6 +768,8 @@ Assembly descriptor for the full Mule distribution.
         <exclude>javax.activation:activation</exclude>
         <exclude>javax.mail:mail</exclude>
         <exclude>commons-logging:commons-logging</exclude>
+
+        <exclude>org.apache.activemq:apache-activemq</exclude>
       </excludes>
     </dependencySet>
 
