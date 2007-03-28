@@ -37,8 +37,14 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
 
     protected InputStream in;
     protected OutputStream out;
+
+    /**
+     * Represents the (optional) resource that generated the message
+     */
     protected UMOMessageResource messageResource = null;
+
     protected OutputHandler handler;
+
     private NullPayload nullPayload = NullPayload.getInstance();
 
     public StreamMessageAdapter(InputStream in)
@@ -98,6 +104,7 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
             }
         }
 
+        // If the UMOMessageResource was specified, dispose of it
         if (messageResource != null)
         {
             messageResource.dispose();
@@ -181,11 +188,21 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
         // nothing to do?
     }
 
+    /**
+     * Set the UMOMessageResource
+     *
+     * @param the message resource
+     */
     public void setMessageResource(UMOMessageResource messageResource)
     {
         this.messageResource = messageResource;
     }
 
+    /**
+     * Get the UMOMessageResource
+     *
+     * @return the message resource associated with this message
+     */
     public UMOMessageResource getMessageResource()
     {
         return messageResource;

@@ -18,8 +18,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
+ * <code>UMOMessageResource</code> represents the resource responsible for the 
+ * generation of a message. It is currently only relevant for streaming messages,
+ * wherein a resource associated with a message may have to be dealt with in some
+ * way after the message is read.
+ *
+ * A UMOMessageResource currently is owned only by a StreamMessageAdapter.
  */
 
 public interface UMOMessageResource extends Disposable
 {
+    // No methods - all we need is in Disposable
 }
