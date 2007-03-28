@@ -10,7 +10,6 @@
 
 package org.mule.providers.email;
 
-import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -102,17 +101,8 @@ public abstract class AbstractMailConnector extends AbstractConnector
         }
 
         UMOEndpointURI uri = endpoint.getEndpointURI();
-        URLName url = 
-            new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), getMailboxFolder(), 
+        return new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), inbox,
                 uri.getUsername(), uri.getPassword());
-        
-        if (url == null)
-        {
-            throw new IllegalArgumentException(
-                new org.mule.config.i18n.Message(Messages.X_IS_NULL, "URL").toString());
-        }
-
-        return url;
     }
     
     /**
@@ -168,13 +158,6 @@ public abstract class AbstractMailConnector extends AbstractConnector
         local.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
     }
 
-    /**
-     * Creates a new javax.mail Session based on a URL. If a password is set on the
-     * URL it also adds an SMTP authenticator.
-     * 
-     * @param args a javax.mail.URLName providing properties of the required Session
-     *            (host, port etc.)
-     */
     private SessionDetails newSession(UMOImmutableEndpoint endpoint)
     {
         URLName url = urlFromEndpoint(endpoint);
