@@ -166,7 +166,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             try
             {
                 msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(sourceFile), null);
-                ((StreamMessageAdapter)msgAdapter).setMessageResource(new FileMessageResource((FileConnector)connector, sourceFile));
+                ((StreamMessageAdapter)msgAdapter).setMessageResource(new FileMessageResource((FileConnector)connector, this, msgAdapter, sourceFile));
             }
             catch (FileNotFoundException e)
             {
@@ -182,7 +182,17 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
 
         // set up destination file
-        if (moveDir != null)
+        //
+        // We should not (and here, we don't) do this for streaming messages!!!
+        //
+        // The reason why is that once a file has hit the destination directory, 
+        // the implication (yes, there are plenty of use cases to support this) 
+        // is that the file has been completely processed. But in streaming mode,
+        // the file may be in process, and hence should not be put in the 
+        // destination directory until we are sure it is finished with. So we 
+        // leave it to the FileMessageResource to handle.
+
+        if (!endpoint.isStreaming() && moveDir != null)
         {
             String destinationFileName = sourceFileOriginalName;
 
@@ -195,16 +205,6 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // don't use new File() directly, see MULE-1112
             destinationFile = FileUtils.newFile(moveDir, destinationFileName);
         }
-        /*
-        else if (endpoint.isStreaming())
-        {
-            // If we are in streaming mode and there was no moveTo directory,
-            // we will use TMP_DIR just to get the file out of the way
-
-            moveDir = System.getProperty("java.io.tmpdir");
-            destinationFile = FileUtils.newFile(moveDir, sourceFileOriginalName);
-        }
-        */
 
         boolean fileWasMoved = false;
 
@@ -230,11 +230,15 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                         destinationFile.getAbsolutePath()));
                 }
 
-                // create new MessageAdapter for destinationFile
+                // create new MessageAdapter for destinationFile - now this 
+                // shoudn't happen in streaming mode because the FileMessageResource
+                // will handle the move
                 if(endpoint.isStreaming())
                 {
+                    /*
                     msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(destinationFile), null);
                     ((StreamMessageAdapter)msgAdapter).setMessageResource(new FileMessageResource((FileConnector)connector, destinationFile));
+                    */
                 }
                 else
                 {
@@ -436,6 +440,26 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         {
             throw new MuleException(new Message("file", 1), e);
         }
+    }
+
+    /**
+     * Return the move directory
+     *
+     * @return file move directory
+     */
+    public String getMoveDir()
+    {
+        return moveDir;
+    }
+
+    /**
+     * Return the move Pattern
+     *
+     * @return file move pattern
+     */
+    public String getMovePattern()
+    {
+        return moveToPattern;
     }
 
 }

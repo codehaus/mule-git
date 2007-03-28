@@ -11,6 +11,7 @@
 package org.mule.providers.file;
 
 import org.mule.MuleException;
+import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageResource;
 import org.mule.util.FileUtils;
 
@@ -24,6 +25,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Example implementation of the UMOMessageResource. This one handles the cleanup
+ * of a File after it has been read in the streaming model.
  */
 public class FileMessageResource implements UMOMessageResource
 {
@@ -32,18 +35,61 @@ public class FileMessageResource implements UMOMessageResource
      */
     private static Log logger = LogFactory.getLog(FileMessageResource.class);
 
+    /**
+     * Represents the source file
+     */
     private File file;
+
+    /**
+     * Lock on the file to make sure it is not read again while being read
+     * for the first time
+     */
     private FileLock lock;
+
+    /**
+     * Whether or not to delete the file after reading it
+     */
     private boolean autoDelete = false;
+
+    /**
+     * FileChannel for the file
+     */
     private FileChannel channel = null;
 
-    public FileMessageResource(FileConnector connector, File file)
+    /**
+     * If applicable, the moveTo file object
+     */
+    private File destinationFile = null;
+
+    /**
+     * Constructor ... perhaps we don't have to pass in all these parameters
+     */
+    public FileMessageResource(FileConnector connector, FileMessageReceiver receiver, UMOMessageAdapter msgAdapter, File file)
     {
         setFile(file);
         this.autoDelete = connector.isAutoDelete();
+        String moveDir = receiver.getMoveDir();
+        String moveToPattern = receiver.getMovePattern();
         acquireLock();
+
+        if (moveDir != null)
+        {
+            String destinationFileName = this.file.getName();
+
+            if (moveToPattern != null)
+            {
+                destinationFileName = connector.getFilenameParser().getFilename(msgAdapter,
+                    moveToPattern);
+            }
+
+            // don't use new File() directly, see MULE-1112
+            destinationFile = FileUtils.newFile(moveDir, destinationFileName);
+        }
     }
 
+    /**
+     * Get a rw lock on the file
+     */
     private void acquireLock()
     {
         try
@@ -68,6 +114,12 @@ public class FileMessageResource implements UMOMessageResource
         return file;
     }
 
+    /**
+     * Clean up the resource.
+     *
+     * First release the lock. Then either move to the destination directory
+     * or delete
+     */
     public void dispose()
     {
         if (file == null)
@@ -100,7 +152,17 @@ public class FileMessageResource implements UMOMessageResource
                 }
             }
 
-            if (autoDelete)
+            if (destinationFile != null)
+            {
+                boolean fileWasMoved = FileUtils.moveFile(file, destinationFile);
+
+                if (!fileWasMoved)
+                {
+                    // Not sure what to do here just yet ...
+                }
+
+            }
+            else if (autoDelete)
             {
                 try 
                 {
