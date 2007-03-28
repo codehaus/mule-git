@@ -17,6 +17,7 @@ import org.mule.config.i18n.Message;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -366,4 +368,44 @@ public class FileUtils extends org.apache.commons.io.FileUtils
                     e);
         }
     }
+
+    /**
+     * Try to move a file by renaming with backup attempt by copying/deleting via NIO
+     */
+    public static boolean moveFile(File sourceFile, File destinationFile)
+    {
+        // try fast file-system-level move/rename first
+        boolean success = sourceFile.renameTo(destinationFile);
+
+        if (!success)
+        {
+            // try again using NIO copy
+            FileInputStream fis = null;
+            FileOutputStream fos = null;
+            try
+            {
+                fis = new FileInputStream(sourceFile);
+                fos = new FileOutputStream(destinationFile);
+                FileChannel srcChannel = fis.getChannel();
+                FileChannel dstChannel = fos.getChannel();
+                dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+                srcChannel.close();
+                dstChannel.close();
+                success = sourceFile.delete();
+            }
+            catch (IOException ioex)
+            {
+                // grr!
+                success = false;
+            }
+            finally
+            {
+                IOUtils.closeQuietly(fis);
+                IOUtils.closeQuietly(fos);
+            }
+        }
+
+        return success;
+    }
+
 }
