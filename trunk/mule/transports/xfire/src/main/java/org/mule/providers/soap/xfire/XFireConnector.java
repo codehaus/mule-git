@@ -30,17 +30,24 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
 import java.util.List;
 
 import org.codehaus.xfire.DefaultXFire;
 import org.codehaus.xfire.XFire;
+import org.codehaus.xfire.aegis.AegisBindingProvider;
+import org.codehaus.xfire.aegis.type.TypeMappingRegistry;
+import org.codehaus.xfire.aegis.type.DefaultTypeMappingRegistry;
 import org.codehaus.xfire.annotations.AnnotationServiceFactory;
 import org.codehaus.xfire.annotations.WebAnnotations;
 import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.service.ServiceFactory;
+import org.codehaus.xfire.service.binding.BindingProvider;
 import org.codehaus.xfire.service.binding.ObjectServiceFactory;
+import org.codehaus.xfire.soap.SoapConstants;
+import org.codehaus.xfire.wsdl11.builder.WSDLBuilderFactory;
 
 /**
  * Configures Xfire to provide STaX-based Web Servies support to Mule.
@@ -54,6 +61,8 @@ public class XFireConnector extends AbstractConnector
     public static final String XFIRE_TRANSPORT = "transportClass";
 
     private static final String CLASSNAME_ANNOTATIONS = "org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations";
+    private static final String DEFAULT_BINDING_PROVIDER_CLASS = "org.codehaus.xfire.aegis.AegisBindingProvider";
+    private static final String DEFAULT_TYPE_MAPPING_REGISTRY_CLASS = "org.codehaus.xfire.aegis.type.DefaultTypeMappingRegistry";
 
     protected MuleDescriptor xfireDescriptor;
 
@@ -68,6 +77,8 @@ public class XFireConnector extends AbstractConnector
     private List clientOutHandlers = null;
     private String clientTransport = null;
 
+    private String bindingProvider = null;
+    private String typeMappingRegistry = null;
     private String serviceTransport = null;
     private List serverInHandlers = null;
     private List serverOutHandlers = null;
@@ -112,6 +123,8 @@ public class XFireConnector extends AbstractConnector
         if (clientServices != null)
         {
             ObjectServiceFactory factory = new ObjectServiceFactory();
+            configureBindingProvider(factory);
+
             for (int i = 0; i < clientServices.size(); i++)
             {
                 try
@@ -152,6 +165,7 @@ public class XFireConnector extends AbstractConnector
             else
             {
                 serviceFactory = new MuleObjectServiceFactory(xfire.getTransportManager());
+                configureBindingProvider((ObjectServiceFactory)serviceFactory);
             }
         }
 
@@ -162,7 +176,75 @@ public class XFireConnector extends AbstractConnector
             {
                 osf.setTransportManager(xfire.getTransportManager());
             }
+
         }
+    }
+
+    protected void configureBindingProvider(ObjectServiceFactory factory) throws InitialisationException
+    {
+        if (StringUtils.isBlank(bindingProvider))
+        {
+            bindingProvider = DEFAULT_BINDING_PROVIDER_CLASS;
+        }
+
+        if (StringUtils.isBlank(typeMappingRegistry))
+        {
+            typeMappingRegistry = DEFAULT_TYPE_MAPPING_REGISTRY_CLASS;
+        }
+
+        try
+        {
+            Class clazz = ClassUtils.loadClass(bindingProvider, this.getClass());
+            BindingProvider provider = (BindingProvider)ClassUtils.instanciateClass(clazz, new Object[] {} );
+
+            // Create the argument of TypeMappingRegistry ONLY if the binding 
+            // provider is aegis and the type mapping registry is not the default
+            if (bindingProvider.equals(DEFAULT_BINDING_PROVIDER_CLASS) && !typeMappingRegistry.equals(DEFAULT_TYPE_MAPPING_REGISTRY_CLASS))
+            {
+                Class registryClazz = ClassUtils.loadClass(typeMappingRegistry, this.getClass());
+
+                // No constructor arguments for the mapping registry
+                //
+                // Note that if we had to create the DefaultTypeMappingRegistry here
+                // we would need to pass in a boolean argument of true to the
+                // constructor. Currently, it appears that all other registries
+                // can be created with zero argument constructors
+                TypeMappingRegistry registry = (TypeMappingRegistry)ClassUtils.instanciateClass(registryClazz, new Object[] { } );
+                ((AegisBindingProvider)provider).setTypeMappingRegistry(registry);
+            }
+
+            factory.setBindingProvider(provider);
+
+            String wsdlBuilderFactoryClass = null;
+
+            // Special handling for MessageBindingProvider
+            if (bindingProvider.equals("org.codehaus.xfire.service.binding.MessageBindingProvider"))
+            {
+                factory.setStyle(SoapConstants.STYLE_MESSAGE);
+            }
+
+            // Special handling for XmlBeansBindingProvider
+            if (bindingProvider.equals("org.codehaus.xfire.service.binding.MessageBindingProvider"))
+            {
+                factory.setStyle(SoapConstants.STYLE_DOCUMENT);
+                wsdlBuilderFactoryClass = "org.codehaus.xfire.xmlbeans.XmlBeansWSDLBuilderFactory";
+            }
+
+            // If required, create the WSDL builder factory (only XML beans needs
+            // this)
+            if (wsdlBuilderFactoryClass != null)
+            {
+                Class wsdlBuilderFactoryClazz = ClassUtils.loadClass(wsdlBuilderFactoryClass, this.getClass());
+                WSDLBuilderFactory wsdlBuilderFactory = (WSDLBuilderFactory)ClassUtils.instanciateClass(wsdlBuilderFactoryClazz, new Object[] { } );
+                factory.setWsdlBuilderFactory(wsdlBuilderFactory);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new InitialisationException(new Message("xfire", 11,
+                bindingProvider), ex, this);
+        }
+
     }
 
     protected void doDispose()
@@ -398,6 +480,26 @@ public class XFireConnector extends AbstractConnector
     public void setServiceTransport(String transportClass)
     {
         serviceTransport = transportClass;
+    }
+
+    public String getBindingProvider()
+    {
+        return bindingProvider;
+    }
+
+    public void setBindingProvider(String bindingProvider)
+    {
+        this.bindingProvider = bindingProvider;
+    }
+
+    public String getTypeMappingRegistry()
+    {
+        return typeMappingRegistry;
+    }
+
+    public void setTypeMappingRegistry(String typeMappingRegistry)
+    {
+        this.typeMappingRegistry = typeMappingRegistry;
     }
 
     public void onNotification(UMOServerNotification event)
