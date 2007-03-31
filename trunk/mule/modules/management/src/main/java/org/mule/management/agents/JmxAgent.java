@@ -304,7 +304,7 @@ public class JmxAgent implements UMOAgent
             mBeanServer = null;
         }
 
-        initialized.set(true);
+        initialized.set(false);
     }
 
     /** {@inheritDoc}
