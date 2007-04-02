@@ -142,6 +142,13 @@
             <artifactId>mule-transport-jms</artifactId>
             <version>${version}</version>
         </dependency>
+        <!-- also include JMS tests -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jms</artifactId>
+            <version>${version}</version>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-multicast</artifactId>
