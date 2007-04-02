@@ -10,20 +10,20 @@
 
 package org.mule.providers.email;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang.StringUtils;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 
-import java.util.Enumeration;
-import java.util.Properties;
-
 import javax.mail.Authenticator;
 import javax.mail.Session;
 import javax.mail.URLName;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Abstract superclass for mail connectors. Provides Mule with an Authenticator
@@ -34,9 +34,9 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
     public static final String MAILBOX = "INBOX";
 
+    private Map sessions = new ConcurrentHashMap();
     private String mailboxFolder;
     private int defaultPort;
-    private SessionManager sessionManager = new MultipleEndpointSessionManager();
 
     /**
      * A custom authenticator to be used on any mail sessions created with this
@@ -79,11 +79,11 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
     public synchronized SessionDetails getSession(UMOImmutableEndpoint endpoint)
     {
-        SessionDetails session = sessionManager.getSession(endpoint, this);
+        SessionDetails session = (SessionDetails) sessions.get(endpoint);
         if (null == session)
         {
-            sessionManager.setSession(endpoint, this, newSession(endpoint));
-            session = sessionManager.getSession(endpoint, this);
+            session = newSession(endpoint);
+            sessions.put(endpoint, session);
         }
         return session;
     }
