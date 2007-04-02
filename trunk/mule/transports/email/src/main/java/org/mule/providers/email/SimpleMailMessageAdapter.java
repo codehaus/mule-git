@@ -18,17 +18,12 @@ import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
-import java.util.Enumeration;
-
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Part;
+import java.io.*;
+import java.util.Date;
+import java.util.Enumeration;
 
 /**
  * <code>SimpleMailMessageAdapter</code> is an adapter for mail messages.  
@@ -39,7 +34,8 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
 {
 
     private static final long serialVersionUID = 8002607243523460556L;
-    private Part part;
+    public static final String EXTENDED_NAME_SEPARATOR = "/";
+    private Part message;
     private byte[] cache = null;
 
     public SimpleMailMessageAdapter(Object object) throws MessagingException 
@@ -60,21 +56,21 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
     }
 
     /**
-     * By default, this simply stores the entire message as a single part.
+     * By default, this simply stores the entire message as a single message.
      * Sub-classes may override with more complex processing.
      */
     protected void handleMessage(Message message) throws Exception 
     {
-        setPart(message);
+        setMessage(message);
     }
 
-    protected void setPart(Part part) 
+    protected void setMessage(Part message) 
     {
-        this.part = part;
+        this.message = message;
     }
 
     public Object getPayload() {
-        return part;
+        return message;
     }
 
     public byte[] getPayloadAsBytes() throws Exception 
@@ -96,7 +92,7 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
     {
         if (null == cache)
         {
-            if (part.getContentType().startsWith("text/"))
+            if (message.getContentType().startsWith("text/"))
             {
                 cache = textPayload(encoding);
             }
@@ -147,11 +143,27 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
         for (Enumeration e = message.getAllHeaders(); e.hasMoreElements();)
         {
             Header h = (Header)e.nextElement();
-            setProperty(h.getName(), h.getValue());
+            String name = h.getName();
+            if (null == getProperty(name))
+            {
+                setProperty(name, h.getValue());
+                setProperty(extendedName(name, 0), h.getValue());
+            }
+            else
+            {
+                int count = 1;
+                while (null != getProperty(extendedName(name, count))) ++count;
+                setProperty(extendedName(name, count), h.getValue());
+            }
         }
     }
 
-    private static InputStream addBuffer(InputStream stream) 
+    private String extendedName(String name, int count)
+    {
+        return name + EXTENDED_NAME_SEPARATOR + count;
+    }
+
+    private static InputStream addBuffer(InputStream stream)
     {
         if (!(stream instanceof BufferedInputStream))
         {
@@ -162,7 +174,7 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
 
     private byte[] binaryPayload() throws Exception 
     {
-        InputStream stream = addBuffer(part.getInputStream());
+        InputStream stream = addBuffer(message.getInputStream());
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32768);
         IOUtils.copy(stream, baos);
         return baos.toByteArray();
@@ -170,7 +182,7 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
 
     private byte[] textPayload(String encoding) throws Exception 
     {
-        InputStream stream = addBuffer(part.getInputStream());
+        InputStream stream = addBuffer(message.getInputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         StringBuffer buffer = new StringBuffer(32768);
 

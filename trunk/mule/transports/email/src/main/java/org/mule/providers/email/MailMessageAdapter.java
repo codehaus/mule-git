@@ -13,14 +13,13 @@ package org.mule.providers.email;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <code>MailMessageAdapter</code> is a wrapper for a javax.mail.Message that 
@@ -50,7 +49,7 @@ public class MailMessageAdapter extends SimpleMailMessageAdapter
 
         if (content instanceof Multipart)
         {
-            setPart(((Multipart)content).getBodyPart(0));
+            setMessage(((Multipart)content).getBodyPart(0));
             logger.debug("Received Multipart message");
 
             for (int i = 1; i < ((Multipart)content).getCount(); i++)
@@ -67,7 +66,7 @@ public class MailMessageAdapter extends SimpleMailMessageAdapter
         }
         else
         {
-            setPart(message);
+            setMessage(message);
         }
     }
 
