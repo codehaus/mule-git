@@ -36,7 +36,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
     private String mailboxFolder;
     private int defaultPort;
-    private SessionManager sessionManager = new SimpleSessionManager();
+    private SessionManager sessionManager = new MultipleEndpointManager();
 
     /**
      * A custom authenticator to be used on any mail sessions created with this
