@@ -113,8 +113,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
 
         getServers().waitForIncomingEmail(DELIVERY_DELAY_MS, 1);
         MimeMessage[] messages = getServers().getReceivedMessages();
-        int count = null == messages ? 0 : messages.length;
-        assertEquals("did not receive mail", 1, count);
+        assertNotNull("did not receive any messages", messages);
+        assertEquals("did not receive 1 mail", 1, messages.length);
         assertMessageOk(messages[0]);
     }
     
