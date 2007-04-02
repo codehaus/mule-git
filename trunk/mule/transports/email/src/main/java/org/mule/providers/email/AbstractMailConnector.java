@@ -10,7 +10,6 @@
 
 package org.mule.providers.email;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
@@ -22,6 +21,7 @@ import javax.mail.Authenticator;
 import javax.mail.Session;
 import javax.mail.URLName;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,7 +34,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
 
     public static final String MAILBOX = "INBOX";
 
-    private Map sessions = new ConcurrentHashMap();
+    private Map sessions = new HashMap();
     private String mailboxFolder;
     private int defaultPort;
 
