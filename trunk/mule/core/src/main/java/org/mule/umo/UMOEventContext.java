@@ -314,7 +314,7 @@ public interface UMOEventContext
     /**
      * Depending on the session state this methods either Passes an event
      * asynchronously to the next available Mule UMO in the pool or via the endpoint
-     * configured for the event
+     * configured for the event.
      * 
      * @param message the event message payload to send
      * @param endpointName The endpoint name to disptch the event through. This will
@@ -338,20 +338,20 @@ public interface UMOEventContext
     void dispatchEvent(UMOMessage message, UMOEndpoint endpoint) throws UMOException;
 
     /**
-     * Requests a synchronous receive of an event on the component
+     * Requests a synchronous receive of an event on the component.
      * 
-     * @param endpoint the endpoint identifing the endpointUri on ewhich the event
+     * @param endpoint the endpoint identifying the endpointUri on which the event
      *            will be received
-     * @param timeout time in milliseconds before the request timesout
+     * @param timeout time in milliseconds before the request times out
      * @return The requested event or null if the request times out
      * @throws UMOException if the request operation fails
      */
     UMOMessage receiveEvent(UMOEndpoint endpoint, long timeout) throws UMOException;
 
     /**
-     * Requests a synchronous receive of an event on the component
+     * Requests a synchronous receive of an event on the component.
      * 
-     * @param endpointName the endpoint identifing the endpointUri on ewhich the
+     * @param endpointName the endpoint identifying the endpointUri on which the
      *            event will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
@@ -360,7 +360,7 @@ public interface UMOEventContext
     UMOMessage receiveEvent(String endpointName, long timeout) throws UMOException;
 
     /**
-     * Requests a synchronous receive of an event on the component
+     * Requests a synchronous receive of an event on the component.
      * 
      * @param endpoint the endpointUri on which the event will be received
      * @param timeout time in milliseconds before the request timesout
