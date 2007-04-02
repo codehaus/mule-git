@@ -51,7 +51,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         {
             try
             {
-                transport = castConnector().getSession(endpoint).newTransport();
+                transport = castConnector().getSessionDetails(endpoint).newTransport();
                 UMOEndpointURI uri = endpoint.getEndpointURI();
                 transport.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());
             }

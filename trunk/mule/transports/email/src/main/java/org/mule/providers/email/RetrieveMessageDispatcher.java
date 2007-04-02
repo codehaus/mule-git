@@ -49,7 +49,7 @@ public class RetrieveMessageDispatcher extends AbstractMessageDispatcher
         if (folder == null || !folder.isOpen())
         {
 
-            Store store = castConnector().getSession(endpoint).newStore();
+            Store store = castConnector().getSessionDetails(endpoint).newStore();
 
             UMOEndpointURI uri = endpoint.getEndpointURI();
             store.connect(uri.getHost(), uri.getPort(), uri.getUsername(), uri.getPassword());

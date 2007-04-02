@@ -77,15 +77,15 @@ public abstract class AbstractMailConnector extends AbstractConnector
         this.mailboxFolder = mailboxFolder;
     }
 
-    public synchronized SessionDetails getSession(UMOImmutableEndpoint endpoint)
+    public synchronized SessionDetails getSessionDetails(UMOImmutableEndpoint endpoint)
     {
-        SessionDetails session = (SessionDetails) sessions.get(endpoint);
-        if (null == session)
+        SessionDetails sessionDetails = (SessionDetails) sessions.get(endpoint);
+        if (null == sessionDetails)
         {
-            session = newSession(endpoint);
-            sessions.put(endpoint, session);
+            sessionDetails = newSession(endpoint);
+            sessions.put(endpoint, sessionDetails);
         }
-        return session;
+        return sessionDetails;
     }
     
     public URLName urlFromEndpoint(UMOImmutableEndpoint endpoint)

@@ -75,7 +75,7 @@ implements MessageCountListener, Startable, Stoppable
 
     protected void doConnect() throws Exception
     {
-        SessionDetails session = castConnector().getSession(endpoint);
+        SessionDetails session = castConnector().getSessionDetails(endpoint);
 
         Store store = session.newStore();
         store.connect();
