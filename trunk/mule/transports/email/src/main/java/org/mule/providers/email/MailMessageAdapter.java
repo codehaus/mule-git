@@ -42,8 +42,6 @@ public class MailMessageAdapter extends SimpleMailMessageAdapter
 
     /**
      * Store only the first body part directly; add further parts as attachments.
-     * 
-     * @param
      */
     // @Override
     protected void handleMessage(Message message) throws Exception

@@ -35,7 +35,8 @@ import javax.mail.Part;
  * Unlike {@link MailMessageAdapter} this preserves the message intact in its original 
  * form.
  */
-public class SimpleMailMessageAdapter extends AbstractMessageAdapter {
+public class SimpleMailMessageAdapter extends AbstractMessageAdapter
+{
 
     private static final long serialVersionUID = 8002607243523460556L;
     private Part part;
@@ -61,9 +62,6 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter {
     /**
      * By default, this simply stores the entire message as a single part.
      * Sub-classes may override with more complex processing.
-     * 
-     * @param message
-     * @throws Exception
      */
     protected void handleMessage(Message message) throws Exception 
     {
