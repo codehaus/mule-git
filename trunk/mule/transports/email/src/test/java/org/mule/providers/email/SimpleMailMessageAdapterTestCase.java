@@ -8,7 +8,8 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.List;
 
-public class SimpleMailMessageAdapterTestCase extends TestCase {
+public class SimpleMailMessageAdapterTestCase extends TestCase
+{
 
     private static final String NAME_1 = "name1";
     private static final String NAME_2 = "name2";

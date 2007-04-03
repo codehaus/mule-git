@@ -21,11 +21,15 @@ import org.mule.util.SystemUtils;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Part;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <code>SimpleMailMessageAdapter</code> is an adapter for mail messages.  
