@@ -108,12 +108,18 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     private static ServerSetup[] getSetups()
     {
         staticLogger.debug("generating new servers from: " + nextPort.get());
-        ServerSetup smtp = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTP);
-        ServerSetup smtps = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTPS);
-        ServerSetup pop3 = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3);
-        ServerSetup pop3s = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3S);
-        ServerSetup imap = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAP);
-        ServerSetup imaps = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAPS);
+        ServerSetup smtp =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTP);
+        ServerSetup smtps =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTPS);
+        ServerSetup pop3 =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3);
+        ServerSetup pop3s =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3S);
+        ServerSetup imap =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAP);
+        ServerSetup imaps =
+                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAPS);
         return new ServerSetup[]{smtp, smtps, pop3, pop3s, imap, imaps};
     }
 
@@ -228,12 +234,14 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
             {
                 if (count >= RETRY_LIMIT)
                 {
-                    logger.warn("Test attempt " + count + " for " + method + " failed (will fail): " + e.getMessage());
+                    logger.warn("Test attempt " + count + " for " + method
+                            + " failed (will fail): " + e.getMessage());
                     throw e;
                 }
                 else
                 {
-                    logger.warn("Test attempt " + count + " for " + method + " failed (will retry): " + e.getMessage());
+                    logger.warn("Test attempt " + count + " for " + method
+                            + " failed (will retry): " + e.getMessage());
                     stopServers();
                     startServers();
                 }
