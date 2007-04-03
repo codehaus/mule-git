@@ -10,21 +10,20 @@
 
 package org.mule.providers.email;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import org.mule.MuleManager;
 import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import java.util.HashMap;
 
 /**
  * Given an endpoint ({@link #getTestEndpointURI()}) this waits for up to 10 seconds,
  * hoping to receive the message stored in the mail server.  It also runs the unit tests
- * defined way down in {@link AbstractConnectorTestCase}.
+ * defined way down in {@link org.mule.tck.providers.AbstractConnectorTestCase}.
  */
 public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
@@ -32,12 +31,17 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
     public static final int POLL_PERIOD_MS = 1000; 
     public static final int WAIT_PERIOD_MS = 3 * POLL_PERIOD_MS;
 
-    protected AbstractReceivingMailConnectorTestCase(String connectorName) 
+    protected AbstractReceivingMailConnectorTestCase(String connectorName)
     {
         super(true, connectorName);
     }
 
     public void testReceiver() throws Exception
+    {
+        repeatTest("doTestReceiver");
+    }
+
+    public void doTestReceiver() throws Exception
     {
         final CountDownLatch countDown = new CountDownLatch(1);
 

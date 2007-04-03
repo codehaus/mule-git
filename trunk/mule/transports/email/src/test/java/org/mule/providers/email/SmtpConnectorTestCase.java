@@ -26,9 +26,8 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
 
-import java.util.HashMap;
-
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
 
 /**
  * Send a message via SMTP to a (greenmail) server.
@@ -90,6 +89,11 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     }
 
     public void testSend() throws Exception
+    {
+        repeatTest("doTestSend");
+    }
+
+    public void doTestSend() throws Exception
     {
         HashMap props = new HashMap();
 

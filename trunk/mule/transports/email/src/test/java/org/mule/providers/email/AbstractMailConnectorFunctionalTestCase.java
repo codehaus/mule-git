@@ -10,26 +10,22 @@
 
 package org.mule.providers.email;
 
-import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
-
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserManager;
 import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.Servers;
-
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
-
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mule.tck.providers.AbstractConnectorTestCase;
+import org.mule.umo.provider.UMOConnector;
+
+import javax.mail.Message;
+import javax.mail.Message.RecipientType;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 /**
  * Start a (greenmail) mail server with a known message, for use in subclasses.
@@ -43,7 +39,10 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     // something odd happening here?  50006 seems to have failed a 
     // couple of times?
     public static final int INITIAL_SERVER_PORT = 50007;
-
+    // large enough to jump away from a group of related ports
+    public static final int PORT_INCREMENT = 17;
+    // ie must succeed within RETRY_LIMIT attempts
+    public static final int RETRY_LIMIT = 2;
     public static final String LOCALHOST = "127.0.0.1";
     public static final String USER = "bob";
     public static final String PROVIDER = "example.com";
@@ -71,10 +70,6 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     {
         super.doSetUp();
         startServers();
-        if (initialEmail)
-        {
-            storeEmail();
-        }
     }
     
     // @Override
@@ -104,17 +99,21 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     {
         servers = new Servers(getSetups());
         servers.start();
+        if (initialEmail)
+        {
+            storeEmail();
+        }
     }
 
     private static ServerSetup[] getSetups()
     {
-        staticLogger.debug("generating news servers from: " + nextPort.get());
-        ServerSetup smtp = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTP);
-        ServerSetup smtps = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_SMTPS);
-        ServerSetup pop3 = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3);
-        ServerSetup pop3s = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_POP3S);
-        ServerSetup imap = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAP);
-        ServerSetup imaps = new ServerSetup(nextPort.incrementAndGet(), null, ServerSetup.PROTOCOL_IMAPS);
+        staticLogger.debug("generating new servers from: " + nextPort.get());
+        ServerSetup smtp = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTP);
+        ServerSetup smtps = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTPS);
+        ServerSetup pop3 = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3);
+        ServerSetup pop3s = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3S);
+        ServerSetup imap = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAP);
+        ServerSetup imaps = new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAPS);
         return new ServerSetup[]{smtp, smtps, pop3, pop3s, imap, imaps};
     }
 
@@ -204,6 +203,42 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         assertNotNull(received.getRecipients(Message.RecipientType.TO));
         assertEquals(1, received.getRecipients(Message.RecipientType.TO).length);
         assertEquals(received.getRecipients(Message.RecipientType.TO)[0].toString(), EMAIL);
+    }
+
+    /**
+     * Tests are intermittently failing due to busy ports.  Here we repeat a test a number of times
+     * (more than twice should not be necessary!) to make sure that the first failure was not due to
+     * an active port.
+     *
+     * @param method The method name of the test
+     * @throws Exception If the failure occurs repeatedly
+     */
+    protected void repeatTest(String method) throws Exception
+    {
+        boolean success = false;
+
+        for (int count = 1; !success; ++count)
+        {
+            try
+            {
+                getClass().getMethod(method, new Class[0]).invoke(this, new Object[0]);
+                success = true;
+            }
+            catch (Exception e)
+            {
+                if (count >= RETRY_LIMIT)
+                {
+                    logger.warn("Test attempt " + count + " for " + method + " failed (will fail): " + e.getMessage());
+                    throw e;
+                }
+                else
+                {
+                    logger.warn("Test attempt " + count + " for " + method + " failed (will retry): " + e.getMessage());
+                    stopServers();
+                    startServers();
+                }
+            }
+        }
     }
 
 }
