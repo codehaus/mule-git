@@ -10,6 +10,8 @@
 
 package org.mule.umo.security.tls;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -22,6 +24,13 @@ import org.mule.umo.security.provider.SecurityProviderInfo;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,16 +39,6 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Support for configuring TLS/SSL connections.
@@ -54,7 +53,8 @@ import org.apache.commons.logging.LogFactory;
  * <h2>Configuration</h2>
  * 
  * The documentation in this class is intended more for programmers than end uses.  If you are
- * configuring a connector the interfaces {@link TlsIndirectTrustStore}, {@link TlsDirectTrustStore}, 
+ * configuring a connector the interfaces {@link org.mule.umo.security.TlsIndirectTrustStore},
+ * {@link TlsDirectTrustStore},
  * {@link TlsDirectKeyStore} and {@link TlsIndirectKeyStore} should provide guidance to individual 
  * properties.  In addition you should check the documentation for the specific protocol / connector 
  * used and may also need to read the discussion on direct and indirect socket and store creation
@@ -64,7 +64,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * This class is intended to be used as a delegate as we typically want to add security to an
  * already existing connector (so we inherit from that connector, implement the appropriate
- * interfaces from {@link TlsIndirectTrustStore}, {@link TlsDirectTrustStore}, 
+ * interfaces from {@link org.mule.umo.security.TlsIndirectTrustStore}, {@link TlsDirectTrustStore},
  * {@link TlsDirectKeyStore} and {@link TlsIndirectKeyStore}, and then forward calls to the 
  * interfaces to an instance of this class).
  * 
@@ -88,14 +88,15 @@ import org.apache.commons.logging.LogFactory;
  * </dl>
  * 
  * Historically, many other transports relied on the indirect configurations defined above.
- * So they implemented {@link TlsIndirectTrustStore} (a superclass of {@link TlsDirectTrustStore})
+ * So they implemented {@link org.mule.umo.security.TlsIndirectTrustStore}
+ * (a superclass of {@link TlsDirectTrustStore})
  * and relied on {@link TlsIndirectKeyStore} from the SSL configuration.  For continuity these
  * interfaces continue to be used, even though 
  * the configurations are now typically (see individual connector/protocol documentation) specific 
  * to a protocol or connector.  <em>Note - these interfaces are new, but the original code had
  * those methods, used as described.  The new interfaces only make things explicit.</em>
  * 
- * <p><em>Note for programmers</em> One way to udnerstand the above is to see that many
+ * <p><em>Note for programmers</em> One way to understand the above is to see that many
  * protocols are handled by libraries that are configured by providing either properties or
  * a socket factory.  In both cases (the latter via {@link TlsPropertiesSocketFactory}) we
  * continue to use properties and the "indirect" interface.  Note also that the mapping
@@ -169,7 +170,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
     /**
      * @param anon If the connection is anonymous then we don't care about client keys
      * @param namespace Namespace to use for global properties (for JSSE use JSSE_NAMESPACE)
-     * @throws InitialisationException
+     * @throws InitialisationException ON initialisation problems
      */
     public void initialise(boolean anon, String namespace) throws InitialisationException
     {
@@ -304,14 +305,25 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
 
     public SSLSocketFactory getSocketFactory() throws NoSuchAlgorithmException, KeyManagementException
     {
-        KeyManager[] keyManagers = 
+        return getSslContext().getSocketFactory();
+    }
+
+    public SSLServerSocketFactory getServerSocketFactory()
+            throws NoSuchAlgorithmException, KeyManagementException
+    {
+        return getSslContext().getServerSocketFactory();
+    }
+
+    public SSLContext getSslContext() throws NoSuchAlgorithmException, KeyManagementException
+    {
+        KeyManager[] keyManagers =
             null == getKeyManagerFactory() ? null : getKeyManagerFactory().getKeyManagers();
         TrustManager[] trustManagers =
             null == getTrustManagerFactory() ? null :  getTrustManagerFactory().getTrustManagers();
 
         SSLContext context = SSLContext.getInstance(getSslType());
         context.init(keyManagers, trustManagers, null);
-        return context.getSocketFactory();
+        return context;
     }
 
 
