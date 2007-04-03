@@ -39,7 +39,6 @@ import org.codehaus.xfire.DefaultXFire;
 import org.codehaus.xfire.XFire;
 import org.codehaus.xfire.aegis.AegisBindingProvider;
 import org.codehaus.xfire.aegis.type.TypeMappingRegistry;
-import org.codehaus.xfire.aegis.type.DefaultTypeMappingRegistry;
 import org.codehaus.xfire.annotations.AnnotationServiceFactory;
 import org.codehaus.xfire.annotations.WebAnnotations;
 import org.codehaus.xfire.service.Service;
@@ -327,21 +326,8 @@ public class XFireConnector extends AbstractConnector
         String endpoint = receiver.getEndpointURI().getAddress();
         String scheme = ep.getScheme().toLowerCase();
 
-        // Default to using synchronous for socket based protocols unless the
-        // synchronous property has been set explicitly
+
         boolean sync = false;
-        if (!receiver.getEndpoint().isSynchronousSet())
-        {
-            if (scheme.equals("http") || scheme.equals("https") || scheme.equals("ssl")
-                || scheme.equals("tcp"))
-            {
-                sync = true;
-            }
-        }
-        else
-        {
-            sync = receiver.getEndpoint().isSynchronous();
-        }
 
         // If we are using sockets then we need to set the endpoint name appropiately
         // and if using http/https
@@ -353,6 +339,17 @@ public class XFireConnector extends AbstractConnector
             receiver.getEndpoint().getProperties().put(HttpConnector.HTTP_METHOD_PROPERTY, "POST");
             receiver.getEndpoint().getProperties().put(HttpConstants.HEADER_CONTENT_TYPE,
                 "text/xml");
+
+            // Default to using synchronous for socket based protocols unless the
+            // synchronous property has been set explicitly
+            if (!receiver.getEndpoint().isSynchronousSet())
+            {
+                sync = true;
+            }
+        }
+        else
+        {
+            sync = receiver.getEndpoint().isSynchronous();
         }
 
         UMOEndpoint serviceEndpoint = new MuleEndpoint(endpoint, true);
@@ -403,7 +400,7 @@ public class XFireConnector extends AbstractConnector
 
     /**
      * The method determines the key used to store the receiver against.
-     * 
+     *
      * @param component the component for which the endpoint is being registered
      * @param endpoint the endpoint being registered for the component
      * @return the key to store the newly created receiver against. In this case it
