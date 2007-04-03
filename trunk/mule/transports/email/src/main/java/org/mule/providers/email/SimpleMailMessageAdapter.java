@@ -24,17 +24,32 @@ import javax.mail.Part;
 import java.io.*;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * <code>SimpleMailMessageAdapter</code> is an adapter for mail messages.  
  * Unlike {@link MailMessageAdapter} this preserves the message intact in its original 
  * form.
+ *
+ * <p>Header values are stored in two formats.  First, as historically used by
+ * {@link MailMessageAdapter}, a single String value is stored for each distinct
+ * header name (if a header is repeated only one value is stored).
+ * Secondly, a list of values for each distinct header is stored in a property name
+ * prefixed by HEADER_LIST_PREFIX
+ * (which produces an invalid header name according to RFC 822 and so (i) avoids
+ * conflict with the first property type and (ii) will cause current applications
+ * that wrongly assume all properties are simple header values to fail fast).
+ * The utility methods
+ * {@link #isListHeader(String)}, {@link #toHeader(String)} and
+ * {@link #toListHeader(String)} identify and convert between property and
+ * header names as required.
  */
 public class SimpleMailMessageAdapter extends AbstractMessageAdapter
 {
 
     private static final long serialVersionUID = 8002607243523460556L;
-    public static final String EXTENDED_NAME_SEPARATOR = "/";
+    public static final String HEADER_LIST_PREFIX = "List:";
     private Part message;
     private byte[] cache = null;
 
@@ -142,25 +157,74 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
 
         for (Enumeration e = message.getAllHeaders(); e.hasMoreElements();)
         {
-            Header h = (Header)e.nextElement();
-            String name = h.getName();
+            Header header = (Header)e.nextElement();
+            String name = header.getName();
+            String listName = toListHeader(name);
+            String value = header.getValue();
+
             if (null == getProperty(name))
             {
-                setProperty(name, h.getValue());
-                setProperty(extendedName(name, 0), h.getValue());
+                setProperty(name, value);
             }
-            else
+
+            if (null == getProperty(listName))
             {
-                int count = 1;
-                while (null != getProperty(extendedName(name, count))) ++count;
-                setProperty(extendedName(name, count), h.getValue());
+                setProperty(listName, new LinkedList());
             }
+            if (getProperty(listName) instanceof List)
+            {
+                ((List) getProperty(listName)).add(header.getValue());
+            }
+       }
+    }
+
+    /**
+     * Check whether a property name has the format associated with a list
+     * of header values
+     * @param name A property name
+     * @return true if the name is associated with a list of header values
+     * (more exactly, if it starts with HEADER_LIST_PREFIX, which gives an
+     * invalid header name according to RFC822).
+     */
+    public static boolean isListHeader(String name)
+    {
+        return null != name && name.startsWith(HEADER_LIST_PREFIX);
+    }
+
+    /**
+     * Convert a property name associated with a list of header values to
+     * the relevant header name (ie drop the prefix)
+     * @param name A property name
+     * @return The associated header name (ie with HEADER_LIST_PREFIX removed)
+     */
+    public static String toHeader(String name)
+    {
+        if (isListHeader(name))
+        {
+            return name.substring(HEADER_LIST_PREFIX.length());
+        }
+        else
+        {
+            return name;
         }
     }
 
-    private String extendedName(String name, int count)
+    /**
+     * Convert a header name to the property name associated with a list of
+     * header values (ie prepend the prefix)
+     * @param header A header name
+     * @return The associated list property name (ie with HEADER_LIST_PREFIX prepended)
+     */
+    public static String toListHeader(String header)
     {
-        return name + EXTENDED_NAME_SEPARATOR + count;
+        if (isListHeader(header))
+        {
+            return header;
+        }
+        else
+        {
+            return HEADER_LIST_PREFIX + header;
+        }
     }
 
     private static InputStream addBuffer(InputStream stream)
