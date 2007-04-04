@@ -15,16 +15,14 @@ import org.mule.util.StringMessageUtils;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
-import javax.jms.TextMessage;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class TestReceiver
 {
-    private static final Log logger = LogFactory.getLog(TestComponent.class);
+    protected static final Log logger = LogFactory.getLog(TestComponent.class);
 
-    private AtomicInteger count = new AtomicInteger(0);
+    protected AtomicInteger count = new AtomicInteger(0);
 
     public String receive(String message) throws Exception
     {
@@ -37,18 +35,6 @@ public class TestReceiver
         }
 
         return "Received: " + message;
-    }
-
-    public String receive(TextMessage message) throws Exception
-    {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Received: " + message.getText() + " Number: " + inc() + " in thread: "
-                         + Thread.currentThread().getName());
-            logger.debug("Message ID is: " + message.getJMSMessageID());
-        }
-
-        return "Received: " + message.getText();
     }
 
     protected int inc()
