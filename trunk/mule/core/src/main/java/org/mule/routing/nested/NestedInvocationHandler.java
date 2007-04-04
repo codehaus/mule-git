@@ -10,9 +10,6 @@
 
 package org.mule.routing.nested;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
@@ -26,6 +23,10 @@ import org.mule.umo.routing.UMONestedRouter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class NestedInvocationHandler implements InvocationHandler
 {

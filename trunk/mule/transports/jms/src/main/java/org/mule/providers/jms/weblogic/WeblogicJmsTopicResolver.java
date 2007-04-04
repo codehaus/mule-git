@@ -15,10 +15,11 @@ import org.mule.providers.jms.Jms102bSupport;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.util.ClassUtils;
 
+import java.lang.reflect.Method;
+
 import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
-import java.lang.reflect.Method;
 
 /**
  * Weblogic-specific JMS topic resolver. Will use reflection and
