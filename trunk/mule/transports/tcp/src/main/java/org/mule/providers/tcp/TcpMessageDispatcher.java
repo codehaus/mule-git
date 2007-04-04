@@ -172,7 +172,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
 
     protected void doConnect() throws Exception
     {
-        //Test the connection
+        // Test the connection
         Socket socket = connector.getSocket(endpoint);
         connector.releaseSocket(socket, endpoint);
     }
