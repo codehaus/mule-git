@@ -48,6 +48,14 @@
             <version>${version}</version>
         </dependency>
         
+        <!-- Needed for common SOAP test classes -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-soap</artifactId>
+            <version>${version}</version>
+            <type>test-jar</type>
+        </dependency>
+        
         <!-- This is needed by org.mule.providers.soap.xfire.transport.MuleUniversalChannel -->
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -110,6 +118,20 @@
             <artifactId>xfire-java5</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <!-- the following dependency will be needed for xmlbeans testing
+        <dependency>
+            <groupId>org.codehaus.xfire</groupId>
+            <artifactId>xfire-xmlbeans</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        -->
+        <!-- the following dependency will be needed for jaxb2 model annotations
+        <dependency>
+            <groupId>org.codehaus.xfire</groupId>
+            <artifactId>xfire-jaxb2</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        -->
         <!-- need to explicitly mark javax.mail as provided -->
         <dependency>
             <groupId>javax.mail</groupId>
