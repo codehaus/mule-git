@@ -31,22 +31,6 @@
         </plugins>
     </build -->
 
-    <repositories>
-        <!-- Local module repository -->
-        <repository>
-            <id>local</id>
-            <name>Local module repository (lib)</name>
-            <url>file://lib</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <layout>legacy</layout>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
