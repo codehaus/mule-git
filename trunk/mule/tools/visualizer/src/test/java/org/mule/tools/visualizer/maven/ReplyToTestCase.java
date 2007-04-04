@@ -17,9 +17,7 @@ public class ReplyToTestCase extends AbstractBaseVisualizerXmlTestCase {
 
     String getXmlConfig()
     {
-        // TODO - UNDO hide real test so we can commit this
-        return "echo-config.xml";
-//        return "reply-to.xml";
+        return "reply-to.xml";
     }
 
 }
