@@ -1,0 +1,803 @@
+<!--
+Assembly descriptor for the full Mule distribution.
+-->
+<assembly>
+  <id>full</id>
+  <formats>
+    <format>zip</format>
+    <format>tar.gz</format>
+  </formats>
+
+  <fileSets>
+    <fileSet>
+      <directory>../src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <!-- <lineEnding>???</lineEnding> -->
+    </fileSet>
+
+    <!-- Make binary directories executable. -->
+    <fileSet>
+      <directory>../src/main/resources/bin</directory>
+      <outputDirectory>bin</outputDirectory>
+      <fileMode>744</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>../src/main/resources/lib/boot/exec</directory>
+      <outputDirectory>lib/boot/exec</outputDirectory>
+      <fileMode>744</fileMode>
+    </fileSet>
+
+      <!--
+        ============================
+            Mule Examples: Echo
+        ============================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/echo</directory>
+          <outputDirectory>examples/maven/echo</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/dist</directory>
+          <outputDirectory>examples/maven/echo</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/dist</directory>
+          <outputDirectory>examples/maven/echo</outputDirectory>
+          <includes>
+              <include>echo*</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/conf</directory>
+          <outputDirectory>examples/maven/echo/conf</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/echo</directory>
+          <outputDirectory>examples/ant/echo</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/dist</directory>
+          <outputDirectory>examples/ant/echo</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/dist</directory>
+          <outputDirectory>examples/ant/echo</outputDirectory>
+          <includes>
+              <include>echo</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/echo/conf</directory>
+          <outputDirectory>examples/ant/echo/conf</outputDirectory>
+      </fileSet>
+
+      <!--
+        ==================================
+            Mule Examples: Error Handler
+        ==================================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/errorhandler</directory>
+          <outputDirectory>examples/maven/errorhandler</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/dist</directory>
+          <outputDirectory>examples/maven/errorhandler</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/dist</directory>
+          <outputDirectory>examples/maven/errorhandler</outputDirectory>
+          <includes>
+              <include>errorhandler</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/conf</directory>
+          <outputDirectory>examples/maven/errorhandler/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/src</directory>
+          <outputDirectory>examples/maven/errorhandler/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/test-data</directory>
+          <outputDirectory>examples/maven/errorhandler/test-data</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/errorhandler</directory>
+          <outputDirectory>examples/ant/errorhandler</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/dist</directory>
+          <outputDirectory>examples/ant/errorhandler</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/dist</directory>
+          <outputDirectory>examples/ant/errorhandler</outputDirectory>
+          <includes>
+              <include>errorhandler</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/conf</directory>
+          <outputDirectory>examples/ant/errorhandler/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/src/main/java</directory>
+          <outputDirectory>examples/ant/errorhandler/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/test-data</directory>
+          <outputDirectory>examples/ant/errorhandler/test-data</outputDirectory>
+      </fileSet>
+
+      <!--
+        ============================
+            Mule Examples: Hello
+        ============================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/hello</directory>
+          <outputDirectory>examples/maven/hello</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/dist</directory>
+          <outputDirectory>examples/maven/hello</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/dist</directory>
+          <outputDirectory>examples/maven/hello</outputDirectory>
+          <includes>
+              <include>hello</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/conf</directory>
+          <outputDirectory>examples/maven/hello/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/src</directory>
+          <outputDirectory>examples/maven/hello/src</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/hello</directory>
+          <outputDirectory>examples/ant/hello</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/dist</directory>
+          <outputDirectory>examples/ant/hello</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/dist</directory>
+          <outputDirectory>examples/ant/hello</outputDirectory>
+          <includes>
+              <include>hello</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/conf</directory>
+          <outputDirectory>examples/ant/hello/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/src/main/java</directory>
+          <outputDirectory>examples/ant/hello/src</outputDirectory>
+      </fileSet>
+
+      <!--
+        ===============================
+            Mule Examples: Loan Broker
+        ===============================
+      -->
+      <fileSet>
+          <directory>../../../examples/loanbroker/dist</directory>
+          <outputDirectory>examples/loanbroker</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+              <include>pom.xml</include>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/dist</directory>
+          <outputDirectory>examples/loanbroker</outputDirectory>
+          <includes>
+              <include>loanbroker</include>
+              <include>loanbroker.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/common</directory>
+          <outputDirectory>examples/loanbroker/common</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/common/src</directory>
+          <outputDirectory>examples/loanbroker/common/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/credit-agency</directory>
+          <outputDirectory>examples/loanbroker/credit-agency</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/credit-agency/src</directory>
+          <outputDirectory>examples/loanbroker/credit-agency/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esb</directory>
+          <outputDirectory>examples/loanbroker/esb</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esb/conf</directory>
+          <outputDirectory>examples/loanbroker/esb/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esb/src</directory>
+          <outputDirectory>examples/loanbroker/esb/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esn</directory>
+          <outputDirectory>examples/loanbroker/esn</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esn/conf</directory>
+          <outputDirectory>examples/loanbroker/esn/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/esn/src</directory>
+          <outputDirectory>examples/loanbroker/esn/src</outputDirectory>
+      </fileSet>
+
+      <!--
+        =============================
+            Mule Examples: Scripting
+        =============================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/scripting</directory>
+          <outputDirectory>examples/maven/scripting</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/dist</directory>
+          <outputDirectory>examples/maven/scripting</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/dist</directory>
+          <outputDirectory>examples/maven/scripting</outputDirectory>
+          <includes>
+              <include>scripting</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/conf</directory>
+          <outputDirectory>examples/maven/scripting/conf</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/scripting</directory>
+          <outputDirectory>examples/ant/scripting</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/dist</directory>
+          <outputDirectory>examples/ant/scripting</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/dist</directory>
+          <outputDirectory>examples/ant/scripting</outputDirectory>
+          <includes>
+              <include>scripting</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/scripting/conf</directory>
+          <outputDirectory>examples/ant/scripting/conf</outputDirectory>
+      </fileSet>
+
+      <!--
+        ===============================
+            Mule Examples: Stock Quote
+        ===============================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/stockquote</directory>
+          <outputDirectory>examples/maven/stockquote</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/dist</directory>
+          <outputDirectory>examples/maven/stockquote</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/dist</directory>
+          <outputDirectory>examples/maven/stockquote</outputDirectory>
+          <includes>
+              <include>stockquote</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/conf</directory>
+          <outputDirectory>examples/maven/stockquote/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/src</directory>
+          <outputDirectory>examples/maven/stockquote/src</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/stockquote</directory>
+          <outputDirectory>examples/ant/stockquote</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/dist</directory>
+          <outputDirectory>examples/ant/stockquote</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/dist</directory>
+          <outputDirectory>examples/ant/stockquote</outputDirectory>
+          <includes>
+              <include>stockquote</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/conf</directory>
+          <outputDirectory>examples/ant/stockquote/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/src/main/java</directory>
+          <outputDirectory>examples/ant/stockquote/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/stockquote/src/main/resources</directory>
+          <outputDirectory>examples/ant/stockquote/resources</outputDirectory>
+      </fileSet>
+
+      <!--
+        ================================
+            Mule Examples: VoIP Service
+        ================================
+      -->
+      <!-- Maven-style example -->
+      <fileSet>
+          <directory>../../../examples/voipservice</directory>
+          <outputDirectory>examples/maven/voipservice</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/dist</directory>
+          <outputDirectory>examples/maven/voipservice</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/dist</directory>
+          <outputDirectory>examples/maven/voipservice</outputDirectory>
+          <includes>
+              <include>voip</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/conf</directory>
+          <outputDirectory>examples/maven/voipservice/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/src</directory>
+          <outputDirectory>examples/maven/voipservice/src</outputDirectory>
+      </fileSet>
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/voipservice</directory>
+          <outputDirectory>examples/ant/voipservice</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/dist</directory>
+          <outputDirectory>examples/ant/voipservice</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/dist</directory>
+          <outputDirectory>examples/ant/voipservice</outputDirectory>
+          <includes>
+              <include>voip</include>
+              <include>*.bat</include>
+          </includes>
+          <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/conf</directory>
+          <outputDirectory>examples/ant/voipservice/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/src/main/java</directory>
+          <outputDirectory>examples/ant/voipservice/src</outputDirectory>
+      </fileSet>
+
+      <!--
+        ============================
+            Mule Examples: Webapp
+        ============================
+      -->
+      <!-- now just copy a readme to explain that the example should be built
+           from Ant -->
+      <fileSet>
+          <directory>../../../examples/webapp/dist</directory>
+          <outputDirectory>examples/maven/webapp</outputDirectory>
+          <includes>
+              <include>MAVEN_README.txt</include>
+          </includes>
+      </fileSet>
+      <!-- Maven-style example : TODO
+      <fileSet>
+          <directory>../../../examples/webapp</directory>
+          <outputDirectory>examples/maven/webapp</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/dist</directory>
+          <outputDirectory>examples/maven/webapp</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/conf</directory>
+          <outputDirectory>examples/maven/webapp/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/src</directory>
+          <outputDirectory>examples/maven/webapp/src</outputDirectory>
+      </fileSet>
+      -->
+
+      <!-- Ant-style example -->
+      <fileSet>
+          <directory>../../../examples/webapp</directory>
+          <outputDirectory>examples/ant/webapp</outputDirectory>
+          <includes>
+              <include>README.txt</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/dist</directory>
+          <outputDirectory>examples/ant/webapp</outputDirectory>
+          <includes>
+              <include>build.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/conf</directory>
+          <outputDirectory>examples/ant/webapp/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/src/main/java</directory>
+          <outputDirectory>examples/ant/webapp/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/src/main/resources</directory>
+          <outputDirectory>examples/ant/webapp/resources</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/webapp/src/main/webapp</directory>
+          <outputDirectory>examples/ant/webapp/webapp</outputDirectory>
+      </fileSet>
+
+
+    <!-- Copy the USAGE.txt file to the root directory for visibility -->
+    <fileSet>
+      <directory>../src/main/resources/bin</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+          <include>USAGE.txt</include>
+      </includes>
+    </fileSet>
+
+    <!-- Copy javadocs -->
+    <fileSet>
+      <directory>../../../target/site/apidocs</directory>
+      <outputDirectory>docs/api</outputDirectory>
+    </fileSet>
+
+    <!-- Copy source bundles ("mvn -DperformRelease=true" must have been run previously) -->
+    <fileSet>
+      <directory>../../..</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+          <include>**/*-sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <!-- OpenEJB needs a direct path to the openejb.conf file (i.e., it can't find it from within a jar) -->
+    <fileSet>
+      <directory>../../../examples/loanbroker/esb/src/main/resources</directory>
+      <outputDirectory>lib/user</outputDirectory>
+      <includes>
+          <include>openejb.conf</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <!--
+       TODO: http://jira.codehaus.org/browse/MASSEMBLY-41 is now fixed.
+       Update to use wildcards.
+   -->
+  <dependencySets>
+
+    <!-- Mule bootstrap -->
+    <dependencySet>
+      <outputDirectory>lib/boot</outputDirectory>
+      <!-- No version number  -->
+      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
+      <includes>
+        <include>org.mule.modules:mule-module-boot</include>
+        <include>commons-cli:commons-cli</include>
+        <include>tanukisoft:wrapper</include>
+      </includes>
+    </dependencySet>
+
+    <!-- Mule libraries -->
+    <dependencySet>
+      <outputDirectory>lib/mule</outputDirectory>
+      <!--
+        Uncomment if you encounter startup failures as described in
+        http://mule.mulesource.org/jira/browse/MULE-1153
+      -->
+      <!-- outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping -->
+      <scope>runtime</scope>
+      <includes>
+        <!-- Core -->
+        <include>org.mule:mule-core</include>
+        <!-- Transports -->
+        <include>org.mule.transports:mule-transport-axis</include>
+        <include>org.mule.transports:mule-transport-bpm</include>
+        <include>org.mule.transports:mule-transport-ejb</include>
+        <include>org.mule.transports:mule-transport-email</include>
+        <include>org.mule.transports:mule-transport-file</include>
+        <include>org.mule.transports:mule-transport-ftp</include>
+        <include>org.mule.transports:mule-transport-http</include>
+        <include>org.mule.transports:mule-transport-jbi</include>
+        <include>org.mule.transports:mule-transport-jdbc</include>
+        <include>org.mule.transports:mule-transport-jms</include>
+        <include>org.mule.transports:mule-transport-multicast</include>
+        <include>org.mule.transports:mule-transport-oracleaq</include>
+        <include>org.mule.transports:mule-transport-quartz</include>
+        <include>org.mule.transports:mule-transport-rmi</include>
+        <include>org.mule.transports:mule-transport-soap</include>
+        <include>org.mule.transports:mule-transport-ssl</include>
+        <include>org.mule.transports:mule-transport-stream</include>
+        <include>org.mule.transports:mule-transport-tcp</include>
+        <include>org.mule.transports:mule-transport-udp</include>
+        <include>org.mule.transports:mule-transport-vm</include>
+        <include>org.mule.transports:mule-transport-xfire</include>
+        <include>org.mule.transports:mule-transport-xmpp</include>
+        <!-- Modules -->
+        <include>org.mule.modules:mule-module-acegi</include>
+        <include>org.mule.modules:mule-module-builders</include>
+        <include>org.mule.modules:mule-module-client</include>
+        <include>org.mule.modules:mule-module-hivemind</include>
+        <include>org.mule.modules:mule-module-jaas</include>
+        <include>org.mule.modules:mule-module-jotm</include>
+        <include>org.mule.modules:mule-module-management</include>
+        <include>org.mule.modules:mule-module-ognl</include>
+        <include>org.mule.modules:mule-module-pgp</include>
+        <include>org.mule.modules:mule-module-picocontainer</include>
+        <include>org.mule.modules:mule-module-scripting</include>
+        <include>org.mule.modules:mule-module-spring</include>
+        <include>org.mule.modules:mule-module-util</include>
+        <include>org.mule.modules:mule-module-xml</include>
+      </includes>
+    </dependencySet>
+
+    <!-- Non-Mule libraries -->
+    <dependencySet>
+      <outputDirectory>lib/opt</outputDirectory>
+      <scope>runtime</scope>
+      <excludes>
+        <!-- Core -->
+        <exclude>org.mule:mule-core</exclude>
+        <!-- Transports -->
+        <exclude>org.mule.transports:mule-transport-axis</exclude>
+        <exclude>org.mule.transports:mule-transport-bpm</exclude>
+        <exclude>org.mule.transports:mule-transport-ejb</exclude>
+        <exclude>org.mule.transports:mule-transport-email</exclude>
+        <exclude>org.mule.transports:mule-transport-file</exclude>
+        <exclude>org.mule.transports:mule-transport-ftp</exclude>
+        <exclude>org.mule.transports:mule-transport-http</exclude>
+        <exclude>org.mule.transports:mule-transport-jbi</exclude>
+        <exclude>org.mule.transports:mule-transport-jdbc</exclude>
+        <exclude>org.mule.transports:mule-transport-jms</exclude>
+        <exclude>org.mule.transports:mule-transport-multicast</exclude>
+        <exclude>org.mule.transports:mule-transport-oracleaq</exclude>
+        <exclude>org.mule.transports:mule-transport-quartz</exclude>
+        <exclude>org.mule.transports:mule-transport-rmi</exclude>
+        <exclude>org.mule.transports:mule-transport-soap</exclude>
+        <exclude>org.mule.transports:mule-transport-ssl</exclude>
+        <exclude>org.mule.transports:mule-transport-stream</exclude>
+        <exclude>org.mule.transports:mule-transport-tcp</exclude>
+        <exclude>org.mule.transports:mule-transport-udp</exclude>
+        <exclude>org.mule.transports:mule-transport-vm</exclude>
+        <exclude>org.mule.transports:mule-transport-xfire</exclude>
+        <exclude>org.mule.transports:mule-transport-xmpp</exclude>
+        <!-- Modules -->
+        <exclude>org.mule.modules:mule-module-boot</exclude>
+        <exclude>org.mule.modules:mule-module-builders</exclude>
+        <exclude>org.mule.modules:mule-module-acegi</exclude>
+        <exclude>org.mule.modules:mule-module-client</exclude>
+        <exclude>org.mule.modules:mule-module-hivemind</exclude>
+        <exclude>org.mule.modules:mule-module-jaas</exclude>
+        <exclude>org.mule.modules:mule-module-jca</exclude>
+        <exclude>org.mule.modules:mule-module-jotm</exclude>
+        <exclude>org.mule.modules:mule-module-management</exclude>
+        <exclude>org.mule.modules:mule-module-ognl</exclude>
+        <exclude>org.mule.modules:mule-module-pgp</exclude>
+        <exclude>org.mule.modules:mule-module-picocontainer</exclude>
+        <exclude>org.mule.modules:mule-module-scripting</exclude>
+        <exclude>org.mule.modules:mule-module-spring</exclude>
+        <exclude>org.mule.modules:mule-module-util</exclude>
+        <exclude>org.mule.modules:mule-module-xml</exclude>
+        <!-- Examples -->
+        <exclude>org.mule.examples:mule-example-echo</exclude>
+        <exclude>org.mule.examples:mule-example-errorhandler</exclude>
+        <exclude>org.mule.examples:mule-example-hello</exclude>
+        <exclude>org.mule.examples:mule-example-loanbroker-esn</exclude>
+        <exclude>org.mule.examples:mule-example-loanbroker-esb</exclude>
+        <exclude>org.mule.examples:mule-example-loanbroker-credit-agency</exclude>
+        <exclude>org.mule.examples:mule-example-scripting</exclude>
+        <exclude>org.mule.examples:mule-example-stockquote</exclude>
+        <exclude>org.mule.examples:mule-example-voipservice</exclude>
+        <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
+        <exclude>org.mule.distributions:mule-full</exclude>
+        <!-- TODO Remove these -->
+        <exclude>javax.activation:activation</exclude>
+        <exclude>javax.mail:mail</exclude>
+
+        <exclude>commons-logging:commons-logging</exclude>
+      </excludes>
+    </dependencySet>
+
+    <!-- Mule examples -->
+    <dependencySet>
+      <outputDirectory>lib/user</outputDirectory>
+      <scope>runtime</scope>
+      <!-- Don't put the version number in the examples. -->
+      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
+      <includes>
+        <include>org.mule.examples:mule-example-echo</include>
+        <include>org.mule.examples:mule-example-errorhandler</include>
+        <include>org.mule.examples:mule-example-hello</include>
+        <include>org.mule.examples:mule-example-loanbroker-esn</include>
+        <include>org.mule.examples:mule-example-loanbroker-esb</include>
+        <include>org.mule.examples:mule-example-loanbroker-credit-agency</include>
+        <include>org.mule.examples:mule-example-scripting</include>
+        <include>org.mule.examples:mule-example-stockquote</include>
+        <include>org.mule.examples:mule-example-voipservice</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>lib/user</outputDirectory>
+      <scope>test</scope>
+      <includes>
+        <include>org.mule.tests:mule-tests-core</include>
+        <include>org.mule.tests:mule-tests-functional</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
