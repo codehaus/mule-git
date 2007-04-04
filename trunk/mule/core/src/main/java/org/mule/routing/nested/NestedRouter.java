@@ -1,5 +1,17 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
 package org.mule.routing.nested;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.management.stats.RouterStatistics;
 import org.mule.routing.AbstractRouter;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
@@ -12,9 +24,6 @@ import org.mule.umo.routing.UMONestedRouter;
 import org.mule.umo.routing.UMOOutboundRouter;
 
 import java.lang.reflect.Proxy;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class NestedRouter extends AbstractRouter implements UMONestedRouter
 {

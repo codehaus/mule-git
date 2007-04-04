@@ -1,3 +1,13 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
 package org.mule.providers.jms.weblogic;
 
 import org.mule.providers.jms.DefaultJmsTopicResolver;
@@ -5,11 +15,10 @@ import org.mule.providers.jms.Jms102bSupport;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.util.ClassUtils;
 
-import java.lang.reflect.Method;
-
 import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
+import java.lang.reflect.Method;
 
 /**
  * Weblogic-specific JMS topic resolver. Will use reflection and
