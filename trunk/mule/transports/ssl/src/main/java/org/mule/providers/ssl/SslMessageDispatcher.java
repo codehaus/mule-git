@@ -32,6 +32,7 @@ public class SslMessageDispatcher extends TcpMessageDispatcher
     // @Override
     protected void doConnect() throws Exception
     {
+        // no-op
     }
 
 }
