@@ -10,10 +10,6 @@
 
 package org.mule.tools.visualizer;
 
-import com.oy.shared.lm.graph.Graph;
-import com.oy.shared.lm.graph.GraphFactory;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.mule.config.MuleDtdResolver;
 import org.mule.tools.visualizer.components.EndpointRegistry;
 import org.mule.tools.visualizer.components.GraphRenderer;
@@ -25,11 +21,17 @@ import org.mule.tools.visualizer.postgraphers.DocIndexerPostGrapher;
 import org.mule.tools.visualizer.postgraphers.GalleryPostGrapher;
 import org.mule.tools.visualizer.postgraphers.MediaCopierPostGrapher;
 
+import com.oy.shared.lm.graph.Graph;
+import com.oy.shared.lm.graph.GraphFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 public class MuleVisualizer
 {
