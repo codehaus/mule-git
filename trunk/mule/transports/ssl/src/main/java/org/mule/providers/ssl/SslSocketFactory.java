@@ -19,7 +19,8 @@ import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-public class SslSocketFactory extends TcpSocketFactory {
+public class SslSocketFactory extends TcpSocketFactory 
+{
 
     private TlsConfiguration tls;
 
