@@ -24,7 +24,6 @@
                          implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="stream://System.in"/>
-                <endpoint address="vm://out"/>
            </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">

@@ -72,6 +72,10 @@ public class EndpointRegistry
         GraphNode n = getEqualsMapping(uri, componentName);
         if (n != null)
         {
+            env.log("found equals mapping: " + n.getId());
+        }
+        else
+        {
             n = (GraphNode) endpoints.get(uri);
             if (null != n)
             {
