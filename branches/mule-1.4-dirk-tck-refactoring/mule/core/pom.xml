@@ -161,6 +161,25 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- publish core's test classes in a separate -tests.jar so other mule modules
+                can include it for their own unit tests
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <!-- no build is complete without XML -->
     <profiles>
         <profile>
