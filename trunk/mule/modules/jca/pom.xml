@@ -60,6 +60,9 @@
     <profiles>
         <profile>
             <id>default</id>
+            <activation>
+                <activeByDefault/>
+            </activation>
             <build>
                 <resources>
                     <!--
