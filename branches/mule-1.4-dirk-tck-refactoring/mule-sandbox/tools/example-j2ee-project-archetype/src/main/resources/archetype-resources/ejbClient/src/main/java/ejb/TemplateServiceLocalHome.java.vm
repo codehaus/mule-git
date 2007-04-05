@@ -1,0 +1,14 @@
+package com.example.service.${serviceName.toLowerCase()}.ejb;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBLocalHome;
+
+/**
+ * Local Home interface for Enterprise Bean: ${serviceName}Service
+ */
+public interface ${serviceName}ServiceLocalHome extends EJBLocalHome {
+    /**
+     * Creates a default instance of Session Bean: ${serviceName}Service
+     */
+    public ${serviceName}ServiceLocal create() throws CreateException;
+}

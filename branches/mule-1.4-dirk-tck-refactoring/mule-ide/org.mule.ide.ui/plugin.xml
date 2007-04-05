@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * Copyright (c) Jesper Steen Møller. All rights reserved.
+ * http://www.selskabet.org/jesper/
+ * 
+ * The software in this package is published under the terms of the BSD
+ * style license a copy of which has been included with this distribution in
+ * the LICENSE.txt file.
+-->
+<plugin>
+     <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.mule.ide.ui.preferences.MulePreferencePage"
+            id="org.mule.ide.ui.preferences.MulePreferencePage"
+            name="Mule">
+         
+         <keywordReference id="org.mule.ide.ui.keyword.mule"/>
+      </page>
+   </extension>
+
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            adaptable="true"
+            class="org.mule.ide.ui.properties.MulePropertiesPage"
+            id="org.mule.ide.ui.properties.mulePropertyPage"
+            name="Mule"
+            objectClass="org.eclipse.core.resources.IProject">
+         <keywordReference id="org.mule.ide.ui.keyword.mule"/>
+         <filter
+               name="projectNature"
+               value="org.mule.ide.core.muleConfigNature"/>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.mule.ide.ui.keyword.mule"
+            label="Mule"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="META-INF/icons/mule_overlay_9x9.png"
+            id="org.mule.ide.ui.ProjectNatureImage"
+            natureId="org.mule.ide.core.muleConfigNature"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.mule.ide.ui.MuleProjectWizards"
+            name="Mule"/>
+      <wizard
+            canFinishEarly="false"
+            category="org.mule.ide.ui.MuleProjectWizards"
+            class="org.mule.ide.ui.wizards.MuleProjectWizard"
+            hasPages="true"
+            icon="META-INF/icons/mule_config_set_16x16.png"
+            id="org.mule.ide.ui.MuleProjectWizard"
+            name="Mule Project"
+            project="true">
+         <description>
+            Create a Mule project, optionally importing an example from the Mule distribution
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.mule.ide.ui.MuleProjectWizards"
+            class="org.mule.ide.ui.wizards.AddMuleSupportWizard"
+            hasPages="true"
+            icon="META-INF/icons/convert_prj_16x16.png"
+            id="org.mule.ide.ui.AddMuleSupportWizard"
+            name="Add Mule Support to Existing Project"
+            project="true">
+         <description>
+            Use this wizard to add Mule support to existing Java project(s), setting up the Mule class path and the Mule launch configurations.
+         </description>
+      </wizard>
+   </extension>
+
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.mule.ide.ui.project.MuleClasspathContainerPage"
+            id="org.mule.ide.core.muleClasspath"
+            name="Mule Classpath"/>
+   </extension>
+
+</plugin>

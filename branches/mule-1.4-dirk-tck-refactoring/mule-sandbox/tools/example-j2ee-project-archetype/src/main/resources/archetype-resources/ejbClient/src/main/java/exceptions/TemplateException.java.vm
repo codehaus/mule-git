@@ -1,0 +1,36 @@
+package com.example.service.${serviceName.toLowerCase()}.exceptions;
+
+import com.example.exception.exampleException;
+
+/**
+ * This exception should be used by a client of the service, e.g.
+ * a web module to isolate itself from the service internals.
+ */
+public class ${serviceName}Exception extends exampleException {
+
+    /**
+     *
+     */
+    public ${serviceName}Exception() {
+        super();
+    }
+
+    public ${serviceName}Exception(exampleException e) {
+        super(e);
+    }
+
+    /**
+     * @param message
+     * @param t
+     */
+    public ${serviceName}Exception(String message, Throwable t) {
+        super(message, t);
+    }
+
+    /**
+     * @param message
+     */
+    public ${serviceName}Exception(String message) {
+        super(message);
+    }
+}
