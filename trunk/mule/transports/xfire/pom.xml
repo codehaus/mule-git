@@ -23,6 +23,8 @@
                         <exclude>**/XFireConnectorVMFunctionalTestCase.java</exclude>
                         <!-- MULE-1515 -->
                         <exclude>**/XFireWsdlTestCase.java</exclude>
+                        <!-- Makes for cyclic dependency with axis ... hold for now -->
+                        <exclude>**/XFireServiceUsingAxisEndpointTestCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -172,12 +174,14 @@
             <scope>test</scope>
         </dependency>
         
+        <!-- Remove for now since it introduces cyclic dependencies
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
+        -->
 
         <!-- for integrtion tests -->
         <dependency>
