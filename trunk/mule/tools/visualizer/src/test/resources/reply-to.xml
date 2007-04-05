@@ -28,6 +28,7 @@
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="vm://in"/>
+                    <reply-to address="vm://out"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
