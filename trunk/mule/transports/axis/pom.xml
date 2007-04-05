@@ -19,12 +19,18 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <!-- TODO fails now -->
-                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                         <!-- TODO Requires an external Axis server running in Tomcat on 8080 with the Calculator.jws service deployed to it -->
+                        <!-- MULE-1515 -->
                         <exclude>**/AxisExternalServerTest.java</exclude>
-                        <!-- TODO This has never worked, maybe we should just ditch it? -->
+
+                        <!-- MULE-1553 -->
+                        <exclude>**/AxisConnectorHttpsTestCase.java</exclude>
+                        <exclude>**/AxisConnectorJmsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
+                        <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
+                        <exclude>**/AxisEndpointTestCase.java</exclude>
+                        <exclude>**/AxisServletBindingTestCase.java</exclude>
+                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
