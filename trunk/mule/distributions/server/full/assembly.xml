@@ -769,7 +769,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>javax.mail:mail</exclude>
         <exclude>commons-logging:commons-logging</exclude>
 
-        <exclude>org.apache.activemq:apache-activemq</exclude>
+        <exclude>org.apache.activemq:activemq-core</exclude>
       </excludes>
     </dependencySet>
 
