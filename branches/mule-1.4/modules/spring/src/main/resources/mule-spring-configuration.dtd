@@ -7,8 +7,8 @@
 
  This DTD describes the grammar of the Mule configuration properties.
 
- Date: $Date$
- Revision: $Revision$
+ $Date$
+ $Revision$
 
  @root mule-configuration
 -->
@@ -988,7 +988,7 @@ Jndi
     the component should be loaded from. Also you can specify to not load the component from a Container
     context by setting this value to 'none'.
 -->
-<!ATTLIST mule-descriptor container			NMTOKEN		#IMPLIED>
+<!ATTLIST mule-descriptor container         NMTOKEN     #IMPLIED>
 
 <!--
     Determines if only a single instance of this component is created.  This is useful when a
