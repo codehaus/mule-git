@@ -14,8 +14,9 @@
     <description>A Mule transport for Http Connectivity. This transport supplies a simple Http Server implementation.</description>
     <dependencies>
         <dependency>
+            <!-- needed for SSL in httpS -->
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-tcp</artifactId>
+            <artifactId>mule-transport-ssl</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>

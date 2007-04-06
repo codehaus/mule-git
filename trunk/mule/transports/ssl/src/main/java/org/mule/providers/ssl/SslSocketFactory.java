@@ -24,7 +24,7 @@ public class SslSocketFactory extends TcpSocketFactory
 
     private TlsConfiguration tls;
 
-    SslSocketFactory(TlsConfiguration tls)
+    public SslSocketFactory(TlsConfiguration tls)
     {
         this.tls = tls;
     }

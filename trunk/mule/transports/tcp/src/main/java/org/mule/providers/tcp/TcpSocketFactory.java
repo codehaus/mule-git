@@ -19,13 +19,12 @@ import java.net.Socket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
 /**
  * Creates a client socket using the host and port address supplied in the endpoint URI.  Addtional
  * socket parameters will also be set from the connector
  */
-public class TcpSocketFactory implements KeyedPoolableObjectFactory
+public class TcpSocketFactory implements PooledSocketFactory
 {
     /**
      * logger used by this class

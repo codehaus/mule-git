@@ -36,22 +36,22 @@ public abstract class ByteProtocol implements TcpProtocol
         // TcpMessageReceiver where the protocol is called
         if (data instanceof UMOMessageAdapter)
         {
-            data = ((UMOMessageAdapter)data).getPayload();
+            data = ((UMOMessageAdapter) data).getPayload();
         }
 
         if (data instanceof byte[])
         {
-            write(os, (byte[])data);
+            write(os, (byte[]) data);
         }
         else if (data instanceof String)
         {
             // TODO SF: encoding is lost/ignored; it is probably a good idea to have
             // a separate "stringEncoding" property on the protocol
-            write(os, ((String)data).getBytes());
+            write(os, ((String) data).getBytes());
         }
         else if (data instanceof Serializable)
         {
-            write(os, SerializationUtils.serialize((Serializable)data));
+            write(os, SerializationUtils.serialize((Serializable) data));
         }
         else
         {

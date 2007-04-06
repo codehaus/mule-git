@@ -41,7 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>TransportServiceDescriptor</code> describes the necessery information for
+ * <code>TransportServiceDescriptor</code> describes the necessary information for
  * creating a connector from a service descriptor. A service descriptor should be
  * located at META-INF/services/org/mule/providers/<protocol> where protocol is the
  * protocol of the connector to be created The service descriptor is in the form of

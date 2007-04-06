@@ -30,7 +30,7 @@ public class MuleMessageProtocol extends DefaultProtocol
     // @Override
     public Object read(InputStream is) throws IOException
     {
-        byte[] tmp = (byte[])super.read(is);
+        byte[] tmp = (byte[]) super.read(is);
 
         if (tmp == null)
         {

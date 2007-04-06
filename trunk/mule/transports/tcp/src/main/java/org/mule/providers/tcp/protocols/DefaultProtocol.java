@@ -37,11 +37,12 @@ public class DefaultProtocol extends ByteProtocol
         ByteArrayOutputStream baos = new ByteArrayOutputStream(BUFFER_SIZE);
 
         byte[] buffer = new byte[BUFFER_SIZE];
-        int len = 0;
+        int len;
         try
         {
             while ((len = is.read(buffer)) == 0)
             {
+                // TODO - shouldn't this really wait, at least for some short time?
                 // wait
             }
         }
@@ -74,8 +75,9 @@ public class DefaultProtocol extends ByteProtocol
                 {
                     break;
                 }
+                len = is.read(buffer);
             }
-            while ((len = is.read(buffer)) > 0);
+            while (len > 0);
 
             baos.flush();
             baos.close();

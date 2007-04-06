@@ -10,8 +10,6 @@
 
 package org.mule.providers.tcp.protocols;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +17,8 @@ import java.io.PushbackInputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -82,8 +82,14 @@ public class XmlMessageProtocol extends ByteProtocol
         {
             while ((len = pbis.read(buffer)) == 0)
             {
+                // TODO - again, need real wait
                 // feed me!
             }
+            if (len <= 0)
+            {
+                return null;
+            }
+
         }
         catch (SocketException e)
         {
@@ -99,7 +105,6 @@ public class XmlMessageProtocol extends ByteProtocol
             {
                 // remove exhausted stream
                 pbMap.remove(is);
-                return null;
             }
         }
 

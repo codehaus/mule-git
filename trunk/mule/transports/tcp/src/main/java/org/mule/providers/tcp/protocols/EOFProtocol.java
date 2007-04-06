@@ -36,11 +36,12 @@ public class EOFProtocol extends ByteProtocol
         ByteArrayOutputStream baos = new ByteArrayOutputStream(EOFProtocol.BUFFER_SIZE);
 
         byte[] buffer = new byte[EOFProtocol.BUFFER_SIZE];
-        int len = 0;
+        int len;
         try
         {
             while ((len = is.read(buffer)) == 0)
             {
+                // TODO - see default protocol.  Also, looks like cut+paste again....
                 // wait
             }
         }
@@ -64,8 +65,9 @@ public class EOFProtocol extends ByteProtocol
             do
             {
                 baos.write(buffer, 0, len);
+                len = is.read(buffer);
             }
-            while ((len = is.read(buffer)) >= 0);
+            while (len >= 0);
 
             baos.flush();
             baos.close();

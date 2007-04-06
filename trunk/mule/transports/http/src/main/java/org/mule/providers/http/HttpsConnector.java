@@ -16,12 +16,17 @@ import org.mule.umo.security.TlsDirectTrustStore;
 import org.mule.umo.security.TlsIndirectKeyStore;
 import org.mule.umo.security.provider.SecurityProviderFactory;
 import org.mule.umo.security.tls.TlsConfiguration;
+import org.mule.providers.ssl.SslSocketFactory;
+import org.mule.providers.ssl.SslServerSocketFactory;
 
 import java.io.IOException;
 import java.security.Provider;
+import java.net.ServerSocket;
+import java.net.URI;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.SSLServerSocket;
 
 /**
  * <code>HttpsConnector</code> provides Https connectivity
@@ -30,6 +35,22 @@ public class HttpsConnector extends HttpConnector
 implements TlsDirectKeyStore, TlsIndirectKeyStore, TlsDirectTrustStore
 {
     private TlsConfiguration tls = new TlsConfiguration(TlsConfiguration.DEFAULT_KEYSTORE);
+
+    public HttpsConnector()
+    {
+        setSocketFactory(new SslSocketFactory(tls));
+        setServerSocketFactory(new SslServerSocketFactory(tls));
+        // setting this true causes problems as socket closes before handshake finishes
+        setCheckConnection(false);
+    }
+
+    // @Override
+    protected ServerSocket getServerSocket(URI uri) throws IOException
+    {
+        SSLServerSocket serverSocket = (SSLServerSocket) super.getServerSocket(uri);
+        serverSocket.setNeedClientAuth(isRequireClientAuthentication());
+        return serverSocket;
+    }
 
     protected void doInitialise() throws InitialisationException
     {

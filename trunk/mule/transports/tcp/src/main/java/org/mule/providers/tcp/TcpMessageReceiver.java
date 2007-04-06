@@ -26,15 +26,12 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -46,7 +43,7 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
-import org.apache.commons.lang.StringUtils;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
@@ -70,7 +67,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         try
         {
-            serverSocket = createSocket(uri);
+            serverSocket = ((TcpConnector) connector).getServerSocket(uri);
         }
         catch (Exception e)
         {
@@ -117,22 +114,6 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
     protected void doStop() throws UMOException
     {
         // nothing to do
-    }
-
-    protected ServerSocket createSocket(URI uri) throws Exception
-    {
-        String host = StringUtils.defaultIfEmpty(uri.getHost(), "localhost");
-        int backlog = ((TcpConnector)connector).getReceiveBacklog();
-        InetAddress inetAddress = InetAddress.getByName(host);
-        if (inetAddress.equals(InetAddress.getLocalHost()) || inetAddress.isLoopbackAddress()
-            || host.trim().equals("localhost"))
-        {
-            return new ServerSocket(uri.getPort(), backlog);
-        }
-        else
-        {
-            return new ServerSocket(uri.getPort(), backlog, inetAddress);
-        }
     }
 
     /**
