@@ -5,7 +5,7 @@ if "%MULE_BASE%" == "" SET MULE_BASE=%MULE_HOME%
 
 REM Any changes to the files in .\conf will take precedence over those deployed to %MULE_HOME%\lib\user
 SET MULE_LIB=.\conf
-SET ACTIVEMQ=activemq-3.2.4.jar
+SET ACTIVEMQ=activemq-core-4.1.0-incubator.jar
 SET OPENEJB=openejb-core-1.0.jar
 
 :testactivemq
@@ -22,11 +22,13 @@ echo This example requires additional libraries which need to be downloaded by t
 goto :eof
 
 :mule
-ECHO The Loan Broker example is available in two variations:
+ECHO The Loan Broker example is available in three flavors:
 ECHO   1. Loan Broker ESB
 ECHO   2. Loan Broker ESN
+ECHO   3. Loan Broker BPM
 SET /P Choice=Select the one you wish to execute and press Enter...
 
-IF '%Choice%'=='1' call %MULE_BASE%\bin\mule.bat -main org.mule.examples.loanbroker.esb.Main
-IF '%Choice%'=='2' call %MULE_BASE%\bin\mule.bat -main org.mule.examples.loanbroker.esn.Main
+IF '%Choice%'=='1' call %MULE_BASE%\bin\mule.bat -main org.mule.examples.loanbroker.esb.LoanBrokerApp
+IF '%Choice%'=='2' call %MULE_BASE%\bin\mule.bat -main org.mule.examples.loanbroker.esn.LoanBrokerApp
+IF '%Choice%'=='3' call %MULE_BASE%\bin\mule.bat -main org.mule.examples.loanbroker.bpm.LoanBrokerApp
 

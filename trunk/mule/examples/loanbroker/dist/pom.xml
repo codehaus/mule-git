@@ -17,9 +17,17 @@
 
     <modules>
         <module>common</module>
+        <module>common-tests</module>
         <module>credit-agency</module>
         <module>esb</module>
         <module>esn</module>
+        <module>bpm</module>
+        <!--
+        <module>bpel</module>
+        <module>rules</module>
+        <module>spaces</module>
+        <module>benchmark</module>
+        -->
     </modules>
 
     <repositories>
@@ -97,14 +105,9 @@
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>activemq</groupId>
-                                    <artifactId>activemq</artifactId>
-                                    <version>3.2.4</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>concurrent</groupId>
-                                    <artifactId>concurrent</artifactId>
-                                    <version>1.3.4</version>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activemq-core</artifactId>
+                                    <version>4.1.0-incubator</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>openejb</groupId>
