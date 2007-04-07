@@ -29,7 +29,7 @@ import org.jbpm.msg.mule.MuleMessageService;
  * 
  * @param endpoint - the Mule endpoint
  * @param transformers - any transformers to be applied
- * @param payload - the payload of the message
+ * @param payload - specify the payload as a string directly in the jPDL
  * @param payloadSource - process variable from which to generate the message
  *            payload, defaults to {@link ProcessConnector.PROCESS_VARIABLE_DATA} or
  *            {@link ProcessConnector.PROCESS_VARIABLE_INCOMING}
@@ -43,10 +43,14 @@ public class SendMuleEvent extends LoggingActionHandler
     boolean synchronous = true;
     String endpoint = null;
     String transformers = null;
-    Object payload = null;
-    String payloadSource = null;
     Map properties = null;
-
+    
+    // Use "payload" to easily specify the payload as a string directly in the jPDL.
+    // Use "payloadSource" to get the payload from a process variable. 
+    String payload = null;
+    String payloadSource = null;
+    
+    // The actual payload (as an object) will be stored here.
     private Object payloadObject;
 
     public void execute(ExecutionContext executionContext) throws Exception
@@ -111,13 +115,15 @@ public class SendMuleEvent extends LoggingActionHandler
         UMOMessage response = mule.generateMessage(endpoint, payloadObject, props, synchronous);
         if (synchronous)
         {
-            if (response == null)
+            if (response != null)
+            {
+                executionContext.setVariable(ProcessConnector.PROCESS_VARIABLE_INCOMING, response.getPayload());
+            }
+            else 
             {
                 logger.info("Synchronous message was sent to endpoint " + endpoint
-                                + ", but no response was returned.");
+                    + ", but no response was returned.");
             }
-            // TODO TC: fix NPE
-            executionContext.setVariable(ProcessConnector.PROCESS_VARIABLE_INCOMING, response.getPayload());
         }
     }
 

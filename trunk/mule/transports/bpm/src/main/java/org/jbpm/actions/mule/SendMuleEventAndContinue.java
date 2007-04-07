@@ -20,7 +20,7 @@ import org.jbpm.graph.exe.ExecutionContext;
  * 
  * @param url - the Mule endpoint
  * @param transformers - any transformers to be applied
- * @param payload - the payload of the message
+ * @param payload - specify the payload as a string directly in the jPDL
  * @param payloadSource - process variable from which to generate the message
  *            payload, defaults to {@link ProcessConnector.PROCESS_VARIABLE_DATA}
  * @param messageProperties - any properties to be applied to the message
