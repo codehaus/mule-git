@@ -77,19 +77,27 @@ public class XmlMessageProtocol extends ByteProtocol
             byte[] buffer = new byte[READ_BUFFER_SIZE];
             StringBuffer message = new StringBuffer(READ_BUFFER_SIZE);
             int patternIndex = -1;
+            boolean repeat;
             do
             {
                 len = safeRead(pbis, buffer);
-                if (len > 0)
+                if (len >= 0)
                 {
                     // TODO take encoding into account, ideally from the incoming XML
                     message.append(new String(buffer, 0, len));
                     // start search at 2nd character in buffer (index=1) to
                     // indicate whether we have reached a new document.
                     patternIndex = message.toString().indexOf(XML_PATTERN, 1);
+                    repeat = isRepeat(patternIndex, len, pbis.available());
                 }
+                else
+                {
+                    // never repeat on closed stream (and avoid calling available)
+                    repeat = false;
+                }
+
             }
-            while (isRepeat(patternIndex, len, pbis.available()));
+            while (repeat);
 
             if (patternIndex > 0)
             {

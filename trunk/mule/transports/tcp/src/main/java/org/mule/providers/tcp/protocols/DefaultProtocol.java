@@ -64,7 +64,7 @@ public class DefaultProtocol extends ByteProtocol
                 }
                 else
                 {
-                    // always exit on end of file
+                    // always exit on end of stream (and avoid calling available)
                     repeat = false;
                 }
                 if (logger.isDebugEnabled())
