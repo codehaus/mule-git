@@ -18,9 +18,7 @@ public class XmlMessageEOFProtocol extends XmlMessageProtocol
 {
 
     /**
-     * Show we continue reading?  This class, following previous implementations, only
-     * reads while input is saturated.
-     * @see XmlMessageEOFProtocol
+     * Continue reading til EOF or new document found
      *
      * @param patternIndex The index of the xml tag (or -1 if the next message not found)
      * @param len The amount of data read this loop (or -1 if EOF)
