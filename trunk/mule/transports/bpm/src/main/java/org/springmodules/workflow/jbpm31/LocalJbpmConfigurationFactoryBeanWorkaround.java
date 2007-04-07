@@ -16,6 +16,9 @@ import org.springframework.beans.factory.BeanFactory;
 /**
  * This class is an ugly workaround for the issue described in
  * http://forum.springframework.org/showthread.php?p=87189
+ * http://opensource.atlassian.com/projects/spring/browse/MOD-266
+ * 
+ * This was supposedly fixed in springmodules 0.7 but the problem still remains in 0.8!
  */
 public class LocalJbpmConfigurationFactoryBeanWorkaround  extends LocalJbpmConfigurationFactoryBean{
 
