@@ -266,7 +266,6 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/loanbroker/common</directory>
           <outputDirectory>examples/loanbroker/common</outputDirectory>
           <includes>
-              <include>README.txt</include>
               <include>pom.xml</include>
           </includes>
       </fileSet>
@@ -275,10 +274,20 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/common/src</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/loanbroker/common-tests</directory>
+          <outputDirectory>examples/loanbroker/common-tests</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/common-tests/src</directory>
+          <outputDirectory>examples/loanbroker/common-tests/src</outputDirectory>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/loanbroker/credit-agency</directory>
           <outputDirectory>examples/loanbroker/credit-agency</outputDirectory>
           <includes>
-              <include>README.txt</include>
               <include>pom.xml</include>
           </includes>
       </fileSet>
@@ -290,7 +299,6 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/loanbroker/esb</directory>
           <outputDirectory>examples/loanbroker/esb</outputDirectory>
           <includes>
-              <include>README.txt</include>
               <include>pom.xml</include>
           </includes>
       </fileSet>
@@ -306,7 +314,6 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/loanbroker/esn</directory>
           <outputDirectory>examples/loanbroker/esn</outputDirectory>
           <includes>
-              <include>README.txt</include>
               <include>pom.xml</include>
           </includes>
       </fileSet>
@@ -317,6 +324,21 @@ Assembly descriptor for the full Mule distribution.
       <fileSet>
           <directory>../../../examples/loanbroker/esn/src</directory>
           <outputDirectory>examples/loanbroker/esn/src</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/bpm</directory>
+          <outputDirectory>examples/loanbroker/bpm</outputDirectory>
+          <includes>
+              <include>pom.xml</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/bpm/conf</directory>
+          <outputDirectory>examples/loanbroker/bpm/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/loanbroker/bpm/src</directory>
+          <outputDirectory>examples/loanbroker/bpm/src</outputDirectory>
       </fileSet>
 
       <!--
@@ -755,6 +777,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.examples:mule-example-loanbroker-common</exclude>
         <exclude>org.mule.examples:mule-example-loanbroker-esn</exclude>
         <exclude>org.mule.examples:mule-example-loanbroker-esb</exclude>
+        <exclude>org.mule.examples:mule-example-loanbroker-bpm</exclude>
         <exclude>org.mule.examples:mule-example-loanbroker-credit-agency</exclude>
         <exclude>org.mule.examples:mule-example-scripting</exclude>
         <exclude>org.mule.examples:mule-example-stockquote</exclude>
@@ -786,6 +809,7 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.examples:mule-example-loanbroker-common</include>
         <include>org.mule.examples:mule-example-loanbroker-esn</include>
         <include>org.mule.examples:mule-example-loanbroker-esb</include>
+        <include>org.mule.examples:mule-example-loanbroker-bpm</include>
         <include>org.mule.examples:mule-example-loanbroker-credit-agency</include>
         <include>org.mule.examples:mule-example-scripting</include>
         <include>org.mule.examples:mule-example-stockquote</include>
