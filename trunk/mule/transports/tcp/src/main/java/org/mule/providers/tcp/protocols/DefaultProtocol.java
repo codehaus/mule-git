@@ -93,7 +93,7 @@ public class DefaultProtocol extends ByteProtocol
         // previous logic - less reliable on slow networks
 //        return len == bufferSize && available > 0;
         
-        return available > 0;
+        return len >= 0 && available > 0;
     }
 
 }
