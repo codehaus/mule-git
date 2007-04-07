@@ -91,8 +91,7 @@ public class LengthProtocol extends DefaultProtocol
     // @Override
     protected boolean isRepeat(int len, int size, int available)
     {
-        return len >= 0 && size != SIZE_INT;
+        return size < SIZE_INT;
     }
-
 
 }

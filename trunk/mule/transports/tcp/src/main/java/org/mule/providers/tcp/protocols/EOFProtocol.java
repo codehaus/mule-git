@@ -28,7 +28,7 @@ public class EOFProtocol extends DefaultProtocol
     // @Override
     protected boolean isRepeat(int len, int size, int available)
     {
-        return len >= 0;
+        return true;
     }
 
 }

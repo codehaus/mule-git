@@ -57,11 +57,16 @@ public class DefaultProtocol extends ByteProtocol
             do
             {
                 len = copy(is, buffer, baos);
-                if (len > 0)
+                if (len >= 0)
                 {
                     size += len;
+                    repeat = isRepeat(len, size, is.available());
                 }
-                repeat = isRepeat(len, size, is.available());
+                else
+                {
+                    // always exit on end of file
+                    repeat = false;
+                }
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("len/repeat: " + len + "/" + repeat);
@@ -93,7 +98,7 @@ public class DefaultProtocol extends ByteProtocol
         // previous logic - less reliable on slow networks
 //        return len == bufferSize && available > 0;
         
-        return len >= 0 && available > 0;
+        return available > 0;
     }
 
 }
