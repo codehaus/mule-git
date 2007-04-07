@@ -79,7 +79,7 @@
         The loan broker is used to receive loan requests
         -->
         <mule-descriptor name="LoanBroker"
-            implementation="org.mule.examples.loanbroker.DefaultLoanBroker">
+            implementation="org.mule.examples.loanbroker.AsynchronousLoanBroker">
 
             <inbound-router>
                 <endpoint address="CustomerRequestsREST" transformers="RestRequestToCustomerRequest"/>

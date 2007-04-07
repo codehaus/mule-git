@@ -67,7 +67,7 @@
         <!--
         The loan broker is used to receive loan requests
         -->
-        <mule-descriptor name="LoanBroker" implementation="org.mule.examples.loanbroker.DefaultLoanBroker">
+        <mule-descriptor name="LoanBroker" implementation="org.mule.examples.loanbroker.AsynchronousLoanBroker">
 
             <!--
             This router uses the BankQuoteAggregator for events of type BankQuote, for all other
