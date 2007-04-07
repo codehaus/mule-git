@@ -72,6 +72,15 @@ public class Jbpm implements BPMS
             jbpmContext.close();
         }
     }
+    
+    public void destroy()
+    {
+        if (jbpmConfiguration != null)
+        {
+            jbpmConfiguration.close();
+            jbpmConfiguration = null;
+        }
+    }
 
     // ///////////////////////////////////////////////////////////////////////////
     // Process status / lookup
@@ -87,9 +96,24 @@ public class Jbpm implements BPMS
         return new Long(((ProcessInstance)process).getId());
     }
 
+    // By default the process is lazily-initialized so we need to open a new session to the
+    // database before calling process.getRootToken().getNode().getName()
     public Object getState(Object process) throws Exception
     {
-        return ((ProcessInstance)process).getRootToken().getNode().getName();
+        ProcessInstance processInstance = (ProcessInstance) process;
+
+        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+        try
+        {
+            // Look up the process instance from the database.
+            processInstance = jbpmContext.getGraphSession()
+                .loadProcessInstance(processInstance.getId());
+            return processInstance.getRootToken().getNode().getName();
+        }
+        finally
+        {
+            jbpmContext.close();
+        }
     }
 
     public boolean hasEnded(Object process) throws Exception
@@ -112,12 +136,12 @@ public class Jbpm implements BPMS
             // Look up the process instance from the database.
             processInstance = jbpmContext.getGraphSession()
                 .loadProcessInstance(NumberUtils.toLong(processId));
+            return processInstance;
         }
         finally
         {
             jbpmContext.close();
         }
-        return processInstance;
     }
 
     // ///////////////////////////////////////////////////////////////////////////
@@ -165,6 +189,7 @@ public class Jbpm implements BPMS
 
             jbpmContext.save(processInstance);
 
+            return processInstance;
         }
         catch (Exception e)
         {
@@ -175,7 +200,6 @@ public class Jbpm implements BPMS
         {
             jbpmContext.close();
         }
-        return processInstance;
     }
 
     /**
@@ -232,6 +256,7 @@ public class Jbpm implements BPMS
             // Save the process state back to the database.
             jbpmContext.save(processInstance);
 
+            return processInstance;
         }
         catch (Exception e)
         {
@@ -242,7 +267,6 @@ public class Jbpm implements BPMS
         {
             jbpmContext.close();
         }
-        return processInstance;
     }
 
     /**
@@ -272,6 +296,7 @@ public class Jbpm implements BPMS
             // Save the process state back to the database.
             jbpmContext.save(processInstance);
 
+            return processInstance;
         }
         catch (Exception e)
         {
@@ -282,7 +307,6 @@ public class Jbpm implements BPMS
         {
             jbpmContext.close();
         }
-        return processInstance;
     }
 
     /**
@@ -294,7 +318,6 @@ public class Jbpm implements BPMS
         try
         {
             jbpmContext.getGraphSession().deleteProcessInstance(NumberUtils.toLong(processId));
-
         }
         catch (Exception e)
         {
@@ -347,12 +370,12 @@ public class Jbpm implements BPMS
         {
             taskInstances = jbpmContext.getTaskMgmtSession().findTaskInstancesByToken(
                 process.getRootToken().getId());
+            return taskInstances;
         }
         finally
         {
             jbpmContext.close();
         }
-        return taskInstances;
     }
 
     public synchronized void completeTask(TaskInstance task)
