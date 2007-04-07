@@ -28,7 +28,7 @@ public class XmlMessageEOFProtocol extends XmlMessageProtocol
     // @Override
     protected boolean isRepeat(int patternIndex, int len, int available)
     {
-        return patternIndex < 0 && len > 0;
+        return patternIndex < 0;
     }
 
 }
