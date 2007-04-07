@@ -51,7 +51,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 {
-    protected ServerSocket serverSocket = null;
+    private ServerSocket serverSocket = null;
 
     public TcpMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
