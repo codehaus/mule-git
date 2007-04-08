@@ -48,8 +48,8 @@ public class LengthProtocol extends DefaultProtocol
         // first read the data necessary to know the length of the payload
         DataInputStream dis = new DataInputStream(is);
         dis.mark(SIZE_INT);
-        // this pulls through SIZE_INT bytes (see isRepeat() below)
-        super.read(dis);
+        // this pulls through SIZE_INT bytes
+        super.read(dis, SIZE_INT);
 
         // reset and read the integer
         dis.reset();
@@ -81,17 +81,16 @@ public class LengthProtocol extends DefaultProtocol
     }
 
     /**
-     * Read all four bytes for initial integer
+     * Read all four bytes for initial integer (limit is set in read)
      *
      * @param len Amount transferred last call (-1 on EOF or socket error)
-     * @param size Total amount transferred
      * @param available Amount available
      * @return true if the transfer should continue
      */
     // @Override
-    protected boolean isRepeat(int len, int size, int available)
+    protected boolean isRepeat(int len, int available)
     {
-        return size < SIZE_INT;
+        return true;
     }
 
 }

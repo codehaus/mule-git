@@ -21,12 +21,11 @@ public class EOFProtocol extends DefaultProtocol
      * Repeat until end of file
      *
      * @param len Amount transferred last call (-1 on EOF or socket error)
-     * @param size Total amount transferred
      * @param available Amount available
      * @return true if the transfer should continue
      */
     // @Override
-    protected boolean isRepeat(int len, int size, int available)
+    protected boolean isRepeat(int len, int available)
     {
         return true;
     }

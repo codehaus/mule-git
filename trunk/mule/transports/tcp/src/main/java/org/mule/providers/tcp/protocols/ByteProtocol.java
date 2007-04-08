@@ -41,7 +41,7 @@ public abstract class ByteProtocol implements TcpProtocol
 
     private static final Log logger = LogFactory.getLog(DefaultProtocol.class);
     private static final long PAUSE_PERIOD = 100;
-    private static final int EOF = -1;
+    public static final int EOF = -1;
 
     public void write(OutputStream os, Object data) throws IOException
     {
@@ -79,7 +79,6 @@ public abstract class ByteProtocol implements TcpProtocol
         os.write(data);
     }
 
-
     /**
      * Manage non-blocking reads and handle errors
      *
@@ -90,12 +89,26 @@ public abstract class ByteProtocol implements TcpProtocol
      */
     protected int safeRead(InputStream is, byte[] buffer) throws IOException
     {
+        return safeRead(is, buffer, buffer.length);
+    }
+
+    /**
+     * Manage non-blocking reads and handle errors
+     *
+     * @param is The input stream to read from
+     * @param buffer The buffer to read into
+     * @param size The amount of data (upper bound) to read
+     * @return The amount of data read (always non-zero, -1 on EOF or socket exception)
+     * @throws IOException other than socket exceptions
+     */
+    protected int safeRead(InputStream is, byte[] buffer, int size) throws IOException
+    {
         int len;
         try
         {
             do
             {
-                len = is.read(buffer);
+                len = is.read(buffer, 0, size);
                 if (0 == len)
                 {
                     // wait for non-blocking input stream
@@ -141,7 +154,22 @@ public abstract class ByteProtocol implements TcpProtocol
      */
     protected int copy(InputStream source, byte[] buffer, OutputStream dest) throws IOException
     {
-        int len = safeRead(source, buffer);
+        return copy(source, buffer, dest, buffer.length);
+    }
+
+    /**
+     * Make a single transfer from source to dest via a byte array buffer
+     *
+     * @param source Source of data
+     * @param buffer Buffer array for transfer
+     * @param dest Destination of data
+     * @param size The amount of data (upper bound) to read
+     * @return Amount of data transferred, or -1 on eof or socket error
+     * @throws IOException On non-socket error
+     */
+    protected int copy(InputStream source, byte[] buffer, OutputStream dest, int size) throws IOException
+    {
+        int len = safeRead(source, buffer, size);
         if (len > 0)
         {
             dest.write(buffer, 0, len);

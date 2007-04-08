@@ -32,6 +32,7 @@ public class DefaultProtocol extends ByteProtocol
 
     private static final Log logger = LogFactory.getLog(DefaultProtocol.class);
     private static final int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int UNLIMITED = -1;
 
     private int bufferSize;
 
@@ -47,29 +48,29 @@ public class DefaultProtocol extends ByteProtocol
 
     public Object read(InputStream is) throws IOException
     {
+        return read(is, UNLIMITED);
+    }
+
+    public Object read(InputStream is, int limit) throws IOException
+    {
+        // this can grow on repeated reads
         ByteArrayOutputStream baos = new ByteArrayOutputStream(bufferSize);
+        
         try
         {
             byte[] buffer = new byte[bufferSize];
             int len;
-            int size = 0;
+            int remain = remaining(limit, limit, 0);
             boolean repeat;
             do
             {
-                len = copy(is, buffer, baos);
-                if (len >= 0)
-                {
-                    size += len;
-                    repeat = isRepeat(len, size, is.available());
-                }
-                else
-                {
-                    // always exit on end of stream (and avoid calling available)
-                    repeat = false;
-                }
+                len = copy(is, buffer, baos, remain);
+                remain = remaining(limit, remain, len);
+                repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
+
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("len/repeat: " + len + "/" + repeat);
+                    logger.debug("len/limit/repeat: " + len + "/" + limit + "/" + repeat);
                 }
             }
             while (repeat);
@@ -82,18 +83,33 @@ public class DefaultProtocol extends ByteProtocol
         return nullEmptyArray(baos.toByteArray());
     }
 
+    private int remaining(int limit, int remain, int len)
+    {
+        if (UNLIMITED == limit)
+        {
+            return bufferSize;
+        }
+        else if (EOF != len)
+        {
+            return remain - len;
+        }
+        else
+        {
+            return remain;
+        }
+    }
+
     /**
-     * Decide whether to isRepeat transfer.  This implementation does so if
+     * Decide whether to repeat transfer.  This implementation does so if
      * more data are available.  Note that previously, while documented as such,
      * there was also the additional requirement that the previous transfer
      * completely used the transfer buffer.
      *
      * @param len Amount transferred last call (-1 on EOF or socket error)
-     * @param size Total amount transferred
      * @param available Amount available
      * @return true if the transfer should continue
      */
-    protected boolean isRepeat(int len, int size, int available)
+    protected boolean isRepeat(int len, int available)
     {
         // previous logic - less reliable on slow networks
 //        return len == bufferSize && available > 0;
