@@ -24,7 +24,7 @@ public class ChitChatter
 
     public ChitChatter()
     {
-        chitchat = new Message("hello-example", 1).getMessage();
+        chitchat = LocaleMessage.getGreetingPart2();
     }
 
     public void chat(ChatString string)

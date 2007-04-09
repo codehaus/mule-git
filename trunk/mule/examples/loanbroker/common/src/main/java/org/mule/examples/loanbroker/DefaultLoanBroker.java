@@ -10,7 +10,6 @@
 
 package org.mule.examples.loanbroker;
 
-import org.mule.config.i18n.Message;
 import org.mule.examples.loanbroker.messages.CreditProfile;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
@@ -48,7 +47,7 @@ public class DefaultLoanBroker implements LoanBrokerService
                 String.valueOf(request.getLoanAmount()),
                 String.valueOf(request.getLoanDuration()) };
 
-            logger.info("\n***** " + new Message("loanbroker-example", 1, params).getMessage());
+            logger.info("\n***** " + LocaleMessage.getString("1", params));
         }        
         return request;
     }
@@ -74,7 +73,7 @@ public class DefaultLoanBroker implements LoanBrokerService
                 String.valueOf(profile.getCreditScore()),
                 String.valueOf(profile.getCreditHistory()) };
 
-            logger.info("\n***** " + new Message("loanbroker-example", 7, params).getMessage());
+            logger.info("\n***** " + LocaleMessage.getString("7", params));
         }
         return profile;
     }
@@ -86,7 +85,7 @@ public class DefaultLoanBroker implements LoanBrokerService
         {
             String[] params = new String[] { String.valueOf(quotes), 
                 quote.toString() };
-            logger.info("\n***** " + new Message("loanbroker-example", 2, params).getMessage());
+            logger.info("\n***** " + LocaleMessage.getString("2", params));
         }
         return quote;
     }

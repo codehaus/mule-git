@@ -13,7 +13,6 @@ package org.mule.examples.loanbroker;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
-import org.mule.config.i18n.Message;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.extras.client.MuleClient;
@@ -74,7 +73,7 @@ public abstract class AbstractLoanBrokerApp
         int response = 0;
         while (response != 'q')
         {
-            System.out.println("\n" + new Message("loanbroker-example", 41).getMessage());
+            System.out.println("\n" + LocaleMessage.getString("41"));
 
             response = readCharacter();
 
@@ -95,11 +94,11 @@ public abstract class AbstractLoanBrokerApp
 
                 case '3' :
                 {
-                    System.out.println(new Message("loanbroker-example", 22).getMessage());
+                    System.out.println(LocaleMessage.getString("22"));
                     int number = readInt();
                     if (number < 1)
                     {
-                        System.out.println(new Message("loanbroker-example", 23).getMessage());
+                        System.out.println(LocaleMessage.getString("23"));
                     }
                     else
                     {
@@ -110,14 +109,14 @@ public abstract class AbstractLoanBrokerApp
 
                 case 'q' :
                 {
-                    System.out.println(new Message("loanbroker-example", 14).getMessage());
+                    System.out.println(LocaleMessage.getString("14"));
                     dispose();
                     System.exit(0);
                 }
 
                 default :
                 {
-                    System.out.println(new Message("loanbroker-example", 15).getMessage());
+                    System.out.println(LocaleMessage.getString("15"));
                 }
             }
         }
@@ -134,14 +133,14 @@ public abstract class AbstractLoanBrokerApp
     protected static CustomerQuoteRequest getRequestFromUser() throws IOException
     {
         byte[] buf = new byte[128];
-        System.out.print(new Message("loanbroker-example", 16).getMessage());
+        System.out.print(LocaleMessage.getString("16"));
         System.in.read(buf);
         String name = new String(buf).trim();
-        System.out.print(new Message("loanbroker-example", 17).getMessage());
+        System.out.print(LocaleMessage.getString("17"));
         buf = new byte[16];
         System.in.read(buf);
         String amount = new String(buf).trim();
-        System.out.print(new Message("loanbroker-example", 18).getMessage());
+        System.out.print(LocaleMessage.getString("18"));
         buf = new byte[16];
         System.in.read(buf);
         String duration = new String(buf).trim();
@@ -153,7 +152,7 @@ public abstract class AbstractLoanBrokerApp
         }
         catch (NumberFormatException e)
         {
-            System.out.println(new Message("loanbroker-example", 19, duration).getMessage());
+            System.out.println(LocaleMessage.getString("19", duration));
             d = getRandomDuration();
         }
 
@@ -164,7 +163,7 @@ public abstract class AbstractLoanBrokerApp
         }
         catch (NumberFormatException e)
         {
-            System.out.println(new Message("loanbroker-example", 20, amount).getMessage());
+            System.out.println(LocaleMessage.getString("20", amount));
             a = getRandomAmount();
         }
 
@@ -178,7 +177,7 @@ public abstract class AbstractLoanBrokerApp
         if (!sync)
         {
             client.dispatch("vm://customer.requests", request, null);
-            System.out.println(new Message("loanbroker-example", 42).getMessage());
+            System.out.println(LocaleMessage.getString("42"));
             // let the request catch up
             Thread.sleep(1500);
         }
@@ -187,11 +186,11 @@ public abstract class AbstractLoanBrokerApp
             UMOMessage result = client.send("vm://customer.requests", request, null);
             if (result == null)
             {
-                System.out.println(new Message("loanbroker-example", 12).getMessage());
+                System.out.println(LocaleMessage.getString("12"));
             }
             else
             {
-                System.out.println(new Message("loanbroker-example", 13, result.getPayload()).getMessage());
+                System.out.println(LocaleMessage.getString("13", result.getPayload()));
             }
         }
     }
@@ -227,7 +226,7 @@ public abstract class AbstractLoanBrokerApp
             int i = 1;
             for (Iterator iterator = list.iterator(); iterator.hasNext(); i++)
             {
-                System.out.println(new Message("loanbroker-example", 24, String.valueOf(i), iterator.next().toString()).getMessage());
+                System.out.println(LocaleMessage.getString("24", String.valueOf(i), iterator.next().toString()));
             }
         }
         else

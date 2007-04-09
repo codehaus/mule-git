@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.esn;
 
-import org.mule.config.i18n.Message;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
+import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.util.DateUtils;
 import org.mule.util.StringMessageUtils;
@@ -73,7 +73,7 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
             {
                 long start = System.currentTimeMillis();
                 List results = loanBrokerApp.requestSend(i, "vm://customer.requests");
-                System.out.println(new Message("loanbroker-example", 10, String.valueOf(results.size())).getMessage());
+                System.out.println(LocaleMessage.getString("10", String.valueOf(results.size())));
                 List output = new ArrayList(results.size());
                 int x = 1;
                 for (Iterator iterator = results.iterator(); iterator.hasNext(); x++)
@@ -84,7 +84,7 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
                 System.out.println(StringMessageUtils.getBoilerPlate(output, '*', 80));
                 long cur = System.currentTimeMillis();
                 System.out.println(DateUtils.getFormattedDuration(cur - start));
-                System.out.println(new Message("loanbroker-example", 11, String.valueOf( ((cur - start) / x) )).getMessage());
+                System.out.println(LocaleMessage.getString("11", String.valueOf( ((cur - start) / x) )));
             }
             else
             {
@@ -103,14 +103,14 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
 
     protected static String getInteractiveConfig() throws IOException
     {
-        System.out.println(StringMessageUtils.getBoilerPlate(new Message("loanbroker-example", 40).getMessage()));
+        System.out.println(StringMessageUtils.getBoilerPlate(LocaleMessage.getString("40")));
                     
         int response = 0;
         String provider = "axis";
 
         while (response != 'a' && response != 'x')
         {
-            System.out.println("\n" + new Message("loanbroker-example", 43).getMessage());
+            System.out.println("\n" + LocaleMessage.getString("43"));
             response = readCharacter();
             switch (response)
             {
@@ -130,20 +130,20 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         response = 0;
         while (response != 'a' && response != 's')
         {
-            System.out.println("\n" + new Message("loanbroker-example", 44).getMessage());
+            System.out.println("\n" + LocaleMessage.getString("44"));
             response = readCharacter();
             switch (response)
             {
                 case 'a' :
                 {
-                    System.out.println(new Message("loanbroker-example", 45).getMessage());
+                    System.out.println(LocaleMessage.getString("45"));
                     synchronous = false;
                     break;
                 }
 
                 case 's' :
                 {
-                    System.out.println(new Message("loanbroker-example", 46).getMessage());
+                    System.out.println(LocaleMessage.getString("46"));
                     synchronous = true;
                     break;
                 }
