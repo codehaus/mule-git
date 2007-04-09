@@ -53,7 +53,7 @@ public class TcpConnector extends AbstractConnector
     private int receiveBufferSize = DEFAULT_BUFFER_SIZE;
     private int receiveBacklog = DEFAULT_BACKLOG;
     private boolean sendTcpNoDelay;
-    private boolean checkConnection = true;
+    private boolean validateConnections = true;
     private int socketLinger = INT_VALUE_NOT_SET;
     private String tcpProtocolClassName;
     private TcpProtocol tcpProtocol;
@@ -394,15 +394,15 @@ public class TcpConnector extends AbstractConnector
      *
      * @return If true, the message adapter opens and closes the socket on intialisation.
      */
-    public boolean isCheckConnection() {
-        return checkConnection;
+    public boolean isValidateConnections() {
+        return validateConnections;
     }
 
     /**
-     * @see #isCheckConnection()
-     * @param checkConnection If true, the message adapter opens and closes the socket on intialisation.
+     * @see #isValidateConnections()
+     * @param validateConnections If true, the message adapter opens and closes the socket on intialisation.
      */
-    public void setCheckConnection(boolean checkConnection) {
-        this.checkConnection = checkConnection;
+    public void setValidateConnections(boolean validateConnections) {
+        this.validateConnections = validateConnections;
     }
 }

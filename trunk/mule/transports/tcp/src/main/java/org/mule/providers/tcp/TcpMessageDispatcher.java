@@ -12,7 +12,6 @@ package org.mule.providers.tcp;
 
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -171,7 +170,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
     protected void doConnect() throws Exception
     {
         // Test the connection
-        if (connector.isCheckConnection())
+        if (connector.isValidateConnections())
         {
             Socket socket = connector.getSocket(endpoint);
             connector.releaseSocket(socket, endpoint);

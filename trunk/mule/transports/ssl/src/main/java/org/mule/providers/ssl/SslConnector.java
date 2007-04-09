@@ -44,7 +44,7 @@ implements TlsDirectKeyStore, TlsIndirectKeyStore, TlsDirectTrustStore
         setSocketFactory(new SslSocketFactory(tls));
         setServerSocketFactory(new SslServerSocketFactory(tls));
         // setting this true causes problems as socket closes before handshake finishes
-        setCheckConnection(false);
+        setValidateConnections(false);
     }
 
     // @Override
