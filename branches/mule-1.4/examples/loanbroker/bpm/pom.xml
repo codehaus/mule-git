@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-loanbroker-parent</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4-RC1</version>
     </parent>
     <artifactId>mule-example-loanbroker-bpm</artifactId>
     <packaging>jar</packaging>
