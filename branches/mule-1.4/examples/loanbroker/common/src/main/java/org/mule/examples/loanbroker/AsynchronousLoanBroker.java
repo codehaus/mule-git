@@ -11,23 +11,19 @@
 package org.mule.examples.loanbroker;
 
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
-import org.mule.examples.loanbroker.messages.LoanQuote;
+import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 
 /**
  * <code>LoanBroker</code> is the Service that starts the loan request process. The
  * broker also receives the final quote.
  */
-public interface LoanBrokerService
+public class AsynchronousLoanBroker extends DefaultLoanBroker
 {
-    /**
-     * Triggered by an incoming customer request for a loan.
-     * @return Outgoing payload will depend on the implementation
-     */
-	Object getLoanQuote(CustomerQuoteRequest request) throws LoanBrokerException;
-
-    /**
-     * Triggered by an incoming offer from a bank.
-     * @return Outgoing payload will depend on the implementation
-     */
-    Object receiveQuote(LoanQuote quote);
+    public Object getLoanQuote(CustomerQuoteRequest request) throws LoanBrokerException
+    {
+        super.getLoanQuote(request);
+        LoanBrokerQuoteRequest bqr = new LoanBrokerQuoteRequest();
+        bqr.setCustomerRequest(request);
+        return bqr;
+    }
 }

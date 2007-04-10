@@ -26,10 +26,11 @@ import org.mule.umo.UMOMessage;
  */
 public class SynchronousLoanBroker extends DefaultLoanBroker
 {
-    public LoanBrokerQuoteRequest getLoanQuote(CustomerQuoteRequest request) throws LoanBrokerException
+    public Object getLoanQuote(CustomerQuoteRequest request) throws LoanBrokerException
     {
-        // The Loan Broker request contains the original request from the customer plus additional info.
-        LoanBrokerQuoteRequest bqr = super.getLoanQuote(request);
+        super.getLoanQuote(request);
+        LoanBrokerQuoteRequest bqr = new LoanBrokerQuoteRequest();
+        bqr.setCustomerRequest(request);
         
     	// Get context used to generate new messages.
         UMOEventContext context = RequestContext.getEventContext();
