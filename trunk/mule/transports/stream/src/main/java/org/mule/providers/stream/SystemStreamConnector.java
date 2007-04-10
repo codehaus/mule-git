@@ -116,7 +116,7 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getPromptMessage()
     {
-        if (!StringUtils.isBlank(resourceBundle) && !StringUtils.isBlank(promptMessageCode))
+        if (!StringUtils.isBlank(resourceBundle) && StringUtils.isNotBlank(promptMessageCode))
         {
             return LocaleMessageHandler.getString(resourceBundle, promptMessageCode);
         }
