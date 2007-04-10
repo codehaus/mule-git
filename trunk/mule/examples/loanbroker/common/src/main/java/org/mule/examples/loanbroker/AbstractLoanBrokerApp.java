@@ -73,7 +73,7 @@ public abstract class AbstractLoanBrokerApp
         int response = 0;
         while (response != 'q')
         {
-            System.out.println("\n" + LocaleMessage.getString("41"));
+            System.out.println("\n" + LocaleMessage.getString(LocaleMessage.MENU));
 
             response = readCharacter();
 
@@ -94,11 +94,11 @@ public abstract class AbstractLoanBrokerApp
 
                 case '3' :
                 {
-                    System.out.println(LocaleMessage.getString("22"));
+                    System.out.println(LocaleMessage.getString(LocaleMessage.MENU_OPTION_NUM_REQUESTS));
                     int number = readInt();
                     if (number < 1)
                     {
-                        System.out.println(LocaleMessage.getString("23"));
+                        System.out.println(LocaleMessage.getString(LocaleMessage.MENU_ERROR_NUM_REQUESTS));
                     }
                     else
                     {
@@ -109,14 +109,14 @@ public abstract class AbstractLoanBrokerApp
 
                 case 'q' :
                 {
-                    System.out.println(LocaleMessage.getString("14"));
+                    System.out.println(LocaleMessage.getString(LocaleMessage.EXITING));
                     dispose();
                     System.exit(0);
                 }
 
                 default :
                 {
-                    System.out.println(LocaleMessage.getString("15"));
+                    System.out.println(LocaleMessage.getString(LocaleMessage.MENU_ERROR));
                 }
             }
         }
@@ -133,14 +133,14 @@ public abstract class AbstractLoanBrokerApp
     protected static CustomerQuoteRequest getRequestFromUser() throws IOException
     {
         byte[] buf = new byte[128];
-        System.out.print(LocaleMessage.getString("16"));
+        System.out.print(LocaleMessage.getString(LocaleMessage.ENTER_NAME));
         System.in.read(buf);
         String name = new String(buf).trim();
-        System.out.print(LocaleMessage.getString("17"));
+        System.out.print(LocaleMessage.getString(LocaleMessage.ENTER_LOAN_AMT));
         buf = new byte[16];
         System.in.read(buf);
         String amount = new String(buf).trim();
-        System.out.print(LocaleMessage.getString("18"));
+        System.out.print(LocaleMessage.getString(LocaleMessage.ENTER_LOAN_DURATION));
         buf = new byte[16];
         System.in.read(buf);
         String duration = new String(buf).trim();
@@ -152,7 +152,7 @@ public abstract class AbstractLoanBrokerApp
         }
         catch (NumberFormatException e)
         {
-            System.out.println(LocaleMessage.getString("19", duration));
+            System.out.println(LocaleMessage.getString(LocaleMessage.LOAN_DURATION_ERROR, duration));
             d = getRandomDuration();
         }
 
@@ -163,7 +163,7 @@ public abstract class AbstractLoanBrokerApp
         }
         catch (NumberFormatException e)
         {
-            System.out.println(LocaleMessage.getString("20", amount));
+            System.out.println(LocaleMessage.getString(LocaleMessage.LOAN_AMT_ERROR, amount));
             a = getRandomAmount();
         }
 
@@ -177,7 +177,7 @@ public abstract class AbstractLoanBrokerApp
         if (!sync)
         {
             client.dispatch("vm://customer.requests", request, null);
-            System.out.println(LocaleMessage.getString("42"));
+            System.out.println(LocaleMessage.getString(LocaleMessage.SENT_ASYNC));
             // let the request catch up
             Thread.sleep(1500);
         }
@@ -186,11 +186,11 @@ public abstract class AbstractLoanBrokerApp
             UMOMessage result = client.send("vm://customer.requests", request, null);
             if (result == null)
             {
-                System.out.println(LocaleMessage.getString("12"));
+                System.out.println(LocaleMessage.getString(LocaleMessage.REQUEST_ERROR));
             }
             else
             {
-                System.out.println(LocaleMessage.getString("13", result.getPayload()));
+                System.out.println(LocaleMessage.getString(LocaleMessage.REQUEST_RESPONSE, result.getPayload()));
             }
         }
     }
@@ -226,7 +226,7 @@ public abstract class AbstractLoanBrokerApp
             int i = 1;
             for (Iterator iterator = list.iterator(); iterator.hasNext(); i++)
             {
-                System.out.println(LocaleMessage.getString("24", String.valueOf(i), iterator.next().toString()));
+                System.out.println(LocaleMessage.getString(LocaleMessage.REQUEST, String.valueOf(i), iterator.next().toString()));
             }
         }
         else

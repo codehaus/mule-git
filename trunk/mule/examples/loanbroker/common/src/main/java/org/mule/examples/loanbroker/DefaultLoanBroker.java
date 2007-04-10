@@ -47,7 +47,7 @@ public class DefaultLoanBroker implements LoanBrokerService
                 String.valueOf(request.getLoanAmount()),
                 String.valueOf(request.getLoanDuration()) };
 
-            logger.info("\n***** " + LocaleMessage.getString("1", params));
+            logger.info("\n***** " + LocaleMessage.getString(LocaleMessage.RECEIVED_REQUEST, params));
         }        
         return request;
     }
@@ -73,7 +73,7 @@ public class DefaultLoanBroker implements LoanBrokerService
                 String.valueOf(profile.getCreditScore()),
                 String.valueOf(profile.getCreditHistory()) };
 
-            logger.info("\n***** " + LocaleMessage.getString("7", params));
+            logger.info("\n***** " + LocaleMessage.getString(LocaleMessage.RECEIVED_PROFILE, params));
         }
         return profile;
     }
@@ -85,7 +85,7 @@ public class DefaultLoanBroker implements LoanBrokerService
         {
             String[] params = new String[] { String.valueOf(quotes), 
                 quote.toString() };
-            logger.info("\n***** " + LocaleMessage.getString("2", params));
+            logger.info("\n***** " + LocaleMessage.getString(LocaleMessage.RECEIVED_QUOTE, params));
         }
         return quote;
     }

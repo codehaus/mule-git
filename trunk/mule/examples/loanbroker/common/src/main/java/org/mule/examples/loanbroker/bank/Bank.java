@@ -87,7 +87,7 @@ public class Bank implements UMODescriptorAware, Serializable, BankService
         LoanQuote quote = new LoanQuote();
         quote.setBankName(getBankName());
         quote.setInterestRate(primeRate);
-        logger.info(LocaleMessage.getString("3", quote.toString()));
+        logger.info(LocaleMessage.getString(LocaleMessage.RECEIVED_RATE, quote.toString()));
         
         return quote;
     }

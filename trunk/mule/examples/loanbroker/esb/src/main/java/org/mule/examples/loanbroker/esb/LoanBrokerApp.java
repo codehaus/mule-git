@@ -71,17 +71,17 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         int response = 0;
         
         System.out.println("******************\n"
-            + LocaleMessage.getString("30")
+            + LocaleMessage.getString(LocaleMessage.ESB_WELCOME)
             + "\n******************");
         response = readCharacter();
         if (response == '1')
         {
-            System.out.println(LocaleMessage.getString("31"));
+            System.out.println(LocaleMessage.getString(LocaleMessage.LOADING_ENDPOINT_EJB));
             return "loan-broker-esb-mule-config.xml";
         }
         else
         {
-            System.out.println(LocaleMessage.getString("33"));
+            System.out.println(LocaleMessage.getString(LocaleMessage.LOADING_MANAGED_EJB));
             return "loan-broker-esb-mule-config-with-ejb-container.xml";
         }
     }
