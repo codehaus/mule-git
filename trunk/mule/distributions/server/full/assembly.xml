@@ -123,6 +123,10 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/maven/errorhandler/conf</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/errorhandler/src/main/resources</directory>
+          <outputDirectory>examples/maven/errorhandler/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/errorhandler/src</directory>
           <outputDirectory>examples/maven/errorhandler/src</outputDirectory>
       </fileSet>
@@ -157,6 +161,10 @@ Assembly descriptor for the full Mule distribution.
       </fileSet>
       <fileSet>
           <directory>../../../examples/errorhandler/conf</directory>
+          <outputDirectory>examples/ant/errorhandler/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/errorhandler/src/main/resources</directory>
           <outputDirectory>examples/ant/errorhandler/conf</outputDirectory>
       </fileSet>
       <fileSet>
@@ -202,6 +210,10 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/maven/hello/conf</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/hello/src/main/resources</directory>
+          <outputDirectory>examples/maven/hello/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/hello/src</directory>
           <outputDirectory>examples/maven/hello/src</outputDirectory>
       </fileSet>
@@ -232,6 +244,10 @@ Assembly descriptor for the full Mule distribution.
       </fileSet>
       <fileSet>
           <directory>../../../examples/hello/conf</directory>
+          <outputDirectory>examples/ant/hello/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/hello/src/main/resources</directory>
           <outputDirectory>examples/ant/hello/conf</outputDirectory>
       </fileSet>
       <fileSet>
@@ -438,6 +454,10 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/maven/stockquote/conf</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/stockquote/src/main/resources</directory>
+          <outputDirectory>examples/maven/stockquote/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/stockquote/src</directory>
           <outputDirectory>examples/maven/stockquote/src</outputDirectory>
       </fileSet>
@@ -471,12 +491,22 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/ant/stockquote/conf</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/stockquote/src/main/resources</directory>
+          <outputDirectory>examples/ant/stockquote/conf</outputDirectory>
+          <includes>
+              <include>*.properties</include>
+          </includes>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/stockquote/src/main/java</directory>
           <outputDirectory>examples/ant/stockquote/src</outputDirectory>
       </fileSet>
       <fileSet>
           <directory>../../../examples/stockquote/src/main/resources</directory>
           <outputDirectory>examples/ant/stockquote/resources</outputDirectory>
+          <excludes>
+              <exclude>*.properties</exclude>
+          </excludes>
       </fileSet>
 
       <!--
@@ -513,6 +543,10 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/maven/voipservice/conf</outputDirectory>
       </fileSet>
       <fileSet>
+          <directory>../../../examples/voipservice/src/main/resources</directory>
+          <outputDirectory>examples/maven/voipservice/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
           <directory>../../../examples/voipservice/src</directory>
           <outputDirectory>examples/maven/voipservice/src</outputDirectory>
       </fileSet>
@@ -543,6 +577,10 @@ Assembly descriptor for the full Mule distribution.
       </fileSet>
       <fileSet>
           <directory>../../../examples/voipservice/conf</directory>
+          <outputDirectory>examples/ant/voipservice/conf</outputDirectory>
+      </fileSet>
+      <fileSet>
+          <directory>../../../examples/voipservice/src/main/resources</directory>
           <outputDirectory>examples/ant/voipservice/conf</outputDirectory>
       </fileSet>
       <fileSet>
