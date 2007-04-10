@@ -12,6 +12,8 @@
         <event type="node-enter">
             <action class="org.jbpm.actions.mule.SendMuleEvent">
                 <endpoint>test:///tmp</endpoint>
+                <payload>Message in a bottle.</payload>
+                <synchronous>false</synchronous>
             </action>
         </event>
         <transition to="end" />

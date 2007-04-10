@@ -61,8 +61,10 @@
     
     <model name="loan-broker">
         <mule-descriptor name="LoanBroker"
-        inboundEndpoint="CustomerRequests"
             implementation="org.mule.examples.loanbroker.esn.SynchronousLoanBroker">
+            <inbound-router>
+            	<endpoint address="CustomerRequests"/>
+            </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
                     <endpoint address="CreditAgency" transformers="ExtractCustomer"/>
@@ -93,8 +95,10 @@
         The Lender service is used to determine which banks to contact for a quote
         -->
         <mule-descriptor name="LenderService"
-        inboundEndpoint="LenderService"
             			 implementation="org.mule.examples.loanbroker.lender.DefaultLender">
+            <inbound-router>
+            	<endpoint address="LenderService"/>
+            </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
                     <endpoint address="BankGateway" transformers="SetLendersAsRecipients"/>
@@ -103,8 +107,10 @@
         </mule-descriptor>
             
         <mule-descriptor name="BankGateway"
-        inboundEndpoint="BankGateway"
             			 implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+            	<endpoint address="BankGateway"/>
+            </inbound-router>
             <outbound-router>
                 <catch-all-strategy className="org.mule.routing.LoggingCatchAllStrategy"/>
                 <router className="org.mule.routing.outbound.StaticRecipientList">
