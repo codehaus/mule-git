@@ -37,12 +37,11 @@ import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.StringUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.util.Collections;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -514,12 +513,13 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         {
             return false;
         }
-        if (transformer != null
-                        ? !transformer.equals(immutableMuleProviderDescriptor.transformer)
-                        : immutableMuleProviderDescriptor.transformer != null)
-        {
-            return false;
-        }
+        // MULE-1551
+//        if (transformer != null
+//                        ? !transformer.equals(immutableMuleProviderDescriptor.transformer)
+//                        : immutableMuleProviderDescriptor.transformer != null)
+//        {
+//            return false;
+//        }
         if (!type.equals(immutableMuleProviderDescriptor.type))
         {
             return false;
@@ -530,11 +530,27 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public int hashCode()
     {
-        int result = (connector != null ? connector.hashCode() : 0);
-        result = 29 * result + (endpointUri != null ? endpointUri.hashCode() : 0);
-        result = 29 * result + (transformer != null ? transformer.hashCode() : 0);
-        result = 29 * result + (name != null ? name.hashCode() : 0);
-        return 29 * result + (type != null ? type.hashCode() : 0);
+        int result = appendHash(0, connector);
+        result = appendHash(result, endpointUri);
+        // MULE-1551
+//        result = appendHash(result, transformer);
+        result = appendHash(result, name);
+        result = appendHash(result, type);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("hashCode: " + result);
+        }
+        return result;
+    }
+
+    private int appendHash(int hash, Object component)
+    {
+        int delta = component != null ? component.hashCode() : 0;
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(component + ": " + delta);
+        }
+        return 29 * hash + delta;
     }
 
     public UMOFilter getFilter()
