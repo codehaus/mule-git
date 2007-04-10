@@ -5,7 +5,7 @@ Assembly descriptor for the full Mule distribution.
   <id>full</id>
   <formats>
     <format>zip</format>
-    <!--<format>tar.gz</format>-->
+    <format>tar.gz</format>
   </formats>
 
   <fileSets>

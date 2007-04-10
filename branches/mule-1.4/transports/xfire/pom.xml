@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4-RC1</version>
     </parent>
     <artifactId>mule-transport-xfire</artifactId>
     <packaging>jar</packaging>
@@ -56,6 +56,7 @@
             <artifactId>mule-transport-soap</artifactId>
             <version>${version}</version>
             <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         
         <!-- This is needed by org.mule.providers.soap.xfire.transport.MuleUniversalChannel -->

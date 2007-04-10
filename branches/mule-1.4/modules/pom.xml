@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4-RC1</version>
     </parent>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-modules</artifactId>
@@ -19,7 +19,10 @@
         <module>builders</module>
         <module>boot</module>
         <module>client</module>
+        <!-- do not publish the CSV module as per decision in dev meeting in SFO
         <module>csv</module>
+        <module>wssecurity</module>
+        -->
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
@@ -31,7 +34,6 @@
         <module>registry</module>
         <module>scripting</module>
         <module>spring</module>
-        <module>wssecurity</module>
         <module>xml</module>
     </modules>
 
