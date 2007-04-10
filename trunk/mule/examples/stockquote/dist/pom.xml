@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
     </dependencies>
 
