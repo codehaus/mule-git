@@ -12,60 +12,31 @@
     </description>
 
     <mule-environment-properties synchronous="true" serverUrl=""/>
-
-	<!-- TODO Move these to global-endpoints once MULE-1464 is fixed. -->
-    <endpoint-identifiers>
-        <endpoint-identifier name="CustomerRequests" value="vm://customer.requests"/>
-        <endpoint-identifier name="LoanBrokerQuotes" value="vm://loan.quotes"/>
-        <endpoint-identifier name="CreditAgency" value="xfire:http://localhost:18080/mule/CreditAgencyService?method=getCreditProfile"/>
-        <endpoint-identifier name="CreditAgencyIn" value="xfire:http://localhost:18080/mule"/>
-        <endpoint-identifier name="LenderService" value="vm://lender.service?method=setLenderList"/>
-        <endpoint-identifier name="BankGateway" value="vm://bank.gateway"/>
-    </endpoint-identifiers>
-
-    <transformers>
-    	<transformer name="ExtractCustomer" className="org.mule.transformers.simple.GetBeanProperty">
-    		<properties>
-    			<property name="propertyName" value="customerRequest.customer" />
-    		</properties>
-    	</transformer>
-        <transformer name="SetLendersAsRecipients" className="org.mule.examples.loanbroker.transformers.SetLendersAsRecipients" />
-    </transformers>
-    
-    <global-endpoints>
-        <endpoint name="Bank1" address="xfire:http://localhost:10080/mule/Bank1?method=getLoanQuote"/>
-        <endpoint name="Bank2" address="xfire:http://localhost:20080/mule/Bank2?method=getLoanQuote"/>
-        <endpoint name="Bank3" address="xfire:http://localhost:30080/mule/Bank3?method=getLoanQuote"/>
-        <endpoint name="Bank4" address="xfire:http://localhost:40080/mule/Bank4?method=getLoanQuote"/>
-        <endpoint name="Bank5" address="xfire:http://localhost:50080/mule/Bank5?method=getLoanQuote"/>
-        <endpoint name="Bank1In" address="xfire:http://localhost:10080/mule"/>
-        <endpoint name="Bank2In" address="xfire:http://localhost:20080/mule"/>
-        <endpoint name="Bank3In" address="xfire:http://localhost:30080/mule"/>
-        <endpoint name="Bank4In" address="xfire:http://localhost:40080/mule"/>
-        <endpoint name="Bank5In" address="xfire:http://localhost:50080/mule"/>
-    </global-endpoints>
-    
+ 
     <model name="loan-broker">
-        <mule-descriptor name="LoanBroker"
-            implementation="org.mule.examples.loanbroker.esn.SynchronousLoanBroker">
+        <mule-descriptor name="LoanBroker" implementation="org.mule.examples.loanbroker.esn.SynchronousLoanBroker">
+
             <inbound-router>
-                <endpoint address="CustomerRequests"/>
+                <global-endpoint name="CustomerRequests"/>
             </inbound-router>
+
+            <nested-router>
+                <binding interface="org.mule.examples.loanbroker.credit.CreditAgencyService">
+                    <global-endpoint name="CreditAgency"/>
+                </binding>
+            </nested-router>
 
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="CreditAgency" transformers="ExtractCustomer"/>
-                    <filter expression="/creditProfile = null" className="org.mule.routing.filters.xml.JXPathFilter"/>
-                </router>
-                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="LenderService"/>
-                    <filter expression="/lenders = null" className="org.mule.routing.filters.xml.JXPathFilter"/>
+                    <global-endpoint name="LenderService"/>
                 </router>
             </outbound-router>
+
             <response-router timeout="10000">
-                <endpoint address="LoanBrokerQuotes"/>
+                <global-endpoint name="LoanBrokerQuotes"/>
                 <router className="org.mule.examples.loanbroker.routers.BankQuotesResponseAggregator"/>
             </response-router>
+            
         </mule-descriptor>
 
         <!--
@@ -74,7 +45,7 @@
         <mule-descriptor name="CreditAgencyService"
             			 implementation="org.mule.examples.loanbroker.credit.DefaultCreditAgency">
             <inbound-router>
-                <endpoint address="CreditAgencyIn"/>
+                <global-endpoint name="CreditAgencyIn"/>
             </inbound-router>
         </mule-descriptor>
 
@@ -84,11 +55,11 @@
         <mule-descriptor name="LenderService"
             			 implementation="org.mule.examples.loanbroker.lender.DefaultLender">
             <inbound-router>
-                <endpoint address="LenderService"/>
+                <global-endpoint name="LenderService"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="BankGateway" transformers="SetLendersAsRecipients"/>
+                    <global-endpoint name="BankGateway" transformers="SetLendersAsRecipients"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
@@ -96,7 +67,7 @@
         <mule-descriptor name="BankGateway"
             			 implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
-                <endpoint address="BankGateway"/>
+                <global-endpoint name="BankGateway"/>
             </inbound-router>
             <outbound-router>
                 <catch-all-strategy className="org.mule.routing.LoggingCatchAllStrategy"/>
