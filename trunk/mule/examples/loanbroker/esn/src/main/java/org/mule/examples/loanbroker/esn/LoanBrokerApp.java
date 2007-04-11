@@ -30,7 +30,7 @@ import java.util.Map;
 public class LoanBrokerApp extends AbstractLoanBrokerApp
 {
     public static final String CLI_OPTIONS[][] = {
-            { "config", "true", "Configuration File" },
+            { "config", "true", "Configuration File(s)" },
             { "main", "true", "LoanBrokerApp Class"},
             { "req", "true", "Number of loan requests to use"},
             { "sync", "true", "Whether to run in synchronous mode or not"}
@@ -150,7 +150,8 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
             }
         }
 
-        String config = "loan-broker-" + provider + "-" + (synchronous ? "sync" : "async") + "-config.xml";
+        String config = "loan-broker-" + (synchronous ? "sync" : "async") + "-config.xml";
+        config += ",loan-broker-" + provider + "-endpoints-config.xml";
         return config;
     }
 }

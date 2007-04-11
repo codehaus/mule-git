@@ -12,47 +12,8 @@
     each component communicates messaging according to its configuration in this file.
     </description>
 
-    <mule-environment-properties serverUrl="" enableMessageEvents="false" >
-        <threading-profile maxBufferSize="0" maxThreadsActive="8" maxThreadsIdle="1" poolExhaustedAction="RUN" threadTTL="60000"/>
-        <pooling-profile maxActive="5" maxIdle="1" exhaustedAction="GROW" maxWait="1000"/>
-        <queue-profile maxOutstandingMessages="200"/>
-    </mule-environment-properties>
+    <mule-environment-properties serverUrl=""/>
 
-	<!-- TODO Move these to global-endpoints once MULE-1464 is fixed. -->
-    <endpoint-identifiers>
-        <endpoint-identifier name="CustomerRequests" value="vm://customer.requests"/>
-        <endpoint-identifier name="CustomerResponses" value="vm://customer.responses"/>
-        <endpoint-identifier name="LoanBrokerQuotes" value="vm://loan.quotes"/>
-        <endpoint-identifier name="CreditAgency" value="vm://credit.agency"/>
-        <endpoint-identifier name="CreditAgencyIn" value="vm://credit.agency"/>
-        <endpoint-identifier name="LenderService" value="vm://lender.service?method=setLenderList"/>
-        <endpoint-identifier name="BankGateway" value="vm://bank.gateway"/>
-    </endpoint-identifiers>
-
-    <transformers>
-    	<transformer name="ExtractCustomer" className="org.mule.transformers.simple.GetBeanProperty">
-    		<properties>
-    			<property name="propertyName" value="customerRequest.customer" />
-    		</properties>
-    	</transformer>
-        <transformer name="SetLendersAsRecipients" className="org.mule.examples.loanbroker.transformers.SetLendersAsRecipients" />
-    </transformers>
-
-    <global-endpoints>
-        <!-- The method parameter for the bank endpoints is added programmatically when the bank objects are
-        created -->
-        <endpoint name="Bank1" address="vm://bank.1"/>
-        <endpoint name="Bank2" address="vm://bank.2"/>
-        <endpoint name="Bank3" address="vm://bank.3"/>
-        <endpoint name="Bank4" address="vm://bank.4"/>
-        <endpoint name="Bank5" address="vm://bank.5"/>
-        <endpoint name="Bank1In" address="vm://bank.1"/>
-        <endpoint name="Bank2In" address="vm://bank.2"/>
-        <endpoint name="Bank3In" address="vm://bank.3"/>
-        <endpoint name="Bank4In" address="vm://bank.4"/>
-        <endpoint name="Bank5In" address="vm://bank.5"/>
-    </global-endpoints>
-    
     <!--
        The Mule model initialises and manages your UMO components
     -->
@@ -70,10 +31,10 @@
                 <catch-all-strategy className="org.mule.routing.ComponentCatchAllStrategy"/>
                 
                 <!-- New requests from customers -->
-                <endpoint address="CustomerRequests"/>
+                <global-endpoint name="CustomerRequests"/>
                 
                 <!-- Loan quotes from banks -->
-                <endpoint address="LoanBrokerQuotes"/>
+                <global-endpoint name="LoanBrokerQuotes"/>
                 <router className="org.mule.examples.loanbroker.routers.BankQuotesInboundAggregator">
                     <filter expectedType="org.mule.examples.loanbroker.messages.LoanQuote" 
                     		className="org.mule.routing.filters.PayloadTypeFilter"/>
@@ -83,19 +44,19 @@
             <outbound-router>
             	<!-- Credit profile requests -->
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="CreditAgency" transformers="ExtractCustomer"/>
+                    <global-endpoint name="CreditAgency" transformers="ExtractCustomer"/>
                     <filter expectedType="org.mule.examples.loanbroker.messages.Customer" 
                     		className="org.mule.routing.filters.PayloadTypeFilter"/>
                 </router>
                 <!-- Quote requests to the banks -->
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="LenderService"/>
+                    <global-endpoint name="LenderService"/>
                     <filter expectedType="org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest" 
                     		className="org.mule.routing.filters.PayloadTypeFilter"/>
                 </router>
                 <!-- Final quote response to the customer -->
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="CustomerResponses"/>
+                    <global-endpoint name="CustomerResponses"/>
                     <filter expectedType="org.mule.examples.loanbroker.messages.LoanQuote" 
                     		className="org.mule.routing.filters.PayloadTypeFilter"/>
                 </router>
@@ -108,7 +69,7 @@
         <mule-descriptor name="CreditAgencyService"
             			 implementation="org.mule.examples.loanbroker.credit.DefaultCreditAgency">
             <inbound-router>
-                <endpoint address="CreditAgency"/>
+                <global-endpoint name="CreditAgency"/>
             </inbound-router>
         </mule-descriptor>
 
@@ -118,11 +79,11 @@
         <mule-descriptor name="LenderService"
             			 implementation="org.mule.examples.loanbroker.lender.DefaultLender">
             <inbound-router>
-                <endpoint address="LenderService"/>
+                <global-endpoint name="LenderService"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter">
-                    <endpoint address="BankGateway" transformers="SetLendersAsRecipients"/>
+                    <global-endpoint name="BankGateway" transformers="SetLendersAsRecipients"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
@@ -130,7 +91,7 @@
         <mule-descriptor name="BankGateway"
             			 implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
-                <endpoint address="BankGateway"/>
+                <global-endpoint name="BankGateway"/>
             </inbound-router>
             <outbound-router>
                 <catch-all-strategy className="org.mule.routing.LoggingCatchAllStrategy"/>
