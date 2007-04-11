@@ -7,14 +7,16 @@
 
     <mule-environment-properties serverUrl=""/>
 
-    <connector name="tcpConnector" className="org.mule.providers.tcp.TcpConnector">
+    <connector name="openConnector" className="org.mule.providers.tcp.TcpConnector">
         <properties>
             <property name="keepSendSocketOpen" value="true"/>
         </properties>
     </connector>
 
+    <connector name="closeConnector" className="org.mule.providers.tcp.TcpConnector"/>
+
     <global-endpoints>
-        <endpoint name="clientEndpoint" address="tcp://localhost:60198" synchronous="true"/>
+        <endpoint name="clientEndpoint" address="tcp://localhost:60198?connector=openConnector" synchronous="true"/>
     </global-endpoints>
 
     <model name="main">

@@ -10,12 +10,18 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.tck.FunctionalTestCase;
 import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
-import java.util.Map;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
+import java.io.InputStream;
+
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase 
 {
@@ -41,6 +47,102 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         // try an extra message in case it's a problem on repeat
         result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
+    }
+
+    public void testOpen() throws Exception
+    {
+        SimpleServerSocket server = new SimpleServerSocket(60197);
+        try
+        {
+            new Thread(server).start();
+            MuleClient client = new MuleClient();
+            client.sendNoReceive("tcp://localhost:60197?connector=openConnector", "Hello", null);
+            client.sendNoReceive("tcp://localhost:60197?connector=closeConnector", "world", null);
+            assertEquals(1, server.getCount());
+        }
+        finally
+        {
+            server.close();
+        }
+    }
+
+    public void testClose() throws Exception
+    {
+        SimpleServerSocket server = new SimpleServerSocket(60196);
+        try
+        {
+            new Thread(server).start();
+            MuleClient client = new MuleClient();
+            client.sendNoReceive("tcp://localhost:60196?connector=closeConnector", "Hello", null);
+            client.sendNoReceive("tcp://localhost:60196?connector=closeConnector", "world", null);
+            // include blip!
+            assertEquals(3, server.getCount());
+        }
+        finally
+        {
+            server.close();
+        }
+    }
+
+    private class SimpleServerSocket implements Runnable
+    {
+        
+        private ServerSocket server;
+        AtomicBoolean running = new AtomicBoolean(true);
+        int count = 0;
+
+        public SimpleServerSocket(int port) throws Exception
+        {
+            server = new ServerSocket();
+            server.bind(new InetSocketAddress("localhost", port));
+        }
+
+        public int getCount()
+        {
+            return count;
+        }
+
+        public void run()
+        {
+            logger.debug("starting server");
+            try
+            {
+                while (true)
+                {
+                    Socket socket = server.accept();
+                    count++;
+                    logger.debug("have connection " + count);
+                    InputStream in = socket.getInputStream();
+                    while (in.read() > -1)
+                    {
+                        logger.debug("read character");
+                    }
+                    socket.close();
+                }
+            }
+            catch(Exception e)
+            {
+                if (running.get())
+                {
+                    logger.error(e);
+                    count = -1;
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        public void close()
+        {
+            try
+            {
+                running.set(false);
+                server.close();
+            }
+            catch (Exception e)
+            {
+                // no-op
+            }
+        }
     }
 
 }
