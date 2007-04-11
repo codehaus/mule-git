@@ -20,6 +20,28 @@ package com.javaforge.bobber.plugin.archetype;
 import com.javaforge.bobber.archetype.model.Template;
 import com.javaforge.bobber.archetype.model.Variable;
 import com.javaforge.bobber.archetype.model.io.xpp3.BobberArchetypeXpp3Reader;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
 import org.apache.maven.archetype.Archetype;
 import org.apache.maven.archetype.ArchetypeDescriptorException;
 import org.apache.maven.archetype.ArchetypeNotFoundException;
@@ -38,27 +60,6 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.codehaus.plexus.velocity.VelocityComponent;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 //source blatantly copied from org.apache.maven.archetype.DefaultArchetype. Also stole code from DefaultPluginVersionManager.java
 
@@ -462,11 +463,10 @@ public class BobberArchetype
 
         Writer writer = null;
         try {
-            writer = new FileWriter(outFile);
-
+            getLogger().info("Processing Template: " + template.getFile());
             String templateLocation = ARCHETYPE_RESOURCES + "/" + template.getFile();
 
-            getLogger().info("Processing Template: " + template.getFile());
+            writer = new FileWriter(outFile);
             velocity.getEngine().mergeTemplate(templateLocation, context, writer);
             writer.flush();
 

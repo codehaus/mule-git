@@ -9,7 +9,7 @@
         <variable>
             <name>TransportName</name>
             <description>The protocol name to use for the transport (lower case) i.e. jms or http</description>
-            <defvalue></defvalue>
+            <defvalue>myTransport</defvalue>
         </variable>
         <variable>
             <name>TransportDescription</name>
@@ -232,3 +232,4 @@
         </template>
     </templates>
 </archetype>
+
