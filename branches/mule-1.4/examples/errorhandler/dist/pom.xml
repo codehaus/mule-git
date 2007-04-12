@@ -276,8 +276,8 @@
                                     <destFileName>${artifactId}.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>activemq</groupId>
-                                    <artifactId>activemq</artifactId>
+                                    <groupId>org.apache.activemq</groupId> 
+                                    <artifactId>apache-activemq</artifactId>
                                     <version>${activemqVersion}</version>
                                 </artifactItem>
                                 <artifactItem>
