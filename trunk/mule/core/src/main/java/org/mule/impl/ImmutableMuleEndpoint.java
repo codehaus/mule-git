@@ -536,20 +536,20 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 //        result = appendHash(result, transformer);
         result = appendHash(result, name);
         result = appendHash(result, type);
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("hashCode: " + result);
-        }
+//        if (logger.isDebugEnabled())
+//        {
+//            logger.debug("hashCode: " + result);
+//        }
         return result;
     }
 
     private int appendHash(int hash, Object component)
     {
         int delta = component != null ? component.hashCode() : 0;
-        if (logger.isDebugEnabled())
-        {
-            logger.debug(component + ": " + delta);
-        }
+//        if (logger.isDebugEnabled())
+//        {
+//            logger.debug(component + ": " + delta);
+//        }
         return 29 * hash + delta;
     }
 

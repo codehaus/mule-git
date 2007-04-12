@@ -14,14 +14,14 @@ import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.InputStream;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase 
 {
@@ -56,8 +56,8 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         {
             new Thread(server).start();
             MuleClient client = new MuleClient();
-            client.sendNoReceive("tcp://localhost:60197?connector=openConnector", "Hello", null);
-            client.sendNoReceive("tcp://localhost:60197?connector=closeConnector", "world", null);
+            client.send("tcp://localhost:60197?connector=openConnector", "Hello", null);
+            client.send("tcp://localhost:60197?connector=closeConnector", "world", null);
             assertEquals(1, server.getCount());
         }
         finally
@@ -73,8 +73,8 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         {
             new Thread(server).start();
             MuleClient client = new MuleClient();
-            client.sendNoReceive("tcp://localhost:60196?connector=closeConnector", "Hello", null);
-            client.sendNoReceive("tcp://localhost:60196?connector=closeConnector", "world", null);
+            client.send("tcp://localhost:60196?connector=closeConnector", "Hello", null);
+            client.send("tcp://localhost:60196?connector=closeConnector", "world", null);
             // include blip!
             assertEquals(3, server.getCount());
         }
@@ -88,8 +88,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
     {
         
         private ServerSocket server;
-        AtomicBoolean running = new AtomicBoolean(true);
-        int count = 0;
+        AtomicInteger count = new AtomicInteger(0);
 
         public SimpleServerSocket(int port) throws Exception
         {
@@ -97,9 +96,9 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
             server.bind(new InetSocketAddress("localhost", port));
         }
 
-        public int getCount()
+        public int getCount() throws InterruptedException
         {
-            return count;
+            return count.get();
         }
 
         public void run()
@@ -110,8 +109,9 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
                 while (true)
                 {
                     Socket socket = server.accept();
-                    count++;
+                    count.incrementAndGet();
                     logger.debug("have connection " + count);
+                    socket.getOutputStream().write("shaddup".getBytes());
                     InputStream in = socket.getInputStream();
                     while (in.read() > -1)
                     {
@@ -122,12 +122,10 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
             }
             catch(Exception e)
             {
-                if (running.get())
-                {
-                    logger.error(e);
-                    count = -1;
-                    throw new RuntimeException(e);
-                }
+                // can get a socket close error if client closes first
+                // we don't care - we're only interested in connections here
+                // and without any real protocol this is the simplest way
+                logger.debug(e);
             }
         }
 
@@ -135,7 +133,6 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         {
             try
             {
-                running.set(false);
                 server.close();
             }
             catch (Exception e)
