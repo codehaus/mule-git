@@ -73,7 +73,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
 
     public void testClose() throws Exception
     {
-        useServer("tcp://localhost:60196?connector=openConnector", 60196, 1);
+        useServer("tcp://localhost:60196?connector=closeConnector", 60196, 3);
     }
 
     private class SimpleServerSocket implements Runnable
