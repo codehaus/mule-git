@@ -11,17 +11,19 @@
 package org.mule.providers.tcp.issues;
 
 import org.mule.extras.client.MuleClient;
+import org.mule.providers.tcp.protocols.LengthProtocol;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.BufferedInputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase 
 {
@@ -68,25 +70,26 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
 
     public void testOpen() throws Exception
     {
-        useServer("tcp://localhost:60197?connector=openConnector", 60197, 1);
+        useServer("tcp://localhost:60197?connector=openConnectorLength", 60197, 1);
     }
 
     public void testClose() throws Exception
     {
-        useServer("tcp://localhost:60196?connector=closeConnector", 60196, 3);
+        useServer("tcp://localhost:60196?connector=closeConnectorLength", 60196, 3);
     }
 
     private class SimpleServerSocket implements Runnable
     {
         
         private ServerSocket server;
+        AtomicBoolean running = new AtomicBoolean(true);
         AtomicInteger count = new AtomicInteger(0);
 
         public SimpleServerSocket(int port) throws Exception
         {
             server = new ServerSocket();
             logger.debug("starting server");
-            server.bind(new InetSocketAddress("localhost", port));
+            server.bind(new InetSocketAddress("localhost", port), 3);
         }
 
         public int getCount()
@@ -98,26 +101,40 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         {
             try
             {
+                LengthProtocol protocol = new LengthProtocol();
+                // repeat for as many connections as we receive until the close()
+                // method here causes the accept to thrown a exception
                 while (true)
                 {
                     Socket socket = server.accept();
                     count.incrementAndGet();
-                    logger.debug("have connection " + count);
-                    socket.getOutputStream().write("shaddup".getBytes());
-                    InputStream in = socket.getInputStream();
-                    while (in.read() > -1)
+                    try
                     {
-                        logger.debug("read character");
+                        // repeat for as many messages as we receive before closing
+                        // of the socket by the client causes an exception to exit this loop
+                        while (true)
+                        {
+                            logger.debug("have connection " + count);
+                            String msg =
+                                    new String((byte[]) protocol.read(new BufferedInputStream(socket.getInputStream())));
+                            logger.debug("read: " + msg);
+                            logger.debug("writing reply");
+                            protocol.write(socket.getOutputStream(), "ok");
+                        }
                     }
-                    socket.close();
+                    catch (Exception e)
+                    {
+                        logger.debug(e);
+                    }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                // can get a socket close error if client closes first
-                // we don't care - we're only interested in connections here
-                // and without any real protocol this is the simplest way
-                logger.debug(e);
+                // an exception is expected during shutdown
+                if (running.get())
+                {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -125,6 +142,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         {
             try
             {
+                running.set(false);
                 server.close();
             }
             catch (Exception e)
