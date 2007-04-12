@@ -10,6 +10,14 @@
 
 package org.mule.providers.oracle.jms.transformers;
 
+import org.mule.config.i18n.Message;
+import org.mule.providers.jms.JmsConnector;
+import org.mule.providers.oracle.jms.OracleJmsConnector;
+import org.mule.transformers.AbstractEventAwareTransformer;
+import org.mule.umo.UMOEventContext;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.util.StringMessageUtils;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
@@ -22,20 +30,11 @@ import oracle.jms.AdtMessage;
 import oracle.sql.CLOB;
 import oracle.xdb.XMLType;
 
-import org.mule.config.i18n.Message;
-import org.mule.providers.jms.JmsConnector;
-import org.mule.providers.oracle.jms.OracleJmsConnector;
-import org.mule.transformers.AbstractEventAwareTransformer;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.util.StringMessageUtils;
-
 /**
  * Transformer for use with the Oracle Jms Connector. Expects a string containing
  * properly-formed XML. Creates a JMS message whose payload is Oracle's native XML
  * data type.
  * 
- * @see XMLMessageToString
  * @see OracleJmsConnector
  * @see <a href="http://otn.oracle.com/pls/db102/">XML DB Developer's Guide</a>
  */
@@ -55,9 +54,9 @@ public class StringToXMLMessage extends AbstractEventAwareTransformer
      */
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException
     {
-        Session session = null;
-        AdtMessage message = null;
-        XMLType xmltype = null;
+        Session session;
+        AdtMessage message;
+        XMLType xmltype;
 
         try
         {
