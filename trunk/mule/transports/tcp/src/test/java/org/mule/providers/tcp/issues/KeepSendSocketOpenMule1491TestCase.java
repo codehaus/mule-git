@@ -107,6 +107,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
                 while (true)
                 {
                     Socket socket = server.accept();
+                    logger.debug("have connection " + count);
                     count.incrementAndGet();
                     try
                     {
@@ -114,7 +115,6 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
                         // of the socket by the client causes an exception to exit this loop
                         while (true)
                         {
-                            logger.debug("have connection " + count);
                             String msg =
                                     new String((byte[]) protocol.read(new BufferedInputStream(socket.getInputStream())));
                             logger.debug("read: " + msg);
