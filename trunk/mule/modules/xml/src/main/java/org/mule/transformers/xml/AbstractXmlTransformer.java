@@ -38,8 +38,8 @@ import org.mule.transformers.AbstractTransformer;
 
 public abstract class AbstractXmlTransformer extends AbstractTransformer
 {
-	private String outputEncoding = null;
-	
+    private String outputEncoding;
+
     public AbstractXmlTransformer()
     {
         registerSourceType(String.class);
@@ -206,7 +206,7 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
     protected String convertToText(Object obj)
         throws TransformerFactoryConfigurationError, javax.xml.transform.TransformerException
     {
-    	return convertToText(obj, null);
+        return convertToText(obj, null);
     }
 
     /**
@@ -245,9 +245,9 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         Transformer idTransformer = TransformerFactory.newInstance().newTransformer();
         if (outputEncoding != null)
         {
-        	idTransformer.setOutputProperty(OutputKeys.ENCODING, outputEncoding);
+            idTransformer.setOutputProperty(OutputKeys.ENCODING, outputEncoding);
         }
-		idTransformer.transform(src, result);
+        idTransformer.transform(src, result);
         return writer.getBuffer().toString();
     }
     
@@ -280,20 +280,20 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         return writer.getBuffer().toString();
     }
 
-	/**
-	 * @return the outputEncoding
-	 */
-	public String getOutputEncoding()
-	{
-		return outputEncoding;
-	}
+    /**
+     * @return the outputEncoding
+     */
+    public String getOutputEncoding()
+    {
+        return outputEncoding;
+    }
 
-	/**
-	 * @param outputEncoding the outputEncoding to set
-	 */
-	public void setOutputEncoding(String outputEncoding)
-	{
-		this.outputEncoding = outputEncoding;
-	}
+    /**
+     * @param outputEncoding the outputEncoding to set
+     */
+    public void setOutputEncoding(String outputEncoding)
+    {
+        this.outputEncoding = outputEncoding;
+    }
         
 }
