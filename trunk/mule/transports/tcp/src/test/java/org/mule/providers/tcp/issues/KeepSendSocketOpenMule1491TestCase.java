@@ -49,16 +49,16 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 
-    public void testOpen() throws Exception
+    private void useServer(String endpoint, int port, int count) throws Exception
     {
-        SimpleServerSocket server = new SimpleServerSocket(60197);
+        SimpleServerSocket server = new SimpleServerSocket(port);
         try
         {
             new Thread(server).start();
             MuleClient client = new MuleClient();
-            client.send("tcp://localhost:60197?connector=openConnector", "Hello", null);
-            client.send("tcp://localhost:60197?connector=closeConnector", "world", null);
-            assertEquals(1, server.getCount());
+            client.send(endpoint, "Hello", null);
+            client.send(endpoint, "world", null);
+            assertEquals(count, server.getCount());
         }
         finally
         {
@@ -66,22 +66,14 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         }
     }
 
+    public void testOpen() throws Exception
+    {
+        useServer("tcp://localhost:60197?connector=openConnector", 60197, 1);
+    }
+
     public void testClose() throws Exception
     {
-        SimpleServerSocket server = new SimpleServerSocket(60196);
-        try
-        {
-            new Thread(server).start();
-            MuleClient client = new MuleClient();
-            client.send("tcp://localhost:60196?connector=closeConnector", "Hello", null);
-            client.send("tcp://localhost:60196?connector=closeConnector", "world", null);
-            // include blip!
-            assertEquals(3, server.getCount());
-        }
-        finally
-        {
-            server.close();
-        }
+        useServer("tcp://localhost:60196?connector=openConnector", 60196, 1);
     }
 
     private class SimpleServerSocket implements Runnable
@@ -93,6 +85,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
         public SimpleServerSocket(int port) throws Exception
         {
             server = new ServerSocket();
+            logger.debug("starting server");
             server.bind(new InetSocketAddress("localhost", port));
         }
 
@@ -103,7 +96,6 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
 
         public void run()
         {
-            logger.debug("starting server");
             try
             {
                 while (true)
