@@ -115,6 +115,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/common</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
@@ -126,6 +127,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/common-tests</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
@@ -137,6 +139,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/credit-agency</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
@@ -148,6 +151,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/esb</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
@@ -163,6 +167,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/esn</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
@@ -178,6 +183,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/bpm</outputDirectory>
           <includes>
               <include>pom.xml</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
       <fileSet>
