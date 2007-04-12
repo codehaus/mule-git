@@ -12,6 +12,7 @@
 
     <properties>
         <muleVersion>1.4-RC1</muleVersion>
+        <activemqVersion>4.1.0-incubator</activemqVersion>
     </properties>
 
     <dependencies>
@@ -59,7 +60,7 @@
         <dependency>
             <groupId>org.apache.activemq</groupId> 
             <artifactId>apache-activemq</artifactId>
-            <version>4.1.0-incubator</version>
+            <version>${activemqVersion}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -277,7 +278,7 @@
                                 <artifactItem>
                                     <groupId>activemq</groupId>
                                     <artifactId>activemq</artifactId>
-                                    <version>3.2.4</version>
+                                    <version>${activemqVersion}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>concurrent</groupId>
