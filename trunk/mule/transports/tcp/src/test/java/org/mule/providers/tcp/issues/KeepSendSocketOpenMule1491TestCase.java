@@ -96,7 +96,7 @@ public class KeepSendSocketOpenMule1491TestCase  extends FunctionalTestCase
             server.bind(new InetSocketAddress("localhost", port));
         }
 
-        public int getCount() throws InterruptedException
+        public int getCount()
         {
             return count.get();
         }
