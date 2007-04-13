@@ -66,6 +66,10 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/errorhandler</outputDirectory>
           <fileMode>744</fileMode>
       </fileSet>
+      <fileSet>
+        <directory>../../../examples/errorhandler/src/main/resources</directory>
+        <outputDirectory>examples/errorhandler/conf</outputDirectory>
+      </fileSet>
 
 
       <!--
@@ -85,6 +89,10 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/hello/dist</directory>
           <outputDirectory>examples/hello</outputDirectory>
           <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+        <directory>../../../examples/hello/src/main/resources</directory>
+        <outputDirectory>examples/hello/conf</outputDirectory>
       </fileSet>
 
       <!--
@@ -260,6 +268,10 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/voipservice/dist</directory>
           <outputDirectory>examples/voipservice</outputDirectory>
           <fileMode>744</fileMode>
+      </fileSet>
+      <fileSet>
+        <directory>../../../examples/voipservice/src/main/resources</directory>
+        <outputDirectory>examples/voipservice/conf</outputDirectory>
       </fileSet>
 
 
