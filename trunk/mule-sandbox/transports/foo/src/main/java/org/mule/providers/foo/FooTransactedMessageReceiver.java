@@ -31,7 +31,7 @@ public class FooTransactedMessageReceiver extends TransactedPollingMessageReceiv
     public FooTransactedMessageReceiver(UMOConnector connector,
                                           UMOComponent component,
                                           final UMOEndpoint endpoint,
-                                          Long pollingFrequency) throws InitialisationException
+                                          long pollingFrequency) throws InitialisationException
     {
         super(connector, component, endpoint, pollingFrequency);
     }
