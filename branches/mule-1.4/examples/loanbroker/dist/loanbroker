@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # 3rd party libraries needed to run the example
-ACTIVEMQ=activemq-core-4.1.0-incubator.jar
+ACTIVEMQ=apache-activemq-4.1.0-incubator.jar
 OPENEJB=openejb-core-1.0.jar
 
 # There is no need to call this if you set the MULE_HOME in your environment

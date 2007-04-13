@@ -106,7 +106,13 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.activemq</groupId>
-                                    <artifactId>activemq-core</artifactId>
+                                    <!-- TODO:
+                                         Import activemq-core artifact rather than
+                                         apache-activemq wich will include the entire kitchen sink.
+                                         Using it for now to make examples work
+                                    -->
+                                    <!--artifactId>activemq-core</artifactId-->
+                                    <artifactId>apache-activemq</artifactId>
                                     <version>4.1.0-incubator</version>
                                 </artifactItem>
                                 <artifactItem>
