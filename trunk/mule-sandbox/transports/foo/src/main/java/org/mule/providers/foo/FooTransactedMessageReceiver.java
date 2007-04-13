@@ -38,15 +38,16 @@ public class FooTransactedMessageReceiver extends TransactedPollingMessageReceiv
 
     protected List getMessages() throws Exception
     {
+
         //Todo Consume one or more messages from the underlying technology
         //This method is execute within a transaction template so all operations
         //will be part of the transation
 
-        //IMPLEMENTATION NOTE:
-        //You can just return a single message in a list or return a batch of messages
-        //to be processed. It's always recommend to process ingle messages to start with
-        //And then experiment with batching
-
+        /* IMPLEMENTATION NOTE:
+        You can just return a single message in a list or return a batch of messages
+        to be processed. It's always recommend to process ingle messages to start with
+        And then experiment with batching
+        */
         throw new UnsupportedOperationException("getMessages");
 
     }
