@@ -144,19 +144,6 @@
            </exclusions>
         </dependency>
 
-        <!-- m2 workaround? 
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        -->
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-ejb</artifactId>
@@ -175,6 +162,11 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-xfire</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

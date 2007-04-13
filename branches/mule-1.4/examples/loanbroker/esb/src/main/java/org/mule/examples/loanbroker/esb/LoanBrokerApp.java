@@ -15,48 +15,15 @@ import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
 
 import java.io.IOException;
 
-import org.apache.activemq.broker.BrokerService;
-
 /**
  * Runs the LoanBroker ESB example application.
  */
 
 public class LoanBrokerApp extends AbstractLoanBrokerApp
 {
-    private BrokerService msgBroker = null;
-
     public LoanBrokerApp(String config) throws Exception
     {
         super(config);
-    }
-
-    public void init() throws Exception
-    {
-        // Start up the ActiveMQ message broker.
-        msgBroker = new BrokerService();
-        try
-        {
-            msgBroker.addConnector("tcp://localhost:61616");
-            msgBroker.start();
-        } 
-        finally
-        {
-            if (msgBroker != null)
-            {
-                msgBroker.stop();
-            }
-        }
-        
-        super.init();
-    }
-
-    public void dispose() throws Exception
-    {
-        super.dispose();
-        if (msgBroker != null)
-        {
-            msgBroker.stop();
-        }
     }
 
     public static void main(String[] args) throws Exception
