@@ -154,7 +154,9 @@ public abstract class AbstractMailConnector extends AbstractConnector
         // using the base protocol) are needed.  they are inherited from old, gnarly
         // code.
 
-        local.setProperty("mail." + getBaseProtocol() + ".host", url.getHost());
+        if (StringUtils.isNotBlank(url.getHost())) {
+            local.setProperty("mail." + getBaseProtocol() + ".host", url.getHost());
+        }
         local.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
     }
 
