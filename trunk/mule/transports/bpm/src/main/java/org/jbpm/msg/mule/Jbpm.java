@@ -29,6 +29,24 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+/**
+ * jBPM's implementation of Mule's generic BPMS interface.
+ * This class should be set as the "bpms" property of the BPM Connector:
+ *
+ *   <connector name="jBpmConnector" className="org.mule.providers.bpm.ProcessConnector">
+ *       <properties>
+ *           <spring-property name="bpms">
+ *              <ref local="jbpm" />
+ *           </spring-property>
+ *       </properties>
+ *   </connector>
+ *
+ *   <bean id="jbpm" class="org.jbpm.msg.mule.Jbpm" destroy-method="destroy">
+ *       <spring-property name="jbpmConfiguration">
+ *           <ref local="jbpmConfig" />
+ *       </spring-property>
+ *   </bean>
+ */
 public class Jbpm implements BPMS
 {
     protected static transient Log logger = LogFactory.getLog(Jbpm.class);

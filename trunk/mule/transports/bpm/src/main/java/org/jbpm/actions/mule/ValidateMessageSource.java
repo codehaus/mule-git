@@ -19,12 +19,15 @@ import org.jbpm.graph.exe.ExecutionContext;
 /**
  * Throws an exception if the message's source is not as expected.
  * 
+ *  <action class="org.jbpm.actions.mule.ValidateSource">
+ *     <expectedSource>ERPGateway</expectedSource> 
+ *  </action> 
+ *  <action class="org.jbpm.actions.mule.ValidateSource">
+ *     <expectedSource>http://localhost:8080/incoming</expectedSource>
+ *  </action>
+ *             
  * @param expectedSource can be the expected endpoint's "name" or "address"
- * @throws JbpmException <action class="org.jbpm.actions.mule.ValidateSource">
- *             <expectedSource>ERPGateway</expectedSource> </action> <action
- *             class="org.jbpm.actions.mule.ValidateSource">
- *             <expectedSource>http://localhost:8080/incoming</expectedSource>
- *             </action>
+ * @throws JbpmException 
  */
 public class ValidateMessageSource extends LoggingActionHandler
 {

@@ -17,6 +17,16 @@ import java.util.Map;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.msg.Message;
 
+/**
+ * jBPM has built-in support for messaging via the org.jbpm.msg.MessageService interface, 
+ * the idea being that one can plug in a JMS implementation and send messages from a process 
+ * using a standard "<message>" construct.  
+ * 
+ * If Mule were to implement this interface, one could make Mule the standard MessageService 
+ * instead of JMS, which would make the Mule/jBPM integration more "seamless".
+ * 
+ * This is an unfinished work, see MULE-1219
+ */
 public class MuleMessageService implements org.jbpm.msg.MessageService
 {
 
