@@ -18,13 +18,16 @@ import org.mule.umo.TransactionException;
 
 
 /**
- * <code>${TransportName}Transaction</code> is a wrapper for a ${TransportName} local transaction. This
- * object holds the tx resource and controls the when the transaction committed
- * or rolled back.
+ * <code>${TransportName}Transaction</code> is a wrapper for a
+ * ${TransportName} local transaction. This object holds the tx resource and
+ * controls the when the transaction committed or rolled back.
  *
  */
 public class ${TransportName}Transaction extends AbstractSingleResourceTransaction
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
 
     /*
      * (non-Javadoc)
@@ -34,18 +37,18 @@ public class ${TransportName}Transaction extends AbstractSingleResourceTransacti
      */
     public void bindResource(Object key, Object resource) throws TransactionException
     {
-        //IMPLEMENTATION NOTE:
-        //Validate as necessary, the resource here and then pass it to the super class to bind it
-        //to the key and also do any other specific binding here
+        /* IMPLEMENTATION NOTE: Validate as necessary, the resource here and
+           then pass it to the super class to bind it to the key and also do
+           any other specific binding here.  eg.
 
-        /*
-        try {
-            //Todo Validate Resource state here if necessary
+             try {
+                 // TODO Validate Resource state here if necessary
 
-        } catch (XXXException e) {
-            throw new IllegalTransactionStateException(new Message(Messages.TX_CANT_READ_STATE), e);
-        }
+             } catch (XXXException e) {
+                 throw new IllegalTransactionStateException(new Message(Messages.TX_CANT_READ_STATE), e);
+             }
         */
+
         super.bindResource(key, resource);
     }
 
@@ -56,17 +59,16 @@ public class ${TransportName}Transaction extends AbstractSingleResourceTransacti
      */
     protected void doBegin() throws TransactionException
     {
-        //IMPLEMENTATION NOTE:
-        //Sometimes the resource has already begun the transaction when its been made available
-        //i.e. A transacted Jms Session doesn't have a .begin() method, because initiation is handled
-        //by the Jms provider
+        /* IMPLEMENTATION NOTE: Sometimes the resource has already begun the
+           transaction when its been made available i.e. A transacted Jms
+           Session doesn't have a .begin() method, because initiation is
+           handled by the Jms provider.  eg.
 
-        /*
-        try {
-            //Todo begin transaction - i.e. <resource>.begin();
-        } catch (XXXException e) {
-            throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
-        }
+             try {
+                 // TODO begin transaction - i.e. <resource>.begin();
+             } catch (XXXException e) {
+                 throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
+             }
         */
     }
 
@@ -77,12 +79,14 @@ public class ${TransportName}Transaction extends AbstractSingleResourceTransacti
      */
     protected void doCommit() throws TransactionException
     {
-        /*
-        try {
-            //Todo commit transaction - i.e. <resource>.commit();
-        } catch (XXXException e) {
-            throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
-        }
+        /* IMPLEMENTATION NOTE: Commit the transaction here.  Throw an
+           appropriate TransactionException on failure.  eg.
+
+             try {
+                 // TODO commit transaction - i.e. <resource>.commit();
+             } catch (XXXException e) {
+                 throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
+             }
         */
     }
 
@@ -93,12 +97,14 @@ public class ${TransportName}Transaction extends AbstractSingleResourceTransacti
      */
     protected void doRollback() throws TransactionException
     {
-        /*
-        try {
-            //Todo rollback transaction - i.e. <resource>.rollback();
-        } catch (XXXException e) {
-            throw new TransactionException(new Message(Messages.TX_ROLLBACK_FAILED), e);
-        }
+        /* IMPLEMENTATION NOTE: Rollback the transaction here.  Throw an
+           appropriate TransactionException on failure.  eg,
+
+             try {
+                 // TODO rollback transaction - i.e. <resource>.rollback();
+             } catch (XXXException e) {
+                 throw new TransactionException(new Message(Messages.TX_ROLLBACK_FAILED), e);
+             }
         */
     }
 

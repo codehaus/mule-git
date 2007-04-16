@@ -17,20 +17,20 @@ import java.net.URI;
 import java.util.Properties;
 
 /**
- * <code>${TransportName}EndpointBuilder</code> Todo Document
- *
+ * <code>${TransportName}EndpointBuilder</code> TODO Document
  */
 public class ${TransportName}EndpointBuilder extends AbstractEndpointBuilder
 {
     protected void setEndpoint(URI uri, Properties props) throws MalformedEndpointException
     {
-        //Todo extract the endpoit config from the uri
+        /* IMPLEMENTATION NOTE: This method should set the this.address
+           variable to the endpoint value to be retruned when calling
+           MuleEndpointURI.getAddress().  Mule uses this portion to pass to
+           the underlying technology */
 
-        //IMPLEMENTATION NOTE:
-        //This method should set the this.address variable to the endpoint value to be retruned when
-        //calling MuleEndpointURI.getAddress().  Mule uses this portion to pass to  the underlying
-        //technology
+        // TODO extract the endpoint config from the uri
 
         throw new UnsupportedOperationException("setEndpoint");
     }
+
 }

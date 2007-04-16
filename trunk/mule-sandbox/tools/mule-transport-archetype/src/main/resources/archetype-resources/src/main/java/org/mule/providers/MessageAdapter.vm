@@ -16,22 +16,22 @@ import org.mule.umo.provider.MessageTypeNotSupportedException;
 
 /**
  * <code>${TransportName}MessageAdapter</code> TODO document
- * 
  */
-
 public class ${TransportName}MessageAdapter extends AbstractMessageAdapter
 {
-    /* IMPLEMENTATION NOTE:
-    The MessageAdapter is used to wrap an underlying message. It should store a copy of the
-    underlying message as an instance variable.
-    */
+ 
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
+    /* IMPLEMENTATION NOTE: The MessageAdapter is used to wrap an underlying
+       message. It should store a copy of the underlying message as an
+       instance variable. */
     
     public ${TransportName}MessageAdapter(Object message) throws MessagingException
     {
-    	/* IMPLEMENTATION NOTE:
-    	The constructor should deterime that the message is of the correct type or
-    	throw an exception i.e.
-    	
+        /* IMPLEMENTATION NOTE: The constructor should determine that the
+           message is of the correct type or throw an exception i.e.
+        
         if (message instanceof byte[]) {
             this.message = (byte[]) message;
         } else {
@@ -42,19 +42,20 @@ public class ${TransportName}MessageAdapter extends AbstractMessageAdapter
 
     public String getPayloadAsString(String encoding) throws Exception
     {
-        //Todo return the string representation of the wrapped message
+        // TODO return the string representation of the wrapped message
         throw new UnsupportedOperationException("getPayloadAsString");
     }
 
     public byte[] getPayloadAsBytes() throws Exception
     {
-        //Todo return the byte[] representation of the wrapped message
+        // TODO return the byte[] representation of the wrapped message
         throw new UnsupportedOperationException("getPayloadAsBytes");
     }
 
     public Object getPayload()
     {
-        //Todo return the actual wrapped message
+        // TODO return the actual wrapped message
         throw new UnsupportedOperationException("getPayload");
     }
+
 }

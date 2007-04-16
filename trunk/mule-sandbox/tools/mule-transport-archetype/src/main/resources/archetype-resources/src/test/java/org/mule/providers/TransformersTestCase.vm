@@ -13,8 +13,12 @@ package org.mule.providers.${TransportNameLower}.transformers;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.umo.transformer.UMOTransformer;
 
+
 public class ${TransportName}TransformersTestCase extends AbstractTransformerTestCase
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
 
     /*
      * (non-Javadoc)
@@ -23,7 +27,8 @@ public class ${TransportName}TransformersTestCase extends AbstractTransformerTes
      */
     public Object getTestData()
     {
-        //Todo create a test data object that will be passed into the transformer
+        // TODO create a test data object that will be passed into the
+        // transformer
         throw new UnsupportedOperationException("getResultData");
     }
 
@@ -35,7 +40,8 @@ public class ${TransportName}TransformersTestCase extends AbstractTransformerTes
     public Object getResultData()
     {
         try {
-            //Todo Return the result data expected once the getTestData() value has been transformed
+            // TODO Return the result data expected once the getTestData()
+            // value has been transformed
             throw new UnsupportedOperationException("getResultData");
         }
         catch (Exception ex) {
@@ -56,7 +62,7 @@ public class ${TransportName}TransformersTestCase extends AbstractTransformerTes
         t.setReturnClass(this.getResultData().getClass());
         return t;
 #else
-        //No Inbound transformer was created for this Transport
+        // No Inbound transformer was created for this Transport
         return null;
 #end
     }
@@ -74,7 +80,7 @@ public class ${TransportName}TransformersTestCase extends AbstractTransformerTes
         t.setReturnClass(this.getTestData().getClass());
         return t;
 #else
-        //No Outbound transformer was created for this Transport
+        // No Outbound transformer was created for this Transport
         return null;
 #end
     }

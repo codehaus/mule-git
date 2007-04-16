@@ -24,6 +24,9 @@ import org.mule.umo.provider.UMOMessageReceiver;
 public class ${TransportName}MessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
 
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
     public UMOMessageReceiver getMessageReceiver() throws Exception
     {
         Mock mockComponent = new Mock(UMOComponent.class);
@@ -39,8 +42,9 @@ public class ${TransportName}MessageReceiverTestCase extends AbstractMessageRece
 
     public UMOEndpoint getEndpoint() throws Exception
     {
-    	//Todo return a valid UMOendpoint i.e.
-    	//return new MuleEndpoint("tcp://localhost:1234", true)
+    	// TODO return a valid UMOendpoint i.e.
+    	// return new MuleEndpoint("tcp://localhost:1234", true)
         throw new UnsupportedOperationException("getEndpoint");
     }
+
 }

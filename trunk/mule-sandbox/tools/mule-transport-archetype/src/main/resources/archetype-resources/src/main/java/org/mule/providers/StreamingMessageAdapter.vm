@@ -17,10 +17,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * <code>${TransportName}</code> Todo Document
+ * <code>${TransportName}</code> TODO document
  */
 public class ${TransportName}StreamingMessageAdapter extends StreamMessageAdapter
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
 
     public ${TransportName}StreamingMessageAdapter(InputStream in)
     {
@@ -47,14 +50,13 @@ public class ${TransportName}StreamingMessageAdapter extends StreamMessageAdapte
         super(in, out, handler);
     }
 
-
-    /**
-     * The release method is called by Mule to notify this adapter that it is no
-     * longer needed. This method can be used to release any resources that a custom
-     * StreamAdapter may have associated with it.
-     */
     public void release()
     {
-        // nothing to do
+        // Optional; does not need to be implemented. Delete if not required
+
+        /* IMPLEMENTATION NOTE: The release method is called by Mule to notify
+           this adapter that it is no longer needed. This method can be used
+           to release any resources that a custom StreamAdapter may have
+           associated with it. */
     }
 }

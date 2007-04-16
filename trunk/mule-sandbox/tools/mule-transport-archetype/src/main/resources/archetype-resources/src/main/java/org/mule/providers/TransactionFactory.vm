@@ -15,12 +15,17 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 
 /**
- * <code>${TransportName}TransactionFactory</code> Creates a ${TransportName}Transaction
+ * <code>${TransportName}TransactionFactory</code> Creates a
+ * ${TransportName}Transaction
  *
  * @see ${TransportName}Transaction
  */
 public class ${TransportName}TransactionFactory implements UMOTransactionFactory
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
     /*
      * (non-Javadoc)
      *

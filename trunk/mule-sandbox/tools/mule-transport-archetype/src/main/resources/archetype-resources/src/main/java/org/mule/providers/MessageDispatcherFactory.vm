@@ -10,20 +10,24 @@
 
 package org.mule.providers.${TransportNameLower};
 
+import org.mule.providers.AbstractMessageDispatcherFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.provider.UMOMessageDispatcherFactory;
 
 /**
  * <code>${TransportName}MessageDispatcherFactory</code> Todo document
- * 
  */
 
-public class ${TransportName}MessageDispatcherFactory implements UMOMessageDispatcherFactory
+public class ${TransportName}MessageDispatcherFactory implements AbstractMessageDispatcherFactory
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {
         return new ${TransportName}MessageDispatcher(endpoint);
     }
+
 }

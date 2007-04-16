@@ -17,9 +17,13 @@ import org.mule.umo.MessagingException;
 
 public class ${TransportName}MessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
     public Object getValidMessage() throws Exception
     {
-    	//Todo Create a valid message for your transport
+    	// TODO Create a valid message for your transport
     	throw new UnsupportedOperationException("getValidMessage");
     }
 
@@ -27,4 +31,5 @@ public class ${TransportName}MessageAdapterTestCase extends AbstractMessageAdapt
     {
         return new ${TransportName}MessageAdapter(payload);
     }
+
 }

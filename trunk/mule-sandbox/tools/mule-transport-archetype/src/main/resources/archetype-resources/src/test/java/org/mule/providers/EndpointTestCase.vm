@@ -18,9 +18,14 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class ${TransportName}EndpointTestCase extends AbstractMuleTestCase
 {
+
+    /* For general guidelines on writing transports see
+       http://mule.mulesource.org/display/MULE/Writing+Transports */
+
     public void testValidEndpointURI() throws Exception
     {
-        //Todo test creating and asserting Endpoint values i.e.
+        // TODO test creating and asserting Endpoint values eg
+
         /*
         UMOEndpointURI url = new MuleEndpointURI("tcp://localhost:7856");
         assertEquals("tcp", url.getScheme());
@@ -31,8 +36,8 @@ public class ${TransportName}EndpointTestCase extends AbstractMuleTestCase
         assertEquals("tcp://localhost:7856", url.getAddress());
         assertEquals(0, url.getParams().size());
         */
-        throw new UnsupportedOperationException("testValidEndpointURI");
 
+        throw new UnsupportedOperationException("testValidEndpointURI");
     }
 
 }
