@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.msg.mule;
+package org.mule.providers.bpm.jbpm;
 
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.MessageService;
@@ -41,7 +41,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
  *       </properties>
  *   </connector>
  *
- *   <bean id="jbpm" class="org.jbpm.msg.mule.Jbpm" destroy-method="destroy">
+ *   <bean id="jbpm" class="org.mule.providers.bpm.jbpm.Jbpm" destroy-method="destroy">
  *       <spring-property name="jbpmConfiguration">
  *           <ref local="jbpmConfig" />
  *       </spring-property>

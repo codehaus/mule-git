@@ -8,22 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions;
+package org.mule.providers.bpm.jbpm;
 
-import org.jbpm.graph.def.ActionHandler;
-import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.msg.Message;
 
-/**
- * Simply continues the process execution (moves on to the next state).
- */
-public class Continue implements ActionHandler
+public class MuleMessage extends Message
 {
-
     private static final long serialVersionUID = 1L;
-
-    public void execute(ExecutionContext executionContext) throws Exception
-    {
-        executionContext.leaveNode();
-    }
-
 }

@@ -31,7 +31,7 @@
          BPMS Configuration
          *************************************************** -->
     <!-- BPMS object for Mule's BPM Connector -->
-    <bean id="jbpm" class="org.jbpm.msg.mule.Jbpm" destroy-method="destroy">
+    <bean id="jbpm" class="org.mule.providers.bpm.jbpm.Jbpm" destroy-method="destroy">
         <spring-property name="jbpmConfiguration">
             <ref local="jbpmConfig" />
         </spring-property>

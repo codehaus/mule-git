@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

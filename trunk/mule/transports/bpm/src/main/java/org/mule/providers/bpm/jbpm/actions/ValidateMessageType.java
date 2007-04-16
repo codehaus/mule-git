@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions.mule;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.jbpm.JbpmException;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -16,7 +16,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 /**
  * Throws an exception if the incoming message's class is not as expected.
  * 
- *  <action class="org.jbpm.actions.mule.ValidateMessageType">
+ *  <action class="org.mule.providers.bpm.jbpm.actions.ValidateMessageType">
  *     <expectedType>com.mycompany.MyClass</expectedType> 
  *  </action>
  *  

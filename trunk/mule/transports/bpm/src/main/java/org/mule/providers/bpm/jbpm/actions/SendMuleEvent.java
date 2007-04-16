@@ -8,10 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions.mule;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.mule.config.MuleProperties;
 import org.mule.providers.bpm.ProcessConnector;
+import org.mule.providers.bpm.jbpm.MuleMessageService;
 import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
@@ -19,9 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.jbpm.actions.LoggingActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.msg.mule.MuleMessageService;
 
 /**
  * Sends a Mule message to the specified endpoint. If the message is synchronous, 

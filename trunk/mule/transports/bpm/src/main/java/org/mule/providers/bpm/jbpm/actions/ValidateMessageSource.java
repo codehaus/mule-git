@@ -8,21 +8,20 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions.mule;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.mule.providers.bpm.ProcessConnector;
 
 import org.jbpm.JbpmException;
-import org.jbpm.actions.LoggingActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
 
 /**
  * Throws an exception if the message's source is not as expected.
  * 
- *  <action class="org.jbpm.actions.mule.ValidateSource">
+ *  <action class="org.mule.providers.bpm.jbpm.actions.ValidateSource">
  *     <expectedSource>ERPGateway</expectedSource> 
  *  </action> 
- *  <action class="org.jbpm.actions.mule.ValidateSource">
+ *  <action class="org.mule.providers.bpm.jbpm.actions.ValidateSource">
  *     <expectedSource>http://localhost:8080/incoming</expectedSource>
  *  </action>
  *             

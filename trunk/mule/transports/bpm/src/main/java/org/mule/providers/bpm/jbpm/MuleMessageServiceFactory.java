@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.msg.mule;
+package org.mule.providers.bpm.jbpm;
 
 import org.jbpm.svc.Service;
 import org.jbpm.svc.ServiceFactory;

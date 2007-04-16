@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions.mule;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.mule.providers.bpm.ProcessConnector;
 
@@ -16,7 +16,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 /**
  * Stores the incoming message payload into the specified variable. 
- *   <action class="org.mule.providers.bpm.actions.StoreIncomingData"> 
+ *   <action class="org.mule.providers.bpm.jbpm.actions.StoreIncomingData"> 
  *      <variable>foo</variable>
  *   </action>
  */

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.jbpm.actions.mule;
+package org.mule.providers.bpm.jbpm.actions;
 
 import org.mule.providers.bpm.ProcessConnector;
 
