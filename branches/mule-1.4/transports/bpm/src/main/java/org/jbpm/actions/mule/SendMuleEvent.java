@@ -24,8 +24,8 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.msg.mule.MuleMessageService;
 
 /**
- * Sends a Mule message to the specified URL. If the message is synchronous, the
- * response will be stored in PROCESS_VARIABLE_INCOMING.
+ * Sends a Mule message to the specified endpoint. If the message is synchronous, 
+ * the response from Mule will be automatically stored in PROCESS_VARIABLE_INCOMING.
  * 
  * @param endpoint - the Mule endpoint
  * @param transformers - any transformers to be applied

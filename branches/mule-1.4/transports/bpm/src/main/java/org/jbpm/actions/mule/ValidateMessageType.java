@@ -16,11 +16,13 @@ import org.jbpm.graph.exe.ExecutionContext;
 /**
  * Throws an exception if the incoming message's class is not as expected.
  * 
+ *  <action class="org.jbpm.actions.mule.ValidateMessageType">
+ *     <expectedType>com.mycompany.MyClass</expectedType> 
+ *  </action>
+ *  
  * @param expectedType the expected class type
- * @param strict if true, the class must match exactly, otherwise it can be a
- *            subclass
- * @throws JbpmException <action class="org.jbpm.actions.mule.ValidateType">
- *             <expectedType>com.mycompany.MyClass</expectedType> </action>
+ * @param strict if true, the class must match exactly, otherwise it can be a subclass
+ * @throws JbpmException 
  */
 public class ValidateMessageType extends IntegrationActionHandler
 {

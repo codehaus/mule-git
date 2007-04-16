@@ -15,7 +15,7 @@ import org.mule.providers.bpm.ProcessConnector;
 import org.jbpm.graph.exe.ExecutionContext;
 
 /**
- * Sends a Mule message to the specified URL and continues execution to the next
+ * Sends a Mule message to the specified endpoint and continues execution to the next
  * state. This class assumes the current state has only one leaving transition.
  * 
  * @param url - the Mule endpoint

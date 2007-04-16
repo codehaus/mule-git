@@ -13,8 +13,6 @@
         <properties>
             <!-- This field in LoanQuoteRequest holds the unique process ID. -->
             <property name="processIdField" value="requestId" />
-            <!-- A process can only reference the outgoing endpoints for its component. -->
-            <property name="localEndpointsOnly" value="true" />
             <!-- jBpm itself is configured by a series of Spring beans at the end of
                  this file. -->
             <spring-property name="bpms"><ref local="jbpm" /></spring-property>

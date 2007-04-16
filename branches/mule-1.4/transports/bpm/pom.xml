@@ -98,7 +98,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Only used if localEndpointsOnly = false -->
+        <!-- Only used if allowGlobalDispatcher = true -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
@@ -110,7 +110,8 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring</artifactId>
             <version>${version}</version>
-            <!-- TODO Change this back to scope=test once LocalJbpmConfigurationFactoryBeanWorkaround 
+            <!-- TODO Change this back to scope=test once 
+                LocalJbpmConfigurationFactoryBeanWorkaround 
             	is no longer needed in src/main/java -->
             <!-- <scope>test</scope> -->
         </dependency>
