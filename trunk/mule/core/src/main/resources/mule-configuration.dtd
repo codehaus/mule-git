@@ -15,7 +15,7 @@
 
 <!ELEMENT mule-configuration (description?,environment-properties?,mule-environment-properties?,container-context*,security-manager?,
  transaction-manager?,agents?,connector*,endpoint-identifiers?,transformers?,global-endpoints?,
-            interceptor-stack*,model*)>
+            interceptor-stack*,model*,mule-descriptor*)>
 
 <!--
     The id attribute allows for a unique id for this file as it is often the case that
