@@ -119,6 +119,11 @@
                                     <artifactId>castor</artifactId>
                                     <version>0.9.9</version>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activeio-core</artifactId>
+                                    <version>3.0.0-incubator</version>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

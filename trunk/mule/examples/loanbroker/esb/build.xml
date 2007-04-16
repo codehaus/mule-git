@@ -27,17 +27,22 @@
 
     <!-- Download any additional libraries needed to run the application -->
     <target name="get.libraries">
-            
+
+        <!-- ActiveMQ -->            
         <get src="${url.maven.repo2}/org/apache/activemq/activemq-core/4.1.0-incubator/activemq-core-4.1.0-incubator.jar"
              dest="${dir.user.lib}/activemq-core-4.1.0-incubator.jar"
              verbose="true"
              usetimestamp="true"/>
+        <get src="${url.maven.repo2}/org/apache/activemq/activeio-core/3.0.0-incubator/activeio-core-3.0.0-incubator.jar"
+             dest="${dir.user.lib}/activeio-core-3.0.0-incubator.jar"
+             verbose="true"
+             usetimestamp="true"/>
 
+        <!-- OpenEJB -->
         <get src="${url.maven.repo}/openejb/openejb-core/1.0/openejb-core-1.0.jar"
              dest="${dir.user.lib}/openejb-core-1.0.jar"
              verbose="true"
              usetimestamp="true"/>
-        <!-- Used by OpenEJB -->
         <get src="${url.maven.repo}/castor/castor/0.9.9/castor-0.9.9.jar"
              dest="${dir.user.lib}/castor-0.9.9.jar"
              verbose="true"

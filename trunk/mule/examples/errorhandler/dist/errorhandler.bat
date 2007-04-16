@@ -5,7 +5,7 @@ if "%MULE_BASE%" == "" SET MULE_BASE=%MULE_HOME%
 
 REM Any changes to the files in .\conf will take precedence over those deployed to %MULE_HOME%\lib\user
 SET MULE_LIB=.\conf
-SET ACTIVEMQ=apache-activemq-4.1.0-incubator.jar
+SET ACTIVEMQ=activemq-core-4.1.0-incubator.jar
 
 if exist "%MULE_BASE%\lib\user\%ACTIVEMQ%" goto :mule
 if exist "%MULE_HOME%\lib\user\%ACTIVEMQ%" goto :mule
