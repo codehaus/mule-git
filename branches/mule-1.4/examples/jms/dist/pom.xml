@@ -11,7 +11,7 @@
     <description>Provides some JMS examples</description>
 
     <properties>
-        <muleVersion>1.4-RC1</muleVersion>
+        <muleVersion>1.4.0</muleVersion>
     </properties>
 
     <dependencies>
