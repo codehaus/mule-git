@@ -282,6 +282,7 @@ Assembly descriptor for the full Mule distribution.
       -->
       <!-- now just copy a readme to explain that the example should be built
            from Ant -->
+      <!-- TODO for 1.4 release the webapp example is excluded from the distro
       <fileSet>
           <directory>../../../examples/webapp/dist</directory>
           <outputDirectory>examples/webapp</outputDirectory>
@@ -289,6 +290,7 @@ Assembly descriptor for the full Mule distribution.
               <include>MAVEN_README.txt</include>
           </includes>
       </fileSet>
+      -->
       <!-- Maven-style example : TODO
       <fileSet>
           <directory>../../../examples/webapp</directory>
@@ -315,6 +317,7 @@ Assembly descriptor for the full Mule distribution.
       -->
 
       <!-- Ant-style example -->
+      <!-- TODO for 1.4 release the webapp example is excluded from the distro
       <fileSet>
           <directory>../../../examples/webapp</directory>
           <outputDirectory>examples/webapp</outputDirectory>
@@ -345,7 +348,7 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/webapp/src/main/webapp</directory>
           <outputDirectory>examples/webapp/webapp</outputDirectory>
       </fileSet>
-
+      -->
 
     <!-- Copy the USAGE.txt file to the root directory for visibility -->
     <fileSet>

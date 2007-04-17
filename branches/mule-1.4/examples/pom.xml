@@ -22,7 +22,9 @@
         <module>scripting</module>
         <module>stockquote</module>
         <module>voipservice</module>
+        <!-- the webapp example currently has errors. Skip it from the distro 
         <module>webapp</module>
+        -->
     </modules>
 
     <build>
