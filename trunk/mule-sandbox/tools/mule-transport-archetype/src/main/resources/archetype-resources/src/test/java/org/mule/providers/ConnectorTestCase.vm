@@ -13,6 +13,7 @@ package org.mule.providers.${TransportName.toLowerCase()};
 
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.UMOComponent;
+import org.mule.umo.provider.UMOConnector;
 
 public class ${TransportName}ConnectorTestCase extends AbstractConnectorTestCase
 {

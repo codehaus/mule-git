@@ -19,7 +19,7 @@ import org.mule.umo.provider.UMOMessageDispatcher;
  * <code>${TransportName}MessageDispatcherFactory</code> Todo document
  */
 
-public class ${TransportName}MessageDispatcherFactory implements AbstractMessageDispatcherFactory
+public class ${TransportName}MessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
 
     /* For general guidelines on writing transports see

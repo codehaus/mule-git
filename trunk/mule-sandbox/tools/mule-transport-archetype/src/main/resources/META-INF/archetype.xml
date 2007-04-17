@@ -4,7 +4,7 @@
         <variable>
             <name>MuleVersion</name>
             <description>Which version of Mule are you working with?</description>
-            <defvalue>1.3</defvalue>
+            <defvalue>1.4</defvalue>
         </variable>
         <variable>
             <name>TransportName</name>

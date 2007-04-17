@@ -14,6 +14,7 @@ package org.mule.providers.${TransportName.toLowerCase()};
 import com.mockobjects.dynamic.Mock;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.${TransportName.toLowerCase()}.${TransportName}MessageReceiver;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
@@ -34,7 +35,7 @@ public class ${TransportName}MessageReceiverTestCase extends AbstractMessageRece
         mockComponent.expectAndReturn("getDescriptor", mockDescriptor.proxy());
         mockDescriptor.expectAndReturn("getResponseTransformer", null);
 #if($PollingMessageReceiver)
-        return new ${TransportName}MessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint, new Long(1000));
+        return new ${TransportName}MessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint, 1000);
 #else
         return new ${TransportName}MessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint);
 #end
