@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="test" version="1.0">
+
+    <environment-properties>
+        <property name="test.endpoint" value="tcp://localhost:45441"/>
+    </environment-properties>
+
+
+    <!-- Mule properties -->
+    <mule-environment-properties remoteSync="false" />
+
+    <connector name="tcpConnector" className="org.mule.providers.tcp.TcpConnector">
+        <properties>
+            <property name="timeout" value="60000"/>
+        <!--
+            <property name="bufferSize" value="1048576"/>
+         -->
+             <property name="tcpProtocolClassName" value="org.mule.providers.tcp.protocols.LengthProtocol"/>
+        </properties>
+    </connector>
+
+    <global-endpoints>
+        <endpoint name="clientEndpoint" address="${test.endpoint}" type="sender"/>
+    </global-endpoints>
+
+    <model name="model">
+        <mule-descriptor name="TcpReceiver" implementation="org.mule.components.simple.EchoComponent">
+            <inbound-router>
+                <endpoint address="${test.endpoint}" synchronous="true"/>
+            </inbound-router>
+        </mule-descriptor>
+
+    </model>
+
+</mule-configuration>
