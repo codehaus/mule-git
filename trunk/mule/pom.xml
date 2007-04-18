@@ -303,7 +303,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>2.0-beta-5</version>
+                <!--version>2.0-beta-5</version-->
             </plugin>
 
             <!-- by default download all sources when generating project files -->
@@ -382,10 +382,7 @@
                     <charset>ISO-8859-1</charset>
                     <encoding>ISO-8859-1</encoding>
                     <!-- aggregate all when built from the top-level directory -->
-                    <!--
-                        TODO why does this cause dependency errors??
-                        <aggregate>true</aggregate>
-                    -->
+                    <aggregate>true</aggregate>
                     <!-- Link to the external online JavaDoc -->
                     <!-- TODO add more refs -->
                     <links>
@@ -459,7 +456,6 @@
                     <headerLocation>codecheck/LICENSE.txt</headerLocation>
                 </configuration>
             </plugin>
-
 
             <!-- Code Coverage by Cobertura -->
             <plugin>
