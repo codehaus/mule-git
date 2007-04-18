@@ -42,14 +42,14 @@ then
 
     if [ -z "$MISSING_LIB" ]
     then
-        exec $MULE_BASE/bin/mule -main org.mule.examples.loanbroker.esb.LoanBrokerApp
+        exec "$MULE_BASE/bin/mule" -main org.mule.examples.loanbroker.esb.LoanBrokerApp
     else
         echo "This example requires additional libraries which need to be downloaded by the build script.  Please follow the instructions in the README.txt file."
     fi
 elif [ 2 = $i ]
 then
-    exec $MULE_BASE/bin/mule -main org.mule.examples.loanbroker.esn.LoanBrokerApp
+    exec "$MULE_BASE/bin/mule" -main org.mule.examples.loanbroker.esn.LoanBrokerApp
 elif [ 3 = $i ]
 then
-    exec $MULE_BASE/bin/mule -main org.mule.examples.loanbroker.bpm.LoanBrokerApp
+    exec "$MULE_BASE/bin/mule" -main org.mule.examples.loanbroker.bpm.LoanBrokerApp
 fi
