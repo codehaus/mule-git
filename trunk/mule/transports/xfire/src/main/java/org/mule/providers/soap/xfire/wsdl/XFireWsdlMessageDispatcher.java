@@ -66,7 +66,7 @@ public class XFireWsdlMessageDispatcher extends XFireMessageDispatcher
 
             try
             {
-                this.client = createXFireWsdlClient(endpoint, service, xfire);
+                this.client = createXFireWsdlClient(endpoint, service, xfire, wsdlUrl);
             }
             catch (Exception ex)
             {
@@ -81,10 +81,10 @@ public class XFireWsdlMessageDispatcher extends XFireMessageDispatcher
         }
     }
 
-    protected Client createXFireWsdlClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire) throws Exception
+    protected Client createXFireWsdlClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String wsdlUrl) throws Exception
     {
         UMOEndpointURI uri = endpoint.getEndpointURI();
-        Client client = new Client(new URL(uri.getAddress()));
+        Client client = new Client(new URL(wsdlUrl));
         client.setXFire(xfire);
         client.setEndpointUri(uri.toString());
         return configureXFireClient(client);
