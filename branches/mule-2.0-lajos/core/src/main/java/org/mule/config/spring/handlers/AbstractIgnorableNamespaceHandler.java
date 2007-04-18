@@ -16,9 +16,10 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * TODO document
+ * This Namespace handler extends the default Spring {@link org.springframework.beans.factory.xml.NamespaceHandlerSupport}
+ * to allow certain elements in document to be ignorred by the handler.
  */
-public abstract class AbstractHierarchicalNamespaceHandler extends NamespaceHandlerSupport
+public abstract class AbstractIgnorableNamespaceHandler extends NamespaceHandlerSupport
 {
     protected final void registerIgnoredElement(String name)
     {
