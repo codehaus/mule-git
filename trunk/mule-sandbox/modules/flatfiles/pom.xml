@@ -8,11 +8,12 @@
         <artifactId>mule-modules</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-module-csv</artifactId>
-    <name>CSV Extensions</name>
-    <description>Functionality for working with CSV data</description>
+    <artifactId>mule-module-flatfiles</artifactId>
+    <name>CSV/flat file Extensions</name>
+    <description>Functionality for working with CSV data and other types of 'flat file' data</description>
     
     <dependencies>
+        <!-- remove and replace with PZFileReader, which is not on any repos yet.. -->
         <dependency>
             <groupId>au.com.bytecode</groupId>
             <artifactId>opencsv</artifactId>
