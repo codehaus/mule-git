@@ -10,23 +10,19 @@
 
 package org.mule.providers.soap.xfire;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.NullPayload;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 
 import org.custommonkey.xmlunit.XMLAssert;
-import org.w3c.dom.Document;
 
 public class XFireWsdlTestCase extends AbstractMuleTestCase
 {
@@ -47,29 +43,31 @@ public class XFireWsdlTestCase extends AbstractMuleTestCase
     }
 
     /**
-     * This tests the endpoint propery of wsdlUrl which specifies an
-     * alternative WSDL location (see MULE-1368)
+     * This tests the endpoint propery of wsdlUrl which specifies an alternative WSDL
+     * location (see MULE-1368)
      */
     public void testXFireWsdlServiceWithEndpointParam() throws Exception
     {
-        MuleClient client = new MuleClient();
-	UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(STOCKQUOTE_URL_NOWSDL,UMOEndpoint.ENDPOINT_TYPE_SENDER);
-	endpoint.setProperty("wsdlUrl", STOCKQUOTE_URL_WSDL);
+        // make sure the Mule is up when not using MuleClient
+        // TODO HH: track down why the dispatcher pool is derailed with an NPE
+        // without this - shouldn't it happen automatically?
+        MuleManager.getInstance().start();
 
-	UMOMessage message = new MuleMessage(STOCK_SYMBOL);
-	UMOSession session = new MuleSession(message,
-		((AbstractConnector) endpoint.getConnector())
-		.getSessionHandler());    	
-	MuleEvent event = new MuleEvent(message, endpoint, session, true);
-	UMOMessage reply = session.sendEvent(event);
-		
+        UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(STOCKQUOTE_URL_NOWSDL,
+            UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        endpoint.setProperty("wsdlUrl", STOCKQUOTE_URL_WSDL);
+
+        UMOMessage message = new MuleMessage(STOCK_SYMBOL);
+        UMOSession session = new MuleSession(message, ((AbstractConnector) endpoint.getConnector())
+            .getSessionHandler());
+        MuleEvent event = new MuleEvent(message, endpoint, session, true);
+        UMOMessage reply = session.sendEvent(event);
+
         assertNotNull(reply);
 
         String response = reply.getPayloadAsString();
         assertNotNull(response);
-
         XMLAssert.assertXpathEvaluatesTo(STOCK_SYMBOL, "//StockQuotes/Stock/Symbol", response);
-        
     }
 
 }
