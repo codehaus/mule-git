@@ -230,7 +230,7 @@
         <profile>
             <id>jboss</id>
             <!--
-                TODO MULE-1169
+                TODO MULE-1072
                 finalName might not be a real solution, what we are looking for is the classifier
             -->
             <build>
