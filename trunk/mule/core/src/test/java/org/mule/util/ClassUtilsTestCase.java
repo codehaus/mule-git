@@ -174,9 +174,9 @@ public class ClassUtilsTestCase extends AbstractMuleTestCase
 
     public void testSimpleName()
     {
-        simpleNameHelper("java.lang.String", "foo".getClass());
+        simpleNameHelper("String", "foo".getClass());
         simpleNameHelper("int[]", (new int[0]).getClass());
-        simpleNameHelper("java.lang.Object[][]", (new Object[0][0]).getClass());
+        simpleNameHelper("Object[][]", (new Object[0][0]).getClass());
         simpleNameHelper("null", null);
     }
 

@@ -661,10 +661,10 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
                 case 'J': return "long";
                 case 'S': return "short";
                 case '[': return classNameHelper(encodedName) + "[]";
-                case 'L': return dropSemicolon(new BufferedReader(encodedName).readLine());
+                case 'L': return shorten(new BufferedReader(encodedName).readLine());
                 default:
                     encodedName.reset();
-                    return dropSemicolon(new BufferedReader(encodedName).readLine());
+                    return shorten(new BufferedReader(encodedName).readLine());
             }
         }
         catch (IOException e)
@@ -673,15 +673,20 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         }
     }
 
-    private static String dropSemicolon(String text)
+    /**
+     * @param clazz A class name (with possible package and trailing semicolon)
+     * @return The short name for the class
+     */
+    private static String shorten(String clazz)
     {
-        if (null != text && text.length() > 0 && text.endsWith(";"))
+        if (null != clazz && clazz.endsWith(";"))
         {
-            return text.substring(0, text.length() - 1);
+            clazz = clazz.substring(0, clazz.length() - 1);
         }
-        else
+        if (null != clazz && clazz.lastIndexOf(".") > -1)
         {
-            return text;
+            clazz = clazz.substring(clazz.lastIndexOf(".") + 1, clazz.length());
         }
+        return clazz;
     }
 }
