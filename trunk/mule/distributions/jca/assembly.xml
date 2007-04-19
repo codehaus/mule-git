@@ -117,6 +117,7 @@ Assembly descriptor for the Mule JCA distribution.
                 <exclude>org.mule.examples:mule-example-loanbroker-esb</exclude>
 
                 <exclude>org.apache.activemq:activemq-core</exclude>
+                <exclude>org.apache.activemq:activeio-core</exclude>
                 
                 <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
                 <exclude>org.mule.distributions:mule-jca</exclude>
