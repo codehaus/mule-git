@@ -12,6 +12,7 @@ package org.mule.providers.tcp.protocols;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
@@ -70,7 +71,9 @@ public class DefaultProtocol extends ByteProtocol
 
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("len/limit/repeat: " + len + "/" + limit + "/" + repeat);
+                    logger.debug(MessageFormat.format(
+                            "len/limit/repeat: {0}/{1}/{2}",
+                            new Object[] {new Integer(len), new Integer(limit), Boolean.valueOf(repeat)}));
                 }
             }
             while (repeat);
