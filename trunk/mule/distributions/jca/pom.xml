@@ -229,6 +229,13 @@
     <profiles>
         <profile>
             <id>jboss</id>
+            <!--
+                TODO MULE-1169
+                finalName might not be a real solution, what we are looking for is the classifier
+            -->
+            <build>
+                <finalName>${artifactId}-${version}-jboss</finalName>
+            </build>
             <!--  more dependencies to ignore for JBoss -->
             <dependencies>
                 <dependency>
