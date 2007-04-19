@@ -25,7 +25,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.util.StringMessageUtils;
+import org.mule.util.ClassUtils;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -239,7 +239,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                             if (logger.isDebugEnabled())
                             {
                                 logger.debug("Message received it is of type: " +
-                                        StringMessageUtils.className(message.getClass()));
+                                        ClassUtils.getSimpleName(message.getClass()));
                                 if (message.getJMSDestination() != null)
                                 {
                                     logger.debug("Message received on " + message.getJMSDestination() + " ("

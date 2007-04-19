@@ -155,19 +155,6 @@ public class StringMessageUtilsTestCase extends AbstractMuleTestCase
         assertEquals("this is a ...[10 of 37]", result);
     }
 
-    public void testClassName()
-    {
-        classNameHelper("java.lang.String", "foo".getClass());
-        classNameHelper("int[]", (new int[0]).getClass());
-        classNameHelper("java.lang.Object[][]", (new Object[0][0]).getClass());
-        classNameHelper("null", null);
-    }
-
-    private void classNameHelper(String target, Class clazz)
-    {
-        assertEquals(target, StringMessageUtils.className(clazz));
-    }
-
     private class TestObject
     {
         private String name;

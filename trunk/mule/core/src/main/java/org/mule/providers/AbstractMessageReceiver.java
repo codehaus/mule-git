@@ -673,7 +673,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(80);
-        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
         sb.append(", receiverKey=").append(receiverKey);
         sb.append(", endpoint=").append(endpoint.getEndpointURI());

@@ -1843,7 +1843,7 @@ public abstract class AbstractConnector
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(120);
-        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
         sb.append(", started=").append(started);
         sb.append(", initialised=").append(initialised);

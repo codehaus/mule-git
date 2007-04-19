@@ -71,7 +71,7 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
     {
         if (name == null)
         {
-            setName(ClassUtils.getShortClassName(getClass()));
+            setName(ClassUtils.getSimpleName(getClass()));
         }
         return name;
     }

@@ -15,11 +15,7 @@ import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessageConstants;
 import org.mule.config.i18n.Message;
 
-import java.io.BufferedReader;
-import java.io.CharArrayReader;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.io.Reader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -257,68 +253,6 @@ public final class StringMessageUtils
         else
         {
             return o.toString();
-        }
-    }
-
-    /**
-     * Provide a simple-to-understand class name (with access to only Java 1.4 API).
-     * @param clazz The class whose name we will generate
-     * @return A readable name for the class
-     */
-    public static String className(Class clazz)
-    {
-        if (null == clazz)
-        {
-            return "null";
-        }
-        else
-        {
-            return classNameHelper(new BufferedReader(new CharArrayReader(clazz.getName().toCharArray())));
-        }
-    }
-
-    private static String classNameHelper(Reader encodedName)
-    {
-        // I did consider separating this data from the code, but I could not find a
-        // solution that was as clear to read, or clearly motivated (these data are not
-        // used elsewhere).
-
-        try
-        {
-            encodedName.mark(1);
-            switch(encodedName.read())
-            {
-                case -1: return "null";
-                case 'Z': return "boolean";
-                case 'B': return "byte";
-                case 'C': return "char";
-                case 'D': return "double";
-                case 'F': return "float";
-                case 'I': return "int";
-                case 'J': return "long";
-                case 'S': return "short";
-                case '[': return classNameHelper(encodedName) + "[]";
-                case 'L': return dropSemicolon(new BufferedReader(encodedName).readLine());
-                default:
-                    encodedName.reset();
-                    return dropSemicolon(new BufferedReader(encodedName).readLine());
-            }
-        }
-        catch (IOException e)
-        {
-            return "unknown type: " + e.getMessage();
-        }
-    }
-
-    private static String dropSemicolon(String text)
-    {
-        if (null != text && text.length() > 0 && text.endsWith(";"))
-        {
-            return text.substring(0, text.length() - 1);
-        }
-        else
-        {
-            return text;
         }
     }
 

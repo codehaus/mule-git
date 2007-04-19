@@ -92,8 +92,8 @@ public abstract class AbstractTransformer implements UMOTransformer
             if (!returnClass.isInstance(object))
             {
                 throw new TransformerException(new Message(Messages.TRANSFORM_X_UNEXPECTED_TYPE_X,
-                        StringMessageUtils.className(object.getClass()),
-                        StringMessageUtils.className(returnClass)),
+                        ClassUtils.getSimpleName(object.getClass()),
+                        ClassUtils.getSimpleName(returnClass)),
                         this);
             }
         }
@@ -101,7 +101,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         if (logger.isDebugEnabled())
         {
             logger.debug("The transformed object is of expected type. Type is: " +
-                    StringMessageUtils.className(object.getClass()));
+                    ClassUtils.getSimpleName(object.getClass()));
         }
 
         return object;
@@ -140,7 +140,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     {
         if (string == null)
         {
-            string = ClassUtils.getShortClassName(this.getClass());
+            string = ClassUtils.getSimpleName(this.getClass());
         }
 
         logger.debug("Setting transformer name to: " + string);
@@ -397,7 +397,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     protected String generateTransformerName()
     {
-        return ClassUtils.getShortClassName(this.getClass());
+        return ClassUtils.getSimpleName(this.getClass());
     }
 
     public boolean isIgnoreBadInput()
@@ -414,7 +414,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     public String toString()
     {
         StringBuffer sb = new StringBuffer(80);
-        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
         sb.append(", name='").append(name).append('\'');
         sb.append(", ignoreBadInput=").append(ignoreBadInput);
