@@ -22,6 +22,7 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
+import org.mule.util.StringMessageUtils;
 
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -135,9 +136,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             if (!(message instanceof Message))
             {
                 throw new DispatchException(new org.mule.config.i18n.Message(
-                    Messages.MESSAGE_NOT_X_IT_IS_TYPE_X_CHECK_TRANSFORMER_ON_X, "JMS message",
-                    message.getClass().getName(), connector.getName()), event.getMessage(),
-                    event.getEndpoint());
+                        Messages.MESSAGE_NOT_X_IT_IS_TYPE_X_CHECK_TRANSFORMER_ON_X, "JMS message",
+                        StringMessageUtils.className(message.getClass()), connector.getName()),
+                        event.getMessage(), event.getEndpoint());
             }
 
             Message msg = (Message)message;
@@ -219,7 +220,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             if (logger.isDebugEnabled())
             {
-                logger.debug("Sending message of type " + msg.getClass().getName());
+                logger.debug("Sending message of type " + StringMessageUtils.className(msg.getClass()));
             }
 
             if (consumer != null && topic)

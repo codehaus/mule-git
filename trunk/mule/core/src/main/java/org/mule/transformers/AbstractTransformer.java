@@ -23,10 +23,9 @@ import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -92,15 +91,17 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             if (!returnClass.isInstance(object))
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNEXPECTED_TYPE_X, object
-                    .getClass().getName(), returnClass.getName()), this);
+                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNEXPECTED_TYPE_X,
+                        StringMessageUtils.className(object.getClass()),
+                        StringMessageUtils.className(returnClass)),
+                        this);
             }
         }
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("The transformed object is of expected type. Type is: "
-                            + object.getClass().getName());
+            logger.debug("The transformed object is of expected type. Type is: " +
+                    StringMessageUtils.className(object.getClass()));
         }
 
         return object;

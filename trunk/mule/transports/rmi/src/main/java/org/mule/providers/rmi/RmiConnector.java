@@ -26,6 +26,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ArrayUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
+import org.mule.util.StringMessageUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -284,7 +285,8 @@ public class RmiConnector extends AbstractJndiConnector
         catch (NoSuchMethodException e)
         {
             throw new NoSuchMethodException(new Message(Messages.METHOD_X_WITH_PARAMS_X_NOT_FOUND_ON_X,
-                methodName, ArrayUtils.toString(argTypes), remoteObject.getClass().getName()).toString());
+                    methodName, ArrayUtils.toString(argTypes),
+                    StringMessageUtils.className(remoteObject.getClass())).toString());
         }
         catch (SecurityException e)
         {

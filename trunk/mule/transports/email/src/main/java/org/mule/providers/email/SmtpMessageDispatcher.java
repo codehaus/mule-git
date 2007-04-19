@@ -18,6 +18,7 @@ import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+import org.mule.util.StringMessageUtils;
 
 import java.util.Calendar;
 
@@ -94,8 +95,10 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             if (!(data instanceof Message))
             {
                 throw new DispatchException(new org.mule.config.i18n.Message(
-                    Messages.TRANSFORM_X_UNEXPECTED_TYPE_X, data.getClass().getName(),
-                    Message.class.getName()), event.getMessage(), event.getEndpoint());
+                        Messages.TRANSFORM_X_UNEXPECTED_TYPE_X,
+                        StringMessageUtils.className(data.getClass()),
+                        StringMessageUtils.className(Message.class)),
+                        event.getMessage(), event.getEndpoint());
             }
             else
             {

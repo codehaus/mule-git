@@ -11,8 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.StringMessageUtils;
-import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -155,6 +153,19 @@ public class StringMessageUtilsTestCase extends AbstractMuleTestCase
 
         result = StringMessageUtils.truncate(msg, 10, true);
         assertEquals("this is a ...[10 of 37]", result);
+    }
+
+    public void testClassName()
+    {
+        classNameHelper("java.lang.String", "foo".getClass());
+        classNameHelper("[int]", (new int[0]).getClass());
+        classNameHelper("[[java.lang.Object]]", (new Object[0][0]).getClass());
+        classNameHelper("null", null);
+    }
+
+    private void classNameHelper(String target, Class clazz)
+    {
+        assertEquals(target, StringMessageUtils.className(clazz));
     }
 
     private class TestObject
