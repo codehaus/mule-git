@@ -158,8 +158,8 @@ public class StringMessageUtilsTestCase extends AbstractMuleTestCase
     public void testClassName()
     {
         classNameHelper("java.lang.String", "foo".getClass());
-        classNameHelper("[int]", (new int[0]).getClass());
-        classNameHelper("[[java.lang.Object]]", (new Object[0][0]).getClass());
+        classNameHelper("int[]", (new int[0]).getClass());
+        classNameHelper("java.lang.Object[][]", (new Object[0][0]).getClass());
         classNameHelper("null", null);
     }
 

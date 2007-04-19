@@ -298,7 +298,7 @@ public final class StringMessageUtils
                 case 'I': return "int";
                 case 'J': return "long";
                 case 'S': return "short";
-                case '[': return "[" + classNameHelper(encodedName) + "]";
+                case '[': return classNameHelper(encodedName) + "[]";
                 case 'L': return dropSemicolon(new BufferedReader(encodedName).readLine());
                 default:
                     encodedName.reset();
