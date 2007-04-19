@@ -18,11 +18,10 @@ export MULE_LIB
 
 echo "(make sure you have configured your HTTP proxy if behind a firewall - see README.txt)"
 echo
-#echo "The Stock Quote example is available in three variations:"
-echo "The Stock Quote example is available in two variations:"
+echo "The Stock Quote example is available in three variations:"
 echo "  1. REST"
 echo "  2. SOAP"
-#echo "  3. WSDL"
+echo "  3. WSDL"
 echo "Select the one you wish to execute and press Enter..."
 read i
 
@@ -32,7 +31,7 @@ then
 elif [ 2 = $i ]
 then
     exec $MULE_BASE/bin/mule -config ./conf/soap-config.xml
-#elif [ 3 = $i ]
-#then
-#    exec $MULE_BASE/bin/mule -config ./conf/wsdl-config.xml
+elif [ 3 = $i ]
+then
+    exec $MULE_BASE/bin/mule -config ./conf/wsdl-config.xml
 fi
