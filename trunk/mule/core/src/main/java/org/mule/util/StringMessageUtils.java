@@ -30,8 +30,7 @@ import java.util.Map;
 import org.apache.commons.lang.SystemUtils;
 
 /**
- * <code>StringMessageHelper</code> contains some useful methods for formatting
- * message strings for logging or exceptions.
+ * Useful methods for formatting message strings for logging or exceptions.
  */
 // @ThreadSafe
 public final class StringMessageUtils
