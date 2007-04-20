@@ -35,6 +35,7 @@ public class SystemStreamConnector extends StreamConnector
     private String promptMessageCode = null;
     private String resourceBundle = null;
     private String outputMessage;
+    private String outputMessageCode = null;
     private long messageDelayTime = 3000;
     private boolean firstTime = true;
 
@@ -169,6 +170,11 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getOutputMessage()
     {
+        if (!StringUtils.isBlank(resourceBundle) && StringUtils.isNotBlank(outputMessageCode))
+        {
+            return LocaleMessageHandler.getString(resourceBundle, outputMessageCode);
+        }
+
         return outputMessage;
     }
 
@@ -178,6 +184,22 @@ public class SystemStreamConnector extends StreamConnector
     public void setOutputMessage(String outputMessage)
     {
         this.outputMessage = outputMessage;
+    }
+
+    /**
+     * @return Returns the outputMessageCode.
+     */
+    public String getOutputMessageCode()
+    {
+        return outputMessageCode;
+    }
+
+    /**
+     * @param outputMessageCode The outputMessageCode to set.
+     */
+    public void setOutputMessageCode(String outputMessageCode)
+    {
+        this.outputMessageCode = outputMessageCode;
     }
 
     /*
