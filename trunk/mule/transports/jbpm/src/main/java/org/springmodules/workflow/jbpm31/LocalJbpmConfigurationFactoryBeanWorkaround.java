@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:LocalJbpmConfigurationFactoryBeanWorkaround.java 5924 2007-04-07 21:12:55 +0000 (Sat, 07 Apr 2007) tcarlson $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *

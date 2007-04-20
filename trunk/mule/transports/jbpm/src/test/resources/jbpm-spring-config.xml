@@ -61,22 +61,23 @@
         </spring-property>
         <spring-property name="hibernateProperties">
             <props>
+                <!-- These properties may depend on your database -->
                 <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-                <prop key="hibernate.c3p0.min_size">1</prop>
-                <prop key="hibernate.c3p0.max_size">3</prop>
-                <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.query.substitutions">true 1, false 0</prop>
                 <prop key="hibernate.jdbc.batch_size">0</prop>
                 <!-- Create/update the database tables automatically when the JVM starts up -->
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!-- EhCache is no longer the default cache provider as of Hibernate 3.2 
+                  Refer to http://www.hibernate.org/hib_docs/v3/reference/en/html/performance.html
+                  for Hibernate's different cache providers. -->
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+                <!-- C3P0 (connection pooling) properties -->
+                <prop key="hibernate.c3p0.min_size">1</prop>
+                <prop key="hibernate.c3p0.max_size">3</prop>
+                <!-- Write SQL statements to log -->
+                <prop key="hibernate.show_sql">false</prop>
             </props>
         </spring-property>
-    </bean>
-
-    <!-- JBPM data types -->
-    <bean id="jbpmTypes" class="org.springframework.orm.hibernate3.TypeDefinitionBean">
-        <spring-property name="typeName"><value>string_max</value></spring-property>
-        <spring-property name="typeClass"><value>org.jbpm.db.hibernate.StringMax</value></spring-property>
     </bean>
 
     <!-- JBPM Datasource -->
@@ -85,5 +86,11 @@
         <spring-property name="url"><value>jdbc:hsqldb:mem:.;sql.enforce_strict_size=true</value></spring-property>
         <spring-property name="username"><value>sa</value></spring-property>
         <spring-property name="password"><value></value></spring-property>
+    </bean>
+
+    <!-- JBPM data types -->
+    <bean id="jbpmTypes" class="org.springframework.orm.hibernate3.TypeDefinitionBean">
+        <spring-property name="typeName"><value>string_max</value></spring-property>
+        <spring-property name="typeClass"><value>org.jbpm.db.hibernate.StringMax</value></spring-property>
     </bean>
 </mule-configuration>
