@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-loanbroker-parent</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>mule-example-loanbroker-esb</artifactId>
     <packaging>jar</packaging>
@@ -17,18 +17,18 @@
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-common</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-common-tests</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-credit-agency</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>openejb</groupId>
@@ -41,10 +41,9 @@
                     <groupId>castor</groupId>
                     <artifactId>castor</artifactId>
                 </exclusion>
-                <!-- we like slf4j -->
                 <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
+                  <groupId>commons-logging</groupId>
+                  <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -152,27 +151,27 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-ejb</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jms</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-xfire</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
     </dependencies>
 
@@ -189,6 +188,55 @@
                         <exclude implementation="java.lang.String">**/*LoanBrokerEsb*.*</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <!-- "mvn install" will copy the target jar to the $MULE_HOME/lib/user directory,
+                overwriting the previous one. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-artifact</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${groupId}</groupId>
+                                    <artifactId>${artifactId}</artifactId>
+                                    <version>${version}</version>
+                                    <destFileName>${artifactId}.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activemq-core</artifactId>
+                                    <version>4.1.0-incubator</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activeio-core</artifactId>
+                                    <version>3.0.0-incubator</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>openejb</groupId>
+                                    <artifactId>openejb-core</artifactId>
+                                    <version>1.0</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>castor</groupId>
+                                    <artifactId>castor</artifactId>
+                                    <version>0.9.9</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

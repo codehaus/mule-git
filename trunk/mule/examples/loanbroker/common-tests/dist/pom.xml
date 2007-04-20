@@ -8,27 +8,27 @@
         <artifactId>mule-example-loanbroker-parent</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>mule-example-loanbroker-credit-agency</artifactId>
-    <packaging>ejb</packaging>
-    <name>Loan Broker Example: Credit Agency EJB</name>
-    
+    <artifactId>mule-example-loanbroker-common-tests</artifactId>
+    <packaging>jar</packaging>
+    <name>Loan Broker Example: Shared classes for unit tests</name>
+
     <dependencies>
         <dependency>
-            <groupId>openejb</groupId>
-            <artifactId>openejb-core</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope> 
-            <exclusions>
-                <!-- Tries to pull an unpublished castor version -->
-                <exclusion>
-                    <groupId>castor</groupId>
-                    <artifactId>castor</artifactId>
-                </exclusion>
-                <exclusion>
-                  <groupId>commons-logging</groupId>
-                  <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-loanbroker-common</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <!-- This should have been pulled in as a transitive dependency from mule-tests-functional but it looks 
+        	like it's yet another m2 workaround. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
         </dependency>
     </dependencies>
 

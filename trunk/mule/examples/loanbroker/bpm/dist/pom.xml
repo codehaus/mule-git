@@ -8,27 +8,26 @@
         <artifactId>mule-example-loanbroker-parent</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>mule-example-loanbroker-credit-agency</artifactId>
-    <packaging>ejb</packaging>
-    <name>Loan Broker Example: Credit Agency EJB</name>
-    
+    <artifactId>mule-example-loanbroker-bpm</artifactId>
+    <packaging>jar</packaging>
+    <name>Loan Broker BPM Example</name>
+
     <dependencies>
         <dependency>
-            <groupId>openejb</groupId>
-            <artifactId>openejb-core</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope> 
-            <exclusions>
-                <!-- Tries to pull an unpublished castor version -->
-                <exclusion>
-                    <groupId>castor</groupId>
-                    <artifactId>castor</artifactId>
-                </exclusion>
-                <exclusion>
-                  <groupId>commons-logging</groupId>
-                  <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-loanbroker-common</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-loanbroker-common-tests</artifactId>
+            <version>${muleVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jbpm</artifactId>
+            <version>${muleVersion}</version>
         </dependency>
     </dependencies>
 
