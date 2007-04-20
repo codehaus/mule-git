@@ -102,7 +102,7 @@ public class TcpConnectorFunctionalTestCase extends AbstractProviderFunctionalTe
 
         initialiseComponent(descriptor, new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object Component) throws Exception
+            public void eventReceived(UMOEventContext context, Object component) throws Exception
             {
                 callbackCount++;
                 String result = "Received Async event: " + context.getMessageAsString();
