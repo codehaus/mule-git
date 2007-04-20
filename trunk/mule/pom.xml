@@ -8,6 +8,9 @@
     <artifactId>mule</artifactId>
     <packaging>pom</packaging>
     <version>1.4.1-SNAPSHOT</version>
+    <prerequisites>
+        <maven>2.0.6</maven>
+    </prerequisites>
 
     <!-- Organization -->
     <organization>
@@ -193,9 +196,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-
                     <archive>
-
                         <!--
                             Disabled for http://mule.mulesource.org/jira/browse/MULE-1153
                             and http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
@@ -221,9 +222,7 @@
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
                             <Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
                         </manifestEntries>
-
                     </archive>
-
                 </configuration>
             </plugin>
 
@@ -557,8 +556,6 @@
                 </site>
             </distributionManagement>
         </profile>
-
     </profiles>
-
 </project>
 
