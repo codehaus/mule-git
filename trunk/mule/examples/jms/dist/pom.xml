@@ -151,7 +151,6 @@
   
     <build>
         <defaultGoal>install</defaultGoal>
-        <finalName>${artifactId}</finalName>
 
         <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
         <resources>
