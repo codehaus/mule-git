@@ -120,6 +120,9 @@ public class StAXMapWriter
         // write the "root element"
         streamWriter.writeStartElement(this.getRecordIdentifier(record));
 
+        // TODO HH: there is something weird going on in here, see:
+        // http://jira.codehaus.org/browse/WSTX-116
+
         // now write each key/value pair
         for (Iterator i/* <Map.Entry<?, ?> */= record.entrySet().iterator(); i.hasNext();)
         {
