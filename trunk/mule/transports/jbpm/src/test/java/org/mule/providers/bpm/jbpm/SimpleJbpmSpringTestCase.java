@@ -8,11 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.bpm;
+package org.mule.providers.bpm.jbpm;
 
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
+import org.mule.providers.bpm.ProcessConnector;
 
 /**
  * Tests the connector against jBPM with 2 simple processes.

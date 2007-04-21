@@ -8,13 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.bpm;
+package org.mule.providers.bpm.jbpm;
 
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
-import org.mule.providers.bpm.jbpm.Jbpm;
+import org.mule.providers.bpm.BPMS;
+import org.mule.providers.bpm.ProcessConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
