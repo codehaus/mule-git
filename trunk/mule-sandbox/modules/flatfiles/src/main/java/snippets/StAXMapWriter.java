@@ -19,6 +19,9 @@ public class StAXMapWriter
     private boolean writeDocumentHeader = true;
 
     // the default XML root element tag
+    private String datasetIdentifier = "dataset";
+
+    // the default tag for a single "record"
     private String defaultRecordIdentifier = "record";
 
     // this allows for a simple, customizable key->tag mapping
@@ -32,22 +35,34 @@ public class StAXMapWriter
         super();
     }
 
+    // identifier for an entire set of records
+    public String getDatasetIdentifier()
+    {
+        return datasetIdentifier;
+    }
+
+    // this configures the dataset identifier
+    public void setDatasetIdentifier(String identifier)
+    {
+        datasetIdentifier = identifier;
+    }
+
     // identifier for each new "record"
     public String getDefaultRecordIdentifier()
     {
         return defaultRecordIdentifier;
     }
 
-    // identifier for this particular Map
-    public String getRecordIdentifier(Map/* <?, ?> */data)
-    {
-        return (data.containsKey("mumble") ? "address" : this.getDefaultRecordIdentifier());
-    }
-
     // this configures the default record identifier
     public void setDefaultRecordIdentifier(String identifier)
     {
         defaultRecordIdentifier = identifier;
+    }
+
+    // identifier for this particular Map
+    public String getRecordIdentifier(Map/* <?, ?> */data)
+    {
+        return (data.containsKey("mumble") ? "address" : this.getDefaultRecordIdentifier());
     }
 
     // overridable method to retrieve the XML tag for a Map key
@@ -84,10 +99,16 @@ public class StAXMapWriter
                 streamWriter.writeStartDocument();
             }
 
+            // write the "dataset" root element
+            streamWriter.writeStartElement(this.getDatasetIdentifier());
+
             for (Iterator/* <Map<?, ?>> */i = maps.iterator(); i.hasNext();)
             {
                 this.writeMapToXMLStream((Map) i.next(), streamWriter);
             }
+
+            // close the dataset
+            streamWriter.writeEndElement();
 
             // close the document
             streamWriter.writeEndDocument();
@@ -95,6 +116,7 @@ public class StAXMapWriter
         catch (XMLStreamException xmlstex)
         {
             // rollback output?
+            throw xmlstex;
         }
         finally
         {
@@ -108,6 +130,7 @@ public class StAXMapWriter
                 catch (XMLStreamException xmlstex)
                 {
                     // give up :(
+                    throw xmlstex;
                 }
             }
         }
@@ -117,11 +140,8 @@ public class StAXMapWriter
     public void writeMapToXMLStream(Map/* <?, ?> */record, XMLStreamWriter streamWriter)
         throws XMLStreamException
     {
-        // write the "root element"
+        // begin a single "record"
         streamWriter.writeStartElement(this.getRecordIdentifier(record));
-
-        // TODO HH: there is something weird going on in here, see:
-        // http://jira.codehaus.org/browse/WSTX-116
 
         // now write each key/value pair
         for (Iterator i/* <Map.Entry<?, ?> */= record.entrySet().iterator(); i.hasNext();)
@@ -151,14 +171,13 @@ public class StAXMapWriter
         Map/* <String, String> */data1 = new HashMap/* <String, String> */();
         // remember that the foo key will result in a different element
         data1.put("foo", "Hanz");
-        data1.put("bar", "Bar");
-        data1.put("baz", "xyzzy");
-        data1.put("gargle", "xxxx");
+        data1.put("bar", "bar");
+        data1.put("baz", "baz");
         maps.add(data1);
 
         Map/* <String, String> */data2 = new HashMap/* <String, String> */(data1);
         // add a key which will result in a different root element
-        data2.put("mumble", "yyyy");
+        data2.put("mumble", "mumble");
         maps.add(data2);
 
         // write data to output stream
