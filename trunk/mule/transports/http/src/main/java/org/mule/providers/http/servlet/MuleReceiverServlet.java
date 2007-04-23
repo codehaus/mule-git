@@ -16,6 +16,7 @@ import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.http.HttpConnector;
+import org.mule.providers.http.HttpConstants;
 import org.mule.providers.service.TransportFactory;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.EndpointException;
@@ -73,6 +74,12 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
 
     }
 
+    protected void doHead(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+    
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
@@ -105,6 +112,76 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             {
                 writeResponse(response, responseMessage);
             }
+        }
+        catch (Exception e)
+        {
+            handleException(e, e.getMessage(), response);
+        }
+    }
+
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        try
+        {
+            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_OPTIONS).toString() + HttpConstants.CRLF);
+        }
+        catch (Exception e)
+        {
+            handleException(e, e.getMessage(), response);
+        }
+    }
+
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        try
+        {
+            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_PUT).toString() + HttpConstants.CRLF);
+        }
+        catch (Exception e)
+        {
+            handleException(e, e.getMessage(), response);
+        }
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        try
+        {
+            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_DELETE).toString() + HttpConstants.CRLF);
+        }
+        catch (Exception e)
+        {
+            handleException(e, e.getMessage(), response);
+        }
+    }
+
+    protected void doTrace(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        try
+        {
+            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_TRACE).toString() + HttpConstants.CRLF);
+        }
+        catch (Exception e)
+        {
+            handleException(e, e.getMessage(), response);
+        }
+    }
+
+    protected void doConnect(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        try
+        {
+            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_CONNECT).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
