@@ -156,7 +156,7 @@ public class ProcessConnector extends AbstractConnector implements MessageServic
         else
         {
             throw new IllegalArgumentException(
-                "No valid URL could be created for the given process name and ID.");
+                "No valid URL could be created for the given process name and ID: processName = " + processName + ", processId = " + processId);
         }
         return url;
     }
