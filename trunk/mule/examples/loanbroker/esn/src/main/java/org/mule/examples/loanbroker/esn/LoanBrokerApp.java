@@ -72,7 +72,7 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
             if (synchronous)
             {
                 long start = System.currentTimeMillis();
-                List results = loanBrokerApp.requestSend(i, "vm://customer.requests");
+                List results = loanBrokerApp.requestSend(i, "CustomerRequests");
                 System.out.println(LocaleMessage.getString(LocaleMessage.RESPONSE_NUM_QUOTES, String.valueOf(results.size())));
                 List output = new ArrayList(results.size());
                 int x = 1;
@@ -88,7 +88,7 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
             }
             else
             {
-                loanBrokerApp.requestDispatch(i, "vm://customer.requests");
+                loanBrokerApp.requestDispatch(i, "CustomerRequests");
             }
         }
         /////////////////////////////////////////

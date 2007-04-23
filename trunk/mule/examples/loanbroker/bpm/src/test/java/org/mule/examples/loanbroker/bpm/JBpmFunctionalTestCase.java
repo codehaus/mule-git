@@ -47,7 +47,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
             throw new ConfigurationException(Message.createStaticMessage("Unable to look up jBpmConnector from Mule registry."));
         }
         BPMS bpms = connector.getBpms();
-        // TODO The following assert is throwing a 
+        // TODO MULE-1558 The following assert is throwing a 
         //   org.hibernate.LazyInitializationException: could not initialize proxy - the owning Session was closed
         // See http://forum.springframework.org/archive/index.php/t-24800.html
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));

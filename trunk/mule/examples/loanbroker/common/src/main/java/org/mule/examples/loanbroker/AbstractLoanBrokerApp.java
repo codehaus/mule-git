@@ -176,14 +176,14 @@ public abstract class AbstractLoanBrokerApp
     {
         if (!sync)
         {
-            client.dispatch("vm://customer.requests", request, null);
+            client.dispatch("CustomerRequests", request, null);
             System.out.println(LocaleMessage.getString(LocaleMessage.SENT_ASYNC));
             // let the request catch up
             Thread.sleep(1500);
         }
         else
         {
-            UMOMessage result = client.send("vm://customer.requests", request, null);
+            UMOMessage result = client.send("CustomerRequests", request, null);
             if (result == null)
             {
                 System.out.println(LocaleMessage.getString(LocaleMessage.REQUEST_ERROR));
@@ -222,7 +222,7 @@ public abstract class AbstractLoanBrokerApp
     {
         if (synchronous)
         {
-            List list = this.requestSend(number, "vm://customer.requests");
+            List list = this.requestSend(number, "CustomerRequests");
             int i = 1;
             for (Iterator iterator = list.iterator(); iterator.hasNext(); i++)
             {
@@ -231,7 +231,7 @@ public abstract class AbstractLoanBrokerApp
         }
         else
         {
-            this.requestDispatch(number, "vm://customer.requests");
+            this.requestDispatch(number, "CustomerRequests");
         }
     }
 
