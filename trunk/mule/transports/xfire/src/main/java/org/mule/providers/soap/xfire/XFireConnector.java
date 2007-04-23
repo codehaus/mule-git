@@ -154,6 +154,7 @@ public class XFireConnector extends AbstractConnector
                     WebAnnotations wa = (WebAnnotations)ClassUtils.instanciateClass(
                         CLASSNAME_ANNOTATIONS, null, this.getClass());
                     serviceFactory = new AnnotationServiceFactory(wa, xfire.getTransportManager());
+                    configureBindingProvider((ObjectServiceFactory)serviceFactory);
                 }
                 catch (Exception ex)
                 {
