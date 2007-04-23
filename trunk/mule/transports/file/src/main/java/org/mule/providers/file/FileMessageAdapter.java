@@ -24,8 +24,8 @@ import org.mule.umo.provider.MessageTypeNotSupportedException;
 /**
  * <code>FileMessageAdapter</code> provides a wrapper for a file reference. Users
  * can obtain the contents of the message through the payload property and can get
- * the filename and directory in the properties using PROPERTY_FILENAME and
- * PROPERTY_DIRECTORY.
+ * the filename and directory in the properties using FileConnector.PROPERTY_FILENAME and
+ * FileConnector.PROPERTY_DIRECTORY.
  */
 public class FileMessageAdapter extends AbstractMessageAdapter
 {
