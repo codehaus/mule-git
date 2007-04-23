@@ -213,7 +213,13 @@ public class IOUtils extends org.apache.commons.io.IOUtils
         var = SystemUtils.getenv(var);
         if (split.length > 1){
             if (var == null){
-                return split[1].substring(1);
+                var = System.getProperty(split[0].substring(2));
+                if (var == null){
+                    return split[1].substring(1);
+                }
+                else{
+                    return var+"\\"+split[1].substring(1);
+                }
             }
             else{
                 return var+"\\"+split[1].substring(1);
