@@ -180,8 +180,10 @@ public class FileConnector extends AbstractConnector
                 }
             }
             Map srvOverride = (Map) props.get(PROPERTY_SERVICE_OVERRIDE);
-            if (srvOverride != null) {
-                if (serviceOverrides == null) {
+            if (srvOverride != null) 
+            {
+                if (serviceOverrides == null) 
+                {
                     serviceOverrides = new Properties();
                 }
                 serviceOverrides.setProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER,
