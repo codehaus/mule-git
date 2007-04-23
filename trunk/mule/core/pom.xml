@@ -25,20 +25,17 @@
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
         <!-- Used for the WorkManager API & for the Mule RA -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-            <version>1.0.1</version>
         </dependency>
         <!-- Used for Transactions -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
-            <version>1.0.1</version>
         </dependency>
 
         <!--
@@ -149,7 +146,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>mockobjects</groupId>
