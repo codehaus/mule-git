@@ -10,15 +10,16 @@
 
 package org.mule.providers.email;
 
-import junit.framework.TestCase;
+import org.mule.tck.AbstractMuleTestCase;
+
+import java.util.List;
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
-import java.util.List;
 
-public class SimpleMailMessageAdapterTestCase extends TestCase
+public class SimpleMailMessageAdapterTestCase extends AbstractMuleTestCase
 {
 
     private static final String NAME_1 = "name1";
