@@ -69,6 +69,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
                 }
 
                 UMOEndpoint ep = new MuleEndpoint("servlet://" + path.substring(1), true);
+                ep.setTransformer(endpoint.getTransformer());
                 scon.registerListener(component, ep);
             }
             catch (Exception e)
