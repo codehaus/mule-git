@@ -8,7 +8,7 @@
         <artifactId>mule-modules</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-module-cache</artifactId>
+    <artifactId>mule-module-caching</artifactId>
     <name>Cache Integration</name>
     <description>Pluggable integration of various cache implementations</description>
 
