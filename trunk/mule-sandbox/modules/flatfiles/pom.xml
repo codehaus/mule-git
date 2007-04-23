@@ -32,6 +32,13 @@
             <artifactId>pzfilereader</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- pzfilereader dependencies -->
+        <dependency>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-xml</artifactId>
