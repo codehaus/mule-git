@@ -200,6 +200,7 @@ public class IOUtils extends org.apache.commons.io.IOUtils
     private static String parseResourceName(String src){
         String var;
         String[] split;
+        String ps = System.getProperty("file.separator");
         
         if (src.indexOf('$') > -1)
         {
@@ -218,11 +219,11 @@ public class IOUtils extends org.apache.commons.io.IOUtils
                     return split[1].substring(1);
                 }
                 else{
-                    return var+"\\"+split[1].substring(1);
+                    return var + ps + split[1].substring(1);
                 }
             }
             else{
-                return var+"\\"+split[1].substring(1);
+                return var + ps + split[1].substring(1);
             }
         }
         else{
