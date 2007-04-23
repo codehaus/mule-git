@@ -10,13 +10,12 @@
 
 package org.mule.umo;
 
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.security.tls.TlsConfiguration;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import junit.framework.TestCase;
-
-public class TlsConfigurationTestCase extends TestCase
+public class TlsConfigurationTestCase extends AbstractMuleTestCase
 {
 
     public void testEmptyConfiguration() throws Exception

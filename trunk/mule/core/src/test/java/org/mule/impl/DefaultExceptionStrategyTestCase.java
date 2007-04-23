@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import junit.framework.TestCase;
+import org.mule.tck.AbstractMuleTestCase;
 
-public class DefaultExceptionStrategyTestCase extends TestCase
+public class DefaultExceptionStrategyTestCase extends AbstractMuleTestCase
 {
 
     // MULE-1404
