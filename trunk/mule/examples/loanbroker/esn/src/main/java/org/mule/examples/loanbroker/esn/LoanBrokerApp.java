@@ -38,6 +38,13 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
 
     private static boolean synchronous = false;
 
+    // Needed for webapp version!
+    // TODO Travis ... sadly, it doesn't quite work
+    public LoanBrokerApp() throws Exception
+    {
+        super();
+    }
+
     public LoanBrokerApp(String config) throws Exception
     {
         super(config);
