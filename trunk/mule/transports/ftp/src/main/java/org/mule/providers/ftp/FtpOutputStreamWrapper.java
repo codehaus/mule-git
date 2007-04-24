@@ -9,6 +9,8 @@
  */
 package org.mule.providers.ftp;
 
+import org.mule.umo.endpoint.UMOEndpointURI;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -21,9 +23,14 @@ public class FtpOutputStreamWrapper extends OutputStream
 {
     private final FTPClient client;
     private final OutputStream out;
+    private final FtpConnector connector;
+    private final UMOEndpointURI uri;
 
-    public FtpOutputStreamWrapper(FTPClient client, OutputStream out)
+    public FtpOutputStreamWrapper(FtpConnector connector, UMOEndpointURI uri,
+                                  FTPClient client, OutputStream out)
     {
+        this.connector = connector;
+        this.uri = uri;
         this.client = client;
         this.out = out;
     }
@@ -52,9 +59,7 @@ public class FtpOutputStreamWrapper extends OutputStream
     {
         try
         {
-            // close output stream
             out.close();
-
             if (!client.completePendingCommand())
             {
                 client.logout();
@@ -64,8 +69,14 @@ public class FtpOutputStreamWrapper extends OutputStream
         }
         finally
         {
-            out.close();
-            super.close();
+            try
+            {
+                connector.releaseFtp(uri, client);
+            }
+            catch (Exception e)
+            {
+                throw (IOException)  new IOException(e.getMessage()).initCause(e);
+            }
         }
     }
 

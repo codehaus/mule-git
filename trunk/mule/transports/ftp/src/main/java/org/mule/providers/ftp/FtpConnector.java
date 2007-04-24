@@ -89,9 +89,9 @@ public class FtpConnector extends AbstractConnector
         {
             polling = 1000;
         }
-        logger.debug("set polling frequency to: " + polling);
-        return serviceDescriptor.createMessageReceiver(this, component, endpoint, new Object[]{new Long(
-            polling)});
+        logger.debug("set polling frequency to " + polling);
+        return serviceDescriptor.createMessageReceiver(this, component, endpoint,
+                new Object[]{new Long(polling)});
     }
 
     /**
@@ -112,37 +112,52 @@ public class FtpConnector extends AbstractConnector
 
     public FTPClient getFtp(UMOEndpointURI uri) throws Exception
     {
-        ObjectPool pool = getFtpPool(uri);
-        return (FTPClient)pool.borrowObject();
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(">>> retrieving client for " + uri);
+        }
+        return (FTPClient)getFtpPool(uri).borrowObject();
     }
 
     public void releaseFtp(UMOEndpointURI uri, FTPClient client) throws Exception
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("<<< releasing client for " + uri);
+        }
         if (dispatcherFactory.isCreateDispatcherPerRequest())
         {
             destroyFtp(uri, client);
         }
         else
         {
-            if (client != null && client.isConnected())
-            {
-                ObjectPool pool = getFtpPool(uri);
-                pool.returnObject(client);
-            }
+            getFtpPool(uri).returnObject(client);
         }
     }
 
     public void destroyFtp(UMOEndpointURI uri, FTPClient client) throws Exception
     {
-        if (client != null && client.isConnected())
+        if (logger.isDebugEnabled())
         {
-            ObjectPool pool = getFtpPool(uri);
-            pool.invalidateObject(client);
+            logger.debug("<<< destroying client for " + uri);
+        }
+        try
+        {
+            getFtpPool(uri).invalidateObject(client);
+        }
+        catch (Exception e)
+        {
+            // no way to test if pool is closed except try to access it
+            logger.debug(e.getMessage());
         }
     }
 
     protected synchronized ObjectPool getFtpPool(UMOEndpointURI uri)
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("=== get pool for " + uri);
+        }
         String key = uri.getUsername() + ":" + uri.getPassword() + "@" + uri.getHost() + ":" + uri.getPort();
         ObjectPool pool = (ObjectPool)pools.get(key);
         if (pool == null)
@@ -262,6 +277,10 @@ public class FtpConnector extends AbstractConnector
 
     protected void doStop() throws UMOException
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("!!! stopping all pools");
+        }
         try
         {
             for (Iterator it = pools.values().iterator(); it.hasNext();)
@@ -495,45 +514,55 @@ public class FtpConnector extends AbstractConnector
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {
-        FTPClient client = null;
-
-        UMOEndpointURI uri = endpoint.getEndpointURI();
-        String filename = (String)message.getProperty(FtpConnector.PROPERTY_FILENAME);
-
         try
         {
-            if (filename == null)
+            UMOEndpointURI uri = endpoint.getEndpointURI();
+            String filename = getFilename(endpoint, message);
+            FTPClient client = getFtp(uri);
+
+            try
             {
-                String outPattern = (String)endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
-                if (outPattern == null){
-                    outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
-                    getOutputPattern());
+                enterActiveOrPassiveMode(client, endpoint);
+                setupFileType(client, endpoint);
+                if (!client.changeWorkingDirectory(uri.getPath()))
+                {
+                    throw new IOException("Ftp error: " + client.getReplyCode());
                 }
-                filename = generateFilename(message, outPattern);
+                OutputStream out = client.storeFileStream(filename);
+                // We wrap the ftp outputstream to ensure that the
+                // completePendingRequest() method is called when the stream is closed
+                return new FtpOutputStreamWrapper(this, uri, client, out);
             }
-
-            if (filename == null)
+            catch (Exception e)
             {
-                throw new IOException("Filename is null");
+                releaseFtp(uri, client);
+                throw e;
             }
-
-            client = getFtp(uri);
-            enterActiveOrPassiveMode(client, endpoint);
-            setupFileType(client, endpoint);
-            if (!client.changeWorkingDirectory(uri.getPath()))
-            {
-                throw new IOException("Ftp error: " + client.getReplyCode());
-            }
-            OutputStream out = client.storeFileStream(filename);
-            // We wrap the ftp outputstream to ensure that the
-            // completePendingRequest() method is called when the stream is closed
-            return new FtpOutputStreamWrapper(client, out);
         }
         catch (Exception e)
         {
             throw new DispatchException(new Message(Messages.STREAMING_FAILED_NO_STREAM), message, endpoint,
-                e);
+                    e);
         }
+    }
+
+    private String getFilename(UMOImmutableEndpoint endpoint, UMOMessage message) throws IOException
+    {
+        String filename = (String)message.getProperty(FtpConnector.PROPERTY_FILENAME);
+        if (filename == null)
+        {
+            String outPattern = (String) endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
+            if (outPattern == null){
+                outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
+                        getOutputPattern());
+            }
+            filename = generateFilename(message, outPattern);
+        }
+        if (filename == null)
+        {
+            throw new IOException("Filename is null");
+        }
+        return filename;
     }
 
     private String generateFilename(UMOMessage message, String pattern)
