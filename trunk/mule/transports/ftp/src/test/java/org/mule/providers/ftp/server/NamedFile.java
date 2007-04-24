@@ -8,17 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.ftp;
+package org.mule.providers.ftp.server;
 
 import org.apache.ftpserver.ftplet.FileObject;
 
-public abstract class NamedFileObject implements FileObject {
+public abstract class NamedFile implements FileObject {
 
     private String name;
+    private ServerState state;
 
-    public NamedFileObject(String name)
+    public NamedFile(String name, ServerState state)
     {
         this.name = name;
+        this.state = state;
     }
 
     public String getFullName()
@@ -99,6 +101,11 @@ public abstract class NamedFileObject implements FileObject {
     public boolean move(FileObject destination)
     {
         return false;
+    }
+
+    protected ServerState getState()
+    {
+        return state;
     }
 
 }
