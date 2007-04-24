@@ -33,6 +33,12 @@ public abstract class AbstractLoanBrokerApp
     private MuleClient client = null;
     private String config;
 
+    public AbstractLoanBrokerApp() throws Exception
+    {
+        this.config = null;
+        init();
+    }
+
     public AbstractLoanBrokerApp(String config) throws Exception
     {
         this.config = config;
@@ -41,8 +47,11 @@ public abstract class AbstractLoanBrokerApp
 
     protected void init() throws Exception
     {
-        ConfigurationBuilder builder = getConfigBuilder();
-        builder.configure(config);
+        if (config != null)
+        {
+            ConfigurationBuilder builder = getConfigBuilder();
+            builder.configure(config);
+        }
 
         client = new MuleClient();
 
