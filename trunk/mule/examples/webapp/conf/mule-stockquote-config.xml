@@ -15,7 +15,8 @@
         </transformer>
     </transformers>
 
-    <mule-descriptor name="HTTPPostSample"
+    <model name="samples" type="inherited">
+        <mule-descriptor name="HTTPPostSample"
             inboundEndpoint="vm://stockquote"
             responseTransformer="XmlDecoder Xslt XmlToObject"
             implementation="org.mule.components.rest.RestServiceWrapper">
@@ -27,5 +28,7 @@
             </properties>
 
         </mule-descriptor>
+
+   </model>
 
 </mule-configuration>
