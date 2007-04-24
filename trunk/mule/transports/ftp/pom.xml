@@ -13,20 +13,6 @@
     <name>Ftp Transport</name>
     <description>A Mule transport for Ftp Connectivity.</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <!-- Exclude the functional test, requires FTP server to be up -->
-                        <exclude implementation="java.lang.String">org/mule/providers/ftp/FtpConnectorFunctionalTestCase.java</exclude>
-                    </excludes>
-                </configuration></plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -43,5 +29,34 @@
             <groupId>oro</groupId>
             <version>2.0.7</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ftpserver</groupId>
+            <artifactId>ftpserver-core</artifactId>
+            <version>1.0-mule-temp</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ftpserver</groupId>
+            <artifactId>ftplet-api</artifactId>
+            <version>1.0-mule-temp</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mina</groupId>
+            <artifactId>mina-core</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+     </dependencies>
 </project>
