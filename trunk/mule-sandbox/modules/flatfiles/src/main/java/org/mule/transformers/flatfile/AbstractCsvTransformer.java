@@ -14,7 +14,6 @@ import org.mule.transformers.AbstractTransformer;
 
 public abstract class AbstractCsvTransformer extends AbstractTransformer
 {
-
     protected static final char DEFAULT_DELIMITER = ';';
     protected static final char DEFAULT_QUALIFIER = '"';
 

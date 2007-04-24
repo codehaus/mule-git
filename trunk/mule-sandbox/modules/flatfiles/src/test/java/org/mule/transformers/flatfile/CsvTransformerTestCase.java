@@ -77,30 +77,5 @@ public class CsvTransformerTestCase extends AbstractTransformerTestCase
 
         return true;
     }
-
-//    public void testParseDataWithHeadings()
-//    {
-//        Assert.fail("implement me!");
-//    }
-//
-//    public void testParseDataWithoutHeadings()
-//    {
-//        Assert.fail("implement me!");
-//    }
-//    
-//    public void testParseDataWrongInput()
-//    {
-//        Assert.fail("implement me!");
-//    }
-//    
-//    public void testParseDataWrongInputClass()
-//    {
-//        Assert.fail("implement me!");
-//    }
-//
-//    public void testParseDataDifferentDelimiterAndQualifier()
-//    {
-//        Assert.fail("implement me!");
-//    }
 }
 
