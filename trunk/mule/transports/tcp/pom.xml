@@ -13,6 +13,20 @@
     <name>Tcp Transport</name>
     <description>A Mule transport for Tcp Connectivity. This transport supplies a tcp Server and client implementation.</description>
 
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <excludes>
+              <exclude>**/StreamingTestCase.java</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.transports</groupId>
