@@ -17,7 +17,8 @@ import org.mule.extras.client.MuleClient;
 import java.util.Map;
 import java.util.HashMap;
 
-public class TcpFunctionalTestCase extends FunctionalTestCase {
+public class TcpFunctionalTestCase extends FunctionalTestCase 
+{
 
     protected static String TEST_MESSAGE = "Test TCP Request";
 
