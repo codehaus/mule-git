@@ -13,7 +13,6 @@ package org.mule.providers.tcp.protocols;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.io.OutputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
@@ -58,6 +57,11 @@ public class XmlMessageProtocol extends ByteProtocol
     private static final int PUSHBACK_BUFFER_SIZE = READ_BUFFER_SIZE * 2;
 
     private ConcurrentHashMap pbMap = new ConcurrentHashMap();
+
+    public XmlMessageProtocol()
+    {
+        super(STREAM_OK);
+    }
 
     public Object read(InputStream is) throws IOException
     {
@@ -124,11 +128,6 @@ public class XmlMessageProtocol extends ByteProtocol
                 pbMap.remove(is);
             }
         }
-    }
-
-    public void write(OutputStream os, byte[] data) throws IOException
-    {
-        os.write(data);
     }
 
     /**

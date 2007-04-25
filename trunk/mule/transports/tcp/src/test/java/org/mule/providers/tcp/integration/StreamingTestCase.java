@@ -14,8 +14,10 @@ import org.mule.extras.client.MuleClient;
 import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
+import org.mule.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class StreamingTestCase  extends FunctionalTestCase
 {
@@ -41,7 +43,9 @@ public class StreamingTestCase  extends FunctionalTestCase
                         new StreamMessageAdapter(
                                 new ByteArrayInputStream(TEST_MESSAGE.getBytes())),
                         TIMEOUT);
-        assertEquals(TEST_MESSAGE, result.getPayloadAsString());
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        IOUtils.copy(result.getInputStream(), buffer);
+        assertEquals(TEST_MESSAGE, buffer.toString());
     }
 
 }

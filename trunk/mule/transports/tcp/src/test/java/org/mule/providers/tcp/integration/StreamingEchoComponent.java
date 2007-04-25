@@ -10,16 +10,15 @@
 
 package org.mule.providers.tcp.integration;
 
-import org.mule.impl.model.streaming.StreamingService;
-import org.mule.umo.UMOEventContext;
 import org.mule.util.IOUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class StreamingEchoComponent implements StreamingService
+public class StreamingEchoComponent
 {
-    public void call(InputStream in, OutputStream out, UMOEventContext context) throws Exception
+    
+    public void echo(InputStream in, OutputStream out) throws Exception
     {
         IOUtils.copy(in, out);
     }

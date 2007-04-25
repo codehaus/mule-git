@@ -39,11 +39,12 @@ public class DefaultProtocol extends ByteProtocol
 
     public DefaultProtocol()
     {
-        this(DEFAULT_BUFFER_SIZE);
+        this(STREAM_OK, DEFAULT_BUFFER_SIZE);
     }
 
-    public DefaultProtocol(int bufferSize)
+    public DefaultProtocol(boolean streamOk, int bufferSize)
     {
+        super(streamOk);
         this.bufferSize = bufferSize;
     }
 

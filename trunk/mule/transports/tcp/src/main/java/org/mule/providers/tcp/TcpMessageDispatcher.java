@@ -100,8 +100,6 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         TcpProtocol protocol = connector.getTcpProtocol();
 
         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-        // TODO SF check if need to convert String to Bytes... using
-        // data.toString().getBytes() or should we send string as is?
         protocol.write(bos, data);
         bos.flush();
     }

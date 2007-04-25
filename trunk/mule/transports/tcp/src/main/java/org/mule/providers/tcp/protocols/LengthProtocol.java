@@ -37,7 +37,7 @@ public class LengthProtocol extends DefaultProtocol
 
     public LengthProtocol()
     {
-        super(SIZE_INT);
+        super(NO_STREAM, SIZE_INT);
     }
 
     public Object read(InputStream is) throws IOException

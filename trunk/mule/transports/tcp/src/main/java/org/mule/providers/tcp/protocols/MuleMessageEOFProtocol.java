@@ -32,7 +32,7 @@ public class MuleMessageEOFProtocol extends EOFProtocol
     // @Override
     public void write(OutputStream os, Object unused) throws IOException
     {
-        MuleMessageWorker.doWrite(os);
+        super.write(os, MuleMessageWorker.doWrite());
     }
 
 }
