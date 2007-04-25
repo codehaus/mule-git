@@ -8,9 +8,6 @@
     <artifactId>mule</artifactId>
     <packaging>pom</packaging>
     <version>1.4.1-SNAPSHOT</version>
-    <prerequisites>
-        <maven>2.0.6</maven>
-    </prerequisites>
 
     <!-- Organization -->
     <organization>
@@ -246,6 +243,31 @@
         -->
 
         <plugins>
+            <!-- Enforce minimum maven version.
+                 This must be done through the maven-enforcer-plugin as per 
+                 http://jira.codehaus.org/browse/MNG-2423 the prerequisites are not inherited.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-maven-version</id>
+                        <goals>
+                            <goal>enforce-once</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <!-- minimum version is 2.0.6, higher versions allowed -->
+                                    <version>[2.0.6,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Compile to JDK 1.4 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -257,7 +279,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Add index to generated JARs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
