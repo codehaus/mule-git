@@ -424,7 +424,8 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         }
         
         //set transaction properties
-        if(receiver.getEndpoint().getTransactionConfig()!= null){
+        if(receiver.getEndpoint().getTransactionConfig()!= null)
+        {
             serviceEndpoint.setTransactionConfig(receiver.getEndpoint().getTransactionConfig());
             receiver.getEndpoint().setTransactionConfig(null);
         }
