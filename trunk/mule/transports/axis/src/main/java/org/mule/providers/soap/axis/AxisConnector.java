@@ -422,6 +422,13 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             serviceEndpoint.setTransformer(receiver.getEndpoint().getTransformer());
             receiver.getEndpoint().setTransformer(null);
         }
+        
+        //set transaction properties
+        if(receiver.getEndpoint().getTransactionConfig()!= null){
+            serviceEndpoint.setTransactionConfig(receiver.getEndpoint().getTransactionConfig());
+            receiver.getEndpoint().setTransactionConfig(null);
+        }
+        
         // propagate properties to the service endpoint
         serviceEndpoint.getProperties().putAll(receiver.getEndpoint().getProperties());
 
