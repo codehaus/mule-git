@@ -159,7 +159,7 @@ public class FunctionalTestComponent implements Callable
      * OuputStream as a second parameter) anything because I can't get synchronous reply to
      * work with streaming (I'm reduced to baby steps here).
      */
-    public Object receiveStream(InputStream in) throws Exception
+    public void receiveStream(InputStream in) throws Exception
     {
         try
         {
@@ -221,7 +221,7 @@ public class FunctionalTestComponent implements Callable
 
             String message = result.toString();
             logger.debug(message);
-            return onReceive(message);
+            onReceive(message);
         }
         catch (Exception e)
         {
