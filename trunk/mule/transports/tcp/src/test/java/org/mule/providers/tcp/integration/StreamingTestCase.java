@@ -11,9 +11,8 @@
 package org.mule.providers.tcp.integration;
 
 import org.mule.MuleManager;
-import org.mule.impl.model.streaming.StreamingComponent;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.streaming.StreamMessageAdapter;
+import org.mule.impl.model.streaming.StreamingComponent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
@@ -21,12 +20,12 @@ import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
 
-import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -97,9 +96,12 @@ public class StreamingTestCase  extends FunctionalTestCase
 
         ftc.setEventCallback(callback);
 
-        client.dispatchStream("tcp://localhost:65432",
-                new StreamMessageAdapter(
-                        new ByteArrayInputStream(TEST_MESSAGE.getBytes())));
+        client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
+
+        // we could have called client.dispatchStream instead, it makes no difference,
+        // since everything gets put on the socket output stream anyway.  but that is
+        // the "stream provider" functionality, rather than the "streaming model"
+        // functionality...
 
         latch.await(1, TimeUnit.SECONDS);
         assertEquals(RESULT, message.get());
