@@ -48,7 +48,6 @@
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-file</artifactId>
             <version>${version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
