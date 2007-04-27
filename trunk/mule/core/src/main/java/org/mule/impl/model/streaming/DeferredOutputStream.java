@@ -73,7 +73,12 @@ public class DeferredOutputStream extends OutputStream
         //out could be null if the stream hasn't been written to yet
         if (out != null)
         {
+            logger.debug("flushing deferred output stream");
             out.flush();
+        }
+        else
+        {
+            logger.debug("deferred output stream unflushed");
         }
     }
 

@@ -18,6 +18,8 @@ import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.util.StringMessageUtils;
 
+import java.io.InputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,6 +35,8 @@ public class FunctionalTestComponent implements Callable
 {
     protected transient Log logger = LogFactory.getLog(getClass());
 
+    public static final int STREAM_SAMPLE_SIZE = 4;
+    public static final int STREAM_BUFFER_SIZE = 4096;
     private EventCallback eventCallback;
     private Object returnMessage = null;
     private boolean appendComponentName = false;
@@ -140,7 +144,6 @@ public class FunctionalTestComponent implements Callable
         this.throwException = throwException;
     }
 
-
     public boolean isAppendComponentName()
     {
         return appendComponentName;
@@ -150,4 +153,84 @@ public class FunctionalTestComponent implements Callable
     {
         this.appendComponentName = appendComponentName;
     }
+
+    /**
+     * Experimental extension for testing streaming - we don't return a stream here (ie include
+     * OuputStream as a second parameter) anything because I can't get synchronous reply to
+     * work with streaming (I'm reduced to baby steps here).
+     */
+    public Object receiveStream(InputStream in) throws Exception
+    {
+        try
+        {
+            logger.debug("arrived at FTC");
+            byte[] startData = new byte[STREAM_SAMPLE_SIZE];
+            int startDataSize = 0;
+            byte[] endData = new byte[STREAM_SAMPLE_SIZE]; // ring buffer
+            int endDataSize = 0;
+            int endRingPointer = 0;
+            int streamLength = 0;
+            byte[] buffer = new byte[STREAM_BUFFER_SIZE];
+
+            // throw data on the floor, but keep a record of size, start and end values
+            int bytesRead = 0;
+            while (bytesRead >= 0)
+            {
+                bytesRead = in.read(buffer);
+                if (bytesRead > 0)
+                {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("read " + bytesRead + " bytes");
+                    }
+                    streamLength += bytesRead;
+                    int startOfEndBytes = 0;
+                    for (int i = 0; startDataSize < STREAM_SAMPLE_SIZE && i < bytesRead; ++i)
+                    {
+                        startData[startDataSize++] = buffer[i];
+                        ++startOfEndBytes; // skip data included in startData
+                    }
+                    startOfEndBytes = Math.max(startOfEndBytes, bytesRead - STREAM_SAMPLE_SIZE);
+                    for (int i = startOfEndBytes; i < bytesRead; ++i)
+                    {
+                        ++endDataSize;
+                        endData[endRingPointer++ % STREAM_SAMPLE_SIZE] = buffer[i];
+                    }
+                }
+            }
+            endDataSize = Math.max(endDataSize, STREAM_SAMPLE_SIZE);
+
+            // make a nice summary of the data
+            StringBuffer result = new StringBuffer("Received stream");
+            result.append("; length: ");
+            result.append(streamLength);
+            result.append("; '");
+            for (int i = 0; i < startDataSize; ++i)
+            {
+                result.append((char) startData[i]);
+            }
+            if (endDataSize > 0)
+            {
+                result.append("...");
+                for (int i = 0; i < endDataSize; ++i)
+                {
+                    result.append((char) endData[(endRingPointer + i) % STREAM_SAMPLE_SIZE]);
+                }
+            }
+            result.append("'");
+
+            String message = result.toString();
+            logger.debug(message);
+            return onReceive(message);
+        }
+        catch (Exception e)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e);
+            }
+            throw e;
+        }
+    }
+
 }
