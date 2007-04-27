@@ -15,13 +15,16 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-public class SignallingOutputStream extends OutputStream {
+public class SignallingOutputStream extends OutputStream
+{
 
+    private String name;
     private ServerState state;
     private ByteArrayOutputStream delegate = new ByteArrayOutputStream();
 
-    public SignallingOutputStream(ServerState state)
+    public SignallingOutputStream(String name, ServerState state)
     {
+        this.name = name;
         this.state = state;
     }
 
@@ -33,8 +36,7 @@ public class SignallingOutputStream extends OutputStream {
     public void close() throws IOException
     {
         delegate.close();
-        state.setPayload(delegate.toByteArray());
-        state.registerCompletion();
+        state.pushLastUpload(new NamedPayload(name, delegate.toByteArray()));
         super.close();
     }
 

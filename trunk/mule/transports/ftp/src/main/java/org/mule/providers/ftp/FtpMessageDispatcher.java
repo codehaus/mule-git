@@ -14,6 +14,7 @@ import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 
@@ -47,21 +48,27 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
     protected void doDispatch(UMOEvent event) throws Exception
     {
         Object data = event.getTransformedMessage();
-        byte[] dataBytes;
-
-        if (data instanceof byte[])
-        {
-            dataBytes = (byte[])data;
-        }
-        else
-        {
-            dataBytes = data.toString().getBytes();
-        }
-
         OutputStream out = connector.getOutputStream(event.getEndpoint(), event.getMessage());
+
         try
         {
-            IOUtils.write(dataBytes, out);
+            if (data instanceof UMOStreamMessageAdapter)
+            {
+                IOUtils.copy(((UMOStreamMessageAdapter) data).getInputStream(), out);
+            }
+            else
+            {
+                byte[] dataBytes;
+                if (data instanceof byte[])
+                {
+                    dataBytes = (byte[])data;
+                }
+                else
+                {
+                    dataBytes = data.toString().getBytes();
+                }
+                IOUtils.write(dataBytes, out);
+            }
         }
         finally
         {

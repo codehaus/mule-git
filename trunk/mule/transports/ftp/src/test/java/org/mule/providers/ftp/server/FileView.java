@@ -10,14 +10,17 @@
 
 package org.mule.providers.ftp.server;
 
-import org.apache.ftpserver.ftplet.FileSystemView;
-import org.apache.ftpserver.ftplet.FileObject;
-import org.apache.ftpserver.ftplet.FtpException;
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import org.apache.ftpserver.ftplet.FileObject;
+import org.apache.ftpserver.ftplet.FileSystemView;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class FileView implements FileSystemView
 {
 
+    protected final Log logger = LogFactory.getLog(getClass());
     private CountDownLatch started = new CountDownLatch(1);
     private ServerState state;
 
@@ -31,7 +34,8 @@ public class FileView implements FileSystemView
         started.countDown();
     }
 
-    public FileObject getHomeDirectory() throws FtpException {
+    public FileObject getHomeDirectory() throws FtpException
+    {
         return new Directory("/", state);
     }
 
@@ -45,9 +49,22 @@ public class FileView implements FileSystemView
         return true;
     }
 
-    public FileObject getFileObject(String file) throws FtpException
+    public FileObject getFileObject(String name) throws FtpException
     {
-        return new StreamingFile(file, state);
+        logger.debug("request for: " + name);
+        if (state.getDownloadNames().contains(name))
+        {
+            return new DownloadFile(name, state);
+        }
+        // TODO - is this standard FTP convention?
+        else if (null != name && name.endsWith("/"))
+        {
+            return new Directory(name, state);
+        }
+        else
+        {
+            return new UploadFile(name, state);
+        }
     }
 
     public boolean isRandomAccessible() throws FtpException

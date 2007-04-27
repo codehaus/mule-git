@@ -30,20 +30,10 @@ public class Server
     private ServerState state;
     private int port;
 
-    public byte[] getPayload()
-    {
-        return state.getPayload();
-    }
-
-    public void setPayload(byte[] payload)
-    {
-        state.setPayload(payload);
-    }
-
-    public Server(int port, int count) throws Exception
+    public Server(int port) throws Exception
     {
         this.port = port;
-        state = new ServerState(count);
+        state = new InOutState();
 
         // this must be set BEFORE the configuration is created
         // is is accessed BEFORE server startup
@@ -64,19 +54,14 @@ public class Server
         server.start();
     }
 
-    public void waitToStart(long ms) throws InterruptedException
+    public void awaitStart(long ms) throws InterruptedException
     {
-        state.waitToStart(ms);
+        state.awaitStart(ms);
     }
 
-    public void await(long ms) throws InterruptedException
+    public NamedPayload awaitUpload(long ms) throws InterruptedException
     {
-        awaitAndReset(ms, 0);
-    }
-
-    public void awaitAndReset(long ms, int count) throws InterruptedException
-    {
-        state.awaitAndReset(ms, count);
+        return state.awaitUpload(ms);
     }
 
     public void stop()

@@ -11,26 +11,20 @@
 package org.mule.providers.ftp;
 
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.ftp.server.Server;
-import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
+import org.mule.providers.ftp.server.NamedPayload;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
-
-public class FtpFunctionalTestCase extends FunctionalTestCase
+public class FtpFunctionalTestCase extends BaseServerTestCase
 {
 
-    private String TEST_MESSAGE = "Test FTP message";
-    private static AtomicInteger port = new AtomicInteger(60198);
-    private long TIMEOUT = 10000;
-    private Server server;
+    private static int PORT = 60198;
 
     public FtpFunctionalTestCase()
     {
-        setDisposeManagerPerSuite(true);
+        super(PORT);
     }
 
     protected String getConfigResources()
@@ -38,31 +32,16 @@ public class FtpFunctionalTestCase extends FunctionalTestCase
         return "ftp-functional-test.xml";
     }
 
-    protected void doPostFunctionalSetUp() throws Exception
-    {
-        server = new Server(port.incrementAndGet(), 1);
-        server.waitToStart(TIMEOUT);
-    }
-
-    protected void doFunctionalTearDown() throws Exception
-    {
-        // stop the server
-        if (null != server)
-        {
-            server.stop();
-        }
-    }
-
     public void testSendAndReceive() throws Exception
     {
         Map properties = new HashMap();
         MuleClient client = new MuleClient();
-        client.dispatch("ftp://anonymous:email@localhost:" + port.get(), TEST_MESSAGE, properties);
-        server.awaitAndReset(TIMEOUT, 1);
-        assertNotNull(server.getPayload());
-        assertEquals(TEST_MESSAGE, new String(server.getPayload()));
+        client.dispatch("ftp://anonymous:email@localhost:" + PORT, TEST_MESSAGE, properties);
+        NamedPayload payload = awaitUpload();
+        assertNotNull(payload);
+        assertEquals(TEST_MESSAGE, new String(payload.getPayload()));
         logger.info("received message OK!");
-        UMOMessage retrieved = client.receive("ftp://anonymous:email@localhost:" + port.get(), TIMEOUT);
+        UMOMessage retrieved = client.receive("ftp://anonymous:email@localhost:" + PORT, getTimeout());
         assertNotNull(retrieved);
         assertEquals(retrieved.getPayloadAsString(), TEST_MESSAGE);
     }

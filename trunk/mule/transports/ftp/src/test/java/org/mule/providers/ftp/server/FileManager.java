@@ -22,12 +22,12 @@ public class FileManager implements FileSystemManager
 
     public void setStateFromSystemProperties(String key)
     {
-        state = (ServerState) System.getProperties().get(key);
+        state = (InOutState) System.getProperties().get(key);
         if (null == state)
         {
             throw new IllegalStateException("Missing state for key " + key);
         }
-        state.registerStarted();
+        state.started();
     }
 
     public FileSystemView createFileSystemView(User user) throws FtpException

@@ -10,13 +10,12 @@
 
 package org.mule.providers.ftp.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.ftpserver.ftplet.FileObject;
 
-public class Directory extends NamedFile
+public class Directory extends Named
 {
 
     public Directory(String name, ServerState state)
@@ -36,14 +35,20 @@ public class Directory extends NamedFile
 
     public FileObject[] listFiles()
     {
-        return new FileObject[]{new StreamingFile("file", getState())};
+        logger.debug("list files");
+        Collection available = getState().getDownloadNames();
+        FileObject[] files = new FileObject[available.size()];
+        int index = 0;
+        for (Iterator names = available.iterator(); names.hasNext();)
+        {
+            String name = (String) names.next();
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("file available: " + name);
+            }
+            files[index++] = new DownloadFile(name, getState());
+        }
+        return files;
     }
 
-    public OutputStream createOutputStream(long offset) throws IOException {
-        return null;
-    }
-
-    public InputStream createInputStream(long offset) throws IOException {
-        return null;
-    }
 }

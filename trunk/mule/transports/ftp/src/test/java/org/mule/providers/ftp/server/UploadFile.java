@@ -10,21 +10,20 @@
 
 package org.mule.providers.ftp.server;
 
-import java.util.Collection;
+import java.io.OutputStream;
+import java.io.IOException;
 
-public interface ServerState
+public class UploadFile extends File
 {
 
-    void pushLastUpload(NamedPayload payload);
+    public UploadFile(String name, ServerState state)
+    {
+        super(name, state);
+    }
 
-    NamedPayload getDownload(String name);
-
-    Collection getDownloadNames();
-
-    void started();
-
-    void awaitStart(long ms) throws InterruptedException;
-
-    NamedPayload awaitUpload(long ms) throws InterruptedException;
+    public OutputStream createOutputStream(long offset) throws IOException
+    {
+        return new SignallingOutputStream(getShortName(), getState());
+    }
 
 }
