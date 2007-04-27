@@ -29,6 +29,12 @@ public class PzWriterFactory extends Object
     {
         return new MappedCsvWriter(mapping, output, delimiter, qualifier);
     }
+    
+    public static PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
+        throws IOException
+    {
+        return new FixedLengthWriter(mapping, output);
+    }
 }
 
 

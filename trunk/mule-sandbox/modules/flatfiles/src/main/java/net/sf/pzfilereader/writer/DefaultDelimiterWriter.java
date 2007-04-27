@@ -13,22 +13,19 @@ package net.sf.pzfilereader.writer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class DefaultDelimiterWriter extends AbstractPzWriter implements DelimiterPZWriter
 {
     private char delimiter;
     private char qualifier;
     private List columnTitles = null;
-    private Map rowMap = null;
     private boolean columnTitlesWritten = false;
     
     public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
     {
-        super(output, delimiter);
+        super(output);
         this.delimiter = delimiter;
         this.qualifier = qualifier;
         this.columnTitles = new ArrayList();
@@ -40,20 +37,6 @@ public class DefaultDelimiterWriter extends AbstractPzWriter implements Delimite
         // TODO surround with qualifier if value's string contains delimiter
         this.write(value);
         this.write(delimiter);
-    }
-
-    public void addRecordEntry(String columnName, Object value)
-    {
-        if (rowMap == null)
-        {
-            rowMap = new HashMap();
-        }
-        
-        if (columnTitles.contains(columnName) == false)
-        {
-            throw new IllegalArgumentException("unknown column: \"" + columnName + "\"");
-        }
-        rowMap.put(columnName, value);
     }
 
     public void addColumnTitle(String string)
@@ -93,11 +76,11 @@ public class DefaultDelimiterWriter extends AbstractPzWriter implements Delimite
             String columnTitle = (String)titlesIter.next();
             if (titlesIter.hasNext())
             {
-                this.writeWithDelimiter(rowMap.get(columnTitle));
+                this.writeWithDelimiter(this.getRowMap().get(columnTitle));
             }
             else
             {
-                this.write(rowMap.get(columnTitle));
+                this.write(this.getRowMap().get(columnTitle));
             }
         }
     }
@@ -112,8 +95,8 @@ public class DefaultDelimiterWriter extends AbstractPzWriter implements Delimite
         else
         {
             this.writeRow();
-            rowMap = null;
         }
+
         super.nextRecord();
     }
 
@@ -125,6 +108,11 @@ public class DefaultDelimiterWriter extends AbstractPzWriter implements Delimite
     public void printHeader()
     {
         // TODO Auto-generated method stub
+    }
+
+    protected boolean validateColumnTitle(String columnTitle)
+    {
+        return columnTitles.contains(columnTitle);
     }
 }
 

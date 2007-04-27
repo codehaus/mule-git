@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.pzfilereader.InitialisationException;
 import net.sf.pzfilereader.structure.ColumnMetaData;
 import net.sf.pzfilereader.xml.PZMapParser;
 
@@ -25,20 +26,27 @@ import org.jdom.JDOMException;
 public class MappedCsvWriter extends DefaultDelimiterWriter
 {
     public MappedCsvWriter(InputStream mapping, OutputStream output, char delimiter, char qualifier) 
-        throws IOException, JDOMException
+        throws IOException
     {
         super(output, delimiter, qualifier);
         
-        Map parsedMapping = PZMapParser.parse(mapping);
-        List columns = (List)parsedMapping.get("detail");
-        Iterator columnIter = columns.iterator();
-        while (columnIter.hasNext())
+        try
         {
-            ColumnMetaData element = (ColumnMetaData)columnIter.next();
-            super.addColumnTitle(element.getColName());
+            Map parsedMapping = PZMapParser.parse(mapping);
+            List columns = (List)parsedMapping.get("detail");
+            Iterator columnIter = columns.iterator();
+            while (columnIter.hasNext())
+            {
+                ColumnMetaData element = (ColumnMetaData)columnIter.next();
+                super.addColumnTitle(element.getColName());
+            }
+            // write the column headers
+            this.nextRecord();
         }
-        // write the column headers
-        this.nextRecord();
+        catch (JDOMException jde)
+        {
+            throw new InitialisationException(jde);
+        }
     }
 
     /**
