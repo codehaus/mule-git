@@ -21,7 +21,7 @@
                     <excludes>
                         <!-- MULE-1134 -->
                         <exclude>**/XFireConnectorVMFunctionalTestCase.java</exclude>
-                        <!-- MULE-1515 -->
+                        <!-- Only run tests with external dependencies in the tests-external profile -->
                         <exclude>**/XFireWsdlTestCase.java</exclude>
                         <!-- Makes for cyclic dependency with axis ... hold for now -->
                         <exclude>**/XFireServiceUsingAxisEndpointTestCase.java</exclude>
@@ -30,6 +30,36 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>tests-external</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <!-- MULE-1134 -->
+                                <exclude>**/XFireConnectorVMFunctionalTestCase.java</exclude>
+                                <!-- Makes for cyclic dependency with axis ... hold for now -->
+                                <exclude>**/XFireServiceUsingAxisEndpointTestCase.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.mule.tests</groupId>
+                    <artifactId>mule-tests-external-xfire</artifactId>
+                    <version>${version}</version>
+                    <type>war</type>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
