@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.jdom.JDOMException;
-
 public class PzWriterFactory extends Object
 {
     public static DelimiterPZWriter newCsvWriter(OutputStream output, char delimiter, char qualifier) 
@@ -25,7 +23,7 @@ public class PzWriterFactory extends Object
     }
     
     public static DelimiterPZWriter newCsvWriter(InputStream mapping, OutputStream output,
-        char delimiter, char qualifier) throws IOException, JDOMException
+        char delimiter, char qualifier) throws IOException
     {
         return new MappedCsvWriter(mapping, output, delimiter, qualifier);
     }
