@@ -10,7 +10,10 @@
 
 package net.sf.pzfilereader.writer;
 
-public interface CsvWriter extends PZWriter
+/**
+ * Write support for character-delimited records.
+ */
+public interface DelimiterPZWriter extends PZWriter
 {
     void addColumnTitle(String columnTitle);
 }

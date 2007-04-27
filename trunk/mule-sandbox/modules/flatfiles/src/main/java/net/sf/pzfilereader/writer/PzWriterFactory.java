@@ -18,13 +18,13 @@ import org.jdom.JDOMException;
 
 public class PzWriterFactory extends Object
 {
-    public static CsvWriter newCsvWriter(OutputStream output, char delimiter, char qualifier) 
+    public static DelimiterPZWriter newCsvWriter(OutputStream output, char delimiter, char qualifier) 
         throws IOException
     {
-        return new DefaultCsvWriter(output, delimiter, qualifier);
+        return new DefaultDelimiterWriter(output, delimiter, qualifier);
     }
     
-    public static CsvWriter newCsvWriter(InputStream mapping, OutputStream output,
+    public static DelimiterPZWriter newCsvWriter(InputStream mapping, OutputStream output,
         char delimiter, char qualifier) throws IOException, JDOMException
     {
         return new MappedCsvWriter(mapping, output, delimiter, qualifier);

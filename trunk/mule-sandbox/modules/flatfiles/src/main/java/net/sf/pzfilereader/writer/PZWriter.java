@@ -25,5 +25,3 @@ public interface PZWriter
     void flush() throws IOException;
     void close() throws IOException;
 }
-
-

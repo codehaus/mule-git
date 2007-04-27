@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultCsvWriter extends AbstractPzWriter implements CsvWriter
+public class DefaultDelimiterWriter extends AbstractPzWriter implements DelimiterPZWriter
 {
     private char delimiter;
     private char qualifier;
@@ -26,7 +26,7 @@ public class DefaultCsvWriter extends AbstractPzWriter implements CsvWriter
     private Map rowMap = null;
     private boolean columnTitlesWritten = false;
     
-    public DefaultCsvWriter(OutputStream output, char delimiter, char qualifier)
+    public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
     {
         super(output, delimiter);
         this.delimiter = delimiter;

@@ -22,7 +22,7 @@ import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
-public class MappedCsvWriter extends DefaultCsvWriter
+public class MappedCsvWriter extends DefaultDelimiterWriter
 {
     public MappedCsvWriter(InputStream mapping, OutputStream output, char delimiter, char qualifier) 
         throws IOException, JDOMException

@@ -18,13 +18,13 @@ import java.io.OutputStream;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-public class CsvWriterTestCase extends TestCase
+public class DelimiterWriterTestCase extends TestCase
 {
     public void testWriteCsvNoMappingFile() throws Exception
     {
         OutputStream out = new ByteArrayOutputStream();
         
-        CsvWriter writer = PzWriterFactory.newCsvWriter(out, ';', '"');
+        DelimiterPZWriter writer = PzWriterFactory.newCsvWriter(out, ';', '"');
         // the first line defines the column titles
         writer.addColumnTitle("FIRSTNAME");
         writer.addColumnTitle("LASTNAME");
@@ -40,7 +40,7 @@ public class CsvWriterTestCase extends TestCase
         writer.addRecordEntry("ZIP", "44035");
         writer.addRecordEntry("CITY", "ELYRIA");
         writer.addRecordEntry("STATE", "OH");
-        writer.addRecordEntry("ADDRESS","1234 CIRCLE CT");
+        writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
         writer.nextRecord();
         writer.flush();        
         
@@ -55,13 +55,13 @@ public class CsvWriterTestCase extends TestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        CsvWriter writer = PzWriterFactory.newCsvWriter(mapping, out, ';', '"');
+        DelimiterPZWriter writer = PzWriterFactory.newCsvWriter(mapping, out, ';', '"');
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
         writer.addRecordEntry("ZIP", "44035");
         writer.addRecordEntry("CITY", "ELYRIA");
         writer.addRecordEntry("STATE", "OH");
-        writer.addRecordEntry("ADDRESS","1234 CIRCLE CT");
+        writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
         writer.nextRecord();
         writer.flush();
 
@@ -75,7 +75,7 @@ public class CsvWriterTestCase extends TestCase
     {
         try
         {
-            new DefaultCsvWriter(null, ';', '"');
+            new DefaultDelimiterWriter(null, ';', '"');
         }
         catch (NullPointerException npe)
         {
