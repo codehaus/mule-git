@@ -43,5 +43,11 @@
                 <module>vendor</module>
             </modules>
         </profile>
+        <profile>
+            <id>tests-external</id>
+            <modules>
+                <module>external</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
