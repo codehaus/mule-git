@@ -10,18 +10,23 @@
 
 package org.mule.providers.tcp.integration;
 
+import org.mule.MuleManager;
+import org.mule.impl.model.streaming.StreamingComponent;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
-import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
 
 import java.io.ByteArrayInputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,6 +36,7 @@ public class StreamingTestCase  extends FunctionalTestCase
     private static final Log logger = LogFactory.getLog(StreamingTestCase.class);
     public static final int TIMEOUT = 3000;
     public static final String TEST_MESSAGE = "Test TCP Request";
+    public static final String RESULT = "Received stream; length: 16; 'Test...uest'";
 
     public StreamingTestCase()
     {
@@ -45,6 +51,8 @@ public class StreamingTestCase  extends FunctionalTestCase
     public void testSend() throws Exception
     {
         final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference message = new AtomicReference();
+        final AtomicInteger loopCount = new AtomicInteger(0);
 
         EventCallback callback = new EventCallback()
         {
@@ -52,24 +60,41 @@ public class StreamingTestCase  extends FunctionalTestCase
             {
                 try
                 {
-                    logger.debug("woot - event received");
-                    logger.debug("context: " + context);
-                    logger.debug("component: " + component);
-                    assertEquals("Received stream; length: 16; 'Test...uest'", context.getMessage().getPayload());
-                    latch.countDown();
+                    logger.warn("called " + loopCount.incrementAndGet() + " times");
+                    FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
+                    // without this we may have problems with the many repeats
+                    if (1 == latch.getCount())
+                    {
+                        message.set(ftc.getSummary());
+                        assertEquals(RESULT, message.get());
+                        latch.countDown();
+                    }
                 }
                 catch (Exception e)
                 {
-                    // counter will not be incremented
                     logger.error(e.getMessage(), e);
                 }
             }
         };
 
         MuleClient client = new MuleClient();
-        UMOModel model = (UMOModel) client.getManager().getModels().get("echo");
-        FunctionalTestComponent ftc =
-                (FunctionalTestComponent) model.getComponent("testComponent").getInstance();
+
+        // this just creates another class - not the one used
+//        FunctionalStreamingTestComponent ftc =
+//                (FunctionalStreamingTestComponent) MuleManager.getInstance()
+//                        .getContainerContext().getComponent(
+//                        new ContainerKeyPair("mule", "testComponent"));
+
+        // this creates a new instance too
+//        UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
+//        FunctionalStreamingTestComponent ftc =
+//                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+
+        UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
+        UMOSession session = model.getComponentSession("testComponent");
+        StreamingComponent component = (StreamingComponent) session.getComponent();
+        FunctionalStreamingTestComponent ftc =(FunctionalStreamingTestComponent) component.getComponent();
+
         ftc.setEventCallback(callback);
 
         client.dispatchStream("tcp://localhost:65432",
@@ -77,6 +102,7 @@ public class StreamingTestCase  extends FunctionalTestCase
                         new ByteArrayInputStream(TEST_MESSAGE.getBytes())));
 
         latch.await(1, TimeUnit.SECONDS);
+        assertEquals(RESULT, message.get());
     }
 
 }

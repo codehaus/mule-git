@@ -120,4 +120,14 @@ public class StreamingComponent extends AbstractComponent
             ((Disposable) component).dispose();
         }
     }
+
+    /**
+     * Provide access to the component.  This may be a big hack, but I can find no
+     * other way to access the component, which makes setting test callbacks impossible
+     */
+    public Object getComponent()
+    {
+        return component;
+    }
+
 }

@@ -10,17 +10,29 @@
 
 package org.mule.providers.ftp.server;
 
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.ftpserver.ftplet.FileObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public abstract class NamedFile implements FileObject {
+public abstract class Named implements FileObject 
+{
 
+    protected final Log logger = LogFactory.getLog(getClass());
     private String name;
     private ServerState state;
 
-    public NamedFile(String name, ServerState state)
+    public Named(String name, ServerState state)
     {
         this.name = name;
         this.state = state;
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("created: " + name);
+        }
     }
 
     public String getFullName()
@@ -106,6 +118,16 @@ public abstract class NamedFile implements FileObject {
     protected ServerState getState()
     {
         return state;
+    }
+
+    public OutputStream createOutputStream(long offset) throws IOException
+    {
+        return null;
+    }
+
+    public InputStream createInputStream(long offset) throws IOException
+    {
+        return null;
     }
 
 }

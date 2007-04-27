@@ -21,13 +21,13 @@
                 <endpoint address="tcp://localhost:65432" streaming="true"/>
             </inbound-router>
             <outbound-router>
-                <router className="org.mule.routing.outbound.MulticastingRouter">
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="tcp://localhost:65433" streaming="true"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
         
-        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalTestComponent">
+        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalStreamingTestComponent">
             <inbound-router>
                 <endpoint address="tcp://localhost:65433" streaming="true"/>
             </inbound-router>
