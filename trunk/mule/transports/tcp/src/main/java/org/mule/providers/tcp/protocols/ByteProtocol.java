@@ -63,10 +63,7 @@ public abstract class ByteProtocol implements TcpProtocol
             if (streamOk)
             {
                 IOUtils.copy(((UMOStreamMessageAdapter) data).getInputStream(), os);
-                // TODO ???
                 os.flush();
-                // cannot close or receive fails 
-                //os.close();
             }
             else
             {

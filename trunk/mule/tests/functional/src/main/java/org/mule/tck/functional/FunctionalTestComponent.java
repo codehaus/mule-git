@@ -198,7 +198,7 @@ public class FunctionalTestComponent implements Callable
                     }
                 }
             }
-            endDataSize = Math.max(endDataSize, STREAM_SAMPLE_SIZE);
+            endDataSize = Math.min(endDataSize, STREAM_SAMPLE_SIZE);
 
             // make a nice summary of the data
             StringBuffer result = new StringBuffer("Received stream");

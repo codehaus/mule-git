@@ -6,13 +6,11 @@
 
 <mule-configuration id="TcpStreaming" version="1.0">
 
-    <mule-environment-properties serverUrl="" remoteSync="true"/>
+    <mule-environment-properties serverUrl="" synchronous="true"/>
 
     <connector name="default" className="org.mule.providers.tcp.TcpConnector">
         <properties>
-            <property name="tcpProtocolClassName" value="org.mule.providers.tcp.protocols.EOFProtocol"/>
             <property name="validateConnections" value="false"/>
-            <property name="timeout" value="10000"/>
         </properties>
     </connector>
 
@@ -23,7 +21,7 @@
                 <endpoint address="tcp://localhost:65432" streaming="true"/>
             </inbound-router>
             <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                <router className="org.mule.routing.outbound.MulticastingRouter">
                     <endpoint address="tcp://localhost:65433" streaming="true"/>
                 </router>
             </outbound-router>

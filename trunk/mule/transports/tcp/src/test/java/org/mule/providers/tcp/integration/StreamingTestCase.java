@@ -18,9 +18,7 @@ import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.model.UMOModel;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -57,6 +55,7 @@ public class StreamingTestCase  extends FunctionalTestCase
                     logger.debug("woot - event received");
                     logger.debug("context: " + context);
                     logger.debug("component: " + component);
+                    assertEquals("Received stream; length: 16; 'Test...uest'", context.getMessage().getPayload());
                     latch.countDown();
                 }
                 catch (Exception e)
@@ -73,19 +72,11 @@ public class StreamingTestCase  extends FunctionalTestCase
                 (FunctionalTestComponent) model.getComponent("testComponent").getInstance();
         ftc.setEventCallback(callback);
 
-        Object result = client.sendStream("tcp://localhost:65432",
-                        new StreamMessageAdapter(
-                                new ByteArrayInputStream(TEST_MESSAGE.getBytes())),
-                TIMEOUT);
-        assertNotNull(result);
-        assertTrue(result instanceof StreamMessageAdapter);
-        BufferedReader in =
-                new BufferedReader(
-                        new InputStreamReader(((StreamMessageAdapter) result).getInputStream()));
-        String message = in.readLine();
-        logger.debug("this is useless: " + message);
+        client.dispatchStream("tcp://localhost:65432",
+                new StreamMessageAdapter(
+                        new ByteArrayInputStream(TEST_MESSAGE.getBytes())));
 
-        latch.await(2, TimeUnit.SECONDS);
+        latch.await(1, TimeUnit.SECONDS);
     }
 
 }
