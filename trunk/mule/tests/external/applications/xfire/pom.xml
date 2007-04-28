@@ -9,8 +9,6 @@
         <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-tests-external-xfire</artifactId>
-    <!-- Need name to be static since it is hardcoded into the tests -->
-    <!-- version>1.0</version-->
     <packaging>war</packaging>
     <name>XFire webapp for external testing</name>
     <description>XFire webapp for external testing</description>
@@ -57,8 +55,18 @@
         </dependency>
     </dependencies>
 
-    <!-- Use for testing ... we can remove later -->
+    <!-- This section defines the Tomcat plugin for deploying this war to.
+         To build this war, just type "mvn install".
+         To deploy it, type "mvn tomcat:deploy". Note that you must:
+           - have a local Tomcat installed
+           - have it running
+           - have the manager application working
+           - have the manager login defined in your settings.xml in the
+             <servers> section under the id "localTomcat"
+    -->
     <build>
+        <!-- Use this to prevent constant renaming of URLs in the tests -->
+        <finalName>mule-tests-external-xfire</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -72,14 +80,15 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <server>myServer</server>
+                    <server>localTomcat</server>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <!-- For now, only install on the Tomcat server when the specific
-         tests-external-install profile is used
+         "tests-external-deploy" profile is used and only deinstall when
+         the "tests-external-undeploy" profile is used.
     -->
     <profiles>
         <profile>
