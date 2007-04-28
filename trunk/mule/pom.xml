@@ -45,6 +45,10 @@
         <url>http://svn.mule.codehaus.org/</url>
     </scm>
 
+    <properties>
+        <springVersion>2.0.4</springVersion>
+    </properties>
+
     <!-- declare all dependencies that are used in more than one module here. -->
     <dependencyManagement>
         <dependencies>
@@ -111,7 +115,18 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring</artifactId>
-                <version>2.0.4</version>
+                <version>${springVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springVersion}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>
