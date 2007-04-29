@@ -1,0 +1,10 @@
+<beans xmlns="http://xfire.codehaus.org/config/1.0">
+  <service>
+    <name>TestService</name>
+    <namespace>http://mule.mulesource.org/Tests/TestService</namespace>
+    <serviceClass>org.mule.tck.external.applications.xfire.TestService</serviceClass>
+    <implementationClass>org.mule.tck.external.applications.xfire.TestServiceImpl</implementationClass>
+  </service>
+</beans>
+
+
