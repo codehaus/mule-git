@@ -15,17 +15,17 @@
     
     <connector name="asyncVm" className="org.mule.providers.vm.VMConnector">
         <properties>
-        	<!-- Queue up events for asynchronous communication. -->
+            <!-- Queue up events for asynchronous communication. -->
             <property name="queueEvents" value="true"/>
         </properties>
     </connector>
     
     <transformers>
-    	<transformer name="ExtractCustomer" className="org.mule.transformers.simple.GetBeanProperty">
-    		<properties>
-    			<property name="propertyName" value="customerRequest.customer" />
-    		</properties>
-    	</transformer>
+        <transformer name="ExtractCustomer" className="org.mule.transformers.simple.GetBeanProperty">
+            <properties>
+                <property name="propertyName" value="customerRequest.customer" />
+            </properties>
+        </transformer>
         <transformer name="SetLendersAsRecipients" className="org.mule.examples.loanbroker.transformers.SetLendersAsRecipients" />
     </transformers>
 
