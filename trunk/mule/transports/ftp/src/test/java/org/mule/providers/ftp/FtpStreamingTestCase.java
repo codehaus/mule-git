@@ -31,7 +31,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 /**
  * We don't have an integrated ftp server (yet), and synchronous return doesn't work
  * with streaming, as far as i can tell, so the best we can do here is dispatch
- * a stream and receive it with the test server.
+ * a stream (which is testing the stream adapter, not the streaming model) to the
+ * test server, then pull it back again through a streaming model.
  */
 public class FtpStreamingTestCase extends BaseServerTestCase
 {
@@ -96,7 +97,7 @@ public class FtpStreamingTestCase extends BaseServerTestCase
 
         // poll and pull back through test component
         latch.await(getTimeout(), TimeUnit.MILLISECONDS);
-        assertEquals(TEST_MESSAGE, message.get());
+        assertEquals("Received stream; length: 16; 'Test...sage'", message.get());
     }
 
 }
