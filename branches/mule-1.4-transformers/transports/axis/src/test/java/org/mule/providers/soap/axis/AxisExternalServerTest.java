@@ -29,10 +29,13 @@ import javax.xml.namespace.QName;
  */
 public class AxisExternalServerTest extends AbstractMuleTestCase
 {
+    public static final String TEST_URL = "http://localhost:8080/mule-tests-external-axis/axis/Calculator.jws";
+    public static final String TEST_AXIS_URL = "axis:" + TEST_URL;
+    public static final String TEST_WSDL_URL = "wsdl-exis:" + TEST_URL + "?wsdl";
 
     public void testAxisServiceRPC() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws?method=add";
+        String URL = TEST_AXIS_URL + "?method=add";
         MuleClient client = new MuleClient();
         UMOMessage result = client.send(URL, new Object[]{new Integer(4), new Integer(3)}, null);
         assertNotNull(result);
@@ -42,7 +45,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
 
     public void testAxisServiceDocLitWrapped() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws?method=add";
+        String URL = TEST_AXIS_URL + "?method=add";
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("style", "wrapped");
@@ -55,7 +58,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
 
     public void testAxisServiceDocLitWrappedWithNamedParams() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws";
+        String URL = TEST_AXIS_URL;
         MuleClient client = new MuleClient();
 
         SoapMethod method = new SoapMethod(new QName("http://muleumo.org/Calc", "add"));
@@ -91,14 +94,14 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
     // to send a Doc/Lit request style soap message
     // public void testAxisServiceDocLit() throws Exception
     // {
-    // String URL = "axis:http://localhost:8080/axis/Calculator.jws";
+    // String URL = TEST_AXIS_URL;
     // MuleClient client = new MuleClient();
     // Map props = new HashMap();
     // props.put("style", "document");
     // props.put("use", "literal");
     //         
     // SoapMethod method = new SoapMethod(new
-    // QName("http://localhost:8080/axis/Calculator.jws", "add"));
+    // QName(TEST_URL, "add"));
     // method.addNamedParameter(new QName("i1"), NamedParameter.XSD_INT, "in");
     // method.addNamedParameter(new QName("i2"), NamedParameter.XSD_INT, "in");
     // method.setReturnType(NamedParameter.XSD_INT);
@@ -115,14 +118,13 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
     // feature
     // public void testAxisServiceUsingWSDL() throws Exception
     // {
-    // String URL =
-    // "wsdl-axis:http://localhost:8080/axis/Calculator.jws?wsdl&method=add";
+    // String URL = TEST_WSDL_URL + "&method=add";
     // MuleClient client = new MuleClient();
-    //
+    
     // UMOMessage result = client.send(URL, new Object[]{new Integer(4), new
     // Integer(4)}, null);
     // assertNotNull(result);
-    //
+   
     // assertEquals(result.getPayload(), new Integer(8));
     // }
 

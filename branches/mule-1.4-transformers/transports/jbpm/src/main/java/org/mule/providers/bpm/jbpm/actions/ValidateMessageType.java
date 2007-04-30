@@ -10,6 +10,8 @@
 
 package org.mule.providers.bpm.jbpm.actions;
 
+import org.mule.util.ClassUtils;
+
 import org.jbpm.JbpmException;
 import org.jbpm.graph.exe.ExecutionContext;
 
@@ -41,7 +43,7 @@ public class ValidateMessageType extends IntegrationActionHandler
             throw new JbpmException("Incoming message is null.");
         }
 
-        Class expectedClass = Class.forName(expectedType);
+        Class expectedClass = ClassUtils.loadClass(expectedType, this.getClass());
         boolean match;
         if (strict)
         {

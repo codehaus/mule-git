@@ -15,6 +15,7 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.providers.NullPayload;
+import org.mule.util.ClassUtils;
 
 import java.util.Map;
 
@@ -94,7 +95,7 @@ public class MessagingException extends UMOException
                 payload = NullPayload.getInstance();
             }
 
-            buf.append(Messages.get(Messages.MESSAGE_IS_OF_TYPE_X, payload.getClass().getName()));
+            buf.append(Messages.get(Messages.MESSAGE_IS_OF_TYPE_X, ClassUtils.getSimpleName(payload.getClass())));
             addInfo("Payload", payload.toString());
         }
         else

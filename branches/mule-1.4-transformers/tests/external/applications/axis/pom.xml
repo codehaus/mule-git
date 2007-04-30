@@ -8,43 +8,22 @@
         <artifactId>mule-tests-external-applications</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-tests-external-xfire</artifactId>
+    <artifactId>mule-tests-external-axis</artifactId>
     <packaging>war</packaging>
-    <name>XFire webapp for external testing</name>
-    <description>XFire webapp for external testing</description>
+    <name>Axis webapp for external testing</name>
+    <description>Axis webapp for external testing</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.xfire</groupId>
-            <artifactId>xfire-all</artifactId>
-            <version>1.2.5</version>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
             <exclusions>
                 <!-- we like slf4j -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>                
-                <exclusion>
-                    <!-- we want the newer version below -->
-                    <groupId>woodstox</groupId>
-                    <artifactId>wstx-asl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xmlParserAPIs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>qdox</groupId>
-                    <artifactId>qdox</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
@@ -60,7 +39,7 @@
     -->
     <build>
         <!-- Use this to prevent constant renaming of URLs in the tests -->
-        <finalName>mule-tests-external-xfire</finalName>
+        <finalName>mule-tests-external-axis</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

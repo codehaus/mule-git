@@ -18,7 +18,7 @@ import org.mule.util.ObjectPool;
 public class MuleConfigurationTestCase extends AbstractMuleTestCase
 {
 
-    public void testconfigurationDefaults()
+    public void testConfigurationDefaults()
     {
         MuleConfiguration mc = new MuleConfiguration();
         assertEquals(MuleConfiguration.DEFAULT_MAX_OUTSTANDING_MESSAGES, mc.getQueueProfile()
@@ -42,8 +42,8 @@ public class MuleConfigurationTestCase extends AbstractMuleTestCase
         mc.getPoolingProfile().setMaxWait(0);
         mc.getPoolingProfile().setMaxActive(1);
         mc.getPoolingProfile().setMaxIdle(1);
-        mc.getPoolingProfile().setExhaustedAction((byte)1);
-        mc.getPoolingProfile().setInitialisationPolicy((byte)0);
+        mc.getPoolingProfile().setExhaustedAction((byte) 1);
+        mc.getPoolingProfile().setInitialisationPolicy((byte) 0);
         mc.setSynchronous(false);
         mc.setModel("Test");
 
@@ -51,11 +51,17 @@ public class MuleConfigurationTestCase extends AbstractMuleTestCase
 
         pp.setExhaustedActionString("GROW");
         assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
+        pp.setExhaustedActionString("WHEN_EXHAUSTED_GROW");
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
 
         pp.setExhaustedActionString("BLOCK");
         assertEquals(ObjectPool.WHEN_EXHAUSTED_BLOCK, pp.getExhaustedAction());
+        pp.setExhaustedActionString("WHEN_EXHAUSTED_BLOCK");
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_BLOCK, pp.getExhaustedAction());
 
         pp.setExhaustedActionString("FAIL");
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
+        pp.setExhaustedActionString("WHEN_EXHAUSTED_FAIL");
         assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
 
         pp.setExhaustedActionString("BLAH");
@@ -63,5 +69,27 @@ public class MuleConfigurationTestCase extends AbstractMuleTestCase
 
         pp.setExhaustedActionString(null);
         assertEquals(ObjectPool.DEFAULT_EXHAUSTED_ACTION, pp.getExhaustedAction());
+
+        pp.setInitialisationPolicyString("INITIALISE_NONE");
+        assertEquals(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS, pp.getInitialisationPolicy());
+        pp.setInitialisationPolicyString("POOL_INITIALISE_NO_COMPONENTS");
+        assertEquals(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS, pp.getInitialisationPolicy());
+
+        pp.setInitialisationPolicyString("INITIALISE_ONE");
+        assertEquals(PoolingProfile.POOL_INITIALISE_ONE_COMPONENT, pp.getInitialisationPolicy());
+        pp.setInitialisationPolicyString("POOL_INITIALISE_ONE_COMPONENT");
+        assertEquals(PoolingProfile.POOL_INITIALISE_ONE_COMPONENT, pp.getInitialisationPolicy());
+
+        pp.setInitialisationPolicyString("INITIALISE_ALL");
+        assertEquals(PoolingProfile.POOL_INITIALISE_ALL_COMPONENTS, pp.getInitialisationPolicy());
+        pp.setInitialisationPolicyString("POOL_INITIALISE_ALL_COMPONENTS");
+        assertEquals(PoolingProfile.POOL_INITIALISE_ALL_COMPONENTS, pp.getInitialisationPolicy());
+
+        pp.setInitialisationPolicyString("FOO");
+        assertEquals(PoolingProfile.DEFAULT_POOL_INITIALISATION_POLICY, pp.getInitialisationPolicy());
+
+        pp.setInitialisationPolicyString(null);
+        assertEquals(PoolingProfile.DEFAULT_POOL_INITIALISATION_POLICY, pp.getInitialisationPolicy());
     }
+
 }

@@ -149,13 +149,22 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 throw new IOException("Ftp error: " + client.getReplyCode());
             }
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            if (!client.retrieveFile(file.getName(), baos))
+            UMOMessage message;
+            if (endpoint.isStreaming())
             {
-                throw new IOException("Ftp error: " + client.getReplyCode());
+                message = new MuleMessage(
+                        connector.getStreamMessageAdapter(client.retrieveFileStream(file.getName()), null));
+            }
+            else
+            {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                if (!client.retrieveFile(file.getName(), baos))
+                {
+                    throw new IOException("Ftp error: " + client.getReplyCode());
+                }
+                message = new MuleMessage(connector.getMessageAdapter(baos.toByteArray()));
             }
 
-            UMOMessage message = new MuleMessage(connector.getMessageAdapter(baos.toByteArray()));
             message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, file.getName());
             routeMessage(message);
 
