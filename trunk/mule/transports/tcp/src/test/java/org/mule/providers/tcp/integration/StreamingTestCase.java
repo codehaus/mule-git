@@ -63,7 +63,7 @@ public class StreamingTestCase  extends FunctionalTestCase
             {
                 try
                 {
-                    logger.warn("called " + loopCount.incrementAndGet() + " times");
+                    logger.info("called " + loopCount.incrementAndGet() + " times");
                     FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
                     // without this we may have problems with the many repeats
                     if (1 == latch.getCount())

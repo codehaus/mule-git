@@ -9,7 +9,7 @@
 
     <model name="main" type="streaming">
 
-        <mule-descriptor name="bridge" implementation="org.mule.providers.tcp.integration.StreamingEchoComponent">
+        <mule-descriptor name="bridge" implementation="org.mule.components.simple.StreamingBridgeComponent">
             <inbound-router>
                 <endpoint address="tcp://localhost:60196" streaming="true"/>
             </inbound-router>
