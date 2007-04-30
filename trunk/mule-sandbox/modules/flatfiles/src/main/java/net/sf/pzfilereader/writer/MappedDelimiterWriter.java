@@ -23,7 +23,7 @@ import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
-public class MappedDelimiterWriter extends DefaultDelimiterWriter
+public class MappedDelimiterWriter extends AbstractDelimiterWriter implements PZWriter
 {
     public MappedDelimiterWriter(InputStream mapping, OutputStream output, char delimiter, char qualifier) 
         throws IOException
@@ -38,7 +38,7 @@ public class MappedDelimiterWriter extends DefaultDelimiterWriter
             while (columnIter.hasNext())
             {
                 ColumnMetaData element = (ColumnMetaData)columnIter.next();
-                super.addColumnTitle(element.getColName());
+                super.doAddColumnTitle(element.getColName());
             }
             // write the column headers
             this.nextRecord();
@@ -47,17 +47,6 @@ public class MappedDelimiterWriter extends DefaultDelimiterWriter
         {
             throw new InitialisationException(jde);
         }
-    }
-
-    /**
-     * This implementation throws an UnsupportedOperationException because the columns 
-     * to write are already defined in the mapping file.
-     * 
-     * @throws UnsupportedOperationException
-     */
-    public void addColumnTitle(String string)
-    {
-        throw new UnsupportedOperationException("columns cannot be added when working with a mapping file");
     }
 }
 

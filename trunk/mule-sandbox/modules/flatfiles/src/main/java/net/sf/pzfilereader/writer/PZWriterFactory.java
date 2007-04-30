@@ -19,7 +19,7 @@ public interface PZWriterFactory
     public DelimiterPZWriter newDelimiterWriter(OutputStream output, char delimiter, char qualifier) 
         throws IOException;
     
-    public DelimiterPZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
+    public PZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
         char delimiter, char qualifier) throws IOException;
 
     public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 

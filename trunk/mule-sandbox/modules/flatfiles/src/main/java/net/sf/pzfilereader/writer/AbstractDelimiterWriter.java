@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DefaultDelimiterWriter extends AbstractPZWriter implements DelimiterPZWriter
+public abstract class AbstractDelimiterWriter extends AbstractPZWriter
 {
     private char delimiter;
     private char qualifier;
     private List columnTitles = null;
     private boolean columnTitlesWritten = false;
     
-    public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
+    public AbstractDelimiterWriter(OutputStream output, char delimiter, char qualifier)
     {
         super(output);
         this.delimiter = delimiter;
@@ -39,7 +39,7 @@ public class DefaultDelimiterWriter extends AbstractPZWriter implements Delimite
         this.write(delimiter);
     }
 
-    public void addColumnTitle(String string)
+    protected void doAddColumnTitle(String string)
     {
         if (string == null)
         {

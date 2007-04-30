@@ -29,7 +29,7 @@ public class DefaultPZWriterFactory extends Object implements PZWriterFactory
         return new DefaultDelimiterWriter(output, delimiter, qualifier);
     }
     
-    public DelimiterPZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
+    public PZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
         char delimiter, char qualifier) throws IOException
     {
         return new MappedDelimiterWriter(mapping, output, delimiter, qualifier);
