@@ -12,7 +12,12 @@ package org.mule.config;
 
 import org.mule.config.pool.CommonsPoolFactory;
 import org.mule.umo.model.UMOPoolFactory;
+import org.mule.util.MapUtils;
 import org.mule.util.ObjectPool;
+
+import java.util.Map;
+
+import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 /**
  * <code>PoolingProfile</code> is a configuration object used to define the object
@@ -87,6 +92,51 @@ public class PoolingProfile
      * </ul>
      */
     public static final int DEFAULT_POOL_INITIALISATION_POLICY = POOL_INITIALISE_ONE_COMPONENT;
+
+    // map pool exhaustion strings to their respective values
+    private static final Map POOL_EXHAUSTED_ACTIONS = new CaseInsensitiveMap()
+    {
+        private static final long serialVersionUID = 1L;
+
+        // static initializer
+        {
+            // if the values were an actual enum in ObjectPool we could iterate
+            // properly.. :/
+
+            Integer value = new Integer(ObjectPool.WHEN_EXHAUSTED_BLOCK);
+            this.put("WHEN_EXHAUSTED_BLOCK", value);
+            this.put("BLOCK", value);
+
+            value = new Integer(ObjectPool.WHEN_EXHAUSTED_FAIL);
+            this.put("WHEN_EXHAUSTED_FAIL", value);
+            this.put("FAIL", value);
+
+            value = new Integer(ObjectPool.WHEN_EXHAUSTED_GROW);
+            this.put("WHEN_EXHAUSTED_GROW", value);
+            this.put("GROW", value);
+        }
+    };
+
+    // map pool initialisation policy strings to their respective values
+    private static final Map POOL_INITIALISATION_POLICIES = new CaseInsensitiveMap()
+    {
+        private static final long serialVersionUID = 1L;
+
+        // static initializer
+        {
+            Integer value = new Integer(POOL_INITIALISE_NO_COMPONENTS);
+            this.put("POOL_INITIALISE_NO_COMPONENTS", value);
+            this.put("INITIALISE_NONE", value);
+
+            value = new Integer(POOL_INITIALISE_ONE_COMPONENT);
+            this.put("POOL_INITIALISE_ONE_COMPONENT", value);
+            this.put("INITIALISE_ONE", value);
+
+            value = new Integer(POOL_INITIALISE_ALL_COMPONENTS);
+            this.put("POOL_INITIALISE_ALL_COMPONENTS", value);
+            this.put("INITIALISE_ALL", value);
+        }
+    };
 
     private int maxActive = DEFAULT_MAX_POOL_ACTIVE;
 
@@ -197,44 +247,14 @@ public class PoolingProfile
 
     public void setExhaustedActionString(String poolExhaustedAction)
     {
-        if (poolExhaustedAction != null)
-        {
-            if ("GROW".equalsIgnoreCase(poolExhaustedAction))
-            {
-                this.exhaustedAction = ObjectPool.WHEN_EXHAUSTED_GROW;
-            }
-            else if ("BLOCK".equalsIgnoreCase(poolExhaustedAction))
-            {
-                this.exhaustedAction = ObjectPool.WHEN_EXHAUSTED_BLOCK;
-            }
-            else if ("FAIL".equalsIgnoreCase(poolExhaustedAction))
-            {
-                this.exhaustedAction = ObjectPool.WHEN_EXHAUSTED_FAIL;
-            }
-            else
-            {
-                this.exhaustedAction = ObjectPool.DEFAULT_EXHAUSTED_ACTION;
-            }
-        }
+        this.exhaustedAction = MapUtils.getIntValue(POOL_EXHAUSTED_ACTIONS, poolExhaustedAction,
+            ObjectPool.DEFAULT_EXHAUSTED_ACTION);
     }
 
     public void setInitialisationPolicyString(String policy)
     {
-        if (policy != null)
-        {
-            if ("INITIALISE_NONE".equalsIgnoreCase(policy))
-            {
-                this.initialisationPolicy = POOL_INITIALISE_NO_COMPONENTS;
-            }
-            else if ("INITIALISE_ALL".equalsIgnoreCase(policy))
-            {
-                this.initialisationPolicy = POOL_INITIALISE_ALL_COMPONENTS;
-            }
-            else
-            {
-                this.initialisationPolicy = POOL_INITIALISE_ONE_COMPONENT;
-            }
-        }
+        this.initialisationPolicy = MapUtils.getIntValue(POOL_INITIALISATION_POLICIES, policy,
+            DEFAULT_POOL_INITIALISATION_POLICY);
     }
 
     public UMOPoolFactory getPoolFactory()
