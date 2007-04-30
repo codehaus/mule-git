@@ -35,4 +35,40 @@ public class ThreadingProfileTestCase extends AbstractMuleTestCase
         assertSame(handler, pool.getRejectedExecutionHandler());
     }
 
+    public void testPoolExhaustedActionStrings()
+    {
+        ThreadingProfile tp = new ThreadingProfile();
+
+        tp.setPoolExhaustedActionString(null);
+        assertEquals(ThreadingProfile.DEFAULT_POOL_EXHAUST_ACTION, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("BAZ");
+        assertEquals(ThreadingProfile.DEFAULT_POOL_EXHAUST_ACTION, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("WHEN_EXHAUSTED_WAIT");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
+        tp.setPoolExhaustedActionString("WAIT");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("WHEN_EXHAUSTED_DISCARD");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_DISCARD, tp.getPoolExhaustedAction());
+        tp.setPoolExhaustedActionString("DISCARD");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_DISCARD, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("WHEN_EXHAUSTED_DISCARD_OLDEST");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_DISCARD_OLDEST, tp.getPoolExhaustedAction());
+        tp.setPoolExhaustedActionString("DISCARD_OLDEST");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_DISCARD_OLDEST, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("WHEN_EXHAUSTED_ABORT");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_ABORT, tp.getPoolExhaustedAction());
+        tp.setPoolExhaustedActionString("ABORT");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_ABORT, tp.getPoolExhaustedAction());
+
+        tp.setPoolExhaustedActionString("WHEN_EXHAUSTED_RUN");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_RUN, tp.getPoolExhaustedAction());
+        tp.setPoolExhaustedActionString("RUN");
+        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_RUN, tp.getPoolExhaustedAction());
+    }
+
 }
