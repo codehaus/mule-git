@@ -23,9 +23,9 @@ import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
-public class MappedCsvWriter extends DefaultDelimiterWriter
+public class MappedDelimiterWriter extends DefaultDelimiterWriter
 {
-    public MappedCsvWriter(InputStream mapping, OutputStream output, char delimiter, char qualifier) 
+    public MappedDelimiterWriter(InputStream mapping, OutputStream output, char delimiter, char qualifier) 
         throws IOException
     {
         super(output, delimiter, qualifier);

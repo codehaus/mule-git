@@ -32,7 +32,7 @@ public class DefaultPZWriterFactory extends Object implements PZWriterFactory
     public DelimiterPZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
         char delimiter, char qualifier) throws IOException
     {
-        return new MappedCsvWriter(mapping, output, delimiter, qualifier);
+        return new MappedDelimiterWriter(mapping, output, delimiter, qualifier);
     }
     
     public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
