@@ -26,6 +26,7 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.ClassUtils;
 
 /**
  * TODO
@@ -182,7 +183,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
 
         try
         {
-            remote = (RmiAble)Class.forName(className).newInstance();
+            remote = (RmiAble)ClassUtils.instanciateClass(className, new Object[] { }, this.getClass());
         }
         catch (Exception e)
         {
