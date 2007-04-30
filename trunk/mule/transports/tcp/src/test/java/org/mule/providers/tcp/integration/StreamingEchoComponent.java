@@ -21,6 +21,7 @@ public class StreamingEchoComponent
     public void echo(InputStream in, OutputStream out) throws Exception
     {
         IOUtils.copy(in, out);
+        out.close();
     }
 
 }
