@@ -20,12 +20,12 @@ import java.util.Map;
 /**
  * This class encapsulates the writer that's used to output the data.
  */
-public abstract class AbstractPzWriter extends Object implements PZWriter
+public abstract class AbstractPZWriter extends Object implements PZWriter
 {
     private BufferedWriter writer;
     private Map rowMap;
 
-    public AbstractPzWriter(OutputStream output)
+    public AbstractPZWriter(OutputStream output)
     {
         super();
         writer = new BufferedWriter(new OutputStreamWriter(output));

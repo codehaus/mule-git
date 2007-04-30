@@ -24,7 +24,7 @@ import net.sf.pzfilereader.xml.PZMapParser;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.JDOMException;
 
-public class FixedLengthWriter extends AbstractPzWriter
+public class FixedLengthWriter extends AbstractPZWriter
 {
     private Map columnMapping;
     

@@ -24,7 +24,7 @@ public class DelimiterWriterTestCase extends TestCase
     {
         OutputStream out = new ByteArrayOutputStream();
         
-        DelimiterPZWriter writer = PzWriterFactory.newCsvWriter(out, ';', '"');
+        DelimiterPZWriter writer = DefaultPZWriterFactory.getInstance().newDelimiterWriter(out, ';', '"');
         // the first line defines the column titles
         writer.addColumnTitle("FIRSTNAME");
         writer.addColumnTitle("LASTNAME");
@@ -55,7 +55,7 @@ public class DelimiterWriterTestCase extends TestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        DelimiterPZWriter writer = PzWriterFactory.newCsvWriter(mapping, out, ';', '"');
+        DelimiterPZWriter writer = DefaultPZWriterFactory.getInstance().newDelimiterWriter(mapping, out, ';', '"');
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
         writer.addRecordEntry("ZIP", "44035");

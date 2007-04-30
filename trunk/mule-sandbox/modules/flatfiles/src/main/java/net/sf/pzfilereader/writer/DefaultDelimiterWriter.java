@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DefaultDelimiterWriter extends AbstractPzWriter implements DelimiterPZWriter
+public class DefaultDelimiterWriter extends AbstractPZWriter implements DelimiterPZWriter
 {
     private char delimiter;
     private char qualifier;

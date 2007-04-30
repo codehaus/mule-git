@@ -25,7 +25,7 @@ public class FixedLengthWriterTestCase extends TestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = PzWriterFactory.newFixedLengthWriter(mapping, out);
+        PZWriter writer = DefaultPZWriterFactory.getInstance().newFixedLengthWriter(mapping, out);
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
         writer.addRecordEntry("STATE", "OH");

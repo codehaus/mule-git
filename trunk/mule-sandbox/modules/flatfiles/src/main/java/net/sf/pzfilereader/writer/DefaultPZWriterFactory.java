@@ -14,21 +14,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PzWriterFactory extends Object
+public class DefaultPZWriterFactory extends Object implements PZWriterFactory
 {
-    public static DelimiterPZWriter newCsvWriter(OutputStream output, char delimiter, char qualifier) 
+    private static final DefaultPZWriterFactory INSTANCE = new DefaultPZWriterFactory();
+
+    public static PZWriterFactory getInstance() 
+    {
+        return INSTANCE;
+    }
+    
+    public DelimiterPZWriter newDelimiterWriter(OutputStream output, char delimiter, char qualifier) 
         throws IOException
     {
         return new DefaultDelimiterWriter(output, delimiter, qualifier);
     }
     
-    public static DelimiterPZWriter newCsvWriter(InputStream mapping, OutputStream output,
+    public DelimiterPZWriter newDelimiterWriter(InputStream mapping, OutputStream output,
         char delimiter, char qualifier) throws IOException
     {
         return new MappedCsvWriter(mapping, output, delimiter, qualifier);
     }
     
-    public static PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
+    public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
         throws IOException
     {
         return new FixedLengthWriter(mapping, output);
