@@ -15,12 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>tomcat-maven-plugin</artifactId>
-            <version>1.0-alpha-1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-all</artifactId>
             <version>1.2.5</version>
@@ -73,6 +67,11 @@
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <version>1.0-alpha-1</version>
                 <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>tomcat-maven-plugin</artifactId>
+                        <version>1.0-alpha-1</version>
+                    </dependency>
                     <dependency>
                         <groupId>mx4j</groupId>
                         <artifactId>mx4j</artifactId>
