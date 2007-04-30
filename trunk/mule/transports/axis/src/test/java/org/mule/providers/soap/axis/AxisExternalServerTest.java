@@ -29,10 +29,11 @@ import javax.xml.namespace.QName;
  */
 public class AxisExternalServerTest extends AbstractMuleTestCase
 {
+    public static final String TEST_URL = "axis:http://localhost:8080/mule-tests-external-axis/axis/Calculator.jws";
 
     public void testAxisServiceRPC() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws?method=add";
+        String URL = TEST_URL + "?method=add";
         MuleClient client = new MuleClient();
         UMOMessage result = client.send(URL, new Object[]{new Integer(4), new Integer(3)}, null);
         assertNotNull(result);
@@ -42,7 +43,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
 
     public void testAxisServiceDocLitWrapped() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws?method=add";
+        String URL = TEST_URL + "?method=add";
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("style", "wrapped");
@@ -55,7 +56,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
 
     public void testAxisServiceDocLitWrappedWithNamedParams() throws Exception
     {
-        String URL = "axis:http://localhost:8080/axis/Calculator.jws";
+        String URL = TEST_URL;
         MuleClient client = new MuleClient();
 
         SoapMethod method = new SoapMethod(new QName("http://muleumo.org/Calc", "add"));
