@@ -10,6 +10,8 @@
 
 package org.mule.umo.transformer;
 
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+
 /**
  * <code>UMOTransformer</code> can be chained together to covert message payloads
  * from one object type to another.
@@ -41,7 +43,11 @@ public interface UMOTransformer extends UMOBaseTransformer
      * @throws TransformerException if a error occurs transforming the data or if the
      *             expected returnClass isn't the same as the transformed data
      */
+    // HH: deprecate?
     Object transform(Object src) throws TransformerException;
+
+    // HH: magick happens here
+    Object transform(Object src, UMOImmutableEndpoint endpoint) throws TransformerException;
 
     /**
      * Sets the expected return type for the transformed data. If the transformed

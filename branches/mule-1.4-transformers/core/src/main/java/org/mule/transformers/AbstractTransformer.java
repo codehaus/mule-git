@@ -209,6 +209,18 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public final Object transform(Object src) throws TransformerException
     {
+        // HH: replace null with ThreadLocal?
+        return this.transform(src, null);
+    }
+
+    /**
+     * Transforms the object.
+     * 
+     * @param src The source object to transform.
+     * @return The transformed object
+     */
+    public final Object transform(Object src, UMOImmutableEndpoint endpoint) throws TransformerException
+    {
         String encoding = null;
 
         if (src instanceof UMOMessage && !isSourceTypeSupported(UMOMessage.class))
