@@ -284,6 +284,7 @@ public abstract class AbstractTransformer implements UMOTransformer
      * 
      * @see org.mule.umo.transformer.UMOTransformer#setConnector(org.mule.umo.provider.UMOConnector)
      */
+    // TODO HH: kill
     public void setEndpoint(UMOImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
