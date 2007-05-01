@@ -96,7 +96,6 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
             // Try to figure out our endpoint's JMS Specification and fall back to
             // 1.0.2 if none is set.
             String jmsSpec = JmsConstants.JMS_SPECIFICATION_102B;
-            UMOImmutableEndpoint endpoint = this.getEndpoint();
             if (endpoint != null)
             {
                 UMOConnector connector = endpoint.getConnector();

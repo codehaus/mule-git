@@ -19,11 +19,6 @@ import org.mule.umo.lifecycle.Initialisable;
  */
 public interface UMOBaseTransformer extends Initialisable, Cloneable
 {
-    /**
-     * The endpoint that this transformer is attached to
-     * @return the endpoint associated with the transformer
-     */
-    UMOImmutableEndpoint getEndpoint();
 
     /**
      * Sets the endpoint associated with with this connector
