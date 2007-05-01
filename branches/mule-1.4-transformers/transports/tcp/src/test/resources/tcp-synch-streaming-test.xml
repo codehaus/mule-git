@@ -4,9 +4,9 @@
           "-//MuleSource //DTD mule-configuration XML V1.0//EN"
           "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
-<mule-configuration id="TcpStreaming" version="1.0">
+<mule-configuration id="TcpSynchStreaming" version="1.0">
 
-    <mule-environment-properties serverUrl="" synchronous="false"/>
+    <mule-environment-properties serverUrl="" synchronous="true"/>
 
     <connector name="default" className="org.mule.providers.tcp.TcpConnector">
         <properties>
@@ -20,19 +20,8 @@
             <inbound-router>
                 <endpoint address="tcp://localhost:65432" streaming="true"/>
             </inbound-router>
-            <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="tcp://localhost:65433" streaming="true"/>
-                </router>
-            </outbound-router>
         </mule-descriptor>
         
-        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalStreamingTestComponent">
-            <inbound-router>
-                <endpoint address="tcp://localhost:65433" streaming="true"/>
-            </inbound-router>
-        </mule-descriptor>
-
     </model>
 
 </mule-configuration>

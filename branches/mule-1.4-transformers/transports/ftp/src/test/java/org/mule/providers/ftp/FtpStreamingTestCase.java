@@ -11,7 +11,6 @@
 package org.mule.providers.ftp;
 
 import org.mule.providers.ftp.server.NamedPayload;
-import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
@@ -21,7 +20,7 @@ import org.mule.umo.model.UMOModel;
 import org.mule.MuleManager;
 import org.mule.impl.model.streaming.StreamingComponent;
 
-import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -31,8 +30,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 /**
  * We don't have an integrated ftp server (yet), and synchronous return doesn't work
  * with streaming, as far as i can tell, so the best we can do here is dispatch
- * a stream (which is testing the stream adapter, not the streaming model) to the
- * test server, then pull it back again through a streaming model.
+ * a through a streaming bridge to the test server, then pull it back again (again,
+ * through the streaming model).
  */
 public class FtpStreamingTestCase extends BaseServerTestCase
 {
@@ -61,7 +60,7 @@ public class FtpStreamingTestCase extends BaseServerTestCase
             {
                 try
                 {
-                    logger.warn("called " + loopCount.incrementAndGet() + " times");
+                    logger.info("called " + loopCount.incrementAndGet() + " times");
                     FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
                     // without this we may have problems with the many repeats
                     if (1 == latch.getCount())
@@ -82,14 +81,21 @@ public class FtpStreamingTestCase extends BaseServerTestCase
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("main");
         UMOSession session = model.getComponentSession("testComponent");
         StreamingComponent component = (StreamingComponent) session.getComponent();
-        FunctionalStreamingTestComponent ftc =(FunctionalStreamingTestComponent) component.getComponent();
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
 
-        ftc.setEventCallback(callback);
+        ftc.setEventCallback(callback, TEST_MESSAGE.length());
 
         // send out to FTP server
-        client.sendStream("ftp://anonymous:email@localhost:" + PORT,
-                new StreamMessageAdapter(new ByteArrayInputStream(TEST_MESSAGE.getBytes())),
-                getTimeout());
+//        client.dispatchStream("ftp://anonymous:email@localhost:" + PORT,
+//                new StreamMessageAdapter(new ByteArrayInputStream(TEST_MESSAGE.getBytes())),
+//                getTimeout());
+//        NamedPayload payload = awaitUpload();
+//        assertNotNull(payload);
+//        logger.info("received message: " + payload);
+//        assertEquals(TEST_MESSAGE, new String(payload.getPayload()));
+
+        // send out to FTP server via streaming model
+        client.dispatch("tcp://localhost:60196", TEST_MESSAGE, new HashMap());
         NamedPayload payload = awaitUpload();
         assertNotNull(payload);
         logger.info("received message: " + payload);

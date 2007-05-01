@@ -63,7 +63,7 @@ public class StreamingTestCase  extends FunctionalTestCase
             {
                 try
                 {
-                    logger.warn("called " + loopCount.incrementAndGet() + " times");
+                    logger.info("called " + loopCount.incrementAndGet() + " times");
                     FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
                     // without this we may have problems with the many repeats
                     if (1 == latch.getCount())
@@ -96,9 +96,9 @@ public class StreamingTestCase  extends FunctionalTestCase
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
         UMOSession session = model.getComponentSession("testComponent");
         StreamingComponent component = (StreamingComponent) session.getComponent();
-        FunctionalStreamingTestComponent ftc =(FunctionalStreamingTestComponent) component.getComponent();
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
 
-        ftc.setEventCallback(callback);
+        ftc.setEventCallback(callback, TEST_MESSAGE.length());
 
         client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
 
@@ -107,7 +107,7 @@ public class StreamingTestCase  extends FunctionalTestCase
         // the "stream provider" functionality, rather than the "streaming model"
         // functionality...
 
-        latch.await(1, TimeUnit.SECONDS);
+        latch.await(10, TimeUnit.SECONDS);
         assertEquals(RESULT, message.get());
     }
 

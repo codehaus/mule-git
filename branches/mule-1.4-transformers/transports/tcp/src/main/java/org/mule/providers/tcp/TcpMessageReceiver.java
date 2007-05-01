@@ -14,6 +14,8 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
+import org.mule.impl.model.streaming.CloseCountDownInputStream;
+import org.mule.impl.model.streaming.CloseCountDownOutputStream;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.ConnectException;
 import org.mule.umo.UMOComponent;
@@ -32,6 +34,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -44,6 +47,7 @@ import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
@@ -214,8 +218,8 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
     protected class TcpWorker implements Work, Disposable
     {
         protected Socket socket = null;
-        protected DataInputStream dataIn;
-        protected DataOutputStream dataOut;
+        protected InputStream dataIn;
+        protected OutputStream dataOut;
         protected AtomicBoolean closed = new AtomicBoolean(false);
         protected TcpProtocol protocol;
 
@@ -301,16 +305,31 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                 dataIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                 dataOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
-                while (!socket.isClosed() && !disposing.get())
+                if (endpoint.isStreaming())
                 {
-                    try
+                    // all we can do for streaming is connect the streams
+                    CountDownLatch latch;
+                    if (endpoint.isSynchronous())
                     {
-                        if (endpoint.isStreaming())
-                        {
-                            UMOMessageAdapter adapter = connector.getStreamMessageAdapter(dataIn, dataOut);
-                            routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), null);
-                        }
-                        else
+                        latch = new CountDownLatch(2);
+                        dataOut = new CloseCountDownOutputStream(dataOut, latch);
+                    }
+                    else
+                    {
+                        latch = new CountDownLatch(2);
+                    }
+                    dataIn = new CloseCountDownInputStream(dataIn, latch);
+
+                    UMOMessageAdapter adapter = connector.getStreamMessageAdapter(dataIn, dataOut);
+                    routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), null);
+
+                    latch.await();
+                }
+                else
+                {
+                    while (!socket.isClosed() && !disposing.get())
+                    {
+                        try
                         {
                             Object readMsg = protocol.read(dataIn);
                             if (readMsg == null)
@@ -326,12 +345,12 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
                             dataOut.flush();
                         }
-                    }
-                    catch (SocketTimeoutException e)
-                    {
-                        if (!socket.getKeepAlive())
+                        catch (SocketTimeoutException e)
                         {
-                            break;
+                            if (!socket.getKeepAlive())
+                            {
+                                break;
+                            }
                         }
                     }
                 }

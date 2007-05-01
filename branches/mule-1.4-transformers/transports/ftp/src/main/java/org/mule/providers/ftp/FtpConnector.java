@@ -535,6 +535,7 @@ public class FtpConnector extends AbstractConnector
             }
             catch (Exception e)
             {
+                logger.debug("Error getting output stream: ", e);
                 releaseFtp(uri, client);
                 throw e;
             }

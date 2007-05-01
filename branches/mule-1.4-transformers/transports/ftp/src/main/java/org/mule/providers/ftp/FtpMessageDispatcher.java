@@ -55,6 +55,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
             if (data instanceof UMOStreamMessageAdapter)
             {
                 IOUtils.copy(((UMOStreamMessageAdapter) data).getInputStream(), out);
+                ((UMOStreamMessageAdapter) data).getOutputStream().close();
             }
             else
             {

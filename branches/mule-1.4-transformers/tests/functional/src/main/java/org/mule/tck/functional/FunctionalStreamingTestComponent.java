@@ -37,21 +37,24 @@ public class FunctionalStreamingTestComponent implements StreamingService
     protected transient Log logger = LogFactory.getLog(getClass());
 
     private static AtomicInteger count = new AtomicInteger(0);
+    private int number = count.incrementAndGet();
+
     public static final int STREAM_SAMPLE_SIZE = 4;
     public static final int STREAM_BUFFER_SIZE = 4096;
     private EventCallback eventCallback;
     private String summary = null;
-    private int number = count.incrementAndGet();
+    private int targetSize = -1;
 
     public FunctionalStreamingTestComponent()
     {
         logger.debug("creating " + toString());
     }
 
-    public void setEventCallback(EventCallback eventCallback)
+    public void setEventCallback(EventCallback eventCallback, int targetSize)
     {
         logger.debug("setting callback: " + eventCallback + " in " + toString());
         this.eventCallback = eventCallback;
+        this.targetSize = targetSize;
     }
 
     public String getSummary()
@@ -96,41 +99,13 @@ public class FunctionalStreamingTestComponent implements StreamingService
                         ++endDataSize;
                         endData[endRingPointer++ % STREAM_SAMPLE_SIZE] = buffer[i];
                     }
+                    if (streamLength >= targetSize)
+                    {
+                        doCallback(startData, startDataSize,
+                                endData, endDataSize, endRingPointer,
+                                streamLength, context);
+                    }
                 }
-            }
-            endDataSize = Math.min(endDataSize, STREAM_SAMPLE_SIZE);
-
-            // make a nice summary of the data
-            StringBuffer result = new StringBuffer("Received stream");
-            result.append("; length: ");
-            result.append(streamLength);
-            result.append("; '");
-            for (int i = 0; i < startDataSize; ++i)
-            {
-                result.append((char) startData[i]);
-            }
-            if (endDataSize > 0)
-            {
-                result.append("...");
-                for (int i = 0; i < endDataSize; ++i)
-                {
-                    result.append((char) endData[(endRingPointer + i) % STREAM_SAMPLE_SIZE]);
-                }
-            }
-            result.append("'");
-
-            summary = result.toString();
-
-            String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
-                    + context.getComponentDescriptor().getName() + ". " + summary
-                    + "\n callback: " + eventCallback,
-                    '*', 80);
-
-            logger.info(msg);
-
-            if (eventCallback != null)
-            {
-                eventCallback.eventReceived(context, this);
             }
 
         }
@@ -141,6 +116,47 @@ public class FunctionalStreamingTestComponent implements StreamingService
                 logger.debug(e);
             }
             throw e;
+        }
+    }
+
+    private void doCallback(byte[] startData, int startDataSize,
+                            byte[] endData, int endDataSize, int endRingPointer,
+                            int streamLength, UMOEventContext context) throws Exception
+    {
+        // make a nice summary of the data
+        StringBuffer result = new StringBuffer("Received stream");
+        result.append("; length: ");
+        result.append(streamLength);
+        result.append("; '");
+
+        for (int i = 0; i < startDataSize; ++i)
+        {
+            result.append((char) startData[i]);
+        }
+
+        int endSize = Math.min(endDataSize, STREAM_SAMPLE_SIZE);
+        if (endSize > 0)
+        {
+            result.append("...");
+            for (int i = 0; i < endSize; ++i)
+            {
+                result.append((char) endData[(endRingPointer + i) % STREAM_SAMPLE_SIZE]);
+            }
+        }
+        result.append("'");
+
+        summary = result.toString();
+
+        String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
+                + context.getComponentDescriptor().getName() + ". " + summary
+                + "\n callback: " + eventCallback,
+                '*', 80);
+
+        logger.info(msg);
+
+        if (eventCallback != null)
+        {
+            eventCallback.eventReceived(context, this);
         }
     }
 

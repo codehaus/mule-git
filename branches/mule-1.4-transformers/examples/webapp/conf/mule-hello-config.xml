@@ -16,6 +16,7 @@
             returnClass="org.mule.samples.hello.NameString"/>
         <transformer name="NameStringToChatString" className="org.mule.samples.hello.NameStringToChatString"
             returnClass="org.mule.samples.hello.ChatString"/>
+        <transformer name="ObjectToString" className="org.mule.transformers.simple.ObjectToString"/>
     </transformers>
 
     <model name="samples" type="inherited">
@@ -27,8 +28,6 @@
         <mule-descriptor name="GreeterUMO" implementation="org.mule.samples.hello.Greeter">
             <inbound-router>
                 <endpoint address="vm://greeter" transformers="StringToNameString"/>
-                <!-- Used by the REST Hello world Example -->
-                <endpoint address="servlet://rest" transformers="StringToNameString"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
@@ -40,6 +39,23 @@
         <mule-descriptor name="ChitChatUMO" implementation="org.mule.samples.hello.ChitChatter">
             <inbound-router>
                 <endpoint address="vm://chitchatter" transformers="NameStringToChatString"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="RESTGreeterUMO" implementation="org.mule.samples.hello.Greeter">
+            <inbound-router>
+                <endpoint address="servlet://rest" transformers="StringToNameString"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="vm://RESTchitchatter"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="RESTChitChatUMO" implementation="org.mule.samples.hello.ChitChatter">
+            <inbound-router>
+                <endpoint address="vm://RESTchitchatter" transformers="NameStringToChatString" responseTransformers="ObjectToString"/>
             </inbound-router>
         </mule-descriptor>
 

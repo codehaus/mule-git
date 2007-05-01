@@ -40,6 +40,12 @@ public abstract class BaseServerTestCase extends FunctionalTestCase
     {
         server = new Server(port);
         server.awaitStart(timeout);
+        // this is really ugly, but the above doesn't get to waiting.
+        // need to improve this as part of ftp server work
+        synchronized(this)
+        {
+            wait(500);
+        }
     }
 
     protected void doFunctionalTearDown() throws Exception
