@@ -58,6 +58,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     /**
      * The endpoint that this transformer instance is configured on
      */
+    // TODO HH: kill
     protected UMOImmutableEndpoint endpoint = null;
 
     /**

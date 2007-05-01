@@ -24,6 +24,7 @@ public interface UMOBaseTransformer extends Initialisable, Cloneable
      * Sets the endpoint associated with with this connector
      * @param endpoint sets the endpoint associated with the transfromer
      */
+    // TODO HH: kill
     void setEndpoint(UMOImmutableEndpoint endpoint);
 
     /**
