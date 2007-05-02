@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+                                "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd">
+
+<mule-configuration id="pop3" version="1.0">
+	
+	<!--<mule-environment-properties synchronous="true" synchronousEventTimeout="5000">
+       <threading-profile id="default" maxThreadsActive="1" maxThreadsIdle="1" maxBufferSize="1" doThreading="false" poolExhaustedAction="WAIT"/>
+	</mule-environment-properties>-->
+	
+	<connector name="vmConnector" className="org.mule.providers.vm.VMConnector">
+        <properties>
+            <property name="queueEvents" value="true"/>
+        </properties>		
+	</connector>
+	
+	<connector name="SecureEmailConnector" className="org.mule.providers.email.ImapsConnector">
+		<properties>
+			<property value="emailtests.others.DummySSLSocketFactory" name="socketFactory"/>
+		</properties>
+	</connector>
+	
+	<model name="imap">
+		<mule-descriptor name="mainService" implementation="org.mule.components.simple.BridgeComponent">
+			<inbound-router>
+				<endpoint address="imaps://login:password@localhost:3993?checkFrequency=103"/>
+			</inbound-router>
+			<outbound-router>
+				<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+					<endpoint address="vm://outbound"/>
+				</router>
+			</outbound-router>
+		</mule-descriptor>
+    </model>
+</mule-configuration>
