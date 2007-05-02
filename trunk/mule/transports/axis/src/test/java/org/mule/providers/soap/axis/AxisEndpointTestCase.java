@@ -71,10 +71,5 @@ public class AxisEndpointTestCase extends AbstractMuleTestCase
             endpointUri.getAddress());
         assertEquals("getSomething", endpointUri.getParams().getProperty(MuleProperties.MULE_METHOD_PROPERTY));
         assertEquals(3, endpointUri.getParams().size());
-
-        TransportServiceDescriptor csd = TransportFactory.getServiceDescriptor("soap");
-        assertEquals("axis", csd.getProtocol());
-        assertEquals("org.mule.providers.soap.axis.AxisConnector", csd.getConnector());
-
     }
 }
