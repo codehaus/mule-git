@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 public interface PZWriterFactory
 {
-    public DelimiterPZWriter newDelimiterWriter(OutputStream output, char delimiter, char qualifier) 
+    public PZDelimiterWriter newDelimiterWriter(OutputStream output, char delimiter, char qualifier) 
         throws IOException;
     
     public PZWriter newDelimiterWriter(InputStream mapping, OutputStream output,

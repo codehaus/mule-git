@@ -15,7 +15,7 @@ import java.io.OutputStream;
 
 public interface PZDelimiterWriterFactory
 {
-    public DelimiterPZWriter createWriter(OutputStream out);
+    public PZDelimiterWriter createWriter(OutputStream out);
 }
 
 

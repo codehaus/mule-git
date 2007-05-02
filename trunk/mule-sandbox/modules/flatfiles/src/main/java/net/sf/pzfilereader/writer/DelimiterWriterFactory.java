@@ -43,7 +43,7 @@ public class DelimiterWriterFactory extends Object implements PZDelimiterWriterF
         return delimiter;
     }
 
-    public DelimiterPZWriter createWriter(OutputStream out)
+    public PZDelimiterWriter createWriter(OutputStream out)
     {
         return new DefaultDelimiterWriter(out, delimiter, qualifier);
     }

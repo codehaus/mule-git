@@ -13,7 +13,7 @@ package net.sf.pzfilereader.writer;
 /**
  * Write support for character-delimited records.
  */
-public interface DelimiterPZWriter extends PZWriter
+public interface PZDelimiterWriter extends PZWriter
 {
     void addColumnTitle(String columnTitle);
 }

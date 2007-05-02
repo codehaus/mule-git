@@ -16,7 +16,7 @@ import java.io.OutputStream;
  * This class exists only to expose the implementation of the <code>DelimiterPZWriter</code>
  * interface.
  */
-public class DefaultDelimiterWriter extends AbstractDelimiterWriter implements DelimiterPZWriter
+public class DefaultDelimiterWriter extends AbstractDelimiterWriter implements PZDelimiterWriter
 {
     public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
     {
