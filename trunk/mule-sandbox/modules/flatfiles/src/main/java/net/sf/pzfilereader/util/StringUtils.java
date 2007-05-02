@@ -10,47 +10,48 @@
 
 package net.sf.pzfilereader.util;
 
+import java.util.Arrays;
 
 public class StringUtils
 {
-    public static String rightPad(String string, int size, char padChar) 
+    /**
+     * Never create instances of this class.
+     */
+    private StringUtils()
     {
-        if (string == null) 
+        // no instances, please
+    }
+
+    public static String rightPad(String string, int size, char padChar)
+    {
+        if (string == null)
         {
             return null;
         }
-        
+
         int strlen = string.length();
-        int pads = size - strlen;
-        if (pads <= 0) 
+        if (size - strlen <= 0)
         {
-            return string; // returns original String when possible
+            // return the original String when possible
+            return string;
         }
 
         char[] retValue = new char[size];
-        
-        // copy over the contents of string
+
+        /*
+         * Copy the contents of the original string; for Strings up to ~8-10
+         * characters this loop is consistently faster than String.getChars(). Short
+         * Strings are usually the majority of values in fixed-width data columns.
+         */
         for (int i = 0; i < strlen; i++)
         {
             retValue[i] = string.charAt(i);
         }
-        
-        // fill with pad chars
-        for (int i = strlen; i < size; i++)
-        {
-            retValue[i] = padChar;
-        }
-        
+
+        // fill with pad characters
+        Arrays.fill(retValue, strlen, size, padChar);
+
         return new String(retValue);
     }
-        
-    /**
-     * Never create instances of this class.
-     */
-    private StringUtils() 
-    { 
-        // no instances, please 
-    }
+
 }
-
-
