@@ -24,4 +24,7 @@ public interface PZWriterFactory
 
     public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
         throws IOException;
+
+    public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output, char fillChar) 
+        throws IOException;
 }

@@ -44,6 +44,23 @@ public class FixedLengthWriter extends AbstractPZWriter
         }
     }
 
+    public void addRecordEntry(String columnName, Object value)
+    {
+        if (value != null)
+        {
+            ColumnMetaData metaData = this.getColumnMetaData(columnName);
+            
+            String valueString = value.toString();
+            if (valueString.length() > metaData.getColLength())
+            {
+                throw new IllegalArgumentException(valueString 
+                    + " exceeds the maximum length for column " + columnName 
+                    + "(" + metaData.getColLength() + ")");
+            }
+        }
+        super.addRecordEntry(columnName, value);
+    }
+
     public void nextRecord() throws IOException
     {
         Iterator columnIter = this.getColumnMetaData().iterator();
@@ -51,12 +68,13 @@ public class FixedLengthWriter extends AbstractPZWriter
         {
             ColumnMetaData element = (ColumnMetaData)columnIter.next();
             
-            String outputString = "";
+            String outputString = null;
             Object value = this.getRowMap().get(element.getColName());
-            if (value != null)
+            if (value == null)
             {
-                outputString = StringUtils.rightPad(value.toString(), element.getColLength(), fillChar);
+                value = "";
             }
+            outputString = StringUtils.rightPad(value.toString(), element.getColLength(), fillChar);
             this.write(outputString);
         }
         
@@ -87,6 +105,21 @@ public class FixedLengthWriter extends AbstractPZWriter
     private List getColumnMetaData()
     {
         return (List)columnMapping.get("detail");
+    }
+    
+    private ColumnMetaData getColumnMetaData(String columnName)
+    {
+        Iterator metaDataIter = this.getColumnMetaData().iterator();
+        while (metaDataIter.hasNext())
+        {
+            ColumnMetaData element = (ColumnMetaData)metaDataIter.next();
+            if (element.getColName().equals(columnName))
+            {
+                return element;
+            }
+        }
+        
+        throw new IllegalArgumentException("Column \"" + columnName + "\" unknown");
     }
 }
 

@@ -38,18 +38,6 @@ public class StringUtilTestCase extends TestCase
         String result = StringUtils.rightPad(null, 3, ' ');
         Assert.assertNull(result);
     }
-    
-    public void testPerformance()
-    {
-        long before = System.currentTimeMillis();
-        
-        for (int i = 0; i < 100000; i++)
-        {
-            StringUtils.rightPad(String.valueOf(i), 100, ' ');
-        }
-        
-        System.out.println("100000 iterations: " + (System.currentTimeMillis() - before) + " ms");
-    }
 }
 
 
