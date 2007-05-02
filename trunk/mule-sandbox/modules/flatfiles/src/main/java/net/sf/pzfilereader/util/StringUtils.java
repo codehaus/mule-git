@@ -10,58 +10,18 @@
 
 package net.sf.pzfilereader.util;
 
-import java.util.Arrays;
 
 public class StringUtils
 {
-    // 100000 iterations: 179 ms
-    public static String XrightPad(String string, int size, char padChar) 
-    {
-        if (string == null) 
-        {
-            return null;
-        }
-        int pads = size - string.length();
-        if (pads <= 0) 
-        {
-            return string; // returns original String when possible
-        }
-
-        char[] padding = new char[pads];
-        Arrays.fill(padding, padChar);
-        
-        return string.concat(new String(padding));
-    }
-
-    // 100000 iterations: 247 ms
-    public static String XXrightPad(String string, int size, char padChar) 
-    {
-        if (string == null) 
-        {
-            return null;
-        }
-        int pads = size - string.length();
-        if (pads <= 0) 
-        {
-            return string; // returns original String when possible
-        }
-
-        StringBuffer buffer = new StringBuffer(string);
-        char[] padding = new char[pads];
-        Arrays.fill(padding, padChar);
-        
-        return buffer.append(padding).toString();
-    }
-
-    // 100000 iterations: 120 ms
-    public static String XXXrightPad(String string, int size, char padChar) 
+    public static String rightPad(String string, int size, char padChar) 
     {
         if (string == null) 
         {
             return null;
         }
         
-        int pads = size - string.length();
+        int strlen = string.length();
+        int pads = size - strlen;
         if (pads <= 0) 
         {
             return string; // returns original String when possible
@@ -70,7 +30,6 @@ public class StringUtils
         char[] retValue = new char[size];
         
         // copy over the contents of string
-        int strlen = string.length();
         for (int i = 0; i < strlen; i++)
         {
             retValue[i] = string.charAt(i);
@@ -84,13 +43,7 @@ public class StringUtils
         
         return new String(retValue);
     }
-    
-    // 100000 iterations: 172 ms
-    public static String rightPad(String string, int size, char padChar) 
-    {
-        return org.apache.commons.lang.StringUtils.rightPad(string, size, padChar);
-    }
-    
+        
     /**
      * Never create instances of this class.
      */
