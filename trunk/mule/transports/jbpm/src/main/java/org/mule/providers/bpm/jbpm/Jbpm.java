@@ -173,7 +173,7 @@ public class Jbpm implements BPMS
      */
     public synchronized Object startProcess(Object processType) throws Exception
     {
-        return startProcess(processType, /* processVariables */null);
+        return startProcess(processType, /* transition */null, /* processVariables */null);
     }
 
     /**
@@ -181,7 +181,7 @@ public class Jbpm implements BPMS
      * 
      * @return the newly-created ProcessInstance
      */
-    public synchronized Object startProcess(Object processType, Map processVariables) throws Exception
+    public synchronized Object startProcess(Object processType, Object transition, Map processVariables) throws Exception
     {
         ProcessInstance processInstance = null;
 

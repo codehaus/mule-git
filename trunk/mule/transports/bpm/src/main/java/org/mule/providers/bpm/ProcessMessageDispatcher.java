@@ -159,7 +159,7 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
         {
             if (processType != null)
             {
-                process = connector.getBpms().startProcess(processType, processVariables);
+                process = connector.getBpms().startProcess(processType, transition, processVariables);
                 if ((process != null) && logger.isInfoEnabled())
                 {
                     logger.info("New process started, ID = " + connector.getBpms().getId(process));
