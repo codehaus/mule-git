@@ -14,28 +14,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 public class FixedWriterFactory extends Object implements PZFixedWriterFactory
 {
-    private static final char DEFAULT_FILL_CHAR = ' ';
-    
-    private char fillChar = DEFAULT_FILL_CHAR;
+    public static final char DEFAULT_PADDING_CHARACTER = ' ';
+
+    private final char pad;
 
     public FixedWriterFactory()
     {
-        super();
+        this(DEFAULT_PADDING_CHARACTER);
     }
-    
+
     public FixedWriterFactory(char fillChar)
     {
-        this();
-        this.fillChar = fillChar;
+        super();
+        this.pad = fillChar;
     }
-    
+
     public PZWriter createWriter(InputStream mapping, OutputStream output) throws IOException
     {
-        return new FixedLengthWriter(mapping, output, fillChar);
+        return new FixedLengthWriter(mapping, output, pad);
     }
 }
-
-
