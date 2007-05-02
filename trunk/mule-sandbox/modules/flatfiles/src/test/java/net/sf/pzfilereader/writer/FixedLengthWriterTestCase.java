@@ -44,9 +44,21 @@ public class FixedLengthWriterTestCase extends TestCase
         Assert.fail("implement me");
     }
     
-    public void testWriteStringWiderThanColumnDefinition()
+    public void testWriteStringWiderThanColumnDefinition() throws Exception
     {
-        Assert.fail("implement me");
+        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
+        OutputStream out = new ByteArrayOutputStream();
+        
+        PZWriter writer = DefaultPZWriterFactory.getInstance().newFixedLengthWriter(mapping, out);
+        try
+        {
+            writer.addRecordEntry("STATE", "THISISTOOLONG");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // expected exception
+        }
     }
 }
 

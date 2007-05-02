@@ -19,9 +19,9 @@ import java.util.Map;
 
 import net.sf.pzfilereader.InitialisationException;
 import net.sf.pzfilereader.structure.ColumnMetaData;
+import net.sf.pzfilereader.util.StringUtils;
 import net.sf.pzfilereader.xml.PZMapParser;
 
-import org.apache.commons.lang.StringUtils;
 import org.jdom.JDOMException;
 
 public class FixedLengthWriter extends AbstractPZWriter
