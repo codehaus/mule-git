@@ -11,13 +11,9 @@
 package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-
 
 public interface PZFixedWriterFactory
 {
-    public PZWriter createWriter(InputStream mapping, OutputStream output) throws IOException;
+    public PZWriter createWriter(OutputStream output) throws IOException;
 }
-
-

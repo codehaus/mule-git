@@ -12,10 +12,7 @@ package net.sf.pzfilereader.writer;
 
 import java.io.OutputStream;
 
-
 public interface PZDelimiterWriterFactory
 {
     public PZDelimiterWriter createWriter(OutputStream out);
 }
-
-

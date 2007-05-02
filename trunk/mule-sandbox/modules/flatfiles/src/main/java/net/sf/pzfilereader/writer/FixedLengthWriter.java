@@ -11,38 +11,25 @@
 package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.InitialisationException;
 import net.sf.pzfilereader.structure.ColumnMetaData;
 import net.sf.pzfilereader.util.PZConstants;
 import net.sf.pzfilereader.util.StringUtils;
-import net.sf.pzfilereader.xml.PZMapParser;
-
-import org.jdom.JDOMException;
 
 public class FixedLengthWriter extends AbstractPZWriter
 {
     private Map columnMapping;
     private char fillChar;
     
-    public FixedLengthWriter(InputStream mapping, OutputStream output, char fillChar) throws IOException
+    public FixedLengthWriter(Map parsedMapping, OutputStream output, char fillChar) throws IOException
     {
         super(output);
         this.fillChar = fillChar;
-        
-        try
-        {
-            columnMapping = PZMapParser.parse(mapping);
-        }
-        catch (JDOMException jde)
-        {
-            throw new InitialisationException(jde);
-        }
+        columnMapping = parsedMapping;
     }
 
     public void addRecordEntry(String columnName, Object value)

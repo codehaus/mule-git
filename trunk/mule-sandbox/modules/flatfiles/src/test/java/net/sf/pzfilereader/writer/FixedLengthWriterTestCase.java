@@ -24,7 +24,7 @@ public class FixedLengthWriterTestCase extends TestCase
         OutputStream out = new ByteArrayOutputStream();
 
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory().createWriter(mapping, out);
+        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -44,7 +44,7 @@ public class FixedLengthWriterTestCase extends TestCase
         OutputStream out = new ByteArrayOutputStream();
 
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory('.').createWriter(mapping, out);
+        PZWriter writer = new FixedWriterFactory(mapping, '.').createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -69,7 +69,7 @@ public class FixedLengthWriterTestCase extends TestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new FixedWriterFactory().createWriter(mapping, out);
+        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
         try
         {
             writer.addRecordEntry("STATE", "THISISTOOLONG");
@@ -86,7 +86,7 @@ public class FixedLengthWriterTestCase extends TestCase
         OutputStream out = new ByteArrayOutputStream();
         
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory().createWriter(mapping, out);
+        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
