@@ -27,10 +27,13 @@ import org.jdom.JDOMException;
 public class FixedLengthWriter extends AbstractPZWriter
 {
     private Map columnMapping;
+    private char fillChar;
     
-    public FixedLengthWriter(InputStream mapping, OutputStream output) throws IOException
+    public FixedLengthWriter(InputStream mapping, OutputStream output, char fillChar) throws IOException
     {
         super(output);
+        this.fillChar = fillChar;
+        
         try
         {
             columnMapping = PZMapParser.parse(mapping);
@@ -52,7 +55,7 @@ public class FixedLengthWriter extends AbstractPZWriter
             Object value = this.getRowMap().get(element.getColName());
             if (value != null)
             {
-                outputString = StringUtils.rightPad(value.toString(), element.getColLength());
+                outputString = StringUtils.rightPad(value.toString(), element.getColLength(), fillChar);
             }
             this.write(outputString);
         }

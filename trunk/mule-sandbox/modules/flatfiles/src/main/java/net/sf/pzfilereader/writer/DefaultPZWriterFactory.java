@@ -38,7 +38,7 @@ public class DefaultPZWriterFactory extends Object implements PZWriterFactory
     public PZWriter newFixedLengthWriter(InputStream mapping, OutputStream output) 
         throws IOException
     {
-        return new FixedLengthWriter(mapping, output);
+        return new FixedLengthWriter(mapping, output, ' ');
     }
 }
 
