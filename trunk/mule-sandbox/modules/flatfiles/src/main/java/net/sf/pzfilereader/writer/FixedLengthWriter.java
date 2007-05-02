@@ -19,6 +19,7 @@ import java.util.Map;
 
 import net.sf.pzfilereader.InitialisationException;
 import net.sf.pzfilereader.structure.ColumnMetaData;
+import net.sf.pzfilereader.util.PZConstants;
 import net.sf.pzfilereader.util.StringUtils;
 import net.sf.pzfilereader.xml.PZMapParser;
 
@@ -84,7 +85,7 @@ public class FixedLengthWriter extends AbstractPZWriter
 
     protected boolean validateColumnTitle(String columnTitle)
     {
-        Map columnNameToIndex = (Map)columnMapping.get("colIndex");
+        Map columnNameToIndex = (Map)columnMapping.get(PZConstants.COL_IDX);
         return columnNameToIndex.keySet().contains(columnTitle);
     }
 
@@ -105,7 +106,7 @@ public class FixedLengthWriter extends AbstractPZWriter
      */
     private List getColumnMetaData()
     {
-        return (List)columnMapping.get("detail");
+        return (List)columnMapping.get(PZConstants.DETAIL_ID);
     }
     
     private ColumnMetaData getColumnMetaData(String columnName)

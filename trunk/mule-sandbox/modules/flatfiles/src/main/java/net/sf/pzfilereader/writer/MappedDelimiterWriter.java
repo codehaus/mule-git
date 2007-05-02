@@ -19,6 +19,7 @@ import java.util.Map;
 
 import net.sf.pzfilereader.InitialisationException;
 import net.sf.pzfilereader.structure.ColumnMetaData;
+import net.sf.pzfilereader.util.PZConstants;
 import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
@@ -33,7 +34,7 @@ public class MappedDelimiterWriter extends AbstractDelimiterWriter implements PZ
         try
         {
             Map parsedMapping = PZMapParser.parse(mapping);
-            List columns = (List)parsedMapping.get("detail");
+            List columns = (List)parsedMapping.get(PZConstants.DETAIL_ID);
             Iterator columnIter = columns.iterator();
             while (columnIter.hasNext())
             {
