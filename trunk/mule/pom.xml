@@ -138,13 +138,13 @@
     </dependencyManagement>
 
     <ciManagement>
-        <system>continuum</system>
-        <url>http://localhost:8080/continuum</url>
+        <system>bamboo</system>
+        <url>http://bamboo.mulesource.org/bamboo</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
                 <configuration>
-                    <address>tcarlson@impsat.com</address>
+                    <address>scm@mule.codehaus.org</address>
                 </configuration>
             </notifier>
         </notifiers>
