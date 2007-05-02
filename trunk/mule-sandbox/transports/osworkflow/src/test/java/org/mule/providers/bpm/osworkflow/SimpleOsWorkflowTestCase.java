@@ -19,9 +19,9 @@ import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
 /**
- * Tests the connector against BPM with 2 simple processes.
+ * Tests the connector against OSWorkflow with a simple process.
  */
-public class SimpleBpmTestCase extends FunctionalTestCase {
+public class SimpleOsWorkflowTestCase extends FunctionalTestCase {
 
     ProcessConnector connector;
     BPMS bpms;
@@ -36,7 +36,7 @@ public class SimpleBpmTestCase extends FunctionalTestCase {
     }
 
     protected void doSetupManager() throws Exception {
-        // Configure the BPM connector programmatically so that we are able to pass it the jBPM instance.
+        // Configure the BPM connector programmatically so that we are able to pass it the OsWorkflow instance.
         connector = new ProcessConnector();
         bpms = new OsWorkflow();
         connector.setBpms(bpms);
@@ -63,15 +63,7 @@ public class SimpleBpmTestCase extends FunctionalTestCase {
             response = client.send("bpm://simple/" + processId, null, null);
             process = response.getPayload();
 
-            // The process should be in the second wait state.
-            assertEquals(1, NumberUtils.toInt(bpms.getState(process)));
-            
-            // Advance the process one more step.
-            response = client.send("bpm://simple/" + processId, null, null);
-            process = response.getPayload();
-            
             // The process should have ended.
-            assertEquals(2, NumberUtils.toInt(bpms.getState(process)));
             assertTrue(bpms.hasEnded(process));
         } finally {
             client.dispose();
@@ -94,7 +86,7 @@ public class SimpleBpmTestCase extends FunctionalTestCase {
                 response.getLongProperty(ProcessConnector.PROPERTY_PROCESS_ID, -1);
             // The process should be started and in a wait state.
             assertFalse(processId == -1);
-            assertEquals(new Long(1), bpms.getState(process));
+            assertEquals(1, NumberUtils.toInt(bpms.getState(process)));
 
             // Advance the process one step.
             response = client.send("bpm://?" +

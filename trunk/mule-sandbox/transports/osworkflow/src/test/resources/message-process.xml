@@ -4,55 +4,32 @@
                  "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
 <workflow>
   <initial-actions>
-    <action id="100" name="Start Workflow">
+    <action id="1" name="start">
       <results>
-        <unconditional-result old-status="Finished" status="Queued" step="1"/>
+        <unconditional-result old-status="Starting" status="Underway" step="1"/>
       </results>
     </action>
   </initial-actions>
 
   <steps>
-    <step id="1" name="First Draft">
+    <step id="1" name="dummyState">
       <actions>
-        <action id="1" name="Start First Draft">
-          <restrict-to>
-            <conditions>
-              <condition type="class">
-                <arg name="class.name">com.opensymphony.workflow.util.StatusCondition</arg>
-                <arg name="status">Queued</arg>
-              </condition>
-            </conditions>
-          </restrict-to>
+        <action id="2" name="Dummy Action">
           <pre-functions>
             <function type="class">
-              <arg name="class.name">com.opensymphony.workflow.util.Caller</arg>
+              <arg name="class.name">org.mule.providers.bpm.osworkflow.functions.SendMuleEvent</arg>
+              <arg name="endpoint">test:///tmp</arg>
+              <arg name="payload">Message in a bottle.</arg>
+              <arg name="synchronous">false</arg>
             </function>
           </pre-functions>
           <results>
-            <unconditional-result old-status="Finished" status="Underway" step="1" owner="${caller}"/>
-          </results>
-        </action>
-
-        <action id="2" name="Finish First Draft">
-          <restrict-to>
-            <conditions type="AND">
-              <condition type="class">
-                <arg name="class.name">com.opensymphony.workflow.util.StatusCondition</arg>
-                <arg name="status">Underway</arg>
-              </condition>
-              <condition type="class">
-                <arg name="class.name">com.opensymphony.workflow.util.AllowOwnerOnlyCondition</arg>
-              </condition>
-            </conditions>
-          </restrict-to>
-          <results>
-            <unconditional-result old-status="Finished" status="Queued" step="2"/>
+            <unconditional-result old-status="Underway" status="Finished" step="2"/>
           </results>
         </action>
       </actions>
     </step>
 
-    <step id="2" name="finished" />
+    <step id="2" name="end" />
   </steps>
 </workflow>
-

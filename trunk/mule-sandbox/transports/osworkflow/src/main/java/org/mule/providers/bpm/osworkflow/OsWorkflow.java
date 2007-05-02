@@ -15,15 +15,14 @@ import org.mule.providers.bpm.MessageService;
 import org.mule.util.NumberUtils;
 
 import com.opensymphony.workflow.Workflow;
+import com.opensymphony.workflow.WorkflowException;
 import com.opensymphony.workflow.basic.BasicWorkflow;
-import com.opensymphony.workflow.config.DefaultConfiguration;
 
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springmodules.workflow.WorkflowException;
 
 /**
  * OSWorkflow's implementation of Mule's generic BPMS interface.
@@ -58,7 +57,6 @@ public class OsWorkflow implements BPMS
     public OsWorkflow() 
     {
         workflowInterface = new BasicWorkflow(user);
-        workflowInterface.setConfiguration(new DefaultConfiguration());
     }
     
     /**
@@ -71,7 +69,7 @@ public class OsWorkflow implements BPMS
 
     public void setMessageService(MessageService msgService)
     {
-        // TODO
+        workflowInterface.setConfiguration(new MuleConfiguration(msgService));
     }
     
     // ///////////////////////////////////////////////////////////////////////////
