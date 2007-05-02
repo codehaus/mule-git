@@ -109,8 +109,10 @@ public class PoolingProfile
             // if the values were an actual enum in ObjectPool we could iterate
             // properly.. :/
 
-            Integer value = new Integer(ObjectPool.WHEN_EXHAUSTED_BLOCK);
-            this.put("WHEN_EXHAUSTED_BLOCK", value);
+            Integer value = new Integer(ObjectPool.WHEN_EXHAUSTED_WAIT);
+            this.put("WHEN_EXHAUSTED_WAIT", value);
+            this.put("WAIT", value);
+            // TODO HH: remove for 2.0 (only keep WAIT)
             this.put("BLOCK", value);
 
             value = new Integer(ObjectPool.WHEN_EXHAUSTED_FAIL);
@@ -137,6 +139,8 @@ public class PoolingProfile
             value = new Integer(POOL_INITIALISE_ONE_COMPONENT);
             this.put("POOL_INITIALISE_ONE_COMPONENT", value);
             this.put("INITIALISE_ONE", value);
+            // TODO HH: remove for 2.0 (only keep ONE)
+            this.put("INITIALISE_FIRST", value);
 
             value = new Integer(POOL_INITIALISE_ALL_COMPONENTS);
             this.put("POOL_INITIALISE_ALL_COMPONENTS", value);

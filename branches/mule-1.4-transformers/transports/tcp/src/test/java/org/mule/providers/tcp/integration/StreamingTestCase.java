@@ -10,15 +10,15 @@
 
 package org.mule.providers.tcp.integration;
 
-import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.model.streaming.StreamingComponent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
+import org.mule.impl.model.streaming.StreamingComponent;
+import org.mule.MuleManager;
 
 import java.util.HashMap;
 
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * This test is more about testing the streaming model than the TCP provider, really.
  * While the test passes, it shows some problems (multiple calls, errors).
  */
-public class StreamingTestCase  extends FunctionalTestCase
+public class StreamingTestCase extends FunctionalTestCase
 {
 
     private static final Log logger = LogFactory.getLog(StreamingTestCase.class);
@@ -92,6 +92,14 @@ public class StreamingTestCase  extends FunctionalTestCase
 //        UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
 //        FunctionalStreamingTestComponent ftc =
 //                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+
+        // not sure this ould work even for non-streaming code
+//        FunctionalStreamingTestComponent ftc =
+//                (FunctionalStreamingTestComponent)
+//                        ((StreamingComponent) getTestComponent(
+//                                getTestDescriptor("echo",
+//                                        "org.mule.components.simple.StreamingBridgeComponent")))
+//                                .getComponent();
 
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
         UMOSession session = model.getComponentSession("testComponent");

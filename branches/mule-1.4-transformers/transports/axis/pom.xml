@@ -27,7 +27,6 @@
                         <exclude>**/AxisConnectorJmsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
-                        <exclude>**/AxisEndpointTestCase.java</exclude>
                         <exclude>**/AxisServletBindingTestCase.java</exclude>
                         <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                         <exclude>**/VmToAxisProxyTestCase.java</exclude>
@@ -52,7 +51,6 @@
                                 <exclude>**/AxisConnectorJmsFunctionalTestCase.java</exclude>
                                 <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                                 <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
-                                <exclude>**/AxisEndpointTestCase.java</exclude>
                                 <exclude>**/AxisServletBindingTestCase.java</exclude>
                                 <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                                 <exclude>**/VmToAxisProxyTestCase.java</exclude>
