@@ -59,6 +59,7 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>4.1.0-incubator</version>
+            <scope>provided</scope> 
             <!-- Exclude everything except activeio-core -->
             <exclusions>
                 <exclusion>
