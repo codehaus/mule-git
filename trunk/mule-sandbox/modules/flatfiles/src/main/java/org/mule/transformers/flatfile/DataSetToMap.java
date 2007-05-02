@@ -42,14 +42,13 @@ public class DataSetToMap extends AbstractTransformer
         while (dataSet.next())
         {
             Map row = new HashMap();
+            rowList.add(row);
             
             for (int i = 0; i < headers.length; i++)
             {
                 String key = headers[i];
                 String value = dataSet.getString(key);
                 row.put(key, value);
-                
-                rowList.add(row);
             }
         }
         
