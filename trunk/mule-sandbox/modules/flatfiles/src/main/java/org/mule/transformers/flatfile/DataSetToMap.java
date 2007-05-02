@@ -42,7 +42,6 @@ public class DataSetToMap extends AbstractTransformer
         while (dataSet.next())
         {
             Map row = new HashMap();
-            rowList.add(row);
             
             for (int i = 0; i < headers.length; i++)
             {
@@ -50,8 +49,29 @@ public class DataSetToMap extends AbstractTransformer
                 String value = dataSet.getString(key);
                 row.put(key, value);
             }
+     
+            if (this.filterRow(row, dataSet) == false)
+            {
+                rowList.add(row);
+            }
         }
         
         return rowList;
+    }
+
+    /**
+     * Subclasses can override this method to skip rows from the final list.
+     * <p>
+     * This implementation always returns <code>false</code> to indicate that all
+     * rows should be included in the final list.
+     * 
+     * @param row
+     * @param dataSet
+     * @return <code>true</code> to exclude <code>row</code> from the final list or
+     *           <code>false</code> to include <code>row</code> into the final list.
+     */
+    protected boolean filterRow(Map row, DataSet dataSet)
+    {
+        return false;
     }
 }

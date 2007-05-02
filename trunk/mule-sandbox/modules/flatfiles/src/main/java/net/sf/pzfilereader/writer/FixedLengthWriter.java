@@ -74,6 +74,7 @@ public class FixedLengthWriter extends AbstractPZWriter
             {
                 value = "";
             }
+            // TODO DO: add formatting of values
             outputString = StringUtils.rightPad(value.toString(), element.getColLength(), fillChar);
             this.write(outputString);
         }

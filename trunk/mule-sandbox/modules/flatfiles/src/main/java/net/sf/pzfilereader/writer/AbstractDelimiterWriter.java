@@ -76,6 +76,7 @@ public abstract class AbstractDelimiterWriter extends AbstractPZWriter
             String columnTitle = (String)titlesIter.next();
             if (titlesIter.hasNext())
             {
+                // TODO DO: add formatting of values to model and format here
                 this.writeWithDelimiter(this.getRowMap().get(columnTitle));
             }
             else
