@@ -54,10 +54,10 @@ public class MuleConfigurationTestCase extends AbstractMuleTestCase
         pp.setExhaustedActionString("WHEN_EXHAUSTED_GROW");
         assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
 
-        pp.setExhaustedActionString("BLOCK");
-        assertEquals(ObjectPool.WHEN_EXHAUSTED_BLOCK, pp.getExhaustedAction());
-        pp.setExhaustedActionString("WHEN_EXHAUSTED_BLOCK");
-        assertEquals(ObjectPool.WHEN_EXHAUSTED_BLOCK, pp.getExhaustedAction());
+        pp.setExhaustedActionString("WAIT");
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_WAIT, pp.getExhaustedAction());
+        pp.setExhaustedActionString("WHEN_EXHAUSTED_WAIT");
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_WAIT, pp.getExhaustedAction());
 
         pp.setExhaustedActionString("FAIL");
         assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
