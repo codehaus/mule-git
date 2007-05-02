@@ -55,7 +55,7 @@ public class DelimiterWriterTestCase extends TestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = DefaultPZWriterFactory.getInstance().newDelimiterWriter(mapping, out, ';', '"');
+        PZWriter writer = new MappedDelimiterWriterFactory(mapping, ';', '"').createWriter(out);
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
         writer.addRecordEntry("ZIP", "44035");
@@ -67,6 +67,10 @@ public class DelimiterWriterTestCase extends TestCase
 
         String expected = "FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP\n" 
             + "JOHN;ANAME;1234 CIRCLE CT;ELYRIA;OH;44035\n";
+
+        // TODO DO: look at newlines: 0x0a vs. 0x0d
+        // System.out.println(StringUtils.toHexString(expected.getBytes()));
+        // System.out.println(StringUtils.toHexString(out.toString().getBytes()));
 
         Assert.assertEquals(expected, out.toString());
     }
