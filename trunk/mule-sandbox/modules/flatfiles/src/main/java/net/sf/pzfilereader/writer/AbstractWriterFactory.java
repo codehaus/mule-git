@@ -58,6 +58,7 @@ public abstract class AbstractWriterFactory extends Object
     
     protected Map getColumnMapping()
     {
+        // TODO DO: return deep mutable clone here or better: make the Map a first class citizen of the library
         return Collections.unmodifiableMap(mapping);
     }
 }

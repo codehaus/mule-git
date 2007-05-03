@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import net.sf.pzfilereader.InitialisationException;
+
 import junit.framework.Assert;
 
 public class DelimiterWriterTestCase extends PZWriterTestCase
@@ -89,6 +91,20 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
             ";ANAME;;ELYRIA;OH;44035");
 
         Assert.assertEquals(expected, out.toString());
+    }
+    
+    public void testCreateWriterWithoutColumnMapping() throws Exception
+    {
+        try
+        {
+            PZWriter writer = new DelimiterWriterFactory(';','"').createWriter(new ByteArrayOutputStream());
+            writer.addRecordEntry("ThisColumnDoesNotExist", "foo");
+            Assert.fail("Writing to a DelimiterWriter without column mapping is not supported");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // exception was expected
+        }
     }
 
     public void testCreateWriterWithNullOutputStream() throws IOException
