@@ -25,7 +25,7 @@ public class FixedLengthWriter extends AbstractPZWriter
     private Map columnMapping;
     private char fillChar;
     
-    public FixedLengthWriter(Map parsedMapping, OutputStream output, char fillChar) throws IOException
+    protected FixedLengthWriter(Map parsedMapping, OutputStream output, char fillChar) throws IOException
     {
         super(output);
         this.fillChar = fillChar;

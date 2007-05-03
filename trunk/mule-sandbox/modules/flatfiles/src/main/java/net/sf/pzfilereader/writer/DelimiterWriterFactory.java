@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MappedDelimiterWriterFactory.java 6291 2007-05-03 12:03:50Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -21,7 +21,7 @@ import net.sf.pzfilereader.util.PZConstants;
 
 import org.jdom.JDOMException;
 
-public class DelimiterWriterFactory extends AbstractWriterFactory implements PZWriterFactory
+public class DelimiterWriterFactory extends AbstractWriterFactory
 {
     private static final char DEFAULT_DELIMITER = ';';
     private static final char DEFAULT_QUALIFIER = '"';
@@ -87,6 +87,7 @@ public class DelimiterWriterFactory extends AbstractWriterFactory implements PZW
         return new DelimiterWriter(this.getColumnMapping(), out, delimiter, qualifier);
     }
     
+    // TODO DO: check that no column titles can be added after first nextRecord
     public void addColumnTitle(String columnTitle)
     {
         Map columnMapping = this.getColumnMapping();

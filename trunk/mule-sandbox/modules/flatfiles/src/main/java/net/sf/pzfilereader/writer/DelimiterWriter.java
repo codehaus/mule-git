@@ -27,7 +27,7 @@ public class DelimiterWriter extends AbstractPZWriter
     private List columnTitles = null;
     private boolean columnTitlesWritten = false;
     
-    public DelimiterWriter(Map columnMapping, OutputStream output, 
+    protected DelimiterWriter(Map columnMapping, OutputStream output, 
         char delimiter, char qualifier) throws IOException
     {
         super(output);

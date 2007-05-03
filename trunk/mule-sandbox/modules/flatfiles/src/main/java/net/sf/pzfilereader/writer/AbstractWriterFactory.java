@@ -12,6 +12,7 @@ package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,11 +24,11 @@ import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
-public abstract class AbstractWriterFactory extends Object
+public abstract class AbstractWriterFactory extends Object implements PZWriterFactory
 {
     private Map mapping;
 
-    public AbstractWriterFactory()
+    protected AbstractWriterFactory()
     {
         super();
         
@@ -36,13 +37,13 @@ public abstract class AbstractWriterFactory extends Object
         mapping.put(PZConstants.COL_IDX, new HashMap());
     }
     
-    public AbstractWriterFactory(Map mapping)
+    protected AbstractWriterFactory(Map mapping)
     {
         super();
         this.mapping = mapping;
     }
     
-    public AbstractWriterFactory(InputStream mappingSrc) throws IOException
+    protected AbstractWriterFactory(InputStream mappingSrc) throws IOException
     {
         this();
         
@@ -61,6 +62,8 @@ public abstract class AbstractWriterFactory extends Object
         // TODO DO: return deep mutable clone here or better: make the Map a first class citizen of the library
         return Collections.unmodifiableMap(mapping);
     }
+
+    public abstract PZWriter createWriter(OutputStream out) throws IOException;
 }
 
 
