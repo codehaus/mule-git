@@ -16,6 +16,8 @@ import java.io.OutputStream;
 
 import junit.framework.Assert;
 
+import net.sf.pzfilereader.InitialisationException;
+
 public class FixedLengthWriterTestCase extends PZWriterTestCase
 {
     public void testWriteFixedLength() throws Exception
@@ -58,9 +60,18 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         Assert.assertEquals(expected, out.toString());
     }
 
-    public void testCreateParserWithMalformedMappingFile()
+    public void testCreateParserWithMalformedMappingFile() throws Exception
     {
-        Assert.fail("implement me");
+        try
+        {
+            InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("BrokenMapping.pzmap.xml");
+            new FixedWriterFactory(mapping);
+            Assert.fail();
+        }
+        catch (InitialisationException ie)
+        {
+            // this excecption must occur, mapping xml is invalid
+        }
     }
     
     public void testWriteStringWiderThanColumnDefinition() throws Exception
