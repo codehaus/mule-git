@@ -13,19 +13,19 @@
     <name>Ftp Transport</name>
     <description>A Mule transport for Ftp Connectivity.</description>
 
-    <!-- build>
+    <build>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <excludes>
-              <exclude>**/FtpStreamingTestCase.java</exclude>
+              <exclude>**/*Mule1696TestCase.java</exclude>
             </excludes>
           </configuration>
         </plugin>
       </plugins>
-    </build -->
+    </build>
                                               
     <dependencies>
         <dependency>
