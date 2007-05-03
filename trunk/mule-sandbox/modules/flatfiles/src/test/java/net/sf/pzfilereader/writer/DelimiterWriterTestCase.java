@@ -23,7 +23,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
     {
         OutputStream out = new ByteArrayOutputStream();
         
-        PZDelimiterWriter writer = new DelimiterWriterFactory(';', '"').createWriter(out);
+        DefaultDelimiterWriter writer = (DefaultDelimiterWriter)new DelimiterWriterFactory(';', '"').createWriter(out);
         // the first line defines the column titles
         writer.addColumnTitle("FIRSTNAME");
         writer.addColumnTitle("LASTNAME");

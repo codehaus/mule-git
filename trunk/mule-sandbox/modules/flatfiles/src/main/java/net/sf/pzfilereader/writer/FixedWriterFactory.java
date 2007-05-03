@@ -13,18 +13,13 @@ package net.sf.pzfilereader.writer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
-
-import net.sf.pzfilereader.InitialisationException;
-import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
-public class FixedWriterFactory extends Object implements PZFixedWriterFactory
+public class FixedWriterFactory extends AbstractWriterFactory implements PZFixedWriterFactory
 {
     public static final char DEFAULT_PADDING_CHARACTER = ' ';
 
-    private final Map parsedMapping;
     private final char pad;
 
     public FixedWriterFactory()
@@ -35,7 +30,6 @@ public class FixedWriterFactory extends Object implements PZFixedWriterFactory
     public FixedWriterFactory(char fillChar)
     {
         super();
-        this.parsedMapping = null;
         this.pad = fillChar;
     }
 
@@ -46,21 +40,12 @@ public class FixedWriterFactory extends Object implements PZFixedWriterFactory
 
     public FixedWriterFactory(InputStream mappingSrc, char fillChar) throws IOException
     {
-        super();
+        super(mappingSrc);
         this.pad = fillChar;
-
-        try
-        {
-            this.parsedMapping = PZMapParser.parse(mappingSrc);
-        }
-        catch (JDOMException jde)
-        {
-            throw new InitialisationException(jde);
-        }
     }
 
     public PZWriter createWriter(OutputStream output) throws IOException
     {
-        return new FixedLengthWriter(parsedMapping, output, pad);
+        return new FixedLengthWriter(this.getParsedMapping(), output, pad);
     }
 }

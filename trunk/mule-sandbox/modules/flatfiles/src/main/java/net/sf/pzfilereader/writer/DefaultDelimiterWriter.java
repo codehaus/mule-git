@@ -12,11 +12,7 @@ package net.sf.pzfilereader.writer;
 
 import java.io.OutputStream;
 
-/**
- * This class exists only to expose the implementation of the <code>DelimiterPZWriter</code>
- * interface.
- */
-public class DefaultDelimiterWriter extends AbstractDelimiterWriter implements PZDelimiterWriter
+public class DefaultDelimiterWriter extends AbstractDelimiterWriter
 {
     public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
     {

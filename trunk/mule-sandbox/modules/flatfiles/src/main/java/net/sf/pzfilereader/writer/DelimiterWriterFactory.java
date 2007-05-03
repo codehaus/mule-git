@@ -10,6 +10,7 @@
 
 package net.sf.pzfilereader.writer;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 
@@ -37,13 +38,13 @@ public class DelimiterWriterFactory extends Object implements PZDelimiterWriterF
         this(delimiter);
         this.qualifier = qualifier;
     }
-    
+        
     public char getDelimiter()
     {
         return delimiter;
     }
 
-    public PZDelimiterWriter createWriter(OutputStream out)
+    public PZWriter createWriter(OutputStream out) throws IOException
     {
         return new DefaultDelimiterWriter(out, delimiter, qualifier);
     }
