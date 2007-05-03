@@ -15,7 +15,10 @@ import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ArrayUtils;
+import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
+import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +38,6 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 /**
  * <code>XsltTransformer</code> performs an XSLT transform on a DOM (or other
  * XML-ish) object.
- * 
  */
 
 public class XsltTransformer extends AbstractXmlTransformer
@@ -49,6 +51,7 @@ public class XsltTransformer extends AbstractXmlTransformer
 
     protected final GenericObjectPool transformerPool;
 
+    private volatile String xslTransformerFactoryClassName;
     private volatile String xslFile;
     private volatile String xslt;
 
@@ -105,7 +108,7 @@ public class XsltTransformer extends AbstractXmlTransformer
 
             try
             {
-                transformer = (Transformer)transformerPool.borrowObject();
+                transformer = (Transformer) transformerPool.borrowObject();
 
                 transformer.setErrorListener(errorListener);
                 transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
@@ -132,6 +135,28 @@ public class XsltTransformer extends AbstractXmlTransformer
         {
             throw new TransformerException(this, e);
         }
+    }
+
+    /**
+     * Returns the name of the currently configured javax.xml.transform.Transformer
+     * factory class used to create XSLT Transformers.
+     * 
+     * @return a TransformerFactory class name or <code>null</code> if none has
+     *         been configured
+     */
+    public String getXslTransformerFactory()
+    {
+        return xslTransformerFactoryClassName;
+    }
+
+    /**
+     * Configures the javax.xml.transform.Transformer factory class
+     * 
+     * @param xslTransformerFactory the name of the TransformerFactory class to use
+     */
+    public void setXslTransformerFactory(String xslTransformerFactory)
+    {
+        this.xslTransformerFactoryClassName = xslTransformerFactory;
     }
 
     /**
@@ -200,7 +225,7 @@ public class XsltTransformer extends AbstractXmlTransformer
     // @Override
     public Object clone() throws CloneNotSupportedException
     {
-        XsltTransformer clone = (XsltTransformer)super.clone();
+        XsltTransformer clone = (XsltTransformer) super.clone();
 
         try
         {
@@ -222,10 +247,24 @@ public class XsltTransformer extends AbstractXmlTransformer
         public Object makeObject() throws Exception
         {
             StreamSource source = XsltTransformer.this.getStreamSource();
-            TransformerFactory factory = TransformerFactory.newInstance();
+            String factoryClassName = XsltTransformer.this.getXslTransformerFactory();
+            TransformerFactory factory = null;
+
+            if (StringUtils.isNotEmpty(factoryClassName))
+            {
+                factory = (TransformerFactory) ClassUtils.instanciateClass(factoryClassName,
+                    ArrayUtils.EMPTY_OBJECT_ARRAY, this.getClass());
+            }
+            else
+            {
+                // fall back to JDK default
+                factory = TransformerFactory.newInstance();
+            }
+
             factory.setURIResolver(new URIResolver()
             {
-                public Source resolve(String href, String base) throws javax.xml.transform.TransformerException
+                public Source resolve(String href, String base)
+                    throws javax.xml.transform.TransformerException
                 {
                     try
                     {
