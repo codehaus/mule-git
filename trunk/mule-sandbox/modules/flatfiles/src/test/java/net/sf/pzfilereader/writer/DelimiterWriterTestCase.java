@@ -103,14 +103,20 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         }
     }
     
-//    public void testWriterWithoutHeadersAndWithoutMapping()
-//    {
-//        // TODO this must throw exception
-//        Assert.fail();
-//    }
-    
-//    public void testWriteCsvWithMissingColumns()
-//    {
-//        // TODO
-//    }
+    public void testWriteValueWithQualifier() throws Exception
+    {
+        DelimiterWriterFactory factory = new DelimiterWriterFactory(';', '"');
+        factory.addColumnTitle("col1");
+        factory.addColumnTitle("col2");
+        
+        OutputStream out = new ByteArrayOutputStream();
+        PZWriter writer = factory.createWriter(out);
+        writer.addRecordEntry("col1", "value;with;delimiter");
+        writer.addRecordEntry("col2", "normal value");
+        writer.nextRecord();
+        writer.flush();
+        
+        String expected = this.joinLines("col1;col2", "\"value;with;delimiter\";normal value");
+        Assert.assertEquals(expected, out.toString());
+    }
 }

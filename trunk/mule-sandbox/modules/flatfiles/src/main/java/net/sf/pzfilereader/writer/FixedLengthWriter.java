@@ -78,13 +78,13 @@ public class FixedLengthWriter extends AbstractPZWriter
 
     public void printFooter()
     {
-        // TODO Auto-generated method stub
+        // TODO DO: implement footer handling
 
     }
 
     public void printHeader()
     {
-        // TODO Auto-generated method stub
+        // TODO DO: implement header handling
 
     }
     

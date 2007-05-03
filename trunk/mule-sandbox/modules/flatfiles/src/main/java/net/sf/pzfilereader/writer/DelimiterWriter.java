@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: AbstractDelimiterWriter.java 6289 2007-05-03 11:03:21Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -48,10 +48,30 @@ public class DelimiterWriter extends AbstractPZWriter
 
     protected void writeWithDelimiter(Object value) throws IOException
     {
-        // TODO DO: format the value 
-        // TODO DO: surround with qualifier if value's string contains delimiter
         this.write(value);
         this.write(delimiter);
+    }
+    
+    protected void write(Object value) throws IOException
+    {
+        String stringValue = "";
+        if (value != null)
+        {
+            // TODO DO: format the value 
+            stringValue = value.toString();
+            if (stringValue.indexOf(delimiter) > -1)
+            {
+                int strlen = stringValue.length();
+                char[] newValue = new char[strlen + 2];
+                
+                stringValue.getChars(0, strlen, newValue, 1);
+                newValue[0] = qualifier;
+                newValue[strlen + 1] = qualifier;
+                
+                stringValue = new String(newValue);
+            }
+        }
+        super.write(stringValue);
     }
 
     protected void addColumnTitle(String string)
@@ -65,8 +85,6 @@ public class DelimiterWriter extends AbstractPZWriter
 
     protected void writeColumnTitles() throws IOException
     {
-        // TODO make sure that column titles exist
-        
         Iterator titleIter = columnTitles.iterator();
         while (titleIter.hasNext())
         {
@@ -91,7 +109,6 @@ public class DelimiterWriter extends AbstractPZWriter
             String columnTitle = (String)titlesIter.next();
             if (titlesIter.hasNext())
             {
-                // TODO DO: add formatting of values to model and format here
                 this.writeWithDelimiter(this.getRowMap().get(columnTitle));
             }
             else
@@ -118,12 +135,12 @@ public class DelimiterWriter extends AbstractPZWriter
 
     public void printFooter()
     {
-        // TODO Auto-generated method stub
+        // TODO DO: implement footer handling
     }
 
     public void printHeader()
     {
-        // TODO Auto-generated method stub
+        // TODO DO: implement header handling
     }
 
     protected boolean validateColumnTitle(String columnTitle)
