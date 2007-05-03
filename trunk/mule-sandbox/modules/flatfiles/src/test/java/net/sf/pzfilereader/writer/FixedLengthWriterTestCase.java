@@ -15,9 +15,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-public class FixedLengthWriterTestCase extends TestCase
+public class FixedLengthWriterTestCase extends PZWriterTestCase
 {
     public void testWriteFixedLength() throws Exception
     {
@@ -35,7 +34,7 @@ public class FixedLengthWriterTestCase extends TestCase
         writer.nextRecord();
         writer.flush();
         
-        String expected = "JOHN                               DOE                                1234 CIRCLE CT                                                                                      ELYRIA                                                                                              OH44035\n";
+        String expected = this.normalizeLineEnding("JOHN                               DOE                                1234 CIRCLE CT                                                                                      ELYRIA                                                                                              OH44035");
         Assert.assertEquals(expected, out.toString());
     }
     
@@ -55,7 +54,7 @@ public class FixedLengthWriterTestCase extends TestCase
         writer.nextRecord();
         writer.flush();
         
-        String expected = "JOHN...............................DOE................................1234 CIRCLE CT......................................................................................ELYRIA..............................................................................................OH44035\n";
+        String expected = this.normalizeLineEnding("JOHN...............................DOE................................1234 CIRCLE CT......................................................................................ELYRIA..............................................................................................OH44035");
         Assert.assertEquals(expected, out.toString());
     }
 
@@ -98,7 +97,7 @@ public class FixedLengthWriterTestCase extends TestCase
         writer.nextRecord();
         writer.flush();
         
-        String expected = "                                   DOE                                1234 CIRCLE CT                                                                                      ELYRIA                                                                                              OH44035\n";
+        String expected = this.normalizeLineEnding("                                   DOE                                1234 CIRCLE CT                                                                                      ELYRIA                                                                                              OH44035");
         Assert.assertEquals(expected, out.toString());
     }
 }

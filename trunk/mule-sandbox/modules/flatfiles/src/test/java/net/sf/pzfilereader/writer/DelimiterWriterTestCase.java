@@ -16,9 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-public class DelimiterWriterTestCase extends TestCase
+public class DelimiterWriterTestCase extends PZWriterTestCase
 {
     public void testWriteCsvNoMappingFile() throws Exception
     {
@@ -44,8 +43,9 @@ public class DelimiterWriterTestCase extends TestCase
         writer.nextRecord();
         writer.flush();        
         
-        String expected = "FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP\n" 
-            + "JOHN;ANAME;1234 CIRCLE CT;ELYRIA;OH;44035\n";
+        // make sure the tests work on Windows and on Linux
+        String expected = this.joinLines("FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP",
+            "JOHN;ANAME;1234 CIRCLE CT;ELYRIA;OH;44035");
 
         Assert.assertEquals(expected, out.toString());
     }
@@ -65,12 +65,8 @@ public class DelimiterWriterTestCase extends TestCase
         writer.nextRecord();
         writer.flush();
 
-        String expected = "FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP\n" 
-            + "JOHN;ANAME;1234 CIRCLE CT;ELYRIA;OH;44035\n";
-
-        // TODO DO: look at newlines: 0x0a vs. 0x0d
-        // System.out.println(StringUtils.toHexString(expected.getBytes()));
-        // System.out.println(StringUtils.toHexString(out.toString().getBytes()));
+        String expected = this.joinLines("FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP",
+            "JOHN;ANAME;1234 CIRCLE CT;ELYRIA;OH;44035");
 
         Assert.assertEquals(expected, out.toString());
     }
