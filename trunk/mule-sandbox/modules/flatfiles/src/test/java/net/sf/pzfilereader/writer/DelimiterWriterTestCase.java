@@ -71,6 +71,26 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         Assert.assertEquals(expected, out.toString());
     }
     
+    public void testWriteCsvWithMissingColumns() throws Exception
+    {
+        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
+        OutputStream out = new ByteArrayOutputStream();
+        
+        PZWriter writer = new MappedDelimiterWriterFactory(mapping, ';', '"').createWriter(out);
+        // note that we do not provide values for FIRSTNAME and ADDRESS
+        writer.addRecordEntry("LASTNAME", "ANAME");
+        writer.addRecordEntry("ZIP", "44035");
+        writer.addRecordEntry("CITY", "ELYRIA");
+        writer.addRecordEntry("STATE", "OH");
+        writer.nextRecord();
+        writer.flush();
+
+        String expected = this.joinLines("FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP",
+            ";ANAME;;ELYRIA;OH;44035");
+
+        Assert.assertEquals(expected, out.toString());
+    }
+
     public void testCreateWriterWithNullOutputStream() throws IOException
     {
         try

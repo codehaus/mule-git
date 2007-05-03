@@ -33,8 +33,8 @@ public abstract class AbstractDelimiterWriter extends AbstractPZWriter
 
     protected void writeWithDelimiter(Object value) throws IOException
     {
-        // TODO format the value 
-        // TODO surround with qualifier if value's string contains delimiter
+        // TODO DO: format the value 
+        // TODO DO: surround with qualifier if value's string contains delimiter
         this.write(value);
         this.write(delimiter);
     }

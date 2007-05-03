@@ -73,7 +73,7 @@ public abstract class AbstractPZWriter extends Object implements PZWriter
         {
             value = "";
         }
-        // TODO converter/formatter for converting value to string?
+        // TODO DO: converter/formatter for converting value to string?
         writer.write(value.toString());
     }
     
