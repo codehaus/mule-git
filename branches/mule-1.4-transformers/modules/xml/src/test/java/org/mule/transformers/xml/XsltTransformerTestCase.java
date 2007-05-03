@@ -10,6 +10,7 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
@@ -56,6 +57,27 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         return resultData;
     }
 
+    public void testCustomTransformerFactoryClass() throws InitialisationException
+    {
+        XsltTransformer t = new XsltTransformer();
+        t.setXslTransformerFactory("com.nosuchclass.TransformerFactory");
+        t.setXslFile("cdcatalog.xsl");
+
+        try
+        {
+            t.initialise();
+            fail("should have failed with ClassNotFoundException");
+        }
+        catch (InitialisationException iex)
+        {
+            assertEquals(ClassNotFoundException.class, iex.getCause().getClass());
+        }
+
+        // try again with JDK default
+        t.setXslTransformerFactory(null);
+        t.initialise();
+    }
+
     // @Override
     protected void doTestClone(UMOTransformer original, UMOTransformer clone) throws Exception
     {
@@ -67,7 +89,8 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         // The transformerPool must be a new instance
         assertNotSame("transformerPool", t1.transformerPool, t2.transformerPool);
         // ..but it must have the same config value
-        assertEquals("transformerPool.maxActive", t1.getMaxActiveTransformers(), t2.getMaxActiveTransformers());
+        assertEquals("transformerPool.maxActive", t1.getMaxActiveTransformers(), t2
+            .getMaxActiveTransformers());
     }
 
 }
