@@ -19,9 +19,9 @@ import java.util.Map;
 import net.sf.pzfilereader.structure.ColumnMetaData;
 import net.sf.pzfilereader.util.PZConstants;
 
-public class MappedDelimiterWriter extends AbstractDelimiterWriter implements PZWriter
+public class DelimiterWriter extends AbstractDelimiterWriter
 {
-    public MappedDelimiterWriter(Map parsedMapping, OutputStream output, char delimiter, char qualifier)
+    public DelimiterWriter(Map parsedMapping, OutputStream output, char delimiter, char qualifier)
         throws IOException
     {
         super(output, delimiter, qualifier);

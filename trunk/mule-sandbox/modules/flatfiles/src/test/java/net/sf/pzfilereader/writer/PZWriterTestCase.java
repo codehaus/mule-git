@@ -12,7 +12,7 @@ package net.sf.pzfilereader.writer;
 
 import junit.framework.TestCase;
 
-public class PZWriterTestCase extends TestCase
+public abstract class PZWriterTestCase extends TestCase
 {
     private String lineSeparator = System.getProperty("line.separator");
 

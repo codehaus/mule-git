@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -23,16 +24,15 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
     {
         OutputStream out = new ByteArrayOutputStream();
         
-        DefaultDelimiterWriter writer = (DefaultDelimiterWriter)new DelimiterWriterFactory(';', '"').createWriter(out);
-        // the first line defines the column titles
-        writer.addColumnTitle("FIRSTNAME");
-        writer.addColumnTitle("LASTNAME");
-        writer.addColumnTitle("ADDRESS");
-        writer.addColumnTitle("CITY");
-        writer.addColumnTitle("STATE");
-        writer.addColumnTitle("ZIP");
-        writer.nextRecord();
+        DelimiterWriterFactory factory = new DelimiterWriterFactory(';', '"');
+        factory.addColumnTitle("FIRSTNAME");
+        factory.addColumnTitle("LASTNAME");
+        factory.addColumnTitle("ADDRESS");
+        factory.addColumnTitle("CITY");
+        factory.addColumnTitle("STATE");
+        factory.addColumnTitle("ZIP");
         
+        PZWriter writer = factory.createWriter(out);
         // write one line of data ... not in the correct order of fields
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
@@ -55,7 +55,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new MappedDelimiterWriterFactory(mapping, ';', '"').createWriter(out);
+        PZWriter writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
         writer.addRecordEntry("ZIP", "44035");
@@ -76,7 +76,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new MappedDelimiterWriterFactory(mapping, ';', '"').createWriter(out);
+        PZWriter writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
         // note that we do not provide values for FIRSTNAME and ADDRESS
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("ZIP", "44035");
@@ -95,7 +95,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
     {
         try
         {
-            new DefaultDelimiterWriter(null, ';', '"');
+            new DelimiterWriterFactory((Map)null).createWriter(null);
         }
         catch (NullPointerException npe)
         {

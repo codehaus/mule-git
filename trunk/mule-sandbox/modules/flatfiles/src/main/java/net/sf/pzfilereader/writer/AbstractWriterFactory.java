@@ -12,22 +12,34 @@ package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.pzfilereader.InitialisationException;
+import net.sf.pzfilereader.util.PZConstants;
 import net.sf.pzfilereader.xml.PZMapParser;
 
 import org.jdom.JDOMException;
 
 public abstract class AbstractWriterFactory extends Object
 {
-    private Map parsedMapping;
+    private Map mapping;
 
     public AbstractWriterFactory()
     {
         super();
-        parsedMapping = null;
+        
+        mapping = new HashMap();
+        mapping.put(PZConstants.DETAIL_ID, new ArrayList());
+        mapping.put(PZConstants.COL_IDX, new HashMap());
+    }
+    
+    public AbstractWriterFactory(Map mapping)
+    {
+        super();
+        this.mapping = mapping;
     }
     
     public AbstractWriterFactory(InputStream mappingSrc) throws IOException
@@ -36,7 +48,7 @@ public abstract class AbstractWriterFactory extends Object
         
         try
         {
-            parsedMapping = PZMapParser.parse(mappingSrc);
+            mapping = PZMapParser.parse(mappingSrc);
         }
         catch (JDOMException jde)
         {
@@ -44,9 +56,9 @@ public abstract class AbstractWriterFactory extends Object
         }
     }
     
-    protected Map getParsedMapping()
+    protected Map getColumnMapping()
     {
-        return Collections.unmodifiableMap(parsedMapping);
+        return Collections.unmodifiableMap(mapping);
     }
 }
 

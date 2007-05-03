@@ -10,17 +10,20 @@
 
 package net.sf.pzfilereader.writer;
 
-import java.io.OutputStream;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-public class DefaultDelimiterWriter extends AbstractDelimiterWriter
+public class AllTests
 {
-    public DefaultDelimiterWriter(OutputStream output, char delimiter, char qualifier)
+
+    public static Test suite()
     {
-        super(output, delimiter, qualifier);
+        TestSuite suite = new TestSuite("Test for net.sf.pzfilereader.writer");
+        //$JUnit-BEGIN$
+        suite.addTestSuite(FixedLengthWriterTestCase.class);
+        suite.addTestSuite(DelimiterWriterTestCase.class);
+        //$JUnit-END$
+        return suite;
     }
 
-    public void addColumnTitle(String columnTitle)
-    {
-        super.doAddColumnTitle(columnTitle);
-    }
 }

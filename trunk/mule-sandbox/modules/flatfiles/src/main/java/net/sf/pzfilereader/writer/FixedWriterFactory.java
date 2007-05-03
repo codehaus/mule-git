@@ -13,6 +13,7 @@ package net.sf.pzfilereader.writer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import org.jdom.JDOMException;
 
@@ -22,15 +23,29 @@ public class FixedWriterFactory extends AbstractWriterFactory implements PZWrite
 
     private final char pad;
 
+    /**
+     * @deprecated
+     */
+    // TODO HH: creating a FixedWriter without mapping is not supported, what's this method good for?
     public FixedWriterFactory()
     {
         this(DEFAULT_PADDING_CHARACTER);
     }
 
+    /**
+     * @deprecated
+     */
+    // TODO HH: creating a FixedWriter without mapping is not supported, what's this method good for?
     public FixedWriterFactory(char fillChar)
     {
         super();
         this.pad = fillChar;
+    }
+    
+    public FixedWriterFactory(Map mapping)
+    {
+        super(mapping);
+        this.pad = DEFAULT_PADDING_CHARACTER;
     }
 
     public FixedWriterFactory(InputStream mappingSrc) throws IOException, JDOMException
@@ -46,6 +61,6 @@ public class FixedWriterFactory extends AbstractWriterFactory implements PZWrite
 
     public PZWriter createWriter(OutputStream output) throws IOException
     {
-        return new FixedLengthWriter(this.getParsedMapping(), output, pad);
+        return new FixedLengthWriter(this.getColumnMapping(), output, pad);
     }
 }
