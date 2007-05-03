@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 import org.jdom.JDOMException;
 
-public class FixedWriterFactory extends AbstractWriterFactory implements PZFixedWriterFactory
+public class FixedWriterFactory extends AbstractWriterFactory implements PZWriterFactory
 {
     public static final char DEFAULT_PADDING_CHARACTER = ' ';
 

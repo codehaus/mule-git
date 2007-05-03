@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 import org.jdom.JDOMException;
 
-public class MappedDelimiterWriterFactory extends AbstractWriterFactory implements PZDelimiterWriterFactory
+public class MappedDelimiterWriterFactory extends AbstractWriterFactory implements PZWriterFactory
 {
     private static final char DEFAULT_DELIMITER = ';';
     private static final char DEFAULT_QUALIFIER = '"';

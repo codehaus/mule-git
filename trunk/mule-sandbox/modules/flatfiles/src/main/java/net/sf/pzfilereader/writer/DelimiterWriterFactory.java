@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
-public class DelimiterWriterFactory extends Object implements PZDelimiterWriterFactory
+public class DelimiterWriterFactory extends Object implements PZWriterFactory
 {
     private static final char DEFAULT_DELIMITER = ';';
     private static final char DEFAULT_QUALIFIER = '"';
