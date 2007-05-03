@@ -36,7 +36,7 @@ public abstract class BaseServerTestCase extends FunctionalTestCase
         this(port, DEFAULT_TIMEOUT);
     }
 
-    protected void doPostFunctionalSetUp() throws Exception
+    protected void startServer() throws Exception
     {
         server = new Server(port);
         server.awaitStart(timeout);
@@ -48,13 +48,23 @@ public abstract class BaseServerTestCase extends FunctionalTestCase
         }
     }
 
-    protected void doFunctionalTearDown() throws Exception
+    protected void stopServer() throws Exception
     {
         // stop the server
         if (null != server)
         {
             server.stop();
         }
+    }
+
+    protected void doPostFunctionalSetUp() throws Exception
+    {
+        startServer();
+    }
+
+    protected void doFunctionalTearDown() throws Exception
+    {
+        stopServer();
     }
 
     protected int getTimeout()

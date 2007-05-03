@@ -20,7 +20,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <excludes>
-              <exclude>**/*Mule1696TestCase.java</exclude>
             </excludes>
           </configuration>
         </plugin>

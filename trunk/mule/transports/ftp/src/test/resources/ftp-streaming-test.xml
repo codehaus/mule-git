@@ -7,6 +7,16 @@
 
     <mule-environment-properties serverUrl=""/>
 
+    <connector name="ftp" className="org.mule.providers.ftp.FtpConnector">
+        <exception-strategy className="org.mule.providers.ftp.DebugExceptionStrategy"/>
+        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+            <properties>
+                 <property name="retryCount" value="3"/>
+                 <property name="frequency" value="2000"/>
+            </properties>
+        </connection-strategy>
+    </connector>
+
     <model name="main" type="streaming">
 
         <mule-descriptor name="bridge" implementation="org.mule.components.simple.StreamingBridgeComponent">

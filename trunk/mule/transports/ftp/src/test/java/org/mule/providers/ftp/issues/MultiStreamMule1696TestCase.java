@@ -52,12 +52,9 @@ public class MultiStreamMule1696TestCase extends BaseServerTestCase
                 try
                 {
                     FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
-                    // without this we may have problems with the many repeats
-                    if (1 == latch.getCount())
-                    {
-                        message.set(ftc.getSummary());
-                        latch.countDown();
-                    }
+                    logger.debug("Callback called: " + ftc.getSummary());
+                    message.set(ftc.getSummary());
+                    latch.countDown();
                 }
                 catch (Exception e)
                 {
@@ -92,22 +89,27 @@ public class MultiStreamMule1696TestCase extends BaseServerTestCase
         latch.await(getTimeout(), TimeUnit.MILLISECONDS);
         assertEquals("Received stream; length: 16; 'Test...sage'", message.get());
 
+        // repeat, but restart server due to simple state, connection limitations
+        stopServer();
+        synchronized(this)
+        {
+            wait(1000); // TCP socket timeout
+        }
+        startServer();
+
         CountDownLatch latch2 = new CountDownLatch(1);
         AtomicReference message2 = new AtomicReference();
-        EventCallback callback2 = newCallback(latch, message);
-        ftc.setEventCallback(callback2, TEST_MESSAGE.length());
+        EventCallback callback2 = newCallback(latch2, message2);
+        ftc.setEventCallback(callback2, TEST_MESSAGE_2.length());
 
-        // send out to FTP server via streaming model
-        client.dispatch("tcp://localhost:60196", TEST_MESSAGE, new HashMap());
+        client.dispatch("tcp://localhost:60196", TEST_MESSAGE_2, new HashMap());
         NamedPayload payload2 = awaitUpload();
         assertNotNull(payload2);
         logger.info("received message: " + payload2);
         assertEquals(TEST_MESSAGE_2, new String(payload2.getPayload()));
 
-        // poll and pull back through test component
         latch2.await(getTimeout(), TimeUnit.MILLISECONDS);
-        // length is probably incorrect below - update once test appears to work otherwise!
-        assertEquals("Received stream; length: 16; 'Anot...sage'", message2.get());
+        assertEquals("Received stream; length: 20; 'Anot...sage'", message2.get());
     }
 
 }
