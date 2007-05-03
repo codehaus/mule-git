@@ -31,7 +31,6 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.security.UMOCredentials;
 
 import java.io.File;
 import java.io.FileInputStream;
