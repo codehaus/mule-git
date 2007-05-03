@@ -97,10 +97,8 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
 
     private void write(Socket socket, Object data) throws IOException, TransformerException
     {
-        TcpProtocol protocol = connector.getTcpProtocol();
-
         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-        protocol.write(bos, data);
+        connector.getTcpProtocol().write(bos, data);
         bos.flush();
     }
 

@@ -25,6 +25,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.ConnectorException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.impl.model.streaming.CallbackOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -511,14 +512,14 @@ public class FtpConnector extends AbstractConnector
      *         does not support streaming
      * @throws org.mule.umo.UMOException
      */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
+    public OutputStream getSafeOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {
         try
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            final UMOEndpointURI uri = endpoint.getEndpointURI();
             String filename = getFilename(endpoint, message);
-            FTPClient client = getFtp(uri);
+            final FTPClient client = getFtp(uri);
 
             try
             {
@@ -529,9 +530,26 @@ public class FtpConnector extends AbstractConnector
                     throw new IOException("Ftp error: " + client.getReplyCode());
                 }
                 OutputStream out = client.storeFileStream(filename);
-                // We wrap the ftp outputstream to ensure that the
-                // completePendingRequest() method is called when the stream is closed
-                return new FtpOutputStreamWrapper(this, uri, client, out);
+                return new CallbackOutputStream(out,
+                        new CallbackOutputStream.Callback()
+                        {
+                            public void onClose() throws Exception
+                            {
+                                try
+                                {
+                                    if (!client.completePendingCommand())
+                                    {
+                                        client.logout();
+                                        client.disconnect();
+                                        throw new IOException("FTP Stream failed to complete pending request");
+                                    }
+                                }
+                                finally
+                                {
+                                    releaseFtp(uri, client);
+                                }
+                            }
+                        });
             }
             catch (Exception e)
             {

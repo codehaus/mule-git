@@ -37,10 +37,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DeferredOutputStream extends OutputStream
 {
-    /**
-     * logger used by this class
-     */
-    protected final transient Log logger = LogFactory.getLog(DeferredOutputStream.class);
+    
+    protected final Log logger = LogFactory.getLog(DeferredOutputStream.class);
     private UMOEventContext event;
     private OutputStream out = null;
     private int buffer = 0;
@@ -161,7 +159,7 @@ public class DeferredOutputStream extends OutputStream
                         UMOEndpoint ep = (UMOEndpoint) router.getEndpoints().get(0);
                         try
                         {
-                            return ep.getConnector().getOutputStream(ep, event.getMessage());
+                            return ep.getConnector().getSafeOutputStream(ep, event.getMessage());
                         }
                         catch (UMOException e)
                         {

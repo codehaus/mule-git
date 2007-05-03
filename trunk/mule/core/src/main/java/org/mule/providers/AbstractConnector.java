@@ -55,15 +55,6 @@ import org.mule.util.PropertiesUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
 import org.mule.util.concurrent.WaitableBoolean;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
-import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-
 import java.beans.ExceptionListener;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -78,6 +69,14 @@ import java.util.Properties;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkListener;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
+import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1834,6 +1833,23 @@ public abstract class AbstractConnector
      */
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
+    {
+        throw new UnsupportedOperationException(new Message(Messages.STREAMING_NOT_SUPPORTED_FOR_X,
+            getProtocol()).toString());
+    }
+
+    /**
+     * As {@link #getOutputStream(org.mule.umo.endpoint.UMOImmutableEndpoint, org.mule.umo.UMOMessage)},
+     * but no need to release connector-specific resources when the stream closes.
+
+     * @param endpoint the endpoint that releates to this Dispatcher
+     * @param message the current message being processed
+     * @return the output stream to use for this request or null if the transport
+     *         does not support streaming
+     * @throws UMOException in case of any error
+     */
+    public OutputStream getSafeOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
+            throws UMOException
     {
         throw new UnsupportedOperationException(new Message(Messages.STREAMING_NOT_SUPPORTED_FOR_X,
             getProtocol()).toString());

@@ -21,7 +21,6 @@
           <configuration>
             <excludes>
                 <exclude>**/*Mule1687TestCase.java</exclude>
-                <exclude>**/*Mule1692TestCase.java</exclude>
             </excludes>
           </configuration>
         </plugin>

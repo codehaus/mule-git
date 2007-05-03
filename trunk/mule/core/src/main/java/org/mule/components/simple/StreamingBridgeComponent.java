@@ -40,4 +40,5 @@ public class StreamingBridgeComponent implements StreamingService
         // timing errors in tests.
         out.close();
     }
+
 }

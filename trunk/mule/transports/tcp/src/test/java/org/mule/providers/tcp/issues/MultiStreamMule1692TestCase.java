@@ -28,15 +28,17 @@ import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
-public class MultiSynchMule1692TestCase extends FunctionalTestCase
+public class MultiStreamMule1692TestCase extends FunctionalTestCase
 {
 
-    private static final Log logger = LogFactory.getLog(MultiSynchMule1692TestCase.class);
+    private static final Log logger = LogFactory.getLog(MultiStreamMule1692TestCase.class);
     public static final int TIMEOUT = 3000;
     public static final String TEST_MESSAGE = "Test TCP Request";
+    public static final String TEST_MESSAGE_2 = "Second test TCP Request";
     public static final String RESULT = "Received stream; length: 16; 'Test...uest'";
+    public static final String RESULT_2 = "Received stream; length: 23; 'Seco...uest'";
 
-    public MultiSynchMule1692TestCase()
+    public MultiStreamMule1692TestCase()
     {
         setDisposeManagerPerSuite(true);
     }
@@ -59,7 +61,6 @@ public class MultiSynchMule1692TestCase extends FunctionalTestCase
                     if (1 == latch.getCount())
                     {
                         message.set(ftc.getSummary());
-                        assertEquals(RESULT, message.get());
                         latch.countDown();
                     }
                 }
@@ -89,10 +90,10 @@ public class MultiSynchMule1692TestCase extends FunctionalTestCase
 
         final CountDownLatch latch2 = new CountDownLatch(1);
         final AtomicReference message2 = new AtomicReference();
-        ftc.setEventCallback(newCallback(latch2, message2), TEST_MESSAGE.length());
-        client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
+        ftc.setEventCallback(newCallback(latch2, message2), TEST_MESSAGE_2.length());
+        client.dispatch("tcp://localhost:65432", TEST_MESSAGE_2, new HashMap());
         latch2.await(10, TimeUnit.SECONDS);
-        assertEquals(RESULT, message2.get());
+        assertEquals(RESULT_2, message2.get());
     }
 
 }

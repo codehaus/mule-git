@@ -21,11 +21,11 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
-
 import java.beans.ExceptionListener;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
 
 /**
  * <code>UMOConnector</code> is the mechanism used to connect to external systems
@@ -225,7 +225,21 @@ public interface UMOConnector extends Disposable, Initialisable
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
      * @throws UMOException in case of any error
+     * @deprecated Do we need this, or can everything be handled by
+     * {@link #getSafeOutputStream(org.mule.umo.endpoint.UMOImmutableEndpoint, org.mule.umo.UMOMessage)}? 
      */
     OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
+
+    /**
+     * As {@link #getOutputStream(org.mule.umo.endpoint.UMOImmutableEndpoint, org.mule.umo.UMOMessage)},
+     * but no need to release connector-specific resources when the stream closes.
+
+     * @param endpoint the endpoint that releates to this Dispatcher
+     * @param message the current message being processed
+     * @return the output stream to use for this request or null if the transport
+     *         does not support streaming
+     * @throws UMOException in case of any error
+     */
+    OutputStream getSafeOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException;
 
 }
