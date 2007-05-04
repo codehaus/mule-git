@@ -15,6 +15,7 @@ import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.container.MultiContainerContext;
@@ -1231,14 +1232,18 @@ public class MuleManager implements UMOManager
     {
         List message = new ArrayList(2);
         long currentTime = System.currentTimeMillis();
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
-        message.add(new Message(Messages.SHUTDOWN_NORMALLY_ON_X, df.format(new Date())).getMessage());
+        // TODO DO: remove old style message creation
+//        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+//        message.add(new Message(Messages.SHUTDOWN_NORMALLY_ON_X, df.format(new Date())).getMessage());
+        message.add(CoreMessages.shutdownNormally(new Date()));
         long duration = 10;
         if (startDate > 0)
         {
             duration = currentTime - startDate;
         }
-        message.add(new Message(Messages.SERVER_WAS_UP_FOR_X, DateUtils.getFormattedDuration(duration)).getMessage());
+        // TODO DO: remove old style message creation
+//        message.add(new Message(Messages.SERVER_WAS_UP_FOR_X, DateUtils.getFormattedDuration(duration)).getMessage());
+        message.add(CoreMessages.serverWasUpForDuration(duration));
 
         return StringMessageUtils.getBoilerPlate(message, '*', 78);
     }

@@ -23,11 +23,15 @@ public class Message implements Serializable
 
     private static final transient Object[] EMPTY_ARGS = new Object[]{};
 
+    private String message;
     private int code = 0;
     private Object[] args;
-    private String message;
-    private String bundle = Messages.DEFAULT_BUNDLE;
     private Message nextMessage;
+
+    /**
+     * @deprecated
+     */
+    private String bundle = Messages.DEFAULT_BUNDLE;
 
     private Message(String message)
     {
@@ -36,6 +40,9 @@ public class Message implements Serializable
         this.message = message;
     }
 
+    /**
+     * @deprecated
+     */
     public Message(int code)
     {
         this.code = code;
@@ -43,6 +50,9 @@ public class Message implements Serializable
         message = Messages.get(code, args);
     }
 
+    /**
+     * @deprecated
+     */
     public Message(int code, Object[] args)
     {
         this.code = code;
@@ -50,6 +60,9 @@ public class Message implements Serializable
         message = Messages.get(code, args);
     }
 
+    /**
+     * @deprecated
+     */
     public Message(int code, Object arg1)
     {
         this.code = code;
@@ -61,6 +74,9 @@ public class Message implements Serializable
         message = Messages.get(code, args);
     }
 
+    /**
+     * @deprecated
+     */
     public Message(int code, Object arg1, Object arg2)
     {
         this.code = code;
@@ -76,6 +92,9 @@ public class Message implements Serializable
         message = Messages.get(code, args);
     }
 
+    /**
+     * @deprecated
+     */
     public Message(int code, Object arg1, Object arg2, Object arg3)
     {
         this.code = code;
@@ -95,6 +114,9 @@ public class Message implements Serializable
         message = Messages.get(code, args);
     }
 
+    /**
+     * @deprecated
+     */
     public Message(String bundle, int code)
     {
         this.code = code;
@@ -103,14 +125,20 @@ public class Message implements Serializable
         this.bundle = bundle;
     }
 
-    public Message(String bundle, int code, Object[] args)
-    {
-        this.code = code;
-        this.args = args;
-        message = Messages.get(bundle, code, args);
-        this.bundle = bundle;
-    }
+    /**
+     * @deprecated
+     */
+//    public Message(String bundle, int code, Object[] args)
+//    {
+//        this.code = code;
+//        this.args = args;
+//        message = Messages.get(bundle, code, args);
+//        this.bundle = bundle;
+//    }
 
+    /**
+     * @deprecated
+     */
     public Message(String bundle, int code, Object arg1)
     {
         this.code = code;
@@ -123,6 +151,9 @@ public class Message implements Serializable
         this.bundle = bundle;
     }
 
+    /**
+     * @deprecated
+     */
     public Message(String bundle, int code, Object arg1, Object arg2)
     {
         this.code = code;
@@ -139,6 +170,9 @@ public class Message implements Serializable
         this.bundle = bundle;
     }
 
+    /**
+     * @deprecated
+     */
     public Message(String bundle, int code, Object arg1, Object arg2, Object arg3)
     {
         this.code = code;
@@ -157,6 +191,14 @@ public class Message implements Serializable
         args = new Object[]{arg1, arg2, arg3};
         message = Messages.get(bundle, code, args);
         this.bundle = bundle;
+    }
+
+    protected Message(String message, int code, Object[] args)
+    {
+        super();
+        this.message = message;
+        this.code = code;
+        this.args = args;
     }
 
     public int getCode()
@@ -185,6 +227,9 @@ public class Message implements Serializable
         return nextMessage;
     }
 
+    /**
+     * @deprecated
+     */
     public String getBundle()
     {
         return bundle;
