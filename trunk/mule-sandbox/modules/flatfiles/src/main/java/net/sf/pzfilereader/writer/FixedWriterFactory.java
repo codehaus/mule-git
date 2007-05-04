@@ -23,25 +23,6 @@ public class FixedWriterFactory extends AbstractWriterFactory
 
     private final char pad;
 
-    /**
-     * @deprecated
-     */
-    // TODO HH: creating a FixedWriter without mapping is not supported, what's this method good for?
-    public FixedWriterFactory()
-    {
-        this(DEFAULT_PADDING_CHARACTER);
-    }
-
-    /**
-     * @deprecated
-     */
-    // TODO HH: creating a FixedWriter without mapping is not supported, what's this method good for?
-    public FixedWriterFactory(char fillChar)
-    {
-        super();
-        this.pad = fillChar;
-    }
-    
     public FixedWriterFactory(Map mapping)
     {
         super(mapping);
