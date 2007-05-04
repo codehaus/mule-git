@@ -81,8 +81,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             {
                 for (int i = 0; i < inList.size(); i++)
                 {
-                    Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                     service.addInHandler(handler);
                 }
             }
@@ -92,8 +92,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             {
                 for (int i = 0; i < outList.size(); i++)
                 {
-                    Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                     service.addOutHandler(handler);
                 }
             }
@@ -152,8 +152,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         {
             for (int i = 0; i < inList.size(); i++)
             {
-                Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                 client.addInHandler(handler);
             }
         }
@@ -163,8 +163,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         {
             for (int i = 0; i < outList.size(); i++)
             {
-                Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                 client.addOutHandler(handler);
             }
         }
