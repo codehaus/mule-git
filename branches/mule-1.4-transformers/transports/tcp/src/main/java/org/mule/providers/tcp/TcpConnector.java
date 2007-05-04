@@ -20,13 +20,14 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.ClassUtils;
+import org.mule.impl.model.streaming.CallbackOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.ServerSocket;
 import java.net.URI;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -93,6 +94,7 @@ public class TcpConnector extends AbstractConnector
 
     protected void doDispose()
     {
+        logger.debug("Closing TCP connector");
         try
         {
             dispatcherSocketsPool.close();
@@ -110,35 +112,26 @@ public class TcpConnector extends AbstractConnector
     protected Socket getSocket(UMOImmutableEndpoint endpoint) throws Exception
     {
         Socket socket = (Socket) dispatcherSocketsPool.borrowObject(endpoint);
-        logger.debug("returning socket " + socket);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("borrowing socket; debt " + dispatcherSocketsPool.getNumActive());
+        }
         return socket;
     }
 
     void releaseSocket(Socket socket, UMOImmutableEndpoint endpoint) throws Exception
     {
         dispatcherSocketsPool.returnObject(endpoint, socket);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("returned socket; debt " + dispatcherSocketsPool.getNumActive());
+        }
     }
 
-    /**
-     * Well get the output stream (if any) for this type of transport. Typically this
-     * will be called only when Streaming is being used on an outbound endpoint. If
-     * Streaming is not supported by this transport an
-     * {@link UnsupportedOperationException} is thrown
-     * 
-     * @param endpoint the endpoint that releates to this Dispatcher
-     * @param message the current message being processed
-     * @return the output stream to use for this request or null if the transport
-     *         does not support streaming
-     * @throws org.mule.umo.UMOException
-     */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
-        throws UMOException
+    public OutputStream getOutputStream(final UMOImmutableEndpoint endpoint, UMOMessage message)
+            throws UMOException
     {
-        // TODO HH: Is this the right thing to do? not sure how else to get the outputstream
-        // acooke - what about releaseSocket?  it is not called, so will pooling fail?
-        // acooke [later] - holger confirmed that releaseSocket must be called separately
-
-        Socket socket;
+        final Socket socket;
         try
         {
             socket = getSocket(endpoint);
@@ -155,13 +148,20 @@ public class TcpConnector extends AbstractConnector
         }
         try
         {
-            return new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            return new CallbackOutputStream(
+                    new DataOutputStream(new BufferedOutputStream(socket.getOutputStream())),
+                    new CallbackOutputStream.Callback()
+                    {
+                        public void onClose() throws Exception
+                        {
+                            releaseSocket(socket, endpoint);
+                        }
+                    });
         }
         catch (IOException e)
         {
             throw new MessagingException(new Message(Messages.FAILED_TO_GET_OUTPUT_STREAM), message, e);
         }
-
     }
 
     protected void doConnect() throws Exception

@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This test is more about testing the streaming model than the TCP provider, really.
- * While the test passes, it shows some problems (multiple calls, errors).
  */
 public class StreamingTestCase extends FunctionalTestCase
 {
