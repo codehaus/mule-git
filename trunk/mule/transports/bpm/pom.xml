@@ -20,5 +20,11 @@
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
+        <!-- This is needed for org.mule.providers.bpm.tests -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
 </project>

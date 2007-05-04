@@ -109,6 +109,8 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
         true);
         processVariables.remove(ProcessConnector.PROPERTY_PROCESS_TYPE);
 
+        // TODO MULE-1220 The processId for BPM is sort of like a session and so we could probably use
+        // Mule's SessionHandler interface for managing this.  
         Object processId;
         String processIdField = connector.getProcessIdField();
         if (StringUtils.isNotEmpty(processIdField))
