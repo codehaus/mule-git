@@ -6,11 +6,15 @@
 
 <mule-configuration id="TcpStreaming" version="1.0">
 
-    <mule-environment-properties serverUrl="" synchronous="false"/>
+    <!-- as tcp-streaming-test.xml but with synchronous set to true in
+         environment and on connector -->
+
+    <mule-environment-properties serverUrl="" synchronous="true"/>
 
     <connector name="default" className="org.mule.providers.tcp.TcpConnector">
         <properties>
             <property name="validateConnections" value="false"/>
+            <property name="synchronous" value="true"/>
         </properties>
     </connector>
 

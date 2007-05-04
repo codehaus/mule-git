@@ -128,7 +128,7 @@ public class TcpConnector extends AbstractConnector
         }
     }
 
-    public OutputStream getSafeOutputStream(final UMOImmutableEndpoint endpoint, UMOMessage message)
+    public OutputStream getOutputStream(final UMOImmutableEndpoint endpoint, UMOMessage message)
             throws UMOException
     {
         final Socket socket;

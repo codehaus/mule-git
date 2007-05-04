@@ -10,15 +10,13 @@
 
 package org.mule.providers.tcp.integration;
 
+import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
-import org.mule.impl.model.streaming.StreamingComponent;
-import org.mule.MuleManager;
 
 import java.util.HashMap;
 
@@ -31,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This test is more about testing the streaming model than the TCP provider, really.
- * While the test passes, it shows some problems (multiple calls, errors).
  */
 public class StreamingTestCase extends FunctionalTestCase
 {
@@ -82,38 +79,22 @@ public class StreamingTestCase extends FunctionalTestCase
 
         MuleClient client = new MuleClient();
 
-        // this just creates another class - not the one used
-//        FunctionalStreamingTestComponent ftc =
-//                (FunctionalStreamingTestComponent) MuleManager.getInstance()
-//                        .getContainerContext().getComponent(
-//                        new ContainerKeyPair("mule", "testComponent"));
-
-        // this creates a new instance too
-//        UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
-//        FunctionalStreamingTestComponent ftc =
-//                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
-
-        // not sure this ould work even for non-streaming code
-//        FunctionalStreamingTestComponent ftc =
-//                (FunctionalStreamingTestComponent)
-//                        ((StreamingComponent) getTestComponent(
-//                                getTestDescriptor("echo",
-//                                        "org.mule.components.simple.StreamingBridgeComponent")))
-//                                .getComponent();
-
+        // this works only if singleton set in descriptor
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
-        UMOSession session = model.getComponentSession("testComponent");
-        StreamingComponent component = (StreamingComponent) session.getComponent();
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
+        FunctionalStreamingTestComponent ftc =
+                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+//       assertNotNull(ftc);
+//       assertEquals(1, ftc.getNumber());
+
+        // this works with or without singleton, but required adding getComponent method
+//        UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
+//        UMOSession session = model.getComponentSession("testComponent");
+//        StreamingComponent component = (StreamingComponent) session.getComponent();
+//        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
 
         ftc.setEventCallback(callback, TEST_MESSAGE.length());
 
         client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
-
-        // we could have called client.dispatchStream instead, it makes no difference,
-        // since everything gets put on the socket output stream anyway.  but that is
-        // the "stream provider" functionality, rather than the "streaming model"
-        // functionality...
 
         latch.await(10, TimeUnit.SECONDS);
         assertEquals(RESULT, message.get());

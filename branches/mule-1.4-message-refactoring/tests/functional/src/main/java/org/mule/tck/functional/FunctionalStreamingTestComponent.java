@@ -24,7 +24,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A component that can be used by streaming functional tests. This component accepts an
- * EventCallback that can be used to assert the state of the current event.
+ * EventCallback that can be used to assert the state of the current event.  To access the
+ * component when embedded in an (XML) model, make sure that the descriptor sets the
+ * singleton attribute true - see uses in TCP and FTP.
  *
  * Note that although this implements the full StreamingService interface, nothing is
  * written to the output stream - this is intended as a final sink.
@@ -43,14 +45,14 @@ public class FunctionalStreamingTestComponent implements StreamingService
     public static final int STREAM_BUFFER_SIZE = 4096;
     private EventCallback eventCallback;
     private String summary = null;
-    private int targetSize = -1;
+    private long targetSize = -1;
 
     public FunctionalStreamingTestComponent()
     {
         logger.debug("creating " + toString());
     }
 
-    public void setEventCallback(EventCallback eventCallback, int targetSize)
+    public void setEventCallback(EventCallback eventCallback, long targetSize)
     {
         logger.debug("setting callback: " + eventCallback + " in " + toString());
         this.eventCallback = eventCallback;
@@ -60,6 +62,11 @@ public class FunctionalStreamingTestComponent implements StreamingService
     public String getSummary()
     {
         return summary;
+    }
+
+    public int getNumber()
+    {
+        return number;
     }
 
     public void call(InputStream in, OutputStream unused, UMOEventContext context) throws Exception
@@ -72,7 +79,7 @@ public class FunctionalStreamingTestComponent implements StreamingService
             byte[] endData = new byte[STREAM_SAMPLE_SIZE]; // ring buffer
             int endDataSize = 0;
             int endRingPointer = 0;
-            int streamLength = 0;
+            long streamLength = 0;
             byte[] buffer = new byte[STREAM_BUFFER_SIZE];
 
             // throw data on the floor, but keep a record of size, start and end values
@@ -121,7 +128,7 @@ public class FunctionalStreamingTestComponent implements StreamingService
 
     private void doCallback(byte[] startData, int startDataSize,
                             byte[] endData, int endDataSize, int endRingPointer,
-                            int streamLength, UMOEventContext context) throws Exception
+                            long streamLength, UMOEventContext context) throws Exception
     {
         // make a nice summary of the data
         StringBuffer result = new StringBuffer("Received stream");
