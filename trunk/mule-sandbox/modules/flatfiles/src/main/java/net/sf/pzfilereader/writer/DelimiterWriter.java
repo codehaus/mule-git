@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDelimiterWriter.java 6289 2007-05-03 11:03:21Z dirk.olmes $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import net.sf.pzfilereader.structure.ColumnMetaData;
 import net.sf.pzfilereader.util.PZConstants;
+import net.sf.pzfilereader.util.StringUtils;
 
 public class DelimiterWriter extends AbstractPZWriter
 {
@@ -61,14 +62,7 @@ public class DelimiterWriter extends AbstractPZWriter
             stringValue = value.toString();
             if (stringValue.indexOf(delimiter) > -1)
             {
-                int strlen = stringValue.length();
-                char[] newValue = new char[strlen + 2];
-                
-                stringValue.getChars(0, strlen, newValue, 1);
-                newValue[0] = qualifier;
-                newValue[strlen + 1] = qualifier;
-                
-                stringValue = new String(newValue);
+                stringValue = StringUtils.quote(stringValue, qualifier);
             }
         }
         super.write(stringValue);

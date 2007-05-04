@@ -54,4 +54,15 @@ public class StringUtils
         return new String(retValue);
     }
 
+    public static String quote(String string, char qualifier)
+    {
+        int strlen = string.length();
+        char[] newValue = new char[strlen + 2];
+        
+        string.getChars(0, strlen, newValue, 1);
+        newValue[0] = qualifier;
+        newValue[strlen + 1] = qualifier;
+        
+        return new String(newValue);
+    }
 }
