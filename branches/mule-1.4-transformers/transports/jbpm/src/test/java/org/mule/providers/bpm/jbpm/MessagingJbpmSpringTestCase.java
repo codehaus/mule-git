@@ -10,44 +10,32 @@
 
 package org.mule.providers.bpm.jbpm;
 
-import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
 import org.mule.providers.bpm.BPMS;
-import org.mule.providers.bpm.ProcessConnector;
-import org.mule.tck.FunctionalTestCase;
+import org.mule.providers.bpm.tests.AbstractBpmTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
 /**
- * Tests the connector against jBPM with a simple process which generates a Mule message.
- * jBPM is instantiated by Spring using the Spring jBpm module.
+ * Tests the connector against jBPM with a process which generates a Mule message and 
+ * processes its response.
+ * jBPM is instantiated by Spring using the Spring jBPM module.
  */
-public class MessagingJbpmSpringTestCase extends FunctionalTestCase {
-
-    private ProcessConnector connector;
-    private BPMS bpms;
+public class MessagingJbpmSpringTestCase extends AbstractBpmTestCase {
 
     protected ConfigurationBuilder getBuilder() throws Exception {
         return new SpringConfigurationBuilder();
     }
 
     protected String getConfigResources() {
-        return "jbpm-spring-config.xml";
-    }
-
-    protected void doPostFunctionalSetUp() throws Exception {
-        connector =
-            (ProcessConnector) MuleManager.getInstance().lookupConnector("jBpmConnector");
-        bpms = connector.getBpms();
-        connector.setAllowGlobalReceiver(true);
-        super.doPostFunctionalSetUp();
+        return "mule-jbpm-spring-config.xml";
     }
 
     public void testSendMessageProcess() throws Exception {
         // Deploy the process definition.
-        ((Jbpm) bpms).deployProcess("sendMessageProcess.xml");
+        ((Jbpm) bpms).deployProcess("message-process.xml");
 
         UMOMessage response;
         Object process;
@@ -55,7 +43,7 @@ public class MessagingJbpmSpringTestCase extends FunctionalTestCase {
         MuleClient client = new MuleClient();
         try {
             // Create a new process.
-            response = client.send("bpm://sendMessageProcess", "data", null);
+            response = client.send("bpm://message", "data", null);
             process = response.getPayload();
 
             long processId = NumberUtils.toLong(bpms.getId(process));
@@ -64,7 +52,7 @@ public class MessagingJbpmSpringTestCase extends FunctionalTestCase {
             assertEquals("sendMessage", bpms.getState(process));
 
             // Advance the process one step.
-            response = client.send("bpm://sendMessageProcess/" + processId, "data", null);
+            response = client.send("bpm://message/" + processId, "data", null);
             process = response.getPayload();
 
             // The process should have ended.

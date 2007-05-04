@@ -53,29 +53,43 @@ public class Jbpm implements BPMS
 
     protected JbpmConfiguration jbpmConfiguration = null;
 
+    /**
+     * Indicates whether jBPM has been instantiated by the connector (false) or was passed 
+     * in from somewhere else (true).
+     */
+    protected boolean containerManaged;
+    
     // ///////////////////////////////////////////////////////////////////////////
     // Lifecycle methods
     // ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates the Mule wrapper for jBPM. Note: this method does _not_ instantiate a
-     * new jBPM instance. Your code needs to set jbpmConfiguration to reference the
-     * actual jBPM instance. This no-argument constructor is mainly provided for IoC
-     * containers to call.
+     * Creates the Mule wrapper for jBPM using a default configuration. 
      */
     public Jbpm()
     {
-        super();
+        this(JbpmConfiguration.getInstance());
+        containerManaged = false;
     }
 
     /**
-     * Creates the Mule interface based on an already-initialized jBPM instance
+     * Creates the Mule BPM wrapper based on an already-initialized jBPM instance
      * 
-     * @param jbpmSessionFactory - the already-initialized jBPM instance
+     * @param jbpmConfiguration - the already-initialized jBPM instance
      */
     public Jbpm(JbpmConfiguration jbpmConfiguration)
     {
         setJbpmConfiguration(jbpmConfiguration);
+        containerManaged = true;
+    }
+
+    public void destroy()
+    {
+        if (containerManaged == false && jbpmConfiguration != null)
+        {
+            jbpmConfiguration.close();
+            jbpmConfiguration = null;
+        }
     }
 
     public void setMessageService(MessageService msgService)
@@ -91,77 +105,6 @@ public class Jbpm implements BPMS
         }
     }
     
-    public void destroy()
-    {
-        if (jbpmConfiguration != null)
-        {
-            jbpmConfiguration.close();
-            jbpmConfiguration = null;
-        }
-    }
-
-    // ///////////////////////////////////////////////////////////////////////////
-    // Process status / lookup
-    // ///////////////////////////////////////////////////////////////////////////
-
-    public boolean isProcess(Object obj) throws Exception
-    {
-        return (obj instanceof ProcessInstance);
-    }
-
-    public Object getId(Object process) throws Exception
-    {
-        return new Long(((ProcessInstance)process).getId());
-    }
-
-    // By default the process is lazily-initialized so we need to open a new session to the
-    // database before calling process.getRootToken().getNode().getName()
-    public Object getState(Object process) throws Exception
-    {
-        ProcessInstance processInstance = (ProcessInstance) process;
-
-        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
-        try
-        {
-            // Look up the process instance from the database.
-            processInstance = jbpmContext.getGraphSession()
-                .loadProcessInstance(processInstance.getId());
-            return processInstance.getRootToken().getNode().getName();
-        }
-        finally
-        {
-            jbpmContext.close();
-        }
-    }
-
-    public boolean hasEnded(Object process) throws Exception
-    {
-        return ((ProcessInstance)process).hasEnded();
-    }
-
-    /**
-     * Look up an already-running process instance.
-     * 
-     * @return the ProcessInstance
-     */
-    public Object lookupProcess(Object processId) throws Exception
-    {
-        ProcessInstance processInstance = null;
-
-        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
-        try
-        {
-            // Look up the process instance from the database.
-            processInstance = jbpmContext.getGraphSession()
-                .loadProcessInstance(NumberUtils.toLong(processId));
-            return processInstance;
-        }
-        finally
-        {
-            jbpmContext.close();
-        }
-    }
-
     // ///////////////////////////////////////////////////////////////////////////
     // Process manipulation
     // ///////////////////////////////////////////////////////////////////////////
@@ -341,6 +284,68 @@ public class Jbpm implements BPMS
         {
             jbpmContext.setRollbackOnly();
             throw e;
+        }
+        finally
+        {
+            jbpmContext.close();
+        }
+    }
+
+    // ///////////////////////////////////////////////////////////////////////////
+    // Process status / lookup
+    // ///////////////////////////////////////////////////////////////////////////
+
+    public boolean isProcess(Object obj) throws Exception
+    {
+        return (obj instanceof ProcessInstance);
+    }
+
+    public Object getId(Object process) throws Exception
+    {
+        return new Long(((ProcessInstance)process).getId());
+    }
+
+    // By default the process is lazily-initialized so we need to open a new session to the
+    // database before calling process.getRootToken().getNode().getName()
+    public Object getState(Object process) throws Exception
+    {
+        ProcessInstance processInstance = (ProcessInstance) process;
+
+        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+        try
+        {
+            // Look up the process instance from the database.
+            processInstance = jbpmContext.getGraphSession()
+                .loadProcessInstance(processInstance.getId());
+            return processInstance.getRootToken().getNode().getName();
+        }
+        finally
+        {
+            jbpmContext.close();
+        }
+    }
+
+    public boolean hasEnded(Object process) throws Exception
+    {
+        return ((ProcessInstance)process).hasEnded();
+    }
+
+    /**
+     * Look up an already-running process instance.
+     * 
+     * @return the ProcessInstance
+     */
+    public Object lookupProcess(Object processId) throws Exception
+    {
+        ProcessInstance processInstance = null;
+
+        JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+        try
+        {
+            // Look up the process instance from the database.
+            processInstance = jbpmContext.getGraphSession()
+                .loadProcessInstance(NumberUtils.toLong(processId));
+            return processInstance;
         }
         finally
         {

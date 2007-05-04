@@ -60,7 +60,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     public XFireMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (XFireConnector)endpoint.getConnector();
+        this.connector = (XFireConnector) endpoint.getConnector();
     }
 
     protected void doConnect() throws Exception
@@ -77,23 +77,23 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             }
             
             List inList = connector.getServerInHandlers();
-            if(inList != null)
+            if (inList != null)
             {
-                for(int i = 0; i < inList.size(); i++)
+                for (int i = 0; i < inList.size(); i++)
                 {
-                    Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                     service.addInHandler(handler);
                 }
             }
             
             List outList = connector.getServerOutHandlers();
-            if(outList != null)
+            if (outList != null)
             {
-                for(int i = 0; i < outList.size(); i++)
+                for (int i = 0; i < outList.size(); i++)
                 {
-                    Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                     service.addOutHandler(handler);
                 }
             }
@@ -117,17 +117,17 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String transportClass) throws Exception
     {
-    	Class transportClazz;
+        Class transportClazz;
 
         if (connector.getClientTransport() == null)
         {
             if (!StringUtils.isBlank(transportClass))
             {
-    	        transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
+                transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
             }
             else
             {
-    	        transportClazz = MuleUniversalTransport.class;
+                transportClazz = MuleUniversalTransport.class;
             }
         }
         else
@@ -135,7 +135,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             transportClazz = ClassUtils.loadClass(connector.getClientTransport(), this.getClass());
         }
         
-    	Transport transport = (Transport)transportClazz.getConstructor(null).newInstance(null);
+        Transport transport = (Transport) transportClazz.getConstructor(null).newInstance(null);
         Client client = new Client(transport, service, endpoint.getEndpointURI().toString());
         client.setXFire(xfire);
         client.setEndpointUri(endpoint.getEndpointURI().toString());
@@ -148,23 +148,23 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         client.addOutHandler(new MuleHeadersOutHandler());
 
         List inList = connector.getClientInHandlers();
-        if(inList != null)
+        if (inList != null)
         {
-            for(int i = 0; i < inList.size(); i++)
+            for (int i = 0; i < inList.size(); i++)
             {
-            	Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-            	Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                 client.addInHandler(handler);
             }
         }
         
         List outList = connector.getClientOutHandlers();
-        if(outList != null)
+        if (outList != null)
         {
-            for(int i = 0; i < outList.size(); i++)
+            for (int i = 0; i < outList.size(); i++)
             {
-            	Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-            	Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
                 client.addOutHandler(handler);
             }
         }

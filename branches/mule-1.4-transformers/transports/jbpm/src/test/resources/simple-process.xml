@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process-definition name="dummyProcess"> 
+<process-definition name="simple"> 
 
-  <description>Dummy process</description>
+  <description>Simple process</description>
 
   <start-state name="start">
     <transition to="dummyState" />

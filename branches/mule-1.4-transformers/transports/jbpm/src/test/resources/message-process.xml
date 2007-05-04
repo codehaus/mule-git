@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process-definition name="sendMessageProcess">
+<process-definition name="message">
 
-    <description>Generates a simple Mule event.</description>
+    <description>Generates a Mule message and processes its response.</description>
 
     <start-state name="start">
         <transition to="sendMessage"></transition>

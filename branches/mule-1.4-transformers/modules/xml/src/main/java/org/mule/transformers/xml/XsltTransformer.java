@@ -15,7 +15,6 @@ import org.mule.config.i18n.Messages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.ArrayUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
@@ -253,7 +252,7 @@ public class XsltTransformer extends AbstractXmlTransformer
             if (StringUtils.isNotEmpty(factoryClassName))
             {
                 factory = (TransformerFactory) ClassUtils.instanciateClass(factoryClassName,
-                    ArrayUtils.EMPTY_OBJECT_ARRAY, this.getClass());
+                    ClassUtils.NO_ARGS, this.getClass());
             }
             else
             {

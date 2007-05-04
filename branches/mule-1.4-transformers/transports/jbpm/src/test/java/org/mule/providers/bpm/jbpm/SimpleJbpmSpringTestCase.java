@@ -10,14 +10,12 @@
 
 package org.mule.providers.bpm.jbpm;
 
-import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
-import org.mule.providers.bpm.ProcessConnector;
 
 /**
- * Tests the connector against jBPM with 2 simple processes.
- * jBPM is instantiated by Spring using the Spring jBpm module.
+ * Tests the connector against jBPM with a simple process.
+ * jBPM is instantiated by Spring using the Spring jBPM module.
  */
 public class SimpleJbpmSpringTestCase extends SimpleJbpmTestCase {
 
@@ -26,18 +24,6 @@ public class SimpleJbpmSpringTestCase extends SimpleJbpmTestCase {
     }
 
     protected String getConfigResources() {
-        return "jbpm-spring-config.xml";
-    }
-
-    protected void doSetupManager() throws Exception {
-        // Disable parent method
-    }
-
-    protected void doPostFunctionalSetUp() throws Exception {
-        connector =
-            (ProcessConnector) MuleManager.getInstance().lookupConnector("jBpmConnector");
-        bpms = connector.getBpms();
-        connector.setAllowGlobalReceiver(true);
-        super.doPostFunctionalSetUp();
+        return "mule-jbpm-spring-config.xml";
     }
 }
