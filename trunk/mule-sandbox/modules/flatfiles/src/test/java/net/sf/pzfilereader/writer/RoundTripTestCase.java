@@ -14,7 +14,9 @@ import junit.framework.TestCase;
 
 public class RoundTripTestCase extends TestCase
 {
-    // TODO DO: write out fixed and delimited files and parse them via pzfilereader
+    public void testDummy()
+    {
+        // TODO DO: write out fixed and delimited files and parse them via
+        // pzfilereader
+    }
 }
-
-
