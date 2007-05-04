@@ -19,24 +19,22 @@ import junit.framework.TestCase;
 
 import net.sf.pzfilereader.DataSet;
 
-public class DataSetToMapTestCase extends TestCase
+public class DataSetToMapsTestCase extends TestCase
 {
     public void testDataSetToMap() throws Exception
     {
         Mock mock = new Mock(DataSet.class);
-        mock.expectAndReturn("getColumns", new String[] {"col1", "col2"});
-        
-        DataSet dataSet = (DataSet)mock.proxy();
-        DataSetToMap transformer = new DataSetToMap();
-        List result = (List)transformer.transform(dataSet);
-        
+        mock.expectAndReturn("getColumns", new String[]{"col1", "col2"});
+
+        DataSet dataSet = (DataSet) mock.proxy();
+        DataSetToMaps transformer = new DataSetToMaps();
+        List result = (List) transformer.transform(dataSet);
+
         Assert.assertEquals(2, result.size());
     }
-    
+
     public void testFilter()
     {
         Assert.fail("implement me");
     }
 }
-
-
