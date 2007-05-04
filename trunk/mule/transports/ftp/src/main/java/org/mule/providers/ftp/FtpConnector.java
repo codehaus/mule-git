@@ -512,7 +512,7 @@ public class FtpConnector extends AbstractConnector
      *         does not support streaming
      * @throws org.mule.umo.UMOException
      */
-    public OutputStream getSafeOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
+    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {
         try

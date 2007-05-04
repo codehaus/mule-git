@@ -93,7 +93,7 @@ public class MultiStreamMule1696TestCase extends BaseServerTestCase
         stopServer();
         synchronized(this)
         {
-            wait(1000); // TCP socket timeout
+            wait(2000); // TCP socket timeout
         }
         startServer();
 

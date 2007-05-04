@@ -159,7 +159,7 @@ public class DeferredOutputStream extends OutputStream
                         UMOEndpoint ep = (UMOEndpoint) router.getEndpoints().get(0);
                         try
                         {
-                            return ep.getConnector().getSafeOutputStream(ep, event.getMessage());
+                            return ep.getConnector().getOutputStream(ep, event.getMessage());
                         }
                         catch (UMOException e)
                         {
