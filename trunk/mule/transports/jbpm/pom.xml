@@ -114,5 +114,12 @@
             <version>1.8.0.7</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

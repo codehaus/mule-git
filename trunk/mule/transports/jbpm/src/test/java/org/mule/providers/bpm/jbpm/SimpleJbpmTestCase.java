@@ -10,46 +10,25 @@
 
 package org.mule.providers.bpm.jbpm;
 
-import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.ProcessConnector;
-import org.mule.tck.FunctionalTestCase;
+import org.mule.providers.bpm.tests.AbstractBpmTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
-import org.jbpm.JbpmConfiguration;
-
 /**
- * Tests the connector against jBPM with 2 simple processes.
- * jBPM is instantiated programatically via JbpmConfiguration.getInstance()
+ * Tests the connector against jBPM with a simple process.
  */
-public class SimpleJbpmTestCase extends FunctionalTestCase {
-
-    ProcessConnector connector;
-    BPMS bpms;
+public class SimpleJbpmTestCase extends AbstractBpmTestCase {
 
     protected String getConfigResources() {
-        return "jbpm-config.xml";
-    }
-
-    protected void setupManager() throws Exception {
-        doSetupManager();
-        super.setupManager();
-    }
-
-    protected void doSetupManager() throws Exception {
-        // Configure the BPM connector programmatically so that we are able to pass it the jBPM instance.
-        connector = new ProcessConnector();
-        bpms = new Jbpm(JbpmConfiguration.getInstance());
-        connector.setBpms(bpms);
-
-        MuleManager.getInstance().registerConnector(connector);
+        return "mule-jbpm-config.xml";
     }
 
     public void testSimpleProcess() throws Exception {
         // Deploy the process definition.
-        ((Jbpm) bpms).deployProcess("dummyProcess.xml");
+        ((Jbpm) bpms).deployProcess("simple-process.xml");
 
         UMOMessage response;
         Object process;
@@ -57,7 +36,7 @@ public class SimpleJbpmTestCase extends FunctionalTestCase {
         MuleClient client = new MuleClient();
         try {
             // Create a new process.
-            response = client.send("bpm://dummyProcess", "data", null);
+            response = client.send("bpm://simple", "data", null);
             process = response.getPayload();
 
             long processId = NumberUtils.toLong(bpms.getId(process));
@@ -66,7 +45,7 @@ public class SimpleJbpmTestCase extends FunctionalTestCase {
             assertEquals("dummyState", bpms.getState(process));
 
             // Advance the process one step.
-            response = client.send("bpm://dummyProcess/" + processId, null, null);
+            response = client.send("bpm://simple/" + processId, null, null);
             process = response.getPayload();
 
             // The process should have ended.
@@ -78,7 +57,7 @@ public class SimpleJbpmTestCase extends FunctionalTestCase {
 
     public void testSimpleProcessWithParameters() throws Exception {
         // Deploy the process definition.
-        ((Jbpm) bpms).deployProcess("dummyProcess.xml");
+        ((Jbpm) bpms).deployProcess("simple-process.xml");
 
         UMOMessage response;
         Object process;
@@ -88,7 +67,7 @@ public class SimpleJbpmTestCase extends FunctionalTestCase {
             // Create a new process.
             response = client.send("bpm://?" +
                 ProcessConnector.PROPERTY_ACTION + "=" + ProcessConnector.ACTION_START +
-                "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=dummyProcess", "data", null);
+                "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=simple", "data", null);
             process = response.getPayload();
 
             long processId =
@@ -100,7 +79,7 @@ public class SimpleJbpmTestCase extends FunctionalTestCase {
             // Advance the process one step.
             response = client.send("bpm://?" +
                     ProcessConnector.PROPERTY_ACTION + "=" + ProcessConnector.ACTION_ADVANCE +
-                    "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=dummyProcess&" +
+                    "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=simple&" +
                     ProcessConnector.PROPERTY_PROCESS_ID + "=" + processId, "data", null);
             process = response.getPayload();
 
