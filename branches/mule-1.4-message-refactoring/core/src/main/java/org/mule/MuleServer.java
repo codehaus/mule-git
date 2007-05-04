@@ -14,7 +14,6 @@ import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOException;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
@@ -147,7 +146,7 @@ public class MuleServer implements Runnable
             catch (Exception e)
             {
                 logger.fatal(e);
-                final Message message = new Message(Messages.FAILED_LOAD_X, "Builder: " + cfgBuilderClassName);
+                final Message message = CoreMessages.failedToLoad("Builder: " + cfgBuilderClassName);
                 System.err.println(StringMessageUtils.getBoilerPlate("FATAL: " + message.toString()));
                 System.exit(1);
             }
@@ -316,8 +315,8 @@ public class MuleServer implements Runnable
         msgs.add(root.getMessage() + " (" + root.getClass().getName() + ")");
         msgs.add(" ");
         msgs.add(CoreMessages.fatalErrorInShutdown());
-        msgs.add(new Message(Messages.SERVER_STARTED_AT_X, new Date(MuleManager.getInstance().getStartDate())));
-        msgs.add(new Message(Messages.SERVER_SHUTDOWN_AT_X, new Date().toString()));
+        msgs.add(CoreMessages.serverStartedAt(MuleManager.getInstance().getStartDate()));
+        msgs.add(CoreMessages.serverShutdownAt(new Date()));
 
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.fatal(shutdownMessage);
@@ -332,8 +331,8 @@ public class MuleServer implements Runnable
         logger.info("Mule server shutting dow due to normal shutdown request");
         List msgs = new ArrayList();
         msgs.add(CoreMessages.normalShutdown());
-        msgs.add(new Message(Messages.SERVER_STARTED_AT_X, new Date(MuleManager.getInstance().getStartDate())).getMessage());
-        msgs.add(new Message(Messages.SERVER_SHUTDOWN_AT_X, new Date().toString()).getMessage());
+        msgs.add(CoreMessages.serverStartedAt(MuleManager.getInstance().getStartDate()).getMessage());
+        msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
 
         System.exit(0);

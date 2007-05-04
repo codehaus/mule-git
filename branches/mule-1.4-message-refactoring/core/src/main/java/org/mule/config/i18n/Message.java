@@ -45,16 +45,6 @@ public class Message implements Serializable
         this.message = message;
     }
 
-//    /**
-//     * @deprecated
-//     */
-//    public Message(int code)
-//    {
-//        this.code = code;
-//        args = EMPTY_ARGS;
-//        message = Messages.get(code, args);
-//    }
-
     /**
      * @deprecated
      */

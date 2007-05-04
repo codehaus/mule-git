@@ -13,6 +13,7 @@ package org.mule.impl;
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
@@ -310,21 +311,11 @@ public class MuleEvent extends EventObject implements UMOEvent
         return transformedMessage;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOEvent#getPayload()
-     */
     public UMOMessage getMessage()
     {
         return message;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOEvent#getPayloadAsBytes()
-     */
     public byte[] getMessageAsBytes() throws MuleException
     {
         try
@@ -334,17 +325,10 @@ public class MuleEvent extends EventObject implements UMOEvent
         catch (Exception e)
         {
             throw new MuleException(
-                new Message(Messages.CANT_READ_PAYLOAD_AS_BYTES_TYPE_IS_X,
-                    message.getPayload().getClass().getName()),
-                e);
+                CoreMessages.cannotReadPayloadAsBytes(message.getPayload().getClass().getName()), e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOEvent#getTransformedMessage()
-     */
     public Object getTransformedMessage() throws TransformerException
     {
         if (isStreaming())
@@ -393,8 +377,7 @@ public class MuleEvent extends EventObject implements UMOEvent
             catch (UnsupportedEncodingException e)
             {
                 throw new TransformerException(
-                    new Message(Messages.TRANSFORM_FAILED_FROM_X, msg.getClass().getName()),
-                    e);
+                    CoreMessages.transformFailedFrom(msg.getClass()), e);
             }
         }
         else if (msg instanceof Serializable)
@@ -485,8 +468,7 @@ public class MuleEvent extends EventObject implements UMOEvent
         catch (Exception e)
         {
             throw new MuleException(
-                new Message(Messages.CANT_READ_PAYLOAD_AS_STRING_TYPE_IS_X, message.getClass().getName()), 
-                e);
+                CoreMessages.cannotReadPayloadAsString(message.getClass().getName()), e);
         }
     }
 

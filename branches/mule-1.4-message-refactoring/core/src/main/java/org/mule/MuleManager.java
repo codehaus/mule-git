@@ -62,7 +62,6 @@ import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
-import org.mule.util.DateUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.UUID;
@@ -76,7 +75,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -297,8 +295,7 @@ public class MuleManager implements UMOManager
             catch (Exception e)
             {
                 throw new MuleRuntimeException(
-                    new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X, clazz.getName()),
-                    e);
+                    CoreMessages.failedToCreateManagerInstance(clazz.getName()), e);
             }
         }
 
@@ -376,7 +373,7 @@ public class MuleManager implements UMOManager
         if (config == null)
         {
             throw new IllegalArgumentException(
-                new Message(Messages.X_IS_NULL, "MuleConfiguration object").getMessage());
+                CoreMessages.objectIsNull("MuleConfiguration object").getMessage());
         }
 
         MuleManager.config = config;
@@ -591,8 +588,7 @@ public class MuleManager implements UMOManager
             catch (Exception e)
             {
                 throw new MuleRuntimeException(
-                        new Message(Messages.FAILED_TO_CLONE_X, "Transformer: " + trans.getName()),
-                        e);
+                        CoreMessages.failedToClone("Transformer: " + trans.getName()), e);
             }
         }
         return null;
@@ -768,8 +764,7 @@ public class MuleManager implements UMOManager
                     catch (Exception e)
                     {
                         throw new InitialisationException(
-                            new Message(Messages.INITIALISATION_FAILURE_X, "QueueManager"),
-                            e);
+                            CoreMessages.initialisationFailure("QueueManager"), e);
                     }
                 }
 
@@ -1187,8 +1182,7 @@ public class MuleManager implements UMOManager
             message.add(CoreMessages.versionNotSet().getMessage());
         }
         message.add(" ");
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
-        message.add(new Message(Messages.SERVER_STARTED_AT_X, df.format(new Date(getStartDate()))).getMessage());
+        message.add(CoreMessages.serverStartedAt(this.getStartDate()));
         message.add("Server ID: " + id);
 
         // JDK, OS, and Host
@@ -1601,8 +1595,8 @@ public class MuleManager implements UMOManager
     {
         if (this.workManager != null)
         {
-            throw new IllegalStateException(new Message(Messages.CANT_SET_X_ONCE_IT_HAS_BEEN_SET,
-                "workManager").getMessage());
+            throw new IllegalStateException(
+                CoreMessages.cannotSetObjectOnceItHasBeenSet("workManager").getMessage());
         }
         this.workManager = workManager;
     }

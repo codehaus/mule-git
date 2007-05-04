@@ -11,6 +11,7 @@
 package org.mule.config.builders;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
@@ -133,8 +134,8 @@ public class EndpointReference
             MuleEndpoint ep = (MuleEndpoint) MuleManager.getInstance().lookupEndpoint(endpointName);
             if (ep == null)
             {
-                throw new InitialisationException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                    "Endpoint '" + endpointName + "'"), this);
+                throw new InitialisationException(
+                    CoreMessages.notRegisteredWithManager("Endpoint '" + endpointName + "'"), this);
             }
             if (address != null)
             {

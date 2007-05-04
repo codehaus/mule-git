@@ -12,8 +12,6 @@ package org.mule.transaction;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.umo.TransactionException;
 
 import java.util.HashMap;
@@ -54,8 +52,8 @@ public class XaTransaction extends AbstractTransaction
 
         if (txManager == null)
         {
-            throw new IllegalStateException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                "Transaction Manager").getMessage());
+            throw new IllegalStateException(
+                CoreMessages.notRegisteredWithManager("Transaction Manager").getMessage());
         }
 
         try
@@ -68,7 +66,7 @@ public class XaTransaction extends AbstractTransaction
         }
         catch (Exception e)
         {
-            throw new TransactionException(new Message(Messages.TX_CANT_START_X_TRANSACTION, "XA"), e);
+            throw new TransactionException(CoreMessages.cannotStartTransaction("XA"), e);
         }
     }
 
@@ -175,8 +173,8 @@ public class XaTransaction extends AbstractTransaction
 
             if (resources.containsKey(key))
             {
-                throw new IllegalTransactionStateException(new Message(
-                    Messages.TX_RESOURCE_ALREADY_LISTED_FOR_KEY_X, key));
+                throw new IllegalTransactionStateException(
+                    CoreMessages.transactionResourceAlreadyListedForKey(key));
             }
 
             resources.put(key, resource);

@@ -12,8 +12,7 @@ package org.mule.config;
 
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.umo.manager.DefaultWorkListener;
@@ -593,8 +592,7 @@ public class MuleConfiguration
         catch (Exception e)
         {
             throw new MuleRuntimeException(
-                new Message(Messages.FAILED_TO_CLONE_X, "Connection Strategy"), 
-                e);
+                CoreMessages.failedToClone("Connection Strategy"), e);
         }
     }
 

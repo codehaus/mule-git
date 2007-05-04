@@ -10,6 +10,7 @@
 
 package org.mule.config.i18n;
 
+import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.util.DateUtils;
 
 import java.util.Date;
@@ -283,5 +284,215 @@ public class CoreMessages extends MessageFactory
     public static Message resourceManagerNotReady()
     {
         return createMessage(BUNDLE_NAME, 163);
+    }
+
+    public static Message transformFailedFrom(Class clazz)
+    {
+        return createMessage(BUNDLE_NAME, 55, clazz);
+    }
+
+    public static Message serverStartedAt(long startDate)
+    {
+        return createMessage(BUNDLE_NAME, 2, new Date(startDate));
+    }
+
+    public static Message serverShutdownAt(Date date)
+    {
+        return createMessage(BUNDLE_NAME, 3, date);
+    }
+
+    public static Message failedToLoad(String string)
+    {
+        return createMessage(BUNDLE_NAME, 58, string);
+    }
+
+    public static Message objectIsNull(String string)
+    {
+        return createMessage(BUNDLE_NAME, 45, string);
+    }
+
+    public static Message transactionResourceAlreadyListedForKey(Object key)
+    {
+        return createMessage(BUNDLE_NAME, 100, key);
+    }
+
+    public static Message notRegisteredWithManager(String string)
+    {
+        return createMessage(BUNDLE_NAME, 82, string);
+    }
+
+    public static Message cannotStartTransaction(String string)
+    {
+        return createMessage(BUNDLE_NAME, 96, string);
+    }
+
+    public static Message authSetButNoContext(String name)
+    {
+        return createMessage(BUNDLE_NAME, 133, name);
+    }
+
+    public static Message authFailedForUser(Object user)
+    {
+        return createMessage(BUNDLE_NAME, 135, user);
+    }
+
+    public static Message authDeniedOnEndpoint(UMOEndpointURI endpointURI)
+    {
+        return createMessage(BUNDLE_NAME, 134, endpointURI);
+    }
+
+    public static Message failedToCreateManagerInstance(String className)
+    {
+        return createMessage(BUNDLE_NAME, 144, className);
+    }
+
+    public static Message failedToClone(String string)
+    {
+        return createMessage(BUNDLE_NAME, 145, string);
+    }
+
+    public static Message initialisationFailure(String string)
+    {
+        return createMessage(BUNDLE_NAME, 85, string);
+    }
+
+    public static Message cannotSetObjectOnceItHasBeenSet(String string)
+    {
+        return createMessage(BUNDLE_NAME, 165, string);
+    }
+
+    public static Message failedToInvoke(String string)
+    {
+        return createMessage(BUNDLE_NAME, 68, string);
+    }
+
+    public static Object propertyIsNotSetOnEvent(String property)
+    {
+        return createMessage(BUNDLE_NAME, 168, property);
+    }
+
+    public static Message failedToInvokeRestService(String service)
+    {
+        return createMessage(BUNDLE_NAME, 172, service);
+    }
+
+    public static Message failedToSetPropertiesOn(String string)
+    {
+        return createMessage(BUNDLE_NAME, 83, string);
+    }
+
+    public static Message objectAlreadyInitialised(String name)
+    {
+        return createMessage(BUNDLE_NAME, 37, name);
+    }
+
+    public static Message failedToStart(String string)
+    {
+        return createMessage(BUNDLE_NAME, 42, string);
+    }
+
+    public static Message failedToStop(String string)
+    {
+        return createMessage(BUNDLE_NAME, 41, string);
+    }
+
+    public static Message connectorWithProtocolNotRegistered(String scheme)
+    {
+        return createMessage(BUNDLE_NAME, 156, scheme);
+    }
+
+    public static Message failedToCreateConnectorFromUri(UMOEndpointURI uri)
+    {
+        return createMessage(BUNDLE_NAME, 84, uri);
+    }
+
+    public static Message cannotReadPayloadAsBytes(String type)
+    {
+        return createMessage(BUNDLE_NAME, 69, type);
+    }
+
+    public static Message cannotReadPayloadAsString(String type)
+    {
+        return createMessage(BUNDLE_NAME, 70, type);
+    }
+
+    public static Message failedToReadAttachment(String string)
+    {
+        return createMessage(BUNDLE_NAME, 207, string);
+    }
+
+    public static Message propertiesNotSet(String string)
+    {
+        return createMessage(BUNDLE_NAME, 183, string);
+    }
+
+    public static Message noOutboundRouterSetOn(String string)
+    {
+        return createMessage(BUNDLE_NAME, 101, string);
+    }
+
+    public static Message failedToCreate(String string)
+    {
+        return createMessage(BUNDLE_NAME, 65, string);
+    }
+
+    public static Message sessionValueIsMalformed(String string)
+    {
+        return createMessage(BUNDLE_NAME, 201, string);
+    }
+
+    public static Message containerAlreadyRegistered(String name)
+    {
+        return createMessage(BUNDLE_NAME, 155, name);
+    }
+
+    public static Message eventTypeNotRecognised(String string)
+    {
+        return createMessage(BUNDLE_NAME, 166, string);
+    }
+
+    public static Message couldNotDetermineDestinationComponentFromEndpoint(String endpoint)
+    {
+        return createMessage(BUNDLE_NAME, 198, endpoint);
+    }
+
+    public static Message componentIsStopped(String name)
+    {
+        return createMessage(BUNDLE_NAME, 167, name);
+    }
+
+    public static Message descriptorAlreadyExists(String name)
+    {
+        return createMessage(BUNDLE_NAME, 171, name);
+    }
+
+    public static Message componentNotRegistered(String name)
+    {
+        return createMessage(BUNDLE_NAME, 46, name);
+    }
+
+    public static Message objectFailedToInitialise(String string)
+    {
+        return createMessage(BUNDLE_NAME, 40, string);
+    }
+
+    public static Object failedToDispose(String string)
+    {
+        return createMessage(BUNDLE_NAME, 67, string);
+    }
+
+    public static Message eventProcessingFailedFor(String name)
+    {
+        return createMessage(BUNDLE_NAME, 127, name);
+    }
+
+    public static Message interruptedQueuingEventFor(String name)
+    {
+        return createMessage(BUNDLE_NAME, 106, name);
+    }
+
+    public static Message componentCausedErrorIs(String name)
+    {
+        return createMessage(BUNDLE_NAME, 38, name);
     }
 }
