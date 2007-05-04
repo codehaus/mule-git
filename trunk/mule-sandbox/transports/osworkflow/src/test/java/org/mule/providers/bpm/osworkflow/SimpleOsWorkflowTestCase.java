@@ -10,38 +10,20 @@
 
 package org.mule.providers.bpm.osworkflow;
 
-import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.ProcessConnector;
-import org.mule.tck.FunctionalTestCase;
+import org.mule.providers.bpm.tests.AbstractBpmTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
 /**
  * Tests the connector against OSWorkflow with a simple process.
  */
-public class SimpleOsWorkflowTestCase extends FunctionalTestCase {
-
-    ProcessConnector connector;
-    BPMS bpms;
+public class SimpleOsWorkflowTestCase extends AbstractBpmTestCase {
 
     protected String getConfigResources() {
         return "mule-osworkflow-config.xml";
-    }
-
-    protected void setupManager() throws Exception {
-        doSetupManager();
-        super.setupManager();
-    }
-
-    protected void doSetupManager() throws Exception {
-        // Configure the BPM connector programmatically so that we are able to pass it the OsWorkflow instance.
-        connector = new ProcessConnector();
-        bpms = new OsWorkflow();
-        connector.setBpms(bpms);
-
-        MuleManager.getInstance().registerConnector(connector);
     }
 
     public void testSimpleProcess() throws Exception {
@@ -61,7 +43,6 @@ public class SimpleOsWorkflowTestCase extends FunctionalTestCase {
 
             // Advance the process one step.
             response = client.send("bpm://simple/" + processId, null, null);
-            process = response.getPayload();
 
             // The process should have ended.
             assertTrue(bpms.hasEnded(process));
@@ -93,7 +74,6 @@ public class SimpleOsWorkflowTestCase extends FunctionalTestCase {
                     ProcessConnector.PROPERTY_ACTION + "=" + ProcessConnector.ACTION_ADVANCE +
                     "&" + ProcessConnector.PROPERTY_PROCESS_TYPE + "=simple&" +
                     ProcessConnector.PROPERTY_PROCESS_ID + "=" + processId, "data", null);
-            process = response.getPayload();
 
             // The process should have ended.
             assertTrue(bpms.hasEnded(process));

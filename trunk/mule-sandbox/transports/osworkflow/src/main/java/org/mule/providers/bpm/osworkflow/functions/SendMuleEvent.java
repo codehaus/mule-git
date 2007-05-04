@@ -33,6 +33,13 @@ import org.apache.commons.logging.LogFactory;
  * Sends a Mule message to the specified endpoint. If the message is synchronous, 
  * the response from Mule will be automatically stored in PROCESS_VARIABLE_INCOMING.
  * 
+ *    <function type="class">
+ *      <arg name="class.name">org.mule.providers.bpm.osworkflow.functions.SendMuleEvent</arg>
+ *      <arg name="endpoint">vm://echo</arg>
+ *      <arg name="payload">Message in a bottle.</arg>
+ *      <arg name="synchronous">true</arg>
+ *    </function>
+ *            
  * @param endpoint - the Mule endpoint
  * @param transformers - any transformers to be applied
  * @param payload - specify the payload as a string directly in the jPDL

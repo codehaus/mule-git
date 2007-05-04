@@ -17,7 +17,10 @@ import org.mule.util.NumberUtils;
 import com.opensymphony.workflow.Workflow;
 import com.opensymphony.workflow.WorkflowException;
 import com.opensymphony.workflow.basic.BasicWorkflow;
+import com.opensymphony.workflow.spi.Step;
+import com.opensymphony.workflow.spi.WorkflowEntry;
 
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -153,42 +156,58 @@ public class OsWorkflow implements BPMS
     // ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Not yet implemented
+     * The "process" object for OSWorkflow is simply the workflow ID as a Long.
      */
     public Object lookupProcess(Object processId) throws Exception
     {
-        // TODO
-        //return workflowInterface.query(new WorkflowExpressionQuery(???));
-        return null;
+        return processId;
     }
 
+    /**
+     * The "process" object for OSWorkflow is simply the workflow ID as a Long.
+     */
     public Object getId(Object process) throws Exception
     {
-        // The "process" object is simply the workflow ID as a Long.
         return process;
     }
 
     /**
-     * @return the state ID of the specified workflow.
+     * @return the current step ID of the specified workflow.
      */
     public Object getState(Object process) throws Exception
     {
-        return new Integer(workflowInterface.getEntryState(NumberUtils.toLong(process)));
-    }
-
-    public boolean hasEnded(Object process) throws Exception
-    {
-        int[] availableActions = 
-            workflowInterface.getAvailableActions(NumberUtils.toLong(process), new Hashtable());
-        return (availableActions.length == 0);
+        if (hasEnded(process))
+        {
+            return "(ended)";
+        }
+        else 
+        {
+            Collection currentSteps = workflowInterface.getCurrentSteps(NumberUtils.toLong(process));
+            if (currentSteps.size() > 1)
+            {
+                throw new WorkflowException("BPMS.getState() failed because workflow has more than one current step (workflow has probably forked).");
+            }
+            Step currentStep = (Step) currentSteps.iterator().next();
+            return new Integer(currentStep.getStepId());
+        }
     }
 
     /**
-     * Not implemented
+     * True if the workflow's entry state == COMPLETED.
      */
-    public boolean isProcess(Object obj) throws Exception
+    public boolean hasEnded(Object process) throws Exception
     {
-        return false;
+        return (workflowInterface.getEntryState(NumberUtils.toLong(process)) 
+                        == WorkflowEntry.COMPLETED);
+    }
+
+    /**
+     * True if the workflow's entry state != UNKNOWN.
+     */
+    public boolean isProcess(Object process) throws Exception
+    {
+        return (workflowInterface.getEntryState(NumberUtils.toLong(process)) 
+                        != WorkflowEntry.UNKNOWN);
     }
 
     // ///////////////////////////////////////////////////////////////////////////
