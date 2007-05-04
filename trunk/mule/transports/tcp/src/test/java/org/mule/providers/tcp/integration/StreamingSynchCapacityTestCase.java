@@ -23,7 +23,7 @@ package org.mule.providers.tcp.integration;
  * DIAGNOSTICS.  OTHERWISE THE CONSOLE OUTPUT WILL BE SIMILAR SIZE TO DATA TRANSFERRED,
  * CAUSING CONFUSNG AND PROBABLY FATAL MEMORY USE.
  */
-public class StreamingSynchCapacityTestCase extends StreamingCapacityBaseTestCase
+public class StreamingSynchCapacityTestCase extends AbstractStreamingCapacityTestCase
 {
 
     public StreamingSynchCapacityTestCase()
