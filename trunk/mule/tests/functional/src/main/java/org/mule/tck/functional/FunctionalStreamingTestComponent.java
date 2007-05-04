@@ -24,7 +24,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A component that can be used by streaming functional tests. This component accepts an
- * EventCallback that can be used to assert the state of the current event.
+ * EventCallback that can be used to assert the state of the current event.  To access the
+ * component when embedded in an (XML) model, make sure that the descriptor sets the
+ * singleton attribute true - see uses in TCP and FTP.
  *
  * Note that although this implements the full StreamingService interface, nothing is
  * written to the output stream - this is intended as a final sink.
@@ -60,6 +62,11 @@ public class FunctionalStreamingTestComponent implements StreamingService
     public String getSummary()
     {
         return summary;
+    }
+
+    public int getNumber()
+    {
+        return number;
     }
 
     public void call(InputStream in, OutputStream unused, UMOEventContext context) throws Exception

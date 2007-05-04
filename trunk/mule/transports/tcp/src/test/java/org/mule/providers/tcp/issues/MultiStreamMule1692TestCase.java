@@ -10,23 +10,21 @@
 
 package org.mule.providers.tcp.issues;
 
+import org.mule.MuleManager;
+import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
-import org.mule.extras.client.MuleClient;
-import org.mule.MuleManager;
-import org.mule.impl.model.streaming.StreamingComponent;
 
 import java.util.HashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class MultiStreamMule1692TestCase extends FunctionalTestCase
 {
@@ -77,9 +75,10 @@ public class MultiStreamMule1692TestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("echo");
-        UMOSession session = model.getComponentSession("testComponent");
-        StreamingComponent component = (StreamingComponent) session.getComponent();
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
+        FunctionalStreamingTestComponent ftc =
+                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+//        assertNotNull(ftc);
+//        assertEquals(1, ftc.getNumber());
 
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference message = new AtomicReference();

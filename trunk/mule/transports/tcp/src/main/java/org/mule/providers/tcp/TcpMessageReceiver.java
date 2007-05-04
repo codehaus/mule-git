@@ -392,8 +392,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         public void run()
         {
-            super.run(); // To change body of overridden methods use File |
-                            // Settings | File Templates.
+            super.run();
         }
     }
 

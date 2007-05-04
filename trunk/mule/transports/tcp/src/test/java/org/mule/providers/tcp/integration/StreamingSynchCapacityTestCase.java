@@ -11,6 +11,9 @@
 package org.mule.providers.tcp.integration;
 
 /**
+ * Tests a model for which synchonous=true for environment and connector.
+ * Not the same as issue MULE-1687.
+ *
  * This will happily send 1GB while running in significantly less memory, but it takes some time.
  * Since I'd like this to run in CI I will set at 100MB and test memory delta.  But since memory usage
  * could be around that anyway, this is may be a little unreliable.  And there's no way to
@@ -20,18 +23,17 @@ package org.mule.providers.tcp.integration;
  * DIAGNOSTICS.  OTHERWISE THE CONSOLE OUTPUT WILL BE SIMILAR SIZE TO DATA TRANSFERRED,
  * CAUSING CONFUSNG AND PROBABLY FATAL MEMORY USE.
  */
-public class StreamingCapacityTestCase extends StreamingCapacityBaseTestCase
+public class StreamingSynchCapacityTestCase extends StreamingCapacityBaseTestCase
 {
 
-    public StreamingCapacityTestCase()
+    public StreamingSynchCapacityTestCase()
     {
         super(100 * ONE_MB);
     }
 
     protected String getConfigResources()
     {
-        return "tcp-streaming-test.xml";
+        return "tcp-streaming2-test.xml";
     }
 
 }
-
