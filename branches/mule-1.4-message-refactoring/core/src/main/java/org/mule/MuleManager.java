@@ -704,7 +704,7 @@ public class MuleManager implements UMOManager
     {
         if (transactionManager != null)
         {
-            throw new ConfigurationException(new Message(Messages.TX_MANAGER_ALREADY_SET));
+            throw new ConfigurationException(CoreMessages.transactionManagerAlreadySet());
         }
         transactionManager = newManager;
     }
@@ -1167,7 +1167,7 @@ public class MuleManager implements UMOManager
      */
     protected String getStartSplash()
     {
-        String notset = new Message(Messages.NOT_SET).getMessage();
+        String notset = CoreMessages.notSet().getMessage();
 
         // Mule Version, Timestamp, and Server ID
         List message = new ArrayList();
@@ -1176,7 +1176,7 @@ public class MuleManager implements UMOManager
         if (att.values().size() > 0)
         {
             message.add(StringUtils.defaultString(config.getProductDescription(), notset) + " "
-                        + new Message(Messages.VERSION).getMessage() + " "
+                        + CoreMessages.version().getMessage() + " "
                         + StringUtils.defaultString(config.getProductVersion(), notset));
 
             message.add(StringUtils.defaultString(config.getVendorName(), notset));
@@ -1184,7 +1184,7 @@ public class MuleManager implements UMOManager
         }
         else
         {
-            message.add(new Message(Messages.VERSION_INFO_NOT_SET).getMessage());
+            message.add(CoreMessages.versionNotSet().getMessage());
         }
         message.add(" ");
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
@@ -1212,12 +1212,12 @@ public class MuleManager implements UMOManager
         message.add(" ");
         if (agents.size() == 0)
         {
-            message.add(new Message(Messages.AGENTS_RUNNING).getMessage() + " "
-                        + new Message(Messages.NONE).getMessage());
+            message.add(CoreMessages.agentsRunning().getMessage() + " "
+                + CoreMessages.none());
         }
         else
         {
-            message.add(new Message(Messages.AGENTS_RUNNING).getMessage());
+            message.add(CoreMessages.agentsRunning());
             UMOAgent umoAgent;
             for (Iterator iterator = agents.values().iterator(); iterator.hasNext();)
             {
@@ -1232,17 +1232,12 @@ public class MuleManager implements UMOManager
     {
         List message = new ArrayList(2);
         long currentTime = System.currentTimeMillis();
-        // TODO DO: remove old style message creation
-//        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
-//        message.add(new Message(Messages.SHUTDOWN_NORMALLY_ON_X, df.format(new Date())).getMessage());
         message.add(CoreMessages.shutdownNormally(new Date()));
         long duration = 10;
         if (startDate > 0)
         {
             duration = currentTime - startDate;
         }
-        // TODO DO: remove old style message creation
-//        message.add(new Message(Messages.SERVER_WAS_UP_FOR_X, DateUtils.getFormattedDuration(duration)).getMessage());
         message.add(CoreMessages.serverWasUpForDuration(duration));
 
         return StringMessageUtils.getBoilerPlate(message, '*', 78);
@@ -1463,7 +1458,7 @@ public class MuleManager implements UMOManager
     {
         if (notificationManager == null)
         {
-            throw new NotificationException(new Message(Messages.SERVER_EVENT_MANAGER_NOT_ENABLED));
+            throw new NotificationException(CoreMessages.serverEventManagerNotEnabled());
         }
         notificationManager.registerListener(l, resourceIdentifier);
     }

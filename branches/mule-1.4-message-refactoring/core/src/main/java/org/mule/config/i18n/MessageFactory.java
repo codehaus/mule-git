@@ -19,28 +19,48 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-public class MessageFactory extends Object
+public abstract class MessageFactory extends Object
 {
     /**
      * logger used by this class
      */
-    private static final Log logger = LogFactory.getLog(Messages.class);
+    private static final Log logger = LogFactory.getLog(MessageFactory.class);
 
     /**
-     * Factory method to create a new Message instance that is filled with the formatted
-     * message with id <code>code</code> from the bundle <code>bundleName</code>.
+     * The message code to use when client code does not specify one.
+     */
+    private static final int STATIC_ERROR_CODE = -1;
+
+    private static final transient Object[] EMPTY_ARGS = new Object[]{};
+
+    /**
+     * Factory method to create a new {@link Message} instance that is filled with the formatted
+     * message with id <code>code</code> from the resource bundle <code>bundleName</code>.
      * 
      * @param bundleName Name of the resource bundle for lookup
      * @param code numeric code of the message
      * @param arg
      */
-    public static Message createMessage(String bundleName, int code, Object arg)
+    protected static Message createMessage(String bundleName, int code, Object arg)
     {
         Object[] arguments = new Object[] {arg};
         String messageString = getString(bundleName, code, arguments);
-        return new Message("XXX" + messageString, code, arguments);
+        return new Message(messageString, code, arguments);
     }
     
+    /**
+     * Factory Method to create a new {@link Message} instance that is filled with the formatted
+     * message with id <code>code</code> from the resource bundle <code>bundleName</code>.
+     * 
+     * @param bundleName
+     * @param code
+     */
+    protected static Message createMessage(String bundleName, int code)
+    {
+        String messageString = getString(bundleName, code, null);
+        return new Message(messageString, code, EMPTY_ARGS);
+    }
+
     private static String getString(String bundleName, int code, Object[] args)
     {
         // We will throw a MissingResourceException if the bundle name is invalid
@@ -68,14 +88,14 @@ public class MessageFactory extends Object
     /**
      * @throws MissingResourceException if resource is missing
      */
-    protected static ResourceBundle getBundle(String bundleName)
+    private static ResourceBundle getBundle(String bundleName)
     {
         String path = "META-INF.services.org.mule.i18n." + bundleName + "-messages";
         Locale locale = Locale.getDefault();
         logger.debug("Loading resource bundle: " + path + " for locale " + locale);
         ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
         return bundle;
-    }
+    }    
 }
 
 

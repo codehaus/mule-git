@@ -15,6 +15,7 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.PoolingProfile;
 import org.mule.config.QueueProfile;
 import org.mule.config.ThreadingProfile;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.FailedToQueueEventException;
@@ -504,7 +505,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof NoSuchElementException)
                 {
-                    handleException(new ComponentException(new Message(Messages.PROXY_POOL_TIMED_OUT),
+                    handleException(new ComponentException(CoreMessages.proxyPoolTimedOut(),
                         (event == null ? null : event.getMessage()), this, e));
                 }
                 else if (e instanceof UMOException)
@@ -522,7 +523,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 {
                     handleException(
                         new ComponentException(
-                            new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
+                            CoreMessages.failedToGetPooledObject(),
                             (event == null ? null : event.getMessage()), this, e));
                 }
             }

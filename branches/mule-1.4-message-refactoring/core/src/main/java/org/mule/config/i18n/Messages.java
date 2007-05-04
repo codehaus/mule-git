@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * <code>Messages</code> provides facilities for constructing <code>Message</code>
  * objects and access to core message constants.
+ * 
+ * @deprecated
  */
 public final class Messages implements CoreMessageConstants
 {

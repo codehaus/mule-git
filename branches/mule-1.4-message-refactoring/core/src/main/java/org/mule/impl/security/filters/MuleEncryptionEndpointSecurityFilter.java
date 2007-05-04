@@ -11,6 +11,7 @@
 package org.mule.impl.security.filters;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
@@ -128,7 +129,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
 
         if (strategy == null)
         {
-            throw new InitialisationException(new Message(Messages.ENCRYPT_STRATEGY_NOT_SET), this);
+            throw new InitialisationException(CoreMessages.encryptionStrategyNotSet(), this);
         }
     }
 

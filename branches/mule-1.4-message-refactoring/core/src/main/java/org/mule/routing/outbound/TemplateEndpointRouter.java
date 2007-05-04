@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -50,7 +51,7 @@ public class TemplateEndpointRouter extends FilteringOutboundRouter
         UMOMessage result = null;
         if (endpoints == null || endpoints.size() == 0)
         {
-            throw new RoutePathNotFoundException(new Message(Messages.NO_ENDPOINTS_FOR_ROUTER), message, null);
+            throw new RoutePathNotFoundException(CoreMessages.noEndpointsForRouter(), message, null);
         }
         try
         {

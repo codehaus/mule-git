@@ -13,6 +13,7 @@ package org.mule.providers;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.AlreadyInitialisedException;
@@ -666,7 +667,7 @@ public abstract class AbstractConnector
         }
         catch (Exception ex)
         {
-            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+            throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
         }
 
         UMOMessageDispatcher dispatcher = null;
@@ -678,7 +679,7 @@ public abstract class AbstractConnector
         }
         catch (Exception ex)
         {
-            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+            throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
         }
         finally
         {
@@ -691,7 +692,7 @@ public abstract class AbstractConnector
             }
             catch (Exception ex)
             {
-                throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+                throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
             }
         }
     }
@@ -733,7 +734,7 @@ public abstract class AbstractConnector
     {
         if (this.isDisposed())
         {
-            throw new DisposeException(new Message(Messages.CANT_USE_DISPOSED_CONNECTOR), this);
+            throw new DisposeException(CoreMessages.cannotUseDisposedConnector(), this);
         }
     }
 
@@ -753,7 +754,7 @@ public abstract class AbstractConnector
         UMOEndpointURI endpointUri = endpoint.getEndpointURI();
         if (endpointUri == null)
         {
-            throw new ConnectorException(new Message(Messages.ENDPOINT_NULL_FOR_LISTENER), this);
+            throw new ConnectorException(CoreMessages.endpointIsNullForListener(), this);
         }
 
         logger.info("Registering listener: " + component.getDescriptor().getName() + " on endpointUri: "

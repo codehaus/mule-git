@@ -12,6 +12,7 @@ package org.mule.impl;
 
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
@@ -276,7 +277,7 @@ public final class MuleSession implements UMOSession
         }
         else
         {
-            throw new DispatchException(new Message(Messages.NO_COMPONENT_FOR_ENDPOINT), event.getMessage(),
+            throw new DispatchException(CoreMessages.noComponentForEndpoint(), event.getMessage(),
                 event.getEndpoint());
         }
     }
@@ -351,7 +352,7 @@ public final class MuleSession implements UMOSession
         }
         else
         {
-            throw new DispatchException(new Message(Messages.NO_COMPONENT_FOR_ENDPOINT), event.getMessage(),
+            throw new DispatchException(CoreMessages.noComponentForEndpoint(), event.getMessage(),
                 event.getEndpoint());
         }
     }

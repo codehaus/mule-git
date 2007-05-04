@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -55,7 +56,7 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
 
         if (endpoints == null || endpoints.size() == 0)
         {
-            throw new RoutePathNotFoundException(new Message(Messages.NO_ENDPOINTS_FOR_ROUTER), message, null);
+            throw new RoutePathNotFoundException(CoreMessages.noEndpointsForRouter(), message, null);
         }
 
         UMOEndpoint ep = getEndpoint(0, message);
@@ -104,7 +105,7 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
             catch (TransformerException e)
             {
                 throw new RoutingException(
-                    new Message(Messages.TRANSFORM_FAILED_BEFORE_FILTER), 
+                    CoreMessages.transformFailedBeforeFilter(),
                     message, (UMOEndpoint) endpoints.get(0), e);
             }
         }

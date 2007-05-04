@@ -12,6 +12,7 @@ package org.mule.impl;
 
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
@@ -685,7 +686,7 @@ public class MuleEventContext implements UMOEventContext
             else
             {
                 throw new IllegalStateException(
-                    new Message(Messages.CANNOT_USE_TX_AND_REMOTE_SYNC).getMessage());
+                    CoreMessages.cannotUseTxAndRemoteSync().getMessage());
             }
         }
     }

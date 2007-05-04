@@ -10,6 +10,7 @@
 
 package org.mule.routing.response;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.routing.inbound.AbstractEventAggregator;
@@ -60,7 +61,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
         final Object groupId = this.getReplyAggregateIdentifier(event.getMessage());
         if (groupId == null || groupId.equals("-1"))
         {
-            throw new RoutingException(new Message(Messages.NO_CORRELATION_ID), event.getMessage(), event
+            throw new RoutingException(CoreMessages.noCorrelationId(), event.getMessage(), event
                 .getEndpoint());
         }
 

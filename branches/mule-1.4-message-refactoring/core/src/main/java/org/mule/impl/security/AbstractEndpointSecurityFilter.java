@@ -11,6 +11,7 @@
 package org.mule.impl.security;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOEvent;
@@ -58,7 +59,7 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         }
         if (securityManager == null)
         {
-            throw new InitialisationException(new Message(Messages.AUTH_SECURITY_MANAGER_NOT_SET), this);
+            throw new InitialisationException(CoreMessages.authSecurityManagerNotSet(), this);
         }
         if (endpoint == null)
         {
