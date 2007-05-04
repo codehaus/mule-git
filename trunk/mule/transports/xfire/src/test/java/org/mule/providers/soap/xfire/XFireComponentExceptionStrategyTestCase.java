@@ -14,7 +14,6 @@ import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.xfire.testmodels.XFireEnabledFaultMessage;
 import org.mule.providers.soap.xfire.testmodels.CustomFault;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import org.codehaus.xfire.fault.XFireFault;
 
@@ -27,7 +26,7 @@ public class XFireComponentExceptionStrategyTestCase extends FunctionalTestCase
 
         try
         {
-            UMOMessage msg = client.send("xfire:http://localhost:10181/services/XFireDefault?method=testXFireException", "TEST", null);
+            client.send("xfire:http://localhost:10181/services/XFireDefault?method=testXFireException", "TEST", null);
         }
         catch (org.mule.umo.provider.DispatchException ex)
         {

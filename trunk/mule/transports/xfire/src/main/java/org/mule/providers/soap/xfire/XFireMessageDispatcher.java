@@ -60,7 +60,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     public XFireMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (XFireConnector)endpoint.getConnector();
+        this.connector = (XFireConnector) endpoint.getConnector();
     }
 
     protected void doConnect() throws Exception
@@ -77,23 +77,23 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             }
             
             List inList = connector.getServerInHandlers();
-            if(inList != null)
+            if (inList != null)
             {
-                for(int i = 0; i < inList.size(); i++)
+                for (int i = 0; i < inList.size(); i++)
                 {
                     Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
                     service.addInHandler(handler);
                 }
             }
             
             List outList = connector.getServerOutHandlers();
-            if(outList != null)
+            if (outList != null)
             {
-                for(int i = 0; i < outList.size(); i++)
+                for (int i = 0; i < outList.size(); i++)
                 {
                     Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                    Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                    Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
                     service.addOutHandler(handler);
                 }
             }
@@ -135,7 +135,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             transportClazz = ClassUtils.loadClass(connector.getClientTransport(), this.getClass());
         }
         
-        Transport transport = (Transport)transportClazz.getConstructor(null).newInstance(null);
+        Transport transport = (Transport) transportClazz.getConstructor(null).newInstance(null);
         Client client = new Client(transport, service, endpoint.getEndpointURI().toString());
         client.setXFire(xfire);
         client.setEndpointUri(endpoint.getEndpointURI().toString());
@@ -148,23 +148,23 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         client.addOutHandler(new MuleHeadersOutHandler());
 
         List inList = connector.getClientInHandlers();
-        if(inList != null)
+        if (inList != null)
         {
-            for(int i = 0; i < inList.size(); i++)
+            for (int i = 0; i < inList.size(); i++)
             {
                 Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
                 client.addInHandler(handler);
             }
         }
         
         List outList = connector.getClientOutHandlers();
-        if(outList != null)
+        if (outList != null)
         {
-            for(int i = 0; i < outList.size(); i++)
+            for (int i = 0; i < outList.size(); i++)
             {
                 Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
+                Handler handler = (Handler) clazz.getConstructor(null).newInstance(null);
                 client.addOutHandler(handler);
             }
         }
