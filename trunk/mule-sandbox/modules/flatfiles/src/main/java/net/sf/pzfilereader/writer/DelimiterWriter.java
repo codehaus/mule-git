@@ -19,7 +19,6 @@ import java.util.Map;
 
 import net.sf.pzfilereader.structure.ColumnMetaData;
 import net.sf.pzfilereader.util.PZConstants;
-import net.sf.pzfilereader.util.StringUtils;
 
 public class DelimiterWriter extends AbstractPZWriter
 {
@@ -27,14 +26,14 @@ public class DelimiterWriter extends AbstractPZWriter
     private char qualifier;
     private List columnTitles = null;
     private boolean columnTitlesWritten = false;
-    
-    protected DelimiterWriter(Map columnMapping, OutputStream output, 
-        char delimiter, char qualifier) throws IOException
+
+    protected DelimiterWriter(Map columnMapping, OutputStream output, char delimiter, char qualifier)
+        throws IOException
     {
         super(output);
         this.delimiter = delimiter;
         this.qualifier = qualifier;
-        
+
         columnTitles = new ArrayList();
         List columns = (List) columnMapping.get(PZConstants.DETAIL_ID);
         Iterator columnIter = columns.iterator();
@@ -52,20 +51,30 @@ public class DelimiterWriter extends AbstractPZWriter
         this.write(value);
         this.write(delimiter);
     }
-    
+
     protected void write(Object value) throws IOException
     {
         String stringValue = "";
+
         if (value != null)
         {
-            // TODO DO: format the value 
+            // TODO DO: format the value
             stringValue = value.toString();
-            if (stringValue.indexOf(delimiter) > -1)
-            {
-                stringValue = StringUtils.quote(stringValue, qualifier);
-            }
         }
+
+        boolean needsQuoting = (stringValue.indexOf(delimiter) != -1);
+
+        if (needsQuoting)
+        {
+            super.write(qualifier);
+        }
+
         super.write(stringValue);
+
+        if (needsQuoting)
+        {
+            super.write(qualifier);
+        }
     }
 
     protected void addColumnTitle(String string)
@@ -82,8 +91,8 @@ public class DelimiterWriter extends AbstractPZWriter
         Iterator titleIter = columnTitles.iterator();
         while (titleIter.hasNext())
         {
-            String title = (String)titleIter.next();
-            
+            String title = (String) titleIter.next();
+
             if (titleIter.hasNext())
             {
                 this.writeWithDelimiter(title);
@@ -100,7 +109,7 @@ public class DelimiterWriter extends AbstractPZWriter
         Iterator titlesIter = columnTitles.iterator();
         while (titlesIter.hasNext())
         {
-            String columnTitle = (String)titlesIter.next();
+            String columnTitle = (String) titlesIter.next();
             if (titlesIter.hasNext())
             {
                 this.writeWithDelimiter(this.getRowMap().get(columnTitle));
@@ -117,7 +126,7 @@ public class DelimiterWriter extends AbstractPZWriter
         if (columnTitlesWritten == false)
         {
             this.writeColumnTitles();
-            columnTitlesWritten  = true;
+            columnTitlesWritten = true;
         }
         else
         {
@@ -142,5 +151,3 @@ public class DelimiterWriter extends AbstractPZWriter
         return columnTitles.contains(columnTitle);
     }
 }
-
-
