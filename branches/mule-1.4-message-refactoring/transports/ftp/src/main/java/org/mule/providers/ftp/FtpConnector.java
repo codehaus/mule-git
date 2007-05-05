@@ -10,8 +10,8 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.file.FilenameParser;
 import org.mule.providers.file.SimpleFilenameParser;
@@ -25,7 +25,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.ConnectorException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageReceiver;
-import org.mule.impl.model.streaming.CallbackOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -292,7 +291,7 @@ public class FtpConnector extends AbstractConnector
         }
         catch (Exception e)
         {
-            throw new ConnectorException(new Message(Messages.FAILED_TO_STOP_X, "FTP Connector"), this, e);
+            throw new ConnectorException(CoreMessages.failedToStop("FTP Connector"), this, e);
         }
     }
 
@@ -560,8 +559,7 @@ public class FtpConnector extends AbstractConnector
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message(Messages.STREAMING_FAILED_NO_STREAM), message, endpoint,
-                    e);
+            throw new DispatchException(CoreMessages.streamingFailedNoStream(), message, endpoint, e);
         }
     }
 

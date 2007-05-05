@@ -70,7 +70,7 @@ public class TransformerReference
             if (trans == null)
             {
                 throw new InitialisationException(
-                    CoreMessages.notRegisteredWithManager("Transformer '" + transformerName + "'"), object);
+                    CoreMessages.objectNotRegisteredWithManager("Transformer '" + transformerName + "'"), object);
             }
             logger.info("Setting transformer: " + transformerName + " on " + object.getClass().getName()
                         + "." + propertyName);

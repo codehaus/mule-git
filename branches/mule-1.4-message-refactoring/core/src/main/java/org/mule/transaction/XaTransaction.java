@@ -53,7 +53,7 @@ public class XaTransaction extends AbstractTransaction
         if (txManager == null)
         {
             throw new IllegalStateException(
-                CoreMessages.notRegisteredWithManager("Transaction Manager").getMessage());
+                CoreMessages.objectNotRegisteredWithManager("Transaction Manager").getMessage());
         }
 
         try

@@ -316,7 +316,7 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_NAME, 100, key);
     }
 
-    public static Message notRegisteredWithManager(String string)
+    public static Message objectNotRegisteredWithManager(String string)
     {
         return createMessage(BUNDLE_NAME, 82, string);
     }
@@ -494,5 +494,20 @@ public class CoreMessages extends MessageFactory
     public static Message componentCausedErrorIs(String name)
     {
         return createMessage(BUNDLE_NAME, 38, name);
+    }
+
+    public static Message authNoCredentials()
+    {
+        return createMessage(BUNDLE_NAME, 152);
+    }
+
+    public static Message streamingFailedNoStream()
+    {
+        return createMessage(BUNDLE_NAME, 205);
+    }
+
+    public static Message failedToGetOutputStream()
+    {
+        return createMessage(BUNDLE_NAME, 223);
     }
 }

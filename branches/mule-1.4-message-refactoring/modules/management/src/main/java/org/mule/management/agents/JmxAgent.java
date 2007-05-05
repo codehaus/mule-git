@@ -16,6 +16,7 @@ import org.mule.config.i18n.Messages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
+import org.mule.management.ManagementMessages;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
 import org.mule.management.mbeans.ConnectorService;
@@ -45,6 +46,8 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +68,6 @@ import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -162,8 +164,8 @@ public class JmxAgent implements UMOAgent
         }
     }
 
-    /** {@inheritDoc}
-     * (non-Javadoc)
+    /** 
+     * {@inheritDoc}
      * 
      * @see org.mule.umo.lifecycle.Initialisable#initialise()
      */
@@ -173,7 +175,7 @@ public class JmxAgent implements UMOAgent
             return;
         }
         if (mBeanServer == null && !locateServer && !createServer) {
-            throw new InitialisationException(new Message(Messages.JMX_CREATE_OR_LOCATE_SHOULD_BE_SET), this);
+            throw new InitialisationException(ManagementMessages.createOrLocateShouldBeSet(), this);
         }
         if (mBeanServer == null && locateServer) {
             List l = MBeanServerFactory.findMBeanServer(null);
@@ -186,7 +188,7 @@ public class JmxAgent implements UMOAgent
             serverCreated.set(true);
         }
         if (mBeanServer == null) {
-            throw new InitialisationException(new Message(Messages.JMX_CANT_LOCATE_CREATE_SERVER), this);
+            throw new InitialisationException(ManagementMessages.cannotLocateOrCreateServer(), this);
         }
         if (connectorServerUrl != null) {
             try {

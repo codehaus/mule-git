@@ -11,7 +11,6 @@
 package org.mule.providers.email;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.umo.UMOComponent;
@@ -117,11 +116,6 @@ implements MessageCountListener, Startable, Stoppable
         folder.addMessageCountListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.event.MessageCountListener#messagesAdded(javax.mail.event.MessageCountEvent)
-     */
     public void messagesAdded(MessageCountEvent event)
     {
         Message messages[] = event.getMessages();
@@ -160,8 +154,7 @@ implements MessageCountListener, Startable, Stoppable
 
                     if (message != null)
                     {
-                        forwarded = new RoutingException(new org.mule.config.i18n.Message(
-                            Messages.ROUTING_ERROR), message, endpoint, e);
+                        forwarded = new RoutingException(EmailMessages.routingError(), message, endpoint, e);
                     }
                     else
                     {
@@ -192,11 +185,6 @@ implements MessageCountListener, Startable, Stoppable
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.event.MessageCountListener#messagesRemoved(javax.mail.event.MessageCountEvent)
-     */
     public void messagesRemoved(MessageCountEvent event)
     {
         if (logger.isDebugEnabled())

@@ -10,6 +10,7 @@
 
 package org.mule.providers.jms;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
@@ -27,13 +28,6 @@ import javax.jms.Session;
  */
 public class JmsTransaction extends AbstractSingleResourceTransaction
 {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOTransaction#bindResource(java.lang.Object,
-     *      java.lang.Object)
-     */
     public void bindResource(Object key, Object resource) throws TransactionException
     {
         if (!(key instanceof Connection) || !(resource instanceof Session))
@@ -52,27 +46,17 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
         }
         catch (JMSException e)
         {
-            throw new IllegalTransactionStateException(new Message(Messages.TX_CANT_READ_STATE), e);
+            throw new IllegalTransactionStateException(CoreMessages.transactionCannotReadState(), e);
         }
 
         super.bindResource(key, resource);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.transaction.AbstractSingleResourceTransaction#doBegin()
-     */
     protected void doBegin() throws TransactionException
     {
         // do nothing
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.transaction.AbstractSingleResourceTransaction#doCommit()
-     */
     protected void doCommit() throws TransactionException
     {
         try
@@ -81,15 +65,10 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
         }
         catch (JMSException e)
         {
-            throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
+            throw new TransactionException(CoreMessages.transactionCommitFailed(), e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.transaction.AbstractSingleResourceTransaction#doRollback()
-     */
     protected void doRollback() throws TransactionException
     {
         try
@@ -98,8 +77,7 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
         }
         catch (JMSException e)
         {
-            throw new TransactionException(new Message(Messages.TX_ROLLBACK_FAILED), e);
+            throw new TransactionException(CoreMessages.transactionRollbackFailed(), e);
         }
     }
-
 }

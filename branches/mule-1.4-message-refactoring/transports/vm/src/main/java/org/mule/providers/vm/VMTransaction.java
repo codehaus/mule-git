@@ -11,6 +11,7 @@
 package org.mule.providers.vm;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
@@ -67,7 +68,7 @@ public class VMTransaction extends AbstractSingleResourceTransaction
         }
         catch (ResourceManagerException e)
         {
-            throw new TransactionException(new Message(Messages.TX_COMMIT_FAILED), e);
+            throw new TransactionException(CoreMessages.transactionCommitFailed(), e);
         }
     }
 
@@ -79,7 +80,7 @@ public class VMTransaction extends AbstractSingleResourceTransaction
         }
         catch (ResourceManagerException e)
         {
-            throw new TransactionException(new Message(Messages.TX_ROLLBACK_FAILED), e);
+            throw new TransactionException(CoreMessages.transactionRollbackFailed(), e);
         }
     }
 

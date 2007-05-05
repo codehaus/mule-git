@@ -10,6 +10,7 @@
 
 package org.mule.providers.jms;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
@@ -57,8 +58,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
         }
         catch (JMSException e)
         {
-            throw new IllegalTransactionStateException(new org.mule.config.i18n.Message(
-                Messages.TX_COMMIT_FAILED), e);
+            throw new IllegalTransactionStateException(CoreMessages.transactionCommitFailed(), e);
         }
     }
 
@@ -105,8 +105,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
         }
         catch (JMSException e)
         {
-            throw new IllegalTransactionStateException(new org.mule.config.i18n.Message(
-                Messages.TX_CANT_READ_STATE), e);
+            throw new IllegalTransactionStateException(CoreMessages.transactionCannotReadState(), e);
         }
 
         super.bindResource(key, resource);

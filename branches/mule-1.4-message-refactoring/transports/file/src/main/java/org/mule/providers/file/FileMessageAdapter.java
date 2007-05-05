@@ -10,16 +10,18 @@
 
 package org.mule.providers.file;
 
-import java.io.File;
-
-import org.apache.commons.lang.ObjectUtils;
 import org.mule.MuleException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.file.transformers.FileToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+
+import java.io.File;
+
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * <code>FileMessageAdapter</code> provides a wrapper for a file reference. Users
@@ -53,21 +55,11 @@ public class FileMessageAdapter extends AbstractMessageAdapter
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOMessageAdapter#getPayload()
-     */
     public Object getPayload()
     {
         return file;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOMessageAdapter#getPayloadAsBytes()
-     */
     public byte[] getPayloadAsBytes() throws Exception
     {
         synchronized (this)
@@ -83,7 +75,7 @@ public class FileMessageAdapter extends AbstractMessageAdapter
                 }
                 catch (Exception noPayloadException)
                 {
-                    throw new MuleException(new Message(Messages.FAILED_TO_READ_PAYLOAD), noPayloadException);
+                    throw new MuleException(CoreMessages.failedToReadPayload(), noPayloadException);
                 }
             }
             return contents;
@@ -106,11 +98,6 @@ public class FileMessageAdapter extends AbstractMessageAdapter
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOMessageAdapter#setMessage(java.lang.Object)
-     */
     protected void setMessage(File message) throws MessagingException
     {
         boolean fileIsValid;

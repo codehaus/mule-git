@@ -11,6 +11,7 @@
 package org.mule.providers.file;
 
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractConnector;
@@ -521,7 +522,7 @@ public class FileConnector extends AbstractConnector
         }
         catch (IOException e)
         {
-            throw new DispatchException(new Message(Messages.STREAMING_FAILED_NO_STREAM), message,
+            throw new DispatchException(CoreMessages.streamingFailedNoStream(), message,
                 endpoint, e);
         }
     }

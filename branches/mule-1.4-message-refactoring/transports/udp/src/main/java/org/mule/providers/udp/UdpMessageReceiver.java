@@ -10,8 +10,8 @@
 
 package org.mule.providers.udp;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.umo.UMOComponent;
@@ -87,7 +87,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
         }
         catch (WorkException e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_TO_SCHEDULE_WORK), e, this);
+            throw new InitialisationException(CoreMessages.failedToScheduleWork(), e, this);
         }
     }
 

@@ -135,7 +135,7 @@ public class EndpointReference
             if (ep == null)
             {
                 throw new InitialisationException(
-                    CoreMessages.notRegisteredWithManager("Endpoint '" + endpointName + "'"), this);
+                    CoreMessages.objectNotRegisteredWithManager("Endpoint '" + endpointName + "'"), this);
             }
             if (address != null)
             {
