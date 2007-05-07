@@ -75,5 +75,4 @@ public class DataSetToMaps extends AbstractTransformer
     {
         return true;
     }
-
 }
