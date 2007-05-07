@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-external-common</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.xfire</groupId>
             <artifactId>xfire-all</artifactId>
             <version>1.2.5</version>
