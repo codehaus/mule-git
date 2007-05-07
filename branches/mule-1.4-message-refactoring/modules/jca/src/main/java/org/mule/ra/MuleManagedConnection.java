@@ -11,6 +11,7 @@
 package org.mule.ra;
 
 import org.mule.impl.security.MuleCredentials;
+import org.mule.ra.i18n.JcaMessages;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;

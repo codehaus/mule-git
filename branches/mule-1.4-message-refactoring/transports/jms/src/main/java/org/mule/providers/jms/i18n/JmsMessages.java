@@ -8,24 +8,23 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.acegi.i18n;
+package org.mule.providers.jms.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
+import org.mule.util.StringMessageUtils;
 
-public class AcegiMessages extends MessageFactory
+public class JmsMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("acegi");
+    private static final String BUNDLE_PATH = getBundlePath("jms");
 
-    public static Message basicFilterCannotHandleHeader(String header)
+    public static Message invalidResourceType(Class expectedClass, Class actualClass)
     {
-        return createMessage(BUNDLE_PATH, 1, header);
+        return createMessage(BUNDLE_PATH, 12, StringMessageUtils.toString(expectedClass),
+            StringMessageUtils.toString(actualClass));
     }
-
-    public static Message authRealmMustBeSetOnFilter()
-    {
-        return createMessage(BUNDLE_PATH, 2);
-    }
+    
+    
 }
 
 

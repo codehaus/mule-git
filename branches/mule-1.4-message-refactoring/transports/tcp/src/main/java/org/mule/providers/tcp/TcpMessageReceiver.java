@@ -17,6 +17,7 @@ import org.mule.impl.model.streaming.CloseCountDownInputStream;
 import org.mule.impl.model.streaming.CloseCountDownOutputStream;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.ConnectException;
+import org.mule.providers.tcp.i18n.TcpMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;

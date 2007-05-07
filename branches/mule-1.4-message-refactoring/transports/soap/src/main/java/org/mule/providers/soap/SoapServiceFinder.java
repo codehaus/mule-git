@@ -15,6 +15,7 @@ import org.mule.providers.service.TransportFactoryException;
 import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.providers.service.TransportServiceException;
 import org.mule.providers.service.TransportServiceFinder;
+import org.mule.providers.soap.i18n.SoapMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.PropertiesUtils;
 

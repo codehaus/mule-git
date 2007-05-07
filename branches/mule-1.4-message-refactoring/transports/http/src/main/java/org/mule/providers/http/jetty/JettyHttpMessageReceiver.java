@@ -15,7 +15,7 @@ import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.http.HttpMessages;
+import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.servlet.MuleRESTReceiverServlet;
 import org.mule.providers.http.servlet.ServletConnector;
 import org.mule.umo.UMOComponent;

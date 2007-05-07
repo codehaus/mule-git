@@ -13,7 +13,6 @@ package org.mule.config.i18n;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.UMONestedRouter;
 import org.mule.util.ClassUtils;
 import org.mule.util.DateUtils;
 import org.mule.util.StringMessageUtils;
@@ -775,5 +774,10 @@ public class CoreMessages extends MessageFactory
     public static Message failedToSetProxyOnService(Object proxy, Class routerClass)
     {
         return createMessage(BUNDLE_PATH, 217, proxy, routerClass);
+    }
+
+    public static Message valueIsInvalidFor(String value, String parameter)
+    {
+        return createMessage(BUNDLE_PATH, 154, value, parameter);
     }
 }

@@ -12,7 +12,7 @@ package org.mule.ra;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
+import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -20,6 +20,7 @@ import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.providers.AbstractConnector;
+import org.mule.ra.i18n.JcaMessages;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -80,7 +81,9 @@ public class DefaultMuleConnection implements MuleConnection
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(
+                ClientMessages.failedToDispatchClientEvent(),
+                event.getMessage(), event.getEndpoint(), e);
         }
     }
 
@@ -114,7 +117,9 @@ public class DefaultMuleConnection implements MuleConnection
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(
+                ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
         return response;
     }

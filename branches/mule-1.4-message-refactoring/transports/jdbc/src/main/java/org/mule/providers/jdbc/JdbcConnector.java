@@ -13,6 +13,7 @@ package org.mule.providers.jdbc;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.jdbc.i18n.JdbcMessages;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOComponent;

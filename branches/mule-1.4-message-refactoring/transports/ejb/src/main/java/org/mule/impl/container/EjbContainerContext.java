@@ -10,7 +10,7 @@
 
 package org.mule.impl.container;
 
-import org.mule.providers.ejb.EjbMessages;
+import org.mule.providers.ejb.i18n.EjbMessages;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.util.ClassUtils;
 

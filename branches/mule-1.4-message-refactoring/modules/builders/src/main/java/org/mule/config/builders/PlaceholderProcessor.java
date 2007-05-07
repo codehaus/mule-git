@@ -12,6 +12,7 @@ package org.mule.config.builders;
 
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationException;
+import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.util.BeanUtils;

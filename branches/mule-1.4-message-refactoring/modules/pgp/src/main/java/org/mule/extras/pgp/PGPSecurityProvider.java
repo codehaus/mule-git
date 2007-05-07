@@ -11,6 +11,7 @@
 package org.mule.extras.pgp;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.extras.pgp.i18n.PGPMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.SecurityException;
 import org.mule.umo.security.UMOAuthentication;

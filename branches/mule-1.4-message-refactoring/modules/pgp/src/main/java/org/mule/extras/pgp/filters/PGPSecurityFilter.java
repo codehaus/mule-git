@@ -15,7 +15,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.pgp.PGPAuthentication;
 import org.mule.extras.pgp.PGPCryptInfo;
 import org.mule.extras.pgp.PGPKeyRing;
-import org.mule.extras.pgp.PGPMessages;
+import org.mule.extras.pgp.i18n.PGPMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;

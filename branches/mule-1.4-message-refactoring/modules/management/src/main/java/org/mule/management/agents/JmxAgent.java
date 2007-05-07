@@ -15,7 +15,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.management.ManagementMessages;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
 import org.mule.management.mbeans.ConnectorService;

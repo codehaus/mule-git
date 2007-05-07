@@ -11,6 +11,7 @@
 package org.mule.providers.jdbc;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.providers.jdbc.i18n.JdbcMessages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.transaction.TransactionRollbackException;

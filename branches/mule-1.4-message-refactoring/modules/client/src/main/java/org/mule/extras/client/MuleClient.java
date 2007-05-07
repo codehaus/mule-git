@@ -18,6 +18,7 @@ import org.mule.config.MuleProperties;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;

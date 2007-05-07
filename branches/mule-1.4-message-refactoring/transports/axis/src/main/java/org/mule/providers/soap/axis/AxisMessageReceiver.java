@@ -10,8 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.soap.NamedParameter;
@@ -19,6 +18,7 @@ import org.mule.providers.soap.ServiceProxy;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.providers.soap.axis.extensions.MuleMsgProvider;
 import org.mule.providers.soap.axis.extensions.MuleRPCProvider;
+import org.mule.providers.soap.axis.i18n.AxisMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -260,8 +260,8 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
             Style s = Style.getStyle(style);
             if (s == null)
             {
-                throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X, style,
-                    "style"), this);
+                throw new InitialisationException(
+                    CoreMessages.valueIsInvalidFor(style, "style"), this);
             }
             else
             {
@@ -274,7 +274,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
             Use u = Use.getUse(use);
             if (u == null)
             {
-                throw new InitialisationException(new Message(Messages.VALUE_X_IS_INVALID_FOR_X, use, "use"),
+                throw new InitialisationException(CoreMessages.valueIsInvalidFor(use, "use"),
                     this);
             }
             else

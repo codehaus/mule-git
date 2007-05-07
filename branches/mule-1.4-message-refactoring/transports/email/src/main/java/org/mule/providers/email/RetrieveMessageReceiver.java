@@ -13,6 +13,7 @@ package org.mule.providers.email;
 import org.mule.MuleManager;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractPollingMessageReceiver;
+import org.mule.providers.email.i18n.EmailMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;

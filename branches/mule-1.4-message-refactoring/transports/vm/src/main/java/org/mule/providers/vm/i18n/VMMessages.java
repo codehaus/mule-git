@@ -8,23 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.acegi.i18n;
+package org.mule.providers.vm.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class AcegiMessages extends MessageFactory
+public class VMMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("acegi");
+    private static final String BUNDLE_PATH = getBundlePath("vm");
 
-    public static Message basicFilterCannotHandleHeader(String header)
+    public static Message noReceiverForEndpoint(String name, Object uri)
     {
-        return createMessage(BUNDLE_PATH, 1, header);
-    }
-
-    public static Message authRealmMustBeSetOnFilter()
-    {
-        return createMessage(BUNDLE_PATH, 2);
+        return createMessage(BUNDLE_PATH, 1, name, uri);
     }
 }
 

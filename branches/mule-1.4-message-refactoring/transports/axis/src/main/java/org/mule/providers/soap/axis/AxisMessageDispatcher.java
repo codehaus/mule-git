@@ -11,6 +11,7 @@
 package org.mule.providers.soap.axis;
 
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -193,8 +194,8 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
             Style s = Style.getStyle(style);
             if (s == null)
             {
-                throw new IllegalArgumentException(new org.mule.config.i18n.Message(
-                    Messages.VALUE_X_IS_INVALID_FOR_X, style, "style").toString());
+                throw new IllegalArgumentException(
+                    CoreMessages.valueIsInvalidFor(style, "style").toString());
             }
             else
             {
@@ -207,8 +208,8 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
             Use u = Use.getUse(use);
             if (u == null)
             {
-                throw new IllegalArgumentException(new org.mule.config.i18n.Message(
-                    Messages.VALUE_X_IS_INVALID_FOR_X, use, "use").toString());
+                throw new IllegalArgumentException(
+                    CoreMessages.valueIsInvalidFor(use, "use").toString());
             }
             else
             {

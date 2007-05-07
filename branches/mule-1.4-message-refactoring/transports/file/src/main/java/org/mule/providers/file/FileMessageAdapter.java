@@ -14,6 +14,7 @@ import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageAdapter;
+import org.mule.providers.file.i18n.FileMessages;
 import org.mule.providers.file.transformers.FileToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;

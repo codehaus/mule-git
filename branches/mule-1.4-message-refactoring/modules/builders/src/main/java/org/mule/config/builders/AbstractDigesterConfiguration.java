@@ -15,6 +15,7 @@ import org.mule.config.ConfigurationException;
 import org.mule.config.MuleDtdResolver;
 import org.mule.config.MuleProperties;
 import org.mule.config.ReaderResource;
+import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.umo.UMOFilter;

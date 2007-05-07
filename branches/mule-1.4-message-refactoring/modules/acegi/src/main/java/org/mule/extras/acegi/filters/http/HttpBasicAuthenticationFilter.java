@@ -12,9 +12,8 @@ package org.mule.extras.acegi.filters.http;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
 import org.mule.extras.acegi.AcegiAuthenticationAdapter;
-import org.mule.extras.acegi.AcegiMessages;
+import org.mule.extras.acegi.i18n.AcegiMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -168,7 +167,8 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
         else
         {
             setUnauthenticated(event);
-            throw new UnsupportedAuthenticationSchemeException(new Message("acegi", 1, header),
+            throw new UnsupportedAuthenticationSchemeException(
+                AcegiMessages.basicFilterCannotHandleHeader(header),
                 event.getMessage());
         }
     }

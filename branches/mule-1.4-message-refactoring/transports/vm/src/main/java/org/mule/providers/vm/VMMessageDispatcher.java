@@ -12,10 +12,9 @@ package org.mule.providers.vm;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.vm.i18n.VMMessages;
 import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
@@ -178,8 +177,9 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             }
             else
             {
-                throw new NoReceiverForEndpointException(new Message(Messages.NO_RECEIVER_X_FOR_ENDPOINT_X,
-                    connector.getName(), event.getEndpoint().getEndpointURI()));
+                throw new NoReceiverForEndpointException(
+                    VMMessages.noReceiverForEndpoint(connector.getName(), 
+                        event.getEndpoint().getEndpointURI()));
             }
         }
         if (event.isStreaming())

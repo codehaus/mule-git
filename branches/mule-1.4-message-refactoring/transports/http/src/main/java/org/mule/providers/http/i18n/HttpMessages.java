@@ -22,6 +22,16 @@ public class HttpMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 10, name);
     }
 
+    public static Message malformedSyntax()
+    {
+        return createMessage(BUNDLE_PATH, 11);
+    }
+
+    public static Message methodNotAllowed(String method)
+    {
+        return createMessage(BUNDLE_PATH, 12, method);
+    }
+
     public static Message cannotBindToAddress(String path)
     {
         return createMessage(BUNDLE_PATH, 14, path);

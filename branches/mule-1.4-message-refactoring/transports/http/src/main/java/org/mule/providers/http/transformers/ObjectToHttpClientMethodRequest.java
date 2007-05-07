@@ -15,7 +15,7 @@ import org.mule.config.MuleProperties;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.providers.http.HttpMessages;
+import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.transformers.AbstractEventAwareTransformer;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEventContext;

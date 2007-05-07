@@ -14,6 +14,7 @@ import org.mule.MuleException;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractPollingMessageReceiver;
 import org.mule.providers.ConnectException;
+import org.mule.providers.file.i18n.FileMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;

@@ -10,6 +10,7 @@
 
 package org.mule.extras.picocontainer;
 
+import org.mule.extras.picocontainer.i18n.PicocontainerMessages;
 import org.mule.impl.container.AbstractContainerContext;
 import org.mule.impl.container.ContainerKeyPair;
 import org.mule.umo.lifecycle.InitialisationException;

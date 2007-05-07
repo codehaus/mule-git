@@ -11,6 +11,7 @@
 package org.mule.ra;
 
 import org.mule.MuleManager;
+import org.mule.ra.i18n.JcaMessages;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.ManagedConnectionMetaData;
