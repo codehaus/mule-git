@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 
 public class CsvToDataSetTestCase extends TestCase
 {
+    private String lineSeparator = System.getProperty("line.separator");
+
     public void testParseDataWithHeadings() throws TransformerException
     {
         String[] headers = new String[] {"col1", "col2"};
@@ -84,9 +86,9 @@ public class CsvToDataSetTestCase extends TestCase
     {
         StringBuffer input = new StringBuffer();
         input.append(StringUtils.join(headers, delimiter));
-        input.append("\n");
+        input.append(lineSeparator);
         input.append(StringUtils.join(data, delimiter));
-        input.append("\n");
+        input.append(lineSeparator);
         
         return input.toString();
     }
