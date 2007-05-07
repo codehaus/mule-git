@@ -12,13 +12,11 @@ package org.mule.providers.ftp.issues;
 
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.model.streaming.StreamingComponent;
 import org.mule.providers.ftp.BaseServerTestCase;
 import org.mule.providers.ftp.server.NamedPayload;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOSession;
 import org.mule.umo.model.UMOModel;
 
 import java.util.HashMap;
@@ -69,9 +67,10 @@ public class MultiStreamMule1696TestCase extends BaseServerTestCase
         MuleClient client = new MuleClient();
 
         UMOModel model = (UMOModel) MuleManager.getInstance().getModels().get("main");
-        UMOSession session = model.getComponentSession("testComponent");
-        StreamingComponent component = (StreamingComponent) session.getComponent();
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getComponent();
+        FunctionalStreamingTestComponent ftc =
+                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+//        assertNotNull(ftc);
+//        assertEquals(1, ftc.getNumber());
 
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference message = new AtomicReference();

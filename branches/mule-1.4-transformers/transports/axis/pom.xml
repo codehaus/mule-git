@@ -21,6 +21,7 @@
                     <excludes>
                         <!-- Only run tests with external dependencies in the tests-external profile -->
                         <exclude>**/AxisExternalServerTest.java</exclude>
+                        <exclude>**/VmToAxisProxyTestCase.java</exclude>
 
                         <!-- MULE-1553 -->
                         <exclude>**/AxisConnectorHttpsTestCase.java</exclude>
@@ -28,8 +29,7 @@
                         <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
                         <exclude>**/AxisServletBindingTestCase.java</exclude>
-                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
-                        <exclude>**/VmToAxisProxyTestCase.java</exclude>
+                        <exclude>**/AxisSoapHeadersTestCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -52,8 +52,6 @@
                                 <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                                 <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
                                 <exclude>**/AxisServletBindingTestCase.java</exclude>
-                                <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
-                                <exclude>**/VmToAxisProxyTestCase.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -65,6 +63,12 @@
                     <artifactId>mule-tests-external-axis</artifactId>
                     <version>${version}</version>
                     <type>war</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.mule.tests</groupId>
+                    <artifactId>mule-tests-external-common</artifactId>
+                    <version>${version}</version>
+                    <type>jar</type>
                 </dependency>
             </dependencies>
         </profile>
@@ -153,5 +157,6 @@
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
