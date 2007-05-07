@@ -12,6 +12,7 @@ package org.mule.providers.service;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
@@ -91,8 +92,8 @@ public final class TransportFactory
                 connector = MuleManager.getInstance().lookupConnector(uri.getConnectorName());
                 if (connector == null)
                 {
-                    throw new TransportFactoryException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                        "Connector: " + uri.getConnectorName()));
+                    throw new TransportFactoryException(
+                        CoreMessages.objectNotRegisteredWithManager("Connector: " + uri.getConnectorName()));
                 }
             }
             else
@@ -113,7 +114,7 @@ public final class TransportFactory
         if (connector == null)
         {
             Message m = new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", "Uri: " + uri);
-            m.setNextMessage(new Message(Messages.X_IS_NULL, "connector"));
+            m.setNextMessage(CoreMessages.objectIsNull("connector"));
             throw new TransportFactoryException(m);
 
         }
@@ -371,8 +372,7 @@ public final class TransportFactory
             catch (IOException e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_TO_ENDPOINT_FROM_LOCATION_X, location + "/" + protocol), 
-                    e);
+                    CoreMessages.failedToCreateEndpointFromLocation(location + "/" + protocol), e);
             }
         }
         return csd;
@@ -407,8 +407,7 @@ public final class TransportFactory
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X, "Connector"),
-                    e);
+                    CoreMessages.failedToSetPropertiesOn("Connector"), e);
             }
         }
         else if (create == NEVER_CREATE_CONNECTOR && connector == null)
@@ -435,7 +434,8 @@ public final class TransportFactory
                 }
                 else
                 {
-                    throw new IllegalStateException(new Message(Messages.MORE_THAN_ONE_CONNECTOR_WITH_PROTOCOL_X, protocol).getMessage());
+                    throw new IllegalStateException(
+                        CoreMessages.moreThanOneConnectorWithProtocol(protocol).getMessage());
                 }
             }
         }

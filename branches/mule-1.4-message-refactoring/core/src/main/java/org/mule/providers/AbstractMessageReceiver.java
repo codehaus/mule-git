@@ -11,6 +11,7 @@
 package org.mule.providers;
 
 import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
@@ -231,7 +232,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
         else
         {
-            throw new NullPointerException(new Message(Messages.X_IS_NULL, "connector").getMessage());
+            throw new NullPointerException(CoreMessages.objectIsNull("connector").getMessage());
         }
     }
 

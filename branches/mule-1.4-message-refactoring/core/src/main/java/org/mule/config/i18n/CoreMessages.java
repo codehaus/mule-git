@@ -10,7 +10,9 @@
 
 package org.mule.config.i18n;
 
+import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.DateUtils;
 
 import java.util.Date;
@@ -138,7 +140,12 @@ public class CoreMessages extends MessageFactory
 
     public static Message connectorCausedError()
     {
-        return createMessage(BUNDLE_NAME, 33);
+        return connectorCausedError(null);
+    }
+    
+    public static Message connectorCausedError(Object connector)
+    {
+        return createMessage(BUNDLE_NAME, 33, connector);
     }
 
     public static Message cannotUseDisposedConnector()
@@ -491,9 +498,9 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_NAME, 106, name);
     }
 
-    public static Message componentCausedErrorIs(String name)
+    public static Message componentCausedErrorIs(Object component)
     {
-        return createMessage(BUNDLE_NAME, 38, name);
+        return createMessage(BUNDLE_NAME, 38, component);
     }
 
     public static Message authNoCredentials()
@@ -509,5 +516,115 @@ public class CoreMessages extends MessageFactory
     public static Message failedToGetOutputStream()
     {
         return createMessage(BUNDLE_NAME, 223);
+    }
+
+    public static Message streamingComponentMustHaveOneEndpoint(String name)
+    {
+        return createMessage(BUNDLE_NAME, 210, name);
+    }
+
+    public static Message streamingFailedForEndpoint(String string)
+    {
+        return createMessage(BUNDLE_NAME, 212, string);
+    }
+
+    public static Message exceptionOnConnectorNotExceptionListener(String name)
+    {
+        return createMessage(BUNDLE_NAME, 146, name);
+    }
+
+    public static Message listenerAlreadyRegistered(UMOEndpointURI endpointUri)
+    {
+        return createMessage(BUNDLE_NAME, 35, endpointUri);
+    }
+
+    public static Message streamingNotSupported(String protocol)
+    {
+        return createMessage(BUNDLE_NAME, 209, protocol);
+    }
+
+    public static Message failedToCreateEndpointFromLocation(String string)
+    {
+        return createMessage(BUNDLE_NAME, 87, string);
+    }
+
+    public static Message moreThanOneConnectorWithProtocol(String protocol)
+    {
+        return createMessage(BUNDLE_NAME, 221, protocol);
+    }
+
+    public static Message cannotInstanciateFinder(String serviceFinder)
+    {
+        return createMessage(BUNDLE_NAME, 73, serviceFinder);
+    }
+
+    public static Message failedToReadFromStore(String absolutePath)
+    {
+        return createMessage(BUNDLE_NAME, 95, absolutePath);
+    }
+
+    public static Message cannotFindBindingForMethod(String name)
+    {
+        return createMessage(BUNDLE_NAME, 219, name);
+    }
+
+    public static Message transactionAvailableButActionIs(String string)
+    {
+        return createMessage(BUNDLE_NAME, 103, string);
+    }
+
+    public static Message endpointNotFound(String endpoint)
+    {
+        return createMessage(BUNDLE_NAME, 126, endpoint);
+    }
+
+    public static Message endpointIsMalformed(String endpoint)
+    {
+        return createMessage(BUNDLE_NAME, 51, endpoint);
+    }
+
+    public static Message objectNotFound(String object)
+    {
+        return createMessage(BUNDLE_NAME, 76, object);
+    }
+
+    public static Message uniqueIdNotSupportedByAdapter(String name)
+    {
+        return createMessage(BUNDLE_NAME, 147, name);
+    }
+
+    public static Message authNoEncryptionStrategy(String strategyName)
+    {
+        return createMessage(BUNDLE_NAME, 174, strategyName);
+    }
+
+    public static Message authNoSecurityProvider(String providerName)
+    {
+        return createMessage(BUNDLE_NAME, 117, providerName);
+    }
+
+    public static Message authTypeNotRecognised(String string)
+    {
+        return createMessage(BUNDLE_NAME, 131, string);
+    }
+
+    public static Message cannotLoadFromClasspath(String string)
+    {
+        return createMessage(BUNDLE_NAME, 122, string);
+    }
+
+    public static Message failedToConvertStringUsingEncoding(String encoding)
+    {
+        return createMessage(BUNDLE_NAME, 188, encoding);
+    }
+
+    public static Message failedToDispatchToReplyto(UMOEndpoint endpoint)
+    {
+        return createMessage(BUNDLE_NAME, 128, endpoint);
+    }
+
+    public static Message failedToRouterViaEndpoint(UMOImmutableEndpoint endpoint)
+    {
+        return createMessage(BUNDLE_NAME, 30, endpoint);
     }
 }

@@ -48,30 +48,6 @@ public class Message implements Serializable
     /**
      * @deprecated
      */
-    public Message(int code, Object[] args)
-    {
-        this.code = code;
-        this.args = args;
-        message = Messages.get(code, args);
-    }
-
-    /**
-     * @deprecated
-     */
-    public Message(int code, Object arg1)
-    {
-        this.code = code;
-        if (arg1 == null)
-        {
-            arg1 = "null";
-        }
-        args = new Object[]{arg1};
-        message = Messages.get(code, args);
-    }
-
-    /**
-     * @deprecated
-     */
     public Message(int code, Object arg1, Object arg2)
     {
         this.code = code;

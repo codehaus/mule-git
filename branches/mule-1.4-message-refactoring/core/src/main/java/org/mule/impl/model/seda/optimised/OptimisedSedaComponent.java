@@ -11,8 +11,7 @@
 package org.mule.impl.model.seda.optimised;
 
 import org.mule.config.PoolingProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -63,8 +62,7 @@ public class OptimisedSedaComponent extends SedaComponent
         catch (Exception e)
         {
             throw new InitialisationException(
-                new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"),
-                e, this);
+                CoreMessages.objectFailedToInitialise("Proxy Pool"), e, this);
         }
     }
 }

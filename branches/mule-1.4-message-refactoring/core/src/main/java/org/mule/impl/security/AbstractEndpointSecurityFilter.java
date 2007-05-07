@@ -63,7 +63,7 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         }
         if (endpoint == null)
         {
-            throw new InitialisationException(new Message(Messages.X_IS_NULL, "Endpoint"), this);
+            throw new InitialisationException(CoreMessages.objectIsNull("Endpoint"), this);
         }
         // This filter may only allow authentication on a subset of registered
         // security providers
@@ -80,8 +80,9 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
                 }
                 else
                 {
-                    throw new InitialisationException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                        "Security Provider '" + sp[i] + "'"), this);
+                    throw new InitialisationException(
+                        CoreMessages.objectNotRegisteredWithManager(
+                            "Security Provider '" + sp[i] + "'"), this);
                 }
             }
             securityManager = localManager;

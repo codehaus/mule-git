@@ -11,6 +11,7 @@
 package org.mule.providers.service;
 
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleSessionHandler;
@@ -274,8 +275,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.CANT_INSTANCIATE_FINDER_X, serviceFinder), 
-                    e);
+                    CoreMessages.cannotInstanciateFinder(serviceFinder), e);
             }
         }
         return transportServiceFinder;
@@ -692,8 +692,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X, "Endpoint Builder: " + getEndpointBuilder()), 
-                    e);
+                    CoreMessages.failedToLoad("Endpoint Builder: " + getEndpointBuilder()), e);
             }
         }
     }
