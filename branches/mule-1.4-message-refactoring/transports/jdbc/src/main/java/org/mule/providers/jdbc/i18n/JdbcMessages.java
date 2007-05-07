@@ -8,30 +8,23 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.tcp;
+package org.mule.providers.jdbc.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-import java.net.URI;
-
-public class TcpMessages extends MessageFactory
+public class JdbcMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("tcp");
+    private static final String BUNDLE_PATH = getBundlePath("jdbc");
 
-    public static Message failedToBindToUri(URI uri)
+    public static Message transactionSetAutoCommitFailed()
     {
         return createMessage(BUNDLE_PATH, 1);
     }
 
-    public static Message failedToCloseSocket()
+    public static Message jndiResourceNotFound(String name)
     {
-        return createMessage(BUNDLE_PATH, 2);
-    }
-
-    public static Message failedToInitMessageReader()
-    {
-        return createMessage(BUNDLE_PATH, 3);
+        return createMessage(BUNDLE_PATH, 2, name);
     }
 }
 

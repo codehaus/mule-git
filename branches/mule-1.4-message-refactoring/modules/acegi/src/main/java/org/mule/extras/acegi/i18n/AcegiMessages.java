@@ -8,19 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.picocontainer;
+package org.mule.extras.acegi.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class PicocontainerMessages extends MessageFactory
+public class AcegiMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("picocontainer");
+    private static final String BUNDLE_PATH = getBundlePath("acegi");
 
-    public static Message failedToConfigureContainer()
+    public static Message authRealmMustBeSetOnFilter()
     {
-        return createMessage(BUNDLE_PATH, 1);
-    }   
+        return createMessage(BUNDLE_PATH, 2);
+    }
 }
 
 

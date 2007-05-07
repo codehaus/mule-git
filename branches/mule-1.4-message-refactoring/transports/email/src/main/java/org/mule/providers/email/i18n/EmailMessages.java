@@ -8,18 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.soap.axis;
+package org.mule.providers.email.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class AxisMessages extends MessageFactory
+public class EmailMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("axis");
+    private static final String BUNDLE_PATH = getBundlePath("email");
 
-    public static Message objectMustImplementAnInterface(String name)
+    public static Message routingError()
     {
-        return createMessage(BUNDLE_PATH, 1, name);
+        return createMessage(BUNDLE_PATH, 3);
     }
 }
 

@@ -8,16 +8,21 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.acegi;
+package org.mule.management.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class AcegiMessages extends MessageFactory
+public class ManagementMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("acegi");
+    private static final String BUNDLE_PATH = getBundlePath("management");
 
-    public static Message authRealmMustBeSetOnFilter()
+    public static Message createOrLocateShouldBeSet()
+    {
+        return createMessage(BUNDLE_PATH, 1);
+    }
+
+    public static Message cannotLocateOrCreateServer()
     {
         return createMessage(BUNDLE_PATH, 2);
     }

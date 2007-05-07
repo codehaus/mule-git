@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.ejb;
+package org.mule.providers.ejb.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;

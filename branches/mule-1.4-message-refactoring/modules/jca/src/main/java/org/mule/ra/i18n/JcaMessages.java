@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.ra;
+package org.mule.ra.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
@@ -17,7 +17,7 @@ public class JcaMessages extends MessageFactory
 {
     private static final String BUNDLE_PATH = getBundlePath("jca");
 
-    public static Message authDeniedOnEndpoint(MuleManagedConnection endpoint)
+    public static Message authDeniedOnEndpoint(Object endpoint)
     {
         return createMessage(BUNDLE_PATH, 1, endpoint);
     }

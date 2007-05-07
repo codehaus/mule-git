@@ -8,38 +8,30 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.pgp;
+package org.mule.providers.tcp.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class PGPMessages extends MessageFactory
-{
-    private static final String BUNDLE_PATH = getBundlePath("pgp");
+import java.net.URI;
 
-    public static Message noPublicKeyForUser(String userId)
+public class TcpMessages extends MessageFactory
+{
+    private static final String BUNDLE_PATH = getBundlePath("tcp");
+
+    public static Message failedToBindToUri(URI uri)
     {
-        return createMessage(BUNDLE_PATH, 1, userId);
+        return createMessage(BUNDLE_PATH, 1);
     }
 
-    public static Message noSignedMessageFound()
+    public static Message failedToCloseSocket()
     {
         return createMessage(BUNDLE_PATH, 2);
     }
 
-    public static Message invalidSignature()
+    public static Message failedToInitMessageReader()
     {
         return createMessage(BUNDLE_PATH, 3);
-    }
-
-    public static Message errorVerifySignature()
-    {
-        return createMessage(BUNDLE_PATH, 4);
-    }
-
-    public static Message encryptionStrategyNotSet()
-    {
-        return createMessage(BUNDLE_PATH, 5);
     }
 }
 

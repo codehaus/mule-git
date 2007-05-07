@@ -8,25 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.client;
+package org.mule.providers.soap.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class ClientMessages extends MessageFactory
+public class SoapMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("client");
+    private static final String BUNDLE_PATH = getBundlePath("soap");
 
-    public static Message failedToDispatchClientEvent()
+    public static Message couldNotFindSoapProvider(String name)
     {
-        return createMessage(BUNDLE_PATH, 1);
+        return createMessage(BUNDLE_PATH, 8, name);
     }
-
-    public static Message managerIsAlreadyConfigured()
-    {
-        return createMessage(BUNDLE_PATH, 3);
-    }
-
-}
+}  
 
 

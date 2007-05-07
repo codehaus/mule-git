@@ -8,19 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.email;
+package org.mule.extras.picocontainer.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class EmailMessages extends MessageFactory
+public class PicocontainerMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("email");
+    private static final String BUNDLE_PATH = getBundlePath("picocontainer");
 
-    public static Message routingError()
+    public static Message failedToConfigureContainer()
     {
-        return createMessage(BUNDLE_PATH, 3);
-    }
+        return createMessage(BUNDLE_PATH, 1);
+    }   
 }
 
 

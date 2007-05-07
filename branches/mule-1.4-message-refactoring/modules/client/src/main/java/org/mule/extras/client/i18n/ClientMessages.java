@@ -8,24 +8,25 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.jdbc;
+package org.mule.extras.client.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class JdbcMessages extends MessageFactory
+public class ClientMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("jdbc");
+    private static final String BUNDLE_PATH = getBundlePath("client");
 
-    public static Message transactionSetAutoCommitFailed()
+    public static Message failedToDispatchClientEvent()
     {
         return createMessage(BUNDLE_PATH, 1);
     }
 
-    public static Message jndiResourceNotFound(String name)
+    public static Message managerIsAlreadyConfigured()
     {
-        return createMessage(BUNDLE_PATH, 2, name);
+        return createMessage(BUNDLE_PATH, 3);
     }
+
 }
 
 

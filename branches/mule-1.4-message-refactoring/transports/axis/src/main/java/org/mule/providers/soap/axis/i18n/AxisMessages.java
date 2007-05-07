@@ -8,19 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.soap;
+package org.mule.providers.soap.axis.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class SoapMessages extends MessageFactory
+public class AxisMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("soap");
+    private static final String BUNDLE_PATH = getBundlePath("axis");
 
-    public static Message couldNotFindSoapProvider(String name)
+    public static Message objectMustImplementAnInterface(String name)
     {
-        return createMessage(BUNDLE_PATH, 8, name);
+        return createMessage(BUNDLE_PATH, 1, name);
     }
-}  
+}
 
 
