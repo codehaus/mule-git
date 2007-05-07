@@ -34,6 +34,19 @@ public abstract class MessageFactory extends Object
     private static final transient Object[] EMPTY_ARGS = new Object[]{};
 
     /**
+     * Computes the bundle's full path 
+     * (<code>META-INF/services/org/mule/i18n/&lt;bundleName&gt;-messages.properties</code>) from
+     * <code>bundleName</code>.
+     * 
+     * @param bundleName Name of the bundle without the &quot;messages&quot; suffix and without
+     *          file extension.
+     */
+    protected static String getBundlePath(String bundleName)
+    {
+        return "META-INF.services.org.mule.i18n." + bundleName + "-messages";
+    }
+    
+    /**
      * Factory method to create a new {@link Message} instance that is filled with the formatted
      * message with id <code>code</code> from the resource bundle <code>bundleName</code>.
      * 
@@ -41,10 +54,10 @@ public abstract class MessageFactory extends Object
      * @param code numeric code of the message
      * @param arg
      */
-    protected static Message createMessage(String bundleName, int code, Object arg)
+    protected static Message createMessage(String bundlePath, int code, Object arg)
     {
         Object[] arguments = new Object[] {arg};
-        String messageString = getString(bundleName, code, arguments);
+        String messageString = getString(bundlePath, code, arguments);
         return new Message(messageString, code, arguments);
     }
     
@@ -55,24 +68,24 @@ public abstract class MessageFactory extends Object
      * @param bundleName
      * @param code
      */
-    protected static Message createMessage(String bundleName, int code)
+    protected static Message createMessage(String bundlePath, int code)
     {
-        String messageString = getString(bundleName, code, null);
+        String messageString = getString(bundlePath, code, null);
         return new Message(messageString, code, EMPTY_ARGS);
     }
 
-    private static String getString(String bundleName, int code, Object[] args)
+    private static String getString(String bundlePath, int code, Object[] args)
     {
         // We will throw a MissingResourceException if the bundle name is invalid
         // This happens if the code references a bundle name that just doesn't exist
-        ResourceBundle bundle = getBundle(bundleName);
+        ResourceBundle bundle = getBundle(bundlePath);
 
         try
         {
             String m = bundle.getString(String.valueOf(code));
             if (m == null)
             {
-                logger.error("Failed to find message for id " + code + " in resource bundle " + bundleName);
+                logger.error("Failed to find message for id " + code + " in resource bundle " + bundlePath);
                 return "";
             }
 
@@ -80,7 +93,7 @@ public abstract class MessageFactory extends Object
         }
         catch (MissingResourceException e)
         {
-            logger.error("Failed to find message for id " + code + " in resource bundle " + bundleName);
+            logger.error("Failed to find message for id " + code + " in resource bundle " + bundlePath);
             return "";
         }
     }
@@ -88,12 +101,11 @@ public abstract class MessageFactory extends Object
     /**
      * @throws MissingResourceException if resource is missing
      */
-    private static ResourceBundle getBundle(String bundleName)
+    private static ResourceBundle getBundle(String bundlePath)
     {
-        String path = "META-INF.services.org.mule.i18n." + bundleName + "-messages";
         Locale locale = Locale.getDefault();
-        logger.debug("Loading resource bundle: " + path + " for locale " + locale);
-        ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
+        logger.debug("Loading resource bundle: " + bundlePath + " for locale " + locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(bundlePath, locale);
         return bundle;
     }    
 }

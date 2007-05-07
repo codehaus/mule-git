@@ -15,11 +15,11 @@ import org.mule.config.i18n.MessageFactory;
 
 public class PGPMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "pgp";
+    private static final String BUNDLE_PATH = getBundlePath("pgp");
 
     public static Message encryptionStrategyNotSet()
     {
-        return createMessage(BUNDLE_NAME, 5);
+        return createMessage(BUNDLE_PATH, 5);
     }
 }
 

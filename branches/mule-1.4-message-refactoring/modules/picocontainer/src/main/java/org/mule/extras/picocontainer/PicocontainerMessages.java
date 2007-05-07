@@ -15,11 +15,11 @@ import org.mule.config.i18n.MessageFactory;
 
 public class PicocontainerMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "picocontainer";
+    private static final String BUNDLE_PATH = getBundlePath("picocontainer");
 
     public static Message failedToConfigureContainer()
     {
-        return createMessage(BUNDLE_NAME, 1);
+        return createMessage(BUNDLE_PATH, 1);
     }   
 }
 

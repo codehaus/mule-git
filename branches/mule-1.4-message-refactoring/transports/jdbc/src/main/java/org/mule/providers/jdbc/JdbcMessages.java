@@ -15,11 +15,11 @@ import org.mule.config.i18n.MessageFactory;
 
 public class JdbcMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "jdbc";
+    private static final String BUNDLE_PATH = getBundlePath("jdbc");
 
     public static Message transactionSetAutoCommitFailed()
     {
-        return createMessage(BUNDLE_NAME, 1);
+        return createMessage(BUNDLE_PATH, 1);
     }
 }
 

@@ -15,11 +15,11 @@ import org.mule.config.i18n.MessageFactory;
 
 public class AcegiMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "acegi";
+    private static final String BUNDLE_PATH = getBundlePath("acegi");
 
     public static Message authRealmMustBeSetOnFilter()
     {
-        return createMessage(BUNDLE_NAME, 2);
+        return createMessage(BUNDLE_PATH, 2);
     }
 }
 

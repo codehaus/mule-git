@@ -15,16 +15,16 @@ import org.mule.config.i18n.MessageFactory;
 
 public class ManagementMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "management";
+    private static final String BUNDLE_PATH = getBundlePath("management");
 
     public static Message createOrLocateShouldBeSet()
     {
-        return createMessage(BUNDLE_NAME, 1);
+        return createMessage(BUNDLE_PATH, 1);
     }
 
     public static Message cannotLocateOrCreateServer()
     {
-        return createMessage(BUNDLE_NAME, 2);
+        return createMessage(BUNDLE_PATH, 2);
     }
 }
 

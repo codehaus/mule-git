@@ -15,16 +15,16 @@ import org.mule.config.i18n.MessageFactory;
 
 public class ClientMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "client";
+    private static final String BUNDLE_PATH = getBundlePath("client");
 
     public static Message failedToDispatchClientEvent()
     {
-        return createMessage(BUNDLE_NAME, 1);
+        return createMessage(BUNDLE_PATH, 1);
     }
 
     public static Message managerIsAlreadyConfigured()
     {
-        return createMessage(BUNDLE_NAME, 3);
+        return createMessage(BUNDLE_PATH, 3);
     }
 
 }

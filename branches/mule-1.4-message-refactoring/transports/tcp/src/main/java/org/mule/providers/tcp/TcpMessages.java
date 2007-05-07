@@ -17,21 +17,21 @@ import java.net.URI;
 
 public class TcpMessages extends MessageFactory
 {
-    private static final String BUNDLE_NAME = "tcp";
+    private static final String BUNDLE_PATH = getBundlePath("tcp");
 
     public static Message failedToBindToUri(URI uri)
     {
-        return createMessage(BUNDLE_NAME, 1);
+        return createMessage(BUNDLE_PATH, 1);
     }
 
     public static Message failedToCloseSocket()
     {
-        return createMessage(BUNDLE_NAME, 2);
+        return createMessage(BUNDLE_PATH, 2);
     }
 
     public static Message failedToInitMessageReader()
     {
-        return createMessage(BUNDLE_NAME, 3);
+        return createMessage(BUNDLE_PATH, 3);
     }
 }
 
