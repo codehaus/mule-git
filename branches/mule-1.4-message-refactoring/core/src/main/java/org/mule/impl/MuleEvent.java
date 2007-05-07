@@ -14,8 +14,6 @@ import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.umo.UMOComponent;
@@ -389,15 +387,14 @@ public class MuleEvent extends EventObject implements UMOEvent
             catch (Exception e)
             {
                 throw new TransformerException(
-                    new Message(Messages.TRANSFORM_FAILED_FROM_X_TO_X, msg.getClass().getName(), "byte[]"),
-                    e);
+                    CoreMessages.transformFailed(msg.getClass().getName(), "byte[]"), e);
             }
         }
         else
         {
             throw new TransformerException(
-                new Message(Messages.TRANSFORM_ON_X_NOT_OF_SPECIFIED_TYPE_X,
-                    msg.getClass().getName(), "byte[] or " + Serializable.class.getName()));
+                CoreMessages.transformOnObjectNotOfSpecifiedType(msg.getClass().getName(), 
+                    "byte[] or " + Serializable.class.getName()));
         }
     }
 
@@ -417,11 +414,6 @@ public class MuleEvent extends EventObject implements UMOEvent
         return getTransformedMessageAsString(getEncoding());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOEvent#getPayloadAsString()
-     */
     public String getMessageAsString() throws UMOException
     {
         return getMessageAsString(getEncoding());

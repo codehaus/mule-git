@@ -13,8 +13,6 @@ package org.mule.impl;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.FutureMessageResult;
@@ -119,9 +117,9 @@ public class MuleEventContext implements UMOEventContext
         }
         else
         {
-            throw new TransformerException(new Message(Messages.TRANSFORM_ON_X_NOT_OF_SPECIFIED_TYPE_X,
-                this.getComponentDescriptor().getName(), expectedType), this.event.getEndpoint()
-                .getTransformer());
+            throw new TransformerException(
+                CoreMessages.transformOnObjectNotOfSpecifiedType(this.getComponentDescriptor().getName(), 
+                    expectedType), this.event.getEndpoint().getTransformer());
         }
     }
 

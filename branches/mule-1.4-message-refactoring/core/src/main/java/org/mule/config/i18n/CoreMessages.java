@@ -13,7 +13,10 @@ package org.mule.config.i18n;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.routing.UMONestedRouter;
+import org.mule.util.ClassUtils;
 import org.mule.util.DateUtils;
+import org.mule.util.StringMessageUtils;
 
 import java.util.Date;
 
@@ -631,5 +634,146 @@ public class CoreMessages extends MessageFactory
     public static Message transactionCanOnlyBindToResources(String string)
     {
         return createMessage(BUNDLE_PATH, 120, string);
+    }
+
+    public static Message failedToWriteMessageToStore(Object id, String path)
+    {
+        return createMessage(BUNDLE_PATH, 94, id, path);
+    }
+
+    public static Message transformOnObjectNotOfSpecifiedType(String name, Object expectedType)
+    {
+        return createMessage(BUNDLE_PATH, 177, name, expectedType);
+    }
+
+    public static Message responseTimedOutWaitingForId(int timeout, Object id)
+    {
+        return createMessage(BUNDLE_PATH, 90, String.valueOf(timeout), id);
+    }
+
+    public static Message propertyHasInvalidValue(String property, Object value)
+    {
+        return createMessage(BUNDLE_PATH, 189, property, value);
+    }
+
+    public static Message transformFailed(String from, String to)
+    {
+        return createMessage(BUNDLE_PATH, 110, from, to);
+    }
+
+    public static Message noEntryPointFoundWithArgs(Object object, Object args)
+    {
+        return createMessage(BUNDLE_PATH, 116, StringMessageUtils.toString(object),
+            StringMessageUtils.toString(args));
+    }
+
+    public static Message noMatchingMethodsOnObjectReturning(Object object, Class returnType)
+    {
+        return createMessage(BUNDLE_PATH, 220, StringMessageUtils.toString(object),
+            StringMessageUtils.toString(returnType));
+    }
+
+    public static Message tooManyAcceptableMethodsOnObjectForTypes(Object object, Object types)
+    {
+        return createMessage(BUNDLE_PATH, 60, StringMessageUtils.toString(object),
+            StringMessageUtils.toString(types));
+    }
+
+    public static Message tooManyMatchingMethodsOnObjectWhichReturn(Object object, Object returnType)
+    {
+        return createMessage(BUNDLE_PATH, 216, StringMessageUtils.toString(object),
+            StringMessageUtils.toString(returnType));
+    }
+
+    public static Message objectNotOfCorrectType(Class actualClass, Class expectedClass)
+    {
+        return createMessage(BUNDLE_PATH, 185, StringMessageUtils.toString(actualClass),
+            StringMessageUtils.toString(expectedClass));
+    }
+
+    public static Message authEndpointTypeForFilterMustBe(String expected, String actual)
+    {
+        return createMessage(BUNDLE_PATH, 136, expected, actual);
+    }
+
+    public static Message headerMalformedValueIs(String header, String value)
+    {
+        return createMessage(BUNDLE_PATH, 175, header, value);
+    }
+
+    public static Message connectorSchemeIncompatibleWithEndpointScheme(Object expected, Object actual)
+    {
+        return createMessage(BUNDLE_PATH, 206, expected, actual);
+    }
+
+    public static Message schemeNotCompatibleWithConnector(String scheme, Class expectedClass)
+    {
+        return createMessage(BUNDLE_PATH, 115, scheme, expectedClass);
+    }
+
+    public static Message reconnectStrategyFailed(Class strategy, String description)
+    {
+        return createMessage(BUNDLE_PATH, 164, StringMessageUtils.toString(strategy), description);
+    }
+
+    public static Message failedToCreateObjectWith(String string, Object arg)
+    {
+        return createMessage(BUNDLE_PATH, 74, string, arg);
+    }
+
+    public static Message objectNotSetInService(Object object, Object service)
+    {
+        return createMessage(BUNDLE_PATH, 75, object, service);
+    }
+
+    public static Message failedToLoadTransformer(String direction, String transformer)
+    {
+        return createMessage(BUNDLE_PATH, 57, direction, transformer);
+    }
+
+    public static Message schemeCannotChangeForRouter(String scheme, String scheme2)
+    {
+        return createMessage(BUNDLE_PATH, 192, scheme, scheme2);
+    }
+
+    public static Message templateCausedMalformedEndpoint(String uri, String newUri)
+    {
+        return createMessage(BUNDLE_PATH, 197, uri, newUri);
+    }
+
+    public static Message transformUnexpectedType(Class class1, Class returnClass)
+    {
+        return createMessage(BUNDLE_PATH, 53, ClassUtils.getSimpleName(class1),
+            ClassUtils.getSimpleName(returnClass));
+    }
+
+    public static Message messageNotSupportedByAdapter(String string, String string2)
+    {
+        return createMessage(BUNDLE_PATH, 59, string, string2);
+    }
+
+    public static Message failedtoRegisterOnEndpoint(String name, Object endpointURI)
+    {
+        return createMessage(BUNDLE_PATH, 47, name, endpointURI);
+    }
+
+    public static Message failedToUnregister(String name, Object endpointURI)
+    {
+        return createMessage(BUNDLE_PATH, 48, name, endpointURI);
+    }
+
+    public static Message routingFailedOnEndpoint(String name, Object endpointURI)
+    {
+        return createMessage(BUNDLE_PATH, 72, name, endpointURI);
+    }
+
+    public static Message failedToRecevieWithTimeout(Object endpoint, long timeout)
+    {
+        return createMessage(BUNDLE_PATH, 93, endpoint, String.valueOf(timeout));
+    }
+
+    public static Message failedToSetProxyOnService(Object proxy, Class routerClass)
+    {
+        return createMessage(BUNDLE_PATH, 217, proxy, routerClass);
     }
 }

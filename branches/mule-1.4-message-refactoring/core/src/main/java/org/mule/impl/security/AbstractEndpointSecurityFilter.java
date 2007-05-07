@@ -12,8 +12,6 @@ package org.mule.impl.security;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -97,10 +95,10 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         }
         else
         {
-            throw new InitialisationException(new Message(
-                Messages.AUTH_ENDPOINT_TYPE_FOR_FILTER_MUST_BE_X_BUT_IS_X,
-                UMOEndpoint.ENDPOINT_TYPE_SENDER + " or " + UMOEndpoint.ENDPOINT_TYPE_RECEIVER,
-                endpoint.getType()), this);
+            throw new InitialisationException(
+                CoreMessages.authEndpointTypeForFilterMustBe(
+                    UMOEndpoint.ENDPOINT_TYPE_SENDER + " or " + UMOEndpoint.ENDPOINT_TYPE_RECEIVER,
+                    endpoint.getType()), this);
         }
         doInitialise();
     }

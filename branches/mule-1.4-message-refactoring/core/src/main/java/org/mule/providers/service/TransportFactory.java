@@ -14,7 +14,6 @@ import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.endpoint.EndpointException;
@@ -113,7 +112,7 @@ public final class TransportFactory
 
         if (connector == null)
         {
-            Message m = new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", "Uri: " + uri);
+            Message m = CoreMessages.failedToCreateObjectWith("Endpoint", "Uri: " + uri);
             m.setNextMessage(CoreMessages.objectIsNull("connector"));
             throw new TransportFactoryException(m);
 
@@ -286,8 +285,8 @@ public final class TransportFactory
                 }
                 else
                 {
-                    throw new TransportFactoryException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                        "Connector", scheme));
+                    throw new TransportFactoryException(
+                        CoreMessages.objectNotSetInService("Connector", scheme));
                 }
             }
         }
@@ -298,8 +297,7 @@ public final class TransportFactory
         catch (Exception e)
         {
             throw new TransportFactoryException(
-                new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", url),
-                e);
+                CoreMessages.failedToCreateObjectWith("Endpoint", url), e);
         }
 
         connector.setName(ObjectNameHelper.getConnectorName(connector));

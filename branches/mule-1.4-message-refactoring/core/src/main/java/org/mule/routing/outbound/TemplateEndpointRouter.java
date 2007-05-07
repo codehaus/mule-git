@@ -11,8 +11,6 @@
 package org.mule.routing.outbound;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -78,8 +76,8 @@ public class TemplateEndpointRouter extends FilteringOutboundRouter
             UMOEndpointURI newUri = new MuleEndpointURI(uri);
             if (!newUri.getScheme().equalsIgnoreCase(ep.getEndpointURI().getScheme()))
             {
-                throw new CouldNotRouteOutboundMessageException(new Message(
-                    Messages.SCHEME_CANT_CHANGE_FOR_ROUTER_X_X, ep.getEndpointURI().getScheme(),
+                throw new CouldNotRouteOutboundMessageException(
+                    CoreMessages.schemeCannotChangeForRouter(ep.getEndpointURI().getScheme(),
                     newUri.getScheme()), message, ep);
             }
             ep.setEndpointURI(new MuleEndpointURI(uri));

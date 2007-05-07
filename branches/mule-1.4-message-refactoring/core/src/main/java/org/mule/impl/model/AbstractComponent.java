@@ -13,7 +13,6 @@ package org.mule.impl.model;
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.RequestContext;
@@ -546,9 +545,8 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_REGISTER_X_ON_ENDPOINT_X,
-                        getDescriptor().getName(), endpoint.getEndpointURI()), 
-                    e);
+                    CoreMessages.failedtoRegisterOnEndpoint(this.getDescriptor().getName(),
+                        endpoint.getEndpointURI()), e);
             }
         }
     }
@@ -572,9 +570,8 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_UNREGISTER_X_ON_ENDPOINT_X,
-                        getDescriptor().getName(), endpoint.getEndpointURI()), 
-                    e);
+                    CoreMessages.failedToUnregister(this.getDescriptor().getName(), 
+                        endpoint.getEndpointURI()), e);
             }
         }
     }

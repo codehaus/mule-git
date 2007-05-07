@@ -45,23 +45,23 @@ public class Message implements Serializable
         this.message = message;
     }
 
-    /**
-     * @deprecated
-     */
-    public Message(int code, Object arg1, Object arg2)
-    {
-        this.code = code;
-        if (arg1 == null)
-        {
-            arg1 = "null";
-        }
-        if (arg2 == null)
-        {
-            arg2 = "null";
-        }
-        args = new Object[]{arg1, arg2};
-        message = Messages.get(code, args);
-    }
+//    /**
+//     * @deprecated
+//     */
+//    public Message(int code, Object arg1, Object arg2)
+//    {
+//        this.code = code;
+//        if (arg1 == null)
+//        {
+//            arg1 = "null";
+//        }
+//        if (arg2 == null)
+//        {
+//            arg2 = "null";
+//        }
+//        args = new Object[]{arg1, arg2};
+//        message = Messages.get(code, args);
+//    }
 
     /**
      * @deprecated

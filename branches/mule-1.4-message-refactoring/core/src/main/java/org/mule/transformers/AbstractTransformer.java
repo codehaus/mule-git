@@ -11,6 +11,7 @@
 package org.mule.transformers;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.NullPayload;
@@ -23,9 +24,10 @@ import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -91,10 +93,9 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             if (!returnClass.isInstance(object))
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNEXPECTED_TYPE_X,
-                        ClassUtils.getSimpleName(object.getClass()),
-                        ClassUtils.getSimpleName(returnClass)),
-                        this);
+                throw new TransformerException(
+                    CoreMessages.transformUnexpectedType(object.getClass(), returnClass),
+                    this);
             }
         }
 

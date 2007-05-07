@@ -12,8 +12,6 @@ package org.mule.impl;
 
 import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.model.resolvers.DynamicEntryPoint;
 import org.mule.impl.model.resolvers.DynamicEntryPointResolver;
 import org.mule.routing.nested.NestedInvocationHandler;
@@ -224,11 +222,6 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         return resultMessage;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.umo.lifecycle.Initialisable#initialise()
-     */
     public void initialise() throws InitialisationException
     {
         if (Initialisable.class.isInstance(component))
@@ -286,11 +279,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
                     catch (Exception e)
                     {
                         throw new InitialisationException(
-                            new Message(Messages.FAILED_TO_SET_PROXY_X_ON_SERVICE_X, 
-                                nestedRouter, component.getClass().getName()), 
-                            e, this);
+                            CoreMessages.failedToSetProxyOnService(nestedRouter, 
+                                component.getClass()), e, this);
                     }
-
                 }
                 else
                 {

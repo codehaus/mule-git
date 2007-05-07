@@ -16,8 +16,6 @@ import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.container.MultiContainerContext;
 import org.mule.impl.internal.admin.MuleAdminAgent;
 import org.mule.impl.internal.notifications.AdminNotification;
@@ -802,8 +800,8 @@ public class MuleManager implements UMOManager
         // Check we have a valid and supported encoding
         if (!Charset.isSupported(config.getEncoding()))
         {
-            throw new FatalException(new Message(Messages.PROPERTY_X_HAS_INVALID_VALUE_X, "encoding",
-                config.getEncoding()), this);
+            throw new FatalException(
+                CoreMessages.propertyHasInvalidValue("encoding", config.getEncoding()), this);
         }
     }
 
@@ -822,8 +820,8 @@ public class MuleManager implements UMOManager
         // Check we have a valid and supported encoding
         if (!Charset.isSupported(config.getOSEncoding()))
         {
-            throw new FatalException(new Message(Messages.PROPERTY_X_HAS_INVALID_VALUE_X, "osEncoding",
-                config.getOSEncoding()), this);
+            throw new FatalException(
+                CoreMessages.propertyHasInvalidValue("osEncoding", config.getOSEncoding()), this);
         }
     }
 

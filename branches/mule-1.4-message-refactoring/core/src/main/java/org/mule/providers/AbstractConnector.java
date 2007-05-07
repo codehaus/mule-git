@@ -14,8 +14,6 @@ import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -654,9 +652,9 @@ public abstract class AbstractConnector
 
         if (!this.supportsProtocol(endpoint.getConnector().getProtocol()))
         {
-            throw new IllegalArgumentException(new Message(
-                Messages.CONNECTOR_SCHEME_X_INCOMPATIBLE_WITH_ENDPOINT_SCHEME_X, getProtocol(), endpoint
-                    .getEndpointURI().toString()).getMessage());
+            throw new IllegalArgumentException(
+                CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(this.getProtocol(), 
+                    endpoint.getEndpointURI().toString()).getMessage());
         }
 
         try
@@ -1637,8 +1635,9 @@ public abstract class AbstractConnector
     {
         if (!supportsProtocol(endpointUri.getFullScheme()))
         {
-            throw new InitialisationException(new Message(Messages.SCHEME_X_NOT_COMPATIBLE_WITH_CONNECTOR_X,
-                endpointUri.getFullScheme(), getClass().getName()), this);
+            throw new InitialisationException(
+                CoreMessages.schemeNotCompatibleWithConnector(endpointUri.getFullScheme(), 
+                    this.getClass()), this);
         }
         Properties props = new Properties();
         props.putAll(endpointUri.getParams());
