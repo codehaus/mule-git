@@ -62,6 +62,22 @@ public abstract class MessageFactory extends Object
     }
     
     /**
+     * Factory method to create a new {@link Message} instance that is filled with the formatted
+     * message with id <code>code</code> from the resource bundle <code>bundleName</code>.
+     * 
+     * @param bundleName Name of the resource bundle for lookup
+     * @param code numeric code of the message
+     * @param arg1
+     * @param arg2
+     */
+    protected static Message createMessage(String bundlePath, int code, Object arg1, Object arg2)
+    {
+        Object[] arguments = new Object[] {arg1, arg2};
+        String messageString = getString(bundlePath, code, arguments);
+        return new Message(messageString, code, arguments);
+    }
+    
+    /**
      * Factory Method to create a new {@link Message} instance that is filled with the formatted
      * message with id <code>code</code> from the resource bundle <code>bundleName</code>.
      * 

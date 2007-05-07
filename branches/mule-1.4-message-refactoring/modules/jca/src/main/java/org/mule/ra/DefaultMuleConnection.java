@@ -10,13 +10,9 @@
 
 package org.mule.ra;
 
-import java.util.Map;
-
-import javax.resource.ResourceException;
-
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -34,6 +30,10 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
+
+import java.util.Map;
+
+import javax.resource.ResourceException;
 
 /**
  * <code>MuleConnection</code> TODO
@@ -181,8 +181,8 @@ public class DefaultMuleConnection implements MuleConnection
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message(Messages.FAILED_TO_CREATE_X, "Client event"), message,
-                endpoint, e);
+            throw new DispatchException(
+                CoreMessages.failedToCreate("Client event"), message, endpoint, e);
         }
     }
 
@@ -241,7 +241,7 @@ public class DefaultMuleConnection implements MuleConnection
         if (managedConnection == null)
         {
             throw new ResourceException(
-                new Message(Messages.OBJECT_X_MARKED_INVALID, "muleManagedConnection").toString());
+                JcaMessages.objectMarkedInvalid("muleManagedConnection").toString());
         }
     }
 

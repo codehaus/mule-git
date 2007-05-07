@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.axis.client.Transport;
 import org.mule.MuleException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.providers.soap.axis.AxisConnector;
@@ -69,7 +70,7 @@ public class MuleTransport extends Transport
     {
         if (protocol == null)
         {
-            throw new NullPointerException(new Message(Messages.X_IS_NULL, "protocol").toString());
+            throw new NullPointerException(CoreMessages.objectIsNull("protocol").toString());
         }
         if (!isTransportSupported(protocol))
         {

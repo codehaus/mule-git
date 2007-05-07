@@ -12,7 +12,6 @@ package org.mule.providers.jms;
 
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.TransactionException;
@@ -32,8 +31,8 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
     {
         if (!(key instanceof Connection) || !(resource instanceof Session))
         {
-            throw new IllegalTransactionStateException(new Message(
-                Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES, "javax.jms.Connection/javax.jms.Session"));
+            throw new IllegalTransactionStateException(
+                CoreMessages.transactionCanOnlyBindToResources("javax.jms.Connection/javax.jms.Session"));
         }
 
         Session session = (Session)resource;

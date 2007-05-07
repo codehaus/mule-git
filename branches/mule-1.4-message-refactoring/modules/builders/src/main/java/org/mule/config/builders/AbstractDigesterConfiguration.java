@@ -15,8 +15,7 @@ import org.mule.config.ConfigurationException;
 import org.mule.config.MuleDtdResolver;
 import org.mule.config.MuleProperties;
 import org.mule.config.ReaderResource;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.umo.UMOFilter;
 import org.mule.util.IOUtils;
@@ -122,8 +121,8 @@ public abstract class AbstractDigesterConfiguration
             }
             catch (Exception e)
             {
-                throw new ConfigurationException(new Message(Messages.FAILED_TO_PARSE_CONFIG_RESOURCE_X,
-                    configResources[i].getDescription()), e);
+                throw new ConfigurationException(
+                    BuildersMessages.failedToParseConfigResource(configResources[i].getDescription()), e);
             }
         }
 
@@ -148,8 +147,8 @@ public abstract class AbstractDigesterConfiguration
         }
         catch (IOException e)
         {
-            throw new ConfigurationException(new Message(Messages.CANT_LOAD_X_FROM_CLASSPATH_FILE,
-                configResource), e);
+            throw new ConfigurationException(
+                CoreMessages.cannotLoadFromClasspath(configResource), e);
         }
 
         if (is != null)
@@ -158,8 +157,7 @@ public abstract class AbstractDigesterConfiguration
         }
         else
         {
-            throw new ConfigurationException(new Message(Messages.CANT_LOAD_X_FROM_CLASSPATH_FILE,
-                configResource));
+            throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource));
         }
     }
 

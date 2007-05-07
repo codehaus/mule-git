@@ -12,8 +12,6 @@ package org.mule.providers.vm;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.TransactionException;
@@ -31,18 +29,12 @@ public class VMTransaction extends AbstractSingleResourceTransaction
         bindResource(qm, qs);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.UMOTransaction#bindResource(java.lang.Object,
-     *      java.lang.Object)
-     */
     public void bindResource(Object key, Object resource) throws TransactionException
     {
         if (!(key instanceof QueueManager) || !(resource instanceof QueueSession))
         {
-            throw new IllegalTransactionStateException(new Message(
-                Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES, "QueueManager/QueueSession"));
+            throw new IllegalTransactionStateException(
+                CoreMessages.transactionCanOnlyBindToResources("QueueManager/QueueSession"));
         }
         super.bindResource(key, resource);
     }
@@ -55,8 +47,7 @@ public class VMTransaction extends AbstractSingleResourceTransaction
         }
         catch (ResourceManagerException e)
         {
-            throw new TransactionException(
-                new Message(Messages.TX_CANT_START_X_TRANSACTION, "VMTransaction"), e);
+            throw new TransactionException(CoreMessages.cannotStartTransaction("VMTransaction"), e);
         }
     }
 

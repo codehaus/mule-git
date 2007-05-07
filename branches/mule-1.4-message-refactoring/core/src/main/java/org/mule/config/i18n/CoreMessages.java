@@ -493,9 +493,9 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 127, name);
     }
 
-    public static Message interruptedQueuingEventFor(String name)
+    public static Message interruptedQueuingEventFor(Object object)
     {
-        return createMessage(BUNDLE_PATH, 106, name);
+        return createMessage(BUNDLE_PATH, 106, object);
     }
 
     public static Message componentCausedErrorIs(Object component)
@@ -626,5 +626,10 @@ public class CoreMessages extends MessageFactory
     public static Message failedToRouterViaEndpoint(UMOImmutableEndpoint endpoint)
     {
         return createMessage(BUNDLE_PATH, 30, endpoint);
+    }
+
+    public static Message transactionCanOnlyBindToResources(String string)
+    {
+        return createMessage(BUNDLE_PATH, 120, string);
     }
 }

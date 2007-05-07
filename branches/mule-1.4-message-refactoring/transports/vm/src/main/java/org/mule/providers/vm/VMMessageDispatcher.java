@@ -11,6 +11,7 @@
 package org.mule.providers.vm;
 
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
@@ -117,19 +118,14 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#dispatch(org.mule.umo.UMOEvent)
-     */
     protected void doDispatch(UMOEvent event) throws Exception
     {
         UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 
         if (endpointUri == null)
         {
-            throw new DispatchException(new Message(Messages.X_IS_NULL, "Endpoint"), event.getMessage(),
-                event.getEndpoint());
+            throw new DispatchException(
+                CoreMessages.objectIsNull("Endpoint"), event.getMessage(), event.getEndpoint());
         }
         if (connector.isQueueEvents())
         {
@@ -162,11 +158,6 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
-     */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {
         UMOMessage retMessage;

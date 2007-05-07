@@ -11,8 +11,8 @@
 package org.mule.extras.acegi.filters.http;
 
 import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.extras.acegi.AcegiAuthenticationAdapter;
 import org.mule.extras.acegi.AcegiMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
@@ -146,7 +146,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
                     logger.debug("Authentication request for user: " + username + " failed: " + e.toString());
                 }
                 setUnauthenticated(event);
-                throw new UnauthorisedException(new Message(Messages.AUTH_FAILED_FOR_USER_X, username), e);
+                throw new UnauthorisedException(CoreMessages.authFailedForUser(username), e);
             }
 
             // Authentication success

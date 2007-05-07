@@ -21,6 +21,11 @@ public class JdbcMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 1);
     }
+
+    public static Message jndiResourceNotFound(String name)
+    {
+        return createMessage(BUNDLE_PATH, 2, name);
+    }
 }
 
 

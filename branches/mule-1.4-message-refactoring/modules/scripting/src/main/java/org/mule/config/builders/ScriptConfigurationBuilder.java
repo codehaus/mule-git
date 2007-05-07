@@ -16,8 +16,6 @@ import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleProperties;
 import org.mule.config.ReaderResource;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.umo.manager.UMOManager;
 import org.mule.util.PropertiesUtils;
 
@@ -46,8 +44,8 @@ public class ScriptConfigurationBuilder extends Scriptable implements Configurat
         String scriptName = System.getProperty(SCRIPT_ENGINE_NAME_PROPERTY);
         if (scriptName == null)
         {
-            throw new NullPointerException(new Message(Messages.SYSTEM_PROPERTY_X_NOT_SET,
-                SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
+            throw new NullPointerException(
+                BuildersMessages.systemPropertyNotSet(SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
         }
         else
         {

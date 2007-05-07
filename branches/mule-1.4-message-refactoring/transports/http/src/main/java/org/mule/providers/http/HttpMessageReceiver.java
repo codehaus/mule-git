@@ -11,7 +11,6 @@
 package org.mule.providers.http;
 
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -304,7 +303,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
                             response = new HttpResponse();
                             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_NOT_FOUND);
-                            response.setBodyString(new Message(Messages.CANNOT_BIND_TO_ADDRESS_X, failedPath).toString());
+                            response.setBodyString(HttpMessages.cannotBindToAddress(failedPath).toString());
                             RequestContext.setEvent(new MuleEvent(new MuleMessage(response), endpoint,
                                 new MuleSession(component), true));
                             // The DefaultResponseTransformer will set the necessary

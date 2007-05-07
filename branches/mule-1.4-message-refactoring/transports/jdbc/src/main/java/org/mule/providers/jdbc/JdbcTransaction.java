@@ -11,8 +11,6 @@
 package org.mule.providers.jdbc;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.transaction.TransactionRollbackException;
@@ -38,8 +36,8 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
     {
         if (!(key instanceof DataSource) || !(resource instanceof Connection))
         {
-            throw new IllegalTransactionStateException(new Message(
-                Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES, "javax.sql.DataSource/java.sql.Connection"));
+            throw new IllegalTransactionStateException(
+                CoreMessages.transactionCanOnlyBindToResources("javax.sql.DataSource/java.sql.Connection"));
         }
         Connection con = (Connection)resource;
         try

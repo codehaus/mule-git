@@ -12,8 +12,7 @@ package org.mule.ra;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.RequestContext;
 import org.mule.impl.container.ContainerKeyPair;
@@ -81,8 +80,8 @@ public class JcaComponent implements UMOComponent
         }
         catch (Exception e)
         {
-            throw new MuleException(new Message(Messages.FAILED_TO_INVOKE_X, "UMO Component: "
-                                                                             + descriptor.getName()), e);
+            throw new MuleException(
+                CoreMessages.failedToInvoke("UMO Component: " + descriptor.getName()), e);
         }
     }
 
@@ -133,8 +132,8 @@ public class JcaComponent implements UMOComponent
     {
         if (initialised.get())
         {
-            throw new InitialisationException(new Message(Messages.OBJECT_X_ALREADY_INITIALISED,
-                "Component '" + descriptor.getName() + "'"), this);
+            throw new InitialisationException(
+                CoreMessages.objectAlreadyInitialised("Component '" + descriptor.getName() + "'"), this);
         }
         descriptor.initialise();
         try

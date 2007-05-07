@@ -1,0 +1,36 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.providers.http;
+
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
+
+public class HttpMessages extends MessageFactory
+{
+    private static final String BUNDLE_PATH = getBundlePath("http");
+
+    public static Message noServletConnectorFound(String name)
+    {
+        return createMessage(BUNDLE_PATH, 10, name);
+    }
+
+    public static Message cannotBindToAddress(String path)
+    {
+        return createMessage(BUNDLE_PATH, 14, path);
+    }
+
+    public static Message eventPropertyNotSetCannotProcessRequest(String property)
+    {
+        return createMessage(BUNDLE_PATH, 15, property);
+    }
+}
+
+

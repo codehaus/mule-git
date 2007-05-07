@@ -10,18 +10,12 @@
 
 package org.mule.providers.http.jetty;
 
-import org.apache.commons.lang.StringUtils;
-import org.mortbay.http.HttpContext;
-import org.mortbay.http.SocketListener;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.util.InetAddrPort;
 import org.mule.MuleManager;
 import org.mule.config.ThreadingProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.http.HttpMessages;
 import org.mule.providers.http.servlet.MuleRESTReceiverServlet;
 import org.mule.providers.http.servlet.ServletConnector;
 import org.mule.umo.UMOComponent;
@@ -30,6 +24,13 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.provider.UMOConnector;
+
+import org.apache.commons.lang.StringUtils;
+import org.mortbay.http.HttpContext;
+import org.mortbay.http.SocketListener;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.ServletHandler;
+import org.mortbay.util.InetAddrPort;
 
 /**
  * <code>HttpMessageReceiver</code> is a simple http server that can be used to
@@ -53,7 +54,8 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
             //find the listeners for incoming requests
             ServletConnector scon = (ServletConnector) MuleManager.getInstance().lookupConnector(JETTY_SERVLET_CONNECTOR_NAME);
             if(scon!=null) {
-                throw new InitialisationException(new Message("http", 10), this);
+                throw new InitialisationException(
+                    HttpMessages.noServletConnectorFound(JETTY_SERVLET_CONNECTOR_NAME), this);
             }
 
             scon = new ServletConnector();
@@ -163,8 +165,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
         catch (Exception e)
         {
-            throw new LifecycleException(new Message(Messages.FAILED_TO_START_X, "Jetty Http Receiver"), e,
-                this);
+            throw new LifecycleException(CoreMessages.failedToStart("Jetty Http Receiver"), e, this);
         }
     }
 
@@ -176,8 +177,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
         catch (InterruptedException e)
         {
-            throw new LifecycleException(new Message(Messages.FAILED_TO_STOP_X, "Jetty Http Receiver"), e,
-                this);
+            throw new LifecycleException(CoreMessages.failedToStop("Jetty Http Receiver"), e, this);
         }
     }
 

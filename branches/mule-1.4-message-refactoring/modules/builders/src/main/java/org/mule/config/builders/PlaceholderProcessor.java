@@ -10,26 +10,25 @@
 
 package org.mule.config.builders;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.TemplateParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Placeholders are ant-like tags that are embedded in Mule Xml configuration i.e.
@@ -76,8 +75,9 @@ public class PlaceholderProcessor
             value = processValue(value);
             if (value == null)
             {
-                throw new ConfigurationException(new Message(Messages.PROPERTY_TEMPLATE_MALFORMED_X,
-                    "<" + elementName + attribs.getLocalName(i) + "='" + value + "' ...>"));
+                throw new ConfigurationException(
+                    BuildersMessages.propertyTemplateMalformed(
+                        "<" + elementName + attribs.getLocalName(i) + "='" + value + "' ...>"));
             }
             attribs.setValue(i, value);
         }

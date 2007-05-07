@@ -13,7 +13,6 @@ package org.mule.providers.file;
 import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.file.transformers.FileToByteArray;
 import org.mule.umo.MessagingException;
@@ -128,7 +127,7 @@ public class FileMessageAdapter extends AbstractMessageAdapter
                 exceptionArg = ObjectUtils.toString(message, "null");
             }
 
-            Message msg = new Message(Messages.FILE_X_DOES_NOT_EXIST, ObjectUtils.toString(message, "null"));
+            Message msg = FileMessages.fileDoesNotExist(ObjectUtils.toString(message, "null"));
 
             throw new MessagingException(msg, exceptionArg);
         }
@@ -143,5 +142,4 @@ public class FileMessageAdapter extends AbstractMessageAdapter
     {
         return file.getAbsolutePath();
     }
-
 }

@@ -11,8 +11,7 @@ package org.mule.management.agents;
 
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
@@ -208,7 +207,7 @@ public class JmxAgent implements UMOAgent
                 }
                 connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, connectorServerProperties, mBeanServer);
             } catch (Exception e) {
-                throw new InitialisationException(new Message(Messages.FAILED_TO_CREATE_X, "Jmx Connector"), e, this);
+                throw new InitialisationException(CoreMessages.failedToCreate("Jmx Connector"), e, this);
             }
         }
 
@@ -227,7 +226,7 @@ public class JmxAgent implements UMOAgent
                         registerEndpointServices();
                         registerConnectorServices();
                     } catch (Exception e) {
-                        throw new MuleRuntimeException(new Message(Messages.X_FAILED_TO_INITIALISE, "MBeans"), e);
+                        throw new MuleRuntimeException(CoreMessages.objectFailedToInitialise("MBeans"), e);
                     }
                 }
             }
@@ -263,7 +262,7 @@ public class JmxAgent implements UMOAgent
                 logger.info("Starting JMX agent connector Server");
                 connectorServer.start();
             } catch (Exception e) {
-                throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Jmx Connector"), e);
+                throw new JmxManagementException(CoreMessages.failedToStart("Jmx Connector"), e);
             }
         }
     }
@@ -279,7 +278,7 @@ public class JmxAgent implements UMOAgent
             try {
                 connectorServer.stop();
             } catch (Exception e) {
-                throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Jmx Connector"), e);
+                throw new JmxManagementException(CoreMessages.failedToStop("Jmx Connector"), e);
             }
         }
     }

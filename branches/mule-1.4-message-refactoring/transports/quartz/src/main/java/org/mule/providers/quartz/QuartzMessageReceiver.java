@@ -10,10 +10,8 @@
 
 package org.mule.providers.quartz;
 
-import java.util.Date;
-
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.quartz.jobs.MuleReceiverJob;
 import org.mule.umo.UMOComponent;
@@ -22,13 +20,16 @@ import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+
+import java.util.Date;
+
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.ObjectAlreadyExistsException;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.ObjectAlreadyExistsException;
 
 /**
  * Listens for Quartz sheduled events using the Receiver Job and fires events to the
@@ -138,7 +139,7 @@ public class QuartzMessageReceiver extends AbstractMessageReceiver
         }
         catch (Exception e)
         {
-            throw new EndpointException(new Message(Messages.FAILED_TO_START_X, "Quartz receiver"), e);
+            throw new EndpointException(CoreMessages.failedToStart("Quartz receiver"), e);
         }
     }
 

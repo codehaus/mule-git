@@ -13,8 +13,8 @@ package org.mule.extras.spring;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.CoreMessageConstants;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.extras.spring.config.CachedResource;
 import org.mule.extras.spring.config.ReaderInputStream;
 import org.mule.impl.container.AbstractContainerContext;
@@ -209,8 +209,8 @@ public class SpringContainerContext extends AbstractContainerContext implements 
         }
         catch (BeansException e)
         {
-            throw new InitialisationException(new ConfigurationException(new Message(Messages.FAILED_LOAD_X,
-                "Application Context: " + configFile), e), this);
+            throw new InitialisationException(new ConfigurationException(
+                CoreMessages.failedToLoad("Application Context: " + configFile), e), this);
         }
     }
 

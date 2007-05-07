@@ -12,6 +12,7 @@ package org.mule.providers.jms;
 
 import org.mule.MuleManager;
 import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.Messages;
 import org.mule.impl.internal.notifications.ConnectionNotification;
@@ -198,7 +199,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             else if (jndiProviderProperties == null
                      || !jndiProviderProperties.containsKey(Context.INITIAL_CONTEXT_FACTORY))
             {
-                throw new InitialisationException(new Message(Messages.X_IS_NULL, "jndiInitialFactory"), this);
+                throw new InitialisationException(CoreMessages.objectIsNull("jndiInitialFactory"), this);
             }
 
             if (jndiProviderUrl != null)
@@ -362,7 +363,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
         catch (Exception e)
         {
-            throw new ConnectException(new Message(Messages.FAILED_TO_CREATE_X, "Jms Connector"), e, this);
+            throw new ConnectException(CoreMessages.failedToCreate("Jms Connector"), e, this);
         }
 
         try
@@ -487,7 +488,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             }
             catch (JMSException e)
             {
-                throw new LifecycleException(new Message(Messages.FAILED_TO_START_X, "Jms Connection"), e);
+                throw new LifecycleException(CoreMessages.failedToStart("Jms Connection"), e);
             }
         }
     }

@@ -10,12 +10,10 @@
 
 package org.mule.ra;
 
+import org.mule.MuleManager;
+
 import javax.resource.ResourceException;
 import javax.resource.spi.ManagedConnectionMetaData;
-
-import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 
 /**
  * <code>MuleManagedConnectionMetaData</code> TODO
@@ -49,7 +47,8 @@ public class MuleManagedConnectionMetaData implements ManagedConnectionMetaData
     {
         if (managedConnection.isDestroyed())
         {
-            throw new IllegalStateException(new Message(Messages.X_IS_DISPOSED, managedConnection).toString());
+            throw new IllegalStateException(
+                JcaMessages.objectIsDisposed(managedConnection).toString());
         }
         return managedConnection.getUsername();
     }

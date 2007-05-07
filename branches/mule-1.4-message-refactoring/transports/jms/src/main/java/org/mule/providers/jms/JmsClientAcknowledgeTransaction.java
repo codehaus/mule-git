@@ -91,8 +91,8 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
         }
         if (!(key instanceof Connection) || !(resource instanceof Session))
         {
-            throw new IllegalTransactionStateException(new org.mule.config.i18n.Message(
-                Messages.TX_CAN_ONLY_BIND_TO_X_TYPE_RESOURCES, "javax.jms.Connection/javax.jms.Session"));
+            throw new IllegalTransactionStateException(
+                CoreMessages.transactionCanOnlyBindToResources("javax.jms.Connection/javax.jms.Session"));
         }
 
         Session session = (Session)resource;

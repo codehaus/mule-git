@@ -10,8 +10,6 @@
 
 package org.mule.providers.soap;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.providers.service.TransportFactory;
 import org.mule.providers.service.TransportFactoryException;
 import org.mule.providers.service.TransportServiceDescriptor;
@@ -53,8 +51,7 @@ public class SoapServiceFinder implements TransportServiceFinder
                     ")").append(", ");
             }
         }
-        throw new TransportServiceException(new Message(Messages.COULD_NOT_FIND_SOAP_PROVIDER_X,
-            buf.toString()));
+        throw new TransportServiceException(SoapMessages.couldNotFindSoapProvider(buf.toString()));
     }
 
     protected String getProtocolFromKey(String key)
