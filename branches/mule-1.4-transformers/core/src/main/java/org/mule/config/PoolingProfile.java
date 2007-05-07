@@ -42,8 +42,7 @@ public class PoolingProfile
     public static final int POOL_INITIALISE_ONE_COMPONENT = INITIALISE_ONE;
 
     /**
-     * Tells the object pool not to initialise any components on startup. The
-     * configuration alias for this value is "INITIALISE_ALL".
+     * Tells the object pool to initialise all components on startup.
      */
     public static final int INITIALISE_ALL = 2;
     /** @deprecated use INITIALISE_ALL instead */

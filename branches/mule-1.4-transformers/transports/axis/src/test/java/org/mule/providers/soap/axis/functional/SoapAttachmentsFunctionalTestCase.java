@@ -44,7 +44,7 @@ public class SoapAttachmentsFunctionalTestCase extends AbstractProviderFunctiona
         // Make sure we are running synchronously
         MuleManager.getConfiguration().setSynchronous(true);
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
-            PoolingProfile.POOL_INITIALISE_ONE_COMPONENT);
+            PoolingProfile.INITIALISE_ONE);
 
         UMOModel model = new SedaModel();
         model.setName("main");

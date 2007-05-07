@@ -83,7 +83,7 @@ public final class MuleTestUtils
         manager.registerModel(model);
         MuleManager.getConfiguration().setSynchronous(true);
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
-            PoolingProfile.POOL_INITIALISE_NO_COMPONENTS);
+            PoolingProfile.INITIALISE_NONE);
 
         return manager;
     }
