@@ -71,19 +71,15 @@ public class MuleConfigurationTestCase extends AbstractMuleTestCase
         assertEquals(ObjectPool.DEFAULT_EXHAUSTED_ACTION, pp.getExhaustedAction());
 
         pp.setInitialisationPolicyString("INITIALISE_NONE");
-        assertEquals(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS, pp.getInitialisationPolicy());
-        pp.setInitialisationPolicyString("POOL_INITIALISE_NO_COMPONENTS");
-        assertEquals(PoolingProfile.POOL_INITIALISE_NO_COMPONENTS, pp.getInitialisationPolicy());
+        assertEquals(PoolingProfile.INITIALISE_NONE, pp.getInitialisationPolicy());
 
         pp.setInitialisationPolicyString("INITIALISE_ONE");
-        assertEquals(PoolingProfile.POOL_INITIALISE_ONE_COMPONENT, pp.getInitialisationPolicy());
+        assertEquals(PoolingProfile.INITIALISE_ONE, pp.getInitialisationPolicy());
         pp.setInitialisationPolicyString("POOL_INITIALISE_ONE_COMPONENT");
-        assertEquals(PoolingProfile.POOL_INITIALISE_ONE_COMPONENT, pp.getInitialisationPolicy());
+        assertEquals(PoolingProfile.INITIALISE_ONE, pp.getInitialisationPolicy());
 
         pp.setInitialisationPolicyString("INITIALISE_ALL");
-        assertEquals(PoolingProfile.POOL_INITIALISE_ALL_COMPONENTS, pp.getInitialisationPolicy());
-        pp.setInitialisationPolicyString("POOL_INITIALISE_ALL_COMPONENTS");
-        assertEquals(PoolingProfile.POOL_INITIALISE_ALL_COMPONENTS, pp.getInitialisationPolicy());
+        assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
 
         pp.setInitialisationPolicyString("FOO");
         assertEquals(PoolingProfile.DEFAULT_POOL_INITIALISATION_POLICY, pp.getInitialisationPolicy());

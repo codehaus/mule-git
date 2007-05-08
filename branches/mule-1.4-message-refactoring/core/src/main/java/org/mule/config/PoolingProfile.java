@@ -28,22 +28,25 @@ public class PoolingProfile
 {
 
     /**
-     * Tells the object pool not to initialise any components on startup. The
-     * configuration alias for this value is "INITIALISE_NONE".
+     * Tells the object pool not to initialise any components on startup.
      */
-    public static final int POOL_INITIALISE_NO_COMPONENTS = 0;
+    public static final int INITIALISE_NONE = 0;
+    /** @deprecated use INITIALISE_NONE instead */
+    public static final int POOL_INITIALISE_NO_COMPONENTS = INITIALISE_NONE;
 
     /**
-     * Tells the object pool only to initialise one component on startup. The
-     * configuration alias for this value is "INITIALISE_ONE".
+     * Tells the object pool only to initialise one component on startup.
      */
-    public static final int POOL_INITIALISE_ONE_COMPONENT = 1;
+    public static final int INITIALISE_ONE = 1;
+    /** @deprecated use INITIALISE_ONE instead */
+    public static final int POOL_INITIALISE_ONE_COMPONENT = INITIALISE_ONE;
 
     /**
-     * Tells the object pool not to initialise any components on startup. The
-     * configuration alias for this value is "INITIALISE_ALL".
+     * Tells the object pool to initialise all components on startup.
      */
-    public static final int POOL_INITIALISE_ALL_COMPONENTS = 2;
+    public static final int INITIALISE_ALL = 2;
+    /** @deprecated use INITIALISE_ALL instead */
+    public static final int POOL_INITIALISE_ALL_COMPONENTS = INITIALISE_ALL;
 
     /**
      * Controls the maximum number of Mule UMOs that can be borrowed from a component
@@ -64,7 +67,7 @@ public class PoolingProfile
     public static final int DEFAULT_MAX_POOL_IDLE = ObjectPool.DEFAULT_MAX_SIZE;
 
     /**
-     * When the threadPoolExhaustedAction is set to 2 (WHEN_EXHAUSTED_BLOCK) this can
+     * When the threadPoolExhaustedAction is set to WHEN_EXHAUSTED_WAIT this can
      * specify the maximum milliseconds the pool should block before throwing a
      * NoSuchElementException
      */
@@ -73,11 +76,11 @@ public class PoolingProfile
     /**
      * Specifies the behaviour of the Mule UMO pool when the pool is exhausted:
      * <ul>
-     * <li>0 (WHEN_EXHAUSTED_FAIL) : will throw a NoSuchElementException</li>
-     * <li>1 (WHEN_EXHAUSTED_BLOCK): will block (invoke Object.wait(long) until a
-     * new or idle object is available.</li>
-     * <li>2 (WHEN_EXHAUSTED_GROW) : will create a new Mule and return it
-     * (essentially making maxActive meaningless).</li>
+     * <li>WHEN_EXHAUSTED_FAIL : will throw a NoSuchElementException</li>
+     * <li>WHEN_EXHAUSTED_WAIT : will block (invoke Object.wait(long) until a new or
+     * idle object is available.</li>
+     * <li>WHEN_EXHAUSTED_GROW : will create a new Mule and return it (essentially
+     * making maxActive meaningless).</li>
      * </ul>
      * If a positive maxWait value is supplied, it will block for at most that many
      * milliseconds, after which a NoSuchElementException will be thrown. If maxWait
@@ -89,15 +92,13 @@ public class PoolingProfile
      * Determines how components in a pool should be initialised. The possible values
      * are:
      * <ul>
-     * <li>0 (POOL_INITIALISE_NO_COMPONENTS) : Will not load any components in the pool on
+     * <li>INITIALISE_NONE : Will not load any components in the pool on startup</li>
+     * <li>INITIALISE_ONE : Will load only the first component in the pool on
      * startup</li>
-     * <li>1 (POOL_INITIALISE_ONE_COMPONENT) : Will load only the first component in the
-     * pool on startup</li>
-     * <li>2 (POOL_INITIALISE_ALL_COMPONENTS) : Will load all components in the pool on
-     * startup</li>
+     * <li>INITIALISE_ALL : Will load all components in the pool on startup</li>
      * </ul>
      */
-    public static final int DEFAULT_POOL_INITIALISATION_POLICY = POOL_INITIALISE_ONE_COMPONENT;
+    public static final int DEFAULT_POOL_INITIALISATION_POLICY = INITIALISE_ONE;
 
     // map pool exhaustion strings to their respective values
     private static final Map POOL_EXHAUSTED_ACTIONS = new CaseInsensitiveMap()
@@ -132,18 +133,15 @@ public class PoolingProfile
 
         // static initializer
         {
-            Integer value = new Integer(POOL_INITIALISE_NO_COMPONENTS);
-            this.put("POOL_INITIALISE_NO_COMPONENTS", value);
+            Integer value = new Integer(INITIALISE_NONE);
             this.put("INITIALISE_NONE", value);
 
-            value = new Integer(POOL_INITIALISE_ONE_COMPONENT);
-            this.put("POOL_INITIALISE_ONE_COMPONENT", value);
+            value = new Integer(INITIALISE_ONE);
             this.put("INITIALISE_ONE", value);
-            // TODO HH: remove for 2.0 (only keep ONE)
+            // TODO HH: remove for 2.0 (only keep INITIALISE_ONE)
             this.put("INITIALISE_FIRST", value);
 
-            value = new Integer(POOL_INITIALISE_ALL_COMPONENTS);
-            this.put("POOL_INITIALISE_ALL_COMPONENTS", value);
+            value = new Integer(INITIALISE_ALL);
             this.put("INITIALISE_ALL", value);
         }
     };
