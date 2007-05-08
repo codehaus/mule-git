@@ -11,9 +11,8 @@
 package org.mule.config.builders;
 
 import org.mule.config.ConfigurationException;
+import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.container.ContainerKeyPair;
 import org.mule.umo.manager.UMOContainerContext;
 
@@ -123,9 +122,9 @@ public class ObjectGetOrCreateRule extends ObjectCreateRule
             String classRef = attributes.getValue(classAttrib);
             if (classRef == null && classRefRequired)
             {
-                throw new ConfigurationException(new Message(
-                    Messages.MUST_SPECIFY_REF_ATTRIB_X_OR_CLASS_ATTRIB_X_FOR_X, refAttrib, classAttrib,
-                    this.digester.getCurrentElementName()));
+                throw new ConfigurationException(
+                    BuildersMessages.mustSpecifyContainerRefOrClassAttribute(refAttrib, classAttrib,
+                        this.digester.getCurrentElementName()));
             }
             else
             {

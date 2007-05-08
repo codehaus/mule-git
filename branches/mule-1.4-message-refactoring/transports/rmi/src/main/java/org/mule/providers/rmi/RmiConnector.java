@@ -11,9 +11,9 @@
 package org.mule.providers.rmi;
 
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.AbstractJndiConnector;
+import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -238,8 +238,9 @@ public class RmiConnector extends AbstractJndiConnector
 
             if (null == methodName)
             {
-                throw new DispatchException(new org.mule.config.i18n.Message("rmi",
-                    RmiConnector.MSG_PARAM_SERVICE_METHOD_NOT_SET), event.getMessage(), event.getEndpoint());
+                throw new DispatchException(
+                    RmiMessages.messageParamServiceMethodNotSet(), 
+                    event.getMessage(), event.getEndpoint());
             }
         }
 
@@ -283,9 +284,9 @@ public class RmiConnector extends AbstractJndiConnector
         }
         catch (NoSuchMethodException e)
         {
-            throw new NoSuchMethodException(new Message(Messages.METHOD_X_WITH_PARAMS_X_NOT_FOUND_ON_X,
-                    methodName, ArrayUtils.toString(argTypes),
-                    ClassUtils.getSimpleName(remoteObject.getClass())).toString());
+            throw new NoSuchMethodException(
+                CoreMessages.methodWithParamsNotFoundOnObject(methodName, ArrayUtils.toString(argTypes),
+                    remoteObject.getClass()).toString());
         }
         catch (SecurityException e)
         {

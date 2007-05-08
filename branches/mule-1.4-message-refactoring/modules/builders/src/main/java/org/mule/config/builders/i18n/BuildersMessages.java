@@ -31,6 +31,12 @@ public class BuildersMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 3, property);
     }
+
+    public static Message mustSpecifyContainerRefOrClassAttribute(String containerAttrib, 
+        String refAttrib, String config)
+    {
+        return createMessage(BUNDLE_PATH, 4, containerAttrib, refAttrib, config);
+    }
 }
 
 
