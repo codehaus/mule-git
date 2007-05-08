@@ -253,12 +253,12 @@ public class SystemStreamConnector extends StreamConnector
     {
         protected static String getBundlePath(String bundleName)
         {
-            return getBundlePath(bundleName);
+            return MessageFactory.getBundlePath(bundleName);
         }
         
         protected static String getString(String bundlePath, String code)
         {
-            return getString(bundlePath, Integer.parseInt(code));
+            return MessageFactory.getString(bundlePath, Integer.parseInt(code));
         }
     }
 }
