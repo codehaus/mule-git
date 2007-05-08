@@ -45,46 +45,6 @@ public class Message implements Serializable
         this.message = message;
     }
 
-//    /**
-//     * @deprecated
-//     */
-//    public Message(int code, Object arg1, Object arg2)
-//    {
-//        this.code = code;
-//        if (arg1 == null)
-//        {
-//            arg1 = "null";
-//        }
-//        if (arg2 == null)
-//        {
-//            arg2 = "null";
-//        }
-//        args = new Object[]{arg1, arg2};
-//        message = Messages.get(code, args);
-//    }
-
-    /**
-     * @deprecated
-     */
-    public Message(int code, Object arg1, Object arg2, Object arg3)
-    {
-        this.code = code;
-        if (arg1 == null)
-        {
-            arg1 = "null";
-        }
-        if (arg2 == null)
-        {
-            arg2 = "null";
-        }
-        if (arg3 == null)
-        {
-            arg3 = "null";
-        }
-        args = new Object[]{arg1, arg2, arg3};
-        message = Messages.get(code, args);
-    }
-
     /**
      * @deprecated
      */
@@ -95,14 +55,6 @@ public class Message implements Serializable
         message = Messages.get(bundle, code, args);
         this.bundle = bundle;
     }
-
-//    public Message(String bundle, int code, Object[] args)
-//    {
-//        this.code = code;
-//        this.args = args;
-//        message = Messages.get(bundle, code, args);
-//        this.bundle = bundle;
-//    }
 
     /**
      * @deprecated

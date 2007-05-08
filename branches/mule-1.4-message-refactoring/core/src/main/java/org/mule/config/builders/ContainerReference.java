@@ -10,8 +10,7 @@
 
 package org.mule.config.builders;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.ContainerKeyPair;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.manager.UMOContainerContext;
@@ -80,9 +79,8 @@ public class ContainerReference
         catch (Exception e)
         {
             throw new ContainerException(
-                new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName, 
-                    object.getClass().getName(), comp.getClass().getName()),
-                e);
+                CoreMessages.cannotSetPropertyOnObjectWithParamType(propertyName, 
+                    object.getClass(), comp.getClass()), e);
         }
     }
 }

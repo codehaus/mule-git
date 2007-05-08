@@ -12,8 +12,6 @@ package org.mule.transformers;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -237,9 +235,9 @@ public abstract class AbstractTransformer implements UMOTransformer
             }
             else
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNSUPORTED_TYPE_X_ENDPOINT_X,
-                    getName(), src.getClass().getName(),
-                    (endpoint != null ? endpoint.getEndpointURI() : null)), this);
+                throw new TransformerException(
+                    CoreMessages.transformOnObjectUnsupportedTypeOfEndpoint(this.getName(), 
+                        src.getClass(), endpoint), this);
             }
         }
 

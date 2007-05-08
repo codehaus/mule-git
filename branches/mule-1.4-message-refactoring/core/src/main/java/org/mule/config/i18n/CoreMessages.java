@@ -780,4 +780,31 @@ public class CoreMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 154, value, parameter);
     }
+
+    public static Message cannotSetPropertyOnObjectWithParamType(String property, 
+        Class class1, Class class2)
+    {
+        return createMessage(BUNDLE_PATH, 61, property, StringMessageUtils.toString(class1),
+            StringMessageUtils.toString(class2));
+    }
+
+    public static Message methodWithParamsNotFoundOnObject(String method, Object class1, Class class2)
+    {
+        return createMessage(BUNDLE_PATH, 109, method, StringMessageUtils.toString(class1),
+            StringMessageUtils.toString(class2));
+    }
+
+    public static Message propertyIsNotSupportedType(String property, Class expected, 
+        Class actual)
+    {
+        return createMessage(BUNDLE_PATH, 157, property, StringMessageUtils.toString(expected),
+            StringMessageUtils.toString(actual));
+    }
+
+    public static Message transformOnObjectUnsupportedTypeOfEndpoint(String name, Class class1, 
+        UMOImmutableEndpoint endpoint)
+    {
+        return createMessage(BUNDLE_PATH, 54, name, StringMessageUtils.toString(class1),
+            (endpoint != null ? endpoint.getEndpointURI() : null));
+    }
 }
