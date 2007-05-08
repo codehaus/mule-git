@@ -11,8 +11,6 @@
 package org.mule.impl.model.streaming;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.RequestContext;
 import org.mule.impl.model.AbstractComponent;
