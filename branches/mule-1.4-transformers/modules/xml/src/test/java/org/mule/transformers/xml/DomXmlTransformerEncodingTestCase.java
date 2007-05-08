@@ -10,10 +10,6 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.transformers.xml.DomDocumentToXml;
-import org.mule.transformers.xml.XmlToDomDocument;
-import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
@@ -42,9 +38,12 @@ public class DomXmlTransformerEncodingTestCase extends AbstractXmlTransformerTes
         UMOTransformer trans = new DomDocumentToXml();
         trans.setReturnClass(String.class);
 
-        UMOEndpoint endpoint = new MuleEndpoint();
-        endpoint.setEncoding("US-ASCII");
-        trans.setEndpoint(endpoint);
+        // TODO HH: kill or fix?
+        // the endpoint is not used and this succeeds, but the encoding information
+        // should still be accounted for in this test case
+        // UMOEndpoint endpoint = new MuleEndpoint();
+        // endpoint.setEncoding("US-ASCII");
+        // trans.setEndpoint(endpoint);
         return trans;
     }
 
@@ -70,8 +69,8 @@ public class DomXmlTransformerEncodingTestCase extends AbstractXmlTransformerTes
         // instances
         if (expected instanceof Document)
         {
-            expected = new DOMReader().read((Document)expected).asXML();
-            result = new DOMReader().read((Document)result).asXML();
+            expected = new DOMReader().read((Document) expected).asXML();
+            result = new DOMReader().read((Document) result).asXML();
         }
 
         return super.compareResults(expected, result);
