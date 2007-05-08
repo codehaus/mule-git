@@ -17,6 +17,21 @@ public class SoapMessages extends MessageFactory
 {
     private static final String BUNDLE_PATH = getBundlePath("soap");
 
+    public static Message cannotInvokeCallWithoutOperation()
+    {
+        return createMessage(BUNDLE_PATH, 4);
+    }
+
+    public static Message failedToProcessSoapHeaders()
+    {
+        return createMessage(BUNDLE_PATH, 5);
+    }
+
+    public static Message cannotRemoveSingleAttachment()
+    {
+        return createMessage(BUNDLE_PATH, 6);
+    }
+
     public static Message couldNotFindSoapProvider(String name)
     {
         return createMessage(BUNDLE_PATH, 8, name);

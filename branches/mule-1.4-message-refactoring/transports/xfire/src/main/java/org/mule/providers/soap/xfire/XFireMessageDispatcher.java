@@ -10,6 +10,23 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.config.MuleProperties;
+import org.mule.config.i18n.Message;
+import org.mule.impl.MuleMessage;
+import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.FatalConnectException;
+import org.mule.providers.soap.SoapConstants;
+import org.mule.providers.soap.i18n.SoapMessages;
+import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.DispatchException;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.util.ClassUtils;
+import org.mule.util.TemplateParser;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,21 +46,6 @@ import org.codehaus.xfire.handler.Handler;
 import org.codehaus.xfire.service.OperationInfo;
 import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.transport.Transport;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.FatalConnectException;
-import org.mule.providers.soap.SoapConstants;
-import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.util.ClassUtils;
-import org.mule.util.TemplateParser;
 
 /**
  * The XFireMessageDispatcher is used for making Soap client requests to remote
@@ -198,8 +200,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         
         if (method == null)
         {
-            throw new DispatchException(new org.mule.config.i18n.Message("soap", 4), event.getMessage(),
-               event.getEndpoint());
+            throw new DispatchException(SoapMessages.cannotInvokeCallWithoutOperation(), 
+                event.getMessage(), event.getEndpoint());
         }
                 
         return method;

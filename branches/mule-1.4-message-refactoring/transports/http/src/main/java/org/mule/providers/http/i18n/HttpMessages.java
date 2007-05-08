@@ -17,6 +17,21 @@ public class HttpMessages extends MessageFactory
 {
     private static final String BUNDLE_PATH = getBundlePath("http");
 
+    public static Message unableToGetEndpointUri(String requestURI)
+    {
+        return createMessage(BUNDLE_PATH, 4, requestURI);
+    }
+
+    public static Message receiverPropertyNotSet()
+    {
+        return createMessage(BUNDLE_PATH, 7);
+    }
+
+    public static Message noConnectorForProtocolServlet()
+    {
+        return createMessage(BUNDLE_PATH, 9);
+    }
+
     public static Message noServletConnectorFound(String name)
     {
         return createMessage(BUNDLE_PATH, 10, name);

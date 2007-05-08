@@ -48,17 +48,6 @@ public class Message implements Serializable
     /**
      * @deprecated
      */
-    public Message(String bundle, int code)
-    {
-        this.code = code;
-        args = EMPTY_ARGS;
-        message = Messages.get(bundle, code, args);
-        this.bundle = bundle;
-    }
-
-    /**
-     * @deprecated
-     */
     public Message(String bundle, int code, Object arg1)
     {
         this.code = code;

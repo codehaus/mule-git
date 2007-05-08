@@ -11,7 +11,7 @@
 package org.mule.providers.jms;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Messages;
+import org.mule.providers.jms.i18n.JmsMessages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.TransactionException;
@@ -52,7 +52,8 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
         {
             if (message == null)
             {
-                throw new IllegalTransactionStateException(new org.mule.config.i18n.Message("jms", 6));
+                throw new IllegalTransactionStateException(
+                    JmsMessages.noMessageBoundForAck());
             }
             message.acknowledge();
         }
@@ -100,7 +101,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
         {
             if (session.getTransacted())
             {
-                throw new IllegalTransactionStateException(new org.mule.config.i18n.Message("jms", 5));
+                throw new IllegalTransactionStateException(JmsMessages.sessionShouldNotBeTransacted());
             }
         }
         catch (JMSException e)

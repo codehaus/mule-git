@@ -8,28 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.extras.client.i18n;
+package org.mule.extras.spring.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class ClientMessages extends MessageFactory
+public class SpringMessages extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("client");
+    private static final String BUNDLE_PATH = getBundlePath("spring");
 
-    public static Message failedToDispatchClientEvent()
+    public static Message failedToReinitMule()
     {
         return createMessage(BUNDLE_PATH, 1);
-    }
-
-    public static Message noArgsForProxy()
-    {
-        return createMessage(BUNDLE_PATH, 2);
-    }
-
-    public static Message managerIsAlreadyConfigured()
-    {
-        return createMessage(BUNDLE_PATH, 3);
     }
 }
 

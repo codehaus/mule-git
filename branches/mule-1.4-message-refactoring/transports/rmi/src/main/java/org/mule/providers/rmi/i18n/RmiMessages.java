@@ -21,6 +21,16 @@ public class RmiMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 1);
     }
+
+    public static Message messageReceiverNeedsRmiAble()
+    {
+        return createMessage(BUNDLE_PATH, 10);
+    }
+
+    public static Message serviceClassInvocationFailed()
+    {
+        return createMessage(BUNDLE_PATH, 11);
+    }
 }
 
 

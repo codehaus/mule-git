@@ -22,6 +22,7 @@ import org.mule.providers.AbstractConnector;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.MethodFixInterceptor;
+import org.mule.providers.soap.xfire.i18n.XFireMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -147,7 +148,8 @@ public class XFireConnector extends AbstractConnector
                 // are we running under Java 5 (at least)?
                 if (!SystemUtils.isJavaVersionAtLeast(150))
                 {
-                    throw new InitialisationException(new Message("xfire", 9), this);
+                    throw new InitialisationException(
+                        XFireMessages.annotationsRequireJava5(), this);
                 }
                 try
                 {

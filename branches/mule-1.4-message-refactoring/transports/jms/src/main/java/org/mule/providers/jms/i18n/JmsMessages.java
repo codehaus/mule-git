@@ -24,6 +24,21 @@ public class JmsMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 2);
     }
 
+    public static Message sessionShouldBeTransacted()
+    {
+        return createMessage(BUNDLE_PATH, 4);
+    }
+
+    public static Message sessionShouldNotBeTransacted()
+    {
+        return createMessage(BUNDLE_PATH, 5);
+    }
+
+    public static Message noMessageBoundForAck()
+    {
+        return createMessage(BUNDLE_PATH, 6);
+    }
+
     public static Message invalidResourceType(Class expectedClass, Class actualClass)
     {
         return createMessage(BUNDLE_PATH, 12, StringMessageUtils.toString(expectedClass),

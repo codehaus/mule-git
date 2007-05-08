@@ -12,7 +12,6 @@ package org.mule.providers.soap.axis;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractMessageDispatcher;
@@ -20,6 +19,7 @@ import org.mule.providers.NullPayload;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.SoapMethod;
+import org.mule.providers.soap.i18n.SoapMessages;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -166,8 +166,9 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
         if (method == null)
         {
-            throw new DispatchException(new org.mule.config.i18n.Message("soap", 4), event.getMessage(),
-                event.getEndpoint());
+            throw new DispatchException(
+                SoapMessages.cannotInvokeCallWithoutOperation(), event.getMessage(),
+                    event.getEndpoint());
         }
         else if (method instanceof SoapMethod)
         {

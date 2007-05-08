@@ -11,8 +11,8 @@
 package org.mule.providers.quartz;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.providers.quartz.jobs.MuleReceiverJob;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
@@ -111,7 +111,8 @@ public class QuartzMessageReceiver extends AbstractMessageReceiver
             }
             else
             {
-                throw new IllegalArgumentException(new Message("quartz", 1).getMessage());
+                throw new IllegalArgumentException(
+                    QuartzMessages.cronExpressionOrIntervalMustBeSet().getMessage());
             }
             long start = System.currentTimeMillis();
             if (startDelay != null)

@@ -45,12 +45,6 @@ import org.apache.commons.collections.MapUtils;
  */
 public class RmiConnector extends AbstractJndiConnector
 {
-    // Messages
-    public static final int MSG_PARAM_SERVICE_METHOD_NOT_SET = 1;
-    public static final int MSG_PROPERTY_SERVICE_METHOD_PARAM_TYPES_NOT_SET = 2;
-    public static final int NO_RMI_SERVICECLASS_SET = 10;
-    public static final int RMI_SERVICECLASS_INVOCATION_FAILED = 11;
-
     public static final int DEFAULT_RMI_REGISTRY_PORT = 1099;
 
     public static final String PROPERTY_RMI_SECURITY_POLICY = "securityPolicy";
