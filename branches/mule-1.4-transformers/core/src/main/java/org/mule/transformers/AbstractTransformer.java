@@ -59,7 +59,7 @@ public abstract class AbstractTransformer implements UMOTransformer
      * The endpoint that this transformer instance is configured on
      */
     // TODO HH: kill
-    protected UMOImmutableEndpoint endpoint = null;
+    // protected UMOImmutableEndpoint endpoint = null;
 
     /**
      * A list of supported Class types that the source payload passed into this
@@ -286,10 +286,11 @@ public abstract class AbstractTransformer implements UMOTransformer
         return result;
     }
 
-    public UMOImmutableEndpoint getEndpoint()
-    {
-        return endpoint;
-    }
+    // TODO HH: kill
+//    public UMOImmutableEndpoint getEndpoint()
+//    {
+//        return endpoint;
+//    }
 
     /*
      * (non-Javadoc)
@@ -297,16 +298,16 @@ public abstract class AbstractTransformer implements UMOTransformer
      * @see org.mule.umo.transformer.UMOTransformer#setConnector(org.mule.umo.provider.UMOConnector)
      */
     // TODO HH: kill
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
-    {
-        this.endpoint = endpoint;
-        UMOTransformer trans = nextTransformer;
-        while (trans != null && endpoint != null)
-        {
-            trans.setEndpoint(endpoint);
-            trans = trans.getNextTransformer();
-        }
-    }
+//    public void setEndpoint(UMOImmutableEndpoint endpoint)
+//    {
+//        this.endpoint = endpoint;
+//        UMOTransformer trans = nextTransformer;
+//        while (trans != null && endpoint != null)
+//        {
+//            trans.setEndpoint(endpoint);
+//            trans = trans.getNextTransformer();
+//        }
+//    }
 
     protected abstract Object doTransform(Object src, String encoding) throws TransformerException;
 
@@ -370,7 +371,8 @@ public abstract class AbstractTransformer implements UMOTransformer
             }
 
             // update all chained transformers to use this endpoint which is *shared*
-            clone.setEndpoint(endpoint);
+            // TODO HH: kill
+            // clone.setEndpoint(endpoint);
 
             return clone;
         }

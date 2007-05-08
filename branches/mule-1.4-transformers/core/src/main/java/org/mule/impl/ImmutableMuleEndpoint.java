@@ -192,7 +192,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         if (transformer != null)
         {
-            transformer.setEndpoint(this);
+            // TODO HH: kill
+            // transformer.setEndpoint(this);
             this.transformer = transformer;
         }
 
@@ -260,20 +261,22 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             this.transformer = source.getTransformer();
         }
 
-        if (this.transformer != null)
-        {
-            this.transformer.setEndpoint(this);
-        }
+        // TODO HH: kill
+//        if (this.transformer != null)
+//        {
+//            this.transformer.setEndpoint(this);
+//        }
 
         if (this.responseTransformer == null)
         {
             this.responseTransformer = source.getResponseTransformer();
         }
 
-        if (responseTransformer != null)
-        {
-            this.responseTransformer.setEndpoint(this);
-        }
+        // TODO HH: kill
+//        if (responseTransformer != null)
+//        {
+//            this.responseTransformer.setEndpoint(this);
+//        }
 
         this.properties = new ConcurrentHashMap();
 
@@ -719,10 +722,11 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                 }
             }
         }
-        if (transformer != null)
-        {
-            transformer.setEndpoint(this);
-        }
+        // TODO HH: kill
+//        if (transformer != null)
+//        {
+//            transformer.setEndpoint(this);
+//        }
 
         if (endpointUri.getResponseTransformers() != null)
         {
@@ -743,10 +747,11 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                 responseTransformer = ((AbstractConnector) connector).getDefaultResponseTransformer();
             }
         }
-        if (responseTransformer != null)
-        {
-            responseTransformer.setEndpoint(this);
-        }
+        // TODO HH: kill
+//        if (responseTransformer != null)
+//        {
+//            responseTransformer.setEndpoint(this);
+//        }
 
         if (securityFilter != null)
         {

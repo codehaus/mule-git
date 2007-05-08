@@ -11,8 +11,6 @@
 package org.mule.transformers;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.tck.MuleTestUtils;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.transformer.UMOTransformer;
 
 public class TransformerCloningTestCase extends AbstractTransformerTestCase
@@ -32,7 +30,8 @@ public class TransformerCloningTestCase extends AbstractTransformerTestCase
         t2.registerSourceType(StringBuffer.class);
         
         t1.setNextTransformer(t2);
-        t1.setEndpoint(MuleTestUtils.getTestEndpoint("abstract", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER));
+        // TODO HH: kill
+        // t1.setEndpoint(MuleTestUtils.getTestEndpoint("abstract", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER));
         t1.initialise();
         return t1;
     }
@@ -71,7 +70,8 @@ public class TransformerCloningTestCase extends AbstractTransformerTestCase
         assertEquals("sourceTypes", t1.sourceTypes, t2.sourceTypes);
 
         // TODO HH: is this correct? for now AbstractTransformer.clone() keeps the reference
-        assertSame("endpoint", t1.endpoint, t2.endpoint);
+        // TODO HH: kill
+        // assertSame("endpoint", t1.endpoint, t2.endpoint);
 
         // nextTransformer must be a copy of the entire chain!
         assertNotSame("nextTransformer", t1.nextTransformer, t2.nextTransformer);

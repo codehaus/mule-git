@@ -9,7 +9,6 @@
  */
 package org.mule.umo.transformer;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Initialisable;
 
 /**
@@ -25,7 +24,7 @@ public interface UMOBaseTransformer extends Initialisable, Cloneable
      * @param endpoint sets the endpoint associated with the transfromer
      */
     // TODO HH: kill
-    void setEndpoint(UMOImmutableEndpoint endpoint);
+    // void setEndpoint(UMOImmutableEndpoint endpoint);
 
     /**
      * @param newName the logical name for the transformer

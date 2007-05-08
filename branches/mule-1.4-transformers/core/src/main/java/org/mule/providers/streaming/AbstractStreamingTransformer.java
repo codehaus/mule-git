@@ -146,16 +146,16 @@ public abstract class AbstractStreamingTransformer implements UMOStreamingTransf
      * @see org.mule.umo.transformer.UMOTransformer#setConnector(org.mule.umo.provider.UMOConnector)
      */
     // TODO HH: kill
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
-    {
-        this.endpoint = endpoint;
-        UMOStreamingTransformer trans = nextTransformer;
-        while (trans != null && endpoint != null)
-        {
-            trans.setEndpoint(endpoint);
-            trans = trans.getNextTransformer();
-        }
-    }
+//    public void setEndpoint(UMOImmutableEndpoint endpoint)
+//    {
+//        this.endpoint = endpoint;
+//        UMOStreamingTransformer trans = nextTransformer;
+//        while (trans != null && endpoint != null)
+//        {
+//            trans.setEndpoint(endpoint);
+//            trans = trans.getNextTransformer();
+//        }
+//    }
 
     protected abstract Object doTransform(InputStream src, OutputStream dest, String encoding)
         throws TransformerException;
