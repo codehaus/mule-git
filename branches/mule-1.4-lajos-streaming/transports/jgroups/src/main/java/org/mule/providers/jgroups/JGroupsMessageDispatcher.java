@@ -40,12 +40,14 @@ public class JGroupsMessageDispatcher extends AbstractMessageDispatcher
 
         try
         {
+            logger.debug("Creating channel");
             this.channel = this.connector.createChannel(groupName);
             this.dispatcher = new MessageDispatcher(channel, null, null, null);
+            this.dispatcher.start();
         }
         catch (Exception e)
         {
-            logger.error(e);
+            throw new InitialisationException(e, this);
         }
 
         Map props = endpoint.getProperties();
@@ -106,22 +108,31 @@ public class JGroupsMessageDispatcher extends AbstractMessageDispatcher
         byte[] data = event.getTransformedMessageAsBytes();
         Message out = new Message(destAddress, channel.getLocalAddress(), data);
         RspList rsps = dispatcher.castMessage(null, out, 
-                GroupRequest.GET_FIRST, 0L);
-        MuleMessage message = null;
+                GroupRequest.GET_ALL, 0L);
+
+        MuleMessage message = new MuleMessage(null);
+
         logger.info("rsps size is "+ rsps.size());
         for (int i = 0; i < rsps.size(); i++)
         {
             Rsp rsp = (Rsp)rsps.elementAt(i);
             Object o = rsp.getValue();
+            logger.info("Received " + rsp.toString());
+
             if (o != null)
             {
                 logger.info("Received " + o.toString() + " from " + rsp.getSender().toString());
-                if (i == 0) message = new MuleMessage(o);
+                if (i == 0) 
+                {
+                    message = new MuleMessage(o);
+                    message.setStringProperty("messageSource", 
+                            rsp.getSender().toString());
+                    break;
+                }
             }
             else
             {
                 logger.info("Received nothing from " + rsp.getSender().toString());
-                if (i == 0) message = new MuleMessage(null);
             }
         }
 
