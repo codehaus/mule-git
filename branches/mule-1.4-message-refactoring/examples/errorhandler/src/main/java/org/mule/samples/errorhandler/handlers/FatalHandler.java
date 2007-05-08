@@ -20,9 +20,6 @@ import org.mule.util.StringMessageUtils;
 
 /**
  * <code>FatalBehaviour</code> TODO (document class)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class FatalHandler extends DefaultHandler
 {
@@ -37,9 +34,8 @@ public class FatalHandler extends DefaultHandler
 
     public void processException(ErrorMessage message, Throwable t) throws HandlerException
     {
-        String msg = LocaleMessage.getString(LocaleMessage.FATAL_HANDLER_MESSAGE);
+        String msg = LocaleMessage.fatalHandlerMessage();
         System.out.println(StringMessageUtils.getBoilerPlate(msg));
-        logger.fatal(LocaleMessage.getString(LocaleMessage.FATAL_HANDLER_EXCEPTION, t), t);
+        logger.fatal(LocaleMessage.fatalHandlerException(t), t);
     }
-
 }

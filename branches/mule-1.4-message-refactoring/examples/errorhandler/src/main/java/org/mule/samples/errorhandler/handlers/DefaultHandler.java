@@ -33,7 +33,7 @@ public class DefaultHandler extends AbstractExceptionHandler
 
     public void processException(ErrorMessage message, Throwable t) throws HandlerException
     {
-        String msg = LocaleMessage.getString(LocaleMessage.DEFAULT_HANDLER_MESSAGE);
+        String msg = LocaleMessage.defaultHandlerMessage();
         System.out.println(StringMessageUtils.getBoilerPlate(msg));
     }
 

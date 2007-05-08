@@ -26,11 +26,6 @@ public abstract class MessageFactory extends Object
      */
     private static final Log logger = LogFactory.getLog(MessageFactory.class);
 
-    /**
-     * The message code to use when client code does not specify one.
-     */
-    private static final int STATIC_ERROR_CODE = -1;
-
     private static final transient Object[] EMPTY_ARGS = new Object[]{};
 
     /**
@@ -106,6 +101,23 @@ public abstract class MessageFactory extends Object
     {
         String messageString = getString(bundlePath, code, null);
         return new Message(messageString, code, EMPTY_ARGS);
+    }
+    
+    protected static String getString(String bundlePath, int code)
+    {
+        return getString(bundlePath, code, null);
+    }
+    
+    protected static String getString(String bundlePath, int code, Object arg)
+    {
+        Object[] arguments = new Object[] {arg};
+        return getString(bundlePath, code, arguments);
+    }
+    
+    protected static String getString(String bundlePath, int code, Object arg1, Object arg2)
+    {
+        Object[] arguments = new Object[] {arg1, arg2};
+        return getString(bundlePath, code, arguments);
     }
 
     private static String getString(String bundlePath, int code, Object[] args)
