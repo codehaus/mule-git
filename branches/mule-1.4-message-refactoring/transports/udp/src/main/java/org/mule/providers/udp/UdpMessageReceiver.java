@@ -11,9 +11,9 @@
 package org.mule.providers.udp;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.udp.i18n.UdpMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -64,7 +64,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
         }
         catch (UnknownHostException e)
         {
-            throw new InitialisationException(new Message("udp", 2, uri), e, this);
+            throw new InitialisationException(UdpMessages.failedToLocateHost(uri), e, this);
         }
 
         responseTransformer = getResponseTransformer();
@@ -78,7 +78,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message("udp", 1, uri), e, this);
+            throw new InitialisationException(UdpMessages.failedToBind(uri), e, this);
         }
 
         try

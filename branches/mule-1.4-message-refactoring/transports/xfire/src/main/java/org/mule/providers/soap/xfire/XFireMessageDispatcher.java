@@ -11,12 +11,12 @@
 package org.mule.providers.soap.xfire;
 
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.FatalConnectException;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.i18n.SoapMessages;
+import org.mule.providers.soap.xfire.i18n.XFireMessages;
 import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
@@ -75,7 +75,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
             if (service == null)
             {
-                throw new FatalConnectException(new Message("xfire", 8, serviceName), this);
+                throw new FatalConnectException(XFireMessages.serviceIsNull(serviceName), this);
             }
             
             List inList = connector.getServerInHandlers();

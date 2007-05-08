@@ -12,8 +12,11 @@ package org.mule.providers.jms.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
+import org.mule.providers.jms.JmsMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
+
+import org.apache.commons.lang.ObjectUtils;
 
 public class JmsMessages extends MessageFactory
 {
@@ -37,6 +40,17 @@ public class JmsMessages extends MessageFactory
     public static Message noMessageBoundForAck()
     {
         return createMessage(BUNDLE_PATH, 6);
+    }
+
+    public static Message messageMarkedForRedelivery(JmsMessageAdapter jmsMessage)
+    {
+        String messageDescription = (jmsMessage == null) ? "[null message]" : jmsMessage.getUniqueId();
+        return createMessage(BUNDLE_PATH, 7, messageDescription);
+    }
+
+    public static Message failedToCreateAndDispatchResponse(Object object)
+    {
+        return createMessage(BUNDLE_PATH, 8, ObjectUtils.toString(object, "null"));
     }
 
     public static Message invalidResourceType(Class expectedClass, Class actualClass)

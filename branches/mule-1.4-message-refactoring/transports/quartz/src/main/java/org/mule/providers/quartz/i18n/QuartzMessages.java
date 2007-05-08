@@ -32,6 +32,11 @@ public class QuartzMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 3);
     }
 
+    public static Message missingJobDetail(String detail)
+    {
+        return createMessage(BUNDLE_PATH, 4, detail);
+    }
+
     public static Message receiverNotInJobDataMap()
     {
         return createMessage(BUNDLE_PATH, 5);

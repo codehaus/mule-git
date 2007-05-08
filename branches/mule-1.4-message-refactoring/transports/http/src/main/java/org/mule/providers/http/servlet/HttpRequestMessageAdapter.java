@@ -12,9 +12,9 @@ package org.mule.providers.http.servlet;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.http.HttpConstants;
+import org.mule.providers.http.i18n.ServletMessages;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.provider.UniqueIdNotSupportedException;
@@ -210,7 +210,8 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
         catch (IOException e)
         {
-            throw new MessagingException(new Message("servlet", 3, request.getRequestURL().toString()), e);
+            throw new MessagingException(
+                ServletMessages.failedToReadPayload(request.getRequestURL().toString()), e);
         }
     }
 

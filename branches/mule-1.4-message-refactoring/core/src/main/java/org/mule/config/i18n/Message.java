@@ -28,11 +28,6 @@ public class Message implements Serializable
     private Object[] args;
     private Message nextMessage;
 
-    /**
-     * @deprecated
-     */
-    private String bundle = Messages.DEFAULT_BUNDLE;
-
     public static Message createStaticMessage(String message)
     {
         return new Message(message);
@@ -43,21 +38,6 @@ public class Message implements Serializable
         this.code = STATIC_ERROR_CODE;
         args = EMPTY_ARGS;
         this.message = message;
-    }
-
-    /**
-     * @deprecated
-     */
-    public Message(String bundle, int code, Object arg1)
-    {
-        this.code = code;
-        if (arg1 == null)
-        {
-            arg1 = "null";
-        }
-        args = new Object[]{arg1};
-        message = Messages.get(bundle, code, args);
-        this.bundle = bundle;
     }
 
     /**
@@ -76,7 +56,6 @@ public class Message implements Serializable
         }
         args = new Object[]{arg1, arg2};
         message = Messages.get(bundle, code, args);
-        this.bundle = bundle;
     }
 
     /**
@@ -99,7 +78,6 @@ public class Message implements Serializable
         }
         args = new Object[]{arg1, arg2, arg3};
         message = Messages.get(bundle, code, args);
-        this.bundle = bundle;
     }
 
     protected Message(String message, int code, Object[] args)
@@ -136,16 +114,8 @@ public class Message implements Serializable
         return nextMessage;
     }
 
-    /**
-     * @deprecated
-     */
-    public String getBundle()
-    {
-        return bundle;
-    }
-
     public String toString()
     {
-        return getMessage();
+        return this.getMessage();
     }
 }

@@ -13,9 +13,16 @@ package org.mule.providers.http.i18n;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
+import java.net.URI;
+
 public class HttpMessages extends MessageFactory
 {
     private static final String BUNDLE_PATH = getBundlePath("http");
+
+    public static Message requestFailedWithStatus(String string)
+    {
+        return createMessage(BUNDLE_PATH, 3, string);
+    }
 
     public static Message unableToGetEndpointUri(String requestURI)
     {
@@ -25,6 +32,11 @@ public class HttpMessages extends MessageFactory
     public static Message receiverPropertyNotSet()
     {
         return createMessage(BUNDLE_PATH, 7);
+    }
+
+    public static Message httpParameterNotSet(String string)
+    {
+        return createMessage(BUNDLE_PATH, 8, string);
     }
 
     public static Message noConnectorForProtocolServlet()
@@ -45,6 +57,11 @@ public class HttpMessages extends MessageFactory
     public static Message methodNotAllowed(String method)
     {
         return createMessage(BUNDLE_PATH, 12, method);
+    }
+
+    public static Message failedToConnect(URI uri)
+    {
+        return createMessage(BUNDLE_PATH, 13, uri);
     }
 
     public static Message cannotBindToAddress(String path)

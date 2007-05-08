@@ -12,7 +12,6 @@ package org.mule.extras.spring;
 
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.CoreMessageConstants;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.extras.spring.config.CachedResource;
@@ -165,8 +164,7 @@ public class SpringContainerContext extends AbstractContainerContext implements 
         }
         catch (UnsupportedEncodingException e)
         {
-            final Message message = new Message("core",
-                CoreMessageConstants.FAILED_TO_CONVERT_STRING_USING_X_ENCODING, encoding);
+            final Message message = CoreMessages.failedToConvertStringUsingEncoding(encoding);
             throw new ContainerException(message, e);
         }
     }

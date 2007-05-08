@@ -11,7 +11,6 @@
 package org.mule.providers.soap.xfire;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.ManagerNotification;
@@ -135,8 +134,8 @@ public class XFireConnector extends AbstractConnector
                 }
                 catch (ClassNotFoundException e)
                 {
-                    throw new InitialisationException(new Message("xfire", 10, clientServices
-                        .get(i)), e, this);
+                    throw new InitialisationException(
+                        XFireMessages.couldNotInitAnnotationProcessor(clientServices.get(i)), e, this);
                 }
             }
         }
@@ -160,8 +159,8 @@ public class XFireConnector extends AbstractConnector
                 }
                 catch (Exception ex)
                 {
-                    throw new InitialisationException(new Message("xfire", 10,
-                        CLASSNAME_ANNOTATIONS), ex, this);
+                    throw new InitialisationException(
+                        XFireMessages.couldNotInitAnnotationProcessor(CLASSNAME_ANNOTATIONS), ex, this);
                 }
             }
             else
@@ -243,8 +242,8 @@ public class XFireConnector extends AbstractConnector
         }
         catch (Exception ex)
         {
-            throw new InitialisationException(new Message("xfire", 11,
-                bindingProvider), ex, this);
+            throw new InitialisationException(
+                XFireMessages.unableToInitBindingProvider(bindingProvider), ex, this);
         }
 
     }

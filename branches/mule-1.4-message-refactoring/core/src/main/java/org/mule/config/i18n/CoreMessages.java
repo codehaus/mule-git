@@ -807,4 +807,9 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 54, name, StringMessageUtils.toString(class1),
             (endpoint != null ? endpoint.getEndpointURI() : null));
     }
+
+    public static Message failedToInitSecurityProvider(String providerClass)
+    {
+        return createMessage(BUNDLE_PATH, 208, providerClass);
+    }
 }
