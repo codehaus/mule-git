@@ -46,7 +46,7 @@
     </scm>
 
     <properties>
-        <springVersion>2.0.4</springVersion>
+        <springVersion>2.0.5</springVersion>
     </properties>
 
     <!-- declare all dependencies that are used in more than one module here. -->
