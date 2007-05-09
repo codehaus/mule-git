@@ -47,12 +47,14 @@ public class FtpConnector extends AbstractConnector
     public static final String PROPERTY_PASSIVE_MODE = "passive";
     public static final String PROPERTY_BINARY_TRANSFER = "binary";
 
+    public static final int DEFAULT_POLLING_FREQUENCY = 1000;
+    
     /**
      * Time in milliseconds to poll. On each poll the poll() method is called
      */
-    private long pollingFrequency = 0;
+    private long pollingFrequency;
 
-    private String outputPattern = null;
+    private String outputPattern;
 
     private FilenameParser filenameParser = new SimpleFilenameParser();
 
@@ -79,7 +81,7 @@ public class FtpConnector extends AbstractConnector
         if (props != null)
         {
             // Override properties on the endpoint for the specific endpoint
-            String tempPolling = (String)props.get(PROPERTY_POLLING_FREQUENCY);
+            String tempPolling = (String) props.get(PROPERTY_POLLING_FREQUENCY);
             if (tempPolling != null)
             {
                 polling = Long.parseLong(tempPolling);
@@ -87,7 +89,7 @@ public class FtpConnector extends AbstractConnector
         }
         if (polling <= 0)
         {
-            polling = 1000;
+            polling = DEFAULT_POLLING_FREQUENCY;
         }
         logger.debug("set polling frequency to " + polling);
         return serviceDescriptor.createMessageReceiver(this, component, endpoint,
@@ -116,7 +118,7 @@ public class FtpConnector extends AbstractConnector
         {
             logger.debug(">>> retrieving client for " + uri);
         }
-        return (FTPClient)getFtpPool(uri).borrowObject();
+        return (FTPClient) getFtpPool(uri).borrowObject();
     }
 
     public void releaseFtp(UMOEndpointURI uri, FTPClient client) throws Exception
@@ -159,11 +161,11 @@ public class FtpConnector extends AbstractConnector
             logger.debug("=== get pool for " + uri);
         }
         String key = uri.getUsername() + ":" + uri.getPassword() + "@" + uri.getHost() + ":" + uri.getPort();
-        ObjectPool pool = (ObjectPool)pools.get(key);
+        ObjectPool pool = (ObjectPool) pools.get(key);
         if (pool == null)
         {
             pool = new GenericObjectPool(new FtpConnectionFactory(uri));
-            ((GenericObjectPool)pool).setTestOnBorrow(this.validateConnections);
+            ((GenericObjectPool) pool).setTestOnBorrow(this.validateConnections);
             pools.put(key, pool);
         }
         return pool;
@@ -217,14 +219,14 @@ public class FtpConnector extends AbstractConnector
 
         public void destroyObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient)obj;
+            FTPClient client = (FTPClient) obj;
             client.logout();
             client.disconnect();
         }
 
         public boolean validateObject(Object obj)
         {
-            FTPClient client = (FTPClient)obj;
+            FTPClient client = (FTPClient) obj;
             try
             {
                 client.sendNoOp();
@@ -238,13 +240,13 @@ public class FtpConnector extends AbstractConnector
 
         public void activateObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient)obj;
+            FTPClient client = (FTPClient) obj;
             client.setReaderThread(true);
         }
 
         public void passivateObject(Object obj) throws Exception
         {
-            FTPClient client = (FTPClient)obj;
+            FTPClient client = (FTPClient) obj;
             client.setReaderThread(false);
         }
     }

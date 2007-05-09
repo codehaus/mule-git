@@ -37,7 +37,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
     public FtpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (FtpConnector)endpoint.getConnector();
+        this.connector = (FtpConnector) endpoint.getConnector();
     }
 
     protected void doDispose()
@@ -62,7 +62,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
                 byte[] dataBytes;
                 if (data instanceof byte[])
                 {
-                    dataBytes = (byte[])data;
+                    dataBytes = (byte[]) data;
                 }
                 else
                 {
@@ -130,7 +130,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
             FilenameFilter filenameFilter = null;
             if (endpoint.getFilter() instanceof FilenameFilter)
             {
-                filenameFilter = (FilenameFilter)endpoint.getFilter();
+                filenameFilter = (FilenameFilter) endpoint.getFilter();
             }
 
             FTPFile[] files = client.listFiles();
@@ -160,7 +160,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
                 return null;
             }
 
-            FTPFile file = (FTPFile)fileList.get(0);
+            FTPFile file = (FTPFile) fileList.get(0);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             if (!client.retrieveFile(file.getName(), baos))
             {
