@@ -3,6 +3,9 @@ package org.mule.providers.jgroups;
 import org.mule.MuleException;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.jgroups.adapters.JGroupsAdapter;
+import org.mule.providers.jgroups.adapters.MuleMessageDispatcherAdapter;
+import org.mule.providers.jgroups.adapters.MulePullPushAdapter;
 import org.mule.providers.jgroups.listeners.MuleReceiverMessageListener;
 import org.mule.providers.jgroups.listeners.MuleReceiverRequestHandler;
 import org.mule.umo.UMOComponent;
@@ -15,16 +18,13 @@ import org.mule.umo.provider.UMOConnector;
 import org.jgroups.Address;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
-import org.jgroups.blocks.MessageDispatcher;
-import org.jgroups.blocks.PullPushAdapter;
 import org.jgroups.util.Util;
 
 public class JGroupsMessageReceiver extends AbstractMessageReceiver 
 {
     private String groupName = "mule_group";
     private JChannel channel = null;
-    private PullPushAdapter adapter = null;
-    private MessageDispatcher dispatcher;
+    private JGroupsAdapter adapter = null;
     private final JGroupsConnector connector;
 
     public JGroupsMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint) throws InitialisationException
@@ -45,17 +45,15 @@ public class JGroupsMessageReceiver extends AbstractMessageReceiver
             if (endpoint.isSynchronous())
             {
                 logger.debug("Endpoint is synchronous: creating MessageDispatcher");
-                this.dispatcher = new MessageDispatcher(channel, null, null, 
-                    new MuleReceiverRequestHandler(this));
-                this.dispatcher.start();
+                this.adapter = new MuleMessageDispatcherAdapter(channel, 
+                        null, null, new MuleReceiverRequestHandler(this));
             }
             else
             {
                 logger.debug("Endpoint is asynchronous: creating PullPushAdapter");
                 // For now, no MembershipListener
-                this.adapter = new PullPushAdapter(channel, 
+                this.adapter = new MulePullPushAdapter(channel, 
                         new MuleReceiverMessageListener(this, null), null);
-                this.adapter.start();
             }
 
             logger.debug("Connecting to " + groupName);
@@ -70,6 +68,7 @@ public class JGroupsMessageReceiver extends AbstractMessageReceiver
             if( channel.getLocalAddress() != null)
                 logger.debug("Local address is " + channel.getLocalAddress());
 
+            this.adapter.start();
         } catch (Exception e) {
             logger.error(e);
             throw new MuleException(e);
@@ -78,7 +77,13 @@ public class JGroupsMessageReceiver extends AbstractMessageReceiver
 
     protected void doStop() throws UMOException
     {
-        if (channel != null) {
+        if (adapter != null)
+        {
+            this.adapter.stop();
+        }
+
+        if (channel != null) 
+        {
             logger.debug("Stopping channel for group " + groupName);
             channel.disconnect();
             channel.close();
@@ -96,7 +101,11 @@ public class JGroupsMessageReceiver extends AbstractMessageReceiver
 
     protected void doDispose()
     {
-        // nothing to do               
+        if (adapter != null)
+        {
+            this.adapter.dispose();
+        }
+
     }
 
 }

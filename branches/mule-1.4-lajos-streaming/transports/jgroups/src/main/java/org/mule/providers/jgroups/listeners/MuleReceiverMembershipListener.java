@@ -1,6 +1,7 @@
 package org.mule.providers.jgroups.listeners;
 
 import org.mule.impl.MuleMessage;
+import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.AbstractMessageReceiver;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +17,7 @@ public class MuleReceiverMembershipListener implements MembershipListener
     private AbstractMessageReceiver receiver;
     private int[] state = null;
     private static Log logger = LogFactory.getLog(MuleReceiverMembershipListener.class);
+    private View view = null;
 
     public MuleReceiverMembershipListener(AbstractMessageReceiver receiver, int[] state)
     {
@@ -23,8 +25,15 @@ public class MuleReceiverMembershipListener implements MembershipListener
         this.state = state;
     }
 
+    public MuleReceiverMembershipListener(AbstractMessageDispatcher dispatcher, int[] state)
+    {
+        this.receiver = receiver;
+        this.state = state;
+    }
+
     public void viewAccepted(View inView) {
         logger.debug("View: " + inView.toString());
+        this.view = inView;
     }
 
     public void suspect(Address suspected_mbr) {
@@ -35,4 +44,8 @@ public class MuleReceiverMembershipListener implements MembershipListener
         logger.debug("Block called");
     }
 
+    public boolean isInView(Address dest)
+    {
+        return view.containsMember(dest);
+    }
 }

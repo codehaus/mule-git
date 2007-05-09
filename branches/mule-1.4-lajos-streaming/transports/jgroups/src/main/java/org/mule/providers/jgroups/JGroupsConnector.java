@@ -10,7 +10,7 @@ import org.jgroups.JChannel;
 
 public class JGroupsConnector extends AbstractConnector
 {
-    private String flags = "UDP:PING(timeout=2000):FD(timeout=5000):pbcast.NAKACK:pbcast.STABLE(stability_delay=1000):VERIFY_SUSPECT(timeout=1500):MERGE2(max_interval=10000;min_interval=5000):UNICAST(timeout=3600):FRAG:pbcast.GMS(join_timeout=3000;join_retry_timeout=2000;shun=true)";
+    private String flags = "UDP(mcast_addr=224.0.0.35;mcast_port=45566;ip_ttl=32;):PING(timeout=2000):FD(timeout=5000):pbcast.NAKACK:pbcast.STABLE(stability_delay=1000):VERIFY_SUSPECT(timeout=1500):MERGE2(max_interval=10000;min_interval=5000):UNICAST(timeout=3600):FRAG:pbcast.GMS(join_timeout=3000;join_retry_timeout=2000;shun=true)";
     private String extraFlags = "";
     private boolean primary = false;
 
