@@ -12,7 +12,7 @@ package org.mule.tck.functional;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.RequestContext;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
@@ -69,7 +69,7 @@ public class FunctionalTestComponent implements Callable
 
         if (throwException)
         {
-            throw new MuleException(Message.createStaticMessage("Functional Test Component Exception"));
+            throw new MuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
         }
 
         return replyMessage;
@@ -106,7 +106,7 @@ public class FunctionalTestComponent implements Callable
 
         if (throwException)
         {
-            throw new MuleException(Message.createStaticMessage("Functional Test Component Exception"));
+            throw new MuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
         }
 
         return replyMessage;

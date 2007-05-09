@@ -19,26 +19,10 @@ public class Message implements Serializable
      */
     private static final long serialVersionUID = -6109760447384477924L;
 
-    public static final int STATIC_ERROR_CODE = -1;
-
-    private static final transient Object[] EMPTY_ARGS = new Object[]{};
-
     private String message;
     private int code = 0;
     private Object[] args;
     private Message nextMessage;
-
-    public static Message createStaticMessage(String message)
-    {
-        return new Message(message);
-    }
-
-    private Message(String message)
-    {
-        this.code = STATIC_ERROR_CODE;
-        args = EMPTY_ARGS;
-        this.message = message;
-    }
 
     protected Message(String message, int code, Object[] args)
     {

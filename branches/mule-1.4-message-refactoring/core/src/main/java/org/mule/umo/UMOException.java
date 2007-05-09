@@ -13,6 +13,7 @@ package org.mule.umo;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.io.PrintWriter;
@@ -59,7 +60,7 @@ public abstract class UMOException extends Exception
     {
         super((cause instanceof InvocationTargetException
                         ? ((InvocationTargetException) cause).getTargetException() : cause));
-        setMessage(Message.createStaticMessage(cause.getMessage() + " (" + cause.getClass().getName() + ")"));
+        setMessage(MessageFactory.createStaticMessage(cause.getMessage() + " (" + cause.getClass().getName() + ")"));
         initialise();
     }
 
@@ -82,7 +83,7 @@ public abstract class UMOException extends Exception
         this.message = message;
         if (i18nMessage == null)
         {
-            i18nMessage = Message.createStaticMessage(message);
+            i18nMessage = MessageFactory.createStaticMessage(message);
         }
     }
 

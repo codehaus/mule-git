@@ -11,7 +11,7 @@
 package org.mule.providers.bpm;
 
 import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
@@ -94,7 +94,7 @@ public class ProcessConnector extends AbstractConnector implements MessageServic
                 else 
                 {
                     throw new ConfigurationException(
-                        Message.createStaticMessage("Either the bpms or bpmsClass property must be set for this connector."));
+                        MessageFactory.createStaticMessage("Either the bpms or bpmsClass property must be set for this connector."));
                 }
             }
 
@@ -200,7 +200,7 @@ public class ProcessConnector extends AbstractConnector implements MessageServic
         ProcessMessageReceiver receiver = lookupReceiver(processName, processId);
         if (receiver == null)
         {
-            throw new ConfigurationException(Message
+            throw new ConfigurationException(MessageFactory
                 .createStaticMessage("No corresponding receiver found for processName = " + processName
                                 + ", processId = " + processId));
         }

@@ -14,6 +14,7 @@ import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.endpoint.EndpointException;
@@ -255,7 +256,7 @@ public final class TransportFactory
         // method
         if (csd.getServiceError() != null)
         {
-            throw new TransportServiceException(Message.createStaticMessage(csd.getServiceError()));
+            throw new TransportServiceException(MessageFactory.createStaticMessage(csd.getServiceError()));
         }
 
         // If this is a fineder service, lets find it before trying to create it

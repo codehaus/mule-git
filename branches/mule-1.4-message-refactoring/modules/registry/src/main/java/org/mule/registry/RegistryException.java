@@ -11,6 +11,7 @@
 package org.mule.registry;
 
 import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.UMOException;
 
 /**
@@ -44,11 +45,11 @@ public class RegistryException extends UMOException
     // TODO remove
     public RegistryException(String message)
     {
-        super(Message.createStaticMessage(message));
+        super(MessageFactory.createStaticMessage(message));
     }
 
     public RegistryException(String message, Throwable throwable)
     {
-        super(Message.createStaticMessage(message), throwable);
+        super(MessageFactory.createStaticMessage(message), throwable);
     }
 }

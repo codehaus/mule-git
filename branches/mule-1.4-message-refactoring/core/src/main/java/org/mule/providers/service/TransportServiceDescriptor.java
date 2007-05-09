@@ -12,7 +12,7 @@ package org.mule.providers.service;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.endpoint.EndpointBuilder;
 import org.mule.impl.endpoint.UrlEndpointBuilder;
@@ -487,7 +487,7 @@ public class TransportServiceDescriptor
         // method
         if (getServiceError() != null)
         {
-            throw new TransportServiceException(Message.createStaticMessage(getServiceError()));
+            throw new TransportServiceException(MessageFactory.createStaticMessage(getServiceError()));
         }
         // if there is a factory, use it
         try

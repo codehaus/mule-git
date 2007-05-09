@@ -12,7 +12,7 @@ package org.mule.impl.model;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.RequestContext;
@@ -630,7 +630,7 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        Message.createStaticMessage("Failed to connect listener "
+                        MessageFactory.createStaticMessage("Failed to connect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
                         e);
                 }
@@ -657,7 +657,7 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        Message.createStaticMessage("Failed to disconnect listener "
+                        MessageFactory.createStaticMessage("Failed to disconnect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
                         e);
                 }

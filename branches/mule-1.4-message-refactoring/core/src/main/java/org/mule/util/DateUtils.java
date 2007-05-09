@@ -72,8 +72,8 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils
         StringBuffer bf = new StringBuffer(60);
         bf.append(days).append(" ").append(CoreMessages.days().getMessage()).append(", ");
         bf.append(hours).append(" ").append(CoreMessages.hours().getMessage()).append(", ");
-        bf.append(mins).append(" ").append(CoreMessages.mins().getMessage()).append(", ");
-        bf.append(secs).append(".").append(mills).append(" ").append(CoreMessages.sec().getMessage());
+        bf.append(mins).append(" ").append(CoreMessages.minutes().getMessage()).append(", ");
+        bf.append(secs).append(".").append(mills).append(" ").append(CoreMessages.seconds().getMessage());
         return bf.toString();
     }
 

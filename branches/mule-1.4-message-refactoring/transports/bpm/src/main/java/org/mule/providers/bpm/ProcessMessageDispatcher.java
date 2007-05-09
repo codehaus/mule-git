@@ -11,7 +11,7 @@
 package org.mule.providers.bpm;
 
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.NullPayload;
@@ -56,7 +56,7 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
         }
         else
         {
-            throw new DispatchException(Message
+            throw new DispatchException(MessageFactory
                 .createStaticMessage("Synchronous process invocation must return the new process state."),
                 event.getMessage(), event.getEndpoint());
         }

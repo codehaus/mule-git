@@ -58,7 +58,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             catch (Exception e)
             {
                 throw new EndpointException(
-                    org.mule.config.i18n.Message.createStaticMessage("Unable to connect to mail transport."),
+                    org.mule.config.i18n.MessageFactory.createStaticMessage("Unable to connect to mail transport."),
                     e);
             }
         }

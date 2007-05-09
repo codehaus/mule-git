@@ -710,12 +710,12 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 194);
     }
 
-    public static Message mins()
+    public static Message minutes()
     {
         return createMessage(BUNDLE_PATH, 195);
     }
 
-    public static Message sec()
+    public static Message seconds()
     {
         return createMessage(BUNDLE_PATH, 196);
     }
