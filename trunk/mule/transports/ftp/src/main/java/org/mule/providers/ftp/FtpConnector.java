@@ -52,8 +52,7 @@ public class FtpConnector extends AbstractConnector
 
     /**
      *  TODO it makes sense to have a type-safe adapter for FTP specifically, but without
-     *  Java 5's covariant return types it's really not worth the hassle. Use the top-level
-     *  interface for now, I see more harm in restricting it now than benefits.
+     *  Java 5's covariant return types the benefits are diminished. Keeping it simple for now.
      */
     public static final String DEFAULT_FTP_CONNECTION_FACTORY_CLASS = "org.mule.providers.ftp.FtpConnectionFactory";
 
