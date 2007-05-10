@@ -104,7 +104,7 @@ public class MuleReceiver extends AbstractEndpointComponent implements InternalM
 
             if (receiver == null)
             {
-                throw new NullPointerException(
+                throw new IllegalArgumentException(
                     JbiMessages.receiverMustBeSet(this.getName()).toString());
             }
             else if (receiver instanceof AbstractMessageReceiver)

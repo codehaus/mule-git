@@ -47,7 +47,7 @@ public class EndpointService implements EndpointServiceMBean
     {
         if (receiver == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("Receiver").getMessage());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("Receiver").getMessage());
         }
         this.endpoint = receiver.getEndpoint();
         this.receiver = receiver;
@@ -59,7 +59,7 @@ public class EndpointService implements EndpointServiceMBean
     {
         if (endpoint == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("Endpoint").getMessage());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("Endpoint").getMessage());
         }
         if (receiver == null && !UMOEndpoint.ENDPOINT_TYPE_RECEIVER.equals(endpoint.getType()))
         {

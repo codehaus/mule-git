@@ -229,7 +229,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
         else
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("connector").getMessage());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("connector").getMessage());
         }
     }
 

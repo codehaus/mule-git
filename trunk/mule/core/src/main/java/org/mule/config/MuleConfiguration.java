@@ -675,7 +675,7 @@ public class MuleConfiguration
     {
         if (workListener == null)
         {
-            throw new NullPointerException("workListener");
+            throw new IllegalArgumentException("workListener is null");
         }
         this.workListener = workListener;
     }

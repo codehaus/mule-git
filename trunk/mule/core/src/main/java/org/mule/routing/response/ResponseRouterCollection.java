@@ -124,7 +124,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
         }
         else
         {
-            throw new NullPointerException("endpoint = null");
+            throw new IllegalArgumentException("endpoint = null");
         }
     }
 
@@ -153,7 +153,7 @@ public class ResponseRouterCollection extends AbstractRouterCollection implement
         }
         else
         {
-            throw new NullPointerException("List of endpoints = null");
+            throw new IllegalArgumentException("List of endpoints = null");
         }
     }
 

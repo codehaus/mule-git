@@ -19,7 +19,7 @@ public class DefaultExceptionStrategyTestCase extends AbstractMuleTestCase
     public void testExceptions() throws Exception
     {
         Instrumented instrumented = new Instrumented();
-        instrumented.exceptionThrown(new NullPointerException("boom"));
+        instrumented.exceptionThrown(new IllegalArgumentException("boom"));
         assertEquals(1, instrumented.getCount());
     }
 

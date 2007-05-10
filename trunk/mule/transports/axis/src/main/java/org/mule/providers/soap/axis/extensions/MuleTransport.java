@@ -69,7 +69,7 @@ public class MuleTransport extends Transport
     {
         if (protocol == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("protocol").toString());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("protocol").toString());
         }
         if (!isTransportSupported(protocol))
         {

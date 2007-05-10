@@ -45,7 +45,7 @@ public class ScriptConfigurationBuilder extends Scriptable implements Configurat
         String scriptName = System.getProperty(SCRIPT_ENGINE_NAME_PROPERTY);
         if (scriptName == null)
         {
-            throw new NullPointerException(
+            throw new IllegalArgumentException(
                 BuildersMessages.systemPropertyNotSet(SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
         }
         else

@@ -19,8 +19,8 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMOInboundRouter;
+import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 
@@ -223,7 +223,7 @@ public class InboundRouterCollection extends AbstractRouterCollection implements
         }
         else
         {
-            throw new NullPointerException("endpoint = null");
+            throw new IllegalArgumentException("endpoint = null");
         }
     }
 
@@ -252,7 +252,7 @@ public class InboundRouterCollection extends AbstractRouterCollection implements
         }
         else
         {
-            throw new NullPointerException("List of endpoints = null");
+            throw new IllegalArgumentException("List of endpoints = null");
         }
     }
 

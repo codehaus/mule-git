@@ -366,7 +366,7 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
 
             if (applicationName == null)
             {
-                throw new NullPointerException("applicationName passed in was null.");
+                throw new IllegalArgumentException("applicationName passed in was null.");
             }
 
             AppConfigurationEntry entry = (AppConfigurationEntry)appConfigEntries.get(applicationName);

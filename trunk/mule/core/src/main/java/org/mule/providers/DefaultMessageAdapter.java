@@ -95,7 +95,7 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         }
         else
         {
-            throw new NullPointerException("previousAdapter");
+            throw new IllegalArgumentException("previousAdapter may not be null");
         }
     }
 
