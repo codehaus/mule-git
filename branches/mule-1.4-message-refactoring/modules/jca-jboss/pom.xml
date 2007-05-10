@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.modules</groupId>
+        <artifactId>mule-module-jca-parent</artifactId>
+        <version>1.4.1-SNAPSHOT</version>
+        <relativePath>../jca/pom.xml</relativePath>
+    </parent>
+    <artifactId>mule-module-jca-jboss</artifactId>
+    <name>JCA Resource Adapter for JBoss</name>
+    <packaging>jar</packaging>
+    <description>A Resource Adapter implementation that allows a Mule instance to be deployed to a JBoss application server and exposes Mule services via the JCA connector architecture.</description>
+
+    <build>
+        <!-- This module has no sources but references its parent's source directory.
+             Should we ever need sources specific to this module we can add the standard
+             src/main/java dir and attach that source dir using the buildhelper plugin.
+        -->
+        <sourceDirectory>../jca/src/main/java</sourceDirectory>
+        <testSourceDirectory>../jca/src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>../jca/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>../jca/src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
+</project>
