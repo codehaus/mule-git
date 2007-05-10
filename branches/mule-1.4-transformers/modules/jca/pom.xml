@@ -9,24 +9,23 @@
         <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-jca-parent</artifactId>
+    <groupId>org.mule.modules.jca</groupId>
     <name>JCA Resource Adapter Parent</name>
     <packaging>pom</packaging>
-    <description>Sources and resources for a Resource Adapter</description>
+    <description>
+        This module is the parent for the common jca module (jca-common) and all
+        appserver specific jca modules.
 
-    <!--
-        This module does not produce any artifact, is has packaging=pom
+        It serves mainly as a container for dependencies which are common to all
+        jca modules
+    </description>
 
-        Instead, this pom serves as parent for application server specific
-        jca modules which are children of this module although everything
-        is still managed from the pom which resides in the modules directory.
+    <modules>
+        <module>jca-common</module>
+        <module>jca-generic</module>
+        <module>jca-jboss</module>
+    </modules>
 
-        The sources and resources that reside in src are referenced by the
-        child modules. This is intended since
-            a) modules with packaging=pom cannot produce any artifacts except
-               for the pom which is installed into the repo
-            b) a packaged jar would be useless for the child modules which may
-               need to add own sources/resources
-    -->
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>

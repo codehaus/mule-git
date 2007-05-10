@@ -22,8 +22,6 @@
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
-        <module>jca-generic</module>
-        <module>jca-jboss</module>
         <module>jotm</module>
         <module>management</module>
         <module>ognl</module>
