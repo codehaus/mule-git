@@ -11,10 +11,11 @@
 package org.mule.extras.pgp.filters;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.pgp.PGPAuthentication;
 import org.mule.extras.pgp.PGPCryptInfo;
 import org.mule.extras.pgp.PGPKeyRing;
+import org.mule.extras.pgp.i18n.PGPMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
@@ -76,7 +77,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         catch (Exception e1)
         {
             throw new UnauthorisedException(
-                new org.mule.config.i18n.Message(Messages.FAILED_TO_READ_PAYLOAD), event.getMessage(), e1);
+                CoreMessages.failedToReadPayload(), event.getMessage(), e1);
         }
 
         UMOAuthentication authResult;
@@ -89,7 +90,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         catch (Exception e1)
         {
             throw new UnauthorisedException(
-                new org.mule.config.i18n.Message(Messages.FAILED_TO_READ_PAYLOAD), event.getMessage(), e1);
+                CoreMessages.failedToReadPayload(), event.getMessage(), e1);
         }
 
         try
@@ -104,8 +105,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
                 logger.debug("Authentication request for user: " + userId + " failed: " + e.toString());
             }
 
-            throw new UnauthorisedException(new org.mule.config.i18n.Message(Messages.AUTH_FAILED_FOR_USER_X,
-                userId), event.getMessage(), e);
+            throw new UnauthorisedException(CoreMessages.authFailedForUser(userId), event.getMessage(), e);
         }
 
         // Authentication success
@@ -188,8 +188,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         }
         catch (Exception e1)
         {
-            throw new UnauthorisedException(
-                new org.mule.config.i18n.Message(Messages.FAILED_TO_READ_PAYLOAD), event.getMessage(), e1);
+            throw new UnauthorisedException(CoreMessages.failedToReadPayload(), event.getMessage(), e1);
         }
 
         try
@@ -205,11 +204,6 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#doInitialise()
-     */
     protected void doInitialise() throws InitialisationException
     {
         if (strategyName != null)
@@ -219,8 +213,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
 
         if (strategy == null)
         {
-            throw new InitialisationException(new org.mule.config.i18n.Message(
-                Messages.ENCRYPT_STRATEGY_NOT_SET), this);
+            throw new InitialisationException(PGPMessages.encryptionStrategyNotSet(), this);
         }
     }
 

@@ -11,8 +11,8 @@
 package org.mule.impl.model;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.RequestContext;
@@ -123,8 +123,8 @@ public abstract class AbstractComponent implements UMOComponent
     {
         if (initialised.get())
         {
-            throw new InitialisationException(new Message(Messages.OBJECT_X_ALREADY_INITIALISED,
-                "Component '" + descriptor.getName() + "'"), this);
+            throw new InitialisationException(
+                CoreMessages.objectAlreadyInitialised("Component '" + descriptor.getName() + "'"), this);
         }
         descriptor.initialise();
 
@@ -340,8 +340,9 @@ public abstract class AbstractComponent implements UMOComponent
     {
         if (stopping.get() || stopped.get())
         {
-            throw new ComponentException(new Message(Messages.COMPONENT_X_IS_STOPPED,
-                getDescriptor().getName()), event.getMessage(), this);
+            throw new ComponentException(
+                CoreMessages.componentIsStopped(this.getDescriptor().getName()), 
+                event.getMessage(), this);
         }
 
         try
@@ -390,8 +391,9 @@ public abstract class AbstractComponent implements UMOComponent
     {
         if (stopping.get() || stopped.get())
         {
-            throw new ComponentException(new Message(Messages.COMPONENT_X_IS_STOPPED,
-                getDescriptor().getName()), event.getMessage(), this);
+            throw new ComponentException(
+                CoreMessages.componentIsStopped(this.getDescriptor().getName()), 
+                event.getMessage(), this);
         }
 
         try
@@ -543,9 +545,8 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_REGISTER_X_ON_ENDPOINT_X,
-                        getDescriptor().getName(), endpoint.getEndpointURI()), 
-                    e);
+                    CoreMessages.failedtoRegisterOnEndpoint(this.getDescriptor().getName(),
+                        endpoint.getEndpointURI()), e);
             }
         }
     }
@@ -569,9 +570,8 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    new Message(Messages.FAILED_TO_UNREGISTER_X_ON_ENDPOINT_X,
-                        getDescriptor().getName(), endpoint.getEndpointURI()), 
-                    e);
+                    CoreMessages.failedToUnregister(this.getDescriptor().getName(), 
+                        endpoint.getEndpointURI()), e);
             }
         }
     }
@@ -630,7 +630,7 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        Message.createStaticMessage("Failed to connect listener "
+                        MessageFactory.createStaticMessage("Failed to connect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
                         e);
                 }
@@ -657,7 +657,7 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        Message.createStaticMessage("Failed to disconnect listener "
+                        MessageFactory.createStaticMessage("Failed to disconnect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
                         e);
                 }

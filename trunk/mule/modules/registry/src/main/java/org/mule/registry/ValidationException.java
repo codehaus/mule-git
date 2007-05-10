@@ -11,7 +11,8 @@
 package org.mule.registry;
 
 import org.apache.commons.lang.SystemUtils;
-import org.mule.config.i18n.Message;
+
+import org.mule.config.i18n.MessageFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ValidationException extends RegistryException
 
     public ValidationException(String vaildationError)
     {
-        super(Message.createStaticMessage(vaildationError));
+        super(MessageFactory.createStaticMessage(vaildationError));
     }
 
     public ValidationException(List vaildationErrors)

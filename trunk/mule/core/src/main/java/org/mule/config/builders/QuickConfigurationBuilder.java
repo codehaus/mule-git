@@ -14,8 +14,7 @@ import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.ReaderResource;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -126,7 +125,7 @@ public class QuickConfigurationBuilder implements ConfigurationBuilder
     {
         if (manager.isStarted())
         {
-            throw new InitialisationException(new Message(Messages.MANAGER_ALREADY_STARTED), this);
+            throw new InitialisationException(CoreMessages.managerAlreadyStarted(), this);
         }
         if (serverUrl == null)
         {

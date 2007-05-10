@@ -25,8 +25,7 @@ import org.mule.config.converters.EndpointConverter;
 import org.mule.config.converters.EndpointURIConverter;
 import org.mule.config.converters.TransactionFactoryConverter;
 import org.mule.config.converters.TransformerConverter;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.pool.CommonsPoolFactory;
 import org.mule.impl.DefaultLifecycleAdapter;
 import org.mule.impl.MuleDescriptor;
@@ -236,8 +235,8 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         manager = (MuleManager)process(configResources);
         if (manager == null)
         {
-            throw new ConfigurationException(new Message(Messages.FAILED_TO_CREATE_MANAGER_INSTANCE_X,
-                "Are you using a correct configuration builder?"));
+            throw new ConfigurationException(
+                CoreMessages.failedToCreateManagerInstance("Are you using a correct configuration builder?"));
         }
         try
         {
@@ -252,7 +251,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(new Message(Messages.X_FAILED_TO_INITIALISE, "MuleManager"), e);
+            throw new ConfigurationException(CoreMessages.objectFailedToInitialise("MuleManager"), e);
         }
         return manager;
     }

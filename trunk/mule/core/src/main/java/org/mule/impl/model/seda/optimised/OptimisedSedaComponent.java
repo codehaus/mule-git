@@ -41,5 +41,4 @@ public class OptimisedSedaComponent extends SedaComponent
         return this.getPoolingProfile().getPoolFactory().createPool(descriptor, model,
             new OptimisedProxyFactory(descriptor, model), getPoolingProfile());
     }
-
 }

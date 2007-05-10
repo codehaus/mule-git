@@ -10,17 +10,13 @@
 
 package org.mule.providers.rmi;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.builders.QuickConfigurationBuilder;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.Message;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.jndi.MuleInitialContextFactory;
+import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.services.MatchingMethodsComponent;
 import org.mule.umo.UMOException;
@@ -28,6 +24,11 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+
+import java.util.Hashtable;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 /**
  * test RMI object invocations
@@ -97,8 +98,9 @@ public class RmiInvocationTestCase extends FunctionalTestCase
         catch (UMOException e)
         {
             assertTrue(e instanceof DispatchException);
-            assertTrue(e.getMessage().startsWith(
-                Messages.get("rmi", RmiConnector.MSG_PARAM_SERVICE_METHOD_NOT_SET)));
+            
+            Message message = RmiMessages.messageParamServiceMethodNotSet();
+            assertTrue(e.getMessage().startsWith(message.toString()));
         }
     }
 

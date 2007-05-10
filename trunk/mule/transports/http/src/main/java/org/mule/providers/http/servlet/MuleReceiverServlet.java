@@ -11,12 +11,12 @@
 package org.mule.providers.http.servlet;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
+import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.service.TransportFactory;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.EndpointException;
@@ -59,7 +59,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             connector = (ServletConnector) TransportFactory.getConnectorByProtocol("servlet");
             if (connector == null)
             {
-                throw new ServletException(new Message("http", 9).toString());
+                throw new ServletException(HttpMessages.noConnectorForProtocolServlet().toString());
             }
         }
         else
@@ -67,7 +67,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             connector = (ServletConnector)MuleManager.getInstance().lookupConnector(servletConnectorName);
             if (connector == null)
             {
-                throw new ServletException(new Message("http", 10, servletConnectorName).toString());
+                throw new ServletException(
+                    HttpMessages.noServletConnectorFound(servletConnectorName).toString());
             }
         }
 
@@ -125,7 +126,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         try
         {
-            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_OPTIONS).toString() + HttpConstants.CRLF);
+            response.getWriter().write(
+                HttpMessages.methodNotAllowed(HttpConstants.METHOD_OPTIONS).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
@@ -139,7 +141,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         try
         {
-            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_PUT).toString() + HttpConstants.CRLF);
+            response.getWriter().write(
+                HttpMessages.methodNotAllowed(HttpConstants.METHOD_PUT).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
@@ -153,7 +156,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         try
         {
-            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_DELETE).toString() + HttpConstants.CRLF);
+            response.getWriter().write(
+                HttpMessages.methodNotAllowed(HttpConstants.METHOD_DELETE).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
@@ -167,7 +171,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         try
         {
-            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_TRACE).toString() + HttpConstants.CRLF);
+            response.getWriter().write(
+                HttpMessages.methodNotAllowed(HttpConstants.METHOD_TRACE).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
@@ -181,7 +186,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         try
         {
-            response.getWriter().write(new Message("http", 12, HttpConstants.METHOD_CONNECT).toString() + HttpConstants.CRLF);
+            response.getWriter().write(
+                HttpMessages.methodNotAllowed(HttpConstants.METHOD_CONNECT).toString() + HttpConstants.CRLF);
         }
         catch (Exception e)
         {
@@ -195,7 +201,8 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         String uri = getReceiverName(httpServletRequest);
         if (uri == null)
         {
-            throw new EndpointException(new Message("http", 4, httpServletRequest.getRequestURI()));
+            throw new EndpointException(
+                HttpMessages.unableToGetEndpointUri(httpServletRequest.getRequestURI()));
         }
 
         AbstractMessageReceiver receiver = (AbstractMessageReceiver)getReceivers().get(uri);

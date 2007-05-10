@@ -12,10 +12,10 @@ package org.mule.providers.file;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
+import org.mule.providers.file.i18n.FileMessages;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -176,7 +176,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (Exception e)
         {
-            throw new MuleException(new Message("file", 1), e);
+            throw new MuleException(FileMessages.errorWhileListingFiles(), e);
         }
     }
 

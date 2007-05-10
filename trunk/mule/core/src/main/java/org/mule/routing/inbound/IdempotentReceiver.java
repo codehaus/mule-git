@@ -11,8 +11,7 @@
 package org.mule.routing.inbound;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.routing.RoutingException;
@@ -87,7 +86,7 @@ public class IdempotentReceiver extends SelectiveConsumer
             catch (IOException e)
             {
                 throw new RoutingException(
-                    new Message(Messages.FAILED_TO_WRITE_X_TO_STORE_X, id, idStore.getAbsolutePath()), 
+                    CoreMessages.failedToWriteMessageToStore(id, idStore.getAbsolutePath()),
                     event.getMessage(), event.getEndpoint(), e);
             }
         }
@@ -157,7 +156,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         catch (IOException e)
         {
             throw new RoutingException(
-                new Message(Messages.FAILED_TO_READ_FROM_STORE_X, idStore.getAbsolutePath()),
+                CoreMessages.failedToReadFromStore(idStore.getAbsolutePath()),
                 event.getMessage(), event.getEndpoint(), e);
         }
     }

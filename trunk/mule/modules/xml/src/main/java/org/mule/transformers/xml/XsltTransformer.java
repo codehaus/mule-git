@@ -10,8 +10,7 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
@@ -199,7 +198,7 @@ public class XsltTransformer extends AbstractXmlTransformer
 
         if (xslFile == null)
         {
-            throw new InitialisationException(new Message(Messages.X_IS_NULL, "xslFile"), this);
+            throw new InitialisationException(CoreMessages.objectIsNull("xslFile"), this);
         }
 
         InputStream is;
@@ -217,7 +216,7 @@ public class XsltTransformer extends AbstractXmlTransformer
         }
         else
         {
-            throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, xslFile), this);
+            throw new InitialisationException(CoreMessages.failedToLoad(xslFile), this);
         }
     }
 

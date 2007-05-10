@@ -12,8 +12,9 @@ package org.mule.providers.service;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.endpoint.EndpointException;
@@ -91,8 +92,8 @@ public final class TransportFactory
                 connector = MuleManager.getInstance().lookupConnector(uri.getConnectorName());
                 if (connector == null)
                 {
-                    throw new TransportFactoryException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                        "Connector: " + uri.getConnectorName()));
+                    throw new TransportFactoryException(
+                        CoreMessages.objectNotRegisteredWithManager("Connector: " + uri.getConnectorName()));
                 }
             }
             else
@@ -112,8 +113,8 @@ public final class TransportFactory
 
         if (connector == null)
         {
-            Message m = new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", "Uri: " + uri);
-            m.setNextMessage(new Message(Messages.X_IS_NULL, "connector"));
+            Message m = CoreMessages.failedToCreateObjectWith("Endpoint", "Uri: " + uri);
+            m.setNextMessage(CoreMessages.objectIsNull("connector"));
             throw new TransportFactoryException(m);
 
         }
@@ -255,7 +256,7 @@ public final class TransportFactory
         // method
         if (csd.getServiceError() != null)
         {
-            throw new TransportServiceException(Message.createStaticMessage(csd.getServiceError()));
+            throw new TransportServiceException(MessageFactory.createStaticMessage(csd.getServiceError()));
         }
 
         // If this is a fineder service, lets find it before trying to create it
@@ -285,8 +286,8 @@ public final class TransportFactory
                 }
                 else
                 {
-                    throw new TransportFactoryException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                        "Connector", scheme));
+                    throw new TransportFactoryException(
+                        CoreMessages.objectNotSetInService("Connector", scheme));
                 }
             }
         }
@@ -297,8 +298,7 @@ public final class TransportFactory
         catch (Exception e)
         {
             throw new TransportFactoryException(
-                new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Endpoint", url),
-                e);
+                CoreMessages.failedToCreateObjectWith("Endpoint", url), e);
         }
 
         connector.setName(ObjectNameHelper.getConnectorName(connector));
@@ -371,8 +371,7 @@ public final class TransportFactory
             catch (IOException e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_TO_ENDPOINT_FROM_LOCATION_X, location + "/" + protocol), 
-                    e);
+                    CoreMessages.failedToCreateEndpointFromLocation(location + "/" + protocol), e);
             }
         }
         return csd;
@@ -407,8 +406,7 @@ public final class TransportFactory
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_TO_SET_PROPERTIES_ON_X, "Connector"),
-                    e);
+                    CoreMessages.failedToSetPropertiesOn("Connector"), e);
             }
         }
         else if (create == NEVER_CREATE_CONNECTOR && connector == null)
@@ -435,7 +433,8 @@ public final class TransportFactory
                 }
                 else
                 {
-                    throw new IllegalStateException(new Message(Messages.MORE_THAN_ONE_CONNECTOR_WITH_PROTOCOL_X, protocol).getMessage());
+                    throw new IllegalStateException(
+                        CoreMessages.moreThanOneConnectorWithProtocol(protocol).getMessage());
                 }
             }
         }

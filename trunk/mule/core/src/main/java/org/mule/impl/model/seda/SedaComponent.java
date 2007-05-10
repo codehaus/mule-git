@@ -15,8 +15,7 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.PoolingProfile;
 import org.mule.config.QueueProfile;
 import org.mule.config.ThreadingProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.FailedToQueueEventException;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleEvent;
@@ -160,7 +159,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         catch (Throwable e)
         {
             throw new InitialisationException(
-                new Message(Messages.X_FAILED_TO_INITIALISE, "Component Queue"), e, this);
+                CoreMessages.objectFailedToInitialise("Component Queue"), e, this);
         }
     }
 
@@ -232,8 +231,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.X_FAILED_TO_INITIALISE, "Proxy Pool"), e,
-                this);
+            throw new InitialisationException(
+                CoreMessages.objectFailedToInitialise("Proxy Pool"), e, this);
         }
     }
 
@@ -304,8 +303,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            throw new LifecycleException(new Message(Messages.FAILED_TO_START_X, "Component: "
-                            + descriptor.getName()), e, this);
+            throw new LifecycleException(
+                CoreMessages.failedToStart("Component: " + descriptor.getName()), e, this);
         }
     }
 
@@ -367,8 +366,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         catch (Exception e)
         {
-            FailedToQueueEventException e1 = new FailedToQueueEventException(new Message(
-                Messages.INTERRUPTED_QUEUING_EVENT_FOR_X, getName()), event.getMessage(), this, e);
+            FailedToQueueEventException e1 = 
+                new FailedToQueueEventException(
+                    CoreMessages.interruptedQueuingEventFor(this.getName()), 
+                    event.getMessage(), this, e);
             handleException(e1);
         }
 
@@ -542,7 +543,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof NoSuchElementException)
                 {
-                    handleException(new ComponentException(new Message(Messages.PROXY_POOL_TIMED_OUT),
+                    handleException(new ComponentException(CoreMessages.proxyPoolTimedOut(),
                         (event == null ? null : event.getMessage()), this, e));
                 }
                 else if (e instanceof UMOException)
@@ -551,14 +552,17 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 }
                 else if (e instanceof WorkException)
                 {
-                    handleException(new ComponentException(new Message(
-                        Messages.EVENT_PROCESSING_FAILED_FOR_X, descriptor.getName()), (event == null
-                                    ? null : event.getMessage()), this, e));
+                    handleException(
+                        new ComponentException(
+                            CoreMessages.eventProcessingFailedFor(descriptor.getName()),
+                            (event == null ? null : event.getMessage()), this, e));
                 }
                 else
                 {
-                    handleException(new ComponentException(new Message(Messages.FAILED_TO_GET_POOLED_OBJECT),
-                        (event == null ? null : event.getMessage()), this, e));
+                    handleException(
+                        new ComponentException(
+                            CoreMessages.failedToGetPooledObject(),
+                            (event == null ? null : event.getMessage()), this, e));
                 }
             }
             finally
@@ -637,7 +641,8 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         else
         {
-            throw new MuleRuntimeException(new Message(Messages.COMPONENT_CAUSED_ERROR_IS_X, getName()), e);
+            throw new MuleRuntimeException(
+                CoreMessages.componentCausedErrorIs(this.getName()), e);
         }
     }
 

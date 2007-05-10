@@ -11,7 +11,6 @@
 package org.mule.samples.errorhandler;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.samples.errorhandler.handlers.DefaultHandler;
 import org.mule.samples.errorhandler.handlers.FatalHandler;
 import org.mule.umo.UMOException;
@@ -85,26 +84,22 @@ public class ErrorManager
         catch (Exception e)
         {
         
-            logger.error(LocaleMessage.getString(LocaleMessage.HANDLER_FAILURE, 
-               (eh != null ? (eh.getClass().getName() + " : " + e) : "null")));
+            logger.error(LocaleMessage.handlerFailure(eh));
 
             if (eh instanceof DefaultHandler)
             {
-                logger.error(LocaleMessage.getString(LocaleMessage.DEFAULT_FATAL_HANDLING, 
-                    FatalHandler.class.getName()));
+                logger.error(LocaleMessage.defaultFatalHandling(FatalHandler.class));
                 handleFatal(e);
 
             }
             else if (eh instanceof FatalHandler)
             {
-                logger.fatal(LocaleMessage.getString(LocaleMessage.FATAL_HANDLING, e));
+                logger.fatal(LocaleMessage.fatalHandling(e));
                 ((MuleManager)MuleManager.getInstance()).shutdown(e, false);
             }
             else
             {
-                logger.error(LocaleMessage.getString(LocaleMessage.DEFAULT_HANDLING, 
-                    DefaultHandler.class.getName(),
-                    (eh != null ? (eh.getClass().getName() + " : " + e) : "null")));
+                logger.error(LocaleMessage.defaultHandling(DefaultHandler.class, eh, e));
                 handleDefault(msg, e);
             }
         }
@@ -121,7 +116,7 @@ public class ErrorManager
         }
         catch (Exception e)
         {
-            logger.fatal(LocaleMessage.getString(LocaleMessage.DEFAULT_EXCEPTION, e), e);
+            logger.fatal(LocaleMessage.defaultException(e), e);
             handleFatal(e);
         }
         try
@@ -130,7 +125,7 @@ public class ErrorManager
         }
         catch (HandlerException e)
         {
-            logger.fatal(LocaleMessage.getString(LocaleMessage.DEFAULT_HANDLER_EXCEPTION, e), e);
+            logger.fatal(LocaleMessage.defaultHandlerException(e), e);
             handleFatal(e);
         }
 
@@ -140,7 +135,7 @@ public class ErrorManager
     {
         // If this method has been called, all other handlers failed
         // this is all we can do
-        logger.fatal(LocaleMessage.getString(LocaleMessage.FATAL_EXCEPTION, t), t);
+        logger.fatal(LocaleMessage.fatalException(t), t);
         ((MuleManager)MuleManager.getInstance()).shutdown(t, false);
     }
 }

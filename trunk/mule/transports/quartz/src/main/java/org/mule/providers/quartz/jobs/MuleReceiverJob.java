@@ -10,17 +10,18 @@
 
 package org.mule.providers.quartz.jobs;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.NullPayload;
 import org.mule.providers.quartz.QuartzConnector;
 import org.mule.providers.quartz.QuartzMessageReceiver;
+import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.umo.manager.ObjectNotFoundException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -43,19 +44,20 @@ public class MuleReceiverJob implements Job
 
         String receiverKey = (String)map.get(QuartzMessageReceiver.QUARTZ_RECEIVER_PROPERTY);
         if (receiverKey == null)
-            throw new JobExecutionException(new Message("quartz", 5).getMessage());
+            throw new JobExecutionException(QuartzMessages.receiverNotInJobDataMap().getMessage());
 
         String connectorName = (String)map.get(QuartzMessageReceiver.QUARTZ_CONNECTOR_PROPERTY);
         if (connectorName == null)
-            throw new JobExecutionException(new Message("quartz", 6).getMessage());
+            throw new JobExecutionException(QuartzMessages.connectorNotInJobDataMap().getMessage());
 
         AbstractConnector connector = (AbstractConnector)MuleManager.getInstance().lookupConnector(connectorName);
         if (connector == null)
-            throw new JobExecutionException(new Message("quartz", 7, connectorName).getMessage());
+            throw new JobExecutionException(QuartzMessages.noConnectorFound(connectorName).getMessage());
 
         AbstractMessageReceiver receiver = (AbstractMessageReceiver)connector.lookupReceiver(receiverKey);
         if (receiver == null)
-            throw new JobExecutionException(new Message("quartz", 8, connectorName, receiverKey).getMessage());
+            throw new JobExecutionException(
+                QuartzMessages.noReceiverInConnector(receiverKey, connectorName).getMessage());
 
         Object payload = jobExecutionContext.getJobDetail().getJobDataMap().get(
             QuartzConnector.PROPERTY_PAYLOAD);

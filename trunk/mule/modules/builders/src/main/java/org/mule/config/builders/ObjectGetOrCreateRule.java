@@ -10,22 +10,20 @@
 
 package org.mule.config.builders;
 
-import org.apache.commons.beanutils.MethodUtils;
-import org.apache.commons.digester.ObjectCreateRule;
 import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.builders.i18n.BuildersMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.ContainerKeyPair;
 import org.mule.umo.manager.UMOContainerContext;
-import org.xml.sax.Attributes;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.digester.ObjectCreateRule;
+import org.xml.sax.Attributes;
+
 /**
  * A digester rule that will either create an object of look it up from a container.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ObjectGetOrCreateRule extends ObjectCreateRule
 {
@@ -124,9 +122,9 @@ public class ObjectGetOrCreateRule extends ObjectCreateRule
             String classRef = attributes.getValue(classAttrib);
             if (classRef == null && classRefRequired)
             {
-                throw new ConfigurationException(new Message(
-                    Messages.MUST_SPECIFY_REF_ATTRIB_X_OR_CLASS_ATTRIB_X_FOR_X, refAttrib, classAttrib,
-                    this.digester.getCurrentElementName()));
+                throw new ConfigurationException(
+                    BuildersMessages.mustSpecifyContainerRefOrClassAttribute(refAttrib, classAttrib,
+                        this.digester.getCurrentElementName()));
             }
             else
             {
@@ -144,8 +142,7 @@ public class ObjectGetOrCreateRule extends ObjectCreateRule
             context = (UMOContainerContext)MethodUtils.invokeMethod(root, containerMethodName, null);
             if (context == null)
             {
-                throw new NullPointerException(
-                    new Message(Messages.X_IS_NULL, "Container context").toString());
+                throw new NullPointerException(CoreMessages.objectIsNull("Container context").toString());
             }
         }
         return context;

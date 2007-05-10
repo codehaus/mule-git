@@ -12,8 +12,7 @@ package org.mule.impl.security;
 
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.security.CryptoFailureException;
 import org.mule.umo.security.EncryptionStrategyNotFoundException;
@@ -56,8 +55,8 @@ public class MuleCredentials implements UMOCredentials
         int i = header.indexOf(' ');
         if (i == -1)
         {
-            throw new IllegalArgumentException(new Message(Messages.HEADER_X_MALFORMED_VALUE_IS_X,
-                MuleProperties.MULE_USER_PROPERTY, header).toString());
+            throw new IllegalArgumentException(
+                CoreMessages.headerMalformedValueIs(MuleProperties.MULE_USER_PROPERTY, header).toString());
         }
         else
         {

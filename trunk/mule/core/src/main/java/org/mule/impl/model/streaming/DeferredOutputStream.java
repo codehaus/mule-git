@@ -9,21 +9,20 @@
  */
 package org.mule.impl.model.streaming;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.providers.streaming.StreamMessageAdapter;
+import org.mule.umo.MessagingException;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
-import org.mule.umo.MessagingException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.providers.streaming.StreamMessageAdapter;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.BufferedOutputStream;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
@@ -151,8 +150,7 @@ public class DeferredOutputStream extends OutputStream
                     if (router.getEndpoints().size() != 1)
                     {
                         throw new IOException(
-                            new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT, 
-                                descriptor.getName()).toString());
+                            CoreMessages.streamingComponentMustHaveOneEndpoint(descriptor.getName()).toString());
                     }
                     else
                     {
@@ -164,15 +162,14 @@ public class DeferredOutputStream extends OutputStream
                         catch (UMOException e)
                         {
                             throw (IOException) new IOException(
-                                new Message(Messages.STREAMING_FAILED_FOR_ENDPOINT_X, endpoint.toString()).toString()
-                                ).initCause(e);
+                                CoreMessages.streamingFailedForEndpoint(endpoint.toString()).toString()).initCause(e);
                         }
                     }
                 }
             }
             //If we got to here there are no matching outbound Routers
-            throw new IOException(new Message(Messages.STREAMING_COMPONENT_X_MUST_HAVE_ONE_ENDPOINT,
-                        descriptor.getName()).toString());
+            throw new IOException(
+                CoreMessages.streamingComponentMustHaveOneEndpoint(descriptor.getName()).toString());
         }
         if (logger.isDebugEnabled())
         {

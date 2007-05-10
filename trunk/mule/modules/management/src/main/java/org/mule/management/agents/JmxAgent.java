@@ -11,11 +11,11 @@ package org.mule.management.agents;
 
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
 import org.mule.management.mbeans.ConnectorService;
@@ -45,6 +45,8 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +67,6 @@ import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -162,8 +163,8 @@ public class JmxAgent implements UMOAgent
         }
     }
 
-    /** {@inheritDoc}
-     * (non-Javadoc)
+    /** 
+     * {@inheritDoc}
      * 
      * @see org.mule.umo.lifecycle.Initialisable#initialise()
      */
@@ -173,7 +174,7 @@ public class JmxAgent implements UMOAgent
             return;
         }
         if (mBeanServer == null && !locateServer && !createServer) {
-            throw new InitialisationException(new Message(Messages.JMX_CREATE_OR_LOCATE_SHOULD_BE_SET), this);
+            throw new InitialisationException(ManagementMessages.createOrLocateShouldBeSet(), this);
         }
         if (mBeanServer == null && locateServer) {
             List l = MBeanServerFactory.findMBeanServer(null);
@@ -186,7 +187,7 @@ public class JmxAgent implements UMOAgent
             serverCreated.set(true);
         }
         if (mBeanServer == null) {
-            throw new InitialisationException(new Message(Messages.JMX_CANT_LOCATE_CREATE_SERVER), this);
+            throw new InitialisationException(ManagementMessages.cannotLocateOrCreateServer(), this);
         }
         if (connectorServerUrl != null) {
             try {
@@ -206,7 +207,7 @@ public class JmxAgent implements UMOAgent
                 }
                 connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, connectorServerProperties, mBeanServer);
             } catch (Exception e) {
-                throw new InitialisationException(new Message(Messages.FAILED_TO_CREATE_X, "Jmx Connector"), e, this);
+                throw new InitialisationException(CoreMessages.failedToCreate("Jmx Connector"), e, this);
             }
         }
 
@@ -225,7 +226,7 @@ public class JmxAgent implements UMOAgent
                         registerEndpointServices();
                         registerConnectorServices();
                     } catch (Exception e) {
-                        throw new MuleRuntimeException(new Message(Messages.X_FAILED_TO_INITIALISE, "MBeans"), e);
+                        throw new MuleRuntimeException(CoreMessages.objectFailedToInitialise("MBeans"), e);
                     }
                 }
             }
@@ -261,7 +262,7 @@ public class JmxAgent implements UMOAgent
                 logger.info("Starting JMX agent connector Server");
                 connectorServer.start();
             } catch (Exception e) {
-                throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Jmx Connector"), e);
+                throw new JmxManagementException(CoreMessages.failedToStart("Jmx Connector"), e);
             }
         }
     }
@@ -277,7 +278,7 @@ public class JmxAgent implements UMOAgent
             try {
                 connectorServer.stop();
             } catch (Exception e) {
-                throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Jmx Connector"), e);
+                throw new JmxManagementException(CoreMessages.failedToStop("Jmx Connector"), e);
             }
         }
     }

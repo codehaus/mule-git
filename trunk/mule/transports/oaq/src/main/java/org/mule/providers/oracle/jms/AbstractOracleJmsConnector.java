@@ -14,8 +14,8 @@ package org.mule.providers.oracle.jms;
 import oracle.jms.AQjmsSession;
 import oracle.jms.AdtMessage;
 import oracle.xdb.XMLType;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.ConnectException;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
@@ -25,13 +25,14 @@ import org.mule.umo.TransactionException;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.lifecycle.InitialisationException;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.naming.NamingException;
-import java.io.Serializable;
-import java.sql.SQLException;
 
 public abstract class AbstractOracleJmsConnector extends JmsConnector
 {
@@ -90,8 +91,8 @@ public abstract class AbstractOracleJmsConnector extends JmsConnector
             setJmsSupport(new OracleJmsSupport(this, null, false, false));
         }
         catch (Exception e) {
-            throw new ConnectException(new Message(Messages.FAILED_TO_CREATE_X, "Oracle Jms Connector"), e,
-                    this);
+            throw new ConnectException(CoreMessages.failedToCreate("Oracle Jms Connector"), 
+                e, this);
         }
 
         // Note it doesn't make sense to start a connection at this point

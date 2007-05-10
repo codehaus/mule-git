@@ -10,7 +10,7 @@
 
 package org.mule.providers.stream;
 
-import org.mule.config.i18n.LocaleMessageHandler;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -82,31 +82,16 @@ public class SystemStreamConnector extends StreamConnector
         // template method
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.stream.StreamConnector#getInputStream()
-     */
     public InputStream getInputStream()
     {
         return inputStream;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractConnector#doStart()
-     */
     public void doStart()
     {
         firstTime = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.stream.StreamConnector#getOutputStream()
-     */
     public OutputStream getOutputStream()
     {
         return outputStream;
@@ -117,9 +102,10 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getPromptMessage()
     {
-        if (!StringUtils.isBlank(resourceBundle) && StringUtils.isNotBlank(promptMessageCode))
+        if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(promptMessageCode))
         {
-            return LocaleMessageHandler.getString(resourceBundle, promptMessageCode);
+            String bundlePath = SystemStreamMessageFactory.getBundlePath(resourceBundle);
+            return SystemStreamMessageFactory.getString(bundlePath, promptMessageCode);
         }
 
         return promptMessage;
@@ -170,9 +156,10 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getOutputMessage()
     {
-        if (!StringUtils.isBlank(resourceBundle) && StringUtils.isNotBlank(outputMessageCode))
+        if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(outputMessageCode))
         {
-            return LocaleMessageHandler.getString(resourceBundle, outputMessageCode);
+            String bundlePath = SystemStreamMessageFactory.getBundlePath(resourceBundle);
+            return SystemStreamMessageFactory.getString(bundlePath, outputMessageCode);
         }
 
         return outputMessage;
@@ -202,11 +189,6 @@ public class SystemStreamConnector extends StreamConnector
         this.outputMessageCode = outputMessageCode;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOMessageDispatcher#getConnector()
-     */
     public UMOConnector getConnector()
     {
         return this;
@@ -259,5 +241,24 @@ public class SystemStreamConnector extends StreamConnector
             out = getOutputStream();
         }
         return out;
+    }
+    
+    /**
+     * {@link SystemStreamConnector} needs a way to access other modules' messages. The default
+     * way to access messages is by using {@link MessageFactory} which itself is not meant to be used 
+     * directly. In order not to soften this requiement this private subclass offers access to
+     * {@link MessageFactory}'s methods.
+     */
+    private static class SystemStreamMessageFactory extends MessageFactory
+    {
+        protected static String getBundlePath(String bundleName)
+        {
+            return MessageFactory.getBundlePath(bundleName);
+        }
+        
+        protected static String getString(String bundlePath, String code)
+        {
+            return MessageFactory.getString(bundlePath, Integer.parseInt(code));
+        }
     }
 }

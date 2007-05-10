@@ -12,8 +12,7 @@ package org.mule.impl;
 
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOComponent;
@@ -86,7 +85,7 @@ public final class MuleSession implements UMOSession
         if (component == null)
         {
             throw new IllegalArgumentException(
-                new Message(Messages.PROPERTIES_X_NOT_SET, "component").toString());
+                CoreMessages.propertiesNotSet("component").toString());
         }
         this.component = component;
     }
@@ -96,14 +95,14 @@ public final class MuleSession implements UMOSession
 
         if (requestSessionHandler == null)
         {
-            throw new IllegalArgumentException(new Message(Messages.PROPERTIES_X_NOT_SET,
-                "requestSessionHandler").toString());
+            throw new IllegalArgumentException(
+                CoreMessages.propertiesNotSet("requestSessionHandler").toString());
         }
 
         if (message == null)
         {
             throw new IllegalArgumentException(
-                new Message(Messages.PROPERTIES_X_NOT_SET, "message").toString());
+                CoreMessages.propertiesNotSet("message").toString());
         }
 
         properties = new HashMap();
@@ -128,14 +127,14 @@ public final class MuleSession implements UMOSession
     {
         if (component == null)
         {
-            throw new IllegalStateException(new Message(Messages.X_IS_NULL, "Component").getMessage());
+            throw new IllegalStateException(CoreMessages.objectIsNull("Component").getMessage());
         }
 
         UMOOutboundRouterCollection router = component.getDescriptor().getOutboundRouter();
         if (router == null)
         {
-            throw new EndpointNotFoundException(new Message(Messages.NO_OUTBOUND_ROUTER_SET_ON_X,
-                component.getDescriptor().getName()));
+            throw new EndpointNotFoundException(
+                CoreMessages.noOutboundRouterSetOn(component.getDescriptor().getName()));
         }
         router.route(message, this, false);
     }
@@ -174,13 +173,13 @@ public final class MuleSession implements UMOSession
     {
         if (component == null)
         {
-            throw new IllegalStateException(new Message(Messages.X_IS_NULL, "Component").getMessage());
+            throw new IllegalStateException(CoreMessages.objectIsNull("Component").getMessage());
         }
         UMOOutboundRouterCollection router = component.getDescriptor().getOutboundRouter();
         if (router == null)
         {
-            throw new EndpointNotFoundException(new Message(Messages.NO_OUTBOUND_ROUTER_SET_ON_X,
-                component.getDescriptor().getName()));
+            throw new EndpointNotFoundException(
+                CoreMessages.noOutboundRouterSetOn(component.getDescriptor().getName()));
         }
         UMOMessage result = router.route(message, this, true);
         if (result != null)
@@ -276,7 +275,7 @@ public final class MuleSession implements UMOSession
         }
         else
         {
-            throw new DispatchException(new Message(Messages.NO_COMPONENT_FOR_ENDPOINT), event.getMessage(),
+            throw new DispatchException(CoreMessages.noComponentForEndpoint(), event.getMessage(),
                 event.getEndpoint());
         }
     }
@@ -351,7 +350,7 @@ public final class MuleSession implements UMOSession
         }
         else
         {
-            throw new DispatchException(new Message(Messages.NO_COMPONENT_FOR_ENDPOINT), event.getMessage(),
+            throw new DispatchException(CoreMessages.noComponentForEndpoint(), event.getMessage(),
                 event.getEndpoint());
         }
     }
@@ -429,7 +428,7 @@ public final class MuleSession implements UMOSession
     {
         if (endpoint == null)
         {
-            throw new DispatchException(new Message(Messages.X_IS_NULL, "Outbound Endpoint"), message,
+            throw new DispatchException(CoreMessages.objectIsNull("Outbound Endpoint"), message,
                 endpoint);
         }
 
@@ -464,8 +463,7 @@ public final class MuleSession implements UMOSession
         catch (Exception e)
         {
             throw new DispatchException(
-                new Message(Messages.FAILED_TO_CREATE_X, "Event"),
-                message, endpoint, e);
+                CoreMessages.failedToCreate("Event"), message, endpoint, e);
         }
     }
 

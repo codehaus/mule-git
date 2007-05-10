@@ -10,6 +10,9 @@
 
 package org.mule.ra;
 
+import org.mule.impl.security.MuleCredentials;
+import org.mule.ra.i18n.JcaMessages;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,10 +30,6 @@ import javax.resource.spi.ManagedConnectionMetaData;
 import javax.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
-
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.impl.security.MuleCredentials;
 
 /**
  * <code>MuleManagedConnection</code> TODO
@@ -89,8 +88,8 @@ public class MuleManagedConnection implements ManagedConnection
         if (!passCred.equals(pc))
         {
             // TODO change the message, we are not dealing with an endpoint here
-            throw new javax.resource.spi.SecurityException(new Message(Messages.AUTH_DENIED_ON_ENDPOINT_X,
-                this).getMessage());
+            throw new javax.resource.spi.SecurityException(
+                JcaMessages.authDeniedOnEndpoint(this).getMessage());
         }
 
         String user;
@@ -183,8 +182,8 @@ public class MuleManagedConnection implements ManagedConnection
         }
         else
         {
-            throw new IllegalStateException(new Message(Messages.OBJECT_X_MARKED_INVALID,
-                DefaultMuleConnection.class.getName() + ": "
+            throw new IllegalStateException(
+                JcaMessages.objectMarkedInvalid(DefaultMuleConnection.class.getName() + ": "
                                 + (connection == null ? "null" : connection.getClass().getName())).toString());
         }
     }
@@ -340,7 +339,7 @@ public class MuleManagedConnection implements ManagedConnection
         if (destroyed)
         {
             throw new ResourceException(
-                new Message(Messages.X_IS_DISPOSED, "MuleManagedConnection").toString());
+                JcaMessages.objectIsDisposed("MuleManagedConnection").toString());
         }
     }
 

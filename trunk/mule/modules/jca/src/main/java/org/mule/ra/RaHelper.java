@@ -10,6 +10,8 @@
 
 package org.mule.ra;
 
+import org.mule.config.i18n.CoreMessages;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Iterator;
@@ -20,9 +22,6 @@ import javax.resource.spi.ConnectionRequestInfo;
 import javax.resource.spi.ManagedConnectionFactory;
 import javax.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
-
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 
 /**
  * <code>RaHelper</code> is a collection of helper methods used by this RA
@@ -85,7 +84,7 @@ public class RaHelper
             });
             if (pc == null)
             {
-                throw new java.lang.SecurityException(new Message(Messages.AUTH_NO_CREDENTIALS).getMessage());
+                throw new java.lang.SecurityException(CoreMessages.authNoCredentials().getMessage());
             }
             else
             {
@@ -93,5 +92,4 @@ public class RaHelper
             }
         }
     }
-
 }

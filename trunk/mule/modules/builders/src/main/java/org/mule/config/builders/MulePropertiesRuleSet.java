@@ -10,6 +10,16 @@
 
 package org.mule.config.builders;
 
+import org.mule.MuleManager;
+import org.mule.MuleServer;
+import org.mule.config.ConfigurationException;
+import org.mule.config.MuleConfiguration;
+import org.mule.config.PropertyFactory;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
+import org.mule.util.StringUtils;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,16 +35,6 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.RuleSetBase;
-import org.mule.MuleManager;
-import org.mule.MuleServer;
-import org.mule.config.ConfigurationException;
-import org.mule.config.MuleConfiguration;
-import org.mule.config.PropertyFactory;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.util.ClassUtils;
-import org.mule.util.IOUtils;
-import org.mule.util.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
@@ -260,8 +260,7 @@ public class MulePropertiesRuleSet extends RuleSetBase
                 InputStream is = IOUtils.getResourceAsStream(location, getClass());
                 if (is == null)
                 {
-                    throw new ConfigurationException(new Message(Messages.CANT_LOAD_X_FROM_CLASSPATH_FILE,
-                        location));
+                    throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(location));
                 }
 
                 Properties fileProps = new Properties();
