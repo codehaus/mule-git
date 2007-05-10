@@ -19,7 +19,6 @@
         <module>builders</module>
         <module>boot</module>
         <module>client</module>
-        <module>csv</module>
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
