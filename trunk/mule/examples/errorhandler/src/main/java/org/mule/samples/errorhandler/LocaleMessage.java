@@ -21,7 +21,7 @@ import org.mule.util.StringMessageUtils;
  */
 public class LocaleMessage extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("errorhandler-example");
+    private static final String BUNDLE_PATH = "messages.errorhandler-example-messages";
 
     public static String unretrievedException(Exception e)
     {
