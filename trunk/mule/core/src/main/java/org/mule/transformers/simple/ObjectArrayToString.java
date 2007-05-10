@@ -10,12 +10,9 @@
 
 package org.mule.transformers.simple;
 
-import org.mule.config.i18n.Message;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * <code>ObjectArrayToString</code> transformer is the opposite of 
