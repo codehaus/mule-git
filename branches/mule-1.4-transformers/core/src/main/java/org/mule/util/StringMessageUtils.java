@@ -12,8 +12,7 @@ package org.mule.util;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessageConstants;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
@@ -139,8 +138,7 @@ public final class StringMessageUtils
             catch (UnsupportedEncodingException ueex)
             {
                 throw new MuleRuntimeException(
-                    new Message(CoreMessageConstants.FAILED_TO_CONVERT_STRING_USING_X_ENCODING, 
-                        getOSEncoding()),
+                    CoreMessages.failedToConvertStringUsingEncoding(getOSEncoding()),
                     ueex);
             }
             if (padding > 0)

@@ -17,14 +17,14 @@ import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.config.builders.QuickConfigurationBuilder;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
-import org.mule.impl.model.ModelHelper;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.service.TransportFactory;
@@ -178,7 +178,7 @@ public class MuleClient implements Disposable
     {
         if (MuleManager.isInstanciated())
         {
-            throw new ConfigurationException(new Message(Messages.MANAGER_IS_ALREADY_CONFIGURED));
+            throw new ConfigurationException(ClientMessages.managerIsAlreadyConfigured());
         }
         if (builder == null)
         {
@@ -285,7 +285,8 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
     }
 
@@ -311,7 +312,8 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
     }
 
@@ -360,7 +362,8 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
         return null;
     }
@@ -402,10 +405,9 @@ public class MuleClient implements Disposable
         boolean compregistered = ModelHelper.isComponentRegistered(component);
         if (!compregistered)
         {
-            throw new MessagingException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER, "Component '"
-                                                                                             + component
-                                                                                             + "'"), message,
-                null);
+            throw new MessagingException(
+                CoreMessages.objectNotRegisteredWithManager("Component '" + component + "'"), 
+                message, null);
         }
         UMOTransformer trans = null;
         if (transformers != null)
@@ -473,10 +475,9 @@ public class MuleClient implements Disposable
         boolean compregistered = ModelHelper.isComponentRegistered(component);
         if (!compregistered)
         {
-            throw new MessagingException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER, "Component '"
-                                                                                             + component
-                                                                                             + "'"), message,
-                null);
+            throw new MessagingException(
+                CoreMessages.objectNotRegisteredWithManager("Component '" + component + "'"), 
+                message, null);
         }
         UMOSession session = new MuleSession(ModelHelper.getComponent(component));
         UMOEndpoint endpoint = getDefaultClientEndpoint(session.getComponent().getDescriptor(),
@@ -742,7 +743,8 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
     }
 
@@ -856,8 +858,7 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message(Messages.FAILED_TO_CREATE_X, "Client event"), message,
-                endpoint, e);
+            throw new DispatchException(CoreMessages.failedToCreate("Client event"), message, endpoint, e);
         }
     }
 
@@ -942,7 +943,8 @@ public class MuleClient implements Disposable
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message("client", 1), event.getMessage(), event.getEndpoint(), e);
+            throw new DispatchException(ClientMessages.failedToDispatchClientEvent(), 
+                event.getMessage(), event.getEndpoint(), e);
         }
     }
 

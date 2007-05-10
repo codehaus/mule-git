@@ -11,8 +11,8 @@
 package org.mule.providers.ftp;
 
 import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.file.FilenameParser;
@@ -206,7 +206,7 @@ public class FtpConnector extends AbstractConnector
             catch (Exception ex)
             {
                 throw new MuleRuntimeException(
-                        Message.createStaticMessage("Hmm, couldn't instanciate FTP connection factory."), ex);
+                        MessageFactory.createStaticMessage("Hmm, couldn't instanciate FTP connection factory."), ex);
             }
         }
         return pool;
@@ -220,8 +220,7 @@ public class FtpConnector extends AbstractConnector
             Class objectFactoryClass = ClassUtils.loadClass(this.connectionFactoryClass, getClass());
             if (!FtpConnectionFactory.class.isAssignableFrom(objectFactoryClass))
             {
-                // TODO proper i18n with the new MessageFactories once complete
-                throw new InitialisationException(Message.createStaticMessage(
+                throw new InitialisationException(MessageFactory.createStaticMessage(
                         "FTP connectionFactoryClass is not an instance of org.mule.providers.ftp.FtpConnectionFactory"),
                         this);
             }
@@ -268,7 +267,7 @@ public class FtpConnector extends AbstractConnector
         }
         catch (Exception e)
         {
-            throw new ConnectorException(new Message(Messages.FAILED_TO_STOP_X, "FTP Connector"), this, e);
+            throw new ConnectorException(CoreMessages.failedToStop("FTP Connector"), this, e);
         }
     }
 
@@ -536,8 +535,7 @@ public class FtpConnector extends AbstractConnector
         }
         catch (Exception e)
         {
-            throw new DispatchException(new Message(Messages.STREAMING_FAILED_NO_STREAM), message, endpoint,
-                    e);
+            throw new DispatchException(CoreMessages.streamingFailedNoStream(), message, endpoint, e);
         }
     }
 

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.providers.email;
+package org.mule.providers.email;
 
 import com.icegreen.greenmail.util.DummyTrustManager;
 

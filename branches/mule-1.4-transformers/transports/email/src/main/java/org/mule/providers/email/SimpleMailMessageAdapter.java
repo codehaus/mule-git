@@ -10,7 +10,7 @@
 
 package org.mule.providers.email;
 
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
@@ -18,9 +18,6 @@ import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
-import javax.mail.Header;
-import javax.mail.Message;
-import javax.mail.Part;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +27,10 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.mail.Header;
+import javax.mail.Message;
+import javax.mail.Part;
 
 /**
  * <code>SimpleMailMessageAdapter</code> is an adapter for mail messages.  
@@ -68,9 +69,7 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
         } 
         catch (Exception e) 
         {
-            throw new MessagingException(
-                new org.mule.config.i18n.Message(Messages.FAILED_TO_CREATE_X, "Message Adapter"), 
-                e);
+            throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"), e);
         }
     }
 

@@ -13,8 +13,7 @@ package org.mule.providers;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ThreadingProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ImmutableMuleEndpoint;
@@ -293,7 +292,7 @@ public abstract class AbstractConnector
     {
         if (newName == null)
         {
-            throw new IllegalArgumentException(new Message(Messages.X_IS_NULL, "Connector name").toString());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("Connector name").toString());
         }
 
         if (logger.isDebugEnabled())
@@ -553,8 +552,8 @@ public abstract class AbstractConnector
     {
         if (exceptionListener == null)
         {
-            throw new MuleRuntimeException(new Message(
-                Messages.EXCEPTION_ON_CONNECTOR_X_NO_EXCEPTION_LISTENER, getName()), exception);
+            throw new MuleRuntimeException(
+                CoreMessages.exceptionOnConnectorNotExceptionListener(this.getName()), exception);
         }
         else
         {
@@ -653,9 +652,9 @@ public abstract class AbstractConnector
 
         if (!this.supportsProtocol(endpoint.getConnector().getProtocol()))
         {
-            throw new IllegalArgumentException(new Message(
-                Messages.CONNECTOR_SCHEME_X_INCOMPATIBLE_WITH_ENDPOINT_SCHEME_X, getProtocol(), endpoint
-                    .getEndpointURI().toString()).getMessage());
+            throw new IllegalArgumentException(
+                CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(this.getProtocol(), 
+                    endpoint.getEndpointURI().toString()).getMessage());
         }
 
         try
@@ -667,7 +666,7 @@ public abstract class AbstractConnector
         }
         catch (Exception ex)
         {
-            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+            throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
         }
 
         UMOMessageDispatcher dispatcher = null;
@@ -679,7 +678,7 @@ public abstract class AbstractConnector
         }
         catch (Exception ex)
         {
-            throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+            throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
         }
         finally
         {
@@ -692,7 +691,7 @@ public abstract class AbstractConnector
             }
             catch (Exception ex)
             {
-                throw new ConnectorException(new Message(Messages.CONNECTOR_CAUSED_ERROR), this, ex);
+                throw new ConnectorException(CoreMessages.connectorCausedError(), this, ex);
             }
         }
     }
@@ -734,7 +733,7 @@ public abstract class AbstractConnector
     {
         if (this.isDisposed())
         {
-            throw new DisposeException(new Message(Messages.CANT_USE_DISPOSED_CONNECTOR), this);
+            throw new DisposeException(CoreMessages.cannotUseDisposedConnector(), this);
         }
     }
 
@@ -754,7 +753,7 @@ public abstract class AbstractConnector
         UMOEndpointURI endpointUri = endpoint.getEndpointURI();
         if (endpointUri == null)
         {
-            throw new ConnectorException(new Message(Messages.ENDPOINT_NULL_FOR_LISTENER), this);
+            throw new ConnectorException(CoreMessages.endpointIsNullForListener(), this);
         }
 
         logger.info("Registering listener: " + component.getDescriptor().getName() + " on endpointUri: "
@@ -764,7 +763,7 @@ public abstract class AbstractConnector
 
         if (receiver != null)
         {
-            throw new ConnectorException(new Message(Messages.LISTENER_ALREADY_REGISTERED, endpointUri), this);
+            throw new ConnectorException(CoreMessages.listenerAlreadyRegistered(endpointUri), this);
         }
         else
         {
@@ -1040,7 +1039,7 @@ public abstract class AbstractConnector
         }
         catch (Exception e)
         {
-            throw new MuleRuntimeException(new Message(Messages.FAILED_TO_CLONE_X, "connectionStrategy"), e);
+            throw new MuleRuntimeException(CoreMessages.failedToClone("connectionStrategy"), e);
         }
     }
 
@@ -1541,7 +1540,7 @@ public abstract class AbstractConnector
         }
         else
         {
-            throw new MuleRuntimeException(new Message(Messages.CONNECTOR_CAUSED_ERROR, getName()), e);
+            throw new MuleRuntimeException(CoreMessages.connectorCausedError(this.getName()), e);
         }
     }
 
@@ -1636,8 +1635,9 @@ public abstract class AbstractConnector
     {
         if (!supportsProtocol(endpointUri.getFullScheme()))
         {
-            throw new InitialisationException(new Message(Messages.SCHEME_X_NOT_COMPATIBLE_WITH_CONNECTOR_X,
-                endpointUri.getFullScheme(), getClass().getName()), this);
+            throw new InitialisationException(
+                CoreMessages.schemeNotCompatibleWithConnector(endpointUri.getFullScheme(), 
+                    this.getClass()), this);
         }
         Properties props = new Properties();
         props.putAll(endpointUri.getParams());
@@ -1768,7 +1768,7 @@ public abstract class AbstractConnector
         }
         catch (TransportServiceException e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Message Adapter"),
+            throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"),
                 message, e);
         }
     }
@@ -1793,7 +1793,7 @@ public abstract class AbstractConnector
         }
         catch (TransportServiceException e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_CREATE_X, "Stream Message Adapter"),
+            throw new MessagingException(CoreMessages.failedToCreate("Stream Message Adapter"),
                 in, e);
         }
     }
@@ -1835,8 +1835,8 @@ public abstract class AbstractConnector
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException
     {
-        throw new UnsupportedOperationException(new Message(Messages.STREAMING_NOT_SUPPORTED_FOR_X,
-            getProtocol()).toString());
+        throw new UnsupportedOperationException(
+            CoreMessages.streamingNotSupported(this.getProtocol()).toString());
     }
 
     // @Override

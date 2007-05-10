@@ -10,8 +10,7 @@
 
 package org.mule.util;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.io.File;
 import java.io.IOException;
@@ -141,8 +140,8 @@ public class IOUtils extends org.apache.commons.io.IOUtils
     {
         if (resourceName == null)
         {
-            throw new IllegalArgumentException(new Message(Messages.X_IS_NULL, "Resource name")
-                .getMessage());
+            throw new IllegalArgumentException(
+                CoreMessages.objectIsNull("Resource name").getMessage());
         }
         URL url = null;
 

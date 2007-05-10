@@ -11,8 +11,7 @@
 package org.mule.impl.security.filters;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
 import org.mule.impl.security.MuleAuthentication;
 import org.mule.impl.security.MuleCredentials;
@@ -72,8 +71,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
                 logger.debug("Authentication request for user: " + user.getUsername() 
                     + " failed: " + e.toString());
             }
-            throw new UnauthorisedException(
-                new Message(Messages.AUTH_FAILED_FOR_USER_X, user.getUsername()),
+            throw new UnauthorisedException(CoreMessages.authFailedForUser(user.getUsername()),
                 event.getMessage(), e);
         }
 
@@ -128,7 +126,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
 
         if (strategy == null)
         {
-            throw new InitialisationException(new Message(Messages.ENCRYPT_STRATEGY_NOT_SET), this);
+            throw new InitialisationException(CoreMessages.encryptionStrategyNotSet(), this);
         }
     }
 

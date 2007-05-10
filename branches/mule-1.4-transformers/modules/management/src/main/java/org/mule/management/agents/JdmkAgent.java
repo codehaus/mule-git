@@ -10,13 +10,14 @@
 
 package org.mule.management.agents;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
+
+import java.net.URI;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
@@ -24,7 +25,6 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import java.net.URI;
 
 /**
  * <code>JdmkAgent</code> configures an Jdmk Http Adaptor for Jmx management,
@@ -58,41 +58,21 @@ public class JdmkAgent implements UMOAgent
                                            new Object[] {new Integer(port)}, this.getClass());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.manager.UMOAgent#getName()
-     */
     public String getName()
     {
         return this.name;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.manager.UMOAgent#setName(java.lang.String)
-     */
     public void setName(String name)
     {
         this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.manager.UMOAgent#getDescription()
-     */
     public String getDescription()
     {
         return "Jdmk Http adaptor: " + jmxAdaptorUrl;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.lifecycle.Startable#start()
-     */
     public void start() throws UMOException
     {
         try
@@ -101,13 +81,13 @@ public class JdmkAgent implements UMOAgent
         }
         catch (InstanceNotFoundException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Jdmk agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStart("Jdmk agent"), adaptorName, e);
         }
         catch (MBeanException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Jdmk agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStart("Jdmk agent"), adaptorName, e);
         }
         catch (ReflectionException e)
         {
@@ -115,11 +95,6 @@ public class JdmkAgent implements UMOAgent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.lifecycle.Stoppable#stop()
-     */
     public void stop() throws UMOException
     {
         if (mBeanServer == null)
@@ -133,13 +108,13 @@ public class JdmkAgent implements UMOAgent
         }
         catch (InstanceNotFoundException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Jdmk agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStop("Jdmk agent"), adaptorName, e);
         }
         catch (MBeanException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Jdmk agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStop("Jdmk agent"), adaptorName, e);
         }
         catch (ReflectionException e)
         {
@@ -147,11 +122,6 @@ public class JdmkAgent implements UMOAgent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.lifecycle.Disposable#dispose()
-     */
     public void dispose()
     {
         try
@@ -164,31 +134,16 @@ public class JdmkAgent implements UMOAgent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.manager.UMOAgent#registered()
-     */
     public void registered()
     {
         // nothing to do
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.manager.UMOAgent#unregistered()
-     */
     public void unregistered()
     {
         // nothing to do
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.lifecycle.Initialisable#initialise()
-     */
     public void initialise() throws InitialisationException
     {
         try
@@ -212,7 +167,7 @@ public class JdmkAgent implements UMOAgent
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "Jdmk Agent"), e, this);
+            throw new InitialisationException(CoreMessages.failedToStart("Jdmk Agent"), e, this);
         }
     }
 

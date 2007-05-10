@@ -10,7 +10,7 @@
 
 package org.mule.providers.email;
 
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
@@ -18,7 +18,6 @@ import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
-import org.mule.util.ClassUtils;
 
 import java.util.Calendar;
 
@@ -59,7 +58,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             catch (Exception e)
             {
                 throw new EndpointException(
-                    org.mule.config.i18n.Message.createStaticMessage("Unable to connect to mail transport."),
+                    org.mule.config.i18n.MessageFactory.createStaticMessage("Unable to connect to mail transport."),
                     e);
             }
         }
@@ -80,12 +79,6 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.UMOConnector#dispatch(java.lang.Object,
-     *      org.mule.providers.MuleEndpoint)
-     */
     protected void doDispatch(UMOEvent event)
     {
         try
@@ -94,11 +87,9 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 
             if (!(data instanceof Message))
             {
-                throw new DispatchException(new org.mule.config.i18n.Message(
-                        Messages.TRANSFORM_X_UNEXPECTED_TYPE_X,
-                        ClassUtils.getSimpleName(data.getClass()),
-                        ClassUtils.getSimpleName(Message.class)),
-                        event.getMessage(), event.getEndpoint());
+                throw new DispatchException(
+                    CoreMessages.transformUnexpectedType(data.getClass(), Message.class),
+                    event.getMessage(), event.getEndpoint());
             }
             else
             {

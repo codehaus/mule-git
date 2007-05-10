@@ -10,9 +10,10 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.tcp.i18n.TcpMessages;
 import org.mule.providers.tcp.protocols.DefaultProtocol;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOException;
@@ -20,14 +21,13 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.ClassUtils;
-import org.mule.impl.model.streaming.CallbackOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URI;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -81,7 +81,7 @@ public class TcpConnector extends AbstractConnector
             }
             catch (Exception e)
             {
-                throw new InitialisationException(new Message("tcp", 3), e);
+                throw new InitialisationException(TcpMessages.failedToInitMessageReader(), e);
             }
         }
 
@@ -138,7 +138,7 @@ public class TcpConnector extends AbstractConnector
         }
         catch (Exception e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_GET_OUTPUT_STREAM), message, e);
+            throw new MessagingException(CoreMessages.failedToGetOutputStream(), message, e);
         }
         if (socket == null)
         {
@@ -160,7 +160,7 @@ public class TcpConnector extends AbstractConnector
         }
         catch (IOException e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_GET_OUTPUT_STREAM), message, e);
+            throw new MessagingException(CoreMessages.failedToGetOutputStream(), message, e);
         }
     }
 

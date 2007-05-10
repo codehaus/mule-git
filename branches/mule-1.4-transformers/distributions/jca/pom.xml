@@ -8,32 +8,23 @@
         <artifactId>mule-distributions</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-jca</artifactId>
-    <name>JCA Resource Adapter</name>
-    <packaging>rar</packaging>
+    <groupId>org.mule.distributions.jca</groupId>
+    <artifactId>mule-jca-parent</artifactId>
+    <name>Parent for appserver specific JCA Resource Adapters</name>
+    <packaging>pom</packaging>
     <description>
-        A Resource Adapter implementation that allows a Mule instance to
-        be deployed to a J2EE application server and exposes Mule
-        services via the JCA connector architecture.
+        This is the parent module for the appserver specific jca modules. This does not
+        produce any output but serves as container for the dependencies that are common
+        for all appserver specific jca distributions.
     </description>
 
-    <build>
-        <defaultGoal>package</defaultGoal>
-        <plugins>
-            <plugin>
-                <artifactId>maven-rar-plugin</artifactId>
-                <!--
-                    Download a fix for http://jira.codehaus.org/browse/MRAR-8 , not yet released.
-                    Otherwise all kinds of garbage end up in the RA.
-                    <version>2.2-20060926.202808-1</version>
-                -->
-                <configuration>
-                    <rarSourceDirectory>../../modules/jca/src/rar</rarSourceDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>jca</module>
+        <module>jca-jboss</module>
+    </modules>
 
+    <!--
+        TODO DO: is this needed now we don't use a snapshot of the rar plugin any more?
     <pluginRepositories>
         <pluginRepository>
             <id>mule-deps-plugins</id>
@@ -47,16 +38,19 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-
-    <!--
-        HACK: if mule-module-jca is not specified as a direct pom dependency, m2 project object never
-        sees it as a module nor dependency, and assembly inclusion filters then just skip it.
     -->
+
     <dependencies>
+        <!--
+          HACK: if mule-module-jca is not specified as a direct pom dependency, m2 project 
+          object never sees it as a module nor dependency, and assembly inclusion filters 
+          then just skip it.
+        -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-jca</artifactId>
             <version>${version}</version>
+            <scope>provided</scope>
         </dependency>
         <!-- TODO dirk: I'm pretty sure that including the examples in the parent pom
             is not what we want. Only some distros want them, include them there
@@ -194,32 +188,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
-    <profiles>
-        <profile>
-            <id>jboss</id>
-            <!--
-                TODO MULE-1072
-                finalName might not be a real solution, what we are looking for is the classifier
-            -->
-            <build>
-                <finalName>${artifactId}-${version}-jboss</finalName>
-            </build>
-            <!--  more dependencies to ignore for JBoss -->
-            <dependencies>
-                <dependency>
-                    <groupId>mx4j</groupId>
-                    <artifactId>mx4j-jmx</artifactId>
-                    <version>2.1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                    <version>1.2.14</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

@@ -11,8 +11,7 @@
 package org.mule.providers;
 
 import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -224,14 +223,13 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             else
             {
-                throw new IllegalArgumentException(new Message(
-                    Messages.PROPERTY_X_IS_NOT_SUPPORTED_TYPE_X_IT_IS_TYPE_X, "connector",
-                    AbstractConnector.class.getName(), connector.getClass().getName()).getMessage());
+                throw new IllegalArgumentException(CoreMessages.propertyIsNotSupportedType(
+                    "connector", AbstractConnector.class, connector.getClass()).getMessage());
             }
         }
         else
         {
-            throw new NullPointerException(new Message(Messages.X_IS_NULL, "connector").getMessage());
+            throw new NullPointerException(CoreMessages.objectIsNull("connector").getMessage());
         }
     }
 

@@ -10,15 +10,16 @@
 
 package org.mule.management.agents;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
-import org.mule.MuleManager;
+
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import java.util.List;
 
@@ -33,7 +34,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tanukisoftware.wrapper.jmx.WrapperManager;
 import org.tanukisoftware.wrapper.jmx.WrapperManagerMBean;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This agent integrates Java Service Wrapper into Mule. See
@@ -118,7 +118,8 @@ public class WrapperManagerAgent implements UMOAgent {
 
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "wrapper agent"), e, this);
+            throw new InitialisationException(
+                CoreMessages.failedToStart("wrapper agent"), e, this);
         }
     }
 

@@ -11,8 +11,8 @@
 package org.mule.providers.service;
 
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.endpoint.EndpointBuilder;
 import org.mule.impl.endpoint.UrlEndpointBuilder;
@@ -274,8 +274,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.CANT_INSTANCIATE_FINDER_X, serviceFinder), 
-                    e);
+                    CoreMessages.cannotInstanciateFinder(serviceFinder), e);
             }
         }
         return transportServiceFinder;
@@ -298,8 +297,9 @@ public class TransportServiceDescriptor
         {
 
             // If the stream.message.adapter is not set streaming should not be used
-            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                "stream.message.adapter", getProtocol() + " service descriptor"));
+            throw new TransportServiceException(
+                CoreMessages.objectNotSetInService("stream.message.adapter", 
+                    this.getProtocol() + " service descriptor"));
         }
         try
         {
@@ -317,8 +317,7 @@ public class TransportServiceDescriptor
         catch (Exception e)
         {
             throw new TransportServiceException(
-                new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Adapter", streamMessageAdapter),
-                e);
+                CoreMessages.failedToCreateObjectWith("Message Adapter", streamMessageAdapter), e);
         }
     }
 
@@ -338,14 +337,13 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Adapter", clazz),
-                    e);
+                    CoreMessages.failedToCreateObjectWith("Message Adapter", clazz), e);
             }
         }
         else
         {
-            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                "Message Adapter", getProtocol()));
+            throw new TransportServiceException(
+                CoreMessages.objectNotSetInService("Message Adapter", this.getProtocol()));
         }
     }
 
@@ -368,8 +366,7 @@ public class TransportServiceDescriptor
         catch (Throwable e)
         {
             throw new TransportServiceException(
-                new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "SessionHandler", sessionHandler), 
-                e);
+                CoreMessages.failedToCreateObjectWith("SessionHandler", sessionHandler), e);
         }
     }
 
@@ -426,15 +423,14 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Receiver", getProtocol()),
-                    e);
+                    CoreMessages.failedToCreateObjectWith("Message Receiver", this.getProtocol()), e);
             }
 
         }
         else
         {
-            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                "Message Receiver", getProtocol()));
+            throw new TransportServiceException(
+                CoreMessages.objectNotSetInService("Message Receiver", this.getProtocol()));
         }
     }
 
@@ -450,14 +446,14 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Message Dispatcher Factory", dispatcherFactory),
+                    CoreMessages.failedToCreateObjectWith("Message Dispatcher Factory", dispatcherFactory),
                     e);
             }
         }
         else
         {
-            throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                "Message Dispatcher Factory", getProtocol()));
+            throw new TransportServiceException(
+                CoreMessages.objectNotSetInService("Message Dispatcher Factory", this.getProtocol()));
         }
     }
 
@@ -473,7 +469,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportServiceException(
-                    new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Transaction Factory", transactionFactory),
+                    CoreMessages.failedToCreateObjectWith("Transaction Factory", transactionFactory),
                     e);
             }
         }
@@ -491,7 +487,7 @@ public class TransportServiceDescriptor
         // method
         if (getServiceError() != null)
         {
-            throw new TransportServiceException(Message.createStaticMessage(getServiceError()));
+            throw new TransportServiceException(MessageFactory.createStaticMessage(getServiceError()));
         }
         // if there is a factory, use it
         try
@@ -511,8 +507,8 @@ public class TransportServiceDescriptor
                 }
                 else
                 {
-                    throw new TransportServiceException(new Message(Messages.X_NOT_SET_IN_SERVICE_X,
-                        "Connector", getProtocol()));
+                    throw new TransportServiceException(
+                        CoreMessages.objectNotSetInService("Connector", this.getProtocol()));
                 }
             }
         }
@@ -523,9 +519,7 @@ public class TransportServiceDescriptor
         catch (Exception e)
         {
             throw new TransportServiceException(
-                new Message(Messages.FAILED_TO_CREATE_X_WITH_X, "Connector", getConnector()), 
-                e);
-
+                CoreMessages.failedToCreateObjectWith("Connector", this.getConnector()), e);
         }
 
         if (connector.getName() == null)
@@ -554,7 +548,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "inbound", getDefaultInboundTransformer()),
+                    CoreMessages.failedToLoadTransformer("inbound", this.getDefaultInboundTransformer()),
                     e);
             }
         }
@@ -575,7 +569,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "inbound", getDefaultInboundTransformer()),
+                    CoreMessages.failedToLoadTransformer("inbound", this.getDefaultInboundTransformer()),
                     e);
             }
         }
@@ -600,7 +594,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "outbound", getDefaultOutboundTransformer()),
+                    CoreMessages.failedToLoadTransformer("outbound", this.getDefaultOutboundTransformer()),
                     e);
             }
         }
@@ -621,7 +615,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "outbound", getDefaultOutboundTransformer()),
+                    CoreMessages.failedToLoadTransformer("outbound", this.getDefaultOutboundTransformer()),
                     e);
             }
         }
@@ -646,7 +640,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "response", getDefaultResponseTransformer()), 
+                    CoreMessages.failedToLoadTransformer("response", this.getDefaultResponseTransformer()), 
                     e);
             }
         }
@@ -667,7 +661,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X_TRANSFORMER_X, "response", getDefaultResponseTransformer()), 
+                    CoreMessages.failedToLoadTransformer("response", this.getDefaultResponseTransformer()), 
                     e);
             }
         }
@@ -692,8 +686,7 @@ public class TransportServiceDescriptor
             catch (Exception e)
             {
                 throw new TransportFactoryException(
-                    new Message(Messages.FAILED_LOAD_X, "Endpoint Builder: " + getEndpointBuilder()), 
-                    e);
+                    CoreMessages.failedToLoad("Endpoint Builder: " + getEndpointBuilder()), e);
             }
         }
     }
