@@ -8,7 +8,7 @@
         <artifactId>mule-module-jca-parent</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-module-jca-common</artifactId>
+    <artifactId>mule-module-jca-core</artifactId>
     <name>Common artifacts for JCA Resource Adapters</name>
     <packaging>jar</packaging>
     <description>Sources and resources for a Resource Adapter</description>
