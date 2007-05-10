@@ -11,6 +11,7 @@
 package org.mule.transformers.flatfile;
 
 import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.transformer.TransformerException;
 
 import java.io.ByteArrayInputStream;
@@ -49,7 +50,7 @@ public class CsvToDataSet extends AbstractCsvTransformer
         if (dataSet == null)
         {
             // TODO localized error message
-            throw new TransformerException(Message.createStaticMessage("Could not create a data set"));
+            throw new TransformerException(MessageFactory.createStaticMessage("Could not create a data set"));
         }
         if (dataSet.getErrorCount() > 0)
         {
@@ -73,7 +74,7 @@ public class CsvToDataSet extends AbstractCsvTransformer
         
         // TODO localized error message
         String message = "Could not create a transformer for input of type " + src.getClass().getName();
-        throw new TransformerException(Message.createStaticMessage(message));
+        throw new TransformerException(MessageFactory.createStaticMessage(message));
     }
     
     private Message buildErrorMessage(List errors)
@@ -94,7 +95,7 @@ public class CsvToDataSet extends AbstractCsvTransformer
                 message.append("\n");
             }
         }
-        return Message.createStaticMessage(message.toString());
+        return MessageFactory.createStaticMessage(message.toString());
     }
 }
 
