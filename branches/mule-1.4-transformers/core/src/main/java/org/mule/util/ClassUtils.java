@@ -59,7 +59,7 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     {
         if (clazz == null)
         {
-            throw new NullPointerException("clazz");
+            throw new IllegalArgumentException("clazz may not be null");
         }
         return !(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()));
     }

@@ -88,7 +88,7 @@ public class MailUtils
         }
         else
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("Email address").toString());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("Email address").toString());
         }
     }
 }

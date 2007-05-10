@@ -44,7 +44,7 @@ public class TransformerPairWireFormat implements WireFormat
     {
         if (inboundTransformer == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("inboundTransformer").getMessage());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("inboundTransformer").getMessage());
         }
         if (inboundTransformer.isSourceTypeSupported(InputStream.class))
         {
@@ -69,7 +69,7 @@ public class TransformerPairWireFormat implements WireFormat
     {
         if (outboundTransformer == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("outboundTransformer").getMessage());
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("outboundTransformer").getMessage());
         }
         try
         {

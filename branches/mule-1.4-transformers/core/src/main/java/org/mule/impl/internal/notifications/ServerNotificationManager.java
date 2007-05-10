@@ -305,7 +305,7 @@ public class ServerNotificationManager implements Work, Disposable
     {
         if (workListener == null)
         {
-            throw new NullPointerException("workListener");
+            throw new IllegalArgumentException("workListener may not be null");
         }
         this.workListener = workListener;
     }

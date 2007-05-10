@@ -142,7 +142,7 @@ public class ObjectGetOrCreateRule extends ObjectCreateRule
             context = (UMOContainerContext)MethodUtils.invokeMethod(root, containerMethodName, null);
             if (context == null)
             {
-                throw new NullPointerException(CoreMessages.objectIsNull("Container context").toString());
+                throw new IllegalArgumentException(CoreMessages.objectIsNull("Container context").toString());
             }
         }
         return context;

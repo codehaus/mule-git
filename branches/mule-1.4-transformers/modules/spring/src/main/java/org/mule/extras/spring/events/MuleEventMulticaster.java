@@ -913,7 +913,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         }
         else
         {
-            throw new NullPointerException("exceptionListener");
+            throw new IllegalArgumentException("exceptionListener may not be null");
         }
     }
 

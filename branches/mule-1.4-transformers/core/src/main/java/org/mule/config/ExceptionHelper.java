@@ -112,7 +112,7 @@ public final class ExceptionHelper
                 "mule-exception-codes.properties", ExceptionHelper.class);
             if (is == null)
             {
-                throw new NullPointerException(
+                throw new IllegalArgumentException(
                     "Failed to load resource: META_INF/services/org/mule/config/mule-exception-codes.properties");
             }
             errorCodes.load(is);
@@ -121,7 +121,7 @@ public final class ExceptionHelper
                 ExceptionHelper.class);
             if (is == null)
             {
-                throw new NullPointerException(
+                throw new IllegalArgumentException(
                     "Failed to load resource: META_INF/services/org/mule/config/mule-exception-config.properties");
             }
             errorDocs.load(is);

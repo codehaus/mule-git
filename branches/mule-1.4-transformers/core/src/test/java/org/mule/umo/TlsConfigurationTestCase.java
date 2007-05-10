@@ -26,7 +26,7 @@ public class TlsConfigurationTestCase extends AbstractMuleTestCase
             configuration.initialise(false, TlsConfiguration.JSSE_NAMESPACE);
             fail("no key password");
         }
-        catch (NullPointerException e)
+        catch (IllegalArgumentException e)
         {
             assertNotNull("expected", e);
         }
@@ -36,7 +36,7 @@ public class TlsConfigurationTestCase extends AbstractMuleTestCase
             configuration.initialise(false, TlsConfiguration.JSSE_NAMESPACE);
             fail("no store password");
         }
-        catch (NullPointerException e)
+        catch (IllegalArgumentException e)
         {
             assertNotNull("expected", e);
         }

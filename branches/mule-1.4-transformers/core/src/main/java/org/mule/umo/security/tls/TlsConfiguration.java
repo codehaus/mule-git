@@ -284,7 +284,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
     {
         if (null == value)
         {
-            throw new NullPointerException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
