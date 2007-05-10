@@ -19,7 +19,7 @@ import org.mule.config.i18n.MessageFactory;
  */
 public class LocaleMessage extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("voip-example");
+    private static final String BUNDLE_PATH = "messages.voip-example-messages";
     
     public static String getWelcomeMessage()
     {

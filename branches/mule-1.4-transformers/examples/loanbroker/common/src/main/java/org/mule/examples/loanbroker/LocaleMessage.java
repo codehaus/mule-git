@@ -14,10 +14,9 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.util.StringMessageUtils;
 
-// TODO DO: all methods return String
 public class LocaleMessage extends MessageFactory
 {
-    private static final String BUNDLE_PATH = getBundlePath("loanbroker-example");
+    private static final String BUNDLE_PATH = "messages.loanbroker-example-messages";
 
     public static String receivedRequest(String[] params)
     {

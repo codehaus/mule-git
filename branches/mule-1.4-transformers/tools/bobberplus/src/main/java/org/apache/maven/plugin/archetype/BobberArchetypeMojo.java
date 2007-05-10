@@ -16,8 +16,10 @@ package org.apache.maven.plugin.archetype;
  * limitations under the License.
  */
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.archetype.Archetype;
 import org.apache.maven.archetype.ArchetypeDescriptorException;
 import org.apache.maven.archetype.ArchetypeNotFoundException;
@@ -25,9 +27,6 @@ import org.apache.maven.archetype.ArchetypeTemplateProcessingException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Builds archetype containers.
