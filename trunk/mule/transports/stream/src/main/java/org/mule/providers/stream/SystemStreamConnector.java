@@ -104,8 +104,7 @@ public class SystemStreamConnector extends StreamConnector
     {
         if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(promptMessageCode))
         {
-            String bundlePath = SystemStreamMessageFactory.getBundlePath(resourceBundle);
-            return SystemStreamMessageFactory.getString(bundlePath, promptMessageCode);
+            return SystemStreamMessageFactory.getString(resourceBundle, promptMessageCode);
         }
 
         return promptMessage;
@@ -144,7 +143,8 @@ public class SystemStreamConnector extends StreamConnector
     }
 
     /**
-     * @param resourceBundle The resourceBundle to set.
+     * @param resourceBundle The resourceBundle to read the message from. This property is 
+     * only needed in conjunction with promptMessageCode or outputMessageCode.
      */
     public void setResourceBundle(String resourceBundle)
     {
@@ -158,8 +158,7 @@ public class SystemStreamConnector extends StreamConnector
     {
         if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(outputMessageCode))
         {
-            String bundlePath = SystemStreamMessageFactory.getBundlePath(resourceBundle);
-            return SystemStreamMessageFactory.getString(bundlePath, outputMessageCode);
+            return SystemStreamMessageFactory.getString(resourceBundle, outputMessageCode);
         }
 
         return outputMessage;
@@ -251,11 +250,6 @@ public class SystemStreamConnector extends StreamConnector
      */
     private static class SystemStreamMessageFactory extends MessageFactory
     {
-        protected static String getBundlePath(String bundleName)
-        {
-            return MessageFactory.getBundlePath(bundleName);
-        }
-        
         protected static String getString(String bundlePath, String code)
         {
             return MessageFactory.getString(bundlePath, Integer.parseInt(code));
