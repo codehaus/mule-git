@@ -8,11 +8,25 @@
         <artifactId>mule-modules</artifactId>
         <version>1.4.1-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-module-jca</artifactId>
-    <name>JCA Resource Adapter</name>
-    <packaging>jar</packaging>
-    <description>A Resource Adapter implementation that allows a Mule instance to be deployed to a Java EE application server and exposes Mule services via the JCA connector architecture.</description>
+    <artifactId>mule-module-jca-parent</artifactId>
+    <name>JCA Resource Adapter Parent</name>
+    <packaging>pom</packaging>
+    <description>Sources and resources for a Resource Adapter</description>
 
+    <!--
+        This module does not produce any artifact, is has packaging=pom
+
+        Instead, this pom serves as parent for application server specific
+        jca modules which are children of this module although everything
+        is still managed from the pom which resides in the modules directory.
+
+        The sources and resources that reside in src are referenced by the
+        child modules. This is intended since
+            a) modules with packaging=pom cannot produce any artifacts except
+               for the pom which is installed into the repo
+            b) a packaged jar would be useless for the child modules which may
+               need to add own sources/resources
+    -->
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -51,48 +65,4 @@
             <version>${version}</version>
         </dependency>
     </dependencies>
-    
-    <!-- it's not enough to have resources declared globally and only resources for the jboss
-         jca in a profile. 
-         Resources from profiles are added to maven's runtime model so you'll end up with the
-         same directory included twice and ignoring the exclude.
-    -->
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault/>
-            </activation>
-            <build>
-                <resources>
-                    <!--
-                        Need to inject the final RAR name into some
-                        vendor-specific deployment descriptors.
-                        -->
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <filtering>true</filtering>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>jboss</id>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <filtering>true</filtering>
-                        <!-- see http://jira.jboss.com/jira/browse/JBAS-4283
-                             JBoss sees other vendor specific deployment descriptors
-                             which have to be excluded when building this module for jboss
-                        -->
-                        <excludes>
-                            <exclude>**/oc4j*</exclude>
-                        </excludes>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-    </profiles>
 </project>

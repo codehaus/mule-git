@@ -24,10 +24,10 @@
         <!-- Maintain a 1:1 relationship between a TX and connection -->
         <track-connection-by-tx/>
         <!-- This should go in sync with the currently built Mule version -->
-        <rar-name>mule-jca-${version}.rar</rar-name>
+        <!-- <rar-name>mule-jca-${version}.rar</rar-name> -->
+        <rar-name>mule-jca-jboss-${version}.rar</rar-name>
         <connection-definition>org.mule.ra.MuleConnectionFactory</connection-definition>
         <!--
-        
             Uncomment and override with custom settings, don't edit ra.xml directly.
 
         <config-property name="ConfigurationBuilder"
@@ -35,6 +35,5 @@
         <config-property name="Configurations"
                          type="java.lang.String">my-custom-mule-config.xml</config-property>
         -->
-
     </tx-connection-factory>
 </connection-factories> 
