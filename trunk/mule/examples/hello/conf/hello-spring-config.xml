@@ -21,7 +21,7 @@
     -->
     <bean id="systemStreamConnector" class="org.mule.providers.stream.SystemStreamConnector">
         <property name="promptMessageCode"><value>3</value></property>
-        <property name="resourceBundle"><value>META-INF.services.org.mule.i18n.hello-example-messages</value></property>
+        <property name="resourceBundle"><value>messages.hello-example-messages</value></property>
         <property name="messageDelayTime"><value>1000</value></property>
     </bean>
 
