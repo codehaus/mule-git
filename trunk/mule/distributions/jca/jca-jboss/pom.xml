@@ -23,7 +23,7 @@
             <plugin>
                 <artifactId>maven-rar-plugin</artifactId>
                 <configuration>
-                    <rarSourceDirectory>../../../modules/jca/src/rar</rarSourceDirectory>
+                    <rarSourceDirectory>../../../modules/jca/jca-common/src/rar</rarSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -35,7 +35,7 @@
             sees it as a module nor dependency, and assembly inclusion filters then just skip it.
             -->
         <dependency>
-            <groupId>org.mule.modules</groupId>
+            <groupId>org.mule.modules.jca</groupId>
             <artifactId>mule-module-jca-jboss</artifactId>
             <version>${version}</version>
         </dependency>
