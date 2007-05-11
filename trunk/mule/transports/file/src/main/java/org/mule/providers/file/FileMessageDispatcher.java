@@ -124,10 +124,11 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
                 }
 
                 MuleMessage message = new MuleMessage(connector.getMessageAdapter(result));
+                File destinationFile = null;
                 if (connector.getMoveToDirectory() != null)
                 {
                     {
-                        File destinationFile = new File(connector.getMoveToDirectory(), result
+                        destinationFile = new File(connector.getMoveToDirectory(), result
                             .getName());
                         if (!result.renameTo(destinationFile))
                         {
@@ -136,7 +137,26 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
                         }
                     }
                 }
-                result.delete();
+                
+                if (((FileConnector) connector).isAutoDelete())
+                {
+                    // no moveTo directory
+                    if (destinationFile == null)
+                    {
+                        // delete source
+                        if (!result.delete())
+                        {
+                            throw new MuleException(
+                                FileMessages.failedToDeleteFile(result.getAbsolutePath()));
+                        }
+                    }
+                    else
+                    {
+                        // nothing to do here since moveFile() should have deleted
+                        // the source file for us
+                    }
+                }
+                
                 return message;
             }
         }
