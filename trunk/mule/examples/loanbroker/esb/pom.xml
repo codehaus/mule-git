@@ -34,7 +34,7 @@
             <groupId>openejb</groupId>
             <artifactId>openejb-core</artifactId>
             <version>1.0</version>
-            <scope>provided</scope> 
+            <scope>provided</scope>
             <exclusions>
                 <!-- Tries to pull an unpublished castor version -->
                 <exclusion>
@@ -45,6 +45,16 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <!-- no old xerces please -->
+                <!-- apparently scope=provided and dependencyManagement don't get along? -->
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
