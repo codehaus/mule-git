@@ -13,8 +13,8 @@ import org.jdom.JDOMException;
 
 public class DelimiterWriterFactory extends AbstractWriterFactory
 {
-    private static final char DEFAULT_DELIMITER = ';';
-    private static final char DEFAULT_QUALIFIER = '"';
+    public static final char DEFAULT_DELIMITER = ';';
+    public static final char DEFAULT_QUALIFIER = '"';
 
     private final char delimiter;
     private final char qualifier;
