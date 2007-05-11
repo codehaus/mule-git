@@ -13,7 +13,7 @@
     <name>JCA Resource Adapter Parent</name>
     <packaging>pom</packaging>
     <description>
-        This module is the parent for the common jca module (jca-common) and all
+        This module is the parent for the core jca module (jca-core) and all
         appserver specific jca modules.
 
         It serves mainly as a container for dependencies which are common to all
@@ -21,7 +21,7 @@
     </description>
 
     <modules>
-        <module>jca-common</module>
+        <module>jca-core</module>
         <module>jca-generic</module>
         <module>jca-jboss</module>
     </modules>

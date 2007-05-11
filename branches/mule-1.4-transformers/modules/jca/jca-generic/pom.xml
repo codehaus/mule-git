@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mule.modules.jca</groupId>
-            <artifactId>mule-module-jca-common</artifactId>
+            <artifactId>mule-module-jca-core</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

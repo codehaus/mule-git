@@ -23,7 +23,7 @@
             <plugin>
                 <artifactId>maven-rar-plugin</artifactId>
                 <configuration>
-                    <rarSourceDirectory>../../../modules/jca/jca-common/src/rar</rarSourceDirectory>
+                    <rarSourceDirectory>../../../modules/jca/jca-core/src/rar</rarSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -30,7 +30,11 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
         msg.setProperty("addedProperty", "originalValue");
         UMOEventContext ctx = getTestEventContext(msg);
         MuleMessage transformed = (MuleMessage) t.transform(msg, null, ctx);
-        assertNotSame(msg, transformed);
+        assertSame(msg, transformed);
+        assertEquals(msg.getUniqueId(), transformed.getUniqueId());
+        assertEquals(msg.getPayload(), transformed.getPayload());
+        // property values will be different
+        assertEquals(msg.getPropertyNames(), transformed.getPropertyNames());
 
         assertEquals("overwrittenValue", transformed.getProperty("addedProperty"));
     }
@@ -47,7 +51,10 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
         msg.setProperty("addedProperty", "originalValue");
         UMOEventContext ctx = getTestEventContext(msg);
         MuleMessage transformed = (MuleMessage) t.transform(msg, null, ctx);
-        assertNotSame(msg, transformed);
+        assertSame(msg, transformed);
+        assertEquals(msg.getUniqueId(), transformed.getUniqueId());
+        assertEquals(msg.getPayload(), transformed.getPayload());
+        assertEquals(msg.getPropertyNames(), transformed.getPropertyNames());
 
         assertEquals("originalValue", transformed.getProperty("addedProperty"));
     }
