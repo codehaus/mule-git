@@ -113,6 +113,9 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 			stemToFileMap = new HashMap();
 			File optLibs[] = new File(getLocation(),"lib/opt").listFiles();
 			for (int i=0; i < optLibs.length; ++i) stemToFileMap.put(trimVersion(optLibs[i].getName()), optLibs[i]);
+			
+			File muleLibs[] = new File(getLocation(),"lib/mule").listFiles();
+			for (int i=0; i < muleLibs.length; ++i) stemToFileMap.put(trimVersion(muleLibs[i].getName()), muleLibs[i]);
 			try
 			{
 				File userLibs[] = new File(getLocation(),"lib/user").listFiles();
@@ -223,12 +226,14 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 		List transports = new LinkedList();
 		List modules = new LinkedList();
 	
+		String commonSuffix = getVersion() + ".jar";
+
 		File[] allModules = new File(getLocation(), "lib/mule").listFiles();
 		for (int i = 0; i < allModules.length; ++i) {
 			String filePart = allModules[i].getName(); 
-			if (filePart.startsWith("mule-transport-")) {
+			if (filePart.startsWith("mule-transport-") && filePart.endsWith(commonSuffix)) {
 				transports.add(getMuleModule(fileToModule(filePart)));
-			} else if (filePart.startsWith("mule-module-")) {
+			} else if (filePart.startsWith("mule-module-") && filePart.endsWith(commonSuffix)) {
 				modules.add(getMuleModule(fileToModule(filePart)));
 			}
 		}
@@ -334,8 +339,11 @@ public class MuleFullDistribution extends AbstractMuleDistribution {
 			StringTokenizer st = new StringTokenizer(deps, " ");
 			while (st.hasMoreTokens()) {
 				String dep = st.nextToken();
-				if (dep.startsWith(MULE_BUNDLE_PREFIX)) {
-					muleDependencies.add(lookupMuleModule(fileToModule(dep)));
+				if (dep.startsWith(MULE_BUNDLE_PREFIX) && dep.endsWith(getVersion() + ".jar")) {
+					IFileBasedBundle muleModule = lookupMuleModule(fileToModule(dep));
+					if (muleModule != null) {
+						muleDependencies.add(muleModule);
+					}
 				} else {
 					otherDependencies.add(dep);
 				}
