@@ -114,7 +114,7 @@ public class MessagePropertiesTransformer extends AbstractEventAwareTransformer
             }
         }
 
-        return message;
+        return src;
     }
 
     public Set getDeleteProperties()
