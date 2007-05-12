@@ -10,6 +10,9 @@
 
 package org.mule.providers.soap.xfire;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;
@@ -23,23 +26,26 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 
 import org.custommonkey.xmlunit.XMLAssert;
+import org.w3c.dom.Document;
 
 public class XFireWsdlTestCase extends AbstractMuleTestCase
 {
-    public static final String STOCKQUOTE_URL = "wsdl-xfire:http://www.webservicex.net/stockquote.asmx?WSDL&method=GetQuote";
-    public static final String STOCKQUOTE_URL_NOWSDL = "wsdl-xfire:http://www.webservicex.net/stockquote.asmx?method=GetQuote";
-    public static final String STOCKQUOTE_URL_WSDL = "http://www.webservicex.net/stockquote.asmx?WSDL";
-    public static final String STOCK_SYMBOL = "AAPL";
+    public static final String TEST_URL = "wsdl-xfire:http://localhost:8080/mule-tests-external-xfire/services/TestService?WSDL&method=getTest";
+    public static final String TEST_URL_NOWSDL = "wsdl-xfire:http://localhost:8080/mule-tests-external-xfire/services/TestService?method=getTest";
+    public static final String TEST_URL_WSDL = "http://localhost:8080/mule-tests-external-xfire/services/TestService?wsdl";
 
     public void testXFireWsdlService() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send(STOCKQUOTE_URL, STOCK_SYMBOL, null);
+
+        UMOMessage message = new MuleMessage("test1");
+        UMOMessage reply = client.send(TEST_URL, message);
         assertNotNull(reply);
 
-        String response = reply.getPayloadAsString();
+        Document response = (Document)reply.getPayload();
         assertNotNull(response);
-        XMLAssert.assertXpathEvaluatesTo(STOCK_SYMBOL, "//StockQuotes/Stock/Symbol", response);
+
+        XMLAssert.assertXpathEvaluatesTo("test1", "//*[namespace-uri()='http://applications.external.tck.mule.org' and local-name()='key']", response);
     }
 
     /**
@@ -53,11 +59,11 @@ public class XFireWsdlTestCase extends AbstractMuleTestCase
         // without this - shouldn't it happen automatically?
         MuleManager.getInstance().start();
 
-        UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(STOCKQUOTE_URL_NOWSDL,
+        UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(TEST_URL_NOWSDL,
             UMOEndpoint.ENDPOINT_TYPE_SENDER);
-        endpoint.setProperty("wsdlUrl", STOCKQUOTE_URL_WSDL);
+        endpoint.setProperty("wsdlUrl", TEST_URL_WSDL);
 
-        UMOMessage message = new MuleMessage(STOCK_SYMBOL);
+        UMOMessage message = new MuleMessage("test1");
         UMOSession session = new MuleSession(message, ((AbstractConnector) endpoint.getConnector())
             .getSessionHandler());
         MuleEvent event = new MuleEvent(message, endpoint, session, true);
@@ -65,9 +71,9 @@ public class XFireWsdlTestCase extends AbstractMuleTestCase
 
         assertNotNull(reply);
 
-        String response = reply.getPayloadAsString();
+        Document response = (Document)reply.getPayload();
         assertNotNull(response);
-        XMLAssert.assertXpathEvaluatesTo(STOCK_SYMBOL, "//StockQuotes/Stock/Symbol", response);
-    }
 
+        XMLAssert.assertXpathEvaluatesTo("test1", "//*[namespace-uri()='http://applications.external.tck.mule.org' and local-name()='key']", response);
+    }
 }
