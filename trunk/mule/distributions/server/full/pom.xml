@@ -67,7 +67,7 @@
                 The format is:
                     1. Each line corresponds to a single library entry.
                     2. Each line contains an expected library jar name.
-                    3. Library names should have have no extension (".jar" stripped)
+                    3. Library names should have no extension (".jar" stripped)
                     4. For Mule libraries *strip* the version completely. It will be derived from
                        the project version.
                     5. For 3rd-party libraries leave the version in (only strip the jar suffix from #3).
