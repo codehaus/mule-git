@@ -1,0 +1,4 @@
+mule-core
+mule-transports
+mule-modules
+mule-this-module-does-not-exist-yet
