@@ -10,7 +10,7 @@
     </parent>
     <artifactId>mule-transport-ftp</artifactId>
     <packaging>jar</packaging>
-    <name>Ftp Transport</name>
+    <name>FTP Transport</name>
     <description>A Mule transport for Ftp Connectivity.</description>
 
     <build>
