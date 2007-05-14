@@ -273,8 +273,14 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
         -->
+        <!-- for buildnumber plugin -->
+        <pluginRepository>
+            <id>tlc</id>
+            <name>TLC Repository</name>
+            <url>http://commons.ucalgary.ca/pub/m2</url>
+        </pluginRepository>
     </pluginRepositories>
-    
+
     <build>
         <defaultGoal>install</defaultGoal>
 
@@ -350,6 +356,31 @@
                 -->
             </plugin>
 
+            <!-- add repository revision to manifests -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>maven-buildnumber-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- never touch svn -->
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <!--
+                    <format>{0,date,yyyy-MM-dd-HH:mm:ss}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    -->
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -365,7 +396,6 @@
                             <addClasspath>true</addClasspath>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-
                         </manifest>
                         <!-- Custom Entries -->
                         <manifestEntries>
@@ -378,7 +408,9 @@
                             <Dtd-Public-Id>-//${pom.organization.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
                             <Dtd-System-Id>${pom.url}/dtds</Dtd-System-Id>
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
-                            <Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date>
+                            <!--Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date-->
+                            <!-- include repository revision from buildnumber plugin -->
+                            <Build-Revision>${buildNumber}</Build-Revision>
                         </manifestEntries>
                     </archive>
                 </configuration>
