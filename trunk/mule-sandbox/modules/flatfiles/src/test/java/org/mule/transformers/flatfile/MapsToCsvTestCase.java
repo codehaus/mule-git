@@ -12,6 +12,7 @@ package org.mule.transformers.flatfile;
 
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.FileUtils;
+import org.mule.util.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -83,17 +84,8 @@ public class MapsToCsvTestCase extends TestCase
     
     private File getTestResource(String filename)
     {
-        StringBuffer path = new StringBuffer(128);
-        path.append(System.getProperty("user.dir"));
-        path.append(File.separator);
-        path.append("src");
-        path.append(File.separator);
-        path.append("test");
-        path.append(File.separator);
-        path.append("resources");
-        path.append(File.separator);
-        path.append(filename);
-        return new File(path.toString());
+        return FilenameUtils.fileWithPathComponents(new String[] 
+            {System.getProperty("user.dir"), "src", "test", "resources", filename});        
     }
     
     public void testMapsToCsv() throws Exception
