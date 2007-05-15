@@ -84,6 +84,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <projectOutputFile>mule-${version}.zip</projectOutputFile>
                     <!-- Default is under src/main/resources, pull it to the root for this project -->
                     <whitelist>assembly-whitelist.txt</whitelist>
                 </configuration>
