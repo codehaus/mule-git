@@ -26,6 +26,28 @@
                     <rarSourceDirectory>../../../modules/jca/jca-core/src/rar</rarSourceDirectory>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>mule-assembly-verifier</artifactId>
+                <executions>
+                    <execution>
+                        <!--
+                            TODO There's no verify or install phase in this run, bind to package.
+                            Alternatively, we could've changed the default goal to verify (comes after package).
+                         -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Default is under src/main/resources, pull it to the root for this project -->
+                    <whitelist>assembly-whitelist.txt</whitelist>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
