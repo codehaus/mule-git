@@ -76,7 +76,6 @@ mule-transport-oracleaq
 mule-transport-quartz
 mule-transport-rmi
 mule-transport-soap
-mule-transport-soap-1.4.1-SNAPSHOT-tests.jar
 mule-transport-ssl
 mule-transport-stream
 mule-transport-tcp
