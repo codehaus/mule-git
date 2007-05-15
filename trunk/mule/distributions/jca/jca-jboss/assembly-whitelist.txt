@@ -42,7 +42,6 @@ js-engine-1.0-jdk14
 jug-2.0.0-asl
 junit-3.8.2
 jython-engine-1.0-jdk14
-log4j-1.2.14
 mockobjects-core-0.09
 mule-core
 mule-module-acegi
@@ -50,7 +49,7 @@ mule-module-builders
 mule-module-client
 mule-module-hivemind
 mule-module-jca-core
-mule-module-jca-generic
+mule-module-jca-jboss
 mule-module-jaas
 mule-module-jotm
 mule-module-management
@@ -86,7 +85,6 @@ mule-transport-vm
 mule-transport-xfire
 mule-transport-xmpp
 mx4j-impl-2.1.1
-mx4j-jmx-2.1.1
 mx4j-remote-2.1.1
 mx4j-tools-2.1.1
 nanocontainer-1.0
