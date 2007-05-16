@@ -12,8 +12,7 @@ package org.mule.providers.vm;
 
 import org.mule.MuleManager;
 import org.mule.config.QueueProfile;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractConnector;
@@ -48,11 +47,6 @@ public class VMConnector extends AbstractConnector
     private Class adapterClass = null;
     private int queueTimeout = 1000;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractConnector#create()
-     */
     protected void doInitialise() throws InitialisationException
     {
         if (queueEvents)
@@ -69,8 +63,8 @@ public class VMConnector extends AbstractConnector
         }
         catch (ClassNotFoundException e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_LOAD_X,
-                "Message Adapter: " + serviceDescriptor.getMessageAdapter()), e);
+            throw new InitialisationException(
+                CoreMessages.failedToLoad("Message Adapter: " + serviceDescriptor.getMessageAdapter()), e);
         }
     }
 
@@ -99,12 +93,6 @@ public class VMConnector extends AbstractConnector
         // template method
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#registerListener(org.mule.umo.UMOSession,
-     *      org.mule.umo.endpoint.UMOEndpoint)
-     */
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
         if (queueEvents)
@@ -114,11 +102,6 @@ public class VMConnector extends AbstractConnector
         return serviceDescriptor.createMessageReceiver(this, component, endpoint);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#getMessageAdapter(java.lang.Object)
-     */
     public UMOMessageAdapter getMessageAdapter(Object message) throws MessagingException
     {
         if (message == null)
@@ -139,11 +122,6 @@ public class VMConnector extends AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOConnector#getProtocol()
-     */
     public String getProtocol()
     {
         return "VM";

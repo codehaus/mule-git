@@ -11,9 +11,10 @@
 package org.mule.providers.quartz.jobs;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.providers.quartz.QuartzConnector;
+import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.umo.manager.ObjectNotFoundException;
+
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -39,7 +40,7 @@ public class DelegatingJob implements Job
             tempJob = jobDataMap.get(QuartzConnector.PROPERTY_JOB_REF);
             if (tempJob == null)
             {
-                throw new JobExecutionException(new Message("quartz", 2).getMessage());
+                throw new JobExecutionException(QuartzMessages.invalidPayloadType().getMessage());
             }
             else
             {
@@ -53,13 +54,13 @@ public class DelegatingJob implements Job
                 }
                 if (!(tempJob instanceof Job))
                 {
-                    throw new JobExecutionException(new Message("quartz", 3).getMessage());
+                    throw new JobExecutionException(QuartzMessages.invalidJobObject().getMessage());
                 }
             }
         }
         else if (!(tempJob instanceof Job))
         {
-            throw new JobExecutionException(new Message("quartz", 3).toString());
+            throw new JobExecutionException(QuartzMessages.invalidJobObject().toString());
         }
         ((Job)tempJob).execute(jobExecutionContext);
     }

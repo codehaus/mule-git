@@ -10,10 +10,10 @@
 
 package org.mule.samples.errorhandler.handlers;
 
-import org.mule.config.i18n.Message;
 import org.mule.samples.errorhandler.AbstractExceptionHandler;
 import org.mule.samples.errorhandler.ErrorMessage;
 import org.mule.samples.errorhandler.HandlerException;
+import org.mule.samples.errorhandler.LocaleMessage;
 import org.mule.util.StringMessageUtils;
 
 /**
@@ -33,7 +33,7 @@ public class DefaultHandler extends AbstractExceptionHandler
 
     public void processException(ErrorMessage message, Throwable t) throws HandlerException
     {
-        String msg = new Message("errorhandler-example", 14).getMessage();
+        String msg = LocaleMessage.defaultHandlerMessage();
         System.out.println(StringMessageUtils.getBoilerPlate(msg));
     }
 

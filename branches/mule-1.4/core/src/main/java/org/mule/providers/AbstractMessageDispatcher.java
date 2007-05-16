@@ -12,8 +12,7 @@ package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.RequestContext;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
@@ -97,7 +96,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             catch (UMOException e)
             {
                 dispose();
-                throw new MuleRuntimeException(new Message(Messages.FAILED_TO_START_X, "WorkManager"), e);
+                throw new MuleRuntimeException(CoreMessages.failedToStart("WorkManager"), e);
             }
         }
     }
@@ -611,7 +610,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(80);
-        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
         sb.append(", endpoint=").append(endpoint.getEndpointURI());
         sb.append('}');

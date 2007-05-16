@@ -18,7 +18,6 @@ import org.mule.tck.testmodels.fruit.Fruit;
 import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
-import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -171,6 +170,19 @@ public class ClassUtilsTestCase extends AbstractMuleTestCase
         assertNotNull(methods);
         assertEquals(1, methods.size());
         assertEquals("setFruit", ((Method)methods.get(0)).getName());
+    }
+
+    public void testSimpleName()
+    {
+        simpleNameHelper("String", "foo".getClass());
+        simpleNameHelper("int[]", (new int[0]).getClass());
+        simpleNameHelper("Object[][]", (new Object[0][0]).getClass());
+        simpleNameHelper("null", null);
+    }
+
+    private void simpleNameHelper(String target, Class clazz)
+    {
+        assertEquals(target, ClassUtils.getSimpleName(clazz));
     }
 
     private static class DummyObject

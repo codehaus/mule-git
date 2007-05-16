@@ -10,18 +10,19 @@
 
 package org.mule.providers.quartz;
 
-import java.util.Date;
-import java.util.Iterator;
-
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.providers.quartz.jobs.DelegatingJob;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.util.ClassUtils;
+
+import java.util.Date;
+import java.util.Iterator;
+
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -96,22 +97,23 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
                 if (tempJob == null)
                 {
                     // Now we'll give up
-                    throw new DispatchException(new Message("quartz", 2), event.getMessage(),
-                        event.getEndpoint());
+                    throw new DispatchException(QuartzMessages.invalidPayloadType(), 
+                        event.getMessage(), event.getEndpoint());
                 }
                 else
                 {
                     tempJob = MuleManager.getInstance().getContainerContext().getComponent(tempJob);
                     if (!(tempJob instanceof Job))
                     {
-                        throw new DispatchException(new Message("quartz", 3), event.getMessage(),
-                            event.getEndpoint());
+                        throw new DispatchException(QuartzMessages.invalidJobObject(), 
+                            event.getMessage(), event.getEndpoint());
                     }
                 }
             }
             else if (!(tempJob instanceof Job))
             {
-                throw new DispatchException(new Message("quartz", 3), event.getMessage(), event.getEndpoint());
+                throw new DispatchException(QuartzMessages.invalidJobObject(), 
+                    event.getMessage(), event.getEndpoint());
             }
             // If we have a job at this point, then the execution Job
             // will be the DelegatingJob
@@ -163,7 +165,8 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         }
         else
         {
-            throw new IllegalArgumentException(new Message("quartz", 1).getMessage());
+            throw new IllegalArgumentException(
+                QuartzMessages.cronExpressionOrIntervalMustBeSet().getMessage());
         }
         long start = System.currentTimeMillis();
         if (startDelay != null)

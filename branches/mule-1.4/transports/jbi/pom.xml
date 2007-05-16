@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-jbi</artifactId>
     <packaging>jar</packaging>
-    <name>Jbi Transport</name>
+    <name>JBI Transport</name>
     <description>Allows JBI components to interact with Mule.  Note this is different from Mule-JBI, which is a JBI (JSR-208) implementation based on the Mule framework.</description>
     <dependencies>
       <dependency>

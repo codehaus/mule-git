@@ -11,7 +11,8 @@
 package org.mule.examples.loanbroker.bank;
 
 import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
+import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.impl.UMODescriptorAware;
@@ -74,7 +75,7 @@ public class Bank implements UMODescriptorAware, Serializable, BankService
         List endpoints = descriptor.getInboundRouter().getEndpoints();
         if ((endpoints == null) || (endpoints.size() != 1))
         {
-            throw new ConfigurationException(Message.createStaticMessage("Bank is expected to have exactly 1 incoming endpoint."));
+            throw new ConfigurationException(MessageFactory.createStaticMessage("Bank is expected to have exactly 1 incoming endpoint."));
         }
         // TODO This gives us the endpoint the bank is listening on, but the endpoint for sending to the bank 
         // is different in the ESB config ("Bank1In" vs. "Bank1")
@@ -86,7 +87,7 @@ public class Bank implements UMODescriptorAware, Serializable, BankService
         LoanQuote quote = new LoanQuote();
         quote.setBankName(getBankName());
         quote.setInterestRate(primeRate);
-        logger.info(new Message("loanbroker-example", 3, quote.toString()).getMessage());
+        logger.info(LocaleMessage.receivedRate(quote));
         
         return quote;
     }

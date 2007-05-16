@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.i18n.Messages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.jms.i18n.JmsMessages;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
@@ -20,8 +20,11 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -32,8 +35,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
-
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>JmsMessageDispatcher</code> is responsible for dispatching messages to JMS
@@ -95,7 +96,8 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 // in the same transaction.
                 if (remoteSync)
                 {
-                    throw new IllegalTransactionStateException(new org.mule.config.i18n.Message("jms", 2));
+                    throw new IllegalTransactionStateException(
+                        JmsMessages.connectorDoesNotSupportSyncReceiveWhenTransacted());
                 }
             }
             // Should we be caching sessions? Note this is not part of the JMS spec.
@@ -134,10 +136,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             Object message = event.getTransformedMessage();
             if (!(message instanceof Message))
             {
-                throw new DispatchException(new org.mule.config.i18n.Message(
-                    Messages.MESSAGE_NOT_X_IT_IS_TYPE_X_CHECK_TRANSFORMER_ON_X, "JMS message",
-                    message.getClass().getName(), connector.getName()), event.getMessage(),
-                    event.getEndpoint());
+                throw new DispatchException(
+                    JmsMessages.checkTransformer("JMS message", message.getClass(), connector.getName()),
+                    event.getMessage(), event.getEndpoint());
             }
 
             Message msg = (Message)message;
@@ -219,7 +220,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             if (logger.isDebugEnabled())
             {
-                logger.debug("Sending message of type " + msg.getClass().getName());
+                logger.debug("Sending message of type " + ClassUtils.getSimpleName(msg.getClass()));
             }
 
             if (consumer != null && topic)

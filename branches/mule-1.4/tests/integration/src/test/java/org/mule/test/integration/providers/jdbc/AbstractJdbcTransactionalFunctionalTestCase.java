@@ -49,7 +49,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
 
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object Component) throws Exception
+            public void eventReceived(UMOEventContext context, Object component) throws Exception
             {
                 try
                 {

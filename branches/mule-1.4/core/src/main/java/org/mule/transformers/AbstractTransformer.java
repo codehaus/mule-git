@@ -11,8 +11,7 @@
 package org.mule.transformers;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -92,15 +91,16 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             if (!returnClass.isInstance(object))
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNEXPECTED_TYPE_X, object
-                    .getClass().getName(), returnClass.getName()), this);
+                throw new TransformerException(
+                    CoreMessages.transformUnexpectedType(object.getClass(), returnClass),
+                    this);
             }
         }
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("The transformed object is of expected type. Type is: "
-                            + object.getClass().getName());
+            logger.debug("The transformed object is of expected type. Type is: " +
+                    ClassUtils.getSimpleName(object.getClass()));
         }
 
         return object;
@@ -139,7 +139,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     {
         if (string == null)
         {
-            string = ClassUtils.getShortClassName(this.getClass());
+            string = ClassUtils.getSimpleName(this.getClass());
         }
 
         logger.debug("Setting transformer name to: " + string);
@@ -235,9 +235,9 @@ public abstract class AbstractTransformer implements UMOTransformer
             }
             else
             {
-                throw new TransformerException(new Message(Messages.TRANSFORM_X_UNSUPORTED_TYPE_X_ENDPOINT_X,
-                    getName(), src.getClass().getName(),
-                    (endpoint != null ? endpoint.getEndpointURI() : null)), this);
+                throw new TransformerException(
+                    CoreMessages.transformOnObjectUnsupportedTypeOfEndpoint(this.getName(), 
+                        src.getClass(), endpoint), this);
             }
         }
 
@@ -396,7 +396,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     protected String generateTransformerName()
     {
-        return ClassUtils.getShortClassName(this.getClass());
+        return ClassUtils.getSimpleName(this.getClass());
     }
 
     public boolean isIgnoreBadInput()
@@ -413,7 +413,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     public String toString()
     {
         StringBuffer sb = new StringBuffer(80);
-        sb.append(ClassUtils.getShortClassName(this.getClass()));
+        sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{this=").append(Integer.toHexString(System.identityHashCode(this)));
         sb.append(", name='").append(name).append('\'');
         sb.append(", ignoreBadInput=").append(ignoreBadInput);

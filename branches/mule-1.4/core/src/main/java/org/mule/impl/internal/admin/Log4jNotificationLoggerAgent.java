@@ -10,8 +10,7 @@
 
 package org.mule.impl.internal.admin;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.FileUtils;
@@ -120,8 +119,7 @@ public class Log4jNotificationLoggerAgent extends AbstractNotificationLoggerAgen
             catch (IOException e)
             {
                 throw new InitialisationException(
-                    new Message(Messages.FAILED_LOAD_X, "Log4j configuration"),
-                    e, this);
+                    CoreMessages.failedToLoad("Log4j configuration"), e, this);
             }
         }
     }

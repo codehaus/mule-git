@@ -12,8 +12,7 @@ package org.mule.impl;
 
 import org.mule.MuleException;
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractConnector;
@@ -37,11 +36,12 @@ import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.StringUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.Collections;
 import java.util.Map;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -536,20 +536,20 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 //        result = appendHash(result, transformer);
         result = appendHash(result, name);
         result = appendHash(result, type);
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("hashCode: " + result);
-        }
+//        if (logger.isDebugEnabled())
+//        {
+//            logger.debug("hashCode: " + result);
+//        }
         return result;
     }
 
     private int appendHash(int hash, Object component)
     {
         int delta = component != null ? component.hashCode() : 0;
-        if (logger.isDebugEnabled())
-        {
-            logger.debug(component + ": " + delta);
-        }
+//        if (logger.isDebugEnabled())
+//        {
+//            logger.debug(component + ": " + delta);
+//        }
         return 29 * hash + delta;
     }
 
@@ -660,14 +660,14 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                     connector = TransportFactory.getOrCreateConnectorByProtocol(this);
                     if (connector == null)
                     {
-                        throw new InitialisationException(new Message(
-                            Messages.CONNECTOR_WITH_PROTOCOL_X_NOT_REGISTERED, endpointUri.getScheme()), this);
+                        throw new InitialisationException(
+                            CoreMessages.connectorWithProtocolNotRegistered(endpointUri.getScheme()), this);
                     }
                 }
                 catch (TransportFactoryException e)
                 {
-                    throw new InitialisationException(new Message(
-                        Messages.FAILED_TO_CREATE_CONNECTOR_FROM_URI_X, endpointUri), e, this);
+                    throw new InitialisationException(
+                        CoreMessages.failedToCreateConnectorFromUri(endpointUri), e, this);
                 }
             }
 

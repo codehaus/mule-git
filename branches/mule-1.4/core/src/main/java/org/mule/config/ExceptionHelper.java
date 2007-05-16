@@ -11,7 +11,7 @@
 package org.mule.config;
 
 import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.UMOException;
 import org.mule.util.ClassUtils;
 import org.mule.util.SpiUtils;
@@ -112,7 +112,7 @@ public final class ExceptionHelper
                 "mule-exception-codes.properties", ExceptionHelper.class);
             if (is == null)
             {
-                throw new NullPointerException(
+                throw new IllegalArgumentException(
                     "Failed to load resource: META_INF/services/org/mule/config/mule-exception-codes.properties");
             }
             errorCodes.load(is);
@@ -121,7 +121,7 @@ public final class ExceptionHelper
                 ExceptionHelper.class);
             if (is == null)
             {
-                throw new NullPointerException(
+                throw new IllegalArgumentException(
                     "Failed to load resource: META_INF/services/org/mule/config/mule-exception-config.properties");
             }
             errorDocs.load(is);
@@ -131,7 +131,7 @@ public final class ExceptionHelper
         catch (IOException e)
         {
             throw new MuleRuntimeException(
-                Message.createStaticMessage("Failed to load Exception resources"),
+                MessageFactory.createStaticMessage("Failed to load Exception resources"),
                 e);
         }
     }
@@ -220,7 +220,7 @@ public final class ExceptionHelper
             catch (IOException e)
             {
                 throw new MuleRuntimeException(
-                    Message.createStaticMessage("Failed to load Exception resources"), e);
+                    MessageFactory.createStaticMessage("Failed to load Exception resources"), e);
             }
             errorMappings.put(protocol, p);
             String applyTo = p.getProperty(APPLY_TO_PROPERTY, null);

@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.esb;
 
-import org.mule.config.i18n.Message;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
+import org.mule.examples.loanbroker.LocaleMessage;
 
 import java.io.IOException;
 
@@ -38,17 +38,17 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         int response = 0;
         
         System.out.println("******************\n"
-            + new Message("loanbroker-example", 30).getMessage()
+            + LocaleMessage.esbWelcome()
             + "\n******************");
         response = readCharacter();
         if (response == '1')
         {
-            System.out.println(new Message("loanbroker-example", 31).getMessage());
+            System.out.println(LocaleMessage.loadingEndpointEjb());
             return "loan-broker-esb-mule-config.xml";
         }
         else
         {
-            System.out.println(new Message("loanbroker-example", 33).getMessage());
+            System.out.println(LocaleMessage.loadingManagedEjb());
             return "loan-broker-esb-mule-config-with-ejb-container.xml";
         }
     }

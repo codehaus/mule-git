@@ -11,7 +11,7 @@
     <description>Provides some JMS examples</description>
 
     <properties>
-        <muleVersion>1.4.0</muleVersion>
+        <muleVersion>1.4.1-SNAPSHOT</muleVersion>
     </properties>
 
     <dependencies>
@@ -151,7 +151,6 @@
   
     <build>
         <defaultGoal>install</defaultGoal>
-        <finalName>${artifactId}</finalName>
 
         <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
         <resources>

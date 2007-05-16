@@ -10,7 +10,7 @@
 
 package org.mule.providers.stream;
 
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -32,9 +32,10 @@ public class SystemStreamConnector extends StreamConnector
 {
 
     private String promptMessage;
-    private int promptMessageCode = -1;
+    private String promptMessageCode = null;
     private String resourceBundle = null;
     private String outputMessage;
+    private String outputMessageCode = null;
     private long messageDelayTime = 3000;
     private boolean firstTime = true;
 
@@ -81,31 +82,16 @@ public class SystemStreamConnector extends StreamConnector
         // template method
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.stream.StreamConnector#getInputStream()
-     */
     public InputStream getInputStream()
     {
         return inputStream;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractConnector#doStart()
-     */
     public void doStart()
     {
         firstTime = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.stream.StreamConnector#getOutputStream()
-     */
     public OutputStream getOutputStream()
     {
         return outputStream;
@@ -116,9 +102,9 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getPromptMessage()
     {
-        if (!StringUtils.isBlank(resourceBundle) && promptMessageCode > -1)
+        if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(promptMessageCode))
         {
-            return new Message(resourceBundle, promptMessageCode).getMessage();
+            return SystemStreamMessageFactory.getString(resourceBundle, promptMessageCode);
         }
 
         return promptMessage;
@@ -135,7 +121,7 @@ public class SystemStreamConnector extends StreamConnector
     /**
      * @return Returns the promptMessageCode.
      */
-    public int getPromptMessageCode()
+    public String getPromptMessageCode()
     {
         return promptMessageCode;
     }
@@ -143,7 +129,7 @@ public class SystemStreamConnector extends StreamConnector
     /**
      * @param promptMessageCode The promptMessageCode to set.
      */
-    public void setPromptMessageCode(int promptMessageCode)
+    public void setPromptMessageCode(String promptMessageCode)
     {
         this.promptMessageCode = promptMessageCode;
     }
@@ -157,7 +143,8 @@ public class SystemStreamConnector extends StreamConnector
     }
 
     /**
-     * @param resourceBundle The resourceBundle to set.
+     * @param resourceBundle The resourceBundle to read the message from. This property is 
+     * only needed in conjunction with promptMessageCode or outputMessageCode.
      */
     public void setResourceBundle(String resourceBundle)
     {
@@ -169,6 +156,11 @@ public class SystemStreamConnector extends StreamConnector
      */
     public String getOutputMessage()
     {
+        if (StringUtils.isNotBlank(resourceBundle) && StringUtils.isNotBlank(outputMessageCode))
+        {
+            return SystemStreamMessageFactory.getString(resourceBundle, outputMessageCode);
+        }
+
         return outputMessage;
     }
 
@@ -180,11 +172,22 @@ public class SystemStreamConnector extends StreamConnector
         this.outputMessage = outputMessage;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.provider.UMOMessageDispatcher#getConnector()
+    /**
+     * @return Returns the outputMessageCode.
      */
+    public String getOutputMessageCode()
+    {
+        return outputMessageCode;
+    }
+
+    /**
+     * @param outputMessageCode The outputMessageCode to set.
+     */
+    public void setOutputMessageCode(String outputMessageCode)
+    {
+        this.outputMessageCode = outputMessageCode;
+    }
+
     public UMOConnector getConnector()
     {
         return this;
@@ -237,5 +240,19 @@ public class SystemStreamConnector extends StreamConnector
             out = getOutputStream();
         }
         return out;
+    }
+    
+    /**
+     * {@link SystemStreamConnector} needs a way to access other modules' messages. The default
+     * way to access messages is by using {@link MessageFactory} which itself is not meant to be used 
+     * directly. In order not to soften this requiement this private subclass offers access to
+     * {@link MessageFactory}'s methods.
+     */
+    private static class SystemStreamMessageFactory extends MessageFactory
+    {
+        protected static String getString(String bundlePath, String code)
+        {
+            return MessageFactory.getString(bundlePath, Integer.parseInt(code));
+        }
     }
 }

@@ -11,8 +11,7 @@
 package org.mule.config.builders;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.umo.UMOFilter;
@@ -133,8 +132,8 @@ public class EndpointReference
             MuleEndpoint ep = (MuleEndpoint) MuleManager.getInstance().lookupEndpoint(endpointName);
             if (ep == null)
             {
-                throw new InitialisationException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                    "Endpoint '" + endpointName + "'"), this);
+                throw new InitialisationException(
+                    CoreMessages.objectNotRegisteredWithManager("Endpoint '" + endpointName + "'"), this);
             }
             if (address != null)
             {
@@ -193,8 +192,9 @@ public class EndpointReference
             Method m = object.getClass().getMethod(propertyName, new Class[]{UMOEndpoint.class});
             if (m == null)
             {
-                throw new InitialisationException(new Message(Messages.METHOD_X_WITH_PARAMS_X_NOT_FOUND_ON_X,
-                    propertyName, UMOEndpoint.class.getName(), object.getClass().getName()), this);
+                throw new InitialisationException(
+                    CoreMessages.methodWithParamsNotFoundOnObject(propertyName, 
+                        UMOEndpoint.class, object.getClass()), this);
             }
 
             m.invoke(object, new Object[]{ep});
@@ -206,9 +206,8 @@ public class EndpointReference
         catch (Exception e)
         {
             throw new InitialisationException(
-                new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName, 
-                    object.getClass().getName(), UMOEndpoint.class.getName()), 
-                e, this);
+                CoreMessages.cannotSetPropertyOnObjectWithParamType(propertyName, 
+                    object.getClass(), UMOEndpoint.class), e, this);
         }
     }
 

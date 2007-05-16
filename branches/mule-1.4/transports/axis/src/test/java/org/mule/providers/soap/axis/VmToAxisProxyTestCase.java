@@ -30,7 +30,7 @@ public class VmToAxisProxyTestCase extends FunctionalTestCase
         }
 
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://proxy", "ibm", null);
+        UMOMessage result = client.send("vm://proxy", "test1", null);
         assertNotNull(result);
     }
 

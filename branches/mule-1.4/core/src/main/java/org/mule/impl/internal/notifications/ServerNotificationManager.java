@@ -11,8 +11,7 @@
 package org.mule.impl.internal.notifications;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.LifecycleException;
@@ -98,9 +97,9 @@ public class ServerNotificationManager implements Work, Disposable
         }
         else
         {
-            throw new IllegalArgumentException(new Message(
-                Messages.PROPERTY_X_IS_NOT_SUPPORTED_TYPE_X_IT_IS_TYPE_X, "eventType",
-                UMOServerNotification.class.getName(), eventType.getName()).getMessage());
+            throw new IllegalArgumentException(
+                CoreMessages.propertyIsNotSupportedType("eventType",
+                UMOServerNotification.class, eventType).getMessage());
         }
     }
 
@@ -306,7 +305,7 @@ public class ServerNotificationManager implements Work, Disposable
     {
         if (workListener == null)
         {
-            throw new NullPointerException("workListener");
+            throw new IllegalArgumentException("workListener may not be null");
         }
         this.workListener = workListener;
     }

@@ -10,6 +10,19 @@
 
 package org.mule.management.agents;
 
+import org.mule.MuleManager;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
+import org.mule.management.support.JmxSupport;
+import org.mule.management.support.JmxSupportFactory;
+import org.mule.umo.UMOException;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.manager.UMOAgent;
+import org.mule.util.BeanUtils;
+import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
+import org.mule.util.SystemUtils;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,19 +44,6 @@ import mx4j.tools.adaptor.ssl.SSLAdaptorServerSocketFactory;
 import mx4j.tools.adaptor.ssl.SSLAdaptorServerSocketFactoryMBean;
 
 import org.apache.commons.logging.LogFactory;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
-import org.mule.management.support.JmxSupport;
-import org.mule.management.support.JmxSupportFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOAgent;
-import org.mule.util.BeanUtils;
-import org.mule.util.StringUtils;
-import org.mule.util.SystemUtils;
-import org.mule.util.ClassUtils;
-import org.mule.MuleManager;
 
 /**
  * <code>Mx4jAgent</code> configures an Mx4J Http Adaptor for Jmx management,
@@ -173,7 +173,7 @@ public class Mx4jAgent implements UMOAgent
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_TO_START_X, "mx4j agent"), e, this);
+            throw new InitialisationException(CoreMessages.failedToStart("mx4j agent"), e, this);
         }
     }
 
@@ -186,13 +186,13 @@ public class Mx4jAgent implements UMOAgent
         }
         catch (InstanceNotFoundException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Mx4j agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStart("Mx4j agent"), adaptorName, e);
         }
         catch (MBeanException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_START_X, "Mx4j agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStart("Mx4j agent"), adaptorName, e);
         }
         catch (ReflectionException e)
         {
@@ -213,13 +213,13 @@ public class Mx4jAgent implements UMOAgent
         }
         catch (InstanceNotFoundException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Mx4j agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStop("Mx4j agent"), adaptorName, e);
         }
         catch (MBeanException e)
         {
-            throw new JmxManagementException(new Message(Messages.FAILED_TO_STOP_X, "Mx4j agent"),
-                adaptorName, e);
+            throw new JmxManagementException(
+                CoreMessages.failedToStop("Mx4j agent"), adaptorName, e);
         }
         catch (ReflectionException e)
         {

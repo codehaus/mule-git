@@ -10,8 +10,7 @@
 
 package org.mule.config.builders;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.MuleObjectHelper;
@@ -68,8 +67,8 @@ public class TransformerReference
             trans = MuleObjectHelper.getTransformer(transformerName, " ");
             if (trans == null)
             {
-                throw new InitialisationException(new Message(Messages.X_NOT_REGISTERED_WITH_MANAGER,
-                    "Transformer '" + transformerName + "'"), object);
+                throw new InitialisationException(
+                    CoreMessages.objectNotRegisteredWithManager("Transformer '" + transformerName + "'"), object);
             }
             logger.info("Setting transformer: " + transformerName + " on " + object.getClass().getName()
                         + "." + propertyName);
@@ -83,10 +82,8 @@ public class TransformerReference
         catch (Exception e)
         {
             throw new InitialisationException(
-                new Message(Messages.CANT_SET_PROP_X_ON_X_OF_TYPE_X, propertyName, 
-                    (object != null ? object.getClass().getName() : "null"), 
-                    (trans != null ? trans.getClass().getName() : "null")), 
-                e);
+                CoreMessages.cannotSetPropertyOnObjectWithParamType(propertyName, 
+                    object.getClass(), trans.getClass()), e);
         }
     }
 }

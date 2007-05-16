@@ -10,11 +10,10 @@
 
 package org.mule.providers.tcp;
 
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.providers.AbstractConnector;
+import org.mule.providers.tcp.i18n.TcpMessages;
 import org.mule.providers.tcp.protocols.DefaultProtocol;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOException;
@@ -27,10 +26,17 @@ import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
+
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
 /**
  * <code>TcpConnector</code> can bind or sent to a given TCP port on a given host.
+ * Other socket-based transports can be built on top of this class by providing the
+ * appropriate socket factories and application level protocols as required (see
+ * the constructor and the SSL transport for examples).
  */
 public class TcpConnector extends AbstractConnector
 {
@@ -48,13 +54,22 @@ public class TcpConnector extends AbstractConnector
     private int receiveBufferSize = DEFAULT_BUFFER_SIZE;
     private int receiveBacklog = DEFAULT_BACKLOG;
     private boolean sendTcpNoDelay;
+    private boolean validateConnections = true;
     private int socketLinger = INT_VALUE_NOT_SET;
-    private String tcpProtocolClassName = DefaultProtocol.class.getName();
+    private String tcpProtocolClassName;
     private TcpProtocol tcpProtocol;
     private boolean keepSendSocketOpen = false;
     private boolean keepAlive = false;
-    private KeyedPoolableObjectFactory socketFactory = new TcpSocketFactory();
+    private PooledSocketFactory socketFactory;
+    private SimpleServerSocketFactory serverSocketFactory;
     private GenericKeyedObjectPool dispatcherSocketsPool = new GenericKeyedObjectPool();
+
+    public TcpConnector()
+    {
+        setSocketFactory (new TcpSocketFactory());
+        setServerSocketFactory(new TcpServerSocketFactory());
+        setTcpProtocolClassName(DefaultProtocol.class.getName());
+    }
 
     protected void doInitialise() throws InitialisationException
     {
@@ -62,13 +77,14 @@ public class TcpConnector extends AbstractConnector
         {
             try
             {
-                tcpProtocol = (TcpProtocol)ClassUtils.instanciateClass(tcpProtocolClassName, null);
+                tcpProtocol = (TcpProtocol) ClassUtils.instanciateClass(tcpProtocolClassName, null);
             }
             catch (Exception e)
             {
-                throw new InitialisationException(new Message("tcp", 3), e);
+                throw new InitialisationException(TcpMessages.failedToInitMessageReader(), e);
             }
         }
+
         dispatcherSocketsPool.setFactory(getSocketFactory());
         dispatcherSocketsPool.setTestOnBorrow(true);
         dispatcherSocketsPool.setTestOnReturn(true);
@@ -78,6 +94,7 @@ public class TcpConnector extends AbstractConnector
 
     protected void doDispose()
     {
+        logger.debug("Closing TCP connector");
         try
         {
             dispatcherSocketsPool.close();
@@ -92,46 +109,36 @@ public class TcpConnector extends AbstractConnector
      * Lookup a socket in the list of dispatcher sockets but don't create a new
      * socket
      */
-    // TODO - reduce access once testing done
     protected Socket getSocket(UMOImmutableEndpoint endpoint) throws Exception
     {
-        Socket socket = (Socket)dispatcherSocketsPool.borrowObject(endpoint);
-        logger.debug("returning socket " + socket);
+        Socket socket = (Socket) dispatcherSocketsPool.borrowObject(endpoint);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("borrowing socket; debt " + dispatcherSocketsPool.getNumActive());
+        }
         return socket;
     }
 
     void releaseSocket(Socket socket, UMOImmutableEndpoint endpoint) throws Exception
     {
         dispatcherSocketsPool.returnObject(endpoint, socket);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("returned socket; debt " + dispatcherSocketsPool.getNumActive());
+        }
     }
 
-    /**
-     * Well get the output stream (if any) for this type of transport. Typically this
-     * will be called only when Streaming is being used on an outbound endpoint. If
-     * Streaming is not supported by this transport an
-     * {@link UnsupportedOperationException} is thrown
-     * 
-     * @param endpoint the endpoint that releates to this Dispatcher
-     * @param message the current message being processed
-     * @return the output stream to use for this request or null if the transport
-     *         does not support streaming
-     * @throws org.mule.umo.UMOException
-     */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
-        throws UMOException
+    public OutputStream getOutputStream(final UMOImmutableEndpoint endpoint, UMOMessage message)
+            throws UMOException
     {
-        // TODO HH: Is this the right thing to do? not sure how else to get the outputstream
-        // acooke - what about releaseSocket?  it is not called, so will pooling fail?
-        // acooke [later] - holger confirmed that releaseSocket must be called separately
-
-        Socket socket;
+        final Socket socket;
         try
         {
             socket = getSocket(endpoint);
         }
         catch (Exception e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_GET_OUTPUT_STREAM), message, e);
+            throw new MessagingException(CoreMessages.failedToGetOutputStream(), message, e);
         }
         if (socket == null)
         {
@@ -141,13 +148,20 @@ public class TcpConnector extends AbstractConnector
         }
         try
         {
-            return new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            return new CallbackOutputStream(
+                    new DataOutputStream(new BufferedOutputStream(socket.getOutputStream())),
+                    new CallbackOutputStream.Callback()
+                    {
+                        public void onClose() throws Exception
+                        {
+                            releaseSocket(socket, endpoint);
+                        }
+                    });
         }
         catch (IOException e)
         {
-            throw new MessagingException(new Message(Messages.FAILED_TO_GET_OUTPUT_STREAM), message, e);
+            throw new MessagingException(CoreMessages.failedToGetOutputStream(), message, e);
         }
-
     }
 
     protected void doConnect() throws Exception
@@ -338,16 +352,31 @@ public class TcpConnector extends AbstractConnector
         this.sendTcpNoDelay = sendTcpNoDelay;
     }
     
-    protected void setSocketFactory(KeyedPoolableObjectFactory socketFactory)
+    protected void setSocketFactory(PooledSocketFactory socketFactory)
     {
         this.socketFactory = socketFactory;
     }
 
-    protected KeyedPoolableObjectFactory getSocketFactory()
+    protected PooledSocketFactory getSocketFactory()
     {
         return socketFactory;
     }
 
+    public SimpleServerSocketFactory getServerSocketFactory()
+    {
+        return serverSocketFactory;
+    }
+
+    public void setServerSocketFactory(SimpleServerSocketFactory serverSocketFactory)
+    {
+        this.serverSocketFactory = serverSocketFactory;
+    }
+
+    protected ServerSocket getServerSocket(URI uri) throws IOException
+    {
+        return getServerSocketFactory().createServerSocket(uri, getReceiveBacklog());
+    }
+    
     private static int valueOrDefault(int value, int threshhold, int deflt)
     {
         if (value < threshhold)
@@ -359,5 +388,21 @@ public class TcpConnector extends AbstractConnector
             return value;    
         }
     }
-    
+
+    /**
+     * Should the connection be checked before sending data?
+     *
+     * @return If true, the message adapter opens and closes the socket on intialisation.
+     */
+    public boolean isValidateConnections() {
+        return validateConnections;
+    }
+
+    /**
+     * @see #isValidateConnections()
+     * @param validateConnections If true, the message adapter opens and closes the socket on intialisation.
+     */
+    public void setValidateConnections(boolean validateConnections) {
+        this.validateConnections = validateConnections;
+    }
 }

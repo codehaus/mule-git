@@ -11,7 +11,6 @@
 package org.mule.samples.errorhandler;
 
 import org.mule.MuleManager;
-import org.mule.config.i18n.Message;
 import org.mule.samples.errorhandler.handlers.DefaultHandler;
 import org.mule.samples.errorhandler.handlers.FatalHandler;
 import org.mule.umo.UMOException;
@@ -25,9 +24,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>ErrorManager</code> TODO (document class)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ErrorManager
 {
@@ -88,27 +84,22 @@ public class ErrorManager
         catch (Exception e)
         {
         
-            logger.error(new Message("errorhandler-example", 6, 
-               (eh != null ? (eh.getClass().getName() + " : " + e) : "null")).getMessage());
+            logger.error(LocaleMessage.handlerFailure(eh));
 
             if (eh instanceof DefaultHandler)
             {
-                logger.error(new Message("errorhandler-example", 7, 
-                    FatalHandler.class.getName()).getMessage());
+                logger.error(LocaleMessage.defaultFatalHandling(FatalHandler.class));
                 handleFatal(e);
 
             }
             else if (eh instanceof FatalHandler)
             {
-                logger.fatal(new Message("errorhandler-example", 8, 
-                    e).getMessage());
+                logger.fatal(LocaleMessage.fatalHandling(e));
                 ((MuleManager)MuleManager.getInstance()).shutdown(e, false);
             }
             else
             {
-                logger.error(new Message("errorhandler-example", 9, 
-                    DefaultHandler.class.getName(),
-                    (eh != null ? (eh.getClass().getName() + " : " + e) : "null")).getMessage());
+                logger.error(LocaleMessage.defaultHandling(DefaultHandler.class, eh, e));
                 handleDefault(msg, e);
             }
         }
@@ -125,7 +116,7 @@ public class ErrorManager
         }
         catch (Exception e)
         {
-            logger.fatal(new Message("errorhandler-example", 10, e).getMessage(), e);
+            logger.fatal(LocaleMessage.defaultException(e), e);
             handleFatal(e);
         }
         try
@@ -134,7 +125,7 @@ public class ErrorManager
         }
         catch (HandlerException e)
         {
-            logger.fatal(new Message("errorhandler-example", 11, e).getMessage(), e);
+            logger.fatal(LocaleMessage.defaultHandlerException(e), e);
             handleFatal(e);
         }
 
@@ -144,7 +135,7 @@ public class ErrorManager
     {
         // If this method has been called, all other handlers failed
         // this is all we can do
-        logger.fatal(new Message("errorhandler-example", 12, t).getMessage(), t);
+        logger.fatal(LocaleMessage.fatalException(t), t);
         ((MuleManager)MuleManager.getInstance()).shutdown(t, false);
     }
 }

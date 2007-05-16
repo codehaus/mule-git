@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-loanbroker-parent</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-example-loanbroker-common-tests</artifactId>
     <packaging>jar</packaging>
@@ -23,11 +23,10 @@
             <version>${version}</version>
         </dependency>
         <!-- This should have been pulled in as a transitive dependency from mule-tests-functional but it looks 
-        	like it's yet another m2 workaround. -->
-        <dependency>
+            like it's yet another m2 workaround. -->
+<!--        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

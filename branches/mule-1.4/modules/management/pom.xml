@@ -6,7 +6,7 @@
   <parent>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-modules</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
   <artifactId>mule-module-management</artifactId>
   <name>Management Extensions</name>
@@ -16,7 +16,6 @@
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
-            <version>1.0.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>mx4j</artifactId>
@@ -32,7 +31,6 @@
         <dependency>
             <groupId>mx4j</groupId>
             <artifactId>mx4j-jmx</artifactId>
-            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>mx4j</groupId>

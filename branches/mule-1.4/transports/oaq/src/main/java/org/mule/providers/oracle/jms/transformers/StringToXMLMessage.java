@@ -10,7 +10,7 @@
 
 package org.mule.providers.oracle.jms.transformers;
 
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.oracle.jms.OracleJmsConnector;
 import org.mule.transformers.AbstractEventAwareTransformer;
@@ -66,14 +66,14 @@ public class StringToXMLMessage extends AbstractEventAwareTransformer
                 // The tranformation _must_ occur within the same session used previously by the 
                 // dispatcher, otherwise we get "JMS-204: An error occurred in the AQ JNI layer"
                 // Using a transacted endpoint should ensure that the same session is used.
-                throw new TransformerException(Message.createStaticMessage("This transformer may only be used with a transacted endpoint.  Refer to http://mule.codehaus.org/display/MULE/Transaction+Management for more information."), this);
+                throw new TransformerException(MessageFactory.createStaticMessage("This transformer may only be used with a transacted endpoint.  Refer to http://mule.codehaus.org/display/MULE/Transaction+Management for more information."), this);
             }
             session = ((JmsConnector) endpoint.getConnector()).getSessionFromTransaction();
             if (session == null) {
-                throw new TransformerException(Message.createStaticMessage("No JMS session associated with this endpoint."), this);
+                throw new TransformerException(MessageFactory.createStaticMessage("No JMS session associated with this endpoint."), this);
             }
             if ((session instanceof AQjmsSession) == false) {
-                throw new TransformerException(Message.createStaticMessage("Endpoint must be an OracleAQ session."), this);
+                throw new TransformerException(MessageFactory.createStaticMessage("Endpoint must be an OracleAQ session."), this);
             }
 
             // Prepare the XML string.
@@ -84,7 +84,7 @@ public class StringToXMLMessage extends AbstractEventAwareTransformer
             else if (src instanceof String) {
                 xml = (String) src;
             }
-            else throw new TransformerException(Message.createStaticMessage("Object to transform is not one of the supported types for this transformer."), this);
+            else throw new TransformerException(MessageFactory.createStaticMessage("Object to transform is not one of the supported types for this transformer."), this);
 
             logger.debug("Creating an Oracle XMLType based on the following XML:\n" + StringMessageUtils.truncate(xml, 200, false));
 

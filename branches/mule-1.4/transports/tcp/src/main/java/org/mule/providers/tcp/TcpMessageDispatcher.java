@@ -12,7 +12,6 @@ package org.mule.providers.tcp;
 
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -32,13 +31,11 @@ import java.net.SocketTimeoutException;
 public class TcpMessageDispatcher extends AbstractMessageDispatcher
 {
     private final TcpConnector connector;
-    protected final SerializableToByteArray serializableToByteArray;
 
     public TcpMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (TcpConnector)endpoint.getConnector();
-        serializableToByteArray = new SerializableToByteArray();
+        this.connector = (TcpConnector) endpoint.getConnector();
     }
 
     protected synchronized void doDispatch(UMOEvent event) throws Exception
@@ -100,12 +97,8 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
 
     private void write(Socket socket, Object data) throws IOException, TransformerException
     {
-        TcpProtocol protocol = connector.getTcpProtocol();
-
         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-        // TODO SF check if need to convert String to Bytes... using
-        // data.toString().getBytes() or should we send string as is?
-        protocol.write(bos, data);
+        connector.getTcpProtocol().write(bos, data);
         bos.flush();
     }
 
@@ -173,8 +166,11 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
     protected void doConnect() throws Exception
     {
         // Test the connection
-        Socket socket = connector.getSocket(endpoint);
-        connector.releaseSocket(socket, endpoint);
+        if (connector.isValidateConnections())
+        {
+            Socket socket = connector.getSocket(endpoint);
+            connector.releaseSocket(socket, endpoint);
+        }
     }
 
     protected void doDisconnect() throws Exception

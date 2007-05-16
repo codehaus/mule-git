@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.distributions.jca</groupId>
+        <artifactId>mule-jca-parent</artifactId>
+        <version>1.4.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>mule-jca-jboss</artifactId>
+    <name>JCA Resource Adapter for JBoss</name>
+    <packaging>rar</packaging>
+    <description>
+        A Resource Adapter implementation that allows a Mule instance to
+        be deployed to a JBoss application server and exposes Mule
+        services via the JCA connector architecture.
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-rar-plugin</artifactId>
+                <configuration>
+                    <rarSourceDirectory>../../../modules/jca/jca-core/src/rar</rarSourceDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>mule-assembly-verifier</artifactId>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Default is under src/main/resources, pull it to the root for this project -->
+                    <whitelist>assembly-whitelist.txt</whitelist>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!--
+            HACK: if mule-module-jca is not specified as a direct pom dependency, m2 project object never
+            sees it as a module nor dependency, and assembly inclusion filters then just skip it.
+            -->
+        <dependency>
+            <groupId>org.mule.modules.jca</groupId>
+            <artifactId>mule-module-jca-jboss</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mx4j</groupId>
+            <artifactId>mx4j-jmx</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

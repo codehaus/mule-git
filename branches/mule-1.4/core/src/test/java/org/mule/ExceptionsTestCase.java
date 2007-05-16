@@ -11,7 +11,7 @@
 package org.mule;
 
 import org.mule.MuleException;
-import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOException;
@@ -27,8 +27,8 @@ public class ExceptionsTestCase extends AbstractMuleTestCase
         String rootMsg = "Root Test Exception Message";
         String msg = "Test Exception Message";
 
-        Exception e = new ManagerException(Message.createStaticMessage(msg), new MuleException(
-            Message.createStaticMessage(rootMsg)));
+        Exception e = new ManagerException(MessageFactory.createStaticMessage(msg), new MuleException(
+            MessageFactory.createStaticMessage(rootMsg)));
 
         assertEquals(rootMsg, e.getCause().getMessage());
         assertEquals(msg, e.getMessage());

@@ -84,24 +84,46 @@ public class UniversalSender extends BasicHandler
         // (UMOEvent)call.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
         // Get the dispatch endpoint
         String uri = msgContext.getStrProp(MessageContext.TRANS_URL);
-        UMOImmutableEndpoint requestEndpoint = (UMOImmutableEndpoint)call.getProperty(MuleProperties.MULE_ENDPOINT_PROPERTY);
+        UMOImmutableEndpoint requestEndpoint = (UMOImmutableEndpoint)call
+            .getProperty(MuleProperties.MULE_ENDPOINT_PROPERTY);
         UMOImmutableEndpoint endpoint = null;
-        try
+
+        // put username and password in URI if they are set on the current event
+        if (msgContext.getUsername() != null)
         {
-            endpoint = lookupEndpoint(uri);
+            String[] tempEndpoint = uri.split("//");
+            String credentialString = msgContext.getUsername() + ":"
+                                      + msgContext.getPassword();
+            uri = tempEndpoint[0] + "//" + credentialString + "@" + tempEndpoint[1];
+            try
+            {
+                endpoint = lookupEndpoint(uri);
+            }
+            catch (UMOException e)
+            {
+                requestEndpoint.getConnector().handleException(e);
+                return;
+            }
         }
-        catch (UMOException e)
+        else
         {
-            requestEndpoint.getConnector().handleException(e);
-            return;
+            try
+            {
+                endpoint = lookupEndpoint(uri);
+            }
+            catch (UMOException e)
+            {
+                requestEndpoint.getConnector().handleException(e);
+                return;
+            }
         }
 
         try
         {
             if (requestEndpoint.getConnector() instanceof AxisConnector)
             {
-                msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector()).getAxisServer()
-                    .getTypeMappingRegistry());
+                msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector())
+                    .getAxisServer().getTypeMappingRegistry());
             }
             Object payload = null;
             int contentLength = 0;
@@ -109,7 +131,7 @@ public class UniversalSender extends BasicHandler
             {
                 File temp = File.createTempFile("soap", ".tmp");
                 temp.deleteOnExit(); // TODO cleanup files earlier (IOUtils has a
-                                        // file tracker)
+                // file tracker)
                 FileOutputStream fos = new FileOutputStream(temp);
                 msgContext.getRequestMessage().writeTo(fos);
                 fos.close();
@@ -140,9 +162,10 @@ public class UniversalSender extends BasicHandler
             // for MULE_USER header. Filter out other headers like "soapMethods" and
             // MuleProperties.MULE_METHOD_PROPERTY and "soapAction"
             // and also filter out any http related header
-            if ((RequestContext.getEvent() != null) && (RequestContext.getEvent().getMessage() != null))
+            if ((RequestContext.getEvent() != null)
+                && (RequestContext.getEvent().getMessage() != null))
             {
-                props = AxisCleanAndAddProperties.cleanAndAdd(RequestContext.getEventContext());            
+                props = AxisCleanAndAddProperties.cleanAndAdd(RequestContext.getEventContext());
             }
 
             if (call.useSOAPAction())
@@ -153,9 +176,9 @@ public class UniversalSender extends BasicHandler
             if (contentLength > 0)
             {
                 props.put(HttpConstants.HEADER_CONTENT_LENGTH, Integer.toString(contentLength)); // necessary
-                                                                                                    // for
-                                                                                                    // supporting
-                                                                                                    // httpclient
+                // for
+                // supporting
+                // httpclient
             }
 
             if (props.get(HttpConstants.HEADER_CONTENT_TYPE) == null)
@@ -179,6 +202,10 @@ public class UniversalSender extends BasicHandler
                 syncEndpoint.setRemoteSync(true);
                 dispatchEvent = new MuleEvent(dispatchEvent.getMessage(), syncEndpoint,
                     dispatchEvent.getSession(), dispatchEvent.isSynchronous());
+                
+                //set username and password
+                
+                
                 UMOMessage result = session.sendEvent(dispatchEvent);
                 if (result != null)
                 {
@@ -189,7 +216,8 @@ public class UniversalSender extends BasicHandler
                 }
                 else
                 {
-                    logger.warn("No response message was returned from synchronous call to: " + uri);
+                    logger
+                        .warn("No response message was returned from synchronous call to: " + uri);
                 }
                 // remove temp file created for streaming
                 if (payload instanceof File)
@@ -215,8 +243,8 @@ public class UniversalSender extends BasicHandler
 
     protected UMOEndpoint lookupEndpoint(String uri) throws UMOException
     {
-        UMODescriptor axis = MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
-            AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
+        UMODescriptor axis = MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL)
+            .getDescriptor(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
         UMOEndpointURI endpoint = new MuleEndpointURI(uri);
         UMOEndpoint ep;
         if (axis != null)

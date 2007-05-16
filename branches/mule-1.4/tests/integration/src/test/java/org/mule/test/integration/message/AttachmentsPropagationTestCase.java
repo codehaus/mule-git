@@ -54,7 +54,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
         super.doTearDown();
     }
 
-    public void eventReceived(UMOEventContext context, Object Component) throws Exception
+    public void eventReceived(UMOEventContext context, Object component) throws Exception
     {
         UMOMessage message = context.getMessage();
         // add an attachment, named after the componentname...
@@ -62,7 +62,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
             new PlainTextDataSource("text/plain", "<content>")));
 
         // return the list of attachment names
-        FunctionalTestComponent fc = (FunctionalTestComponent)Component;
+        FunctionalTestComponent fc = (FunctionalTestComponent) component;
         fc.setReturnMessage(message.getAttachmentNames().toString());
     }
 

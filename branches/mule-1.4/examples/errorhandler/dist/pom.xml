@@ -11,7 +11,7 @@
     <description>Demonstrates using Spring as the external container to provide the objects managed by Mule and how to publish events to multiple outbound endpoints. The example consists of two components; ExecptionManager and BusinessErrorManager.</description>
 
     <properties>
-        <muleVersion>1.4.0</muleVersion>
+        <muleVersion>1.4.1-SNAPSHOT</muleVersion>
         <activemqVersion>4.1.0-incubator</activemqVersion>
     </properties>
 
@@ -33,13 +33,21 @@
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
+            <!-- this is the dist pom that does not have a parent set. Make sure
+                 that the version declared here matches the version in mule's
+                 toplevel pom's dependencyManagement section.
+            -->
             <version>1.4</version>
+            <artifactId>mail</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
+            <!-- this is the dist pom that does not have a parent set. Make sure
+                 that the version declared here matches the version in mule's
+                 toplevel pom's dependencyManagement section.
+            -->
             <version>1.1</version>
             <scope>provided</scope>
         </dependency>
@@ -239,7 +247,6 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
-        <finalName>${artifactId}</finalName>
 
         <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
         <resources>
@@ -288,12 +295,10 @@
                                 <artifactItem>
                                     <groupId>javax.mail</groupId>
                                     <artifactId>mail</artifactId>
-                                    <version>1.4</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>javax.activation</groupId>
                                     <artifactId>activation</artifactId>
-                                    <version>1.1</version>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

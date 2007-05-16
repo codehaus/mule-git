@@ -13,18 +13,17 @@ package org.mule.impl.internal.admin;
 import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
-import org.mule.impl.RequestContext;
 import org.mule.impl.MuleSession;
-import org.mule.impl.model.ModelHelper;
+import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.model.ModelHelper;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
 import org.mule.transformers.wire.WireFormat;
@@ -77,7 +76,7 @@ public class MuleManagerComponent implements Callable, Initialisable
     {
         if (wireFormat == null)
         {
-            throw new InitialisationException(new Message(Messages.X_IS_NULL, "wireFormat"), this);
+            throw new InitialisationException(CoreMessages.objectIsNull("wireFormat"), this);
         }
     }
 
@@ -105,8 +104,8 @@ public class MuleManagerComponent implements Callable, Initialisable
         }
         else
         {
-            result = handleException(null, new MuleException(new Message(
-                Messages.EVENT_TYPE_X_NOT_RECOGNISED, "AdminNotification:" + action.getAction())));
+            result = handleException(null, new MuleException(
+                CoreMessages.eventTypeNotRecognised("AdminNotification:" + action.getAction())));
         }
         return result;
     }
@@ -153,8 +152,8 @@ public class MuleManagerComponent implements Callable, Initialisable
         }
         else
         {
-            return handleException(result, new MuleException(new Message(
-                Messages.COULD_NOT_DETERMINE_DESTINATION_COMPONENT_FROM_ENDPOINT_X, endpoint)));
+            return handleException(result, new MuleException(
+                CoreMessages.couldNotDetermineDestinationComponentFromEndpoint(endpoint)));
         }
     }
 

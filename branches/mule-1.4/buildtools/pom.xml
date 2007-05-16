@@ -6,17 +6,16 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-buildtools</artifactId>
     <packaging>jar</packaging>
-    <name>Mule's build tools</name>
+    <name>Mule Build Tools</name>
     <description>These are the tools used by the Mule's build procedure</description>
     <dependencies>
         <dependency>
             <artifactId>junit</artifactId>
             <groupId>junit</groupId>
-            <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

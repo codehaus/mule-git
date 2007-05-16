@@ -10,6 +10,12 @@
 
 package org.mule.config.builders;
 
+import org.mule.config.ConfigurationException;
+import org.mule.config.ReaderResource;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.umo.manager.UMOManager;
+import org.mule.util.StringUtils;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -19,12 +25,6 @@ import java.util.List;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.config.ConfigurationException;
-import org.mule.config.ReaderResource;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
-import org.mule.umo.manager.UMOManager;
-import org.mule.util.StringUtils;
 
 /**
  * <code>MuleClasspathConfigurationBuilder</code> can be used to configure a
@@ -89,15 +89,14 @@ public class MuleClasspathConfigurationBuilder extends MuleXmlConfigurationBuild
         }
         catch (IOException ioe)
         {
-            throw new ConfigurationException(new Message(Messages.FAILED_LOAD_X, "Config: "
-                                                                                 + ObjectUtils.toString(url,
-                                                                                     "null")), ioe);
+            throw new ConfigurationException(
+                CoreMessages.failedToLoad("Config: " + ObjectUtils.toString(url, "null")), ioe);
         }
 
         if (list.size() != resString.length)
         {
-            throw new ConfigurationException(new Message(Messages.FAILED_LOAD_X,
-                "Not all resources specified loaded: " + resString[i]));
+            throw new ConfigurationException(
+                CoreMessages.failedToLoad("Not all resources specified loaded: " + resString[i]));
         }
 
         ReaderResource[] resources = new ReaderResource[list.size()];

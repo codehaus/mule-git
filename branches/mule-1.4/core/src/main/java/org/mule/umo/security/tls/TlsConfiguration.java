@@ -10,10 +10,7 @@
 
 package org.mule.umo.security.tls;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.TlsDirectKeyStore;
 import org.mule.umo.security.TlsDirectTrustStore;
@@ -24,13 +21,6 @@ import org.mule.umo.security.provider.SecurityProviderInfo;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +29,17 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Support for configuring TLS/SSL connections.
@@ -220,16 +221,15 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
             InputStream is = IOUtils.getResourceAsStream(keyStoreName, getClass());
             if (null == is)
             {
-                throw new FileNotFoundException(new Message(Messages.CANT_LOAD_X_FROM_CLASSPATH_FILE,
-                    "Keystore: " + keyStoreName).getMessage());
+                throw new FileNotFoundException(
+                    CoreMessages.cannotLoadFromClasspath("Keystore: " + keyStoreName).getMessage());
             }
             tempKeyStore.load(is, keyStorePassword.toCharArray());
         }
         catch (Exception e)
         {
             throw new InitialisationException(
-                new Message(Messages.FAILED_LOAD_X, "KeyStore: " + keyStoreName), 
-                e, this);
+                CoreMessages.failedToLoad("KeyStore: " + keyStoreName), e, this);
         }
         try
         {
@@ -238,7 +238,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
         }
         catch (Exception e)
         {
-            throw new InitialisationException(new Message(Messages.FAILED_LOAD_X, "Key Manager"), e, this);
+            throw new InitialisationException(CoreMessages.failedToLoad("Key Manager"), e, this);
         }
     }
 
@@ -263,8 +263,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
             catch (Exception e)
             {
                 throw new InitialisationException(
-                    new Message(Messages.FAILED_LOAD_X, "TrustStore: " + trustStoreName), 
-                    e, this);
+                    CoreMessages.failedToLoad("TrustStore: " + trustStoreName), e, this);
             }
 
             try
@@ -275,8 +274,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
             catch (Exception e)
             {
                 throw new InitialisationException(
-                    new Message(Messages.FAILED_LOAD_X, "Trust Manager (" + trustManagerAlgorithm + ")"), 
-                    e, this);
+                    CoreMessages.failedToLoad("Trust Manager (" + trustManagerAlgorithm + ")"), e, this);
             }
         }
     }
@@ -286,7 +284,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
     {
         if (null == value)
         {
-            throw new NullPointerException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
@@ -322,6 +320,7 @@ public final class TlsConfiguration implements TlsDirectTrustStore, TlsDirectKey
             null == getTrustManagerFactory() ? null :  getTrustManagerFactory().getTrustManagers();
 
         SSLContext context = SSLContext.getInstance(getSslType());
+        // TODO - nice to have a configurable random number source set here
         context.init(keyManagers, trustManagers, null);
         return context;
     }

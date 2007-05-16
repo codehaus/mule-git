@@ -13,6 +13,7 @@ package org.mule.providers.jms.filters;
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
+import org.mule.util.ClassUtils;
 
 import java.util.regex.Pattern;
 
@@ -130,7 +131,8 @@ public class JmsPropertyFilter implements UMOFilter
         }
         else
         {
-            logger.warn("Expected a payload of javax.jms.Message but instead received " + message.getPayload().getClass().getName());
+            logger.warn("Expected a payload of javax.jms.Message but instead received " +
+                    ClassUtils.getSimpleName(message.getPayload().getClass()));
         }
 
         return false;

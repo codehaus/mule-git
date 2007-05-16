@@ -815,6 +815,7 @@
         <xsl:apply-templates select="list"/>
         <xsl:apply-templates select="bean"/>
         <xsl:apply-templates select="spring-property"/>
+        <xsl:apply-templates select="text-property"/>
     </xsl:template>
 
     <xsl:template match="properties" mode="asMap">
@@ -828,6 +829,7 @@
                 <xsl:apply-templates select="list" mode="mapListProperty"/>
                 <xsl:apply-templates select="bean" mode="asMap"/>
                 <xsl:apply-templates select="spring-property" mode="asMap"/>
+                <xsl:apply-templates select="text-property" mode="asMap"/>
 
             </map>
         </property>
@@ -1016,6 +1018,30 @@ Templates for processing interleaved bean configuration
     <xsl:template match="spring-property" mode="asMap">
         <entry key="{@name}">
             <xsl:apply-templates/>
+        </entry>
+    </xsl:template>
+
+    <!-- text-property template -->
+    <xsl:template match="text-property">
+        <xsl:variable name="name">
+            <xsl:value-of select="@name" />
+        </xsl:variable>
+        <spring-property name="{$name}">
+            <value>
+               <xsl:apply-templates/>
+            </value>
+        </spring-property>
+    </xsl:template>
+
+    <!-- text-property template -->
+    <xsl:template match="text-property" mode="asMap">
+        <xsl:variable name="name">
+            <xsl:value-of select="@name" />
+        </xsl:variable>
+        <entry key="{$name}">
+            <value>
+               <xsl:apply-templates/>
+            </value>
         </entry>
     </xsl:template>
 

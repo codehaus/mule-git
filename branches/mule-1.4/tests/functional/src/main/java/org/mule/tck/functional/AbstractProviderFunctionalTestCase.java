@@ -50,7 +50,7 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
         // Make sure we are running synchronously
         MuleManager.getConfiguration().setSynchronous(true);
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
-            PoolingProfile.POOL_INITIALISE_ONE_COMPONENT);
+            PoolingProfile.INITIALISE_ONE);
 
         UMOModel model = new SedaModel();
         model.setName("main");
@@ -156,7 +156,7 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
     {
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object Component)
+            public void eventReceived(UMOEventContext context, Object component)
             {
                 synchronized (callbackLock)
                 {

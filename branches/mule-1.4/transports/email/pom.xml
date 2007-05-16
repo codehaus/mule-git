@@ -6,18 +6,17 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-email</artifactId>
     <packaging>jar</packaging>
-    <name>Email Transport</name>
+    <name>E-Mail Transport</name>
     <description>A Mule transport for Email Connectivity. This transport supplies a Pop3 connector, Smtp connector and a Mail connector which is an aggregation of the two.</description>
 
     <dependencies>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-jdbc</artifactId>
     <packaging>jar</packaging>
-    <name>Jdbc Transport</name>
+    <name>JDBC Transport</name>
     <description>A Mule transport for JDBC connectivity.</description>
     <dependencies>
         <dependency>

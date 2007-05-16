@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>org.mule.examples</groupId>
     <artifactId>mule-example-hello</artifactId>
     <version>1.0</version>
@@ -11,7 +11,7 @@
     <description>Shows how to configure multiple components to interact on a single request and how to manage event transformations.</description>
 
     <properties>
-        <muleVersion>1.4.0</muleVersion>
+        <muleVersion>1.4.1-SNAPSHOT</muleVersion>
     </properties>
 
     <dependencies>
@@ -69,7 +69,6 @@
   
     <build>
         <defaultGoal>install</defaultGoal>
-        <finalName>${artifactId}</finalName>
 
         <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
         <resources>

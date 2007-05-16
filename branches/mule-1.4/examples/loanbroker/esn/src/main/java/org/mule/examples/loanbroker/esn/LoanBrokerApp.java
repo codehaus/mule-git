@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.esn;
 
-import org.mule.config.i18n.Message;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
+import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.util.DateUtils;
 import org.mule.util.StringMessageUtils;
@@ -37,6 +37,13 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         };
 
     private static boolean synchronous = false;
+
+    // Needed for webapp version!
+    // TODO Travis ... sadly, it doesn't quite work
+    public LoanBrokerApp() throws Exception
+    {
+        super();
+    }
 
     public LoanBrokerApp(String config) throws Exception
     {
@@ -72,8 +79,8 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
             if (synchronous)
             {
                 long start = System.currentTimeMillis();
-                List results = loanBrokerApp.requestSend(i, "vm://customer.requests");
-                System.out.println(new Message("loanbroker-example", 10, String.valueOf(results.size())).getMessage());
+                List results = loanBrokerApp.requestSend(i, "CustomerRequests");
+                System.out.println(LocaleMessage.responseNumQuotes(results.size()));
                 List output = new ArrayList(results.size());
                 int x = 1;
                 for (Iterator iterator = results.iterator(); iterator.hasNext(); x++)
@@ -84,11 +91,11 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
                 System.out.println(StringMessageUtils.getBoilerPlate(output, '*', 80));
                 long cur = System.currentTimeMillis();
                 System.out.println(DateUtils.getFormattedDuration(cur - start));
-                System.out.println(new Message("loanbroker-example", 11, String.valueOf( ((cur - start) / x) )).getMessage());
+                System.out.println(LocaleMessage.responseAvgRequest(((cur - start) / x) ));
             }
             else
             {
-                loanBrokerApp.requestDispatch(i, "vm://customer.requests");
+                loanBrokerApp.requestDispatch(i, "CustomerRequests");
             }
         }
         /////////////////////////////////////////
@@ -103,14 +110,14 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
 
     protected static String getInteractiveConfig() throws IOException
     {
-        System.out.println(StringMessageUtils.getBoilerPlate(new Message("loanbroker-example", 40).getMessage()));
+        System.out.println(StringMessageUtils.getBoilerPlate(LocaleMessage.welcome()));
                     
         int response = 0;
         String provider = "axis";
 
         while (response != 'a' && response != 'x')
         {
-            System.out.println("\n" + new Message("loanbroker-example", 43).getMessage());
+            System.out.println("\n" + LocaleMessage.menuOptionSoap());
             response = readCharacter();
             switch (response)
             {
@@ -130,20 +137,20 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         response = 0;
         while (response != 'a' && response != 's')
         {
-            System.out.println("\n" + new Message("loanbroker-example", 44).getMessage());
+            System.out.println("\n" + LocaleMessage.menuOptionMode());
             response = readCharacter();
             switch (response)
             {
                 case 'a' :
                 {
-                    System.out.println(new Message("loanbroker-example", 45).getMessage());
+                    System.out.println(LocaleMessage.loadingAsync());
                     synchronous = false;
                     break;
                 }
 
                 case 's' :
                 {
-                    System.out.println(new Message("loanbroker-example", 46).getMessage());
+                    System.out.println(LocaleMessage.loadingSync());
                     synchronous = true;
                     break;
                 }

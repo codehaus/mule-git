@@ -66,10 +66,13 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/errorhandler</outputDirectory>
           <fileMode>744</fileMode>
       </fileSet>
+
       <fileSet>
-        <directory>../../../examples/errorhandler/src/main/resources</directory>
-        <outputDirectory>examples/errorhandler/conf</outputDirectory>
+          <directory>../../../examples/errorhandler/src/main/resources</directory>
+          <outputDirectory>examples/errorhandler/conf</outputDirectory>
       </fileSet>
+
+
 
 
       <!--
@@ -90,11 +93,14 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/hello</outputDirectory>
           <fileMode>744</fileMode>
       </fileSet>
-      <fileSet>
-        <directory>../../../examples/hello/src/main/resources</directory>
-        <outputDirectory>examples/hello/conf</outputDirectory>
-      </fileSet>
 
+      <fileSet>
+          <directory>../../../examples/hello/src/main/resources</directory>
+          <outputDirectory>examples/hello/conf</outputDirectory>
+      </fileSet>
+ 
+
+ 
       <!--
         ===============================
             Mule Examples: Loan Broker
@@ -119,7 +125,7 @@ Assembly descriptor for the full Mule distribution.
           <fileMode>744</fileMode>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/common</directory>
+          <directory>../../../examples/loanbroker/common/dist</directory>
           <outputDirectory>examples/loanbroker/common</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -131,7 +137,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/common/src</outputDirectory>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/common-tests</directory>
+          <directory>../../../examples/loanbroker/common-tests/dist</directory>
           <outputDirectory>examples/loanbroker/common-tests</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -143,7 +149,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/common-tests/src</outputDirectory>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/credit-agency</directory>
+          <directory>../../../examples/loanbroker/credit-agency/dist</directory>
           <outputDirectory>examples/loanbroker/credit-agency</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -155,7 +161,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/credit-agency/src</outputDirectory>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/esb</directory>
+          <directory>../../../examples/loanbroker/esb/dist</directory>
           <outputDirectory>examples/loanbroker/esb</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -171,7 +177,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/esb/src</outputDirectory>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/esn</directory>
+          <directory>../../../examples/loanbroker/esn/dist</directory>
           <outputDirectory>examples/loanbroker/esn</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -187,7 +193,7 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/loanbroker/esn/src</outputDirectory>
       </fileSet>
       <fileSet>
-          <directory>../../../examples/loanbroker/bpm</directory>
+          <directory>../../../examples/loanbroker/bpm/dist</directory>
           <outputDirectory>examples/loanbroker/bpm</outputDirectory>
           <includes>
               <include>pom.xml</include>
@@ -231,6 +237,8 @@ Assembly descriptor for the full Mule distribution.
         ===============================
       -->
 
+
+
       <fileSet>
           <directory>../../../examples/stockquote</directory>
           <outputDirectory>examples/stockquote</outputDirectory>
@@ -244,10 +252,13 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/stockquote</outputDirectory>
           <fileMode>744</fileMode>
       </fileSet>
+
       <fileSet>
           <directory>../../../examples/stockquote/src/main/resources</directory>
           <outputDirectory>examples/stockquote/resources</outputDirectory>
       </fileSet>
+
+
 
       <!--
         ================================
@@ -269,10 +280,12 @@ Assembly descriptor for the full Mule distribution.
           <outputDirectory>examples/voipservice</outputDirectory>
           <fileMode>744</fileMode>
       </fileSet>
+
       <fileSet>
-        <directory>../../../examples/voipservice/src/main/resources</directory>
-        <outputDirectory>examples/voipservice/conf</outputDirectory>
+          <directory>../../../examples/voipservice/src/main/resources</directory>
+          <outputDirectory>examples/voipservice/conf</outputDirectory>
       </fileSet>
+
 
 
       <!--
@@ -282,7 +295,6 @@ Assembly descriptor for the full Mule distribution.
       -->
       <!-- now just copy a readme to explain that the example should be built
            from Ant -->
-      <!-- TODO for 1.4 release the webapp example is excluded from the distro
       <fileSet>
           <directory>../../../examples/webapp/dist</directory>
           <outputDirectory>examples/webapp</outputDirectory>
@@ -290,7 +302,6 @@ Assembly descriptor for the full Mule distribution.
               <include>MAVEN_README.txt</include>
           </includes>
       </fileSet>
-      -->
       <!-- Maven-style example : TODO
       <fileSet>
           <directory>../../../examples/webapp</directory>
@@ -317,7 +328,6 @@ Assembly descriptor for the full Mule distribution.
       -->
 
       <!-- Ant-style example -->
-      <!-- TODO for 1.4 release the webapp example is excluded from the distro
       <fileSet>
           <directory>../../../examples/webapp</directory>
           <outputDirectory>examples/webapp</outputDirectory>
@@ -348,7 +358,7 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../examples/webapp/src/main/webapp</directory>
           <outputDirectory>examples/webapp/webapp</outputDirectory>
       </fileSet>
-      -->
+
 
     <!-- Copy the USAGE.txt file to the root directory for visibility -->
     <fileSet>
@@ -421,6 +431,7 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.transports:mule-transport-ftp</include>
         <include>org.mule.transports:mule-transport-http</include>
         <include>org.mule.transports:mule-transport-jbi</include>
+        <include>org.mule.transports:mule-transport-jbpm</include>
         <include>org.mule.transports:mule-transport-jdbc</include>
         <include>org.mule.transports:mule-transport-jms</include>
         <include>org.mule.transports:mule-transport-multicast</include>
@@ -468,6 +479,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.transports:mule-transport-ftp</exclude>
         <exclude>org.mule.transports:mule-transport-http</exclude>
         <exclude>org.mule.transports:mule-transport-jbi</exclude>
+        <exclude>org.mule.transports:mule-transport-jbpm</exclude>
         <exclude>org.mule.transports:mule-transport-jdbc</exclude>
         <exclude>org.mule.transports:mule-transport-jms</exclude>
         <exclude>org.mule.transports:mule-transport-multicast</exclude>
