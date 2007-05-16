@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.distributions</groupId>
         <artifactId>mule-server</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-full</artifactId>
     <!-- This should be "pom" not "jar" but if it is set to "pom", the list of dependencies gets ignored
@@ -72,22 +72,23 @@
                        the project version.
                     5. For 3rd-party libraries leave the version in (only strip the jar suffix from #3).
              -->
-            <!--<plugin>-->
-                <!--<groupId>org.mule.tools</groupId>-->
-                <!--<artifactId>mule-assembly-verifier</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>verify</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>verify</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>mule-assembly-verifier</artifactId>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <projectOutputFile>mule-${version}.zip</projectOutputFile>
                     <!-- Default is under src/main/resources, pull it to the root for this project -->
-                    <!--<whitelist>assembly-whitelist.txt</whitelist>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+                    <whitelist>assembly-whitelist.txt</whitelist>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

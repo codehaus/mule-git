@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-oracleaq</artifactId>
     <packaging>jar</packaging>
@@ -18,21 +18,37 @@
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jms</artifactId>
             <version>${version}</version>
+            <exclusions>
+                <!-- Don't include the JMS 1.1 spec. -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jms_1.1_spec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- The JMS 1.0.2 spec (javax.jms.*) -->
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>jmscommon</artifactId>
+            <version>9i</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- The Oracle JDBC driver. -->
         <dependency>
             <groupId>oracle</groupId>
             <artifactId>ojdbc14</artifactId>
-            <version>10.2.0</version> 
+            <!-- <version>10.2.0.2</version> -->
+            <version>9.2.0.5</version> 
             <scope>provided</scope>
         </dependency>
 
 	    <!-- The Oracle JMS implementation (oracle.jms.*) -->
         <dependency>
             <groupId>oracle</groupId>
-            <artifactId>aqapi</artifactId>
-            <version>10.2.0</version>
+            <artifactId>aqapi13</artifactId>
+            <version>9i</version>
             <scope>provided</scope>
         </dependency>
 
@@ -51,19 +67,6 @@
             <artifactId>xmlparserv2-distilled</artifactId>
             <version>9i</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-client</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
