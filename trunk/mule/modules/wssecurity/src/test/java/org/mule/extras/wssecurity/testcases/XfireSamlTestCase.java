@@ -29,7 +29,7 @@ public class XfireSamlTestCase extends FunctionalTestCase
         // no test
     }
 
-    public void _testGoodUnsignedSamlTokenAuthentication () throws Exception
+    public void testGoodUnsignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
@@ -53,7 +53,7 @@ public class XfireSamlTestCase extends FunctionalTestCase
         assertTrue(m.getPayload().equals("Test"));
     }
 
-    public void _testBadUnsignedSamlTokenAuthentication () throws Exception
+    public void testBadUnsignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
@@ -80,7 +80,7 @@ public class XfireSamlTestCase extends FunctionalTestCase
         assertNull(m);
     }
 
-    public void _testGoodSignedSamlTokenAuthentication () throws Exception
+    public void testGoodSignedSamlTokenAuthentication () throws Exception
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
