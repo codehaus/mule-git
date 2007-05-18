@@ -114,8 +114,7 @@ public class MultiContainerContext implements UMOContainerContext
                     finalCause = e.getCause();
                     if (logger.isDebugEnabled())
                     {
-                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName(),
-                            finalCause);
+                        logger.debug("Object: '" + realKey + "' not found in container: " + container.getName());
                     }
                 }
                 else
