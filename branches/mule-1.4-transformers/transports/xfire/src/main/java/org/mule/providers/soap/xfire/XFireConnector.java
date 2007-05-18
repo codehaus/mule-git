@@ -329,7 +329,7 @@ public class XFireConnector extends AbstractConnector
         String scheme = ep.getScheme().toLowerCase();
 
 
-        boolean sync = false;
+        boolean sync = receiver.getEndpoint().isSynchronous();
 
         // If we are using sockets then we need to set the endpoint name appropiately
         // and if using http/https
@@ -349,10 +349,7 @@ public class XFireConnector extends AbstractConnector
                 sync = true;
             }
         }
-        else
-        {
-            sync = receiver.getEndpoint().isSynchronous();
-        }
+       
 
         UMOEndpoint serviceEndpoint = new MuleEndpoint(endpoint, true);
         serviceEndpoint.setSynchronous(sync);
