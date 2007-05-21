@@ -98,7 +98,7 @@
             <id>mule-site</id>
             <name>Mule Website</name>
             <!-- TODO just to make CI server happy, should be something else -->
-            <url>dav:https://dav.codehaus.org/mule/docs/${muleVersion}</url>
+            <url>dav:https://dav.codehaus.org/mule/docs/${muleVersion}/mule-tools/mule-assembly-verifier</url>
         </site>
     </distributionManagement>
 
@@ -108,7 +108,7 @@
             <distributionManagement>
                 <site>
                     <!-- TODO just to make CI server happy, should be something else -->
-                    <url>file:///home/luntbuild/publish/mule/docs/${muleVersion}</url>
+                    <url>file:///home/luntbuild/publish/mule/docs/${muleVersion}/mule-tools/mule-assembly-verifier</url>
                 </site>
             </distributionManagement>
         </profile>
