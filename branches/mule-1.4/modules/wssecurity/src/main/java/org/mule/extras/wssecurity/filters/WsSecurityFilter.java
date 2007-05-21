@@ -27,7 +27,10 @@ import org.mule.umo.security.SecurityException;
 import org.mule.umo.security.SecurityProviderNotFoundException;
 import org.mule.umo.security.UnknownAuthenticationTypeException;
 import org.mule.umo.security.UnsupportedAuthenticationSchemeException;
+import org.mule.util.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -44,6 +47,7 @@ import org.apache.ws.axis.security.WSDoAllReceiver;
 import org.apache.ws.axis.security.WSDoAllSender;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.codehaus.xfire.XFire;
+import org.codehaus.xfire.client.Client;
 import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;
 import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.util.dom.DOMInHandler;
@@ -53,6 +57,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
 {
     private String wsDecryptionFile = null;
     private String wsSignatureFile = null;
+    private Map addOutboundProperties = null;
 
     public String getWsDecryptionFile()
     {
@@ -214,51 +219,65 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
         if (event.getEndpoint().getConnector() instanceof XFireConnector)
         {
             XFireConnector connector = (XFireConnector)event.getEndpoint().getConnector();
-
-            List clientHandlers = new ArrayList();
-            List existingOutHandlers = connector.getClientOutHandlers();
-
-            clientHandlers.add("org.codehaus.xfire.util.dom.DOMOutHandler");
-            clientHandlers.add("org.codehaus.xfire.security.wss4j.WSS4JOutHandler");
-
-            if (existingOutHandlers == null)
+            Map properties = event.getSession().getComponent().getDescriptor().getProperties();
+            XFire server = (XFire)properties.get("xfire");
+            
+            if (server == null)
             {
-                connector.setClientOutHandlers(clientHandlers);
+                server = connector.getXfire();
             }
-            else if (!existingOutHandlers
-                .contains("org.codehaus.xfire.security.wss4j.WSS4JOutHandler"))
-            {
-                connector.setClientOutHandlers(clientHandlers);
+            
+            if (server != null)
+            {                      
+                List clientHandlers = new ArrayList();
+                List existingOutHandlers = connector.getClientOutHandlers();
+    
+                clientHandlers.add("org.codehaus.xfire.util.dom.DOMOutHandler");
+                clientHandlers.add("org.codehaus.xfire.security.wss4j.WSS4JOutHandler");
+    
+                if (existingOutHandlers == null)
+                {
+                    connector.setClientOutHandlers(clientHandlers);
+                }
+                else if (!existingOutHandlers
+                    .contains("org.codehaus.xfire.security.wss4j.WSS4JOutHandler"))
+                {
+                    connector.setClientOutHandlers(clientHandlers);
+                }
+                
+                // look for security properties in the message
+                Properties props = new Properties();  
+                if (addOutboundProperties != null)
+                {
+                    logger.warn("Properties set on the Security Filter will override those set on the message");
+                    props.putAll(getAddOutboundProperties());
+                    event.getMessage().addProperties(props);
+                }
             }
         }
         else if (event.getEndpoint().getConnector() instanceof AxisConnector)
         {
-            AxisServer server = (AxisServer)event.getSession().getComponent().getDescriptor()
-                .getProperties().get("axisServer");
-            MuleConfigProvider provider = (MuleConfigProvider)server.getConfig();
-
-            String prefix = event.getEndpoint().getProtocol() + ":";
-            String serviceName = event.getEndpoint().getName().substring(prefix.length());
-            SOAPService soapService;
-
-            try
+            AxisConnector connector = (AxisConnector)event.getEndpoint().getConnector();
+            
+            if (connector.getClientProvider() != null)
             {
-                soapService = provider.getService(new QName(serviceName));
-
-                Hashtable options = new Hashtable();
-                if (event.getMessage().getProperty("action") != null)
-                {
-                    options.putAll(getProperties(event));
-                    soapService.setPropertyParent(options);
+                String[] processString = event.getEndpoint().getEndpointURI().toString().split("://");
+                    
+                while (processString.length > 1){
+                    processString = processString[1].split("/");
                 }
-
+    
+                Hashtable options = new Hashtable();
+                        
+                if (addOutboundProperties != null)
+                {
+                    logger.warn("Properties set on the Security Filter will override those set on the message");
+                    options.putAll(getAddOutboundProperties());
+                    event.getMessage().addProperties(options);
+                }
+        
                 Handler outHandler = new WSDoAllSender();
-                provider.setGlobalResponse(outHandler);
-            }
-            catch (ConfigurationException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                connector.getClientProvider().setGlobalRequest(outHandler);
             }
         }
     }
@@ -293,5 +312,15 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
         }
         props.putAll(props2);
         return props;
+    }
+
+    public Map getAddOutboundProperties()
+    {
+        return addOutboundProperties;
+    }
+
+    public void setAddOutboundProperties(Map addOutboundProperties)
+    {
+        this.addOutboundProperties = addOutboundProperties;
     }
 }
