@@ -104,6 +104,8 @@
 
                                 def muleRoot = '../../..'
 
+                                log.info("Mule project root: ${new File(muleRoot).canonicalPath}")
+                                
                                 def tempDir = "$project.build.directory/sources-temp"
                                 ant.mkdir(dir: tempDir)
 
