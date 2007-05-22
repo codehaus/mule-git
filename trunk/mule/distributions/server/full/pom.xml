@@ -92,4 +92,33 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release-profile</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.mule.tools</groupId>
+                        <artifactId>mule-assembly-verifier</artifactId>
+                        <version>1.0</version>
+                        <configuration>
+                            <projectOutputFile>mule-${version}.zip</projectOutputFile>
+                            <!-- Default is under src/main/resources, pull it to the root for this project -->
+                            <whitelist>assembly-release-whitelist.txt</whitelist>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
 </project>
