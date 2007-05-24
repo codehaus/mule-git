@@ -25,7 +25,7 @@ public class StAXMapWriter
     private String defaultRecordIdentifier = "record";
 
     // this allows for a simple, customizable key->tag mapping
-    private Map/* <?, String> */keyToElementMapping = Collections.EMPTY_MAP;
+    private Map keyToElementMapping = Collections.EMPTY_MAP;
 
     // XMLOutputFactory should be kept around
     private final XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -60,31 +60,31 @@ public class StAXMapWriter
     }
 
     // identifier for this particular Map
-    public String getRecordIdentifier(Map/* <?, ?> */data)
+    public String getRecordIdentifier(Map data)
     {
         return (data.containsKey("mumble") ? "address" : this.getDefaultRecordIdentifier());
     }
 
     // overridable method to retrieve the XML tag for a Map key
     // we also normalize from non-String keys (very simplistic)
-    public String getElementIdentifier(Map.Entry/* <?, ?> */entry)
+    public String getElementIdentifier(Map.Entry entry)
     {
         Object key = entry.getKey();
         String elementIdentifier = (String) keyToElementMapping.get(key);
         return (elementIdentifier != null ? elementIdentifier : key.toString());
     }
 
-    public void setElementIdentifiers(Map/* <?, String> */keyToTagMapping)
+    public void setElementIdentifiers(Map keyToTagMapping)
     {
         this.keyToElementMapping = keyToTagMapping;
     }
 
-    public String getElementValue(Map.Entry/* <?, ?> */entry)
+    public String getElementValue(Map.Entry entry)
     {
         return entry.getValue().toString();
     }
 
-    public void writeMapsToXMLStream(List/* <Map<?, ?>> */maps, OutputStream out) throws XMLStreamException
+    public void writeMapsToXMLStream(List maps, OutputStream out) throws XMLStreamException
     {
         XMLStreamWriter streamWriter = null;
 
@@ -102,7 +102,8 @@ public class StAXMapWriter
             // write the "dataset" root element
             streamWriter.writeStartElement(this.getDatasetIdentifier());
 
-            for (Iterator/* <Map<?, ?>> */i = maps.iterator(); i.hasNext();)
+            // write all "records"
+            for (Iterator i = maps.iterator(); i.hasNext();)
             {
                 this.writeMapToXMLStream((Map) i.next(), streamWriter);
             }
@@ -137,19 +138,16 @@ public class StAXMapWriter
 
     }
 
-    public void writeMapToXMLStream(Map/* <?, ?> */record, XMLStreamWriter streamWriter)
-        throws XMLStreamException
+    public void writeMapToXMLStream(Map record, XMLStreamWriter streamWriter) throws XMLStreamException
     {
         // begin a single "record"
         streamWriter.writeStartElement(this.getRecordIdentifier(record));
 
         // now write each key/value pair
-        for (Iterator i/* <Map.Entry<?, ?> */= record.entrySet().iterator(); i.hasNext();)
+        for (Iterator i = record.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry/* <?, ?> */e = (Map.Entry) i.next();
-            streamWriter.writeStartElement(this.getElementIdentifier(e));
-            streamWriter.writeCharacters(this.getElementValue(e));
-            streamWriter.writeEndElement();
+            Map.Entry e = (Map.Entry) i.next();
+            streamWriter.writeAttribute(this.getElementIdentifier(e), this.getElementValue(e));
         }
 
         // close the record element
@@ -162,20 +160,20 @@ public class StAXMapWriter
         StAXMapWriter writer = new StAXMapWriter();
 
         // configure key mapping
-        Map/* <String, String> */keyMapping = Collections.singletonMap("foo", "hanz");
+        Map keyMapping = Collections.singletonMap("foo", "hanz");
         writer.setElementIdentifiers(keyMapping);
 
-        List/* <Map<?, ?>> */maps = new ArrayList/* <Map<?, ?>> */();
+        List maps = new ArrayList();
 
         // create a map with data for a single "record"
-        Map/* <String, String> */data1 = new HashMap/* <String, String> */();
+        Map data1 = new HashMap();
         // remember that the foo key will result in a different element
         data1.put("foo", "Hanz");
         data1.put("bar", "bar");
         data1.put("baz", "baz");
         maps.add(data1);
 
-        Map/* <String, String> */data2 = new HashMap/* <String, String> */(data1);
+        Map data2 = new HashMap(data1);
         // add a key which will result in a different root element
         data2.put("mumble", "mumble");
         maps.add(data2);
