@@ -19,9 +19,7 @@
         <module>builders</module>
         <module>boot</module>
         <module>client</module>
-        <!--
         <module>wssecurity</module>
-        -->
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
