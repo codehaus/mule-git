@@ -28,8 +28,7 @@ public class LocaleMessage extends MessageFactory
     public static String getStockQuoteMessage(String symbol, String name, String date, String last, 
         String change, String open, String high, String low, String volume, String previousClose)
     {
-        String[] params = { symbol, name, date, last, change, open, high,
-            low, volume, previousClose };
-        return getString(BUNDLE_PATH, 1, params);
+        return getString(BUNDLE_PATH, 1, symbol, name, date, last, change, open, high,
+            low, volume, previousClose);
     }
 }
