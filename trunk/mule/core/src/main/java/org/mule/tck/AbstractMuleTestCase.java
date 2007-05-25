@@ -149,8 +149,9 @@ public abstract class AbstractMuleTestCase extends TestCase
      */
     public void runBare() throws Throwable 
     {
-        // getName will return the name of the method being run
-        if (this.isDisabledInThisEnvironment(this.getName())) 
+        // getName will return the name of the method being run. Use the real JUnit implementation,
+        // this class has a different implementation
+        if (this.isDisabledInThisEnvironment(super.getName())) 
         {
             logger.info("**** " + this.getClass().getName() + "." + this.getName() + " disabled in this environment: ");
             return;
