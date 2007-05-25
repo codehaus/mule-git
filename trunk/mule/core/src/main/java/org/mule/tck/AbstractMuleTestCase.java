@@ -153,7 +153,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         // this class has a different implementation
         if (this.isDisabledInThisEnvironment(super.getName())) 
         {
-            logger.info("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
+            logger.warn("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
             return;
         }
         
@@ -183,7 +183,9 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     protected final void setUp() throws Exception
     {
-        logger.info(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
+        // TODO DO: this logs the infamous text box
+        // logger.info(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
+        logger.info("Testing: " + toString());
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
 
