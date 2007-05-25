@@ -11,8 +11,9 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.SystemUtils;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SystemUtilsTestCase extends AbstractMuleTestCase
@@ -30,11 +31,30 @@ public class SystemUtilsTestCase extends AbstractMuleTestCase
         // the user has a different term from /etc/termcaps
         if (SystemUtils.IS_OS_WINDOWS)
         {
-            String term = (String)env.get("TERM");
+            String term = (String) env.get("TERM");
             if (term != null && term.equals("cygwin")) envVarToTest = "PATH";
         }
 
         assertNotNull(env.get(envVarToTest));
+    }
+
+    public void testParsePropertyDefinitions()
+    {
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions(null));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions(""));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions(" "));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions("foo"));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions("-D"));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions("=-D"));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions("=foo"));
+        assertEquals(Collections.EMPTY_MAP, SystemUtils.parsePropertyDefinitions("-D=-Dfoo-D=="));
+
+        Map expected = MapUtils.mapWithKeysAndValues(HashMap.class, new String[]{"keyOnly", "mule.foo",
+            "mule.bar"}, new String[]{"true", "true", "false"});
+
+        String input = "  standalone key=value -D -D= -DkeyOnly -D=noKey -Dmule.foo=true -Dmule.bar=false ";
+
+        assertEquals(expected, SystemUtils.parsePropertyDefinitions(input));
     }
 
 }
