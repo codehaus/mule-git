@@ -43,12 +43,12 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMuleTestCase extends TestCase
 {
+    private static final Log junitLogger = LogFactory.getLog(AbstractMuleTestCase.class.getName()
+        + ".JUnit");
     protected final Log logger = LogFactory.getLog(getClass());
 
     // This should be set to a string message describing any prerequisites not met
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
-    private boolean testLogging = System.getProperty("org.mule.test.logging", "false").equalsIgnoreCase(
-        "true");
 
     private static Map testCounters;
 
@@ -95,7 +95,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             testCounters.clear();
         }
-        log("Cleared all counters");
     }
 
     private void clearCounter()
@@ -103,15 +102,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         if (testCounters != null)
         {
             testCounters.remove(getClass().getName());
-        }
-        log("Cleared counter: " + getClass().getName());
-    }
-
-    private void log(String s)
-    {
-        if (testLogging)
-        {
-            System.err.println(s);
         }
     }
 
@@ -124,7 +114,7 @@ public abstract class AbstractMuleTestCase extends TestCase
     {
         if (this.isTestCaseDisabled())
         {
-            logger.info("**** " + this.getClass().getName() + " disabled");
+            junitLogger.info("**** " + this.getClass().getName() + " disabled");
             return;
         }
         
@@ -153,7 +143,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         // this class has a different implementation
         if (this.isDisabledInThisEnvironment(super.getName())) 
         {
-            logger.warn("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
+            junitLogger.warn("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
             return;
         }
         
@@ -185,7 +175,7 @@ public abstract class AbstractMuleTestCase extends TestCase
     {
         // TODO DO: this logs the infamous text box
         // logger.info(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
-        logger.info("Testing: " + toString());
+        junitLogger.info("Testing: " + toString());
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
 
@@ -198,7 +188,6 @@ public abstract class AbstractMuleTestCase extends TestCase
                     // We dispose here jut in case
                     disposeManager();
                 }
-                log("Pre suiteSetup for test: " + getTestInfo());
                 suitePreSetUp();
             }
             if (!getTestInfo().isDisposeManagerPerSuite())
@@ -209,7 +198,6 @@ public abstract class AbstractMuleTestCase extends TestCase
             doSetUp();
             if (getTestInfo().getRunCount() == 0)
             {
-                log("Post suiteSetup for test: " + getTestInfo());
                 suitePostSetUp();
             }
         }
@@ -246,7 +234,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
             {
-                log("Pre suiteTearDown for test: " + getTestInfo());
                 suitePreTearDown();
             }
             doTearDown();
@@ -262,7 +249,6 @@ public abstract class AbstractMuleTestCase extends TestCase
             {
                 try
                 {
-                    log("Post suiteTearDown for test: " + getTestInfo());
                     suitePostTearDown();
                 }
                 finally
@@ -276,7 +262,6 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     protected void disposeManager() throws UMOException
     {
-        log("disposing manager. disposeManagerPerSuite=" + getTestInfo().isDisposeManagerPerSuite());
         if (MuleManager.isInstanciated())
         {
             MuleManager.getInstance().dispose();
@@ -399,19 +384,16 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             testCount = 0;
             runCount = 0;
-            log("Cleared counts for: " + name);
         }
 
         public void incTestCount()
         {
             testCount++;
-            log("Added test: " + name + " " + testCount);
         }
 
         public void incRunCount()
         {
             runCount++;
-            log("Finished Run: " + toString());
         }
 
         public int getTestCount()
