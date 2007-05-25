@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import junit.framework.TestResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -45,7 +46,6 @@ public abstract class AbstractMuleTestCase extends TestCase
     protected final Log logger = LogFactory.getLog(getClass());
 
     // This should be set to a string message describing any prerequisites not met
-    protected String prereqs = null;
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
     private boolean testLogging = System.getProperty("org.mule.test.logging", "false").equalsIgnoreCase(
         "true");
@@ -118,6 +118,56 @@ public abstract class AbstractMuleTestCase extends TestCase
     public String getName()
     {
         return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
+    }
+
+    public void run(TestResult result) 
+    {
+        if (this.isTestCaseDisabled())
+        {
+            logger.info("**** " + this.getClass().getName() + " disabled");
+            return;
+        }
+        
+        super.run(result);
+    }
+     
+    /**
+     * Subclasses can override this method to skip the execution of the entire test class.
+     * 
+     * @return <code>true</code> if the test class should not be run.
+     */
+    protected boolean isTestCaseDisabled()
+    {
+        return false;
+    }
+    
+    /**
+     * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can extend
+     * this class from ConditionalTestCase.
+     * <p/>
+     * Subclasses can override <code>isDisabledInThisEnvironment</code> to skip a single test.
+     */
+    public void runBare() throws Throwable 
+    {
+        // getName will return the name of the method being run
+        if (this.isDisabledInThisEnvironment(this.getName())) 
+        {
+            logger.info("**** " + this.getClass().getName() + "." + this.getName() + " disabled in this environment: ");
+            return;
+        }
+        
+        // Let JUnit handle execution
+        super.runBare();
+    }
+
+    /**
+     * Should this test run?
+     * @param testMethodName name of the test method
+     * @return whether the test should execute in the current envionment
+     */
+    protected boolean isDisabledInThisEnvironment(String testMethodName) 
+    {
+        return false;
     }
 
     public boolean isOffline(String method)
