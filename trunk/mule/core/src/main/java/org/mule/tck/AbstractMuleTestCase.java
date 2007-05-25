@@ -112,9 +112,9 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     public void run(TestResult result) 
     {
-        if (this.isTestCaseDisabled())
+        if (this.isDisabledInThisEnvironment())
         {
-            junitLogger.info("**** " + this.getClass().getName() + " disabled");
+            junitLogger.info(this.getClass().getName() + " disabled");
             return;
         }
         
@@ -126,7 +126,7 @@ public abstract class AbstractMuleTestCase extends TestCase
      * 
      * @return <code>true</code> if the test class should not be run.
      */
-    protected boolean isTestCaseDisabled()
+    protected boolean isDisabledInThisEnvironment()
     {
         return false;
     }
@@ -143,7 +143,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         // this class has a different implementation
         if (this.isDisabledInThisEnvironment(super.getName())) 
         {
-            junitLogger.warn("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
+            junitLogger.warn(this.getClass().getName() + "." + super.getName() + " disabled in this environment");
             return;
         }
         
@@ -173,8 +173,6 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     protected final void setUp() throws Exception
     {
-        // TODO DO: this logs the infamous text box
-        // logger.info(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
         junitLogger.info("Testing: " + toString());
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
