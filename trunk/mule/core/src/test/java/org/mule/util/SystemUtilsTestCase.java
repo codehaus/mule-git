@@ -23,6 +23,7 @@ public class SystemUtilsTestCase extends AbstractMuleTestCase
         Map env = SystemUtils.getenv();
         assertNotNull(env);
         assertFalse(env.isEmpty());
+        assertSame(env, SystemUtils.getenv());
 
         String envVarToTest = (SystemUtils.IS_OS_WINDOWS ? "Path" : "PATH");
         // This is a hack to catch Cygwin environments; it won't work in cases where
@@ -32,6 +33,7 @@ public class SystemUtilsTestCase extends AbstractMuleTestCase
             String term = (String)env.get("TERM");
             if (term != null && term.equals("cygwin")) envVarToTest = "PATH";
         }
+
         assertNotNull(env.get(envVarToTest));
     }
 

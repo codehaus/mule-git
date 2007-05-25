@@ -38,6 +38,9 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
     // zsh prepends: typeset -x
     private static final String[] UNIX_ENV_PREFIXES = new String[]{"declare -", "typeset -"};
 
+    // the environment of the VM process
+    private static Map environment = null;
+
     /**
      * Get the operating system environment variables. This should work for Windows
      * and Linux.
@@ -46,31 +49,33 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
      */
     public static synchronized Map getenv()
     {
-        Map env = Collections./* <String, String> */EMPTY_MAP;
-
-        try
+        if (environment == null)
         {
-            if (SystemUtils.IS_JAVA_1_4)
+            try
             {
-                // fallback to external process
-                env = getenvJDK14();
+                if (SystemUtils.IS_JAVA_1_4)
+                {
+                    // fallback to external process
+                    environment = Collections.unmodifiableMap(getenvJDK14());
+                }
+                else
+                {
+                    // the following runaround is necessary since we still want to
+                    // compile on JDK 1.4
+                    Class target = System.class;
+                    Method envMethod = target.getMethod("getenv", ArrayUtils.EMPTY_CLASS_ARRAY);
+                    environment = Collections.unmodifiableMap((Map) envMethod.invoke(target, (Class[]) null));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // the following runaround is necessary since we still want to
-                // compile on JDK 1.4
-                Class target = System.class;
-                Method envMethod = target.getMethod("getenv", ArrayUtils.EMPTY_CLASS_ARRAY);
-                env = (Map) envMethod.invoke(target, (Class[] )null);
+                // TODO MULE-863: Is this bad enough to fail?
+                logger.error("Could not access OS environment: ", ex);
+                environment = Collections.EMPTY_MAP;
             }
         }
-        catch (Exception ex)
-        {
-            // TODO MULE-863: Is this bad enough to fail?
-            logger.error("Could not access OS environment: ", ex);
-        }
 
-        return env;
+        return environment;
     }
 
     private static Map getenvJDK14() throws Exception
