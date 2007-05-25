@@ -30,11 +30,11 @@ import org.mule.util.StringMessageUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -120,17 +120,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
     }
 
-    /**
-     * Use this method to do any validation such as check for an installation of a
-     * required server If the current environment does not have the preReqs of the
-     * test return false and the test will be skipped.
-     * 
-     */
-    protected String checkPreReqs()
-    {
-        return null;
-    }
-
     public boolean isOffline(String method)
     {
         if (offline)
@@ -139,18 +128,6 @@ public abstract class AbstractMuleTestCase extends TestCase
                 "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
-    }
-
-    public boolean isPrereqsMet(String method)
-    {
-        prereqs = checkPreReqs();
-        if (prereqs != null)
-        {
-            System.out.println(StringMessageUtils.getBoilerPlate(
-                "WARNING\nPrerequisites for test: " + method + " were not met. skipping test: " + prereqs,
-                '=', 80));
-        }
-        return prereqs == null;
     }
 
     protected final void setUp() throws Exception
@@ -175,10 +152,6 @@ public abstract class AbstractMuleTestCase extends TestCase
             {
                 // We dispose here jut in case
                 disposeManager();
-            }
-            if (!isPrereqsMet(getClass().getName() + ".setUp()"))
-            {
-                return;
             }
             doSetUp();
             if (getTestInfo().getRunCount() == 0)
