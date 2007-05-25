@@ -153,7 +153,7 @@ public abstract class AbstractMuleTestCase extends TestCase
         // this class has a different implementation
         if (this.isDisabledInThisEnvironment(super.getName())) 
         {
-            logger.info("**** " + this.getClass().getName() + "." + this.getName() + " disabled in this environment: ");
+            logger.info("**** " + this.getClass().getName() + "." + super.getName() + " disabled in this environment: ");
             return;
         }
         
@@ -175,7 +175,7 @@ public abstract class AbstractMuleTestCase extends TestCase
     {
         if (offline)
         {
-            System.out.println(StringMessageUtils.getBoilerPlate(
+            logger.warn(StringMessageUtils.getBoilerPlate(
                 "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
@@ -183,7 +183,7 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     protected final void setUp() throws Exception
     {
-        System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
+        logger.info(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
 
