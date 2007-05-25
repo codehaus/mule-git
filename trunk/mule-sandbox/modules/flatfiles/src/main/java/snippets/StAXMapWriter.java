@@ -3,7 +3,6 @@ package snippets;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,10 +21,10 @@ public class StAXMapWriter
     private String datasetIdentifier = "dataset";
 
     // the default tag for a single "record"
-    private String defaultRecordIdentifier = "record";
+    private String recordIdentifier = "record";
 
-    // this allows for a simple, customizable key->tag mapping
-    private Map keyToElementMapping = Collections.EMPTY_MAP;
+    // the default tag for a single "element"
+    private String elementIdentifier = "element";
 
     // XMLOutputFactory should be kept around
     private final XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -48,43 +47,30 @@ public class StAXMapWriter
     }
 
     // identifier for each new "record"
-    public String getDefaultRecordIdentifier()
+    public String getRecordIdentifier()
     {
-        return defaultRecordIdentifier;
+        return recordIdentifier;
     }
 
-    // this configures the default record identifier
-    public void setDefaultRecordIdentifier(String identifier)
+    // this configures the record identifier
+    public void setRecordIdentifier(String identifier)
     {
-        defaultRecordIdentifier = identifier;
-    }
-
-    // identifier for this particular Map
-    public String getRecordIdentifier(Map data)
-    {
-        return (data.containsKey("mumble") ? "address" : this.getDefaultRecordIdentifier());
+        recordIdentifier = identifier;
     }
 
     // overridable method to retrieve the XML tag for a Map key
     // we also normalize from non-String keys (very simplistic)
-    public String getElementIdentifier(Map.Entry entry)
+    public String getElementIdentifier()
     {
-        Object key = entry.getKey();
-        String elementIdentifier = (String) keyToElementMapping.get(key);
-        return (elementIdentifier != null ? elementIdentifier : key.toString());
+        return elementIdentifier;
     }
 
-    public void setElementIdentifiers(Map keyToTagMapping)
+    public void setElementIdentifiers(String identifier)
     {
-        this.keyToElementMapping = keyToTagMapping;
+        this.elementIdentifier = identifier;
     }
 
-    public String getElementValue(Map.Entry entry)
-    {
-        return entry.getValue().toString();
-    }
-
-    public void writeMapsToXMLStream(List maps, OutputStream out) throws XMLStreamException
+    public void writeMaps(List maps, OutputStream out) throws XMLStreamException
     {
         XMLStreamWriter streamWriter = null;
 
@@ -105,7 +91,7 @@ public class StAXMapWriter
             // write all "records"
             for (Iterator i = maps.iterator(); i.hasNext();)
             {
-                this.writeMapToXMLStream((Map) i.next(), streamWriter);
+                this.writeMap((Map) i.next(), streamWriter);
             }
 
             // close the dataset
@@ -138,19 +124,26 @@ public class StAXMapWriter
 
     }
 
-    public void writeMapToXMLStream(Map record, XMLStreamWriter streamWriter) throws XMLStreamException
+    public void writeMap(Map record, XMLStreamWriter streamWriter) throws XMLStreamException
     {
         // begin a single "record"
-        streamWriter.writeStartElement(this.getRecordIdentifier(record));
+        streamWriter.writeStartElement(this.getRecordIdentifier());
 
         // now write each key/value pair
         for (Iterator i = record.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry e = (Map.Entry) i.next();
-            streamWriter.writeAttribute(this.getElementIdentifier(e), this.getElementValue(e));
+            this.writeMapElement((Map.Entry) i.next(), streamWriter);
         }
 
         // close the record element
+        streamWriter.writeEndElement();
+    }
+
+    public void writeMapElement(Map.Entry element, XMLStreamWriter streamWriter) throws XMLStreamException
+    {
+        streamWriter.writeStartElement(getElementIdentifier());
+        streamWriter.writeAttribute("name", element.getKey().toString());
+        streamWriter.writeCharacters(element.getValue().toString());
         streamWriter.writeEndElement();
     }
 
@@ -159,29 +152,19 @@ public class StAXMapWriter
         // our writer
         StAXMapWriter writer = new StAXMapWriter();
 
-        // configure key mapping
-        Map keyMapping = Collections.singletonMap("foo", "hanz");
-        writer.setElementIdentifiers(keyMapping);
-
         List maps = new ArrayList();
 
         // create a map with data for a single "record"
         Map data1 = new HashMap();
-        // remember that the foo key will result in a different element
         data1.put("foo", "Hanz");
         data1.put("bar", "bar");
         data1.put("baz", "baz");
         maps.add(data1);
 
-        Map data2 = new HashMap(data1);
-        // add a key which will result in a different root element
-        data2.put("mumble", "mumble");
-        maps.add(data2);
-
         // write data to output stream
         try
         {
-            writer.writeMapsToXMLStream(maps, System.out);
+            writer.writeMaps(maps, System.out);
             System.out.println();
         }
         catch (XMLStreamException sex)
