@@ -25,7 +25,7 @@ Please enter your name:
 </form>
 <p/>
 <table border="1" bordercolor="#990000"  align="left">
-<tr><td>For more information about Hello world example go <a target="_blank" href="http://mule.mulesource.org/Hello+World+Example">here</a>.<br/>
+<tr><td>For more information about Hello world example go <a target="_blank" href="http://www.muledocs.org/Hello+World+Example">here</a>.<br/>
 To view the source and configuration go <a target="_blank" href="http://svn.mule.codehaus.org/browse/mule/tags/mule-1.4.1/examples/hello/">here</a>.</td></tr>
 </table>
 </body>
