@@ -5,7 +5,6 @@
 
 <mule-configuration id="Test_Multiple_Connectors" version="1.0">
 
-    <!--<mule-environment-properties serverUrl="http://localhost:60504"/>-->
     <mule-environment-properties serverUrl="tcp://localhost:60504?connector=tcpConnector2"/>
 
     <connector name="tcpConnector1" className="org.mule.providers.tcp.TcpConnector"/>

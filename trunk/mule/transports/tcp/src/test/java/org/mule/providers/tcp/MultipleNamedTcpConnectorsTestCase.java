@@ -24,3 +24,4 @@ public class MultipleNamedTcpConnectorsTestCase extends FunctionalTestCase
         // no-op, the initialization must not fail.
     }
 }
+
