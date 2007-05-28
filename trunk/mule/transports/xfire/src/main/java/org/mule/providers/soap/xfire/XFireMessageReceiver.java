@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.jws.WebService;
 
 import javax.xml.namespace.QName;
 
@@ -65,18 +64,6 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
             // check if there is the namespace property on the component
             String namespace = (String)component.getDescriptor().getProperties().get(
                 SoapConstants.SOAP_NAMESPACE_PROPERTY);
-            
-            // check for namespace set as annotation
-            if (namespace == null)
-            {
-                if (connector.isEnableJSR181Annotations())
-                {
-                    if (component.getDescriptor().getImplementationClass().isAnnotationPresent(WebService.class))
-                    {
-                        namespace = ((WebService)component.getDescriptor().getImplementationClass().getAnnotation(javax.jws.WebService.class)).targetNamespace();
-                    }
-                }
-            }
             
             if (namespace == null || namespace.equalsIgnoreCase(""))
             {
