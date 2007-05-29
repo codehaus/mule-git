@@ -12,8 +12,10 @@ package org.mule.providers.jms.activemq;
 
 import org.mule.providers.ConnectException;
 import org.mule.providers.jms.JmsConnector;
+import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import javax.jms.Connection;
 
@@ -38,22 +40,41 @@ public class ActiveMqJmsConnector extends JmsConnector
     {
         try
         {
-            final Connection conn = getConnection();
-            if (conn != null)
+            Connection connection = getConnection();
+            if (connection == null)
             {
-                final Class clazz = conn.getClass();
-                final Method cleanupMethod = clazz.getMethod("cleanup", null);
+                return;
+            }
+
+            final Class clazz = connection.getClass();
+            Method cleanupMethod;
+            if (Proxy.isProxyClass(clazz))
+            {
+                ConnectionFactoryWrapper.ConnectionInvocationHandler handler =
+                        (ConnectionFactoryWrapper.ConnectionInvocationHandler) Proxy.getInvocationHandler(connection);
+                // this is really an XA connection, bypass the java.lang.reflect.Proxy as it
+                // can't delegate to non-interfaced methods (like proprietary 'cleanup' one)
+                // TODO check if CGlib will manage to enhance the AMQ connection class,
+                // there are no final methods, but a number of private ones, though
+                connection = (Connection) handler.getTargetObject();
+                Class realConnectionClass = connection.getClass();
+                cleanupMethod = realConnectionClass.getMethod("cleanup", null);
+            }
+            else
+            {
+                cleanupMethod = clazz.getMethod("cleanup", null);
+            }
+
+            try
+            {
                 if (cleanupMethod != null)
                 {
-                    try
-                    {
-                        cleanupMethod.invoke(conn, null);
-                    }
-                    finally
-                    {
-                        conn.close();
-                    }
+                    cleanupMethod.invoke(connection, null);
                 }
+            }
+            finally
+            {
+                connection.close();
             }
         }
         catch (Exception e)
