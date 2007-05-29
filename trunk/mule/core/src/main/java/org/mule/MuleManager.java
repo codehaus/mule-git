@@ -459,16 +459,9 @@ public class MuleManager implements UMOManager
             queueManager = null;
         }
 
-        if (!config.isEmbedded() && startDate > 0)
+        if ((startDate > 0) && logger.isInfoEnabled())
         {
-            if (logger.isInfoEnabled())
-            {
-                logger.info(getEndSplash());
-            }
-            else
-            {
-                System.out.println(getEndSplash());
-            }
+            logger.info(this.getEndSplash());
         }
 
         config = new MuleConfiguration();
@@ -897,16 +890,9 @@ public class MuleManager implements UMOManager
 
             started.set(true);
             starting.set(false);
-            if (!config.isEmbedded())
+            if (logger.isInfoEnabled())
             {
-                if (logger.isInfoEnabled())
-                {
-                    logger.info(getStartSplash());
-                }
-                else
-                {
-                    System.out.println(getStartSplash());
-                }
+                logger.info(this.getStartSplash());
             }
             fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STARTED));
         }
@@ -1159,7 +1145,7 @@ public class MuleManager implements UMOManager
      *
      * @return a string summary of the server information
      */
-    protected String getStartSplash()
+    private String getStartSplash()
     {
         String notset = CoreMessages.notSet().getMessage();
 
