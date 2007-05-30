@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.mule.tools</groupId>
         <artifactId>mule-tools</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.4.1</version>
     </parent>
     <artifactId>bobberplus</artifactId>
     <packaging>maven-plugin</packaging>
     <name>BobberPlus Archetype Plugin</name>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
     <description>Extended Bobber Custom Archetype Creator</description>
 
     <dependencies>
