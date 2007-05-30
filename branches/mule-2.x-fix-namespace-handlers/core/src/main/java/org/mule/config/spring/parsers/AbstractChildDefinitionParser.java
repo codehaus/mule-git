@@ -61,6 +61,14 @@ public abstract class AbstractChildDefinitionParser extends AbstractMuleSingleBe
         return ((Element) element.getParentNode()).getAttribute(ATTRIBUTE_NAME);
     }
 
+    /**
+     * Parent in Mule's terms, not global Spring's.
+     */
+    protected boolean hasParent(Element element)
+    {
+        return StringUtils.isNotBlank(getParentBeanName(element));
+    }
+
     protected String getParentBeanId(Element element)
     {
         return ((Element) element.getParentNode()).getAttribute(ATTRIBUTE_NAME);

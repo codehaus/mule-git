@@ -9,24 +9,34 @@
  */
 package org.mule.providers.ssl.config;
 
-import org.mule.config.spring.parsers.CompoundElementDefinitionParser;
-import org.mule.config.spring.parsers.SingleElementDefinitionParser;
+import org.mule.config.spring.handlers.AbstractIgnorableNamespaceHandler;
 import org.mule.providers.ssl.SslConnector;
 
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-
 /**
- * Reigsters a Bean Definition Parser for handling <code><ssl:connector></code> elements.
+ * Registers a Bean Definition Parser for handling <code><ssl:connector></code> elements.
  */
-public class SslNamespaceHandler extends NamespaceHandlerSupport
+public class SslNamespaceHandler extends AbstractIgnorableNamespaceHandler
 {
     public void init()
     {
-        registerBeanDefinitionParser("connector", new SingleElementDefinitionParser(SslConnector.class, true));
-        registerBeanDefinitionParser("ssl-key-store", new CompoundElementDefinitionParser());
-        registerBeanDefinitionParser("ssl-client", new CompoundElementDefinitionParser());
-        registerBeanDefinitionParser("ssl-server", new CompoundElementDefinitionParser());
-        registerBeanDefinitionParser("ssl-protocol-handler", new CompoundElementDefinitionParser());
+        // All nested elements are now in this parser's postProcess()...
+        registerBeanDefinitionParser("connector", new SslDefinitionParser(SslConnector.class, true));
+        //registerBeanDefinitionParser("ssl-key-store", new CompoundElementDefinitionParser());
+        //registerBeanDefinitionDecorator("ssl-client", new CompoundElementDefinitionDecorator());
+        //registerBeanDefinitionParser("ssl-client", new CompoundElementDefinitionParser());
+        //registerBeanDefinitionParser("ssl-server", new CompoundElementDefinitionParser());
+        //registerBeanDefinitionParser("ssl-protocol-handler", new CompoundElementDefinitionParser());
+
+        /*
+            These MUST be excluded, as they don't follow a 1:1 element:bean convention. The parser
+            handles them in postProcess().
+
+            I wonder if we could enforce the postProcess() & registerIgnoredElement() binding...
+         */
+        registerIgnoredElement("ssl-key-store");
+        registerIgnoredElement("ssl-client");
+        registerIgnoredElement("ssl-server");
+        registerIgnoredElement("ssl-protocol-handler");
     }
     
 }
