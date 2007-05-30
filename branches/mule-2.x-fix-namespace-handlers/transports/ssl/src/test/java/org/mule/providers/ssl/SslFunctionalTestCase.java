@@ -13,7 +13,8 @@ import java.util.Map;
 
 public class SslFunctionalTestCase extends FunctionalTestCase {
 
-    protected static String TEST_MESSAGE = "Test SSL Request (R�dgr�d), 57 = \u06f7\u06f5 in Arabic";
+    protected static String TEST_MESSAGE = "Test SSL Request = \u06f7\u06f5 in Arabic";
+    // TODO AC
     private static int NUM_MESSAGES = 1;   // MULE-1758 - increase to 100 once fixed!!
 
     public SslFunctionalTestCase()
