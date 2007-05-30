@@ -22,10 +22,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * Contructs a single bean object from a element. This parser can be configured to automatically set the class of the
- * object, the init and destroy methods and whether this object is a singleton.
- */
 public class SslDefinitionParser extends AbstractChildBeanDefinitionParser
 {
     /**

@@ -9,10 +9,6 @@
        http://www.mulesource.org/schema/mule/ssl/2.0 META-INF/mule-ssl.xsd">
 
     <ssl:connector name="SslConnector">
-        <!--
-            For demo purposes only some elements are handled at the moment,
-            rest commented out.
-        -->
         <ssl:ssl-client
                 clientKeyStore="clientKeyStore"
                 clientKeyStorePassword="mulepassword"/>
