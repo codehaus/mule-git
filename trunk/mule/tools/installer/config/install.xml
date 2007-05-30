@@ -7,12 +7,12 @@
     <!-- The info section -->
     <info>
         <appname>Mule</appname>
-        <appversion>1.4.1</appversion>
+        <appversion>1.4.2-SNAPSHOT</appversion>
         <authors>
             <author name="MuleSource" email="support@mulesource.com"/>
         </authors>
         <url>http://mule.mulesource.org/</url>
-        <javaversion>1.4.1</javaversion>
+        <javaversion>1.4.2</javaversion>
     </info>
     
     <!-- The gui preferences indication -->
