@@ -23,6 +23,19 @@
         <module>jca-jboss</module>
     </modules>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <!-- Do not publish (empty) source jars -->
+                    <attach>false</attach>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <!-- TODO dirk: I'm pretty sure that including the examples in the parent pom
             is not what we want. Only some distros want them, include them there
