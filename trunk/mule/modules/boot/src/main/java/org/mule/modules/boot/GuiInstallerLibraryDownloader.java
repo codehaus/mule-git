@@ -75,7 +75,7 @@ public class GuiInstallerLibraryDownloader
         // get a Method ref from the normal class, but invoke on a proprietary parent
         // object,
         // as this method is usually protected in those classloaders
-        Class refClass = URLClassLoader.class;
+        Class refClass = URLClassLoader.class;                            
         Method methodAddUrl = refClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         methodAddUrl.setAccessible(true);
         for (Iterator it = urls.iterator(); it.hasNext();)
