@@ -10,6 +10,17 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.soap.SoapConstants;
+import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.provider.UMOConnector;
+import org.mule.util.ClassUtils;
+import org.mule.util.MapUtils;
+import org.mule.util.StringUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -22,16 +33,6 @@ import org.codehaus.xfire.annotations.WebAnnotations;
 import org.codehaus.xfire.annotations.WebServiceAnnotation;
 import org.codehaus.xfire.handler.Handler;
 import org.codehaus.xfire.service.Service;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.soap.SoapConstants;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.util.ClassUtils;
-import org.mule.util.MapUtils;
-import org.mule.util.StringUtils;
 
 /**
  * Used to register an Xfire endpoint registered with Mule and associated with a
@@ -71,7 +72,7 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
             if (connector.isEnableJSR181Annotations())
             {
                 WebAnnotations wa = (WebAnnotations)ClassUtils.instanciateClass(
-                    connector.CLASSNAME_ANNOTATIONS, null, this.getClass());
+                    XFireConnector.CLASSNAME_ANNOTATIONS, null, this.getClass());
                 WebServiceAnnotation webServiceAnnotation = wa.getWebServiceAnnotation(component
                     .getDescriptor().getImplementationClass());
                 namespace = webServiceAnnotation.getTargetNamespace();
