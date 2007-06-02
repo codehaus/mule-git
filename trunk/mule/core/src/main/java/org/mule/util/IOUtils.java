@@ -10,11 +10,15 @@
 
 package org.mule.util;
 
+import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
@@ -248,5 +252,25 @@ public class IOUtils extends org.apache.commons.io.IOUtils
                 return var;
             }
         }
+    }
+    
+    /**
+     * Returns the stack trace as a single string.
+     */
+    public static String getStackTrace(Throwable exception)
+    {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        exception.printStackTrace(new PrintWriter(os));
+        
+        String stackTrace;
+        try
+        {
+            stackTrace = os.toString(MuleManager.getConfiguration().getEncoding());
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            stackTrace = os.toString();
+        }
+        return stackTrace;
     }
 }
