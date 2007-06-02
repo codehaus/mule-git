@@ -11,11 +11,8 @@
 package org.mule.tck;
 
 import org.mule.MuleManager;
-import org.mule.util.ClassUtils;
 import org.mule.config.ConfigurationBuilder;
-import org.mule.umo.manager.DefaultWorkListener;
-
-import javax.resource.spi.work.WorkEvent;
+import org.mule.util.ClassUtils;
 
 /**
  * Is a base tast case for tests that initialise Mule using a configuration file. The
@@ -99,30 +96,4 @@ public abstract class FunctionalTestCase extends AbstractMuleTestCase
     }
 
     protected abstract String getConfigResources();
-
-    public class TestingWorkListener extends DefaultWorkListener
-    {
-        protected void handleWorkException(WorkEvent event, String type)
-        {
-            super.handleWorkException(event, type);
-            if (event.getException() != null)
-            {
-                Throwable t = event.getException().getCause();
-                if (t != null)
-                {
-
-                    if (t instanceof Error)
-                    {
-                        throw (Error)t;
-                    }
-                    else if (t instanceof RuntimeException)
-                    {
-                        throw (RuntimeException)t;
-                    }
-                }
-
-            }
-        }
-    }
-
 }
