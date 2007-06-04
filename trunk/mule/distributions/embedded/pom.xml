@@ -50,4 +50,25 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-examples-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-modules-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transports-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
 </project>
