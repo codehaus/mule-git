@@ -9,7 +9,7 @@
         <endpoint name="restFileEndpoint" address="file://./.mule/restFile"/>
     </global-endpoints>
 
-    <model name="samples" type="inherited">
+    <model name="samples">
         <mule-descriptor name="RestTesterUMO"
             inboundEndpoint="servlet://restPUTTest"
             outboundEndpoint="restFileEndpoint" 
