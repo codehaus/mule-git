@@ -46,6 +46,11 @@
         </dependency>
         <dependency>
             <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-loanbroker-common-tests</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-credit-agency</artifactId>
             <version>${version}</version>
         </dependency>
