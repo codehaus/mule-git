@@ -11,8 +11,8 @@
     <property environment="env"/>
 
     <property name="dir.java" value="src"/>
-    <property name="dir.build" value="build"/>
-    <property name="dir.classes" value="build/classes"/>
+    <property name="dir.build" value="target"/>
+    <property name="dir.classes" value="${dir.build}/classes"/>
     <property name="dir.common" value="../common"/>
 
     <target name="clean"
