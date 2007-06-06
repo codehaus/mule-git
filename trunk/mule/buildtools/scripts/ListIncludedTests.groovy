@@ -8,7 +8,7 @@
     $Id: ListExcludedTests.groovy 5406 2007-03-04 17:58:50Z aperepel $
 */
 
-def muleRoot = '../../..'
+def muleRoot = '../..'
 
 
 def parser = new XmlSlurper()
@@ -21,6 +21,7 @@ new File(muleRoot).eachFileRecurse { file ->
         def testNames = []
         
         splash project.name
+
         // custom tests directory locations not supported at the moment
         def testsDir = new File(file.parent, 'src/test/java/')
         
@@ -30,6 +31,7 @@ new File(muleRoot).eachFileRecurse { file ->
             // TODO fetch these from a top level pom
             def topLevelExcludes = [
                             '**/Abstract*TestCase.java',
+                            '**/target/**'
                             ]
             
             def moduleExcludes = []
