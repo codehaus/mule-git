@@ -44,11 +44,11 @@
             <artifactId>mule-example-loanbroker-common</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-common-tests</artifactId>
             <version>${version}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-credit-agency</artifactId>
@@ -79,11 +79,11 @@
             <artifactId>mule-example-voipservice</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-webapp</artifactId>
             <version>${version}</version>
             <type>war</type>
-        </dependency>
+        </dependency> -->
     </dependencies>
 </project>

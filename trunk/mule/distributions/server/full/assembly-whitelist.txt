@@ -64,7 +64,6 @@ mule-example-errorhandler
 mule-example-hello
 mule-example-loanbroker-bpm
 mule-example-loanbroker-common
-mule-example-loanbroker-common-tests
 mule-example-loanbroker-credit-agency
 mule-example-loanbroker-esb
 mule-example-loanbroker-esn
