@@ -42,8 +42,8 @@
             <fileset dir="${dir.mule.home}/lib">
                 <include name="**/*.jar"/>
             </fileset>
-            <!-- Include dependencies --> 
-           <fileset dir="${dir.common}/build">
+            <!-- Include dependencies -->
+           <fileset dir="${dir.common}/${dir.build}">
                 <include name="*.jar"/>
             </fileset> 
        </path>
