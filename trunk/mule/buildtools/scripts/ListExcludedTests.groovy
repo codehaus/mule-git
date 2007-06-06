@@ -4,7 +4,7 @@
 
     $Id$
 */
-def muleRoot = '../../..'
+def muleRoot = '../..'
 def parser = new XmlSlurper()
 
 def ant = new AntBuilder()
