@@ -52,10 +52,5 @@
          different dependency sets, configure depdencies in the lower level POMs.
     -->
     <dependencies>
-        <dependency>
-            <groupId>org.mule.examples</groupId>
-            <artifactId>mule-example-webapp</artifactId>
-            <version>${version}</version>
-        </dependency>
     </dependencies>
 </project>

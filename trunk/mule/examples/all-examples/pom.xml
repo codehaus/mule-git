@@ -83,6 +83,7 @@
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-webapp</artifactId>
             <version>${version}</version>
+            <type>war</type>
         </dependency>
     </dependencies>
 </project>
