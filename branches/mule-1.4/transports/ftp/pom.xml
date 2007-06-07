@@ -30,7 +30,7 @@
         <dependency>
             <artifactId>commons-net</artifactId>
             <groupId>commons-net</groupId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <artifactId>oro</artifactId>
