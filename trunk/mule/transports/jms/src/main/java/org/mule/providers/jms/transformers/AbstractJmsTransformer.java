@@ -57,7 +57,21 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
             }
             else
             {
-                result = JmsMessageUtils.toMessage(src, this.getSession());
+            	Session session = null;
+            	
+            	try
+            	{
+            		session = this.getSession();
+                    result = JmsMessageUtils.toMessage(src, session);
+            	}
+            	finally
+            	{
+            		if( session != null )
+            		{
+            		    session.close();
+            		}
+            	}
+
             }
 
             // set the event properties on the Message
