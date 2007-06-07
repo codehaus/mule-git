@@ -15,6 +15,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
@@ -46,6 +47,12 @@ public class WrapperManagerAgent implements UMOAgent {
      */
     public static final String WRAPPER_OBJECT_NAME = "name=WrapperManager";
 
+    /**
+     * For cases when Mule is embedded in another process and that external process
+     * had registered the MBean. 
+     */
+    public static final String DEFAULT_WRAPPER_MBEAN_NAME = "org.tanukisoftware.wrapper:type=WrapperManager";
+
     private static final Log logger = LogFactory.getLog(WrapperManagerAgent.class);
 
     /**
@@ -67,72 +74,64 @@ public class WrapperManagerAgent implements UMOAgent {
     /* @see org.mule.umo.lifecycle.Initialisable#initialise() */
     public void initialise() throws InitialisationException {
 
-        /*
-           Perform an extra check ourselves. If 'wrapper.native_library' property has
-           not been set, which is the case for embedded scenarios, don't even try to
-           construct the wrapper manager bean, as it performs a number of checks internally
-           and outputs a very verbose warning.
-         */
-        boolean launchedByWrapper;
-        if (System.getProperty(WRAPPER_SYSTEM_PROPERTY_NAME) == null)
-        {
-            launchedByWrapper = false;
-        }
-        else
-        {
-            lazyInitWrapperManager();
-            launchedByWrapper = ((WrapperManagerMBean) wrapperManagerRef.get()).isControlledByNativeWrapper();
-        }
-
-        if (!launchedByWrapper)
-        {
-            logger.info("This JVM hasn't been launched by the wrapper, the agent will not run.");
-            try
-            {
-                // remove the agent from the list, it's not functional
-                MuleManager.getInstance().unregisterAgent(this.getName());
-            }
-            catch (UMOException e) {
-                // not interested, really
-            }
-            return;
-        }
-
-
-        final List servers = MBeanServerFactory.findMBeanServer(null);
-        if (servers.isEmpty())
-        {
-            // TODO construct proper exception
-            throw new RuntimeException("no mbean servers found");
-        }
-
         try
         {
+            final List servers = MBeanServerFactory.findMBeanServer(null);
+            if (servers.isEmpty())
+            {
+                throw new InitialisationException(ManagementMessages.noMBeanServerAvailable(), this);
+            }
+
             mBeanServer = (MBeanServer) servers.get(0);
+
+            /*
+              Perform an extra check ourselves. If 'wrapper.native_library' property has
+              not been set, which is the case for embedded scenarios, don't even try to
+              construct the wrapper manager bean, as it performs a number of checks internally
+              and outputs a very verbose warning.
+            */
+            boolean launchedByWrapper;
+            if (System.getProperty(WRAPPER_SYSTEM_PROPERTY_NAME) == null)
+            {
+                launchedByWrapper = false;
+            }
+            // Check if an external process registered a wrapper MBean under default name.
+            else if (mBeanServer.isRegistered(jmxSupport.getObjectName(DEFAULT_WRAPPER_MBEAN_NAME)))
+            {
+                logger.info("Mule is embedded in a container already launched by a wrapper." +
+                            "Duplicates will not be registered. Use the " + DEFAULT_WRAPPER_MBEAN_NAME + " MBean " +
+                            "instead for control.");
+                unregisterMeQuietly();
+                return;
+            }
+            else
+            {
+                lazyInitWrapperManager();
+                launchedByWrapper = ((WrapperManagerMBean) wrapperManagerRef.get()).isControlledByNativeWrapper();
+            }
+
+            if (!launchedByWrapper)
+            {
+                logger.info("This JVM hasn't been launched by the wrapper, the agent will not run.");
+                unregisterMeQuietly();
+                return;
+            }
 
             wrapperName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + WRAPPER_OBJECT_NAME);
 
             unregisterMBeansIfNecessary();
             mBeanServer.registerMBean(wrapperManagerRef.get(), wrapperName);
         }
-
+        catch (InitialisationException iex)
+        {
+            // rethrow
+            throw iex;
+        }
         catch (Exception e)
         {
             throw new InitialisationException(
                 CoreMessages.failedToStart("wrapper agent"), e, this);
         }
-    }
-
-    protected void lazyInitWrapperManager() {
-        WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
-
-        if (wm != null)
-        {
-            return;
-        }
-
-        wm = new WrapperManager();
-        wrapperManagerRef.compareAndSet(null, wm);
     }
 
     /* @see org.mule.umo.lifecycle.Startable#start() */
@@ -144,21 +143,6 @@ public class WrapperManagerAgent implements UMOAgent {
     public void stop() throws UMOException
     {
         // no-op
-    }
-
-    /**
-     * Unregister all MBeans if there are any left over the old deployment
-     */
-    protected void unregisterMBeansIfNecessary()
-        throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
-        if (mBeanServer == null || wrapperName != null)
-        {
-            return;
-        }
-        if (mBeanServer.isRegistered(wrapperName))
-        {
-            mBeanServer.unregisterMBean(wrapperName);
-        }
     }
 
     /* @see org.mule.umo.lifecycle.Disposable#dispose() */
@@ -214,4 +198,48 @@ public class WrapperManagerAgent implements UMOAgent {
     {
         this.name = name;
     }
+
+    protected void lazyInitWrapperManager() {
+        WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();
+
+        if (wm != null)
+        {
+            return;
+        }
+
+        wm = new WrapperManager();
+        wrapperManagerRef.compareAndSet(null, wm);
+    }
+
+    /**
+     * Unregister all MBeans if there are any left over the old deployment
+     */
+    protected void unregisterMBeansIfNecessary()
+        throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
+        if (mBeanServer == null || wrapperName == null)
+        {
+            return;
+        }
+        if (mBeanServer.isRegistered(wrapperName))
+        {
+            mBeanServer.unregisterMBean(wrapperName);
+        }
+    }
+
+    /**
+     * Quietly unregister ourselves.
+     */
+    protected void unregisterMeQuietly()
+    {
+        try
+        {
+            // remove the agent from the list, it's not functional
+            MuleManager.getInstance().unregisterAgent(this.getName());
+        }
+        catch (UMOException e)
+        {
+            // not interested, really
+        }
+    }
+
 }
