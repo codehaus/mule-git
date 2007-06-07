@@ -70,8 +70,9 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
     public TransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
-        // TODO AP: check how frequency=0 works with the scheduler, see setFrequency(long)
-        super(umoConnector, component, endpoint, 0);
+        // TODO AP: find appropriate value for polling frequency with the scheduler;
+        // see setFrequency/setTimeUnit & VMMessageReceiver for more
+        super(umoConnector, component, endpoint);
         this.connector = (JmsConnector) umoConnector;
         this.timeout = endpoint.getTransactionConfig().getTimeout();
 
@@ -83,6 +84,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
             this.reuseConsumer = true;
             this.reuseSession = true;
         }
+
         // User may override reuse strategy if necessary
         this.reuseConsumer = MapUtils.getBooleanValue(endpoint.getProperties(), "reuseConsumer",
             this.reuseConsumer);
@@ -95,10 +97,9 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         // It will start multiple threads, depending on the threading profile.
         final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
-        // If we're using topics We dont want to use multiple receivers as we'll get
-        // the same message
-        // multiple times
-        useMultipleReceivers = !topic;
+        // If we're using topics we don't want to use multiple receivers as we'll get
+        // the same message multiple times
+        this.setUseMultipleTransactedReceivers(!topic);
 
         try
         {

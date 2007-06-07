@@ -41,7 +41,8 @@ public class StreamMessageReceiver extends AbstractPollingMessageReceiver
                                  UMOEndpoint endpoint,
                                  long checkFrequency) throws InitialisationException
     {
-        super(connector, component, endpoint, checkFrequency);
+        super(connector, component, endpoint);
+        this.setFrequency(checkFrequency);
 
         this.connector = (StreamConnector)connector;
         String streamName = endpoint.getEndpointURI().getAddress();
