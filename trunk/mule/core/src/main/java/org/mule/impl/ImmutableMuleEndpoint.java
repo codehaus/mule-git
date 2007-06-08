@@ -39,8 +39,11 @@ import org.mule.util.StringUtils;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -434,14 +437,42 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     public String toString()
     {
+        // Use the interface to retrieve the string and set
+        // the endpoint uri to a default value
+        String sanitizedEndPointUri = endpointUri.toString();
+        URI uri = endpointUri.getUri();
+        //
+        // The following will further sanitize the endpointuri by removing
+        // the embedded password. This will only remove the password if the
+        // uri contains all the necessary information to successfully rebuild the url
+        if (uri != null && (uri.getRawUserInfo() != null) && (uri.getScheme() != null) 
+            && (uri.getHost() != null) && (uri.getRawPath() != null)) 
+        {
+            // build a pattern up that matches what we need tp strip out the password
+            Pattern sanitizerPattern = Pattern.compile("(.*):.*");
+            Matcher sanitizerMatcher = sanitizerPattern.matcher(uri.getRawUserInfo());
+            if (sanitizerMatcher.matches()) 
+            {
+               sanitizedEndPointUri = new StringBuffer(uri.getScheme())
+                   .append("://").append(sanitizerMatcher.group(1))
+                   .append(":<password>").append("@")
+                   .append(uri.getHost()).append(uri.getRawPath()).toString();
+            }
+            if ( uri.getRawQuery() != null)
+            {
+               sanitizedEndPointUri = sanitizedEndPointUri + "?" + uri.getRawQuery();
+            }
+
+        }
+
         return ClassUtils.getClassName(this.getClass()) + "{connector=" + connector + ", endpointUri="
-               + endpointUri + ", transformer=" + transformer + ", name='" + name + "'" + ", type='" + type
-               + "'" + ", properties=" + properties + ", transactionConfig=" + transactionConfig
-               + ", filter=" + filter + ", deleteUnacceptedMessages=" + deleteUnacceptedMessages
-               + ", initialised=" + initialised + ", securityFilter=" + securityFilter + ", synchronous="
-               + synchronous + ", initialState=" + initialState + ", createConnector=" + createConnector
-               + ", remoteSync=" + remoteSync + ", remoteSyncTimeout=" + remoteSyncTimeout
-               + ", endpointEncoding=" + endpointEncoding + "}";
+               + sanitizedEndPointUri + ", transformer=" + transformer + ", name='" + name + "'" 
+               + ", type='" + type + "'" + ", properties=" + properties + ", transactionConfig=" 
+               + transactionConfig + ", filter=" + filter + ", deleteUnacceptedMessages=" 
+               + deleteUnacceptedMessages + ", initialised=" + initialised + ", securityFilter=" 
+               + securityFilter + ", synchronous=" + synchronous + ", initialState=" + initialState 
+               + ", createConnector=" + createConnector + ", remoteSync=" + remoteSync 
+               + ", remoteSyncTimeout=" + remoteSyncTimeout + ", endpointEncoding=" + endpointEncoding + "}";
     }
 
     /*
