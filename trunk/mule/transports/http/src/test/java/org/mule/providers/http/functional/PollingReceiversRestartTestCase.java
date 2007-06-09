@@ -33,7 +33,7 @@ public class PollingReceiversRestartTestCase extends AbstractMuleTestCase
 
         // well, no way to register notification on the MuleServer, only
         // possible for MuleManager, so just sleep
-        Thread.sleep(2000);
+        Thread.sleep(WAIT_TIME);
 
         UMOManager manager = MuleManager.getInstance();
 
