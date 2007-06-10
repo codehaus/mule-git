@@ -145,9 +145,13 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         {
             long fileAge = ((FileConnector) connector).getFileAge();
             long lastMod = sourceFile.lastModified();
-            long now = (new java.util.Date()).getTime();
-            if ((now - lastMod) < fileAge)
+            long now = System.currentTimeMillis();
+            long thisFileAge = now - lastMod;
+            if (thisFileAge < fileAge)
             {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("The file has not aged enough yet, will return nothing for: " + sourceFile);
+                }
                 return;
             }
         }
