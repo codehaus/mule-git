@@ -109,7 +109,7 @@ public class FileConnector extends AbstractConnector
         if (endpoint.getFilter() != null)
         {
             return endpoint.getEndpointURI().getAddress() + "/"
-                   + ((FilenameWildcardFilter)endpoint.getFilter()).getPattern();
+                   + ((FilenameWildcardFilter) endpoint.getFilter()).getPattern();
         }
         return endpoint.getEndpointURI().getAddress();
     }
@@ -136,12 +136,12 @@ public class FileConnector extends AbstractConnector
         if (props != null)
         {
             // Override properties on the endpoint for the specific endpoint
-            String move = (String)props.get(PROPERTY_MOVE_TO_DIRECTORY);
+            String move = (String) props.get(PROPERTY_MOVE_TO_DIRECTORY);
             if (move != null)
             {
                 moveTo = move;
             }
-            String tempMoveToPattern = (String)props.get(PROPERTY_MOVE_TO_PATTERN);
+            String tempMoveToPattern = (String) props.get(PROPERTY_MOVE_TO_PATTERN);
             if (tempMoveToPattern != null)
             {
                 if (logger.isDebugEnabled())
@@ -151,7 +151,7 @@ public class FileConnector extends AbstractConnector
                 moveToPattern = tempMoveToPattern;
             }
 
-            String tempPolling = (String)props.get(PROPERTY_POLLING_FREQUENCY);
+            String tempPolling = (String) props.get(PROPERTY_POLLING_FREQUENCY);
             if (tempPolling != null)
             {
                 polling = Long.parseLong(tempPolling);
@@ -166,7 +166,7 @@ public class FileConnector extends AbstractConnector
             {
                 logger.debug("set polling frequency to: " + polling);
             }
-            String tempFileAge = (String)props.get(PROPERTY_FILE_AGE);
+            String tempFileAge = (String) props.get(PROPERTY_FILE_AGE);
             if (tempFileAge != null)
             {
                 try
@@ -363,7 +363,7 @@ public class FileConnector extends AbstractConnector
     }
 
     /**
-     * @param fileAge The fileAge in seconds to set.
+     * @param fileAge The fileAge in milliseconds to set.
      */
     public void setFileAge(long fileAge)
     {

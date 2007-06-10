@@ -140,10 +140,10 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         //TODO RM*: This can be put in a Filter. Also we can add an AndFileFilter/OrFileFilter to allow users to
         //combine file filters (since we can only pass a single filter to File.listFiles, we would need to wrap
         //the current And/Or filters to extend {@link FilenameFilter}
-        boolean checkFileAge = ((FileConnector)connector).getCheckFileAge();
+        boolean checkFileAge = ((FileConnector) connector).getCheckFileAge();
         if (checkFileAge)
         {
-            long fileAge = ((FileConnector)connector).getFileAge();
+            long fileAge = ((FileConnector) connector).getFileAge();
             long lastMod = sourceFile.lastModified();
             long now = (new java.util.Date()).getTime();
             if ((now - lastMod) < fileAge)
