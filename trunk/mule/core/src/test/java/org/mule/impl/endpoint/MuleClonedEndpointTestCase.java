@@ -26,8 +26,10 @@ public class MuleClonedEndpointTestCase extends AbstractMuleTestCase
         UMOEndpoint endpoint = new MuleEndpoint("myendpoint", u1, null, null,
             UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 1, null, null);
         endpoint.setResponseTransformer(trans);
-        UMOEndpoint clone = (UMOEndpoint)endpoint.clone();
+        UMOEndpoint clone = (UMOEndpoint) endpoint.clone();
         assertNotNull(clone.getResponseTransformer());
         assertTrue(clone.getResponseTransformer() instanceof StringToByteArray);
+        assertNotSame("Should've not referenced the original, but rather created a copy.",
+                      trans, clone.getResponseTransformer());
     }
 }
