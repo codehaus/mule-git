@@ -80,7 +80,8 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         clone.setTransactionConfig(transactionConfig);
         clone.setFilter(filter);
         clone.setSecurityFilter(securityFilter);
-
+        clone.setResponseTransformer(responseTransformer);
+        
         if (remoteSync != null)
         {
             clone.setRemoteSync(isRemoteSync());
