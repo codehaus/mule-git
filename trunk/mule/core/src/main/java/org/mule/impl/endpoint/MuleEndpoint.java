@@ -10,7 +10,9 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.providers.service.TransportFactory;
 import org.mule.umo.UMOException;
@@ -59,7 +61,8 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
                         String endpointEncoding,
                         Map props)
     {
-        super(name, endpointUri, connector, transformer, type, createConnector, endpointEncoding, props);
+        super(name, endpointUri, connector, transformer, type, createConnector, endpointEncoding,
+            props);
     }
 
     public MuleEndpoint(UMOImmutableEndpoint endpoint)
@@ -80,8 +83,19 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         clone.setTransactionConfig(transactionConfig);
         clone.setFilter(filter);
         clone.setSecurityFilter(securityFilter);
-        clone.setResponseTransformer(responseTransformer);
-        
+        try
+        {
+            if (responseTransformer != null)
+            {
+                clone.setResponseTransformer((UMOTransformer)responseTransformer.clone());
+            }
+        }
+        catch (CloneNotSupportedException e1)
+        {
+            // TODO throw exception instead of suppressing it
+            logger.error(e1.getMessage(), e1);
+        }
+
         if (remoteSync != null)
         {
             clone.setRemoteSync(isRemoteSync());
@@ -124,7 +138,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         {
             throw new IllegalArgumentException(
                 CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(connector.getProtocol(),
-                endpointUri).getMessage());
+                    endpointUri).getMessage());
         }
         this.endpointUri = endpointUri;
         if (endpointUri != null)
@@ -150,7 +164,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         {
             throw new IllegalArgumentException(
                 CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(connector.getProtocol(),
-                endpointUri).getMessage());
+                    endpointUri).getMessage());
         }
         this.connector = connector;
     }
