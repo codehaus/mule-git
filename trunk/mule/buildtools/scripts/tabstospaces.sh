@@ -8,7 +8,10 @@ then
     exit 1
 fi
 
-for file in `find $1 | grep -v \.svn`
+ignore_dirs="\.svn\|CVS"
+source_files="\.java$\|\.xml$\|\.xsd$\|\.xsl$\|\.dtd$\|\.txt$\|\.groovy$\|\.vm$\|\.properties$\|\.jsp$\|\.html$\|\.htm$\|\.sh$\|*README*"
+
+for file in `find $1 | grep -v -e $ignore_dirs | grep -e $source_files`
 do
     if [ -f $file ]
     then
