@@ -8,7 +8,7 @@ then
     exit 1
 fi
 
-for file in `find $1`
+for file in `find $1 | grep -v \.svn`
 do
     if [ -f $file ]
     then
