@@ -308,10 +308,15 @@ Assembly descriptor for the full Mule distribution.
         Libraries
     ============================
     -->
-    
-  <!-- TODO: http://jira.codehaus.org/browse/MASSEMBLY-41 is now fixed. Update to use wildcards. -->
-  <dependencySets>
 
+  <!-- 
+       TODO: http://jira.codehaus.org/browse/MASSEMBLY-41 is now fixed. 
+       Update to use wildcards. 
+
+       Unfortunately we still cannot use wildcards, see
+       http://jira.codehaus.org/browse/MASSEMBLY-220
+  -->
+  <dependencySets>
     <!-- Mule bootstrap -->
     <dependencySet>
       <outputDirectory>lib/boot</outputDirectory>
