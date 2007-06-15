@@ -10,6 +10,8 @@
 
 package org.mule.ide.core.builder;
 
+import org.mule.ide.core.MuleCorePlugin;
+
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
@@ -39,7 +41,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.mule.ide.core.MuleCorePlugin;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;

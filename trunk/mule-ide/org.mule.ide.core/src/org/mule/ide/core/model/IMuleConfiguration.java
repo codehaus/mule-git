@@ -11,8 +11,6 @@
 package org.mule.ide.core.model;
 
 import org.eclipse.core.runtime.IPath;
-import org.mule.ide.core.exception.MuleModelException;
-import org.mule.schema.DocumentRoot;
 
 /**
  * Wraps the details of a single mule configuration file.
@@ -46,12 +44,4 @@ public interface IMuleConfiguration extends IMuleModelElement, Comparable {
      * @return the project-relative path
      */
     public IPath getFilePath();
-
-    /**
-     * Get the underlying EMF model document root object.
-     *
-     * @return the EMF model
-     * @throws MuleModelException
-     */
-    public DocumentRoot getConfigDocument() throws MuleModelException;
 }

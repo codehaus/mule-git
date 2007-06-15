@@ -10,6 +10,10 @@
 
 package org.mule.ide.core.jobs;
 
+import org.mule.ide.core.MuleCorePlugin;
+import org.mule.ide.core.model.IMuleConfiguration;
+import org.mule.ide.core.model.IMuleModel;
+
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -17,10 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.mule.ide.core.MuleCorePlugin;
-import org.mule.ide.core.exception.MuleModelException;
-import org.mule.ide.core.model.IMuleConfiguration;
-import org.mule.ide.core.model.IMuleModel;
 
 /**
  * Background job for refreshing the content model from the Mule configuration files.
@@ -61,17 +61,11 @@ public class RefreshMuleConfigurationsJob extends Job {
         while (it.hasNext()) {
             // Getting the config forces a refresh if not initialized.
             IMuleConfiguration config = (IMuleConfiguration) it.next();
-            try {
-                if (this.reloadAll) {
-                    IStatus refreshResult = config.refresh();
-                    if (!refreshResult.isOK()) {
-                        status.add(refreshResult);
-                    }
-                } else {
-                    config.getConfigDocument();
+            if (this.reloadAll) {
+                IStatus refreshResult = config.refresh();
+                if (!refreshResult.isOK()) {
+                    status.add(refreshResult);
                 }
-            } catch (MuleModelException e) {
-                status.add(e.getStatus());
             }
             monitor.worked(1);
         }
