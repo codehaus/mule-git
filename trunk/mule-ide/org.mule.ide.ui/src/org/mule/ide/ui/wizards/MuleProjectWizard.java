@@ -369,6 +369,8 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 			} else {
 				for (int i = 0; i < configs.length; i++) {
 					File configFile = configs[i];
+					if (! configFile.isFile()) continue;
+                    
 					IFile newConfigFile = configFolder.getFile(configFile.getName());
 					try {
 						newConfigFile.create(new FileInputStream(configFile), true, new NullProgressMonitor());
@@ -382,7 +384,7 @@ public class MuleProjectWizard extends Wizard implements INewWizard {
 				}
 			}
 		} catch (CoreException e) {
-			throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "Unsupported endocing", e)); 
+			throw new MuleModelException(MuleCorePlugin.getDefault().createStatus(IStatus.ERROR, "Unexpected problem occurred while getting sample files", e)); 
 		}
 		
 		for (Iterator configIt = addedConfigs.iterator(); configIt.hasNext();) {
