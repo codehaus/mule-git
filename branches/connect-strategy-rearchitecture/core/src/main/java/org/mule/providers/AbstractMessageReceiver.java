@@ -28,9 +28,11 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.UMOTransaction;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
@@ -39,6 +41,7 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.umo.retry.UMORetryCallback;
 import org.mule.util.concurrent.WaitableBoolean;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
@@ -101,25 +104,25 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     private UMOWorkManager workManager;
 
-    protected ConnectionStrategy connectionStrategy;
+    protected UMORetryTemplate connectionStrategy;
 
     /**
      * Creates the Message Receiver
-     * 
+     *
      * @param connector the endpoint that created this listener
      * @param component the component to associate with the receiver. When data is
-     *            received the component <code>dispatchEvent</code> or
-     *            <code>sendEvent</code> is used to dispatch the data to the
-     *            relivant UMO.
-     * @param endpoint the provider contains the endpointUri on which the receiver
-     *            will listen on. The endpointUri can be anything and is specific to
-     *            the receiver implementation i.e. an email address, a directory, a
-     *            jms destination or port address.
+     *                  received the component <code>dispatchEvent</code> or
+     *                  <code>sendEvent</code> is used to dispatch the data to the
+     *                  relivant UMO.
+     * @param endpoint  the provider contains the endpointUri on which the receiver
+     *                  will listen on. The endpointUri can be anything and is specific to
+     *                  the receiver implementation i.e. an email address, a directory, a
+     *                  jms destination or port address.
      * @see UMOComponent
      * @see UMOEndpoint
      */
     public AbstractMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
-        throws InitialisationException
+            throws InitialisationException
     {
         setConnector(connector);
         setComponent(component);
@@ -142,7 +145,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOMessageReceiver#getEndpointName()
      */
     public UMOEndpoint getEndpoint()
@@ -152,7 +155,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOMessageReceiver#getExceptionListener()
      */
     public void handleException(Exception exception)
@@ -170,24 +173,12 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
         }
         connector.getExceptionListener().exceptionThrown(exception);
-        if (exception instanceof ConnectException)
-        {
-            try
-            {
-                logger.warn("Reconnecting after exception: " + exception.getMessage(), exception);
-                connectionStrategy.connect(this);
-            }
-            catch (UMOException e)
-            {
-                connector.getExceptionListener().exceptionThrown(e);
-            }
-        }
     }
 
     /**
      * This method is used to set any additional aand possibly transport specific
      * information on the return message where it has an exception payload.
-     * 
+     *
      * @param message
      * @param exception
      */
@@ -202,7 +193,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             if (logger.isDebugEnabled())
             {
                 logger.debug("Setting error code for: " + connector.getProtocol() + ", " + propName + "="
-                             + code);
+                        + code);
             }
             message.setProperty(propName, code);
         }
@@ -224,7 +215,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             else
             {
                 throw new IllegalArgumentException(CoreMessages.propertyIsNotSupportedType(
-                    "connector", AbstractConnector.class, connector.getClass()).getMessage());
+                        "connector", AbstractConnector.class, connector.getClass()).getMessage());
             }
         }
         else
@@ -241,7 +232,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     public final UMOMessage routeMessage(UMOMessage message) throws UMOException
     {
         return routeMessage(message, (endpoint.isSynchronous() || TransactionCoordination.getInstance()
-            .getTransaction() != null));
+                .getTransaction() != null));
     }
 
     public final UMOMessage routeMessage(UMOMessage message, boolean synchronous) throws UMOException
@@ -251,7 +242,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     }
 
     public final UMOMessage routeMessage(UMOMessage message, UMOTransaction trans, boolean synchronous)
-        throws UMOException
+            throws UMOException
     {
         return routeMessage(message, trans, synchronous, null);
     }
@@ -262,7 +253,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     }
 
     public final UMOMessage routeMessage(UMOMessage message, boolean synchronous, OutputStream outputStream)
-        throws UMOException
+            throws UMOException
     {
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
         return routeMessage(message, tx, tx != null || synchronous, outputStream);
@@ -277,7 +268,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         if (connector.isEnableMessageEvents())
         {
             connector.fireNotification(new MessageNotification(message, endpoint, component.getDescriptor()
-                .getName(), MessageNotification.MESSAGE_RECEIVED));
+                    .getName(), MessageNotification.MESSAGE_RECEIVED));
         }
 
         if (logger.isDebugEnabled())
@@ -289,8 +280,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             try
             {
                 logger.trace("Message Payload: \n"
-                             + StringMessageUtils.truncate(StringMessageUtils.toString(message.getPayload()),
-                                 200, false));
+                        + StringMessageUtils.truncate(StringMessageUtils.toString(message.getPayload()),
+                        200, false));
             }
             catch (Exception e)
             {
@@ -303,7 +294,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             if (!endpoint.getFilter().accept(message))
             {
-                //TODO RM* This ain't pretty, we don't yet have an event context since the message hasn't gon to the 
+                //TODO RM* This ain't pretty, we don't yet have an event context since the message hasn't gon to the
                 //message listener yet. So we need to create a new context so that EventAwareTransformers can be applied
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
@@ -323,7 +314,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         if (logger.isDebugEnabled())
         {
             logger.debug("Message " + messageId + " failed to pass filter on endpoint: " + endpoint
-                         + ". Message is being ignored");
+                    + ". Message is being ignored");
         }
 
         return null;
@@ -331,7 +322,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOMessageReceiver#setEndpoint(org.mule.umo.endpoint.UMOEndpoint)
      */
     public void setEndpoint(UMOEndpoint endpoint)
@@ -345,7 +336,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOMessageReceiver#setSession(org.mule.umo.UMOSession)
      */
     public void setComponent(UMOComponent component)
@@ -386,45 +377,19 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             return;
         }
 
-        if (connecting.compareAndSet(false, true))
+        connectionStrategy.execute(new UMORetryCallback()
         {
-            if (logger.isDebugEnabled())
+            public void doWork() throws Exception
             {
-                logger.debug("Connecting: " + this);
+                doConnect();
+                connected.set(true);
             }
 
-            connectionStrategy.connect(this);
-
-            logger.info("Connected: " + this);
-            return;
-        }
-
-        try
-        {
-            this.doConnect();
-            connected.set(true);
-            connecting.set(false);
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_CONNECTED));
-        }
-        catch (Exception e)
-        {
-            connected.set(false);
-            connecting.set(false);
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_FAILED));
-
-            if (e instanceof ConnectException)
+            public String getWorkDescription()
             {
-                throw (ConnectException) e;
+                return getConnectionDescription();
             }
-            else
-            {
-                throw new ConnectException(e, this);
-            }
-        }
+        });
     }
 
     public void disconnect() throws Exception
@@ -440,7 +405,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         logger.info("Disconnected: " + this);
 
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-            ConnectionNotification.CONNECTION_DISCONNECTED));
+                ConnectionNotification.CONNECTION_DISCONNECTED));
     }
 
     public String getConnectionDescription()
@@ -452,9 +417,14 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     {
         if (stopped.compareAndSet(true, false))
         {
-            if (!connected.get())
+            //Make sure we are connected
+            try
             {
-                connectionStrategy.connect(this);
+                connect();
+            }
+            catch (Exception e)
+            {
+                throw new LifecycleException(e, this);
             }
             doStart();
         }
@@ -545,7 +515,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                     // TODO MULE-863: Do we need to warn?
                     logger.warn("Request was made but was not authenticated: " + e.getMessage(), e);
                     connector.fireNotification(new SecurityNotification(e,
-                        SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
+                            SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
                     handleException(e);
                     resultMessage = message;
                     // setExceptionDetails(resultMessage, e);
@@ -611,7 +581,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             if (transformer.isAcceptNull())
             {
                 returnMessage = new MuleMessage(NullPayload.getInstance(), RequestContext.getEventContext()
-                    .getMessage());
+                        .getMessage());
             }
             else
             {
@@ -652,7 +622,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             if (logger.isDebugEnabled())
             {
                 logger.debug("Response transformer: " + transformer + " doesn't support the result payload: "
-                             + returnPayload.getClass());
+                        + returnPayload.getClass());
             }
         }
         return returnMessage;

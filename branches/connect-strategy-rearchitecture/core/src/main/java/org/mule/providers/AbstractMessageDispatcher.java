@@ -23,6 +23,7 @@ import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.DispatchException;
@@ -30,6 +31,7 @@ import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.util.ClassUtils;
+import org.mule.umo.retry.UMORetryCallback;
 
 import java.beans.ExceptionListener;
 
@@ -60,7 +62,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     protected boolean disposed = false;
 
-    protected ConnectionStrategy connectionStrategy;
+    protected UMORetryTemplate connectionStrategy;
 
     protected volatile boolean connecting = false;
     protected volatile boolean connected = false;
@@ -71,21 +73,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         this.connector = (AbstractConnector) endpoint.getConnector();
 
         connectionStrategy = connector.getConnectionStrategy();
-        if (connectionStrategy instanceof AbstractConnectionStrategy)
-        {
-            // We don't want to do threading in the dispatcher because we're either
-            // already running in a worker thread (asynchronous) or we need to
-            // complete the operation in a single thread
-            final AbstractConnectionStrategy connStrategy = (AbstractConnectionStrategy) connectionStrategy;
-            if (connStrategy.isDoThreading())
-            {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Overriding doThreading to false on " + connStrategy);
-                }
-                connStrategy.setDoThreading(false);
-            }
-        }
 
         if (isDoThreading())
         {
@@ -103,14 +90,14 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.provider.UMOMessageDispatcher#dispatch(org.mule.umo.UMOEvent)
      */
     public final void dispatch(UMOEvent event) throws DispatchException
     {
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
-            event.getEndpoint().getEndpointURI().toString());
+                event.getEndpoint().getEndpointURI().toString());
         RequestContext.setEvent(event);
 
         // Apply Security filter if one is set
@@ -126,7 +113,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 // TODO MULE-863: Do we need this warning?
                 logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage(), e);
                 connector.fireNotification(new SecurityNotification(e,
-                    SecurityNotification.ADMIN_EVENT_ACTION_START_RANGE));
+                        SecurityNotification.ADMIN_EVENT_ACTION_START_RANGE));
                 connector.handleException(e);
                 return;
             }
@@ -150,7 +137,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             else
             {
                 // Make sure we are connected
-                connectionStrategy.connect(this);
+                connect();
                 doDispatch(event);
                 if (connector.isEnableMessageEvents())
                 {
@@ -160,7 +147,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                         component = event.getComponent().getDescriptor().getName();
                     }
                     connector.fireNotification(new MessageNotification(event.getMessage(), event
-                        .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                            .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
                 }
             }
         }
@@ -186,7 +173,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
         event.setSynchronous(true);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
-            event.getEndpoint().getEndpointURI().toString());
+                event.getEndpoint().getEndpointURI().toString());
         RequestContext.setEvent(event);
 
         // Apply Security filter if one is set
@@ -201,7 +188,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             {
                 logger.warn("Outbound Request was made but was not authenticated: " + e.getMessage(), e);
                 connector.fireNotification(new SecurityNotification(e,
-                    SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
+                        SecurityNotification.SECURITY_AUTHENTICATION_FAILED));
                 connector.handleException(e);
                 return event.getMessage();
             }
@@ -218,7 +205,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         try
         {
             // Make sure we are connected
-            connectionStrategy.connect(this);
+            connect();
 
             UMOMessage result = doSend(event);
             if (connector.isEnableMessageEvents())
@@ -229,7 +216,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     component = event.getComponent().getDescriptor().getName();
                 }
                 connector.fireNotification(new MessageNotification(event.getMessage(), event.getEndpoint(),
-                    component, MessageNotification.MESSAGE_SENT));
+                        component, MessageNotification.MESSAGE_SENT));
             }
 
             // Once a dispatcher has done its work we need to remove this property
@@ -254,11 +241,11 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     /**
      * Make a specific request to the underlying transport
-     * 
+     *
      * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
+     *                The call should return immediately if there is data available. If
+     *                no data becomes available before the timeout elapses, null will be
+     *                returned
      * @return the result of the request wrapped in a UMOMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
@@ -268,12 +255,12 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         try
         {
             // Make sure we are connected
-            connectionStrategy.connect(this);
+            connect();
             UMOMessage result = doReceive(timeout);
             if (result != null && connector.isEnableMessageEvents())
             {
                 connector.fireNotification(new MessageNotification(result, endpoint, null,
-                    MessageNotification.MESSAGE_RECEIVED));
+                        MessageNotification.MESSAGE_RECEIVED));
             }
             return result;
         }
@@ -291,7 +278,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.util.ExceptionListener#onException(java.lang.Throwable)
      */
     public void exceptionThrown(Exception e)
@@ -377,7 +364,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      * used we must remove the REMOTE_SYNC header Note the MuleClient will
      * automatically set the REMOTE_SYNC header when client.send(..) is called so
      * that results are returned from remote invocations too.
-     * 
+     *
      * @param event the current event
      * @return true if a response channel should be used to get a resposne from the
      *         event dispatch.
@@ -388,8 +375,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         if (event.getEndpoint().getConnector().isRemoteSyncEnabled())
         {
             remoteSync = event.getEndpoint().isRemoteSync()
-                            || event.getMessage().getBooleanProperty(
-                                MuleProperties.MULE_REMOTE_SYNC_PROPERTY, false);
+                    || event.getMessage().getBooleanProperty(
+                    MuleProperties.MULE_REMOTE_SYNC_PROPERTY, false);
             if (remoteSync)
             {
                 // component will be null for client calls
@@ -418,47 +405,19 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             return;
         }
 
-        if (!connecting)
+        connectionStrategy.execute(new UMORetryCallback()
         {
-            connecting = true;
-
-            if (logger.isDebugEnabled())
+            public void doWork() throws Exception
             {
-                logger.debug("Connecting: " + this);
+                doConnect();
+                connected = true;
             }
 
-            connectionStrategy.connect(this);
-
-            logger.info("Connected: " + this);
-            return;
-        }
-
-        try
-        {
-            this.doConnect();
-            connected = true;
-            connecting = false;
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
-                ConnectionNotification.CONNECTION_CONNECTED));
-        }
-        catch (Exception e)
-        {
-            connected = false;
-            connecting = false;
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
-                ConnectionNotification.CONNECTION_FAILED));
-
-            if (e instanceof ConnectException)
+            public String getWorkDescription()
             {
-                throw (ConnectException) e;
+                return getConnectionDescription();
             }
-            else
-            {
-                throw new ConnectException(e, this);
-            }
-        }
+        });
     }
 
     public synchronized void disconnect() throws Exception
@@ -479,7 +438,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         logger.info("Disconnected: " + this);
 
         connector.fireNotification(new ConnectionNotification(this, getConnectEventId(endpoint),
-            ConnectionNotification.CONNECTION_DISCONNECTED));
+                ConnectionNotification.CONNECTION_DISCONNECTED));
     }
 
     protected String getConnectEventId(UMOImmutableEndpoint endpoint)
@@ -492,14 +451,14 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         return connected;
     }
 
-    protected boolean isDoThreading ()
+    protected boolean isDoThreading()
     {
         return connector.getDispatcherThreadingProfile().isDoThreading();
     }
 
     /**
      * Returns a string identifying the underlying resource
-     * 
+     *
      * @return
      */
     public String getConnectionDescription()
@@ -525,11 +484,11 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     /**
      * Make a specific request to the underlying transport
-     * 
+     *
      * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
+     *                The call should return immediately if there is data available. If
+     *                no data becomes available before the timeout elapses, null will be
+     *                returned
      * @return the result of the request wrapped in a UMOMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
@@ -547,7 +506,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Runnable#run()
          */
         public void run()
@@ -556,7 +515,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             {
                 RequestContext.setEvent(event);
                 // Make sure we are connected
-                connectionStrategy.connect(AbstractMessageDispatcher.this);
+                connect();
                 AbstractMessageDispatcher.this.doDispatch(event);
 
                 if (connector.isEnableMessageEvents())
@@ -568,7 +527,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     }
 
                     connector.fireNotification(new MessageNotification(event.getMessage(), event
-                        .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                            .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
                 }
             }
             catch (Exception e)
@@ -585,7 +544,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
     /**
      * Checks to see if the current transaction has been rolled back
-     * 
+     *
      * @return
      */
     protected boolean isTransactionRollback()
