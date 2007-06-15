@@ -10,6 +10,10 @@
 
 package org.mule.extras.spring.config;
 
+import org.mule.config.MuleDtdResolver;
+import org.mule.umo.transformer.UMOTransformer;
+import org.mule.umo.retry.UMORetryTemplate;
+
 import java.io.IOException;
 
 import javax.xml.transform.Source;
@@ -22,8 +26,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.io.DOMReader;
-import org.mule.config.MuleDtdResolver;
-import org.mule.umo.transformer.UMOTransformer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -57,6 +59,8 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
         this.configCount = configCount;
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,
             new TransformerEditor());
+        ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMORetryTemplate.class,
+            new RetryTemplateEditor());
     }
 
     public int registerBeanDefinitions(Document document, Resource resource) throws BeansException
