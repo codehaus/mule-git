@@ -101,6 +101,7 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
             return getJavaModel().getJavaProject(getProject().getName());
         }
         private IJavaProject javaProject = getJavaProject();
+        
         private Map className2Exists = new java.util.HashMap(); // cache
 
         private boolean hasClass(String className) {
@@ -117,8 +118,26 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
                 } catch (JavaModelException e) {
                 }
             }
+
             className2Exists.put(className, canInstantiate ? Boolean.TRUE : Boolean.FALSE);
             return canInstantiate;
+        }
+
+        private Map typeName2Exists = new java.util.HashMap(); // cache
+
+        private boolean hasType(String typeName) {
+            Boolean hasClassName = (Boolean)typeName2Exists.get(typeName);
+            if (hasClassName != null) return hasClassName.booleanValue();
+
+            boolean found= false;
+            if ((javaProject != null) && javaProject.exists()) {
+                try {
+                    found = javaProject.findType(typeName) != null;
+                } catch (JavaModelException e) {
+                }
+            }
+            className2Exists.put(typeName, found ? Boolean.TRUE : Boolean.FALSE);
+            return found;
         }
 
         private IFile file;
@@ -149,11 +168,35 @@ public class MuleConfigBuilder extends IncrementalProjectBuilder {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             super.startElement(uri, localName, qName, attributes);
 
-            String className = (attributes != null) ? attributes.getValue("", "className") : null;
-            if (className != null) {
-                if (! hasClass(className)) {
+            if (attributes != null) {
+                checkClass(attributes.getValue("", "className")); // Should check 'implements' for various types
+                checkClass(attributes.getValue("", "implementation"));
+                checkType(attributes.getValue("", "returnClass"));
+                checkType(attributes.getValue("", "expectedType"));
+                checkType(attributes.getValue("", "propertyExtractor")); // Should check implements
+            }
+        }
+        
+        private void checkClass(String className)
+        {
+            if (className == null) return;
+            if (! hasClass(className)) {
+                int line = (myLocator != null) ? myLocator.getLineNumber() : -1;
+                if (hasType(className)) {
+                    MuleConfigBuilder.this.addMarker(file, "The type '" + className + "' exists but cannot be instantiated", line, IMarker.SEVERITY_ERROR);
+                } else {
+                    MuleConfigBuilder.this.addMarker(file, "No class '" + className + "' is visible in the project '" + file.getProject().getName() + "'", line, IMarker.SEVERITY_ERROR);
+                }
+            }
+        }
+
+        private void checkType(String typeName)
+        {
+            if (typeName == null) return;
+            if (typeName != null) {
+                if (! hasType(typeName)) {
                     int line = (myLocator != null) ? myLocator.getLineNumber() : -1;
-                    MuleConfigBuilder.this.addMarker(file, "No class '" + className + "' is present in the project '" + file.getProject().getName() + "'", line, IMarker.SEVERITY_ERROR);
+                    MuleConfigBuilder.this.addMarker(file, "No type '" + typeName + "' is visible in the project '" + file.getProject().getName() + "'", line, IMarker.SEVERITY_ERROR);
                 }
             }
         }
