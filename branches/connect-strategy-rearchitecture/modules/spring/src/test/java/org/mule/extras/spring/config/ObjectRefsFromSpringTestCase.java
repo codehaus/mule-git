@@ -11,8 +11,8 @@
 package org.mule.extras.spring.config;
 
 import org.mule.MuleManager;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.SimpleRetryConnectionStrategy;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
@@ -31,7 +31,9 @@ public class ObjectRefsFromSpringTestCase extends FunctionalTestCase
         UMOEndpoint ep = MuleManager.getInstance().lookupEndpoint("foo");
         assertNotNull(ep);
         assertEquals("testConnector", ep.getConnector().getName());
-        assertTrue(((AbstractConnector)ep.getConnector()).getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
+        assertNotNull(((AbstractConnector)ep.getConnector()).getConnectionStrategy());
+        assertTrue(((AbstractConnector)ep.getConnector()).getConnectionStrategy().getPolicyFactory() instanceof SimpleRetryPolicyFactory);
+
         assertTrue(ep.getConnector().getExceptionListener() instanceof TestExceptionStrategy);
 
         assertNotNull(ep.getTransformer());

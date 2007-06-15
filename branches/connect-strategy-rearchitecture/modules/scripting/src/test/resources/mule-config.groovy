@@ -29,7 +29,8 @@ import org.mule.routing.response.ResponseRouterCollection;
 import org.mule.routing.nested.NestedRouter;
 import org.mule.routing.nested.NestedRouterCollection;
 import org.mule.routing.inbound.InboundRouterCollection;
-import org.mule.providers.SimpleRetryConnectionStrategy;
+import org.mule.impl.retry.RetryTemplate;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.management.agents.JmxAgent;
 
 import java.util.List;
@@ -57,10 +58,7 @@ manager.registerAgent(agent);
 TestConnector c = new TestConnector();
 c.setName("dummyConnector");
 c.setExceptionListener(new TestExceptionStrategy());
-SimpleRetryConnectionStrategy cs = new SimpleRetryConnectionStrategy();
-cs.setRetryCount(4);
-cs.setFrequency(3000);
-c.setConnectionStrategy(cs);
+c.setConnectionStrategy(new RetryTemplate(new SimpleRetryPolicyFactory(3000, 4), null));
 manager.registerConnector(c);
 
 //Endpoint identifiers

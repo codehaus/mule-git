@@ -14,7 +14,7 @@
     <mule-environment-properties synchronous="false" model="${model.name}" serverUrl=""/>
 
     <connector name="myTestConnector" className="org.mule.tck.testmodels.mule.TestConnector">
-        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+        <connection-strategy className="org.mule.impl.retry.policies.SimpleRetryPolicyFactory">
             <properties>
                 <property name="retryCount" value="${retry.count}"/>
             </properties>

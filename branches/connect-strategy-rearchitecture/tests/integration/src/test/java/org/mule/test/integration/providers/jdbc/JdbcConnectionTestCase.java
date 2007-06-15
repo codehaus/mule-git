@@ -14,12 +14,14 @@ import org.mule.MuleManager;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.SimpleRetryConnectionStrategy;
+import org.mule.providers.ConnectNotifier;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.impl.retry.RetryTemplate;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 
 import java.util.HashMap;
 
@@ -44,11 +46,8 @@ public class JdbcConnectionTestCase extends AbstractJdbcFunctionalTestCase
     public UMOConnector createConnector() throws Exception
     {
         connector = (JdbcConnector)super.createConnector();
-        SimpleRetryConnectionStrategy strategy = new SimpleRetryConnectionStrategy();
-        strategy.setRetryCount(10);
-        strategy.setFrequency(1000);
-        strategy.setDoThreading(true);
-        connector.setConnectionStrategy(strategy);
+        //TODO RM* This can be done using a worker to wrap the  template in the connector : strategy.setDoThreading(true);
+        connector.setConnectionStrategy(new RetryTemplate(new SimpleRetryPolicyFactory(10, 1000), new ConnectNotifier()));
         return connector;
     }
 

@@ -408,7 +408,7 @@ a connection to the underlying resource
 
 <!--
     The fully qualified classname to instanciate the connector strategy. This class must
-    implement <i>org.mule.providers.ConnectionStrategy</i>
+    implement <i>org.mule.util.retry.PolicyFactory</i>
 -->
 <!ATTLIST connection-strategy className            NMTOKEN        #REQUIRED>
 

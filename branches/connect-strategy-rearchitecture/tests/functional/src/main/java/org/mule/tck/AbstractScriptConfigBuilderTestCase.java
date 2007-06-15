@@ -11,17 +11,17 @@
 package org.mule.tck;
 
 import org.mule.MuleManager;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.impl.AbstractExceptionListener;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.container.DescriptorContainerKeyPair;
 import org.mule.interceptors.LoggingInterceptor;
 import org.mule.interceptors.TimerInterceptor;
-import org.mule.providers.SimpleRetryConnectionStrategy;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.filters.xml.JXPathFilter;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
-import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.FruitCleaner;
+import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestDefaultLifecycleAdapterFactory;
@@ -35,12 +35,12 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.routing.UMOInboundRouterCollection;
+import org.mule.umo.routing.UMONestedRouter;
+import org.mule.umo.routing.UMONestedRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOResponseRouter;
 import org.mule.umo.routing.UMOResponseRouterCollection;
-import org.mule.umo.routing.UMONestedRouterCollection;
-import org.mule.umo.routing.UMONestedRouter;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.List;
@@ -67,9 +67,9 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         assertNotNull(c.getExceptionListener());
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
         assertNotNull(c.getConnectionStrategy());
-        assertTrue(c.getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
-        assertEquals(4, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getRetryCount());
-        assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
+        assertTrue(c.getConnectionStrategy().getPolicyFactory() instanceof SimpleRetryPolicyFactory);
+        assertEquals(4, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getRetryCount());
+        assertEquals(3000, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getFrequency());
     }
 
     public void testGlobalEndpointConfig()
