@@ -310,7 +310,7 @@ public class RemoteDispatcher implements Disposable
         if (logger.isDebugEnabled())
         {
             logger.debug("MuleClient sending remote call to: " + action.getResourceIdentifier() + ". At "
-                         + serverEndpoint.toString() + " .Event is: " + event);
+                         + serverEndpoint.toString() + " . Event is: " + event);
         }
 
         UMOMessage result = null;
