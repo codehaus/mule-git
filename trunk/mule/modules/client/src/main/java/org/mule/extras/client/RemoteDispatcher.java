@@ -107,7 +107,7 @@ public class RemoteDispatcher implements Disposable
     public void dispatchToRemoteComponent(String component, Object payload, Map messageProperties)
         throws UMOException
     {
-        doToRemoteComponent(component, payload, messageProperties, true);
+        doToRemoteComponent(component, payload, messageProperties, false);
     }
 
     /**
@@ -313,7 +313,7 @@ public class RemoteDispatcher implements Disposable
                          + serverEndpoint.toString() + " . Event is: " + event);
         }
 
-        UMOMessage result = null;
+        UMOMessage result;
 
         try
         {
