@@ -144,7 +144,7 @@ public class MuleAdminAgent implements UMOAgent
                 UMOEndpointURI endpointUri = new MuleEndpointURI(serverEndpoint);
                 UMOConnector connector = TransportFactory.getOrCreateConnectorByProtocol(endpointUri);
                 // If this connector has already been initialised i.e. it's a
-                // pre-existing connector not not reinit
+                // pre-existing connector don't reinit
                 if (manager.lookupConnector(connector.getName()) == null)
                 {
                     connector.setName(DEFAULT_MANAGER_ENDPOINT);
