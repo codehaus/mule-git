@@ -10,11 +10,14 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.model.streaming.CloseCountDownInputStream;
 import org.mule.impl.model.streaming.CloseCountDownOutputStream;
+import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.ConnectException;
 import org.mule.providers.tcp.i18n.TcpMessages;
@@ -336,14 +339,16 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                             {
                                 break;
                             }
-
-                            Object result = processData(readMsg);
-                            if (result != null)
+                            
+                            boolean remoteSync =  endpoint.isRemoteSync();
+                            Object result = processData(readMsg);           
+                            
+                            //should send back only if rem synch or no outbound endpoints
+                            if (result != null && (remoteSync || !component.getDescriptor().getOutboundRouter().hasEndpoints()))
                             {
                                 protocol.write(dataOut, result);
+                                dataOut.flush();
                             }
-
-                            dataOut.flush();
                         }
                         catch (SocketTimeoutException e)
                         {
