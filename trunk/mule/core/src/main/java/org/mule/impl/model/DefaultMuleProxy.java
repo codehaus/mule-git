@@ -273,9 +273,14 @@ public class DefaultMuleProxy implements MuleProxy
                     {
                         UMOMessage outboundReturnMessage = descriptor.getOutboundRouter().route(
                             returnMessage, event.getSession(), event.isSynchronous());
-                        if (outboundReturnMessage != null)
+                        //if (outboundReturnMessage != null && !event.getMessage().getBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, false))
+                        if (outboundReturnMessage != null && !event.getEndpoint().isRemoteSync())
                         {
-                            returnMessage = outboundReturnMessage;
+                        	returnMessage=null;
+                        }
+                        else
+                        {
+                        	returnMessage = outboundReturnMessage;
                         }
                     }
                     else

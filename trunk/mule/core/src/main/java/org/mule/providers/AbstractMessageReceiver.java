@@ -11,6 +11,7 @@
 package org.mule.providers;
 
 import org.mule.config.ExceptionHelper;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
@@ -279,6 +280,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             connector.fireNotification(new MessageNotification(message, endpoint, component.getDescriptor()
                 .getName(), MessageNotification.MESSAGE_RECEIVED));
         }
+        
+        if (endpoint.isRemoteSync())
+        	message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, true);
 
         if (logger.isDebugEnabled())
         {
