@@ -14,6 +14,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.JndiContextHelper;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOTransactionManagerFactory;
+import org.mule.util.StringUtils;
 
 import java.util.Map;
 
@@ -21,7 +22,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
 
-import org.mule.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
  * namespace, so your only bet is to run Mule in the same JVM as the application
  * server.
  * 
- * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a>
  */
 public class GenericTransactionManagerLookupFactory implements UMOTransactionManagerFactory
 {

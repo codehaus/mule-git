@@ -31,12 +31,12 @@ import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.ObjectFactory;
+import org.mule.util.StringUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import org.mule.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -26,6 +26,7 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
 import java.util.HashMap;
@@ -33,8 +34,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
-
-import org.mule.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

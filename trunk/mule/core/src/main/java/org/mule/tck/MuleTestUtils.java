@@ -43,12 +43,11 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
 
 import com.mockobjects.dynamic.Mock;
 
 import java.util.HashMap;
-
-import org.mule.util.StringUtils;
 
 /**
  * Utilities for creating test and Mock Mule objects

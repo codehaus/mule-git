@@ -11,7 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.TemplateParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

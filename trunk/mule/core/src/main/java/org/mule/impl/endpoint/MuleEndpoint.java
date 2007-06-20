@@ -10,9 +10,7 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.providers.service.TransportFactory;
 import org.mule.umo.UMOException;

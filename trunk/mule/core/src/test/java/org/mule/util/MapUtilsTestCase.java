@@ -11,7 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.MapUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.mule.util.SystemUtils;
 
 public class MapUtilsTestCase extends AbstractMuleTestCase
 {

@@ -10,9 +10,6 @@
 
 package org.mule.mule.commonspool;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-
 import org.mule.config.pool.CommonsPoolProxyFactory;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.seda.SedaModel;
@@ -20,6 +17,9 @@ import org.mule.tck.model.AbstractProxyPoolFactoryTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.util.ObjectFactory;
 import org.mule.util.ObjectPool;
+
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
 
 /**
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>

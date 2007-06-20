@@ -10,12 +10,12 @@
 
 package org.mule.transaction;
 
-import com.mockobjects.dynamic.Mock;
-
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.transaction.constraints.BatchConstraint;
 import org.mule.transaction.constraints.ConstraintFilter;
 import org.mule.umo.UMOEvent;
+
+import com.mockobjects.dynamic.Mock;
 
 public class BatchConstraintTestCase extends AbstractMuleTestCase
 {

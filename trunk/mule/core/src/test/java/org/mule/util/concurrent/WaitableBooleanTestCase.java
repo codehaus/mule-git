@@ -11,7 +11,6 @@
 package org.mule.util.concurrent;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.concurrent.WaitableBoolean;
 
 public class WaitableBooleanTestCase extends AbstractMuleTestCase
 {

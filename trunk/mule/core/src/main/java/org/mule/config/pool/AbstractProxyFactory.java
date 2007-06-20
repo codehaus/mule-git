@@ -14,8 +14,8 @@ import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.ComponentFactory;
 import org.mule.impl.model.DefaultMuleProxy;
 import org.mule.umo.UMOException;
-import org.mule.umo.model.UMOModel;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.model.UMOModel;
 import org.mule.util.ObjectFactory;
 import org.mule.util.ObjectPool;
 

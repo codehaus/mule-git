@@ -16,8 +16,6 @@ import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transformers.simple.ByteArrayToSerializable;
-import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.UMOTransformer;
 

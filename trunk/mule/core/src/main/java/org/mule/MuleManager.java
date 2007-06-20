@@ -62,13 +62,12 @@ import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -86,9 +85,9 @@ import java.util.jar.Manifest;
 
 import javax.transaction.TransactionManager;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
-import org.mule.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

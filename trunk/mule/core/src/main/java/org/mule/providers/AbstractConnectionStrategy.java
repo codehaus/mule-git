@@ -12,8 +12,8 @@ package org.mule.providers;
 
 import org.mule.MuleManager;
 import org.mule.umo.provider.UMOConnectable;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.provider.UMOMessageReceiver;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;

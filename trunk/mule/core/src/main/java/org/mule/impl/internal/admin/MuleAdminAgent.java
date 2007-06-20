@@ -12,8 +12,8 @@ package org.mule.impl.internal.admin;
 
 import org.mule.MuleManager;
 import org.mule.impl.AlreadyInitialisedException;
-import org.mule.impl.model.ModelHelper;
 import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.impl.model.ModelHelper;
 import org.mule.providers.service.TransportFactory;
 import org.mule.transformers.wire.SerializationWireFormat;
 import org.mule.transformers.wire.WireFormat;
@@ -24,8 +24,8 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.UMOConnector;
-
 import org.mule.util.StringUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

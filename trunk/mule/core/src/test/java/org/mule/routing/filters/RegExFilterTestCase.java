@@ -10,7 +10,6 @@
 
 package org.mule.routing.filters;
 
-import org.mule.routing.filters.RegExFilter;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class RegExFilterTestCase extends AbstractMuleTestCase
