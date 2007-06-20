@@ -13,13 +13,13 @@ package org.mule.providers.tcp.protocols;
 import org.mule.providers.tcp.TcpProtocol;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
-import org.mule.util.IOUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 

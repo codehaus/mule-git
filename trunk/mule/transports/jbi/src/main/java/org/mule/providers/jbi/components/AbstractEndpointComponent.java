@@ -10,14 +10,14 @@
 
 package org.mule.providers.jbi.components;
 
-import java.util.Map;
-
-import javax.jbi.JBIException;
-
 import org.mule.MuleManager;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
+
+import java.util.Map;
+
+import javax.jbi.JBIException;
 
 /**
  * A Jbi component that has a Mule muleEndpoint component configured on it. Both the

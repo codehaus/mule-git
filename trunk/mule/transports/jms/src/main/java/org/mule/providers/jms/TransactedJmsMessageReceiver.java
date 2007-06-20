@@ -22,8 +22,8 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.util.MapUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.MapUtils;
 
 import java.util.List;
 

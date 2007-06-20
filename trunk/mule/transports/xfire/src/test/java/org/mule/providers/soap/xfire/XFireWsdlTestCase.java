@@ -10,9 +10,6 @@
 
 package org.mule.providers.soap.xfire;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;

@@ -17,12 +17,11 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.SystemUtils;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PushbackInputStream;
-
-import org.mule.util.SystemUtils;
 
 /**
  * <code>StreamMessageReceiver</code> is a listener for events from Mule components

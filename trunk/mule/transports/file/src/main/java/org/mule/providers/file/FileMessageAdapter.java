@@ -18,10 +18,9 @@ import org.mule.providers.file.i18n.FileMessages;
 import org.mule.providers.file.transformers.FileToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.util.ObjectUtils;
 
 import java.io.File;
-
-import org.mule.util.ObjectUtils;
 
 /**
  * <code>FileMessageAdapter</code> provides a wrapper for a file reference. Users

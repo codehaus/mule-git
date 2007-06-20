@@ -10,16 +10,15 @@
 
 package org.mule.providers.file;
 
-import java.io.File;
-
 import org.mule.MuleManager;
 import org.mule.impl.RequestContext;
-import org.mule.providers.file.FileConnector;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
+
+import java.io.File;
 
 public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTestCase
 {

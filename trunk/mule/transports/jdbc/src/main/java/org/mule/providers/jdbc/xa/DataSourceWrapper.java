@@ -85,7 +85,9 @@ public class DataSourceWrapper implements DataSource
      */
     public Connection getConnection() throws SQLException
     {
-        return new ConnectionWrapper(xads.getXAConnection(), tm);
+        final ConnectionWrapper connWrapper = new ConnectionWrapper(xads.getXAConnection(), tm);
+        connWrapper.setAutoCommit(false);
+        return connWrapper;
     }
 
     /*
@@ -95,7 +97,9 @@ public class DataSourceWrapper implements DataSource
      */
     public Connection getConnection(String username, String password) throws SQLException
     {
-        return new ConnectionWrapper(xads.getXAConnection(username, password), tm);
+        final ConnectionWrapper connWrapper = new ConnectionWrapper(xads.getXAConnection(username, password), tm);
+        connWrapper.setAutoCommit(false);
+        return connWrapper;
     }
 
     /**

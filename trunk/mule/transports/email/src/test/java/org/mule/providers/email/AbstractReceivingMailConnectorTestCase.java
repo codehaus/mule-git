@@ -10,8 +10,6 @@
 
 package org.mule.providers.email;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import org.mule.MuleManager;
 import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.tck.functional.EventCallback;
@@ -19,6 +17,9 @@ import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
 
 import java.util.HashMap;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * Given an endpoint ({@link #getTestEndpointURI()}) this waits for up to 10 seconds,

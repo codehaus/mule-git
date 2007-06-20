@@ -1,9 +1,10 @@
 package org.mule.tools.visualizer.maven;
 
-import junit.framework.TestCase;
 import org.mule.util.FileUtils;
 
 import java.util.Arrays;
+
+import junit.framework.TestCase;
 
 public abstract class AbstractBaseVisualizerXmlTestCase extends TestCase 
 {

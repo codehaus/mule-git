@@ -27,6 +27,7 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,7 +54,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
-import org.mule.util.StringUtils;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.

@@ -25,6 +25,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,7 +42,6 @@ import org.apache.axis.description.ParameterDesc;
 import org.apache.axis.handlers.soap.SOAPService;
 import org.apache.axis.providers.java.JavaProvider;
 import org.apache.axis.wsdl.fromJava.Namespaces;
-import org.mule.util.StringUtils;
 
 /**
  * <code>AxisMessageReceiver</code> is used to register a component as a service

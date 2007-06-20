@@ -97,7 +97,7 @@ public class UrlAssignerPostProcessor implements PostProcessor
             GraphNode node = nodes[i];
             String caption = node.getInfo().getCaption();
             String header = node.getInfo().getHeader();
-            String className = "";
+            String className;
 
             className = extractFullClassName(caption, header);
             String url = getUrlPatternForClass(className);
@@ -146,7 +146,7 @@ public class UrlAssignerPostProcessor implements PostProcessor
 
     private String extractFullClassName(String caption, String header)
     {
-        String className = "";
+        String className;
         className = getAttribute(caption, "className");
         if (className == null)
         {

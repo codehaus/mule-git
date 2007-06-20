@@ -10,15 +10,18 @@
 
 package org.mule.providers.oracle.jms;
 
-import com.mockobjects.dynamic.Mock;
-import oracle.jdbc.pool.OracleDataSource;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.provider.UMOConnector;
+
+import com.mockobjects.dynamic.Mock;
+
+import java.util.Enumeration;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.TextMessage;
-import java.util.Enumeration;
+
+import oracle.jdbc.pool.OracleDataSource;
 
 public class OracleInContainerJmsConnectorTestCase extends AbstractConnectorTestCase
 {

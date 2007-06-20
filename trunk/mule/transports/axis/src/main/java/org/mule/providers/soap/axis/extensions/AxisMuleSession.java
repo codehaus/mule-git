@@ -23,7 +23,7 @@ public class AxisMuleSession implements Session
 {
 
     private UMOSession session;
-    private Object lock=new Object();
+    private Object lock = new Object();
 
     public AxisMuleSession(UMOSession session)
     {

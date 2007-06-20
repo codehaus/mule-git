@@ -10,6 +10,11 @@
 
 package org.mule.providers.http;
 
+import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.UMOSession;
+import org.mule.umo.provider.UMOSessionHandler;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,10 +22,6 @@ import java.util.List;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.provider.UMOSessionHandler;
 
 /**
  * Will read and write Http Cookie information to and from the Mule Session

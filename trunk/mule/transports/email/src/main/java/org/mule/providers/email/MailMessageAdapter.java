@@ -13,13 +13,14 @@ package org.mule.providers.email;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <code>MailMessageAdapter</code> is a wrapper for a javax.mail.Message that 
