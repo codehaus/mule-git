@@ -14,6 +14,7 @@ import org.mule.config.ConfigurationException;
 import org.mule.config.ReaderResource;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.manager.UMOManager;
+import org.mule.util.ObjectUtils;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mule.util.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

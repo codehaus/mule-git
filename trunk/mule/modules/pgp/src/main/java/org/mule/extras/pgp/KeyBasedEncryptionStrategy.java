@@ -15,6 +15,9 @@ import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.security.CryptoFailureException;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collection;
+
 import cryptix.message.EncryptedMessage;
 import cryptix.message.EncryptedMessageBuilder;
 import cryptix.message.LiteralMessageBuilder;
@@ -23,10 +26,6 @@ import cryptix.message.MessageFactory;
 import cryptix.message.SignedMessageBuilder;
 import cryptix.openpgp.PGPArmouredMessage;
 import cryptix.pki.KeyBundle;
-
-import java.io.ByteArrayInputStream;
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -27,10 +27,7 @@ import org.mule.umo.security.SecurityException;
 import org.mule.umo.security.SecurityProviderNotFoundException;
 import org.mule.umo.security.UnknownAuthenticationTypeException;
 import org.mule.umo.security.UnsupportedAuthenticationSchemeException;
-import org.mule.util.StringUtils;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -47,7 +44,6 @@ import org.apache.ws.axis.security.WSDoAllReceiver;
 import org.apache.ws.axis.security.WSDoAllSender;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.codehaus.xfire.XFire;
-import org.codehaus.xfire.client.Client;
 import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;
 import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.util.dom.DOMInHandler;

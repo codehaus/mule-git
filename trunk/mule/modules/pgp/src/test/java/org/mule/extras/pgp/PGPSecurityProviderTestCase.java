@@ -10,14 +10,14 @@
 
 package org.mule.extras.pgp;
 
-import cryptix.message.Message;
-import cryptix.message.MessageFactory;
-
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.security.UMOAuthentication;
 
 import java.io.FileInputStream;
 import java.net.URL;
+
+import cryptix.message.Message;
+import cryptix.message.MessageFactory;
 
 public class PGPSecurityProviderTestCase extends AbstractMuleTestCase
 {

@@ -10,9 +10,8 @@
 
 package org.mule.registry;
 
-import org.mule.util.SystemUtils;
-
 import org.mule.config.i18n.MessageFactory;
+import org.mule.util.SystemUtils;
 
 import java.util.Iterator;
 import java.util.List;

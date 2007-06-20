@@ -14,9 +14,10 @@ import org.mule.management.agents.JmxAgent;
 import org.mule.management.mbeans.StatisticsService;
 import org.mule.umo.manager.UMOManager;
 
-import javax.management.ObjectName;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.management.ObjectName;
 
 public class JmxSupportTestCase extends AbstractMuleJmxTestCase
 {

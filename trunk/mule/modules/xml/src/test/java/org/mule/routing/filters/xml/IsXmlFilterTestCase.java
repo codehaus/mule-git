@@ -10,13 +10,12 @@
 
 package org.mule.routing.filters.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.mule.impl.MuleMessage;
-import org.mule.routing.filters.xml.IsXmlFilter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class IsXmlFilterTestCase extends AbstractMuleTestCase
 {

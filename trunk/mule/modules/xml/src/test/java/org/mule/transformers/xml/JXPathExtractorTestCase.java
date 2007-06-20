@@ -10,10 +10,9 @@
 
 package org.mule.transformers.xml;
 
-import java.util.List;
-
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transformers.xml.JXPathExtractor;
+
+import java.util.List;
 
 public class JXPathExtractorTestCase extends AbstractMuleTestCase
 {

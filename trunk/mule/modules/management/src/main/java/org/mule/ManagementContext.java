@@ -10,6 +10,8 @@
 
 package org.mule;
 
+import org.mule.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -21,7 +23,6 @@ import javax.transaction.TransactionManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.util.FileUtils;
 
 public class ManagementContext
 {

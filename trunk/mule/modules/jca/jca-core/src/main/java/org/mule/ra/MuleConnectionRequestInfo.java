@@ -10,16 +10,16 @@
 
 package org.mule.ra;
 
+import org.mule.MuleManager;
+import org.mule.config.builders.MuleXmlConfigurationBuilder;
+import org.mule.umo.manager.UMOManager;
+import org.mule.util.StringUtils;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import javax.resource.spi.ConnectionRequestInfo;
-
-import org.mule.MuleManager;
-import org.mule.config.builders.MuleXmlConfigurationBuilder;
-import org.mule.umo.manager.UMOManager;
-import org.mule.util.StringUtils;
 
 /**
  * <code>MuleConnectionRequestInfo</code> TODO

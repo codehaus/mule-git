@@ -10,8 +10,9 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.transformers.AbstractTransformer;
+
 import java.io.ByteArrayInputStream;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -26,10 +27,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.dom4j.Document;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
-import org.mule.transformers.AbstractTransformer;
 
 /**
  * <code>AbstractXmlTransformer</code> offers some XSLT transform on a DOM (or

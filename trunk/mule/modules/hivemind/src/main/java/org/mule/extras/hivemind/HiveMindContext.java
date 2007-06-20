@@ -10,6 +10,12 @@
 
 package org.mule.extras.hivemind;
 
+import org.mule.impl.container.AbstractContainerContext;
+import org.mule.impl.container.ContainerKeyPair;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.manager.ContainerException;
+import org.mule.umo.manager.ObjectNotFoundException;
+
 import java.io.Reader;
 
 import org.apache.commons.logging.Log;
@@ -17,11 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hivemind.ApplicationRuntimeException;
 import org.apache.hivemind.Registry;
 import org.apache.hivemind.impl.RegistryBuilder;
-import org.mule.impl.container.AbstractContainerContext;
-import org.mule.impl.container.ContainerKeyPair;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ContainerException;
-import org.mule.umo.manager.ObjectNotFoundException;
 
 /**
  * <code>HiveMindContext</code> is a HiveMind Context that can expose HiveMind

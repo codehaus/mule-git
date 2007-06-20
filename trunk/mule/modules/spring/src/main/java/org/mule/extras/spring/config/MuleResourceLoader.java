@@ -10,12 +10,13 @@
 
 package org.mule.extras.spring.config;
 
+import org.mule.util.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.util.IOUtils;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;

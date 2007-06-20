@@ -12,15 +12,13 @@ package org.mule.management.agents;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
-import org.mule.management.i18n.ManagementMessages;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import java.util.List;
 
@@ -31,6 +29,7 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tanukisoftware.wrapper.jmx.WrapperManager;

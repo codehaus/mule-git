@@ -10,10 +10,10 @@
 
 package org.mule.extras.spring.config;
 
-import org.mule.tck.FunctionalTestCase;
 import org.mule.MuleManager;
-import org.mule.umo.manager.UMOManager;
+import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.manager.UMOContainerContext;
+import org.mule.umo.manager.UMOManager;
 
 public class MultipleSpringContextsTestCase extends FunctionalTestCase
 {

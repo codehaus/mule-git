@@ -10,6 +10,8 @@
 
 package org.mule.management;
 
+import org.mule.tck.AbstractMuleTestCase;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -18,8 +20,6 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
-
-import org.mule.tck.AbstractMuleTestCase;
 
 /**
  * This base test case will create a new <code>MBean Server</code> if necessary,

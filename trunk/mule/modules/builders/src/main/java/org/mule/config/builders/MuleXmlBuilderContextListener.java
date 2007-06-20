@@ -17,8 +17,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOManager;
 import org.mule.util.StringUtils;
 
-import java.util.Enumeration;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
