@@ -34,7 +34,7 @@ import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.lang.StringUtils;
+import org.mule.util.StringUtils;
 
 /**
  * <code>UMOMessageToHttpResponse</code> converts a UMOMEssage into an Http

@@ -10,7 +10,7 @@
 
 package org.mule.providers.email;
 
-import org.apache.commons.lang.StringUtils;
+import org.mule.util.StringUtils;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointURI;

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.SystemUtils;
+import org.mule.util.SystemUtils;
 
 /**
  * <code>HttpRequestMessageAdapter</code> is a Mule message adapter for

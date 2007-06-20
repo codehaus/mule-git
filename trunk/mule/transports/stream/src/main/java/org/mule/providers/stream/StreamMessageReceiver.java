@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PushbackInputStream;
 
-import org.apache.commons.lang.SystemUtils;
+import org.mule.util.SystemUtils;
 
 /**
  * <code>StreamMessageReceiver</code> is a listener for events from Mule components

@@ -88,7 +88,7 @@ import javax.transaction.TransactionManager;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
-import org.apache.commons.lang.StringUtils;
+import org.mule.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

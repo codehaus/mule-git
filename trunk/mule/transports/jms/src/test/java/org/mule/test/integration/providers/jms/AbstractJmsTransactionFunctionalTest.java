@@ -38,9 +38,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.provider.UMOConnector;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import org.mule.util.ExceptionUtils;
 
 import java.util.HashMap;
 
@@ -53,7 +51,8 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.TopicConnection;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>AbstractJmsTransactionFunctionalTest</code> is a base class for all JMS

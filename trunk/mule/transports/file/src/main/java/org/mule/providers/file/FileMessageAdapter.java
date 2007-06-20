@@ -21,7 +21,7 @@ import org.mule.umo.provider.MessageTypeNotSupportedException;
 
 import java.io.File;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.mule.util.ObjectUtils;
 
 /**
  * <code>FileMessageAdapter</code> provides a wrapper for a file reference. Users

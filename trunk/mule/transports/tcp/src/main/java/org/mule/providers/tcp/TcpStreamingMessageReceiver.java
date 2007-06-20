@@ -27,7 +27,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 
-import org.apache.commons.lang.StringUtils;
+import org.mule.util.StringUtils;
 
 /**
  * <code>TcpStreamingMessageReceiver</code> establishes a TCP client connection to

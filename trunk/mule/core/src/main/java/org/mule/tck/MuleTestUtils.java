@@ -48,7 +48,7 @@ import com.mockobjects.dynamic.Mock;
 
 import java.util.HashMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.mule.util.StringUtils;
 
 /**
  * Utilities for creating test and Mock Mule objects
