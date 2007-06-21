@@ -93,7 +93,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     private boolean persistentDelivery;
     
-    private boolean honorMessageHeaders;
+    private boolean honorQosHeaders;
 
     private Map jndiProviderProperties;
 
@@ -586,24 +586,24 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     }
 
     /**
-     * Sets <code>honorMessageHeaders</code> property, which determines whether <code>JmsMessageDispatcher</code>
-     * should honor incoming message's headers.
-     * @param honorMessageHeaders - <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
-     * message's headers; otherwise <code>false</code>
+     * Sets <code>honorQosHeaders</code> property, which determines whether <code>JmsMessageDispatcher</code>
+     * should honor incoming message's QoS headers (JMSPriority, JMSDeliveryMode).
+     * @param honorQosHeaders - <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
+     * message's QoS headers; otherwise <code>false</code>
      */
-    public void setHonorMessageHeaders(boolean honorMessageHeaders)
+    public void setHonorQosHeaders(boolean honorQosHeaders)
     {
-        this.honorMessageHeaders = honorMessageHeaders;
+        this.honorQosHeaders = honorQosHeaders;
     }
 
     /**
-     * Gets the value of <code>honorMessageHeaders</code> property.
+     * Gets the value of <code>honorQosHeaders</code> property.
      * @return <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
-     * message's headers; otherwise <code>false</code>
+     * message's QoS headers; otherwise <code>false</code>
      */
-    public boolean isHonorMessageHeaders()
+    public boolean isHonorQosHeaders()
     {
-        return honorMessageHeaders;
+        return honorQosHeaders;
     }
     
     /**

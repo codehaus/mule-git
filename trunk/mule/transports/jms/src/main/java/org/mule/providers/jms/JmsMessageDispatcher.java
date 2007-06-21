@@ -19,6 +19,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
@@ -215,16 +216,16 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                                 ? BooleanUtils.toBoolean(persistentDeliveryString)
                                 : connector.isPersistentDelivery();
 
-            if (connector.isHonorMessageHeaders())
+            if (connector.isHonorQosHeaders())
             {
-                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, -1);
-                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, -1);
+                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, UMOConnector.INT_VALUE_NOT_SET);
+                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, UMOConnector.INT_VALUE_NOT_SET);
                 
-                if (priorityProp != -1)
+                if (priorityProp != UMOConnector.INT_VALUE_NOT_SET)
                 {
                     priority = priorityProp;
                 }
-                if (deliveryModeProp != -1)
+                if (deliveryModeProp != UMOConnector.INT_VALUE_NOT_SET)
                 {
                     persistent = deliveryModeProp == DeliveryMode.PERSISTENT;
                 }
