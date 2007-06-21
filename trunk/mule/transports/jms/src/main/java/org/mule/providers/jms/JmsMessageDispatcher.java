@@ -21,6 +21,8 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
+import org.mule.util.NumberUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
 
@@ -33,6 +35,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
+
+import org.apache.commons.lang.BooleanUtils;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
@@ -201,24 +205,30 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             String priorityString = (String)eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
             String persistentDeliveryString = (String)eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
 
-            long ttl = Message.DEFAULT_TIME_TO_LIVE;
-            int priority = Message.DEFAULT_PRIORITY;
-            // TODO this first assignment is ignored anyway, review and remove if need to
-            boolean persistent = Message.DEFAULT_DELIVERY_MODE == DeliveryMode.PERSISTENT;
-
-            if (ttlString != null)
-            {
-                ttl = Long.parseLong(ttlString);
-            }
-            if (priorityString != null)
-            {
-                priority = Integer.parseInt(priorityString);
-            }
-
-            // TODO StringUtils.notBlank() would be more robust here
-            persistent = persistentDeliveryString != null
-                                ? Boolean.valueOf(persistentDeliveryString).booleanValue()
+            long ttl = StringUtils.isNotBlank(ttlString)
+                                ? NumberUtils.toLong(ttlString)
+                                : Message.DEFAULT_TIME_TO_LIVE;
+            int priority = StringUtils.isNotBlank(priorityString)
+                                ? NumberUtils.toInt(priorityString)
+                                : Message.DEFAULT_PRIORITY;
+            boolean persistent = StringUtils.isNotBlank(persistentDeliveryString)
+                                ? BooleanUtils.toBoolean(persistentDeliveryString)
                                 : connector.isPersistentDelivery();
+
+            if (connector.isHonorMessageHeaders())
+            {
+                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, -1);
+                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, -1);
+                
+                if (priorityProp != -1)
+                {
+                    priority = priorityProp;
+                }
+                if (deliveryModeProp != -1)
+                {
+                    persistent = deliveryModeProp == DeliveryMode.PERSISTENT;
+                }
+            }
 
             if (logger.isDebugEnabled())
             {

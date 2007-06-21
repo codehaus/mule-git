@@ -92,6 +92,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     private boolean noLocal;
 
     private boolean persistentDelivery;
+    
+    private boolean honorMessageHeaders;
 
     private Map jndiProviderProperties;
 
@@ -583,6 +585,27 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         this.persistentDelivery = persistentDelivery;
     }
 
+    /**
+     * Sets <code>honorMessageHeaders</code> property, which determines whether <code>JmsMessageDispatcher</code>
+     * should honor incoming message's headers.
+     * @param honorMessageHeaders - <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
+     * message's headers; otherwise <code>false</code>
+     */
+    public void setHonorMessageHeaders(boolean honorMessageHeaders)
+    {
+        this.honorMessageHeaders = honorMessageHeaders;
+    }
+
+    /**
+     * Gets the value of <code>honorMessageHeaders</code> property.
+     * @return <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
+     * message's headers; otherwise <code>false</code>
+     */
+    public boolean isHonorMessageHeaders()
+    {
+        return honorMessageHeaders;
+    }
+    
     /**
      * @return Returns the JNDI providerProperties.
      * @since 1.1
