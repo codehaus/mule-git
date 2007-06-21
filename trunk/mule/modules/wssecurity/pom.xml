@@ -13,7 +13,6 @@
     <name>Web Service Security</name>
     <description>Mule WS-Security uses Apache's WSS4J and XFire's WSS4JHandlers to secure WebServices using SOAP</description>
 
-    <!-- XML is always a joy. -->
     <profiles>
         <profile>
             <id>java14</id>
@@ -40,22 +39,11 @@
                 <dependency>
                     <groupId>org.codehaus.xfire</groupId>
                     <artifactId>xfire-ws-security</artifactId>
-                    <version>1.2.6</version>
                     <exclusions>
-                        <!-- we like slf4j -->
-                        <exclusion>
-                            <groupId>commons-logging</groupId>
-                            <artifactId>commons-logging</artifactId>
-                        </exclusion>                
                         <!-- this is JDK5 only - see below for JDK14 version -->
                         <exclusion>
                             <groupId>org.codehaus.xfire</groupId>
                             <artifactId>bcprov-jdk15</artifactId>
-                        </exclusion>
-                        <!-- this should really be in test scope -->
-                        <exclusion>
-                            <groupId>jmock</groupId>
-                            <artifactId>jmock</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
@@ -77,13 +65,7 @@
                 <dependency>
                     <groupId>org.codehaus.xfire</groupId>
                     <artifactId>xfire-ws-security</artifactId>
-                    <version>1.2.6</version>
                     <exclusions>
-                        <!-- we like slf4j -->
-                        <exclusion>
-                            <groupId>commons-logging</groupId>
-                            <artifactId>commons-logging</artifactId>
-                        </exclusion>                
                         <!-- IMPORTANT for JDK5 -->
                         <exclusion>
                             <groupId>xml-apis</groupId>
