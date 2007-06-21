@@ -27,7 +27,7 @@ public class ChainingRouterNullsHandlingTestCase extends FunctionalTestCase
     public void testLastComponentFails() throws Exception {
 
         MuleClient muleClient = new MuleClient();
-        UMOMessage result = muleClient.send("vm://incomingLastFail", new MuleMessage("abc.pdf"));
+        UMOMessage result = muleClient.send("vm://incomingLastFail", new MuleMessage("thePayload"));
         assertNotNull("Should be a NullPayload instead.", result);
         assertEquals("Should be a NullPayload instead.", NullPayload.getInstance(), result.getPayload());
         assertNotNull("Should've contained an exception payload", result.getExceptionPayload());
@@ -41,7 +41,7 @@ public class ChainingRouterNullsHandlingTestCase extends FunctionalTestCase
     public void testFirstComponentFails() throws Exception {
 
         MuleClient muleClient = new MuleClient();
-        UMOMessage result = muleClient.send("vm://incomingFirstFail", new MuleMessage("abc.pdf"));
+        UMOMessage result = muleClient.send("vm://incomingFirstFail", new MuleMessage("thePayload"));
         assertNotNull("Should be a NullPayload instead.", result);
         assertEquals("Should be a NullPayload instead.", NullPayload.getInstance(), result.getPayload());
         assertNotNull("Should've contained an exception payload", result.getExceptionPayload());
