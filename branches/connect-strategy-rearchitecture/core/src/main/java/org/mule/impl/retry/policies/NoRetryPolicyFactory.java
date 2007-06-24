@@ -28,7 +28,7 @@ public class NoRetryPolicyFactory implements UMOPolicyFactory
     {
         public PolicyStatus applyPolicy()
         {
-            return PolicyStatus.policyOk();
+            return PolicyStatus.policyExhaused(null);
         }
     }
 }

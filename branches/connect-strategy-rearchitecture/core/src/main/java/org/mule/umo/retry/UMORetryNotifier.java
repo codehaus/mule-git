@@ -16,7 +16,7 @@ package org.mule.umo.retry;
 
 public interface UMORetryNotifier
 {
-    public void sucess(String description);
+    public void sucess(RetryContext context);
 
-    public void failed(String description, Throwable e);
+    public void failed(RetryContext context, Throwable e);
 }

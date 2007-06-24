@@ -24,7 +24,7 @@ import org.mule.providers.FatalConnectException;
  */
 public interface UMORetryTemplate
 {
-    void execute(UMORetryCallback callback) throws FatalConnectException;
+    RetryContext execute(UMORetryCallback callback) throws FatalConnectException;
 
     UMOPolicyFactory getPolicyFactory();
 

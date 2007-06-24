@@ -16,6 +16,7 @@ import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.retry.UMORetryNotifier;
 import org.mule.umo.retry.UMORetryCallback;
 import org.mule.umo.retry.UMOTemplatePolicy;
+import org.mule.umo.retry.RetryContext;
 import org.mule.config.i18n.CoreMessages;
 
 import org.apache.commons.logging.Log;
@@ -56,20 +57,21 @@ public class RetryTemplate implements UMORetryTemplate
         this.notifier = notifier;
     }
 
-    public void execute(UMORetryCallback callback) throws FatalConnectException
+    public RetryContext execute(UMORetryCallback callback) throws FatalConnectException
     {
         PolicyStatus status = null;
         UMOTemplatePolicy policy = policyFactory.create();
+        RetryContext context = new RetryContext(callback.getWorkDescription());
         try
         {
             do
             {
                 try
                 {
-                    callback.doWork();
+                    callback.doWork(context);
                     if (notifier != null)
                     {
-                        notifier.sucess(callback.getWorkDescription());
+                        notifier.sucess(context);
                     }
 
                     break;
@@ -78,7 +80,7 @@ public class RetryTemplate implements UMORetryTemplate
                 {
                     if (notifier != null)
                     {
-                        notifier.failed(callback.getWorkDescription(), e);
+                        notifier.failed(context, e);
                     }
                     if (e instanceof InterruptedException)
                     {
@@ -100,6 +102,7 @@ public class RetryTemplate implements UMORetryTemplate
                 }
             }
         }
+        return context;
 
     }
 
