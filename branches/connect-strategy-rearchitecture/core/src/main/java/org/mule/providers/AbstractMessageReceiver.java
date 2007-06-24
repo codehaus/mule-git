@@ -18,6 +18,7 @@ import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
+import org.mule.impl.retry.RetryTemplate;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
@@ -42,6 +43,7 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.RetryContext;
 import org.mule.util.concurrent.WaitableBoolean;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
@@ -140,7 +142,14 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             throw new InitialisationException(e, this);
         }
 
-        connectionStrategy = this.connector.getConnectionStrategy();
+        if(endpoint.getRetryPolicyFactory()!=null)
+        {
+            connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+        }
+        else
+        {
+            connectionStrategy = this.connector.getConnectionStrategy();
+        }
     }
 
     /*
@@ -379,7 +388,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
         connectionStrategy.execute(new UMORetryCallback()
         {
-            public void doWork() throws Exception
+            public void doWork(RetryContext context) throws Exception
             {
                 doConnect();
                 connected.set(true);
@@ -410,7 +419,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     public String getConnectionDescription()
     {
-        return endpoint.getEndpointURI().toString();
+        return "endpoint." + endpoint.getEndpointURI().toString();
     }
 
     public final void start() throws UMOException

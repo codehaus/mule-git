@@ -30,6 +30,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.RetryContext;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -1165,7 +1166,7 @@ public abstract class AbstractConnector
 
         connectionStrategy.execute(new UMORetryCallback()
         {
-            public void doWork() throws Exception
+            public void doWork(RetryContext context) throws Exception
             {
                 doConnect();
             }
@@ -1222,7 +1223,7 @@ public abstract class AbstractConnector
      */
     public String getConnectionDescription()
     {
-        return this.toString();
+        return "connector." + getProtocol() + "." + getName();
     }
 
     /**

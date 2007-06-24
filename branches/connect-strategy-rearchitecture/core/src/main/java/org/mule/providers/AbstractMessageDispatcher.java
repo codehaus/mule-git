@@ -14,6 +14,7 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.RequestContext;
+import org.mule.impl.retry.RetryTemplate;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
@@ -32,6 +33,7 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.util.ClassUtils;
 import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.RetryContext;
 
 import java.beans.ExceptionListener;
 
@@ -47,14 +49,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher, ExceptionListener
 {
-    /**
-     * logger used by this class
-     */
+    /** logger used by this class */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    /**
-     * Thread pool of Connector sessions
-     */
+    /** Thread pool of Connector sessions */
     protected UMOWorkManager workManager = null;
 
     protected final UMOImmutableEndpoint endpoint;
@@ -72,7 +70,14 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         this.endpoint = endpoint;
         this.connector = (AbstractConnector) endpoint.getConnector();
 
-        connectionStrategy = connector.getConnectionStrategy();
+        if(endpoint.getRetryPolicyFactory()!=null)
+        {
+            connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+        }
+        else
+        {
+            connectionStrategy = connector.getConnectionStrategy();
+        }
 
         if (isDoThreading())
         {
@@ -125,36 +130,21 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         }
         // the security filter may update the payload so we need to get the
         // latest event again
-        event = RequestContext.getEvent();
+        final UMOEvent dispatchEvent = RequestContext.getEvent();
 
         try
         {
             UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
-            if (isDoThreading() && !event.isSynchronous() && tx == null)
+            Worker worker = new Worker(dispatchEvent);
+            if (isDoThreading() && !dispatchEvent.isSynchronous() && tx == null)
             {
-                workManager.scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
+                workManager.scheduleWork(worker, WorkManager.INDEFINITE, null, connector);
             }
             else
             {
-                // Make sure we are connected
-                connect();
-                doDispatch(event);
-                if (connector.isEnableMessageEvents())
-                {
-                    String component = null;
-                    if (event.getComponent() != null)
-                    {
-                        component = event.getComponent().getDescriptor().getName();
-                    }
-                    connector.fireNotification(new MessageNotification(event.getMessage(), event
-                            .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
-                }
+                //Execute within this thread
+                worker.run();
             }
-        }
-        catch (DispatchException e)
-        {
-            dispose();
-            throw e;
         }
         catch (Exception e)
         {
@@ -201,36 +191,44 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
         // the security filter may update the payload so we need to get the
         // latest event again
-        event = RequestContext.getEvent();
+        final UMOEvent currentEvent = RequestContext.getEvent();
         try
         {
-            // Make sure we are connected
-            connect();
-
-            UMOMessage result = doSend(event);
-            if (connector.isEnableMessageEvents())
+            RetryContext context = connectionStrategy.execute(new UMORetryCallback()
             {
-                String component = null;
-                if (event.getComponent() != null)
+                public void doWork(RetryContext context) throws Exception
                 {
-                    component = event.getComponent().getDescriptor().getName();
-                }
-                connector.fireNotification(new MessageNotification(event.getMessage(), event.getEndpoint(),
-                        component, MessageNotification.MESSAGE_SENT));
-            }
+                    // Make sure we are connected
+                    connect();
 
-            // Once a dispatcher has done its work we need to remove this property
-            // so that it is not propagated to the next request
-            if (result != null)
-            {
-                result.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
-            }
-            return result;
-        }
-        catch (DispatchException e)
-        {
-            dispose();
-            throw e;
+                    UMOMessage result = doSend(currentEvent);
+                    if (connector.isEnableMessageEvents())
+                    {
+                        String component = null;
+                        if (currentEvent.getComponent() != null)
+                        {
+                            component = currentEvent.getComponent().getDescriptor().getName();
+                        }
+                        connector.fireNotification(new MessageNotification(currentEvent.getMessage(), currentEvent.getEndpoint(),
+                                component, MessageNotification.MESSAGE_SENT));
+                    }
+
+                    // Once a dispatcher has done its work we need to remove this property
+                    // so that it is not propagated to the next request
+                    if (result != null)
+                    {
+                        result.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
+                        context.addReturnMessage(result);
+                    }
+                }
+
+                public String getWorkDescription()
+                {
+                    return getConnectionDescription();
+                }
+            });
+            return context.getFirstReturnMessage();
+
         }
         catch (Exception e)
         {
@@ -250,24 +248,33 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    public final UMOMessage receive(long timeout) throws Exception
+    public final UMOMessage receive(final long timeout) throws Exception
     {
+
         try
         {
-            // Make sure we are connected
-            connect();
-            UMOMessage result = doReceive(timeout);
-            if (result != null && connector.isEnableMessageEvents())
+            RetryContext context = connectionStrategy.execute(new UMORetryCallback()
             {
-                connector.fireNotification(new MessageNotification(result, endpoint, null,
-                        MessageNotification.MESSAGE_RECEIVED));
-            }
-            return result;
-        }
-        catch (DispatchException e)
-        {
-            dispose();
-            throw e;
+                public void doWork(RetryContext context) throws Exception
+                {
+                    // Make sure we are connected
+                    connect();
+                    UMOMessage result = doReceive(timeout);
+                    if (result != null && connector.isEnableMessageEvents())
+                    {
+                        connector.fireNotification(new MessageNotification(result, endpoint, null,
+                                MessageNotification.MESSAGE_RECEIVED));
+                    }
+                    context.setReturnMessages(new UMOMessage[]{result});
+                }
+
+                public String getWorkDescription()
+                {
+                    return getWorkDescription();
+                }
+            });
+            return context.getFirstReturnMessage();
+
         }
         catch (Exception e)
         {
@@ -309,9 +316,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         // nothing to do by default
     }
 
-    /**
-     * Template method to destroy any resources held by the Message Dispatcher
-     */
+    /** Template method to destroy any resources held by the Message Dispatcher */
     public final synchronized void dispose()
     {
         if (!disposed)
@@ -405,19 +410,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             return;
         }
 
-        connectionStrategy.execute(new UMORetryCallback()
-        {
-            public void doWork() throws Exception
-            {
-                doConnect();
-                connected = true;
-            }
-
-            public String getWorkDescription()
-            {
-                return getConnectionDescription();
-            }
-        });
+        doConnect();
+        connected = true;
     }
 
     public synchronized void disconnect() throws Exception
@@ -463,7 +457,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      */
     public String getConnectionDescription()
     {
-        return endpoint.getEndpointURI().toString();
+        return "endpoint." + endpoint.getEndpointURI().toString();
     }
 
     public synchronized void reconnect() throws Exception
@@ -513,22 +507,39 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             try
             {
-                RequestContext.setEvent(event);
-                // Make sure we are connected
-                connect();
-                AbstractMessageDispatcher.this.doDispatch(event);
-
-                if (connector.isEnableMessageEvents())
+                connectionStrategy.execute(new UMORetryCallback()
                 {
-                    String component = null;
-                    if (event.getComponent() != null)
+
+                    public void doWork(RetryContext context) throws Exception
                     {
-                        component = event.getComponent().getDescriptor().getName();
+
+                        RequestContext.setEvent(event);
+                        // Make sure we are connected
+                        connect();
+                        AbstractMessageDispatcher.this.doDispatch(event);
+
+                        if (connector.isEnableMessageEvents())
+                        {
+                            String component = null;
+                            if (event.getComponent() != null)
+                            {
+                                component = event.getComponent().getDescriptor().getName();
+                            }
+
+                            connector.fireNotification(new MessageNotification(event.getMessage(), event
+                                    .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                        }
                     }
 
-                    connector.fireNotification(new MessageNotification(event.getMessage(), event
-                            .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
+                    public String getWorkDescription()
+                    {
+                        return getConnectionDescription();
+                    }
                 }
+
+                );
+
+
             }
             catch (Exception e)
             {
