@@ -18,6 +18,7 @@ import org.mule.umo.UMOMessage;
 
 import java.util.Iterator;
 
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,6 +31,8 @@ public final class RequestContext
 {
     private static final Log logger = LogFactory.getLog(RequestContext.class);
     private static final ThreadLocal currentEvent = new ThreadLocal();
+
+    public static LinkedBlockingDeque history = new LinkedBlockingDeque();
 
     /** Do not instanciate. */
     private RequestContext()
@@ -52,11 +55,14 @@ public final class RequestContext
 
     public static UMOEvent getEvent()
     {
+        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(), System.currentTimeMillis(), "READ"));
         return (UMOEvent) currentEvent.get();
     }
 
     public static void setEvent(UMOEvent event)
     {
+        Throwable t = new Throwable();
+        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(), System.currentTimeMillis(), "WRITE"));
         currentEvent.set(event);
     }
 
@@ -137,4 +143,24 @@ public final class RequestContext
         return getEvent().getMessage().getExceptionPayload();
     }
 
+    public static final class TraceHolder
+    {
+        public final Throwable throwable;
+        public final long timestamp;
+        public final String tag;
+
+        public TraceHolder(final Throwable throwable, final long timestamp)
+        {
+            this.throwable = throwable;
+            this.timestamp = timestamp;
+            this.tag = null;
+        }
+
+        public TraceHolder(final Throwable throwable, final long timestamp, final String tag)
+        {
+            this.throwable = throwable;
+            this.timestamp = timestamp;
+            this.tag = tag;
+        }
+    }
 }

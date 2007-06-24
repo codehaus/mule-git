@@ -13,6 +13,7 @@ package org.mule.providers;
 import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.RequestContext;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
@@ -98,6 +99,13 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public Object removeProperty(String key)
     {
+        if (MuleProperties.MULE_REMOTE_SYNC_PROPERTY.equals(key))
+        {
+            RequestContext.TraceHolder trace = new RequestContext.TraceHolder(
+                    new Throwable().fillInStackTrace(), System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE"
+            );
+            RequestContext.history.addLast(trace);
+        }
         return properties.remove(key);
     }
 

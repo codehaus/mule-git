@@ -24,7 +24,7 @@
             Need to dig in DefaultMessageAdapter's propertyNames iterator, which is
             a view over a concurrent map, and thus tolerates changes, but breaks us.
         -->
-        <threading-profile id="dispatcher" doThreading="false"/>
+        <!--<threading-profile id="dispatcher" doThreading="false"/>-->
     </connector>
     
     <model name="loan-broker">

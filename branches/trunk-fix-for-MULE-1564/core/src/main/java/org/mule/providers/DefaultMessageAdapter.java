@@ -12,10 +12,16 @@ package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.RequestContext;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.ExceptionUtils;
+import org.mule.util.SystemUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <code>DefaultMessageAdapter</code> can be used to wrap an arbitary object where
@@ -80,9 +86,34 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
                     throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
                 }
             }
-            for (Iterator iterator = previous.getPropertyNames().iterator(); iterator.hasNext();)
+            final Set propertyNames = previous.getPropertyNames();
+            //final UMOEvent event = RequestContext.getEvent();
+            //final Object v = event.getMessage().getProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
+            //final String s = event.toString();
+            for (Iterator iterator = propertyNames.iterator(); iterator.hasNext();)
             {
                 String name = (String) iterator.next();
+
+                if (previous.getProperty(name) == null)
+                {
+                    //System.out.println("EVENT: " + s);
+                    //System.out.println(RequestContext.getEvent());
+                    final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
+
+                    RequestContext.TraceHolder here = new RequestContext.TraceHolder(
+                            new Throwable().fillInStackTrace(), System.currentTimeMillis(), "PROBLEM DETECTED"
+                    );
+                    RequestContext.history.addLast(here);
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        dump(sdf);
+                    }
+
+                    System.out.println(previous.toString());
+
+                }
+
                 try
                 {
                     setProperty(name, previous.getProperty(name));
@@ -97,6 +128,22 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         {
             throw new IllegalArgumentException("previousAdapter may not be null");
         }
+    }
+
+    private void dump(final SimpleDateFormat sdf)
+    {
+        final RequestContext.TraceHolder trace;
+        trace = (RequestContext.TraceHolder) RequestContext.history.removeLast();
+        StringBuffer sb = new StringBuffer(2048);
+        sb.append(sdf.format(new Date(trace.timestamp))).append(" : ");
+        if (trace.tag != null)
+        {
+            sb.append("<-------------- ").append(trace.tag).append(SystemUtils.LINE_SEPARATOR);
+        }
+        sb.append(ExceptionUtils.getStackTrace(trace.throwable));
+        System.out.println(sb);
+        System.out.println("---------------------------------");
+        System.out.println();
     }
 
     /**
