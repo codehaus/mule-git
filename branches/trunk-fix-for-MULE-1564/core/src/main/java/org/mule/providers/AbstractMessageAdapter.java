@@ -102,7 +102,9 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
         if (MuleProperties.MULE_REMOTE_SYNC_PROPERTY.equals(key))
         {
             RequestContext.TraceHolder trace = new RequestContext.TraceHolder(
-                    new Throwable().fillInStackTrace(), System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE"
+                    new Throwable().fillInStackTrace(),
+                    Thread.currentThread().getName(),
+                    System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE"
             );
             RequestContext.history.addLast(trace);
         }

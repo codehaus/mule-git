@@ -101,7 +101,9 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
                     final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
 
                     RequestContext.TraceHolder here = new RequestContext.TraceHolder(
-                            new Throwable().fillInStackTrace(), System.currentTimeMillis(), "PROBLEM DETECTED"
+                            new Throwable().fillInStackTrace(),
+                            Thread.currentThread().getName(),
+                            System.currentTimeMillis(), "PROBLEM DETECTED"
                     );
                     RequestContext.history.addLast(here);
 
@@ -136,6 +138,7 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         trace = (RequestContext.TraceHolder) RequestContext.history.removeLast();
         StringBuffer sb = new StringBuffer(2048);
         sb.append(sdf.format(new Date(trace.timestamp))).append(" : ");
+        sb.append(trace.threadName).append(' ');
         if (trace.tag != null)
         {
             sb.append("<-------------- ").append(trace.tag).append(SystemUtils.LINE_SEPARATOR);

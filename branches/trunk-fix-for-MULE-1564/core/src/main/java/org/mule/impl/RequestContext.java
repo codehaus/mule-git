@@ -55,14 +55,18 @@ public final class RequestContext
 
     public static UMOEvent getEvent()
     {
-        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(), System.currentTimeMillis(), "READ"));
+        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(),
+                                        Thread.currentThread().getName(),
+                                        System.currentTimeMillis(), "READ"));
         return (UMOEvent) currentEvent.get();
     }
 
     public static void setEvent(UMOEvent event)
     {
         Throwable t = new Throwable();
-        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(), System.currentTimeMillis(), "WRITE"));
+        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(),
+                                        Thread.currentThread().getName(),
+                                        System.currentTimeMillis(), "WRITE"));
         currentEvent.set(event);
     }
 
@@ -148,17 +152,20 @@ public final class RequestContext
         public final Throwable throwable;
         public final long timestamp;
         public final String tag;
+        public final String threadName;
 
-        public TraceHolder(final Throwable throwable, final long timestamp)
+        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp)
         {
             this.throwable = throwable;
+            this.threadName = threadName;
             this.timestamp = timestamp;
             this.tag = null;
         }
 
-        public TraceHolder(final Throwable throwable, final long timestamp, final String tag)
+        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp, final String tag)
         {
             this.throwable = throwable;
+            this.threadName = threadName;
             this.timestamp = timestamp;
             this.tag = tag;
         }
