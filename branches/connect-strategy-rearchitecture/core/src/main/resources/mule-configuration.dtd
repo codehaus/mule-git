@@ -528,7 +528,7 @@ Jndi
 
 -->
 
-<!ELEMENT endpoint ((transaction)?, (filter)?, (security-filter)?, (properties)?)>
+<!ELEMENT endpoint ((transaction)?, (filter)?, (security-filter)?, (retry-policy)?, (properties)?)>
 
 <!--
     The name attribute is used to bind a <i>endpoint</i> to a logical name in the system
@@ -635,6 +635,19 @@ Jndi
     or NEVER which will require a connector to be pre-configured.
 -->
 <!ATTLIST endpoint createConnector    (GET_OR_CREATE | ALWAYS_CREATE | NEVER_CREATE)       #IMPLIED>
+
+<!--
+The <i>retry-policy-factory</i> element specifies a strategy implementation used when making
+a connection to the underlying resource
+-->
+
+<!ELEMENT retry-policy (properties?)>
+
+<!--
+    The fully qualified classname to instanciate the retry strategy. This class must
+    implement <i>org.mule.util.retry.PolicyFactory</i>
+-->
+<!ATTLIST retry-policy factory             NMTOKEN        #REQUIRED>
 
 <!--
     A global endpoint reference
@@ -856,7 +869,7 @@ Jndi
     should behave.
 -->
 
-<!ELEMENT model (description?, entry-point-resolver?, component-factory?, component-lifecycle-adapter-factory?, component-pool-factory?, exception-strategy?, mule-descriptor*, bean*)>
+<!ELEMENT model (description?, entry-point-resolver?, component-factory?, component-lifecycle-adapter-factory?, component-pool-factory?, exception-strategy?, mule-descriptor*)>
 
 <!--
     The name to associate this mule-model with

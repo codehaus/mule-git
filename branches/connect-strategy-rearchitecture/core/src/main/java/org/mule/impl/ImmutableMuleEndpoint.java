@@ -23,6 +23,7 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransactionConfig;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -164,6 +165,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
      * determines if a new connector should be created for this endpoint
      */
     protected int createConnector = TransportFactory.GET_OR_CREATE_CONNECTOR;
+
+    protected UMOPolicyFactory retryPolicyFactory;
 
     /**
      * Default constructor.
@@ -307,6 +310,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         filter = source.getFilter();
         securityFilter = source.getSecurityFilter();
+        retryPolicyFactory = source.getRetryPolicyFactory();
     }
 
     /*
@@ -391,6 +395,19 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         clone.setFilter(filter);
         clone.setSecurityFilter(securityFilter);
 
+        try
+        {
+            if (responseTransformer != null)
+            {
+                clone.setResponseTransformer((UMOTransformer)responseTransformer.clone());
+            }
+        }
+        catch (CloneNotSupportedException e1)
+        {
+            // TODO throw exception instead of suppressing it
+            logger.error(e1.getMessage(), e1);
+        }
+
         if (remoteSync != null)
         {
             clone.setRemoteSync(isRemoteSync());
@@ -408,6 +425,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         clone.setDeleteUnacceptedMessages(deleteUnacceptedMessages);
 
         clone.setInitialState(initialState);
+        clone.setRetryPolicyFactory(retryPolicyFactory);
         if (initialised.get())
         {
             try
@@ -957,4 +975,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
     }
 
+    public UMOPolicyFactory getRetryPolicyFactory()
+    {
+        return retryPolicyFactory;
+    }
 }

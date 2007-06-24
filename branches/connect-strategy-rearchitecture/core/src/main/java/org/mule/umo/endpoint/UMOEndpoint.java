@@ -12,6 +12,7 @@ package org.mule.umo.endpoint;
 
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOTransactionConfig;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
@@ -213,4 +214,15 @@ public interface UMOEndpoint extends UMOImmutableEndpoint
      * @param stream true if the request should be streamed
      */
     void setStreaming(boolean stream);
+
+    /**
+     * The retry policy on the endpoint configures how retries are handled. THe behaviour is slightly different
+     * for inbound and outbound endpoints.
+     * For inbound endpoints the Retry Policy determines how the connection to the underlying transport will be
+     * managed if the connection is lost.
+     * For outbound endpoints, the Retry Policy will attempt to retry dispatching, sending and receiving an event
+     * @param factory the Policy factory to use when retring a connection or dispatching an event
+     */
+    void setRetryPolicyFactory(UMOPolicyFactory factory);
+
 }
