@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="QoSHeaders" version="1.0">
+    <connector name="jmsConnector" className="org.mule.providers.jms.JmsConnector">
+        <properties>
+            <property name="specification" value="1.1"/>
+            <property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+            <property name="jndiInitialFactory" value="org.apache.activemq.jndi.ActiveMQInitialContextFactory"/>
+            <map name="connectionFactoryProperties">
+                <property name="useEmbeddedBroker" value="true"/>
+                <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+            </map>
+            <property name="persistentDelivery" value="false"/>
+            <property name="honorQosHeaders" value="true"/>
+        </properties>
+    </connector>
+
+    <model name="QoSHeadersTest">
+        <mule-descriptor name="Bridge" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="jms://test.in"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jms://test.out"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>
