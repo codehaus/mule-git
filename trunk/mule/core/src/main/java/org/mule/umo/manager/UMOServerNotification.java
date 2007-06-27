@@ -40,6 +40,7 @@ public abstract class UMOServerNotification extends EventObject
     public static final int MESSAGE_EVENT_ACTION_START_RANGE = 800;
     public static final int SPACE_EVENT_ACTION_START_RANGE = 900;
     public static final int REGISTRY_EVENT_ACTION_START_RANGE = 1000;
+    public static final int EXCEPTION_EVENT_ACTION_START_RANGE = 1100;
     public static final int CUSTOM_EVENT_ACTION_START_RANGE = 100000;
 
     public static final int NULL_ACTION = 0;

@@ -26,6 +26,8 @@ import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.CustomNotification;
 import org.mule.impl.internal.notifications.CustomNotificationListener;
+import org.mule.impl.internal.notifications.ExceptionNotification;
+import org.mule.impl.internal.notifications.ExceptionNotificationListener;
 import org.mule.impl.internal.notifications.ManagementNotification;
 import org.mule.impl.internal.notifications.ManagementNotificationListener;
 import org.mule.impl.internal.notifications.ManagerNotification;
@@ -252,6 +254,7 @@ public class MuleManager implements UMOManager
         notificationManager.registerEventType(CustomNotification.class, CustomNotificationListener.class);
         notificationManager.registerEventType(ConnectionNotification.class,
             ConnectionNotificationListener.class);
+        notificationManager.registerEventType(ExceptionNotification.class, ExceptionNotificationListener.class);
 
         // TODO RM*: This is obviously just a workaround until extension modules can register
         // their own classes for notifications. Need to revisit this when the
