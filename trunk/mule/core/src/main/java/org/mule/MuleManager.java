@@ -40,6 +40,8 @@ import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.internal.notifications.SecurityNotificationListener;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.TransactionNotification;
+import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.model.ModelFactory;
 import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleSecurityManager;
@@ -255,6 +257,7 @@ public class MuleManager implements UMOManager
         notificationManager.registerEventType(ConnectionNotification.class,
             ConnectionNotificationListener.class);
         notificationManager.registerEventType(ExceptionNotification.class, ExceptionNotificationListener.class);
+        notificationManager.registerEventType(TransactionNotification.class, TransactionNotificationListener.class);
 
         // TODO RM*: This is obviously just a workaround until extension modules can register
         // their own classes for notifications. Need to revisit this when the

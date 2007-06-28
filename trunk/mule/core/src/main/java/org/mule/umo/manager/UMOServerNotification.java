@@ -19,9 +19,7 @@ import java.util.EventObject;
 /**
  * <code>UMOServerNotification</code> is an event triggered by something happening
  * in the Server itself such as the server starting or a component being registered
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ *
  */
 public abstract class UMOServerNotification extends EventObject
 {
@@ -41,6 +39,7 @@ public abstract class UMOServerNotification extends EventObject
     public static final int SPACE_EVENT_ACTION_START_RANGE = 900;
     public static final int REGISTRY_EVENT_ACTION_START_RANGE = 1000;
     public static final int EXCEPTION_EVENT_ACTION_START_RANGE = 1100;
+    public static final int TRANSACTION_EVENT_ACTION_START_RANGE = 1200;
     public static final int CUSTOM_EVENT_ACTION_START_RANGE = 100000;
 
     public static final int NULL_ACTION = 0;
