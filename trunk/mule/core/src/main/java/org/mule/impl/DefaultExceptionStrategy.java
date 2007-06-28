@@ -10,13 +10,10 @@
 
 package org.mule.impl;
 
-import org.mule.MuleManager;
-import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.ObjectUtils;
 
 /**
@@ -69,25 +66,5 @@ public class DefaultExceptionStrategy extends AbstractExceptionListener
         {
             RequestContext.setExceptionPayload(new ExceptionPayload(t));
         }
-
-        this.fireNotification(new ExceptionNotification(t));
-
     }
-
-    /**
-     * Fires a server notification to all registered
-     * {@link org.mule.impl.internal.notifications.ExceptionNotificationListener}
-     * eventManager.
-     *
-     * @param notification the notification to fire. This must be of type
-     *            {@link org.mule.impl.internal.notifications.ExceptionNotification}
-     *            otherwise an exception will be thrown.
-     * @throws UnsupportedOperationException if the notification fired is not a
-     *             {@link org.mule.impl.internal.notifications.ExceptionNotification}
-     */
-    public void fireNotification(UMOServerNotification notification)
-    {
-        MuleManager.getInstance().fireNotification(notification);
-    }
-
 }
