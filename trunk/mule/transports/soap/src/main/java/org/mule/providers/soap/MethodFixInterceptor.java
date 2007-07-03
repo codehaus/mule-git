@@ -27,7 +27,7 @@ public class MethodFixInterceptor extends EnvelopeInterceptor
 
     public void before(Invocation invocation) throws UMOException
     {
-        invocation.getMessage().setProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY, new Boolean(true));
+        invocation.getMessage().setProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY, Boolean.TRUE);
     }
 
     public void after(Invocation invocation) throws UMOException
