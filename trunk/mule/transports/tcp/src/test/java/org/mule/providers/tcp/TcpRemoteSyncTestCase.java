@@ -35,8 +35,8 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
        Map props = new HashMap();
        
        //must notify the client to wait for a response from the server
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, new Boolean(true));
-       UMOMessage reply = client.send("tcp://localhost:6161", new MuleMessage(message), props, 10000000);
+       props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
+       UMOMessage reply = client.send("tcp://localhost:6161", new MuleMessage(message), props, 10000);
 
        assertNotNull(reply);
        assertNotNull(reply.getPayload());
@@ -50,7 +50,7 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
         Map props = new HashMap();
         
         //must notify the client to wait for a response from the server
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, new Boolean(true));
+        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
         
         UMOMessage reply = client.send("tcp://localhost:6163", new MuleMessage(message), props);
 
