@@ -425,6 +425,11 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 103, string);
     }
 
+    public static Message transactionNotAvailableButActionIs(String string)
+    {
+        return createMessage(BUNDLE_PATH, 104, string);
+    }
+
     public static Message noCatchAllEndpointSet()
     {
         return createMessage(BUNDLE_PATH, 105);
