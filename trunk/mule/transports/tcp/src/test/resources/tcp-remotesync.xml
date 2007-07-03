@@ -15,7 +15,7 @@
         
     </connector>
     
-	<model name="Tcp_wit_remote_sync">
+	<model name="Tcp_with_remote_sync">
 		
         <mule-descriptor name="Echo1" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
