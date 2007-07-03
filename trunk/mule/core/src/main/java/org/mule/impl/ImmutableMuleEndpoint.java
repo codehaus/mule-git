@@ -464,8 +464,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         }
 
-        return ClassUtils.getClassName(this.getClass()) + "{connector=" + connector + ", endpointUri="
-               + sanitizedEndPointUri + ", transformer=" + transformer + ", name='" + name + "'" 
+        return ClassUtils.getClassName(this.getClass()) + "{endpointUri=" + sanitizedEndPointUri
+               + ", connector=" + connector +  ", transformer=" + transformer + ", name='" + name + "'" 
                + ", type='" + type + "'" + ", properties=" + properties + ", transactionConfig=" 
                + transactionConfig + ", filter=" + filter + ", deleteUnacceptedMessages=" 
                + deleteUnacceptedMessages + ", initialised=" + initialised + ", securityFilter=" 
