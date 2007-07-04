@@ -36,7 +36,6 @@ public class LibraryDownloader
 {
     static final int STARTUP_TIMEOUT = 120000;
     static final String REPO_CENTRAL = "http://www.ibiblio.org/maven2";
-    static final String REPO_MULESOURCE = "http://dist.codehaus.org/mule/dependencies/maven2";
 
     static String proxyHostname = System.getProperty("http.proxyHost");
     static String proxyPort = System.getProperty("http.proxyPort");
