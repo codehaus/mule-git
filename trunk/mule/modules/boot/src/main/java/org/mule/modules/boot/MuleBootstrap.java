@@ -11,8 +11,6 @@
 package org.mule.modules.boot;
 
 import org.mule.MuleServer;
-import org.mule.util.ClassUtils;
-import org.mule.util.SystemUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.tanukisoftware.wrapper.WrapperManager;
-import org.tanukisoftware.wrapper.WrapperSimpleApp;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
@@ -73,7 +70,7 @@ public class MuleBootstrap
             muleBase = new File(muleBaseVar).getCanonicalFile();
         }
         else
-        {
+        {                                                                          
             muleBase = muleHome;
         }
 
@@ -84,7 +81,7 @@ public class MuleBootstrap
 
         // If the license ack file isn't on the classpath, we need to
         // display the EULA and make sure the user accepts it before continuing
-        if (ClassUtils.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null)
+        if (ReflectionHelper.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null)
         {
             LicenseHandler licenseHandler = new LicenseHandler(muleHome, muleBase);
             // If the user didn't accept the license, then we have to exit
@@ -101,7 +98,7 @@ public class MuleBootstrap
         // 
         // Now we will download these libraries to MULE_BASE/lib/user. In
         // a standard installation, MULE_BASE will be MULE_HOME.
-        if (!ClassUtils.isClassOnPath("javax.activation.DataSource", MuleBootstrap.class))
+        if (!ReflectionHelper.isClassOnPath("javax.activation.DataSource", MuleBootstrap.class))
         {
             LibraryDownloader downloader = new LibraryDownloader(muleBase);
             addLibrariesToClasspath(downloader.downloadLibraries());
@@ -113,7 +110,8 @@ public class MuleBootstrap
 
         try
         {
-            mainClassName = SystemUtils.getCommandLineOption("main", args, MuleServer.CLI_OPTIONS);
+            final String[][] cliOptions = ReflectionHelper.getCliOptions();
+            mainClassName = ReflectionHelper.getCommandLineOption("main", args, cliOptions);
         }
         catch (Exception e)
         {
@@ -132,7 +130,7 @@ public class MuleBootstrap
         System.arraycopy(args, 0, appArgs, 1, args.length);
 
         // Call the wrapper
-        WrapperSimpleApp.main(appArgs);
+        ReflectionHelper.wrapperMain(appArgs);
     }
 
     private static void addLibrariesToClasspath(List urls)
