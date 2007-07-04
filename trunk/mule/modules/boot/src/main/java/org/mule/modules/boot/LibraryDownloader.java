@@ -35,7 +35,7 @@ import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 public class LibraryDownloader
 {
     static final int STARTUP_TIMEOUT = 120000;
-    static final String REPO_CENTRAL = "http://www.ibiblio.org/maven2";
+    static final String REPO_CENTRAL = "http://repo1.maven.org/maven2";
 
     static String proxyHostname = System.getProperty("http.proxyHost");
     static String proxyPort = System.getProperty("http.proxyPort");
