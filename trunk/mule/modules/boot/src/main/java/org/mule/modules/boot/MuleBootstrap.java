@@ -20,8 +20,6 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.tanukisoftware.wrapper.WrapperManager;
-
 /**
  * Determine which is the main class to run and delegate control to the Java Service
  * Wrapper. <p/> MuleBootstrap class is responsible for constructing Mule's classpath
@@ -89,7 +87,7 @@ public class MuleBootstrap
             // (by default it'll try to start 3 times)
             if (!licenseHandler.getAcceptance())
             {
-                WrapperManager.stop(-1);
+                ReflectionHelper.wrapperStop(-1);
             }
         }
 
@@ -116,7 +114,7 @@ public class MuleBootstrap
         catch (Exception e)
         {
             System.out.println(e.toString());
-            WrapperManager.stop(-1);
+            ReflectionHelper.wrapperStop(-1);
         }
 
         if (mainClassName == null)

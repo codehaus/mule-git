@@ -92,4 +92,15 @@ public class ReflectionHelper
         Method m = clazz.getMethod("main", new Class[] {String[].class});
         m.invoke(null, new Object[] {args});
     }
+
+    /**
+     * Wrap {@link WrapperSimpleApp#stop(int)}.
+     */
+    public static void wrapperStop(int exitCode) throws Exception
+    {
+        Class clazz = WrapperSimpleApp.class;
+        Method m = clazz.getMethod("stop", new Class[] {int.class});
+        m.invoke(null, new Object[] {new Integer(exitCode)});
+    }
+
 }
