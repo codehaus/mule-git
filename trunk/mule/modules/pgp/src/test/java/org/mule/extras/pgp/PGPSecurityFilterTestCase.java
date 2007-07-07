@@ -13,8 +13,8 @@ package org.mule.extras.pgp;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.security.UnauthorisedException;
+import org.mule.util.FileUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
@@ -30,7 +30,7 @@ public class PGPSecurityFilterTestCase extends FunctionalTestCase
     {
         URL url = Thread.currentThread().getContextClassLoader().getResource("./encrypted-signed.asc");
 
-        int length = (int)new File(url.getFile()).length();
+        int length = (int) FileUtils.newFile(url.getFile()).length();
         byte[] msg = new byte[length];
 
         FileInputStream in = new FileInputStream(url.getFile());

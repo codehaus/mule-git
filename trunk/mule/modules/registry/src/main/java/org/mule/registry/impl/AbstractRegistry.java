@@ -69,7 +69,7 @@ public abstract class AbstractRegistry implements Registry
         this.assembliesMap = new HashMap();
         this.componentsMap = new HashMap();
 
-        workingDirectory = new File(MuleManager.getConfiguration().getWorkingDirectory(), REGISTRY_DIRECTORY);
+        workingDirectory = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), REGISTRY_DIRECTORY);
     }
 
     public File getWorkingDirectory()

@@ -65,7 +65,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         super.doSetUp();
         // The working directory is deleted on tearDown
-        tempDir = new File(MuleManager.getConfiguration().getWorkingDirectory(), tempDirName);
+        tempDir = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), tempDirName);
         if (!tempDir.exists())
         {
             tempDir.mkdirs();
@@ -79,7 +79,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         // TestConnector dispatches events via the test: protocol to test://test
         // endpoints, which seems to end up in a directory called "test" :(
-        FileUtils.deleteTree(new File(getTestConnector().getProtocol()));
+        FileUtils.deleteTree(FileUtils.newFile(getTestConnector().getProtocol()));
         super.doTearDown();
     }
     

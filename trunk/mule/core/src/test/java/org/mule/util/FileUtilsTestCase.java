@@ -20,7 +20,7 @@ public class FileUtilsTestCase extends AbstractMuleTestCase
 {
     private final String TEST_FILE = "testFile.txt";
     private final String TEST_DIRECTORY = "target" + File.separator + "testDirectory";
-    private final File toDir = new File(TEST_DIRECTORY);
+    private final File toDir = FileUtils.newFile(TEST_DIRECTORY);
 
     protected void doSetUp() throws Exception
     {
@@ -48,7 +48,7 @@ public class FileUtilsTestCase extends AbstractMuleTestCase
 
             file = FileUtils.stringToFile(TEST_FILE, " and this is appended content", true);
 
-            String content = FileUtils.readFileToString(new File(TEST_FILE), null);
+            String content = FileUtils.readFileToString(FileUtils.newFile(TEST_FILE), null);
 
             assertNotNull(content);
             assertTrue(content.indexOf("this is a test file") > -1);

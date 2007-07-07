@@ -149,7 +149,7 @@ public class ManagementContext
             {
                 s = "0" + s;
             }
-            File f = new File(rootDir, File.separator + TEMP_DIR + File.separator + s);
+            File f = FileUtils.newFile(rootDir, File.separator + TEMP_DIR + File.separator + s);
             if (!f.exists())
             {
                 return f;
@@ -159,49 +159,49 @@ public class ManagementContext
 
     public File getComponentInstallDir(File rootDir, String name)
     {
-        return new File(rootDir, COMPONENTS_DIR + File.separator + validateString(name));
+        return FileUtils.newFile(rootDir, COMPONENTS_DIR + File.separator + validateString(name));
     }
 
     public File getComponentWorkspaceDir(File rootDir, String name)
     {
-        return new File(rootDir, WORKSPACE_DIR + File.separator + validateString(name));
+        return FileUtils.newFile(rootDir, WORKSPACE_DIR + File.separator + validateString(name));
     }
 
     public File getLibraryInstallDir(File rootDir, String name)
     {
-        return new File(rootDir, LIBRARIES_DIR + File.separator + validateString(name));
+        return FileUtils.newFile(rootDir, LIBRARIES_DIR + File.separator + validateString(name));
     }
 
     public File getAssemblyInstallDir(File rootDir, String name)
     {
-        return new File(rootDir, ASSEMBLIES_DIR + File.separator + validateString(name));
+        return FileUtils.newFile(rootDir, ASSEMBLIES_DIR + File.separator + validateString(name));
     }
 
     public static File getAutoInstallDir(File rootDir)
     {
-        return new File(rootDir, INSTALL_DIR);
+        return FileUtils.newFile(rootDir, INSTALL_DIR);
     }
 
     public File getAutoInstallProcessedDir(File rootDir)
     {
-        return new File(rootDir, INSTALL_DIR + File.separator + PROCESSED_DIR);
+        return FileUtils.newFile(rootDir, INSTALL_DIR + File.separator + PROCESSED_DIR);
     }
 
     public File getAutoDeployDir(File rootDir)
     {
-        return new File(rootDir, DEPLOY_DIR);
+        return FileUtils.newFile(rootDir, DEPLOY_DIR);
     }
 
     public File getAutoDeployProcessedDir(File rootDir)
     {
-        return new File(rootDir, DEPLOY_DIR + File.separator + PROCESSED_DIR);
+        return FileUtils.newFile(rootDir, DEPLOY_DIR + File.separator + PROCESSED_DIR);
     }
 
     public void deleteMarkedDirectories(File dir)
     {
         if (dir != null && dir.isDirectory())
         {
-            if (new File(dir, ".delete").isFile())
+            if (FileUtils.newFile(dir, ".delete").isFile())
             {
                 deleteDir(dir);
             }
@@ -231,7 +231,7 @@ public class ManagementContext
         {
             try
             {
-                new File(dir, ".delete").createNewFile();
+                FileUtils.newFile(dir, ".delete").createNewFile();
             }
             catch (IOException e)
             {
