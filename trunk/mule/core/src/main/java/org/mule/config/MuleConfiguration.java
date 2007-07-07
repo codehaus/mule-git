@@ -420,7 +420,7 @@ public class MuleConfiguration
     {
         if (embedded)
         {
-            serverUrl = null;
+            this.serverUrl = null;
         }
         else
         {
