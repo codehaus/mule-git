@@ -279,4 +279,27 @@ public class FileUtilsTestCase extends AbstractMuleTestCase
         FileUtils.deleteTree(outputDir);
     }
 
+    public void testDeleteTreeWithIgnoredDirectories() throws Exception
+    {
+        final String testDir = TEST_DIRECTORY + File.separator + "Test-deleting";
+        File outputDir = FileUtils.newFile(testDir);
+        if (!outputDir.exists())
+        {
+            outputDir.mkdirs();
+        }
+
+        File toBeDeleted1 = FileUtils.newFile(outputDir, "toBeDeleted1/");
+        toBeDeleted1.mkdirs();
+        File toBeDeleted2 = FileUtils.newFile(outputDir, "toBeDeleted2/");
+        toBeDeleted2.mkdirs();
+
+        File keepMeIntact = FileUtils.newFile(outputDir, "keepMeIntact/");
+        keepMeIntact.mkdirs();
+
+        FileUtils.deleteTree(outputDir, new String[] {"keepMeIntact"});
+
+        assertTrue("Shouldn't have been deleted.", keepMeIntact.exists());
+
+        FileUtils.deleteTree(outputDir);
+    }
 }
