@@ -25,6 +25,7 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
+import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -69,6 +71,9 @@ public abstract class AbstractMuleTestCase extends TestCase
             // per default, revert to the old behaviour
             verbose = true;
         }
+
+        // register the custom UrlStreamHandlerFactory.
+        MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
     }
     
     public AbstractMuleTestCase()
