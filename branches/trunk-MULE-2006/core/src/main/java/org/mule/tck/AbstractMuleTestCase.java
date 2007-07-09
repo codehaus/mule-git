@@ -44,6 +44,13 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractMuleTestCase extends TestCase
 {
     /**
+     * Top-level directories under <code>.mule</code> which are not deleted on each
+     * test case recycle. This is required, e.g. to play nice with transaction manager
+     * recovery service object store.
+     */
+    public static final String[] INGORED_MULE_WORD_DIRS = new String[] {"transaction-log"};
+
+    /**
      * This flag controls whether the text boxes will be logged when starting each test case.
      */
     private static final boolean verbose;
@@ -286,7 +293,10 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             MuleManager.getInstance().dispose();
         }
-        FileUtils.deleteTree(FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory()));
+
+        // do not delete TM recovery object store, everything else is good to go
+        FileUtils.deleteTree(FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory()),
+                             INGORED_MULE_WORD_DIRS);
         FileUtils.deleteTree(FileUtils.newFile("./ActiveMQ"));
         MuleManager.setConfiguration(new MuleConfiguration());
     }
