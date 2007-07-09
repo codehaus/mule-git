@@ -58,6 +58,8 @@ public abstract class AbstractMuleTestCase extends TestCase
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
 
     private static Map testCounters;
+    
+    private TestCaseWatchdog watchdog;
 
     static
     {
@@ -200,7 +202,8 @@ public abstract class AbstractMuleTestCase extends TestCase
     protected final void setUp() throws Exception
     {
         // start a watchdog thread that kills the VM after 30 minutes timeout
-        new TestCaseWatchdog(30, TimeUnit.MINUTES).start();
+        watchdog = new TestCaseWatchdog(30, TimeUnit.MINUTES);
+        watchdog.start();
         
         if (verbose)
         {
@@ -287,6 +290,9 @@ public abstract class AbstractMuleTestCase extends TestCase
                     disposeManager();
                 }
             }
+            
+            // remove the watchdog thread
+            watchdog.cancel();
         }
     }
 
