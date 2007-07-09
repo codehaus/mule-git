@@ -50,6 +50,7 @@ import javax.jms.QueueConnection;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.TopicConnection;
+import javax.transaction.Status;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -149,11 +150,12 @@ public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFu
         assertTrue(currentMsg instanceof TextMessage);
         assertEquals(DEFAULT_MESSAGE + " Received", ((TextMessage)currentMsg).getText());
         assertTrue(callbackCalled);
-        assertTrue(currentTx.isBegun());
-        // TODO for some reason, it takes a while for committed flag on the tx
-        // to update
-        Thread.sleep(1000);
-        assertTrue(currentTx.isCommitted());
+
+
+        //assertTrue(currentTx.isBegun());
+        //Thread.sleep(1000);
+        assertEquals(Status.STATUS_NO_TRANSACTION, currentTx.getStatus());
+        assertEquals(Status.STATUS_NO_TRANSACTION, MuleManager.getInstance().getTransactionManager().getStatus());
 
     }
 
@@ -218,11 +220,9 @@ public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFu
         if (transactionAvailable)
         {
             assertNotNull(currentTx);
-            assertTrue(currentTx.isBegun());
-            // TODO for some reason, it takes a while for committed flag on the
-            // tx to update
-            Thread.sleep(300);
-            assertTrue(currentTx.isCommitted());
+            //assertTrue(currentTx.isBegun());
+            assertEquals(Status.STATUS_NO_TRANSACTION, currentTx.getStatus());
+            assertEquals(Status.STATUS_NO_TRANSACTION, MuleManager.getInstance().getTransactionManager().getStatus());
         }
         else
         {

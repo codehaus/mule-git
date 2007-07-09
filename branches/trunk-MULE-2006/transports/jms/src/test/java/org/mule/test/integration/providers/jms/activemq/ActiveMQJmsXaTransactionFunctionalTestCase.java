@@ -11,6 +11,7 @@
 package org.mule.test.integration.providers.jms.activemq;
 
 import org.mule.MuleManager;
+import org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.TransactedJmsMessageReceiver;
@@ -27,8 +28,6 @@ import javax.transaction.TransactionManager;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQXAConnectionFactory;
-import org.objectweb.jotm.Current;
-import org.objectweb.jotm.Jotm;
 
 public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTransactionFunctionalTestCase
 {
@@ -52,14 +51,18 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
     protected void doSetUp() throws Exception
     {
         // check for already active JOTM instance
-        txManager = Current.getCurrent();
+        //txManager = Current.getCurrent();
         // if none found, create new local JOTM instance
-        if (txManager == null)
-        {
-            new Jotm(true, false);
-            txManager = Current.getCurrent();
-        }
-        txManager.setTransactionTimeout(15000);
+        //if (txManager == null)
+        //{
+        //    new Jotm(true, false);
+        //    txManager = Current.getCurrent();
+        //}
+        //txManager.setTransactionTimeout(15000);
+
+        JBossArjunaTransactionManagerFactory factory = new JBossArjunaTransactionManagerFactory();
+        txManager = factory.create();
+
         super.doSetUp();
         MuleManager.getInstance().setTransactionManager(txManager);
     }
