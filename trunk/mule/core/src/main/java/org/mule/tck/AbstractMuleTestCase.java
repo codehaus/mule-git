@@ -30,6 +30,8 @@ import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -197,6 +199,9 @@ public abstract class AbstractMuleTestCase extends TestCase
 
     protected final void setUp() throws Exception
     {
+        // start a watchdog thread that kills the VM after 30 minutes timeout
+        new TestCaseWatchdog(30, TimeUnit.MINUTES).start();
+        
         if (verbose)
         {
             System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));   
