@@ -67,6 +67,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-jbossts</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>4.1.0-incubator</version>
