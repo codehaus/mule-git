@@ -20,9 +20,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkMode>pertest</forkMode>
-                    <!--<excludes>-->
-                        <!--<exclude implementation="java.lang.String">**/ActiveMQ*.*</exclude>-->
-                    <!--</excludes>-->
+                    <excludes>
+                        <!-- http://mule.mulesource.org/jira/browse/MULE-2011 -->
+                        <exclude implementation="java.lang.String">org/mule/test/integration/providers/jms/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
