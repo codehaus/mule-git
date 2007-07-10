@@ -277,22 +277,27 @@ public abstract class AbstractMuleTestCase extends TestCase
         }
         finally
         {
-            getTestInfo().incRunCount();
-            if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
+            try
             {
-                try
+                getTestInfo().incRunCount();
+                if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
                 {
-                    suitePostTearDown();
-                }
-                finally
-                {
-                    clearCounter();
-                    disposeManager();
+                    try
+                    {
+                        suitePostTearDown();
+                    }
+                    finally
+                    {
+                        clearCounter();
+                        disposeManager();
+                    }
                 }
             }
-            
-            // remove the watchdog thread
-            watchdog.cancel();
+            finally 
+            {
+                // remove the watchdog thread in any case
+                watchdog.cancel();
+            }
         }
     }
 
