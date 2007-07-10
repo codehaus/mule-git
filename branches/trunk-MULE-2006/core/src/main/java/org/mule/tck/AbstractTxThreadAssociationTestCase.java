@@ -19,16 +19,10 @@ import org.mule.transaction.XaTransaction;
 import org.mule.transaction.XaTransactionFactory;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.manager.UMOTransactionManagerFactory;
-import org.mule.util.ExceptionUtils;
-import org.mule.util.concurrent.Latch;
 
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-import junit.framework.AssertionFailedError;
 
 /**
  * Validate certain expectations when working with JTA API. It is called to catch discrepancies in TM implementations
@@ -37,86 +31,50 @@ import junit.framework.AssertionFailedError;
 public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTestCase
 {
     /* To allow access from the dead TX threads we spawn. */
-    private AtomicReference/*TransactionManager*/ tmRef = new AtomicReference();
+    private TransactionManager tm;
     protected static final int TRANSACTION_TIMEOUT_SECONDS = 3;
 
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
         UMOTransactionManagerFactory factory = getTransactionManagerFactory();
-        tmRef.set(factory.create());
+        tm = factory.create();
+        assertNotNull("Transaction Manager should be available.", tm);
+        assertNull("There sould be no current transaction associated.", tm.getTransaction());
     }
 
     public void testTxHandleCommitKeepsThreadAssociation() throws Exception
     {
-        final TransactionManager tm = getTransactionManager();
-        assertNotNull("Transaction Manager should be available.", tm);
-        assertNull("There sould be no current transaction associated.", tm.getTransaction());
+        // don't wait for ages, has to be set before TX is begun
+        tm.setTransactionTimeout(TRANSACTION_TIMEOUT_SECONDS);
+        tm.begin();
 
-        final AtomicReference failure = new AtomicReference();
+        Transaction tx = tm.getTransaction();
+        assertNotNull("Transaction should have started.", tx);
+        assertEquals("TX should have been active", Status.STATUS_ACTIVE, tx.getStatus());
 
-        /*
-            This thread will do Transaction.commit() (in contrast to TransactionManager.commit()).
-            TX-Thread association cannot be broken with standard JTA API after that, so we create
-            a sandbox'ed thread to play with. Typically these TXs are subject to manual recovery
-            via TM consoles, and are another kind of heuristic outcomes.
-         */
-        Thread deadTxThread = new Thread()
-        {
-            public void run()
-            {
+        tx.commit();
 
-                try
-                {
-                    // don't wait for ages, has to be set before TX is begun
-                    tm.setTransactionTimeout(TRANSACTION_TIMEOUT_SECONDS);
-                    tm.begin();
+        tx = tm.getTransaction();
+        assertNotNull("Committing via TX handle should NOT disassociate TX from the current thread.",
+                      tx);
+        assertEquals("TX status should have been COMMITTED.", Status.STATUS_COMMITTED, tx.getStatus());
 
-                    Transaction tx = tm.getTransaction();
-                    assertNotNull("Transaction should have started.", tx);
-                    assertEquals("TX should have been active", Status.STATUS_ACTIVE, tx.getStatus());
+        // Remove the TX-thread association. The only public API to achieve it is suspend(),
+        // technically we never resume the same transaction (TX forget).
+        Transaction suspended = tm.suspend();
+        assertTrue("Wron TX suspended?.", suspended.equals(tx));
+        assertNull("TX should've been disassociated from the thread.", tm.getTransaction());
 
-                    tx.commit();
-
-                    tx = tm.getTransaction();
-                    assertNotNull("Committing via TX handle should NOT disassociate TX from the current thread.",
-                                  tx);
-                    assertEquals("TX status should have been COMMITTED.", Status.STATUS_COMMITTED, tx.getStatus());
-                }
-                catch (AssertionFailedError afex)
-                {
-                    // spawned thread doesn't fail the main test execution, so we do it manually later
-                    failure.set(afex);
-                }
-                catch (Exception ex)
-                {
-                    fail(ex.getMessage());
-                }
-            }
-        };
-
-        Latch txLatch = new Latch();
-        deadTxThread.setName("THREAD WITH A DEAD TX IN COMMITTED STATE");
-        deadTxThread.start();
-
-        // add an extra time buffer so nobody can point fingers ;)
-        txLatch.await(TRANSACTION_TIMEOUT_SECONDS + 1, TimeUnit.SECONDS);
+        // should be no-op and never fail
+        tm.resume(null);
 
         // ensure we don't have any TX-Thread association lurking around a main thread
         assertNull(tm.getTransaction());
-
-        // if there were any failures in the dead TX thread, fail the main one here
-        if (failure.get() != null)
-        {
-            fail(ExceptionUtils.getRootCauseMessage((Throwable) failure.get()));
-        }
     }
 
     public void testTxManagerCommitDissassociatesThread() throws Exception
     {
-        final TransactionManager tm = getTransactionManager();
-        assertNotNull("Transaction Manager should be available.", tm);
-        assertNull("There sould be no current transaction associated.", tm.getTransaction());
         // don't wait for ages, has to be set before TX is begun
         tm.setTransactionTimeout(TRANSACTION_TIMEOUT_SECONDS);
         tm.begin();
@@ -133,9 +91,6 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
 
     public void testTxManagerRollbackDissassociatesThread() throws Exception
     {
-        final TransactionManager tm = getTransactionManager();
-        assertNotNull("Transaction Manager should be available.", tm);
-        assertNull("There sould be no current transaction associated.", tm.getTransaction());
         // don't wait for ages, has to be set before TX is begun
         tm.setTransactionTimeout(TRANSACTION_TIMEOUT_SECONDS);
         tm.begin();
@@ -158,9 +113,6 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
      */
     public void testXaTransactionTermination() throws Exception
     {
-        final TransactionManager tm = getTransactionManager();
-        assertNotNull("Transaction Manager should be available.", tm);
-
         MuleManager.getInstance().setTransactionManager(tm);
         assertNull("There sould be no current transaction associated.", tm.getTransaction());
         
@@ -188,9 +140,6 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
      */
     public void testNoNestedTxStarted() throws Exception
     {
-        final TransactionManager tm = getTransactionManager();
-        assertNotNull("Transaction Manager should be available.", tm);
-
         MuleManager.getInstance().setTransactionManager(tm);
         assertNull("There sould be no current transaction associated.", tm.getTransaction());
 
@@ -232,7 +181,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
 
     protected TransactionManager getTransactionManager()
     {
-        return (TransactionManager) tmRef.get();
+        return tm;
     }
 
     protected abstract UMOTransactionManagerFactory getTransactionManagerFactory();
