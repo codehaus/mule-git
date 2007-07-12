@@ -312,19 +312,25 @@ Assembly descriptor for the full Mule distribution.
           <directory>../../../tools/visualizer/win32</directory>
           <outputDirectory>lib/native/visualizer</outputDirectory>
       </fileSet>
-      <!--<fileSet>-->
-          <!--<directory>../../tools/visualizer/conf</directory>-->
-          <!--<outputDirectory>conf</outputDirectory>-->
-      <!--</fileSet>-->
-      <!--<fileSet>-->
-          <!--<directory>../../tools/visualizer/bin</directory>-->
-          <!--<outputDirectory>bin</outputDirectory>-->
-          <!--<fileMode>755</fileMode>-->
-          <!--<includes>-->
-              <!--<include>visualizer</include>-->
-              <!--<include>visualizer.cmd</include>-->
-          <!--</includes>-->
-      <!--</fileSet>-->
+      <fileSet>
+          <directory>../../../tools/visualizer/src/main/resources/bin</directory>
+          <outputDirectory>bin</outputDirectory>
+          <fileMode>755</fileMode>
+          <includes>
+              <include>launcher</include>
+              <include>launcher.bat</include>
+              <include>visualizer</include>
+              <include>visualizer.bat</include>
+          </includes>
+      </fileSet>
+      <fileSet>
+          <directory>../../../tools/visualizer/src/main/resources/bin</directory>
+          <outputDirectory>bin</outputDirectory>
+          <includes>
+              <include>launcher.conf</include>
+              <include>visualizer.groovy</include>
+          </includes>
+      </fileSet>
 
   </fileSets>
 
