@@ -301,6 +301,31 @@ Assembly descriptor for the full Mule distribution.
             <include>stockquote-rest-config.xml</include>
         </includes>
     </fileSet>
+
+      <!--
+      ============================
+          Mule Tools: Visualizer
+      ============================
+      -->
+
+      <fileSet>
+          <directory>../../../tools/visualizer/win32</directory>
+          <outputDirectory>lib/native/visualizer</outputDirectory>
+      </fileSet>
+      <!--<fileSet>-->
+          <!--<directory>../../tools/visualizer/conf</directory>-->
+          <!--<outputDirectory>conf</outputDirectory>-->
+      <!--</fileSet>-->
+      <!--<fileSet>-->
+          <!--<directory>../../tools/visualizer/bin</directory>-->
+          <!--<outputDirectory>bin</outputDirectory>-->
+          <!--<fileMode>755</fileMode>-->
+          <!--<includes>-->
+              <!--<include>visualizer</include>-->
+              <!--<include>visualizer.cmd</include>-->
+          <!--</includes>-->
+      <!--</fileSet>-->
+
   </fileSets>
 
     <!--
