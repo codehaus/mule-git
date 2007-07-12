@@ -13,7 +13,7 @@ package org.mule.extras.spring.config;
 
 /**
  * Tests a Mule config from the file system (i.e., not from the classpath) which loads Spring configs 
- * via <import resource="classpath:file.xml"/> statements.  The Spring configs will be loaded from the classpath
+ * via <code>&lt;import resource="classpath:file.xml"/&gt;</code> statements.  The Spring configs will be loaded from the classpath
  * instead of the same directory as the Mule config because of the "classpath:" prefix (Spring uses relative path 
  * by default).
  */
