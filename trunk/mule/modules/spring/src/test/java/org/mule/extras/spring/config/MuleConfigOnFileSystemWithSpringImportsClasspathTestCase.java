@@ -21,6 +21,7 @@ public class MuleConfigOnFileSystemWithSpringImportsClasspathTestCase extends Mu
 {
     public String getConfigResources()
     {
+        // TODO TC this is guaranteed to fail, when e.g. running in a reactor build fromt the root
         return "./src/test/resources/mule-config-with-imports-classpath.xml";
     }
 }
