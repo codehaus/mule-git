@@ -21,6 +21,8 @@ public class MuleConfigOnFileSystemWithSpringImportsTestCase extends MuleConfigW
     public String getConfigResources()
     {
         // TODO TC this is guaranteed to fail, when e.g. running in a reactor build fromt the root
+        // update: it work on CI, but fails for a single run in IDE, maybe getting all resources
+        // from classpath and copying them to the target folder for the test would be more robust?
         return "./src/test/resources/mule-config-with-imports.xml";
     }
 }
