@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Tests the Mule-to-Spring XSLT transformation.
+ */
 public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestCase
 {
 

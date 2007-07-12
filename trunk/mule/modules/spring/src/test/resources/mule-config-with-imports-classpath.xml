@@ -196,4 +196,8 @@
             <exception-strategy className="org.mule.impl.DefaultExceptionStrategy"/>
         </mule-descriptor>
     </model>
+    
+    <import resource="classpath:test-application-context.xml"/> 
+    <import resource="classpath:test-application-context-2.xml"/> 
+    
 </mule-configuration>

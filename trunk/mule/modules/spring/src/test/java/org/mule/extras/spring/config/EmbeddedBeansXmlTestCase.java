@@ -15,6 +15,9 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.umo.manager.UMOContainerContext;
 
+/**
+ * Tests an embedded (inline) Spring config XML within a Mule config file.
+ */
 public class EmbeddedBeansXmlTestCase extends FunctionalTestCase
 {
 

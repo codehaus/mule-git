@@ -8,7 +8,6 @@
 
     <mule-environment-properties serverUrl=""/>
 
-
     <container-context
             name="spring-1"
             className="org.mule.extras.spring.SpringContainerContext">
@@ -25,8 +24,6 @@
         </properties>
     </container-context>
 
-    <model name="MultiSpringContextModel">
-
-    </model>
+    <model name="MultiSpringContextModel" />
 
 </mule-configuration>
