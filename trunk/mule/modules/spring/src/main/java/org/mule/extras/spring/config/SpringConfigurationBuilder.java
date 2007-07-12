@@ -18,11 +18,15 @@ import org.mule.config.ReaderResource;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOException;
 import org.mule.umo.manager.UMOManager;
+import org.mule.util.ArrayUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>SpringConfigurationBuilder</code> Enables Mule to be loaded from as Spring
@@ -35,6 +39,8 @@ import java.util.Properties;
  */
 public class SpringConfigurationBuilder implements ConfigurationBuilder
 {
+    protected transient final Log logger = LogFactory.getLog(getClass());
+    
     /**
      * Will configure a UMOManager based on the configurations made available through
      * Readers.
@@ -68,7 +74,7 @@ public class SpringConfigurationBuilder implements ConfigurationBuilder
         return configure(configResources, null);
     }
 
-    public UMOManager configure(String configResource, String startupPropertiesFile)
+    public UMOManager configure(String configResources, String startupPropertiesFile)
         throws ConfigurationException
     {
         // Load startup properties if any.
@@ -88,14 +94,13 @@ public class SpringConfigurationBuilder implements ConfigurationBuilder
             }
         }
 
-        if (configResource == null)
+        String[] resources = StringUtils.splitAndTrim(configResources, ",");
+        if (logger.isDebugEnabled())
         {
-            throw new ConfigurationException(CoreMessages.objectIsNull("Configuration Resource"));
+            logger.debug("There is/are " + resources.length + " configuration resource(s): " + ArrayUtils.toString(resources));
         }
-        String[] resources = org.springframework.util.StringUtils.tokenizeToStringArray(configResource, ",;",
-            true, true);
-
         MuleManager.getConfiguration().setConfigResources(resources);
+
         new MuleApplicationContext(resources);
         try
         {
