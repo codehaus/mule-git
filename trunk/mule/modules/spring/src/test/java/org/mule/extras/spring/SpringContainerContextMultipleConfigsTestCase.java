@@ -10,7 +10,6 @@
 
 package org.mule.extras.spring;
 
-import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.umo.manager.UMOContainerContext;
 
 
@@ -30,14 +29,7 @@ public class SpringContainerContextMultipleConfigsTestCase extends SpringContain
         container.initialise();
         assertNotNull(container);
 
-        try
-        {
-            Object result = container.getComponent("apple2");
-            assertNotNull("Component should exist in container", result);
-        }
-        catch (ObjectNotFoundException e)
-        {
-            fail("Component should exist in the container");
-        }
+        Object result = container.getComponent("apple2");
+        assertNotNull("Component should exist in container", result);
     }
 }
