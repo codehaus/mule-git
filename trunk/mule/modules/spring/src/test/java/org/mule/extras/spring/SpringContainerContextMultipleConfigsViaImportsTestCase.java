@@ -15,7 +15,8 @@ import org.mule.umo.manager.UMOContainerContext;
 
 
 /**
- * Tests the Spring container where more than one config file are loaded via <import resource="config.xml"/> 
+ * Tests the Spring container where more than one config file are loaded via
+ * <code>&lt;import resource="config.xml"/&gt;</code>. 
  */
 public class SpringContainerContextMultipleConfigsViaImportsTestCase extends SpringContainerContextTestCase
 {
