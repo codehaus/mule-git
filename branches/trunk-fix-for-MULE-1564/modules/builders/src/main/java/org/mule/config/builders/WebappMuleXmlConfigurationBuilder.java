@@ -11,8 +11,8 @@
 package org.mule.config.builders;
 
 import org.mule.config.ConfigurationException;
+import org.mule.util.FileUtils;
 
-import java.io.File;
 import java.io.InputStream;
 
 import javax.servlet.ServletContext;
@@ -45,7 +45,7 @@ public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuild
      */
     protected InputStream loadResource(String resource) throws ConfigurationException
     {
-        String resourcePath = new File(webappClasspath, resource).getPath();
+        String resourcePath = FileUtils.newFile(webappClasspath, resource).getPath();
         logger.debug("Searching for resource " + resourcePath + " in Servlet Context.");
         InputStream is = context.getResourceAsStream(resourcePath);
         if (is == null)

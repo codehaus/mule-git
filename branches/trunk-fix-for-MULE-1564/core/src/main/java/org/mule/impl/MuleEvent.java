@@ -643,7 +643,7 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
     }
 
     /**
-     * An outputstream the can optionally be used write response data to an incoming
+     * An outputstream can optionally be used to write response data to an incoming
      * message.
      * 
      * @return an output strem if one has been made available by the message receiver

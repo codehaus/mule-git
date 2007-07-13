@@ -204,7 +204,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
             String resource; 
             for (int i = 0; i < resources.length; i++)
             {
-                resource = resources[i].trim();
+                resource = resources[i];
                 readers[i] = new ReaderResource(resource, 
                                             new InputStreamReader(loadResource(resource), configEncoding));
             }

@@ -588,8 +588,9 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     /**
      * Sets <code>honorQosHeaders</code> property, which determines whether <code>JmsMessageDispatcher</code>
      * should honor incoming message's QoS headers (JMSPriority, JMSDeliveryMode).
-     * @param honorQosHeaders - <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
-     * message's QoS headers; otherwise <code>false</code>
+     * @param honorQosHeaders <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
+     * message's QoS headers; otherwise <code>false</code> Default is <code>false</code>, meaning that
+     * connector settings will override message headers.
      */
     public void setHonorQosHeaders(boolean honorQosHeaders)
     {
@@ -599,7 +600,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     /**
      * Gets the value of <code>honorQosHeaders</code> property.
      * @return <code>true</code> if <code>JmsMessageDispatcher</code> should honor incoming
-     * message's QoS headers; otherwise <code>false</code>
+     * message's QoS headers; otherwise <code>false</code> Default is <code>false</code>, meaning that
+     * connector settings will override message headers.
      */
     public boolean isHonorQosHeaders()
     {

@@ -50,12 +50,15 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
     public MuleBeanDefinitionReader(BeanDefinitionRegistry beanDefinitionRegistry, int configCount)
     {
         super(beanDefinitionRegistry);
-        // default resource loader
+
+        setDocumentReaderClass(MuleBeanDefinitionDocumentReader.class);
         setResourceLoader(new MuleResourceLoader());
         // TODO Make this configurable as a property somehow.
         setValidationMode(VALIDATION_DTD);
         setEntityResolver(createEntityResolver());
         this.configCount = configCount;
+        
+        // TransformerEditor is used to convert Transformer names into transformer Objects.
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,
             new TransformerEditor());
     }

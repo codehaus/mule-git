@@ -16,11 +16,11 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.umo.manager.DefaultWorkListener;
+import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.queue.EventFilePersistenceStrategy;
 import org.mule.util.queue.QueuePersistenceStrategy;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -386,7 +386,7 @@ public class MuleConfiguration
     public void setWorkingDirectory(String workingDirectory)
     {
         // fix windows backslashes in absolute paths, convert them to forward ones 
-        this.workingDirectory = new File(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
+        this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
         updateApplicationProperty(MuleProperties.MULE_WORKING_DIRECTORY_PROPERTY, this.workingDirectory);
     }
 
@@ -420,7 +420,7 @@ public class MuleConfiguration
     {
         if (embedded)
         {
-            serverUrl = null;
+            this.serverUrl = null;
         }
         else
         {

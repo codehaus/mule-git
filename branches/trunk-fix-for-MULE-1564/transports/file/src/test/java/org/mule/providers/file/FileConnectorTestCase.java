@@ -38,7 +38,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
     {
         super.doSetUp();
         // The working directory is deleted on tearDown
-        File tempDir = new File(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
+        File tempDir = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
         if (!tempDir.exists())
         {
             tempDir.mkdirs();
@@ -51,7 +51,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
     {
         // TestConnector dispatches events via the test: protocol to test://test
         // endpoints, which seems to end up in a directory called "test" :(
-        FileUtils.deleteTree(new File(getTestConnector().getProtocol()));
+        FileUtils.deleteTree(FileUtils.newFile(getTestConnector().getProtocol()));
         super.doTearDown();
     }
 
