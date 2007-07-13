@@ -13,6 +13,7 @@ package org.mule.providers;
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.RequestContext;
+import org.mule.impl.SafeThreadAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.SystemUtils;
@@ -103,17 +104,15 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
                     RequestContext.TraceHolder here = new RequestContext.TraceHolder(
                             new Throwable().fillInStackTrace(),
                             Thread.currentThread().getName(),
-                            System.currentTimeMillis(), "PROBLEM DETECTED"
+                            System.currentTimeMillis(), "PROBLEM DETECTED",
+                            previous.toString()
                     );
                     RequestContext.history.addLast(here);
 
-                    for (int i = 0; i < 10; i++)
+                    for  (int i = 0; i < 10 && ! RequestContext.history.isEmpty(); i++)
                     {
                         dump(sdf);
                     }
-
-                    System.out.println(previous.toString());
-
                 }
 
                 try
@@ -139,10 +138,8 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         StringBuffer sb = new StringBuffer(2048);
         sb.append(sdf.format(new Date(trace.timestamp))).append(" : ");
         sb.append(trace.threadName).append(' ');
-        if (trace.tag != null)
-        {
-            sb.append("<-------------- ").append(trace.tag).append(SystemUtils.LINE_SEPARATOR);
-        }
+        sb.append("<-------------- ").append(trace.tag).append(SystemUtils.LINE_SEPARATOR);
+        sb.append(trace.messageName).append(SystemUtils.LINE_SEPARATOR);
         sb.append(ExceptionUtils.getStackTrace(trace.throwable));
         System.out.println(sb);
         System.out.println("---------------------------------");
@@ -223,4 +220,10 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
     {
         return id;
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new DefaultMessageAdapter(getPayload(), this);
+    }
+
 }

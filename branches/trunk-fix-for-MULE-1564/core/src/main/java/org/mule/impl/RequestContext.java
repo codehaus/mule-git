@@ -55,18 +55,19 @@ public final class RequestContext
 
     public static UMOEvent getEvent()
     {
-        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(),
-                                        Thread.currentThread().getName(),
-                                        System.currentTimeMillis(), "READ"));
         return (UMOEvent) currentEvent.get();
     }
 
     public static void setEvent(UMOEvent event)
     {
         Throwable t = new Throwable();
-        history.addLast(new TraceHolder(new Throwable().fillInStackTrace(),
-                                        Thread.currentThread().getName(),
-                                        System.currentTimeMillis(), "WRITE"));
+        // RequestContext seems to be used to allow thread local mutation of events that
+        // are not otherwise available in the scope.  so this is a good place to create a new
+        // thread local copy - it will be read because supporting code is expecting mutation.
+        if (event instanceof SafeThreadAccess)
+        {
+            event = (UMOEvent) ((SafeThreadAccess)event).newCopy();
+        }
         currentEvent.set(event);
     }
 
@@ -153,21 +154,15 @@ public final class RequestContext
         public final long timestamp;
         public final String tag;
         public final String threadName;
+        public final String messageName;
 
-        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp)
-        {
-            this.throwable = throwable;
-            this.threadName = threadName;
-            this.timestamp = timestamp;
-            this.tag = null;
-        }
-
-        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp, final String tag)
+        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp, final String tag, String messageName)
         {
             this.throwable = throwable;
             this.threadName = threadName;
             this.timestamp = timestamp;
             this.tag = tag;
+            this.messageName = messageName;
         }
     }
 }

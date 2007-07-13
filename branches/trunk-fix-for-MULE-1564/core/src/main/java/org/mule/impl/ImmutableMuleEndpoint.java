@@ -758,8 +758,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         {
             try
             {
-                responseTransformer = MuleObjectHelper.getTransformer(endpointUri.getResponseTransformers(),
-                    ",");
+                responseTransformer =
+                        MuleObjectHelper.getTransformer(endpointUri.getResponseTransformers(), ",");
             }
             catch (MuleException e)
             {

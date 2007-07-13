@@ -160,8 +160,15 @@ public final class MuleSession implements UMOSession
         UMOEvent event = createOutboundEvent(message, endpoint, null);
 
         dispatchEvent(event);
-        RequestContext.writeResponse(event.getMessage());
-        processResponse(event.getMessage());
+
+        // need a new copy here because we are going to mutate it
+        UMOMessage response = event.getMessage();
+        if (response instanceof SafeThreadAccess)
+        {
+            response = (UMOMessage) ((SafeThreadAccess)response).newCopy();
+        }
+        RequestContext.writeResponse(response);
+        processResponse(response);
     }
 
     public UMOMessage sendEvent(UMOMessage message, String endpointName) throws UMOException
@@ -270,8 +277,13 @@ public final class MuleSession implements UMOSession
             }
             component.dispatchEvent(event);
             RequestContext.writeResponse(event.getMessage());
-            processResponse(event.getMessage());
-
+            // need a new instance here because we want to mutate
+            UMOMessage response = event.getMessage();
+            if (response instanceof SafeThreadAccess)
+            {
+                response = (UMOMessage) ((SafeThreadAccess)response).newCopy();
+            }
+            processResponse(response);
         }
         else
         {

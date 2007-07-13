@@ -14,6 +14,7 @@ import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.RequestContext;
+import org.mule.impl.SafeThreadAccess;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
@@ -23,6 +24,7 @@ import org.mule.util.UUID;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +33,8 @@ import javax.activation.DataHandler;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * message types that maybe don't normally allow for meta information, such as a File
  * or TCP.
  */
-public abstract class AbstractMessageAdapter implements UMOMessageAdapter
+public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeThreadAccess
 {
 
     /**
@@ -55,10 +59,19 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
     protected UMOExceptionPayload exceptionPayload;
     protected String id = UUID.getUUID();
 
+    // these are transient because serisalisation generates a new instance
+    // so we allow mutation again (and we can't serialize threads anyway)
+    private transient AtomicReference ownerThread = null;
+    private transient AtomicBoolean mutable = null;
+    public static final boolean WRITE = true;
+    public static final boolean READ = false;
+
     public String toString()
     {
+        assertAccess(READ);
         StringBuffer buf = new StringBuffer(120);
         buf.append(getClass().getName());
+        buf.append("/" + super.toString());
         buf.append('{');
         buf.append("id=").append(getUniqueId());
         buf.append(", payload=").append(getPayload().getClass().getName());
@@ -74,6 +87,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
 
     public void addProperties(Map props)
     {
+        assertAccess(WRITE);
         if (props != null)
         {
             synchronized (props)
@@ -89,6 +103,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
 
     public void clearProperties()
     {
+        assertAccess(WRITE);
         properties.clear();
     }
 
@@ -99,13 +114,14 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public Object removeProperty(String key)
     {
+        assertAccess(WRITE);
         if (MuleProperties.MULE_REMOTE_SYNC_PROPERTY.equals(key))
         {
             RequestContext.TraceHolder trace = new RequestContext.TraceHolder(
                     new Throwable().fillInStackTrace(),
                     Thread.currentThread().getName(),
-                    System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE"
-            );
+                    System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE",
+                    this.toString());
             RequestContext.history.addLast(trace);
         }
         return properties.remove(key);
@@ -118,6 +134,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public Object getProperty(String key)
     {
+        assertAccess(READ);
         return properties.get(key);
     }
 
@@ -128,7 +145,8 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public Set getPropertyNames()
     {
-        return properties.keySet();
+        assertAccess(READ);
+        return Collections.unmodifiableSet(properties.keySet());
     }
 
     /*
@@ -139,6 +157,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public void setProperty(String key, Object value)
     {
+        assertAccess(WRITE);
         if (key != null)
         {
             if (value != null)
@@ -163,71 +182,85 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
 
     public String getUniqueId()
     {
+        assertAccess(READ);
         return id;
     }
 
     public Object getProperty(String name, Object defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getObject(properties, name, defaultValue);
     }
 
     public int getIntProperty(String name, int defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getIntValue(properties, name, defaultValue);
     }
 
     public long getLongProperty(String name, long defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getLongValue(properties, name, defaultValue);
     }
 
     public double getDoubleProperty(String name, double defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getDoubleValue(properties, name, defaultValue);
     }
 
     public boolean getBooleanProperty(String name, boolean defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getBooleanValue(properties, name, defaultValue);
     }
 
     public String getStringProperty(String name, String defaultValue)
     {
+        assertAccess(READ);
         return MapUtils.getString(properties, name, defaultValue);
     }
 
     public void setBooleanProperty(String name, boolean value)
     {
+        assertAccess(WRITE);
         setProperty(name, Boolean.valueOf(value));
     }
 
     public void setIntProperty(String name, int value)
     {
+        assertAccess(WRITE);
         setProperty(name, new Integer(value));
     }
 
     public void setLongProperty(String name, long value)
     {
+        assertAccess(WRITE);
         setProperty(name, new Long(value));
     }
 
     public void setDoubleProperty(String name, double value)
     {
+        assertAccess(WRITE);
         setProperty(name, new Double(value));
     }
 
     public void setStringProperty(String name, String value)
     {
+        assertAccess(WRITE);
         setProperty(name, value);
     }
 
     public Object getReplyTo()
     {
+        assertAccess(READ);
         return getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
     }
 
     public void setReplyTo(Object replyTo)
     {
+        assertAccess(WRITE);
         if (replyTo != null)
         {
             setProperty(MuleProperties.MULE_REPLY_TO_PROPERTY, replyTo);
@@ -240,11 +273,13 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
 
     public String getCorrelationId()
     {
+        assertAccess(READ);
         return (String) getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY);
     }
 
     public void setCorrelationId(String correlationId)
     {
+        assertAccess(WRITE);
         if (StringUtils.isNotBlank(correlationId))
         {
             setProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY, correlationId);
@@ -263,6 +298,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public int getCorrelationSequence()
     {
+        assertAccess(READ);
         return getIntProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY, -1);
     }
 
@@ -274,6 +310,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public void setCorrelationSequence(int sequence)
     {
+        assertAccess(WRITE);
         setIntProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY, sequence);
     }
 
@@ -284,6 +321,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public int getCorrelationGroupSize()
     {
+        assertAccess(READ);
         return getIntProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, -1);
     }
 
@@ -294,41 +332,49 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public void setCorrelationGroupSize(int size)
     {
+        assertAccess(WRITE);
         setIntProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, size);
     }
 
     public UMOExceptionPayload getExceptionPayload()
     {
+        assertAccess(READ);
         return exceptionPayload;
     }
 
     public void setExceptionPayload(UMOExceptionPayload payload)
     {
+        assertAccess(WRITE);
         exceptionPayload = payload;
     }
 
     public void addAttachment(String name, DataHandler dataHandler) throws Exception
     {
+        assertAccess(WRITE);
         attachments.put(name, dataHandler);
     }
 
     public void removeAttachment(String name) throws Exception
     {
+        assertAccess(WRITE);
         attachments.remove(name);
     }
 
     public DataHandler getAttachment(String name)
     {
+        assertAccess(READ);
         return (DataHandler) attachments.get(name);
     }
 
     public Set getAttachmentNames()
     {
-        return attachments.keySet();
+        assertAccess(READ);
+        return Collections.unmodifiableSet(attachments.keySet());
     }
 
     public String getEncoding()
     {
+        assertAccess(READ);
         return encoding;
     }
 
@@ -339,6 +385,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public void setEncoding(String encoding)
     {
+        assertAccess(WRITE);
         this.encoding = encoding;
     }
 
@@ -351,11 +398,13 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
      */
     public final String getPayloadAsString() throws Exception
     {
+        assertAccess(READ);
         return getPayloadAsString(getEncoding());
     }
 
     protected byte[] convertToBytes(Object object) throws TransformerException, UnsupportedEncodingException
     {
+        assertAccess(READ);
         if (object instanceof String)
         {
             return object.toString().getBytes(getEncoding());
@@ -384,4 +433,77 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter
                     "byte[] or " + Serializable.class.getName()));
         }
     }
+
+    /**
+     * Restrict mutation to private use within a single thread.
+     * Allow reading and writing by initial thread only.
+     * Once accessed by another thread, no writing allowed at all.
+     *
+     * @param write
+     */
+    public void assertAccess(boolean write)
+    {
+        initAccessControl();
+        setOwner();
+        checkMutable(write);
+    }
+
+    private void setOwner()
+    {
+        if (null == ownerThread.get())
+        {
+            ownerThread.compareAndSet(null, Thread.currentThread());
+        }
+    }
+
+    private void checkMutable(boolean write)
+    {
+        Thread currentThread = Thread.currentThread();
+        if (currentThread.equals(ownerThread.get()))
+        {
+            if (write && !mutable.get())
+            {
+                throw new IllegalStateException("Cannot write to immutable message");
+            }
+        }
+        else
+        {
+            if (write)
+            {
+                throw new IllegalStateException("Only owner thread can write to message: "
+                        + ownerThread.get() + "/" + Thread.currentThread());
+            }
+            else
+            {
+                // access by another thread
+                mutable.set(false);
+            }
+        }
+    }
+
+    private synchronized void initAccessControl()
+    {
+        if (null == ownerThread)
+        {
+            ownerThread = new AtomicReference();
+        }
+        if (null == mutable)
+        {
+            mutable = new AtomicBoolean(true);
+        }
+    }
+
+    public synchronized void resetAccessControl()
+    {
+        assertAccess(WRITE);
+        ownerThread.set(null);
+        mutable.set(true);
+    }
+
+    // defeault implementation does nothing
+    public SafeThreadAccess newCopy()
+    {
+        return this;
+    }
+
 }

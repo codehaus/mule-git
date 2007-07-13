@@ -454,8 +454,8 @@ public class DefaultMuleProxy implements MuleProxy
                 RequestContext.setEvent(event);
                 Object replyTo = event.getMessage().getReplyTo();
                 ReplyToHandler replyToHandler = getReplyToHandler(event.getMessage(), event.getEndpoint());
-                InterceptorsInvoker invoker = new InterceptorsInvoker(interceptorList, descriptor,
-                    event.getMessage());
+                InterceptorsInvoker invoker =
+                        new InterceptorsInvoker(interceptorList, descriptor,  event.getMessage());
 
                 // do stats
                 long startTime = 0;
