@@ -53,7 +53,7 @@ public class VisualizerService extends MuleVisualizerPlugin implements Callable,
             config = buildConfig();
             config.setOutputDirectory(MuleManager.getConfiguration().getWorkingDirectory() + File.pathSeparator + "visualizer");
             environment = new GraphEnvironment(config);
-            visualizer = new MuleVisualizer(environment, descriptor.getExceptionListener());
+            visualizer = new MuleVisualizer(environment);
         }
         catch (Exception e)
         {
@@ -84,8 +84,7 @@ public class VisualizerService extends MuleVisualizerPlugin implements Callable,
         {
             throw new IllegalArgumentException("There were no Xml attachments for email: " + msg.getProperty("subject"));
         }
-        config.setFiles(files);
-        List results = visualizer.run();
+        List results = visualizer.visualize(files);
         UMOMessage result = new MuleMessage("Thanks for using Mule Visualizer!");
         if(results==null)
         {

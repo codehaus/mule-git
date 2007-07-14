@@ -24,7 +24,6 @@ import org.mule.tools.visualizer.postgraphers.MediaCopierPostGrapher;
 import com.oy.shared.lm.graph.Graph;
 import com.oy.shared.lm.graph.GraphFactory;
 
-import java.beans.ExceptionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,8 +44,6 @@ public class MuleVisualizer
 
     private final List postGraphers = new ArrayList();
 
-    private ExceptionListener exceptionListener;
-
     public static void main(String[] args)
     {
         if (args.length == 0 || args[0].equals(GraphConfig.ARG_HELP))
@@ -62,13 +59,7 @@ public class MuleVisualizer
         {
             env = new GraphConfig().init(args);
 
-            visualizer = new MuleVisualizer(env, new ExceptionListener()
-            {
-                public void exceptionThrown(Exception e)
-                {
-                    e.printStackTrace();
-                }
-            });
+            visualizer = new MuleVisualizer(env);
         }
         catch (Exception e)
         {
@@ -79,54 +70,47 @@ public class MuleVisualizer
             System.exit(0);
         }
 
-        visualizer.run();
+        try
+        {
+            visualizer.visualize(env.getConfig().getFiles());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    public MuleVisualizer(GraphEnvironment environment, ExceptionListener listener) throws Exception
+    public MuleVisualizer(GraphEnvironment environment) throws Exception
     {
         env = environment;
         this.graphRenderer = new GraphRenderer(env);
         this.postGraphers.add(new DocIndexerPostGrapher(env));
         this.postGraphers.add(new GalleryPostGrapher(env));
         this.postGraphers.add(new MediaCopierPostGrapher());
-        exceptionListener = listener;
     }
 
-    public List run()
+    public List visualize(List files) throws Exception
     {
-        List results = null;
-        try
+        List results;
+        env.getConfig().setFiles(files);
+        env.getConfig().validate();
+        if (env.getConfig().isCombineFiles())
         {
-            env.getConfig().validate();
+            generateIndividual();
+            results = generateCombined();
         }
-        catch (IllegalStateException e)
+        else
         {
-            exceptionListener.exceptionThrown(e);
+            results = generateIndividual();
         }
-        try
-        {
-            if (env.getConfig().isCombineFiles())
-            {
-                generateIndividual();
-                results = generateCombined();
-            }
-            else
-            {
-                results = generateIndividual();
-            }
 
-            for (Iterator iter = postGraphers.iterator(); iter.hasNext();)
-            {
-                PostGrapher postGrapher = (PostGrapher) iter.next();
-                env.log("************ " + postGrapher.getStatusTitle());
-                postGrapher.postGrapher(env);
-            }
-
-        }
-        catch (Exception e)
+        for (Iterator iter = postGraphers.iterator(); iter.hasNext();)
         {
-            exceptionListener.exceptionThrown(e);
+            PostGrapher postGrapher = (PostGrapher) iter.next();
+            env.log("************ " + postGrapher.getStatusTitle());
+            postGrapher.postGrapher(env);
         }
+
         return results;
     }
 
@@ -140,7 +124,7 @@ public class MuleVisualizer
 //            filename = env.getConfig().getFiles().get(0).toString() + ".combined";
 //        }
         return generateGraph(1, env.getConfig().getFiles(), env.getConfig().getOutputDirectory(), env.getConfig()
-            .getCaption());
+                .getCaption());
     }
 
     protected List generateIndividual() throws IOException, JDOMException
@@ -163,7 +147,7 @@ public class MuleVisualizer
     }
 
     protected List generateGraph(int i, List files, File outputDir, String caption)
-        throws JDOMException, IOException
+            throws JDOMException, IOException
     {
         List results = new ArrayList();
         String fileName = env.getConfig().getOutputFilename();
@@ -179,39 +163,42 @@ public class MuleVisualizer
 
             Object o = iterator.next();
             File myFile = null;
-            if(o instanceof String)
+            if (o instanceof String)
             {
                 myFile = new File(o.toString());
 
             }
-            else if(o instanceof File)
+            else if (o instanceof File)
             {
-                myFile = (File)o;
+                myFile = (File) o;
 
             }
 
-            if(myFile!=null)
+            if (myFile != null)
             {
                 env.log("**************** processing " + i + " of " + files.size() + 1 + " : "
-                                + myFile.getCanonicalPath());
+                        + myFile.getCanonicalPath());
 
-                if(fileName==null) fileName = myFile.getName();
+                if (fileName == null)
+                {
+                    fileName = myFile.getName();
+                }
                 muleParser.parseMuleConfig(myFile, graph);
             }
-            else if(o instanceof InputStream)
+            else if (o instanceof InputStream)
             {
-                muleParser.parseMuleConfig((InputStream)o, graph);
+                muleParser.parseMuleConfig((InputStream) o, graph);
             }
-            else if(o instanceof Document)
+            else if (o instanceof Document)
             {
-                muleParser.parseMuleConfig((Document)o, graph);
+                muleParser.parseMuleConfig((Document) o, graph);
             }
             else
             {
                 throw new IllegalArgumentException("Object cannot be processed, unrecognised format: " + o.getClass());
             }
 
-            if(fileName==null)
+            if (fileName == null)
             {
                 fileName = "mule-visualised";
             }
@@ -246,11 +233,11 @@ public class MuleVisualizer
         System.out.println("-----------------------------------------------");
         System.out.println("-files      A comma-seperated list of Mule configuration files (required)");
         System.out
-            .println("-outputdir  The directory to write the generated graphs to. Defaults to the current directory (optional)");
+                .println("-outputdir  The directory to write the generated graphs to. Defaults to the current directory (optional)");
         System.out
-            .println("-exec       The executable file used for Graph generation. Defaults to ./win32/dot.exe (optional)");
+                .println("-exec       The executable file used for Graph generation. Defaults to ./win32/dot.exe (optional)");
         System.out
-            .println("-caption    Default caption for the generated graphs. Defaults to the 'id' attribute in the config file (optional)");
+                .println("-caption    Default caption for the generated graphs. Defaults to the 'id' attribute in the config file (optional)");
         System.out.println("-?          Displays this help");
     }
 

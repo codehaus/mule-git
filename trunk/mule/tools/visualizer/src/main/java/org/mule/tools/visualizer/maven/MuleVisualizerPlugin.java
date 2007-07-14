@@ -15,7 +15,6 @@ import org.mule.tools.visualizer.config.GraphConfig;
 import org.mule.tools.visualizer.config.GraphEnvironment;
 import org.mule.util.FileUtils;
 
-import java.beans.ExceptionListener;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -103,14 +102,8 @@ public class MuleVisualizerPlugin extends AbstractMojo
         {
             GraphConfig config = buildConfig();
             GraphEnvironment environment = new GraphEnvironment(config);
-            StoredExceptionListener listener = new StoredExceptionListener();
-            MuleVisualizer visualizer = new MuleVisualizer(environment, listener);
-            visualizer.run();
-            if (listener.getException() != null)
-            {
-                throw new MojoExecutionException("Failed to run visualizer: " +
-                        listener.getException().getMessage(), listener.getException());
-            }
+            MuleVisualizer visualizer = new MuleVisualizer(environment);
+            visualizer.visualize(files);
         }
         catch (Exception e)
         {
@@ -335,20 +328,5 @@ public class MuleVisualizerPlugin extends AbstractMojo
     public String getTemplateprops()
     {
         return templateprops;
-    }
-
-    private class StoredExceptionListener implements ExceptionListener
-    {
-        private Exception exception;
-
-        public Exception getException()
-        {
-            return exception;
-        }
-
-        public void exceptionThrown(Exception e)
-        {
-            this.exception = e;
-        }
     }
 }
