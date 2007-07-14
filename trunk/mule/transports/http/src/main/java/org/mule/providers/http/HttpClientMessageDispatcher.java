@@ -13,7 +13,6 @@ package org.mule.providers.http;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.ConnectException;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
@@ -49,7 +48,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -88,17 +86,19 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             client.setState(state);
             client.setHttpConnectionManager(connector.getClientConnectionManager());
 
+            //RM* This isn't a good idea since if the connection is not re-used a HEAD request is sent for
+            //every invocation.
             // test the connection via HEAD
-            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
-            try
-            {
-                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
-            }
-            catch (Exception e)
-            {
-                throw new ConnectException(
-                    HttpMessages.failedToConnect(endpoint.getEndpointURI().getUri()), e, this);
-            }
+//            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
+//            try
+//            {
+//                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
+//            }
+//            catch (Exception e)
+//            {
+//                throw new ConnectException(
+//                    HttpMessages.failedToConnect(endpoint.getEndpointURI().getUri()), e, this);
+//            }
         }
 
     }
