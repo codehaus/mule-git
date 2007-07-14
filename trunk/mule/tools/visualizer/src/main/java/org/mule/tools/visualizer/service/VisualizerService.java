@@ -9,17 +9,20 @@
  */
 package org.mule.tools.visualizer.service;
 
+import org.mule.MuleManager;
+import org.mule.config.ConfigurationException;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.UMODescriptorAware;
 import org.mule.tools.visualizer.MuleVisualizer;
 import org.mule.tools.visualizer.config.GraphConfig;
 import org.mule.tools.visualizer.config.GraphEnvironment;
 import org.mule.tools.visualizer.maven.MuleVisualizerPlugin;
+import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.MuleManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,11 +34,17 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 /** TODO */
-public class VisualizerService extends MuleVisualizerPlugin implements Callable, Initialisable
+public class VisualizerService extends MuleVisualizerPlugin implements Callable, Initialisable, UMODescriptorAware
 {
     protected GraphConfig config;
     protected GraphEnvironment environment;
     protected MuleVisualizer visualizer;
+    protected UMODescriptor descriptor;
+
+    public void setDescriptor(UMODescriptor descriptor) throws ConfigurationException
+    {
+        this.descriptor = descriptor;
+    }
 
     public void initialise() throws InitialisationException
     {
@@ -44,7 +53,7 @@ public class VisualizerService extends MuleVisualizerPlugin implements Callable,
             config = buildConfig();
             config.setOutputDirectory(MuleManager.getConfiguration().getWorkingDirectory() + File.pathSeparator + "visualizer");
             environment = new GraphEnvironment(config);
-            visualizer = new MuleVisualizer(environment);
+            visualizer = new MuleVisualizer(environment, descriptor.getExceptionListener());
         }
         catch (Exception e)
         {
@@ -78,6 +87,11 @@ public class VisualizerService extends MuleVisualizerPlugin implements Callable,
         config.setFiles(files);
         List results = visualizer.run();
         UMOMessage result = new MuleMessage("Thanks for using Mule Visualizer!");
+        if(results==null)
+        {
+            return null;
+        }
+        
         for (Iterator iterator = results.iterator(); iterator.hasNext();)
         {
             String s = (String) iterator.next();

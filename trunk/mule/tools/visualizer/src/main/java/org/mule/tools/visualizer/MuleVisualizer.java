@@ -24,6 +24,7 @@ import org.mule.tools.visualizer.postgraphers.MediaCopierPostGrapher;
 import com.oy.shared.lm.graph.Graph;
 import com.oy.shared.lm.graph.GraphFactory;
 
+import java.beans.ExceptionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jdom.JDOMException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 public class MuleVisualizer
@@ -43,6 +44,8 @@ public class MuleVisualizer
     private final GraphRenderer graphRenderer;
 
     private final List postGraphers = new ArrayList();
+
+    private ExceptionListener exceptionListener;
 
     public static void main(String[] args)
     {
@@ -58,7 +61,14 @@ public class MuleVisualizer
         try
         {
             env = new GraphConfig().init(args);
-            visualizer = new MuleVisualizer(env);
+
+            visualizer = new MuleVisualizer(env, new ExceptionListener()
+            {
+                public void exceptionThrown(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
         catch (Exception e)
         {
@@ -72,13 +82,14 @@ public class MuleVisualizer
         visualizer.run();
     }
 
-    public MuleVisualizer(GraphEnvironment environment) throws Exception
+    public MuleVisualizer(GraphEnvironment environment, ExceptionListener listener) throws Exception
     {
         env = environment;
         this.graphRenderer = new GraphRenderer(env);
         this.postGraphers.add(new DocIndexerPostGrapher(env));
         this.postGraphers.add(new GalleryPostGrapher(env));
         this.postGraphers.add(new MediaCopierPostGrapher());
+        exceptionListener = listener;
     }
 
     public List run()
@@ -90,8 +101,7 @@ public class MuleVisualizer
         }
         catch (IllegalStateException e)
         {
-            e.printStackTrace();
-            //System.exit(0);
+            exceptionListener.exceptionThrown(e);
         }
         try
         {
@@ -115,8 +125,7 @@ public class MuleVisualizer
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            //System.exit(1);
+            exceptionListener.exceptionThrown(e);
         }
         return results;
     }

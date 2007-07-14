@@ -22,7 +22,6 @@ import org.mule.tools.visualizer.processor.MuleConfigProcessor;
 import org.mule.tools.visualizer.processor.MuleModelProcessor;
 import org.mule.tools.visualizer.processor.TagProcessor;
 import org.mule.tools.visualizer.processor.TransformerProcessor;
-import org.mule.util.IOUtils;
 
 import com.oy.shared.lm.graph.Graph;
 
@@ -69,7 +68,6 @@ public class MuleParser
 
     public void parseMuleConfig(InputStream in, Graph graph) throws JDOMException, IOException
     {
-        System.out.println(IOUtils.toString(in));
         Document doc = builder.build(in);
         parseMuleConfig(doc, graph);
     }
