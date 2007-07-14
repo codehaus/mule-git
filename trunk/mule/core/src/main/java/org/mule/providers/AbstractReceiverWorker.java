@@ -27,7 +27,7 @@ import java.util.Iterator;
 import javax.resource.spi.work.Work;
 
 /**
- * TODO
+ * A base Worker used by Transport {@link UMOMessageReciever} implementations.
  */
 public abstract class AbstractReceiverWorker implements Work
 {
@@ -51,10 +51,9 @@ public abstract class AbstractReceiverWorker implements Work
 
     }
 
-    /*
-    * (non-Javadoc)
+    /**
+     * This will run the receiver logic and call {@link #release()} once {@link #doRun()} completes.
     *
-    * @see java.lang.Runnable#run()
     */
     public final void run()
     {
@@ -62,6 +61,11 @@ public abstract class AbstractReceiverWorker implements Work
         release();
     }
 
+    /**
+     * The actual logic used to receive messages from the underlying transport.  The default implementation
+     * will execute the processing of messages within a TransactionTemplate.  This template will manage the
+     * transaction lifecycle for the list of messages associated with this receiver worker.
+     */
     protected void doRun()
     {
         TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
@@ -99,8 +103,14 @@ public abstract class AbstractReceiverWorker implements Work
                         }
 
                         UMOMessage result = receiver.routeMessage(new MuleMessage(adapter), tx,  endpoint.isSynchronous(), out);
-                        o = postProcessMessage(result);
-                        results.add(o);
+                        if(result!=null)
+                        {
+                            o = postProcessMessage(result);
+                            if(o!=null)
+                            {
+                                results.add(o);
+                            }
+                        }
                     }
                 }
                 return results;
@@ -122,24 +132,55 @@ public abstract class AbstractReceiverWorker implements Work
         }
     }
 
+    /**
+     * Template method used to bind the resources of this receiver to the transaction.  Only transactional
+     * transports need implment this method
+     * @param tx the current transaction or null if there is no transaction
+     * @throws TransactionException
+     */
     protected abstract void bindTransaction(UMOTransaction tx) throws TransactionException;
 
+    /**
+     * A conveniece method that passes the exception to the connector's ExceptionListener
+     * @param e
+     */
     protected void handleException(Exception e)
     {
         endpoint.getConnector().handleException(e);
     }
 
+    /**
+     * When Mule has finished processing the current messages, there may be zero or more messages to process
+     * by the receiver if request/response messaging is being used. The result(s) should be passed back to the callee.
+     * @param messages a list of messages.  This argument will not be null
+     * @throws Exception
+     */
     protected void handleResults(List messages) throws Exception
     {
         //no op
     }
 
+    /**
+     * Before a message is passed into Mule this callback is called and can be used by the worker to inspect the
+     * message before it gets sent to Mule
+     * @param message the next message to be processed
+     * @return the message to be processed. If Null is returned the message will not get processed.
+     * @throws Exception
+     */
     protected Object preProcessMessage(Object message) throws Exception
     {
         //no op
         return message;
     }
 
+    /**
+     * If a result is returned back this method will get called before the message is added to te list of
+     * results (these are later passed to {@link #handleResults(java.util.List)})
+     * @param message the result message, this will never be null
+     * @return the message to add to the list of results. If null is returned nothing is added to the
+     * list of results
+     * @throws Exception
+     */
     protected UMOMessage postProcessMessage(UMOMessage message) throws Exception
     {
         //no op
@@ -147,6 +188,10 @@ public abstract class AbstractReceiverWorker implements Work
     }
 
 
+    /**
+     * This method is called once this worker is no longer required.  Any resources *only* associated with
+     * this worker should be cleaned up here.
+     */
     public void release()
     {
         // no op

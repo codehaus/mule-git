@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.io.OutputStream;
 
 /**
- * TODO
+ * This is a Message receiver worker used by transports that do not have a way for the underlying transport
+ * to call back to the receiver when a message is available such as Jms. This worker provides a
+ * callback {@link #getNextMessage(Object)} where the receiver can read the next message from the underlying
+ * transport.
  */
 public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWorker
 {
@@ -21,7 +24,7 @@ public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWor
 
     public AbstractReceiverResourceWorker(Object resource, AbstractMessageReceiver receiver)
     {
-        this(new ArrayList(), receiver, null);
+        this(resource, receiver, null);
     }
 
     public AbstractReceiverResourceWorker(Object resource, AbstractMessageReceiver receiver, OutputStream out)
@@ -31,10 +34,9 @@ public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWor
     }
 
 
-    /*
+    /**
     * (non-Javadoc)
     *
-    * @see java.lang.Runnable#run()
     */
     //@Override
     public void doRun()
@@ -56,5 +58,12 @@ public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWor
         }
     }
 
+    /**
+     * The method used to read the next message from the underlying transport.
+     * @param resource the resource to read from, this may be a socket, a directory or some higher level
+     * representation.
+     * @return the message read from the resource.  This can be raw data such as a byte[] or a UMOMessageAdapter.
+     * @throws Exception
+     */
     protected abstract Object getNextMessage(Object resource) throws Exception;
 }
