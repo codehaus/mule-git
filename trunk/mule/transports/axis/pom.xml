@@ -29,6 +29,7 @@
                         <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
                         <exclude>**/AxisServletBindingTestCase.java</exclude>
+                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
