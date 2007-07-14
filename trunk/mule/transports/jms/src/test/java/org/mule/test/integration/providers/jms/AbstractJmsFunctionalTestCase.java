@@ -76,7 +76,6 @@ public abstract class AbstractJmsFunctionalTestCase extends AbstractMuleTestCase
 
         cnn = getSenderConnection();
         cnn.start();
-        // drainDestinations();
         connector = createConnector();
         connector.setConnectionFactory(cf);
         MuleManager.getInstance().registerConnector(connector);
@@ -91,6 +90,9 @@ public abstract class AbstractJmsFunctionalTestCase extends AbstractMuleTestCase
 
     protected void doTearDown() throws Exception
     {
+        //This wait is here because on a dual core, the server can start
+        //shutting before the test has finished
+        Thread.sleep(1000);
         try
         {
             if (cnn != null)
@@ -100,21 +102,21 @@ public abstract class AbstractJmsFunctionalTestCase extends AbstractMuleTestCase
         }
         catch (JMSException e)
         {
-            // TODO shouldn't this be caught?
         }
     }
 
-    // protected void drainDestinations() throws Exception
-    // {
-    // if (!useTopics()) {
-    // logger.debug("@@@@ Draining Queues @@@@");
-    // JmsTestUtils.drainQueue((QueueConnection) cnn, getInDest().getAddress());
-    // assertNull(receive(getInDest().getAddress(), 10));
-    // JmsTestUtils.drainQueue((QueueConnection) cnn, getOutDest().getAddress());
-    // assertNull(receive(getOutDest().getAddress(), 10));
-    // }
-    //
-    // }
+    protected void drainDestinations() throws Exception
+    {
+        if (!useTopics())
+        {
+            logger.debug("@@@@ Draining Queues @@@@");
+            JmsTestUtils.drainQueue((QueueConnection) cnn, getInDest().getAddress());
+            assertNull(receive(getInDest().getAddress(), 10));
+            JmsTestUtils.drainQueue((QueueConnection) cnn, getOutDest().getAddress());
+            assertNull(receive(getOutDest().getAddress(), 10));
+        }
+
+    }
 
     public abstract ConnectionFactory getConnectionFactory() throws Exception;
 
