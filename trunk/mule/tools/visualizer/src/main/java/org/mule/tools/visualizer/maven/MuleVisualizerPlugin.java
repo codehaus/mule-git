@@ -128,7 +128,7 @@ public class MuleVisualizerPlugin extends AbstractMojo
         getLog().info("outputdir: " + getOutputdir());
     }
 
-    private GraphConfig buildConfig() throws IOException
+    protected GraphConfig buildConfig() throws IOException
     {
         // order here as in GraphConfig.init(String[]) in case of depepndencies
         GraphConfig config = new GraphConfig();
