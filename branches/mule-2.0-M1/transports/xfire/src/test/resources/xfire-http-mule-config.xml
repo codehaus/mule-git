@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd">
+    
+    <mule:environment-properties>
+        <entry key="serverUrl" value=""/>
+    </mule:environment-properties>
+    
+    <mule:model-seda name="test">
+        <mule:service name="mycomponent">
+            <mule:component class="org.mule.tck.testmodels.services.TestServiceComponent" />
+            <mule:inbound-router>
+                <mule:endpoint address="xfire:http://localhost:38008/mule"/>
+            </mule:inbound-router>
+        </mule:service>
+
+        <mule:service name="mycomponent2">
+            <mule:component class="org.mule.tck.testmodels.services.TestServiceComponent" />
+            <mule:inbound-router>
+                <mule:endpoint address="xfire:http://localhost:38009/mule/services"/>
+            </mule:inbound-router>
+        </mule:service>
+
+        <mule:service name="mycomponent3">
+            <mule:component class="org.mule.tck.testmodels.services.TestServiceComponent" />
+            <mule:inbound-router>
+                <mule:endpoint address="xfire:http://localhost:38009"/>
+            </mule:inbound-router>
+        </mule:service>
+
+        <mule:service name="mycomponent4">
+            <mule:component class="org.mule.tck.testmodels.services.TestServiceComponent" />
+            <mule:inbound-router>
+                <mule:endpoint address="xfire:http://localhost:38010" synchronous="false"/>
+            </mule:inbound-router>
+        </mule:service>
+    </mule:model-seda>
+</beans>
+<!-- 
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="xfire_test" version="1.0">
+
+    <mule-environment-properties serverUrl="">
+        <threading-profile maxThreadsActive="4"/>
+    </mule-environment-properties>
+
+    <model name="test">
+        <mule-descriptor name="mycomponent"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:38008/mule"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent2"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:38009/mule/services"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent3"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:38009"/>
+            </inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="mycomponent4"
+                         implementation="org.mule.tck.testmodels.services.TestServiceComponent">
+            <inbound-router>
+                <endpoint address="xfire:http://localhost:38010" synchronous="false"/>
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>
+ -->
