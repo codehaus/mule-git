@@ -50,6 +50,7 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
 
@@ -85,7 +86,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             client = new HttpClient();
             client.setState(state);
             client.setHttpConnectionManager(connector.getClientConnectionManager());
-
             //RM* This isn't a good idea since if the connection is not re-used a HEAD request is sent for
             //every invocation.
             // test the connection via HEAD
@@ -294,8 +294,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
      * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
-    {
+    {        
         HttpMethod httpMethod = getMethod(event);
+        httpMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new MuleHttpMethodRetryHandler());
 
         httpMethod = execute(event, httpMethod, false);
 
