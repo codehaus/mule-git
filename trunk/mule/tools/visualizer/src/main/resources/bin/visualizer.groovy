@@ -54,7 +54,7 @@ if (cmdLine.hasOption('exec')) {
             println '\n\nGraph Visualization package not found, please see http://www.graphviz.org\n\n'
             System.exit(-1)
         }
-        exec = out // found in global path
+        exec = out.trim() // found in global path
     }
 }
 
