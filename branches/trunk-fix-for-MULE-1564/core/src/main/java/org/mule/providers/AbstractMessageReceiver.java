@@ -580,11 +580,11 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             if (resultMessage != null)
             {
-                RequestContext.rewriteEvent(resultMessage);
                 if (resultMessage.getExceptionPayload() != null)
                 {
                     setExceptionDetails(resultMessage, resultMessage.getExceptionPayload().getException());
                 }
+                RequestContext.rewriteEvent(resultMessage);
             }
             return applyResponseTransformer(resultMessage);
         }
@@ -647,7 +647,10 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 // endpoint.getConnector().getProtocol() + ". Error is: " +
                 // e.getMessage());
                 // }
-                returnMessage = new MuleMessage(result, returnMessage);
+
+                // need to add properties that may have been set in various transformers
+//                returnMessage = new MuleMessage(result, returnMessage);
+                returnMessage = new MuleMessage(result, RequestContext.getEvent().getMessage());
                 // }
                 //
             }

@@ -202,7 +202,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         protected HttpResponse doGetOrPost(HttpRequest request, RequestLine requestLine) throws IOException, UMOException
         {
-            HttpResponse response;
             Map headers = parseHeaders(request);
 
             // TODO Mule 2.0 generic way to set stream message adapter
@@ -225,6 +224,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             // determine if the request path on this request denotes a different receiver
             UMOMessageReceiver receiver = getTargetReceiver(message, endpoint);
 
+            HttpResponse response;
             // the response only needs to be transformed explicitly if
             // A) the request was not served or B) a null result was returned
             if (receiver != null)
@@ -248,9 +248,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 }
                 else
                 {
-                    // if we update context, bad encoding and some other test work,
-                    // but ordinary encoding test fails.
-                    RequestContext.setEvent(new MuleEvent(returnMessage, RequestContext.getEvent()));
                     response = (HttpResponse)connector.getDefaultResponseTransformer().transform(tempResponse);
                 }
                 response.disableKeepAlive(!((HttpConnector)connector).isKeepAlive());

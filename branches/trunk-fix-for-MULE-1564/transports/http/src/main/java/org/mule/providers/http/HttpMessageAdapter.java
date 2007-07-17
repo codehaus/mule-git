@@ -10,7 +10,6 @@
 
 package org.mule.providers.http;
 
-import org.mule.MuleManager;
 import org.mule.impl.SafeThreadAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.transformers.simple.SerializableToByteArray;
@@ -83,7 +82,6 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         }
 
         // set the encoding
-        String charset = null;
         Header contenttype = getHeader(HttpConstants.HEADER_CONTENT_TYPE);
         if (contenttype != null)
         {
@@ -93,17 +91,9 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
                 NameValuePair param = values[0].getParameterByName("charset");
                 if (param != null)
                 {
-                    charset = param.getValue();
+                    encoding = param.getValue();
                 }
             }
-        }
-        if (charset != null)
-        {
-            encoding = charset;
-        }
-        else
-        {
-            encoding = MuleManager.getConfiguration().getEncoding();
         }
     }
 
