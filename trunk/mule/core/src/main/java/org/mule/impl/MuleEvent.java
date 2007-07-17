@@ -58,7 +58,7 @@ public class MuleEvent extends EventObject implements UMOEvent
     /**
      * Serial version
      */
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
     /**
      * logger used by this class
      */
