@@ -312,9 +312,10 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 //message listener yet. So we need to create a new context so that EventAwareTransformers can be applied
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
+                message = handleUnacceptedFilter(message);
                 RequestContext.setEvent(new MuleEvent(message, endpoint,
                         new MuleSession(message, new NullSessionHandler()), synchronous));
-                return handleUnacceptedFilter(message);
+                return message;
             }
         }
         return listener.onMessage(message, trans, synchronous, outputStream);
