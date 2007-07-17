@@ -11,9 +11,14 @@
 package org.mule.umo.provider;
 
 import org.mule.umo.UMOComponent;
+import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.Lifecycle;
+
+import java.io.OutputStream;
 
 /**
  * <code>UMOMessageReceiver</code> is used to receive data from an external system.
@@ -71,4 +76,22 @@ public interface UMOMessageReceiver extends Lifecycle, UMOConnectable
     String getReceiverKey();
 
     void setReceiverKey(String key);
+
+    UMOMessage routeMessage(UMOMessage message) throws UMOException;
+
+    UMOMessage routeMessage(UMOMessage message, boolean synchronous) throws UMOException;
+
+    UMOMessage routeMessage(UMOMessage message, UMOTransaction trans, boolean synchronous)
+            throws UMOException;
+
+    UMOMessage routeMessage(UMOMessage message, OutputStream outputStream) throws UMOException;
+
+    UMOMessage routeMessage(UMOMessage message, boolean synchronous, OutputStream outputStream)
+        throws UMOException;
+
+    UMOMessage routeMessage(UMOMessage message,
+                            UMOTransaction trans,
+                            boolean synchronous,
+                            OutputStream outputStream) throws UMOException;
+
 }
