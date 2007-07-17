@@ -138,9 +138,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             try
             {
-                conn.setKeepAlive(false);
                 do
                 {
+                    conn.setKeepAlive(false);
                     HttpRequest request = conn.readRequest();
                     if (request == null)
                     {
