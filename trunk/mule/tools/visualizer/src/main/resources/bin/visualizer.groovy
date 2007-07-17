@@ -50,7 +50,7 @@ if (cmdLine.hasOption('exec')) {
         def Process process = 'which dot'.execute()
         def out = process.text
         def err = process.err.text
-        if (err.contains('Command not found')) {
+        if (!err || err.contains('Command not found')) {
             println '\n\nGraph Visualization package not found, please see http://www.graphviz.org\n\n'
             System.exit(-1)
         }
