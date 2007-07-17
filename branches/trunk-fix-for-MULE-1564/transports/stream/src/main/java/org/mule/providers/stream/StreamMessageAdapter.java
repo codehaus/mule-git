@@ -12,6 +12,7 @@ package org.mule.providers.stream;
 
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.impl.SafeThreadAccess;
 
 /**
  * <code>StreamMessageAdapter</code> TODO document
@@ -36,6 +37,12 @@ public class StreamMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, StreamMessageAdapter.class);
         }
+    }
+
+    protected StreamMessageAdapter(StreamMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
     }
 
     /**
@@ -71,4 +78,9 @@ public class StreamMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
+    public SafeThreadAccess newCopy()
+    {
+        return new StreamMessageAdapter(this);
+    }
+    
 }

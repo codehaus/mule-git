@@ -267,6 +267,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                         if (receiver != null)
                         {
                             UMOMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
+                            // if we update context, band encoding and some other test work,
+                            // but ordinary encoding test fails.
+                            //RequestContext.setEvent(new MuleEvent(returnMessage, RequestContext.getEvent()));
                             Object tempResponse;
                             if (returnMessage != null)
                             {

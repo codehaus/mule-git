@@ -14,6 +14,7 @@ import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.StringUtils;
+import org.mule.impl.SafeThreadAccess;
 
 import java.util.Iterator;
 
@@ -61,6 +62,12 @@ public class XmppMessageAdapter extends AbstractMessageAdapter
         }
     }
 
+    protected XmppMessageAdapter(XmppMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+    }
+
     /**
      * Converts the message implementation into a String representation
      * 
@@ -102,6 +109,11 @@ public class XmppMessageAdapter extends AbstractMessageAdapter
     public String getUniqueId()
     {
         return message.getPacketID();
+    }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new XmppMessageAdapter(this);
     }
 
 }

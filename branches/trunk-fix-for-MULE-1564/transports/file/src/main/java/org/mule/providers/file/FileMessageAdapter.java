@@ -11,6 +11,7 @@
 package org.mule.providers.file;
 
 import org.mule.MuleException;
+import org.mule.impl.SafeThreadAccess;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageAdapter;
@@ -52,6 +53,13 @@ public class FileMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, this.getClass());
         }
+    }
+
+    protected FileMessageAdapter(FileMessageAdapter template)
+    {
+        super(template);
+        file = template.file;
+        contents = template.contents;
     }
 
     public Object getPayload()
@@ -142,4 +150,10 @@ public class FileMessageAdapter extends AbstractMessageAdapter
     {
         return file.getAbsolutePath();
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new FileMessageAdapter(this);
+    }
+
 }

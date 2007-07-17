@@ -11,6 +11,7 @@
 package org.mule.providers;
 
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.impl.SafeThreadAccess;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -44,7 +45,12 @@ public class WriterMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, getClass());
         }
+    }
 
+    protected WriterMessageAdapter(WriterMessageAdapter template)
+    {
+        super(template);
+        writer = template.writer;
     }
 
     /**
@@ -103,4 +109,10 @@ public class WriterMessageAdapter extends AbstractMessageAdapter
     {
         writer.close();
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new WriterMessageAdapter(this);
+    }
+
 }

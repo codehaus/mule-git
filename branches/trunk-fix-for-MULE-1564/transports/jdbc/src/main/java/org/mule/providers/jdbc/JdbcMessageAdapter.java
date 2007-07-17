@@ -11,6 +11,7 @@
 package org.mule.providers.jdbc;
 
 import org.mule.providers.AbstractMessageAdapter;
+import org.mule.impl.SafeThreadAccess;
 
 public class JdbcMessageAdapter extends AbstractMessageAdapter
 {
@@ -24,6 +25,12 @@ public class JdbcMessageAdapter extends AbstractMessageAdapter
     public JdbcMessageAdapter(Object obj)
     {
         this.payload = obj;
+    }
+
+    protected JdbcMessageAdapter(JdbcMessageAdapter template)
+    {
+        super(template);
+        payload = template.payload;
     }
 
     /**
@@ -59,4 +66,9 @@ public class JdbcMessageAdapter extends AbstractMessageAdapter
         return payload;
     }
 
+    public SafeThreadAccess newCopy()
+    {
+        return new JdbcMessageAdapter(this);
+    }
+    
 }

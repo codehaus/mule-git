@@ -26,6 +26,7 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
+import org.mule.impl.SafeThreadAccess;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -190,6 +191,11 @@ public class TestConnector extends AbstractConnector
         public void release()
         {
             // nothing to do
+        }
+
+        public SafeThreadAccess newCopy()
+        {
+            return this;
         }
     }
 

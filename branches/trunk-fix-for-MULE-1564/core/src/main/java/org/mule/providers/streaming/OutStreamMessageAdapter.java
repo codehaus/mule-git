@@ -13,6 +13,7 @@ package org.mule.providers.streaming;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.StringMessageUtils;
+import org.mule.impl.SafeThreadAccess;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,7 +61,12 @@ public class OutStreamMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, getClass(), e);
         }
+    }
 
+    protected OutStreamMessageAdapter(OutStreamMessageAdapter template)
+    {
+        super(template);
+        out = template.out;
     }
 
     /**
@@ -145,4 +151,10 @@ public class OutStreamMessageAdapter extends AbstractMessageAdapter
     {
         out.close();
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new OutStreamMessageAdapter(this);
+    }
+    
 }

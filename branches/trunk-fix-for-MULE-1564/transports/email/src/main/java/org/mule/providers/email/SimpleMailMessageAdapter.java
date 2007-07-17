@@ -17,6 +17,7 @@ import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
+import org.mule.impl.SafeThreadAccess;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -71,6 +72,13 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"), e);
         }
+    }
+
+    protected SimpleMailMessageAdapter(SimpleMailMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+        cache = template.cache;
     }
 
     /**
@@ -262,4 +270,9 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
         return buffer.toString().getBytes(encoding);
     }
 
+    public SafeThreadAccess newCopy()
+    {
+        return new SimpleMailMessageAdapter(this);
+    }
+    
 }

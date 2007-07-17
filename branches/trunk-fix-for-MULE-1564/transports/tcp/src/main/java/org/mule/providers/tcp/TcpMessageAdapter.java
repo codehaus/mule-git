@@ -11,12 +11,12 @@
 package org.mule.providers.tcp;
 
 import org.mule.impl.MuleMessage;
+import org.mule.impl.SafeThreadAccess;
 import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.MessagingException;
+import org.mule.providers.DefaultMessageAdapter;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.apache.commons.lang.SerializationUtils;
 
@@ -33,17 +33,16 @@ public class TcpMessageAdapter extends AbstractMessageAdapter
 
     private Object message;
 
-    public TcpMessageAdapter(Object message) throws MessagingException
+    public TcpMessageAdapter(Object message)
     {
         if (message instanceof MuleMessage)
         {
             MuleMessage muleMessage = (MuleMessage)message;
-            Set s = muleMessage.getPropertyNames();
-            Iterator i = s.iterator();
-            while (i.hasNext())
+            Iterator names = muleMessage.getPropertyNames().iterator();
+            while (names.hasNext())
             {
-                Object o = i.next();
-                this.properties.put(o, muleMessage.getProperty(o.toString()));
+                Object name = names.next();
+                this.properties.put(name, muleMessage.getProperty(name.toString()));
             }
             this.message = muleMessage.getPayload();
         }
@@ -51,6 +50,12 @@ public class TcpMessageAdapter extends AbstractMessageAdapter
         {
             this.message = message;
         }
+    }
+
+    protected TcpMessageAdapter(TcpMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
     }
 
     /**
@@ -89,4 +94,10 @@ public class TcpMessageAdapter extends AbstractMessageAdapter
     {
         return message;
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new TcpMessageAdapter(this);
+    }
+
 }

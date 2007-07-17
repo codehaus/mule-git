@@ -15,6 +15,7 @@ import org.mule.impl.model.direct.DirectComponent;
 import org.mule.providers.DefaultMessageAdapter;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.MalformedEndpointException;
+import org.mule.config.MuleProperties;
 
 import java.util.Map;
 
@@ -42,6 +43,22 @@ public class SafeThreadAccessTestCase extends TestCase
         basicPattern(dummyEvent());
         newCopy(dummyEvent());
         resetAccessControl(dummyEvent());
+    }
+
+    public void testDisable() throws InterruptedException
+    {
+        try
+        {
+            System.setProperty(MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, "true");
+            SafeThreadAccess target = new DefaultMessageAdapter(new Object());
+            newThread(target, false, new boolean[]{true, true, false, true});
+            newThread(target, false, new boolean[]{false});
+            newThread(target, false, new boolean[]{true});
+        }
+        finally
+        {
+            System.getProperties().remove(MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY);
+        }
     }
 
     protected SafeThreadAccess dummyEvent()

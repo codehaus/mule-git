@@ -17,6 +17,7 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringUtils;
+import org.mule.impl.SafeThreadAccess;
 
 import java.util.Iterator;
 
@@ -100,6 +101,14 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
         }
     }
 
+    public AxisMessageAdapter(AxisMessageAdapter template)
+    {
+        super(template);
+        payload = template.payload;
+        message = template.message;
+        trans = template.trans;
+    }
+
     /**
      * Converts the message implementation into a String representation
      * 
@@ -155,4 +164,10 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
             throw new SOAPException(SoapMessages.cannotRemoveSingleAttachment().toString());
         }
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new AxisMessageAdapter(this);
+    }
+
 }

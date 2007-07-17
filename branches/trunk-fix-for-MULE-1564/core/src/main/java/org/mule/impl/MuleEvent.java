@@ -708,7 +708,7 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
 
     public SafeThreadAccess newCopy()
     {
-        if (null != message && message instanceof SafeThreadAccess)
+        if (message instanceof SafeThreadAccess)
         {
             MuleEvent copy = new MuleEvent((UMOMessage) ((SafeThreadAccess) message).newCopy(), this);
             copy.resetAccessControl();
@@ -722,7 +722,7 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
 
     public void resetAccessControl()
     {
-        if (null != message &&message instanceof SafeThreadAccess)
+        if (message instanceof SafeThreadAccess)
         {
             ((SafeThreadAccess) message).resetAccessControl();
         }
@@ -730,7 +730,7 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
 
     public void assertAccess(boolean write)
     {
-        if (null != message &&message instanceof SafeThreadAccess)
+        if (message instanceof SafeThreadAccess)
         {
             ((SafeThreadAccess) message).assertAccess(write);
         }

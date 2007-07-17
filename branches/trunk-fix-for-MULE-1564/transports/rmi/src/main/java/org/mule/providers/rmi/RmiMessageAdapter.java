@@ -12,6 +12,7 @@ package org.mule.providers.rmi;
 
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.impl.SafeThreadAccess;
 
 /**
  * Wraps an object obtained by calling a method on a Remote object
@@ -33,6 +34,12 @@ public class RmiMessageAdapter extends AbstractMessageAdapter
             throw new MessageTypeNotSupportedException(null, getClass());
         }
         this.message = message;
+    }
+
+    protected RmiMessageAdapter(RmiMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
     }
 
     public byte[] getPayloadAsBytes() throws Exception
@@ -57,4 +64,10 @@ public class RmiMessageAdapter extends AbstractMessageAdapter
     {
         return message;
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new RmiMessageAdapter(this);
+    }
+    
 }

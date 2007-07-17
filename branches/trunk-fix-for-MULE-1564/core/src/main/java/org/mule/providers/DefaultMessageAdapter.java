@@ -10,19 +10,10 @@
 
 package org.mule.providers;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.RequestContext;
 import org.mule.impl.SafeThreadAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.util.ExceptionUtils;
-import org.mule.util.SystemUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <code>DefaultMessageAdapter</code> can be used to wrap an arbitary object where
@@ -63,10 +54,9 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
 
     public DefaultMessageAdapter(Object message, UMOMessageAdapter previous)
     {
+        super(previous);
         if (previous != null)
         {
-            id = previous.getUniqueId();
-
             if (message == null)
             {
                 this.message = NullPayload.getInstance();
@@ -75,75 +65,11 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
             {
                 this.message = message;
             }
-            for (Iterator iterator = previous.getAttachmentNames().iterator(); iterator.hasNext();)
-            {
-                String name = (String) iterator.next();
-                try
-                {
-                    addAttachment(name, previous.getAttachment(name));
-                }
-                catch (Exception e)
-                {
-                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
-                }
-            }
-            final Set propertyNames = previous.getPropertyNames();
-            //final UMOEvent event = RequestContext.getEvent();
-            //final Object v = event.getMessage().getProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
-            //final String s = event.toString();
-            for (Iterator iterator = propertyNames.iterator(); iterator.hasNext();)
-            {
-                String name = (String) iterator.next();
-
-                if (previous.getProperty(name) == null)
-                {
-                    //System.out.println("EVENT: " + s);
-                    //System.out.println(RequestContext.getEvent());
-                    final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
-
-                    RequestContext.TraceHolder here = new RequestContext.TraceHolder(
-                            new Throwable().fillInStackTrace(),
-                            Thread.currentThread().getName(),
-                            System.currentTimeMillis(), "PROBLEM DETECTED",
-                            previous.toString()
-                    );
-                    RequestContext.history.addLast(here);
-
-                    for  (int i = 0; i < 10 && ! RequestContext.history.isEmpty(); i++)
-                    {
-                        dump(sdf);
-                    }
-                }
-
-                try
-                {
-                    setProperty(name, previous.getProperty(name));
-                }
-                catch (Exception e)
-                {
-                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
-                }
-            }
         }
         else
         {
             throw new IllegalArgumentException("previousAdapter may not be null");
         }
-    }
-
-    private void dump(final SimpleDateFormat sdf)
-    {
-        final RequestContext.TraceHolder trace;
-        trace = (RequestContext.TraceHolder) RequestContext.history.removeLast();
-        StringBuffer sb = new StringBuffer(2048);
-        sb.append(sdf.format(new Date(trace.timestamp))).append(" : ");
-        sb.append(trace.threadName).append(' ');
-        sb.append("<-------------- ").append(trace.tag).append(SystemUtils.LINE_SEPARATOR);
-        sb.append(trace.messageName).append(SystemUtils.LINE_SEPARATOR);
-        sb.append(ExceptionUtils.getStackTrace(trace.throwable));
-        System.out.println(sb);
-        System.out.println("---------------------------------");
-        System.out.println();
     }
 
     /**

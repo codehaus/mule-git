@@ -19,6 +19,7 @@ import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.provider.UniqueIdNotSupportedException;
 import org.mule.util.SystemUtils;
+import org.mule.impl.SafeThreadAccess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -96,6 +97,13 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, getClass());
         }
+    }
+
+    protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+        request = template.request;
     }
 
     /*
@@ -284,4 +292,10 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
         return replyto;
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new HttpRequestMessageAdapter(this);
+    }
+
 }

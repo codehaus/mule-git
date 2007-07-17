@@ -14,6 +14,7 @@ import org.mule.config.MuleProperties;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.impl.SafeThreadAccess;
 
 import java.util.Enumeration;
 
@@ -42,6 +43,13 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
     {
         super();
         this.setMessage(message);
+    }
+
+    protected JmsMessageAdapter(JmsMessageAdapter template)
+    {
+        super(template);
+        jmsSpec = template.jmsSpec;
+        jmsMessage = template.jmsMessage;
     }
 
     public void setSpecification(String newSpec)
@@ -320,6 +328,11 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
             replyTo = getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
         }
         return replyTo;
+    }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new JmsMessageAdapter(this);
     }
 
 }

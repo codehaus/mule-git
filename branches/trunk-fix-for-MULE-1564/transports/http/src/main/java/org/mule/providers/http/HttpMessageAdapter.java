@@ -11,9 +11,9 @@
 package org.mule.providers.http;
 
 import org.mule.MuleManager;
+import org.mule.impl.SafeThreadAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.transformer.UMOTransformer;
 
@@ -40,7 +40,7 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
     private final Object message;
     private boolean http11 = true;
 
-    public HttpMessageAdapter(Object message) throws MessagingException
+    public HttpMessageAdapter(Object message) throws MessageTypeNotSupportedException
     {
         if (message instanceof Object[])
         {
@@ -105,6 +105,13 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         {
             encoding = MuleManager.getConfiguration().getEncoding();
         }
+    }
+
+    protected HttpMessageAdapter(HttpMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+        http11 = template.http11;
     }
 
     /*
@@ -204,4 +211,10 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         }
         return new Header(name, value);
     }
+
+    public SafeThreadAccess newCopy()
+    {
+        return new HttpMessageAdapter(this);
+    }
+
 }

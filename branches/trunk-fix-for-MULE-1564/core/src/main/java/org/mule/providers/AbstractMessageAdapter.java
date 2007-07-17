@@ -11,9 +11,9 @@
 package org.mule.providers;
 
 import org.mule.MuleManager;
+import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.RequestContext;
 import org.mule.impl.SafeThreadAccess;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.provider.UMOMessageAdapter;
@@ -66,6 +66,47 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
     public static final boolean WRITE = true;
     public static final boolean READ = false;
 
+    protected AbstractMessageAdapter()
+    {
+        // usual access for subclasses
+    }
+
+    protected AbstractMessageAdapter(UMOMessageAdapter template)
+    {
+        if (null != template)
+        {
+            Iterator propertyNames = template.getPropertyNames().iterator();
+            while (propertyNames.hasNext())
+            {
+                String key = (String) propertyNames.next();
+                try
+                {
+                   setProperty(key, template.getProperty(key));
+                }
+                catch (Exception e)
+                {
+                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
+                }
+            }
+            Iterator attachmentNames = template.getAttachmentNames().iterator();
+            while (attachmentNames.hasNext())
+            {
+                String key = (String) attachmentNames.next();
+                try
+                {
+                    addAttachment(key, template.getAttachment(key));
+                }
+                catch (Exception e)
+                {
+                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
+                }
+            }
+            encoding = template.getEncoding();
+            exceptionPayload = template.getExceptionPayload();
+            id = template.getUniqueId();
+        }
+    }
+
     public String toString()
     {
         assertAccess(READ);
@@ -115,15 +156,6 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
     public Object removeProperty(String key)
     {
         assertAccess(WRITE);
-        if (MuleProperties.MULE_REMOTE_SYNC_PROPERTY.equals(key))
-        {
-            RequestContext.TraceHolder trace = new RequestContext.TraceHolder(
-                    new Throwable().fillInStackTrace(),
-                    Thread.currentThread().getName(),
-                    System.currentTimeMillis(), "STEALING REMOTE SYNC PROPERTY HERE",
-                    this.toString());
-            RequestContext.history.addLast(trace);
-        }
         return properties.remove(key);
     }
 
@@ -458,20 +490,54 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
 
     private void checkMutable(boolean write)
     {
+
+        // IF YOU SEE AN EXCEPTION THAT IS RAISED FROM WITHIN THIS CODE
+        // ============================================================
+        //
+        // First, understand that the exception here is not the "real" problem.  These exceptions
+        // give early warning of a much more serious issue that results in unreliable and unpredictable
+        // code - more than one thread is attempting to change the contents of a message.
+        //
+        // Having said that, you can disable these exceptions by defining
+        // MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY (org.mule.disable.threadsafemessages)
+        // (ie by adding -Dorg.mule.disable.threadsafemessages=true to the java command line).
+        //
+        // To remove the underlying cause, however, you probably need to do one of:
+        //
+        // - make sure that the message adapter you are using correclty implements the
+        // SafeThreadAccess interface
+        //
+        // - make sure that dispatcher and receiver classes copy SafeThreadAccess instances when
+        // they are passed between threads
+
         Thread currentThread = Thread.currentThread();
         if (currentThread.equals(ownerThread.get()))
         {
             if (write && !mutable.get())
             {
-                throw new IllegalStateException("Cannot write to immutable message");
+                if (isDisabled())
+                {
+                    logger.warn("Writing to immutable message (exception disabled)");
+                }
+                else
+                {
+                    throw new IllegalStateException("Cannot write to immutable message");
+                }
             }
         }
         else
         {
             if (write)
             {
-                throw new IllegalStateException("Only owner thread can write to message: "
-                        + ownerThread.get() + "/" + Thread.currentThread());
+                if (isDisabled())
+                {
+                    logger.warn("Non-owner writing to message (exception disabled)");
+                }
+                else
+                {
+                    throw new IllegalStateException("Only owner thread can write to message: "
+                            + ownerThread.get() + "/" + Thread.currentThread());
+                }
             }
             else
             {
@@ -479,6 +545,12 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
                 mutable.set(false);
             }
         }
+    }
+
+    private boolean isDisabled()
+    {
+        return org.apache.commons.collections.MapUtils.getBooleanValue(System.getProperties(),
+                MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, false);
     }
 
     private synchronized void initAccessControl()
@@ -500,10 +572,6 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
         mutable.set(true);
     }
 
-    // defeault implementation does nothing
-    public SafeThreadAccess newCopy()
-    {
-        return this;
-    }
+    public abstract SafeThreadAccess newCopy();
 
 }
