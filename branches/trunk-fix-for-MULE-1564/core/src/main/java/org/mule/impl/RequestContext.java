@@ -63,9 +63,9 @@ public final class RequestContext
         // RequestContext seems to be used to allow thread local mutation of events that
         // are not otherwise available in the scope.  so this is a good place to create a new
         // thread local copy - it will be read because supporting code is expecting mutation.
-        if (event instanceof SafeThreadAccess)
+        if (event instanceof ThreadSafeAccess)
         {
-            event = (UMOEvent) ((SafeThreadAccess)event).newCopy();
+            event = (UMOEvent) ((ThreadSafeAccess)event).newThreadCopy();
         }
         currentEvent.set(event);
         return event;

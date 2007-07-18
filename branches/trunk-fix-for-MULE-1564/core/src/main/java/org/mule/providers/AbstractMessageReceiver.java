@@ -536,6 +536,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             UMOSession session = new MuleSession(message, connector.getSessionHandler(), component);
             UMOEvent muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
             muleEvent = RequestContext.copyAndSetEvent(muleEvent);
+            message = muleEvent.getMessage();
 
             // Apply Security filter if one is set
             boolean authorised = false;

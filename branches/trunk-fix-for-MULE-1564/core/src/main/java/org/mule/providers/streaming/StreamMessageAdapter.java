@@ -15,7 +15,7 @@ import org.mule.providers.NullPayload;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -152,7 +152,7 @@ public class StreamMessageAdapter extends AbstractMessageAdapter implements UMOS
         // nothing to do?
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new StreamMessageAdapter(this);
     }

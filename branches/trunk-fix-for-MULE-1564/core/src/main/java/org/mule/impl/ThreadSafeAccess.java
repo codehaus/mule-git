@@ -35,7 +35,7 @@ package org.mule.impl;
  * <p>In practice this means that objects are initially mutable, but become immutable once they are
  * shared.</p>
  */
-public interface SafeThreadAccess
+public interface ThreadSafeAccess
 {
 
     /**
@@ -47,8 +47,8 @@ public interface SafeThreadAccess
     void assertAccess(boolean write);
 
     /**
-     * This method should ONLY be used in the construction of composite SafeThreadAccess instances.
-     * For example, a SafeThreadAccess UMOEvent contains a SafeThreadAccess UMOMessageAdapter. During
+     * This method should ONLY be used in the construction of composite ThreadSafeAccess instances.
+     * For example, a ThreadSafeAccess UMOEvent contains a ThreadSafeAccess UMOMessageAdapter. During
      * the construction of the event, the message adapter may be bound to the contructing thread.
      * Calling this method releases that binding so that the event as a whole can be passed to a new
      * thread unbound.
@@ -58,6 +58,6 @@ public interface SafeThreadAccess
     /**
      * @return A new instance of the implementing class, unbound to any thread and mutable.
      */
-    SafeThreadAccess newCopy();
+    ThreadSafeAccess newThreadCopy();
 
 }

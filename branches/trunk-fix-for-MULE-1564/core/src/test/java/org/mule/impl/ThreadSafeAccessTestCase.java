@@ -21,7 +21,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-public class SafeThreadAccessTestCase extends TestCase
+public class ThreadSafeAccessTestCase extends TestCase
 {
 
     public void testMessage() throws InterruptedException
@@ -50,7 +50,7 @@ public class SafeThreadAccessTestCase extends TestCase
         try
         {
             System.setProperty(MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, "true");
-            SafeThreadAccess target = new DefaultMessageAdapter(new Object());
+            ThreadSafeAccess target = new DefaultMessageAdapter(new Object());
             newThread(target, false, new boolean[]{true, true, false, true});
             newThread(target, false, new boolean[]{false});
             newThread(target, false, new boolean[]{true});
@@ -61,14 +61,14 @@ public class SafeThreadAccessTestCase extends TestCase
         }
     }
 
-    protected SafeThreadAccess dummyEvent()
+    protected ThreadSafeAccess dummyEvent()
     {
         UMOMessage message = new MuleMessage(new Object(), (Map)null);
         return new MuleEvent(message, new MuleEndpoint(),
                 new MuleSession(new DirectComponent(new MuleDescriptor(""), null)), false);
     }
 
-    protected void resetAccessControl(SafeThreadAccess target) throws InterruptedException
+    protected void resetAccessControl(ThreadSafeAccess target) throws InterruptedException
     {
         target.assertAccess(true);
         newThread(target, true, new boolean[]{true});
@@ -76,20 +76,20 @@ public class SafeThreadAccessTestCase extends TestCase
         newThread(target, false, new boolean[]{true});
     }
 
-    protected void basicPattern(SafeThreadAccess target) throws InterruptedException
+    protected void basicPattern(ThreadSafeAccess target) throws InterruptedException
     {
         newThread(target, false, new boolean[]{true, true, false, true});
         newThread(target, false, new boolean[]{false});
         newThread(target, true, new boolean[]{true});
     }
 
-    protected void newCopy(SafeThreadAccess target) throws InterruptedException
+    protected void newCopy(ThreadSafeAccess target) throws InterruptedException
     {
         basicPattern(target);
-        basicPattern(target.newCopy());
+        basicPattern(target.newThreadCopy());
     }
 
-    protected void newThread(SafeThreadAccess target, boolean error, boolean[] pattern) throws InterruptedException
+    protected void newThread(ThreadSafeAccess target, boolean error, boolean[] pattern) throws InterruptedException
     {
         Caller caller = new Caller(target, pattern);
         Thread thread =  new Thread(caller);
@@ -102,10 +102,10 @@ public class SafeThreadAccessTestCase extends TestCase
     {
 
         private boolean isError = false;
-        private SafeThreadAccess target;
+        private ThreadSafeAccess target;
         private boolean[] write;
 
-        public Caller(SafeThreadAccess target, boolean[] write)
+        public Caller(ThreadSafeAccess target, boolean[] write)
         {
             this.target = target;
             this.write = write;

@@ -13,7 +13,7 @@ package org.mule.providers.ftp;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 public class FtpMessageAdapter extends AbstractMessageAdapter
 {
@@ -65,7 +65,7 @@ public class FtpMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new FtpMessageAdapter(this);
     }

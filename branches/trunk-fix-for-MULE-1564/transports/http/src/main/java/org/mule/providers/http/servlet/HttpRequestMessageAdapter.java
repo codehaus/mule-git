@@ -19,7 +19,7 @@ import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.provider.UniqueIdNotSupportedException;
 import org.mule.util.SystemUtils;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -293,7 +293,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         return replyto;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new HttpRequestMessageAdapter(this);
     }

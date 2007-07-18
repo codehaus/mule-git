@@ -11,7 +11,7 @@
 package org.mule.providers.file;
 
 import org.mule.MuleException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.providers.AbstractMessageAdapter;
@@ -151,7 +151,7 @@ public class FileMessageAdapter extends AbstractMessageAdapter
         return file.getAbsolutePath();
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new FileMessageAdapter(this);
     }

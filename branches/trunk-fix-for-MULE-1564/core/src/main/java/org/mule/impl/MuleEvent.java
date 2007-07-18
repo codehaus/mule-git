@@ -52,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * and retrieved by Mule UMO components.
  */
 
-public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
+public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
 {
     /**
      * Serial version
@@ -706,11 +706,11 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
         return encoding;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
-        if (message instanceof SafeThreadAccess)
+        if (message instanceof ThreadSafeAccess)
         {
-            MuleEvent copy = new MuleEvent((UMOMessage) ((SafeThreadAccess) message).newCopy(), this);
+            MuleEvent copy = new MuleEvent((UMOMessage) ((ThreadSafeAccess) message).newThreadCopy(), this);
             copy.resetAccessControl();
             return copy;
         }
@@ -722,17 +722,17 @@ public class MuleEvent extends EventObject implements UMOEvent, SafeThreadAccess
 
     public void resetAccessControl()
     {
-        if (message instanceof SafeThreadAccess)
+        if (message instanceof ThreadSafeAccess)
         {
-            ((SafeThreadAccess) message).resetAccessControl();
+            ((ThreadSafeAccess) message).resetAccessControl();
         }
     }
 
     public void assertAccess(boolean write)
     {
-        if (message instanceof SafeThreadAccess)
+        if (message instanceof ThreadSafeAccess)
         {
-            ((SafeThreadAccess) message).assertAccess(write);
+            ((ThreadSafeAccess) message).assertAccess(write);
         }
     }
 

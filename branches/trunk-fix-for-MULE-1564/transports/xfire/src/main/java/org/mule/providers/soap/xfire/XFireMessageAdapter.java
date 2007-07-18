@@ -15,7 +15,7 @@ import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.util.Iterator;
 
@@ -174,7 +174,7 @@ public class XFireMessageAdapter extends AbstractMessageAdapter
         }
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new XFireMessageAdapter(this);
     }

@@ -13,7 +13,7 @@ package org.mule.providers.streaming;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.StringMessageUtils;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -152,7 +152,7 @@ public class OutStreamMessageAdapter extends AbstractMessageAdapter
         out.close();
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new OutStreamMessageAdapter(this);
     }

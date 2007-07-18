@@ -17,7 +17,7 @@ import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -270,7 +270,7 @@ public class SimpleMailMessageAdapter extends AbstractMessageAdapter
         return buffer.toString().getBytes(encoding);
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new SimpleMailMessageAdapter(this);
     }

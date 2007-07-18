@@ -11,9 +11,8 @@
 package org.mule.providers.tcp;
 
 import org.mule.impl.MuleMessage;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
-import org.mule.providers.DefaultMessageAdapter;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -95,7 +94,7 @@ public class TcpMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new TcpMessageAdapter(this);
     }

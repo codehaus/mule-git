@@ -10,7 +10,7 @@
 
 package org.mule.providers.http;
 
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
@@ -202,7 +202,7 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         return new Header(name, value);
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new HttpMessageAdapter(this);
     }

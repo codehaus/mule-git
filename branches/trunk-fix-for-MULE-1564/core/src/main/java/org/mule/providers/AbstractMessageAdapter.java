@@ -14,7 +14,7 @@ import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * message types that maybe don't normally allow for meta information, such as a File
  * or TCP.
  */
-public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeThreadAccess
+public abstract class AbstractMessageAdapter implements UMOMessageAdapter, ThreadSafeAccess
 {
 
     /**
@@ -505,9 +505,9 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
         // To remove the underlying cause, however, you probably need to do one of:
         //
         // - make sure that the message adapter you are using correclty implements the
-        // SafeThreadAccess interface
+        // ThreadSafeAccess interface
         //
-        // - make sure that dispatcher and receiver classes copy SafeThreadAccess instances when
+        // - make sure that dispatcher and receiver classes copy ThreadSafeAccess instances when
         // they are passed between threads
 
         Thread currentThread = Thread.currentThread();
@@ -572,6 +572,6 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, SafeT
         mutable.set(true);
     }
 
-    public abstract SafeThreadAccess newCopy();
+    public abstract ThreadSafeAccess newThreadCopy();
 
 }

@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * associated with the payload.
  */
 
-public class MuleMessage implements UMOMessage, SafeThreadAccess
+public class MuleMessage implements UMOMessage, ThreadSafeAccess
 {
     /**
      * Serial version
@@ -446,12 +446,12 @@ public class MuleMessage implements UMOMessage, SafeThreadAccess
         adapter.setStringProperty(name, value);
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
-        if (adapter instanceof SafeThreadAccess)
+        if (adapter instanceof ThreadSafeAccess)
         {
             logger.debug("new copy of message for " + Thread.currentThread());
-            return new MuleMessage(((SafeThreadAccess) adapter).newCopy(), this);
+            return new MuleMessage(((ThreadSafeAccess) adapter).newThreadCopy(), this);
         }
         else
         {

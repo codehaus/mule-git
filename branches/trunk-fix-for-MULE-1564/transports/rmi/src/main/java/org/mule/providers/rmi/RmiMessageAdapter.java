@@ -12,7 +12,7 @@ package org.mule.providers.rmi;
 
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 /**
  * Wraps an object obtained by calling a method on a Remote object
@@ -65,7 +65,7 @@ public class RmiMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new RmiMessageAdapter(this);
     }

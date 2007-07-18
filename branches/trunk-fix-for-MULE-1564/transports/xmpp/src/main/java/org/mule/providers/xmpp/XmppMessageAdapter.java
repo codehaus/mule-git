@@ -14,7 +14,7 @@ import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.StringUtils;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.util.Iterator;
 
@@ -111,7 +111,7 @@ public class XmppMessageAdapter extends AbstractMessageAdapter
         return message.getPacketID();
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new XmppMessageAdapter(this);
     }

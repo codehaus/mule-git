@@ -10,7 +10,7 @@
 
 package org.mule.providers;
 
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.util.Map;
@@ -147,7 +147,7 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         return id;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new DefaultMessageAdapter(getPayload(), this);
     }

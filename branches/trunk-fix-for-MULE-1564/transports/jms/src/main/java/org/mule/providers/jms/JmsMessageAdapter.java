@@ -14,7 +14,7 @@ import org.mule.config.MuleProperties;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.util.Enumeration;
 
@@ -330,7 +330,7 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
         return replyTo;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new JmsMessageAdapter(this);
     }

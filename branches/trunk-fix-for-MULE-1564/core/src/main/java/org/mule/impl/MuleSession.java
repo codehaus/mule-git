@@ -163,9 +163,9 @@ public final class MuleSession implements UMOSession
 
         // need a new copy here because we are going to mutate it
         UMOMessage response = event.getMessage();
-        if (response instanceof SafeThreadAccess)
+        if (response instanceof ThreadSafeAccess)
         {
-            response = (UMOMessage) ((SafeThreadAccess)response).newCopy();
+            response = (UMOMessage) ((ThreadSafeAccess)response).newThreadCopy();
         }
         RequestContext.writeResponse(response);
         processResponse(response);
@@ -279,9 +279,9 @@ public final class MuleSession implements UMOSession
             RequestContext.writeResponse(event.getMessage());
             // need a new instance here because we want to mutate
             UMOMessage response = event.getMessage();
-            if (response instanceof SafeThreadAccess)
+            if (response instanceof ThreadSafeAccess)
             {
-                response = (UMOMessage) ((SafeThreadAccess)response).newCopy();
+                response = (UMOMessage) ((ThreadSafeAccess)response).newThreadCopy();
             }
             processResponse(response);
         }

@@ -13,7 +13,7 @@ package org.mule.providers.jbi;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -124,7 +124,7 @@ public class JbiMessageAdapter extends AbstractMessageAdapter
         return message.getAttachmentNames();
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new JbiMessageAdapter(this);
     }

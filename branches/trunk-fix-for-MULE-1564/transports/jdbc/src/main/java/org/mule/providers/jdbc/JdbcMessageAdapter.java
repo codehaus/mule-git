@@ -11,7 +11,7 @@
 package org.mule.providers.jdbc;
 
 import org.mule.providers.AbstractMessageAdapter;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 public class JdbcMessageAdapter extends AbstractMessageAdapter
 {
@@ -66,7 +66,7 @@ public class JdbcMessageAdapter extends AbstractMessageAdapter
         return payload;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new JdbcMessageAdapter(this);
     }

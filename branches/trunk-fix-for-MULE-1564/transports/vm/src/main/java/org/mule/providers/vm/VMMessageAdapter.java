@@ -13,7 +13,7 @@ package org.mule.providers.vm;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 
 /**
  * <code>VMMessageAdapter</code> provides a common abstraction of Mule Event
@@ -94,7 +94,7 @@ public class VMMessageAdapter extends AbstractMessageAdapter
         return message.getUniqueId();
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new VMMessageAdapter(this);
     }

@@ -10,7 +10,7 @@
 
 package org.mule.providers.udp;
 
-import org.mule.impl.SafeThreadAccess;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 
@@ -85,7 +85,7 @@ public class UdpMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
-    public SafeThreadAccess newCopy()
+    public ThreadSafeAccess newThreadCopy()
     {
         return new UdpMessageAdapter(this);
     }
