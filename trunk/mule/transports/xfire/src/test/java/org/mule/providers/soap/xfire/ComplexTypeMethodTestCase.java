@@ -6,7 +6,7 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.Person;
 import org.mule.umo.UMOMessage;
 
-public class TestComplexTypeMethod extends FunctionalTestCase{
+public class ComplexTypeMethodTestCase extends FunctionalTestCase{
 
 	public void testSendComplexType() throws Exception
 	{
