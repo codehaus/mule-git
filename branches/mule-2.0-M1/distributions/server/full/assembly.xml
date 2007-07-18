@@ -90,6 +90,9 @@ Assembly descriptor for the full Mule distribution.
             <exclude>pom.xml</exclude>
             <exclude>all-examples/**</exclude>
             <exclude>hello-osgi/**</exclude>
+            <exclude>webapp/**</exclude>
+            <exclude>scripting/**</exclude>
+            <exclude>voipservice/**</exclude>
             <exclude>**/target/**</exclude> 
             <exclude>**/dist/**</exclude>
             <exclude>**/.*/**</exclude>
@@ -213,25 +216,6 @@ Assembly descriptor for the full Mule distribution.
     </fileSet>
 
     <!--
-    =============================
-        Mule Examples: Scripting
-    =============================
-    -->
-    <fileSet>
-        <directory>../../../examples/scripting/dist</directory>
-        <outputDirectory>examples/scripting</outputDirectory>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/scripting/dist</directory>
-        <outputDirectory>examples/scripting</outputDirectory>
-        <fileMode>755</fileMode>
-        <includes>
-            <include>scripting</include>
-            <include>scripting.bat</include>
-        </includes>
-    </fileSet>
-
-    <!--
     ===============================
         Mule Examples: Stock Quote
     ===============================
@@ -249,65 +233,7 @@ Assembly descriptor for the full Mule distribution.
             <include>stockquote.bat</include>
         </includes>
     </fileSet>
-
-    <!--
-    ================================
-        Mule Examples: VoIP Service
-    ================================
-    -->
-    <fileSet>
-        <directory>../../../examples/voipservice/dist</directory>
-        <outputDirectory>examples/voipservice</outputDirectory>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/voipservice/dist</directory>
-        <outputDirectory>examples/voipservice</outputDirectory>
-        <fileMode>755</fileMode>
-        <includes>
-            <include>voip</include>
-            <include>voip.bat</include>
-        </includes>
-    </fileSet>
-
-    <!--
-    ============================
-        Mule Examples: Webapp
-    ============================
-    -->
-    <fileSet>
-        <directory>../../../examples/webapp/dist</directory>
-        <outputDirectory>examples/webapp</outputDirectory>
-    </fileSet>
-    <!-- Copy configs from other examples -->
-    <fileSet>
-        <directory>../../../examples/echo/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>echo-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/hello/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>hello-http-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/loanbroker/esn/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>loan-broker-sync-config.xml</include>
-            <include>loan-broker-vm-endpoints-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/stockquote/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>stockquote-rest-config.xml</include>
-        </includes>
-    </fileSet>
+    
   </fileSets>
 
     <!--
@@ -476,12 +402,7 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.examples:mule-example-hello</include>
         <include>org.mule.examples:mule-example-loanbroker-common</include>
         <include>org.mule.examples:mule-example-loanbroker-esn</include>
-        <include>org.mule.examples:mule-example-loanbroker-esb</include>
-        <include>org.mule.examples:mule-example-loanbroker-bpm</include>
-        <include>org.mule.examples:mule-example-loanbroker-credit-agency</include>
-        <include>org.mule.examples:mule-example-scripting</include>
         <include>org.mule.examples:mule-example-stockquote</include>
-        <include>org.mule.examples:mule-example-voipservice</include>
       </includes>
     </dependencySet>
 
