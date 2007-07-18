@@ -20,12 +20,12 @@ import org.mule.providers.soap.xfire.i18n.XFireMessages;
 import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
+
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.ClassUtils;
-import org.mule.util.StringUtils;
 import org.mule.util.TemplateParser;
 
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.xfire.XFire;
 import org.codehaus.xfire.aegis.AegisBindingProvider;
 import org.codehaus.xfire.aegis.type.TypeMapping;
@@ -54,361 +55,380 @@ import org.codehaus.xfire.transport.Transport;
  * The XFireMessageDispatcher is used for making Soap client requests to remote
  * services.
  */
-public class XFireMessageDispatcher extends AbstractMessageDispatcher {
-	// Since the MessageDispatcher is guaranteed to serve a single thread,
-	// the Dispatcher can own the xfire Client as an instance variable
-	protected Client client = null;
+public class XFireMessageDispatcher extends AbstractMessageDispatcher
+{
+    // Since the MessageDispatcher is guaranteed to serve a single thread,
+    // the Dispatcher can own the xfire Client as an instance variable
+    protected Client client = null;
+    protected final XFireConnector connector;
+    private final TemplateParser soapActionTemplateParser = TemplateParser.createAntStyleParser();
 
-	protected final XFireConnector connector;
+    public XFireMessageDispatcher(UMOImmutableEndpoint endpoint)
+    {
+        super(endpoint);
+        this.connector = (XFireConnector) endpoint.getConnector();
+    }
 
-	private final TemplateParser soapActionTemplateParser = TemplateParser
-			.createAntStyleParser();
+    protected void doConnect() throws Exception
+    {
+        if (client == null)
+        {
+            final XFire xfire = connector.getXfire();
+            final String serviceName = getServiceName(endpoint);
+            final Service service = xfire.getServiceRegistry().getService(serviceName);
 
-	public XFireMessageDispatcher(UMOImmutableEndpoint endpoint) {
-		super(endpoint);
-		this.connector = (XFireConnector) endpoint.getConnector();
-	}
+            if (service == null)
+            {
+                throw new FatalConnectException(XFireMessages.serviceIsNull(serviceName), this);
+            }
+            
+            List inList = connector.getServerInHandlers();
+            if (inList != null)
+            {
+                for (int i = 0; i < inList.size(); i++)
+                {
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
+                    service.addInHandler(handler);
+                }
+            }
+            
+            List outList = connector.getServerOutHandlers();
+            if (outList != null)
+            {
+                for (int i = 0; i < outList.size(); i++)
+                {
+                    Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
+                    service.addOutHandler(handler);
+                }
+            }
 
-	protected void doConnect() throws Exception {
-		if (client == null) {
-			final XFire xfire = connector.getXfire();
-			final String serviceName = getServiceName(endpoint);
-			final Service service = xfire.getServiceRegistry().getService(
-					serviceName);
+            try
+            {
+                this.client = createXFireClient(endpoint, service, xfire);
+            }
+            catch (Exception ex)
+            {
+                disconnect();
+                throw ex;
+            }
+        }
+    }
 
-			if (service == null) {
-				throw new FatalConnectException(XFireMessages
-						.serviceIsNull(serviceName), this);
-			}
+    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire) throws Exception
+    {
+        return createXFireClient(endpoint, service, xfire, null);
+    }
 
-			List inList = connector.getServerInHandlers();
-			if (inList != null) {
-				for (int i = 0; i < inList.size(); i++) {
-					Handler handler = (Handler) ClassUtils.instanciateClass(
-							inList.get(i).toString(), ClassUtils.NO_ARGS, this
-									.getClass());
-					service.addInHandler(handler);
-				}
-			}
+    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String transportClass) throws Exception
+    {
+        Class transportClazz;
 
-			List outList = connector.getServerOutHandlers();
-			if (outList != null) {
-				for (int i = 0; i < outList.size(); i++) {
-					Handler handler = (Handler) ClassUtils.instanciateClass(
-							outList.get(i).toString(), ClassUtils.NO_ARGS, this
-									.getClass());
-					service.addOutHandler(handler);
-				}
-			}
+        if (connector.getClientTransport() == null)
+        {
+            if (!StringUtils.isBlank(transportClass))
+            {
+                transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
+            }
+            else
+            {
+                transportClazz = MuleUniversalTransport.class;
+            }
+        }
+        else
+        {
+            transportClazz = ClassUtils.loadClass(connector.getClientTransport(), this.getClass());
+        }
+        
+        Transport transport = (Transport) transportClazz.getConstructor(null).newInstance(null);
+        Client client = new Client(transport, service, endpoint.getEndpointURI().toString());
+        client.setXFire(xfire);
+        client.setEndpointUri(endpoint.getEndpointURI().toString());
+        return configureXFireClient(client);
+    }
 
-			try {
-				this.client = createXFireClient(endpoint, service, xfire);
-			} catch (Exception ex) {
-				disconnect();
-				throw ex;
-			}
-		}
-	}
+    protected Client configureXFireClient(Client client) throws Exception
+    {
+        client.addInHandler(new MuleHeadersInHandler());
+        client.addOutHandler(new MuleHeadersOutHandler());
 
-	protected Client createXFireClient(UMOImmutableEndpoint endpoint,
-			Service service, XFire xfire) throws Exception {
-		return createXFireClient(endpoint, service, xfire, null);
-	}
+        List inList = connector.getClientInHandlers();
+        if (inList != null)
+        {
+            for (int i = 0; i < inList.size(); i++)
+            {
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
+                client.addInHandler(handler);
+            }
+        }
+        
+        List outList = connector.getClientOutHandlers();
+        if (outList != null)
+        {
+            for (int i = 0; i < outList.size(); i++)
+            {
+                Handler handler = (Handler) ClassUtils.instanciateClass(
+                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
+                client.addOutHandler(handler);
+            }
+        }
+        return client;
+    }
 
-	protected Client createXFireClient(UMOImmutableEndpoint endpoint,
-			Service service, XFire xfire, String transportClass)
-			throws Exception {
-		Class transportClazz;
+    protected void doDisconnect() throws Exception
+    {
+        client = null;
+    }
 
-		if (connector.getClientTransport() == null) {
-			if (!StringUtils.isBlank(transportClass)) {
-				transportClazz = ClassUtils.loadClass(transportClass, this
-						.getClass());
-			} else {
-				transportClazz = MuleUniversalTransport.class;
-			}
-		} else {
-			transportClazz = ClassUtils.loadClass(connector
-					.getClientTransport(), this.getClass());
-		}
+    protected void doDispose()
+    {
+        // nothing to do
+    }
 
-		Transport transport = (Transport) transportClazz.getConstructor(null)
-				.newInstance(null);
-		Client client = new Client(transport, service, endpoint
-				.getEndpointURI().toString());
-		client.setXFire(xfire);
-		client.setEndpointUri(endpoint.getEndpointURI().toString());
-		return configureXFireClient(client);
-	}
+    protected String getMethod(UMOEvent event) throws DispatchException
+    {
+        String method = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);     
+                
+        if (method == null)
+        {
+            UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+            method = (String)endpointUri.getParams().get(MuleProperties.MULE_METHOD_PROPERTY);
+        }
+        
+        if (method == null)
+        {
+            method = (String)event.getEndpoint().getProperties().get(MuleProperties.MULE_METHOD_PROPERTY);
+        }   
+        
+        if (method == null)
+        {
+            throw new DispatchException(SoapMessages.cannotInvokeCallWithoutOperation(), 
+                event.getMessage(), event.getEndpoint());
+        }
+                
+        return method;
+    }
 
-	protected Client configureXFireClient(Client client) throws Exception {
-		client.addInHandler(new MuleHeadersInHandler());
-		client.addOutHandler(new MuleHeadersOutHandler());
+    protected Object[] getArgs(UMOEvent event) throws TransformerException
+    {
+        Object payload = event.getTransformedMessage();
+        Object[] args;
 
-		List inList = connector.getClientInHandlers();
-		if (inList != null) {
-			for (int i = 0; i < inList.size(); i++) {
-				Handler handler = (Handler) ClassUtils
-						.instanciateClass(inList.get(i).toString(),
-								ClassUtils.NO_ARGS, this.getClass());
-				client.addInHandler(handler);
-			}
-		}
+        if (payload instanceof Object[])
+        {
+            args = (Object[])payload;
+        }
+        else
+        {
+            args = new Object[]{payload};
+        }
 
-		List outList = connector.getClientOutHandlers();
-		if (outList != null) {
-			for (int i = 0; i < outList.size(); i++) {
-				Handler handler = (Handler) ClassUtils
-						.instanciateClass(outList.get(i).toString(),
-								ClassUtils.NO_ARGS, this.getClass());
-				client.addOutHandler(handler);
-			}
-		}
-		return client;
-	}
+        UMOMessage message = event.getMessage();
+        Set attachmentNames = message.getAttachmentNames();
+        if (attachmentNames != null && !attachmentNames.isEmpty())
+        {
+            List attachments = new ArrayList();
+            for (Iterator i = attachmentNames.iterator(); i.hasNext();)
+            {
+                attachments.add(message.getAttachment((String)i.next()));
+            }
+            List temp = new ArrayList(Arrays.asList(args));
+            temp.add(attachments.toArray(new DataHandler[0]));
+            args = temp.toArray();
+        }
 
-	protected void doDisconnect() throws Exception {
-		client = null;
-	}
+        return args;
+    }
 
-	protected void doDispose() {
-		// nothing to do
-	}
+    protected UMOMessage doSend(UMOEvent event) throws Exception
+    {
+    	if (event.getEndpoint().getProperty("complexTypes") != null)
+    	{
+    		configureClientForComplexTypes(this.client,event);
+    	}
+        this.client.setTimeout(event.getTimeout());
+        this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
+        String method = getMethod(event);
 
-	protected String getMethod(UMOEvent event) throws DispatchException {
-		String method = (String) event.getMessage().getProperty(
-				MuleProperties.MULE_METHOD_PROPERTY);
+        // Set custom soap action if set on the event or endpoint
+        String soapAction = (String)event.getMessage().getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
+        if (soapAction != null)
+        {
+            soapAction = parseSoapAction(soapAction, new QName(method), event);
+            this.client.setProperty(org.codehaus.xfire.soap.SoapConstants.SOAP_ACTION, soapAction);
+        }
 
-		if (method == null) {
-			UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
-			method = (String) endpointUri.getParams().get(
-					MuleProperties.MULE_METHOD_PROPERTY);
-		}
+        // Set Custom Headers on the client
+        Object[] arr = event.getMessage().getPropertyNames().toArray();
+        String head;
 
-		if (method == null) {
-			method = (String) event.getEndpoint().getProperties().get(
-					MuleProperties.MULE_METHOD_PROPERTY);
-		}
+        for (int i = 0; i < arr.length; i++)
+        {
+            head = (String) arr[i];
+            if ((head != null) && (!head.startsWith("MULE")))
+            {
+                this.client.setProperty((String) arr[i], event.getMessage().getProperty((String) arr[i]));
+            }
+        }
 
-		if (method == null) {
-			throw new DispatchException(SoapMessages
-					.cannotInvokeCallWithoutOperation(), event.getMessage(),
-					event.getEndpoint());
-		}
+        Object[] response = client.invoke(method, getArgs(event));
 
-		return method;
-	}
+        UMOMessage result = null;
+        if (response != null && response.length <= 1)
+        {
+            if (response.length == 1)
+            {
+                result = new MuleMessage(response[0], event.getMessage());
+            }
+        }
+        else
+        {
+            result = new MuleMessage(response, event.getMessage());
+        }
 
-	protected Object[] getArgs(UMOEvent event) throws TransformerException {
-		Object payload = event.getTransformedMessage();
-		Object[] args;
+        return result;
+    }
 
-		if (payload instanceof Object[]) {
-			args = (Object[]) payload;
-		} else {
-			args = new Object[] { payload };
-		}
+    protected void doDispatch(UMOEvent event) throws Exception
+    {
+        this.client.setTimeout(event.getTimeout());
+        this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
+        this.client.invoke(getMethod(event), getArgs(event));
+    }
 
-		UMOMessage message = event.getMessage();
-		Set attachmentNames = message.getAttachmentNames();
-		if (attachmentNames != null && !attachmentNames.isEmpty()) {
-			List attachments = new ArrayList();
-			for (Iterator i = attachmentNames.iterator(); i.hasNext();) {
-				attachments.add(message.getAttachment((String) i.next()));
-			}
-			List temp = new ArrayList(Arrays.asList(args));
-			temp.add(attachments.toArray(new DataHandler[0]));
-			args = temp.toArray();
-		}
+    /**
+     * Make a specific request to the underlying transport
+     * 
+     * @param timeout the maximum time the operation should block before returning.
+     *            The call should return immediately if there is data available. If
+     *            no data becomes available before the timeout elapses, null will be
+     *            returned
+     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     *         returned if no data was avaialable
+     * @throws Exception if the call to the underlying protocal cuases an exception
+     */
+    protected UMOMessage doReceive(long timeout) throws Exception
+    {
+        String serviceName = getServiceName(endpoint);
 
-		return args;
-	}
+        XFire xfire = connector.getXfire();
+        Service service = xfire.getServiceRegistry().getService(serviceName);
 
-	protected UMOMessage doSend(UMOEvent event) throws Exception {
-		// check for complex type declaration. If they exist, register them
-		if (event.getEndpoint().getProperty("complexTypes") != null) {
-			configureClientForComplexTypes(this.client, event);
-		}
-		
-		this.client.setTimeout(event.getTimeout());
-		this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
-		String method = getMethod(event);
+        Client client = new Client(new MuleUniversalTransport(), service, endpoint.getEndpointURI()
+            .toString());
+        client.setXFire(xfire);
+        client.setTimeout((int)timeout);
+        client.setEndpointUri(endpoint.getEndpointURI().toString());
 
-		// Set custom soap action if set on the event or endpoint
-		String soapAction = (String) event.getMessage().getProperty(
-				SoapConstants.SOAP_ACTION_PROPERTY);
-		if (soapAction != null) {
-			soapAction = parseSoapAction(soapAction, new QName(method), event);
-			this.client.setProperty(
-					org.codehaus.xfire.soap.SoapConstants.SOAP_ACTION,
-					soapAction);
-		}
+        String method = (String)endpoint.getProperty(MuleProperties.MULE_METHOD_PROPERTY);
+        OperationInfo op = service.getServiceInfo().getOperation(method);
 
-		// Set Custom Headers on the client
-		Object[] arr = event.getMessage().getPropertyNames().toArray();
-		String head;
+        Properties params = endpoint.getEndpointURI().getUserParams();
+        String args[] = new String[params.size()];
+        int i = 0;
+        for (Iterator iterator = params.values().iterator(); iterator.hasNext(); i++)
+        {
+            args[i] = iterator.next().toString();
+        }
 
-		for (int i = 0; i < arr.length; i++) {
-			head = (String) arr[i];
-			if ((head != null) && (!head.startsWith("MULE"))) {
-				this.client.setProperty((String) arr[i], event.getMessage()
-						.getProperty((String) arr[i]));
-			}
-		}
+        Object[] response = client.invoke(op, args);
 
-		Object[] response = client.invoke(method, getArgs(event));
+        if (response != null && response.length == 1)
+        {
+            return new MuleMessage(response[0]);
+        }
+        else
+        {
+            return new MuleMessage(response);
+        }
+    }
 
-		UMOMessage result = null;
-		if (response != null && response.length <= 1) {
-			if (response.length == 1) {
-				result = new MuleMessage(response[0], event.getMessage());
-			}
-		} else {
-			result = new MuleMessage(response, event.getMessage());
-		}
+    /**
+     * Get the service that is mapped to the specified request.
+     * @param endpoint endpoint containing a service path
+     * @return service name
+     */
+    protected String getServiceName(UMOImmutableEndpoint endpoint)
+    {
+        String pathInfo = endpoint.getEndpointURI().getPath();
 
-		return result;
-	}
+        if (StringUtils.isEmpty(pathInfo))
+        {
+            return endpoint.getEndpointURI().getHost();
+        }
 
-	protected void doDispatch(UMOEvent event) throws Exception {
-		// check for complex type declaration. If they exist, register them
-		if (event.getEndpoint().getProperty("complexTypes") != null) {
-			configureClientForComplexTypes(this.client, event);
-		}
-		
-		this.client.setTimeout(event.getTimeout());
-		this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
-		this.client.invoke(getMethod(event), getArgs(event));
-	}
+        String serviceName;
 
-	/**
-	 * Make a specific request to the underlying transport
-	 * 
-	 * @param timeout
-	 *            the maximum time the operation should block before returning.
-	 *            The call should return immediately if there is data available.
-	 *            If no data becomes available before the timeout elapses, null
-	 *            will be returned
-	 * @return the result of the request wrapped in a UMOMessage object. Null
-	 *         will be returned if no data was avaialable
-	 * @throws Exception
-	 *             if the call to the underlying protocal cuases an exception
-	 */
-	protected UMOMessage doReceive(long timeout) throws Exception {
-		String serviceName = getServiceName(endpoint);
+        int i = pathInfo.lastIndexOf('/');
 
-		XFire xfire = connector.getXfire();
-		Service service = xfire.getServiceRegistry().getService(serviceName);
+        if (i > -1)
+        {
+            serviceName = pathInfo.substring(i + 1);
+        }
+        else
+        {
+            serviceName = pathInfo;
+        }
 
-		Client client = new Client(new MuleUniversalTransport(), service,
-				endpoint.getEndpointURI().toString());
-		client.setXFire(xfire);
-		client.setTimeout((int) timeout);
-		client.setEndpointUri(endpoint.getEndpointURI().toString());
+        return serviceName;
+    }
 
-		String method = (String) endpoint
-				.getProperty(MuleProperties.MULE_METHOD_PROPERTY);
-		OperationInfo op = service.getServiceInfo().getOperation(method);
+    public String parseSoapAction(String soapAction, QName method, UMOEvent event)
+    {
 
-		Properties params = endpoint.getEndpointURI().getUserParams();
-		String args[] = new String[params.size()];
-		int i = 0;
-		for (Iterator iterator = params.values().iterator(); iterator.hasNext(); i++) {
-			args[i] = iterator.next().toString();
-		}
+        UMOEndpointURI endpointURI = event.getEndpoint().getEndpointURI();
+        Map properties = new HashMap();
+        UMOMessage msg = event.getMessage();
+        for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
+        {
+            String propertyKey = (String)iterator.next();
+            properties.put(propertyKey, msg.getProperty(propertyKey));
+        }
+        properties.put(MuleProperties.MULE_METHOD_PROPERTY, method.getLocalPart());
+        properties.put("methodNamespace", method.getNamespaceURI());
+        properties.put("address", endpointURI.getAddress());
+        properties.put("scheme", endpointURI.getScheme());
+        properties.put("host", endpointURI.getHost());
+        properties.put("port", String.valueOf(endpointURI.getPort()));
+        properties.put("path", endpointURI.getPath());
+        properties.put("hostInfo", endpointURI.getScheme()
+                                   + "://"
+                                   + endpointURI.getHost()
+                                   + (endpointURI.getPort() > -1
+                                                   ? ":" + String.valueOf(endpointURI.getPort()) : ""));
+        if (event.getComponent() != null)
+        {
+            properties.put("serviceName", event.getComponent().getDescriptor().getName());
+        }
 
-		Object[] response = client.invoke(op, args);
+        soapAction = soapActionTemplateParser.parse(properties, soapAction);
 
-		if (response != null && response.length == 1) {
-			return new MuleMessage(response[0]);
-		} else {
-			return new MuleMessage(response);
-		}
-	}
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("SoapAction for this call is: " + soapAction);
+        }
 
-	/**
-	 * Get the service that is mapped to the specified request.
-	 * 
-	 * @param endpoint
-	 *            endpoint containing a service path
-	 * @return service name
-	 */
-	protected String getServiceName(UMOImmutableEndpoint endpoint) {
-		String pathInfo = endpoint.getEndpointURI().getPath();
-
-		if (StringUtils.isEmpty(pathInfo)) {
-			return endpoint.getEndpointURI().getHost();
-		}
-
-		String serviceName;
-
-		int i = pathInfo.lastIndexOf('/');
-
-		if (i > -1) {
-			serviceName = pathInfo.substring(i + 1);
-		} else {
-			serviceName = pathInfo;
-		}
-
-		return serviceName;
-	}
-
-	public String parseSoapAction(String soapAction, QName method,
-			UMOEvent event) {
-
-		UMOEndpointURI endpointURI = event.getEndpoint().getEndpointURI();
-		Map properties = new HashMap();
-		UMOMessage msg = event.getMessage();
-		for (Iterator iterator = msg.getPropertyNames().iterator(); iterator
-				.hasNext();) {
-			String propertyKey = (String) iterator.next();
-			properties.put(propertyKey, msg.getProperty(propertyKey));
-		}
-		properties.put(MuleProperties.MULE_METHOD_PROPERTY, method
-				.getLocalPart());
-		properties.put("methodNamespace", method.getNamespaceURI());
-		properties.put("address", endpointURI.getAddress());
-		properties.put("scheme", endpointURI.getScheme());
-		properties.put("host", endpointURI.getHost());
-		properties.put("port", String.valueOf(endpointURI.getPort()));
-		properties.put("path", endpointURI.getPath());
-		properties.put("hostInfo", endpointURI.getScheme()
-				+ "://"
-				+ endpointURI.getHost()
-				+ (endpointURI.getPort() > -1 ? ":"
-						+ String.valueOf(endpointURI.getPort()) : ""));
-		if (event.getComponent() != null) {
-			properties.put("serviceName", event.getComponent().getDescriptor()
-					.getName());
-		}
-
-		soapAction = soapActionTemplateParser.parse(properties, soapAction);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("SoapAction for this call is: " + soapAction);
-		}
-
-		return soapAction;
-	}
-
-	private void configureClientForComplexTypes(Client client, UMOEvent event)
-			throws ClassNotFoundException {
-		Map complexTypes = (Map) event.getEndpoint()
-				.getProperty("complexTypes");
-		Object[] beans = complexTypes.keySet().toArray();
-
-		AegisBindingProvider bp = (AegisBindingProvider) client.getService()
-				.getBindingProvider();
-		TypeMapping typeMapping = bp.getTypeMapping(client.getService());
-		
-		// register each complex type
-		for (int i = 0; i < beans.length; i++) {
-			BeanType bt = new BeanType();
-			String[] queue = ((String) complexTypes.get(beans[i]))
-					.split(":", 2);
-			bt.setSchemaType(new QName(queue[1], queue[0]));
-			bt.setTypeClass(Class.forName(beans[i].toString()));
-			typeMapping.register(bt);
-		}
-	}
+        return soapAction;
+    }
+    
+    private void configureClientForComplexTypes(Client client, UMOEvent event) throws ClassNotFoundException
+    {
+    	Map complexTypes = (Map)event.getEndpoint().getProperty("complexTypes");
+    	Object[] beans = complexTypes.keySet().toArray();
+    	    	
+    	AegisBindingProvider bp = (AegisBindingProvider) client.getService().getBindingProvider();  
+	    TypeMapping typeMapping = bp.getTypeMapping(client.getService());  
+    	
+	    // for each complex type
+    	for (int i = 0; i < beans.length; i++)
+    	{    		
+    		BeanType bt = new BeanType();
+    		String[] queue = ((String)complexTypes.get(beans[i])).split(":",2);
+	        bt.setSchemaType(new QName(queue[1],queue[0]));
+	        bt.setTypeClass(Class.forName(beans[i].toString())); 
+	        typeMapping.register(bt);
+    	}
+    }
 }
