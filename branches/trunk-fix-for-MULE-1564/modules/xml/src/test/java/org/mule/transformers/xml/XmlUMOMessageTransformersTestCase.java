@@ -30,7 +30,7 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
     // @Override
     protected void doSetUp() throws Exception
     {
-        RequestContext.setEvent(new MuleEvent(testObject, getTestEndpoint("test", "sender"), MuleTestUtils
+        RequestContext.copyAndSetEvent(new MuleEvent(testObject, getTestEndpoint("test", "sender"), MuleTestUtils
             .getTestSession(), true));
     }
 

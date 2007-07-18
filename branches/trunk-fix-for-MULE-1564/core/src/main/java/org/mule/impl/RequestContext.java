@@ -58,9 +58,8 @@ public final class RequestContext
         return (UMOEvent) currentEvent.get();
     }
 
-    public static void setEvent(UMOEvent event)
+    public static UMOEvent copyAndSetEvent(UMOEvent event)
     {
-        Throwable t = new Throwable();
         // RequestContext seems to be used to allow thread local mutation of events that
         // are not otherwise available in the scope.  so this is a good place to create a new
         // thread local copy - it will be read because supporting code is expecting mutation.
@@ -69,6 +68,7 @@ public final class RequestContext
             event = (UMOEvent) ((SafeThreadAccess)event).newCopy();
         }
         currentEvent.set(event);
+        return event;
     }
 
     /**
@@ -85,7 +85,7 @@ public final class RequestContext
             if (event != null)
             {
                 event = new MuleEvent(message, event);
-                setEvent(event);
+                copyAndSetEvent(event);
             }
         }
     }
@@ -125,7 +125,7 @@ public final class RequestContext
                 }
 
                 event = new MuleEvent(message, event.getEndpoint(), event.getSession(), event.isSynchronous());
-                setEvent(event);
+                copyAndSetEvent(event);
             }
         }
     }
@@ -135,7 +135,7 @@ public final class RequestContext
      */
     public static void clear()
     {
-        setEvent(null);
+        copyAndSetEvent(null);
     }
 
     public static void setExceptionPayload(UMOExceptionPayload exceptionPayload)

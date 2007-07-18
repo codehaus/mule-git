@@ -313,7 +313,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
                 message = handleUnacceptedFilter(message);
-                RequestContext.setEvent(new MuleEvent(message, endpoint,
+                RequestContext.copyAndSetEvent(new MuleEvent(message, endpoint,
                         new MuleSession(message, new NullSessionHandler()), synchronous));
                 return message;
             }
@@ -535,7 +535,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             UMOSession session = new MuleSession(message, connector.getSessionHandler(), component);
             UMOEvent muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
-            RequestContext.setEvent(muleEvent);
+            muleEvent = RequestContext.copyAndSetEvent(muleEvent);
 
             // Apply Security filter if one is set
             boolean authorised = false;

@@ -45,7 +45,10 @@ public class AxisServletBindingTestCase extends AbstractSoapFunctionalTestCase
     // @Override
     protected void suitePostTearDown() throws Exception
     {
-        httpServer.stop();
+       if (null != httpServer)
+       {
+           httpServer.stop();
+       }
     }
 
     public String getConfigResources()

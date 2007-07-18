@@ -148,7 +148,10 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
 
     public void addAttachment(String name, DataHandler dataHandler) throws Exception
     {
-        message.addAttachmentPart(new AttachmentPart(dataHandler));
+        if (null != message)
+        {
+            message.addAttachmentPart(new AttachmentPart(dataHandler));
+        }
         super.addAttachment(name, dataHandler);
     }
 

@@ -76,7 +76,7 @@ public class JmsTransformerTestCase extends AbstractMuleTestCase
         // The AbstractJMSTransformer will only apply JMS properties to the
         // underlying message when a "current event" is available, so we need to set
         // one.
-        RequestContext.setEvent(new MuleEvent(msg, MuleTestUtils.getTestEvent("previous")));
+        RequestContext.copyAndSetEvent(new MuleEvent(msg, MuleTestUtils.getTestEvent("previous")));
 
         // The transformer we are going to use is ObjectToJMSMessage, which will
         // return the same (but mockingly modified!) JMS message that is used as

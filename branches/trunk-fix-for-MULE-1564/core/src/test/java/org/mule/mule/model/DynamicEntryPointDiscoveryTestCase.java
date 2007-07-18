@@ -105,7 +105,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         try
         {
-            RequestContext.setEvent(getTestEvent("Hello"));
+            RequestContext.copyAndSetEvent(getTestEvent("Hello"));
             ep.invoke(new MultipleEventContextsTestObject(), RequestContext.getEventContext());
             fail("Should have failed to find entrypoint.");
         }
@@ -123,7 +123,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
 
     }
@@ -143,7 +143,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         try
         {
-            RequestContext.setEvent(getTestEvent("Hello"));
+            RequestContext.copyAndSetEvent(getTestEvent("Hello"));
             ep.invoke(new MultiplePayloadsTestObject(), RequestContext.getEventContext());
             fail("Should have failed to find entrypoint.");
         }
@@ -153,7 +153,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -172,7 +172,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         try
         {
-            RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
+            RequestContext.copyAndSetEvent(getTestEvent(new FruitLover("Yummy!")));
 
             // those are usually set on the endpoint and copied over to the message
             final String methodName = "nosuchmethod";
@@ -188,7 +188,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -207,7 +207,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         try
         {
-            RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
+            RequestContext.copyAndSetEvent(getTestEvent(new FruitLover("Yummy!")));
 
             // those are usually set on the endpoint and copied over to the message
             RequestContext.getEventContext().getMessage().setProperty(METHOD_PROPERTY_NAME,
@@ -230,7 +230,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -249,7 +249,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
 
         try
         {
-            RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
+            RequestContext.copyAndSetEvent(getTestEvent(new FruitLover("Yummy!")));
 
             // those are usually set on the endpoint and copied over to the message
             final String methodName = "nosuchmethod";
@@ -268,7 +268,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -287,7 +287,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         try
         {
             Object payload = new Fruit[]{new Apple(), new Banana()};
-            RequestContext.setEvent(getTestEvent(payload));
+            RequestContext.copyAndSetEvent(getTestEvent(payload));
 
             FruitBowl bowl = new FruitBowl();
             assertFalse(bowl.hasApple());
@@ -300,7 +300,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -318,7 +318,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         try
         {
             Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
-            RequestContext.setEvent(getTestEvent(payload));
+            RequestContext.copyAndSetEvent(getTestEvent(payload));
 
             FruitBowl bowl = new FruitBowl();
             assertFalse(bowl.hasApple());
@@ -331,7 +331,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
@@ -349,7 +349,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         try
         {
             Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
-            RequestContext.setEvent(getTestEvent(payload));
+            RequestContext.copyAndSetEvent(getTestEvent(payload));
 
             final String methodName = "setFruit";
             final String propertyName = MuleProperties.MULE_METHOD_PROPERTY;
@@ -366,7 +366,7 @@ public class DynamicEntryPointDiscoveryTestCase extends AbstractEntryPointDiscov
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.copyAndSetEvent(null);
         }
     }
 
