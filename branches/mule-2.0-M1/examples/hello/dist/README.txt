@@ -14,27 +14,6 @@ For more information, refer to http://www.muledocs.org/Examples
 Simply use the shell script (Unix/Linux) or batch file (Windows) provided in this directory to run
 the example.
 
-Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you
-can run the example from the command line as follows:
-
-    Linux / Unix
-    ------------
-    mule -config file:conf/hello-config.xml
-    mule -config file:conf/hello-http-config.xml
-     or
-    export MULE_LIB=./conf
-    mule -config hello-config.xml
-    mule -config hello-http-config.xml
-
-    Windows
-    -------
-    mule.bat -config file:conf/hello-config.xml
-    mule.bat -config file:conf/hello-http-config.xml
-     or
-    SET MULE_LIB=.\conf
-    mule.bat -config hello-config.xml
-    mule.bat -config hello-http-config.xml
-
 To invoke the hello component over http, hit the following URL
 
     http://localhost:8888/?name=Ross
