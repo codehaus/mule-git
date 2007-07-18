@@ -31,23 +31,6 @@ You will need two shell windows in order to run this application.
 In the first window, use the shell script (Unix/Linux) or batch file (Windows) provided
 in this directory to run the example.
 
-Alternatively, if you have added Mule to your executable path as recommended in
-INSTALL.txt, you can run the example from the command line as follows:
-
-    Linux / Unix
-    ------------
-    mule -config file:conf/error-config.xml
-     or
-    export MULE_LIB=./conf
-    mule -config error-config.xml
-
-    Windows
-    -------
-    mule.bat -config .\conf\error-config.xml
-     or
-    SET MULE_LIB=.\conf
-    mule.bat -config error-config.xml
-
 In the second window, copy the files (one by one so you can see the results) from the
 ./test-data/out directory to the ./test-data/in directory.  Note that for the
 FatalException.xml file, Mule will attempt to construct and send an alert email using the
@@ -57,15 +40,5 @@ SMTP configuration you should specify as explained below.
 | E-mail settings |
 +-----------------+
 The FatalException.xml part of this example sends an alert e-mail to the Mule administrator.
-For this to work, you will need to configure your e-mail address and SMTP settings in the
-file ./conf/email.properties  Then you can run the example as follows:
+This functionality is not yet working in 2.0-M1, stay tuned.
 
-    Linux / Unix
-    ------------
-    mule -config file:conf/error-config.xml -props ./conf/email.properties
-
-    Windows
-    -------
-    mule.bat -config file:conf\error-config.xml -props .\conf\email.properties
-
-TODO - MULE-1969 - The above (email properties) may not work.
