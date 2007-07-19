@@ -412,7 +412,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return soapAction;
     }
 
-    private void configureClientForComplexTypes(Client client, UMOEvent event) throws ClassNotFoundException
+    protected void configureClientForComplexTypes(Client client, UMOEvent event) throws ClassNotFoundException
     {
         Map complexTypes = (Map) event.getEndpoint().getProperty("complexTypes");
         Object[] beans = complexTypes.keySet().toArray();
