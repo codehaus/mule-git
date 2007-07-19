@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule</groupId>
+        <artifactId>mule</artifactId>
+        <version>2.0-M1</version>
+    </parent>
+    <groupId>org.mule.transports</groupId>
+    <artifactId>mule-transports</artifactId>
+    <packaging>pom</packaging>
+    <name>Mule Transports</name>
+
+    <modules>
+        <module>all-transports</module>
+        <module>axis</module>
+        <module>bpm</module>
+        <module>ejb</module>
+        <module>email</module>
+        <module>file</module>
+        <module>ftp</module>
+        <module>http</module>
+        <module>jbpm</module>
+        <module>jdbc</module>
+        <module>jms</module>
+        <module>multicast</module>
+        <module>oaq</module>
+        <module>quartz</module>
+        <module>rmi</module>
+        <module>soap</module>
+        <module>ssl</module>
+        <module>stdio</module>
+        <module>tcp</module>
+        <module>udp</module>
+        <module>vm</module>
+        <module>xfire</module>
+        <module>xmpp</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <!-- Now that m2 dependency resolution works, activation
+             should ONLY come via core or (in the future) core-api, but there is
+             OF COURSE a bug with m2's handling of provided dependencies:
+             http://jira.codehaus.org/browse/MNG-2205
+        -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- This is required if the Tests use Mule 1.x configuration format
+             over tie we may revome this dependency, but I think its a good idea
+             to maintain backward compatability until Mule 3.0
+         -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-1to2migration</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>osgi</id>
+            <build>
+                 <plugins>
+                      <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <Bundle-Category>Mule Transport</Bundle-Category>
+                                <Bundle-Activator>org.mule.modules.osgi.TransportActivator</Bundle-Activator>
+                                <!-- The Bundle-Activator can't be imported from another bundle,
+                                    so we need to have a local copy of it. -->
+                                <Private-Package>
+                                    org.mule.modules.osgi
+                                </Private-Package>
+                                <!-- Since org.mule.modules.osgi is included as a private package,
+                                    we need to explicitly declare its imports (they aren't
+                                    automatically generated.
+                                    Note: manifest settings don't get merged with the parent, so
+                                    we need to repeat all settings from ../pom.xml here :-( -->
+                                <Import-Package>
+                                    org.mule.providers.service,
+                                    !com.ccg.net.ethernet,
+                                    !com.sun.activation.registries,
+                                    !com.sun.net.ssl,
+                                    !com.sun.net.ssl.internal.ssl,
+                                    !javax.crypto,
+                                    !javax.crypto.spec,
+                                    !javax.naming,
+                                    !javax.naming.spi,
+                                    !javax.net,
+                                    !javax.net.ssl,
+                                    !javax.security.auth,
+                                    !javax.security.cert,
+                                    !javax.xml.namespace,
+                                    !javax.xml.transform,
+                                    !org.xml.sax,
+                                    !sun.misc,
+                                    *
+                                </Import-Package>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                 </plugins>
+            </build>
+            <dependencies>
+                <!-- Needed for the TransportActivator -->
+                <dependency>
+                    <groupId>org.mule.modules</groupId>
+                    <artifactId>mule-module-osgi</artifactId>
+                    <version>${version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>java14</id>
+            <activation>
+                <jdk>1.4</jdk>
+            </activation>
+            <dependencies>
+                <!--
+                Sun's 1.4.x JVMs come with a bundled Crimson XML parser.
+                Unfortunately it is very buggy and does not support validation
+                against an XML Schema, so we have to unconditionally include
+                both xml-apis and xerces (in matching versions!) for JDK 1.4.
+                -->
+                <dependency>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                    <version>1.3.03</version>
+                </dependency>
+                <dependency>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                    <version>2.8.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!-- no need for a jdk5 profile since we don't have to exclude anything -->
+    </profiles>
+</project>
