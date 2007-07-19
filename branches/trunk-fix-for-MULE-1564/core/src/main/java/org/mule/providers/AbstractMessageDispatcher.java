@@ -111,7 +111,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
             event.getEndpoint().getEndpointURI().toString());
-        event = RequestContext.copyAndSetEvent(event);
+        event = RequestContext.unsafeSetEvent(event);
 
         // Apply Security filter if one is set
         UMOImmutableEndpoint endpoint = event.getEndpoint();
@@ -187,7 +187,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         event.setSynchronous(true);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
             event.getEndpoint().getEndpointURI().toString());
-        event = RequestContext.copyAndSetEvent(event);
+        event = RequestContext.unsafeSetEvent(event);
 
         // Apply Security filter if one is set
         UMOImmutableEndpoint endpoint = event.getEndpoint();
@@ -554,7 +554,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             try
             {
-                event = RequestContext.copyAndSetEvent(event);
+                event = RequestContext.criticalSetEvent(event);
                 // Make sure we are connected
                 connectionStrategy.connect(AbstractMessageDispatcher.this);
                 AbstractMessageDispatcher.this.doDispatch(event);

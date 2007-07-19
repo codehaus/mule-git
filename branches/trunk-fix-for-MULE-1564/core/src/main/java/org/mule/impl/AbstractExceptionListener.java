@@ -240,7 +240,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 }
                 UMOEvent exceptionEvent = new MuleEvent(exceptionMessage, endpoint, new MuleSession(
                     exceptionMessage, new MuleSessionHandler()), true);
-                exceptionEvent = RequestContext.copyAndSetEvent(exceptionEvent);
+                exceptionEvent = RequestContext.safeSetEvent(exceptionEvent);
                 endpoint.send(exceptionEvent);
 
                 if (logger.isDebugEnabled())

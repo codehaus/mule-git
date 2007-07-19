@@ -414,7 +414,7 @@ public abstract class AbstractComponent implements UMOComponent
             logger.debug("Component: " + descriptor.getName() + " has received synchronous event on: "
                          + event.getEndpoint().getEndpointURI());
         }
-        event = RequestContext.copyAndSetEvent(event);
+        event = RequestContext.unsafeSetEvent(event);
         return doSend(event);
     }
 

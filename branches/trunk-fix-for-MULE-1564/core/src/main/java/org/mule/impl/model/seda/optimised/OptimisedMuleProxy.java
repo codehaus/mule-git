@@ -381,7 +381,7 @@ public class OptimisedMuleProxy implements MuleProxy
             if (event.getEndpoint().canReceive())
             {
                 // dispatch the next receiver
-                event = RequestContext.copyAndSetEvent(event);
+                event = RequestContext.safeSetEvent(event);
                 // Object replyTo = event.getMessage().getReplyTo();
                 // ReplyToHandler replyToHandler = null;
                 // if (replyTo != null) {

@@ -26,6 +26,14 @@ import org.apache.commons.logging.LogFactory;
  * <code>RequestContext</code> is a thread context where components can get the
  * current event or set response properties that will be sent on the outgoing
  * message.
+ *
+ * <p>RequestContext seems to be used to allow thread local mutation of events that
+ * are not otherwise available in the scope.  so this is a good place to create a new
+ * thread local copy - it will be read because supporting code is expecting mutation.</p>
+ *
+ * <p>Mutating methods have three versions: safe (default; makes and returns a new copy); unsafe (doesn't
+ * make a copy, use only where certain no threading); critical (as safe, but indicates threading a known
+ * issue).</p>
  */
 public final class RequestContext
 {
@@ -58,74 +66,161 @@ public final class RequestContext
         return (UMOEvent) currentEvent.get();
     }
 
-    public static UMOEvent copyAndSetEvent(UMOEvent event)
+    /**
+     * Set an event for out-of-scope thread access.  Unsafe: use only when known to be single threaded.
+     *
+     * @param event - the event to set
+     * @return The event set
+     */
+    public static UMOEvent unsafeSetEvent(UMOEvent event)
     {
-        // RequestContext seems to be used to allow thread local mutation of events that
-        // are not otherwise available in the scope.  so this is a good place to create a new
-        // thread local copy - it will be read because supporting code is expecting mutation.
-        if (event instanceof ThreadSafeAccess)
-        {
-            event = (UMOEvent) ((ThreadSafeAccess)event).newThreadCopy();
-        }
         currentEvent.set(event);
         return event;
     }
 
     /**
-     * Sets a new message payload in the RequestContext but maintains all other
-     * properties (session, endpoint, synchronous, etc.) from the previous event.
-     * 
-     * @param message - current message payload
+     * Set an event for out-of-scope thread access.  Safe: use by default
+     *
+     * @param event - the event to set
+     * @return A new mutable copy of the event set
      */
-    public static void rewriteEvent(UMOMessage message)
+    public static UMOEvent safeSetEvent(UMOEvent event)
     {
-        if (message != null)
-        {
-            UMOEvent event = getEvent();
-            if (event != null)
-            {
-                event = new MuleEvent(message, event);
-                copyAndSetEvent(event);
-            }
-        }
+        return unsafeSetEvent(newEvent(event));
     }
 
-    public static void writeResponse(UMOMessage message)
+    /**
+     * Set an event for out-of-scope thread access.  Critical: thread safety known to be required
+     *
+     * @param event - the event to set
+     * @return A new mutable copy of the event set
+     */
+    public static UMOEvent criticalSetEvent(UMOEvent event)
+    {
+        return unsafeSetEvent(newEvent(event, true));
+    }
+
+    /**
+     * Sets a new message payload in the RequestContext but maintains all other
+     * properties (session, endpoint, synchronous, etc.) from the previous event.
+     * Unsafe: use only when known to be single threaded
+     *
+     * @param message - the new message payload
+     * @return The message set
+     */
+    public static UMOMessage unsafeRewriteEvent(UMOMessage message)
+    {
+        return internalRewriteEvent(message, false, false);
+    }
+
+    /**
+     * Sets a new message payload in the RequestContext but maintains all other
+     * properties (session, endpoint, synchronous, etc.) from the previous event.
+     * Safe: use by default
+     *
+     * @param message - the new message payload
+     * @return A new copy of the message set
+     */
+    public static UMOMessage safeRewriteEvent(UMOMessage message)
+    {
+        return internalRewriteEvent(message, true, false);
+    }
+
+    /**
+     * Sets a new message payload in the RequestContext but maintains all other
+     * properties (session, endpoint, synchronous, etc.) from the previous event.
+     * Critical: thread safety known to be required
+     *
+     * @param message - the new message payload
+     * @return A new copy of the message set
+     */
+    public static UMOMessage criticalRewriteEvent(UMOMessage message)
+    {
+        return internalRewriteEvent(message, true, true);
+    }
+
+    protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe, boolean required)
     {
         if (message != null)
         {
             UMOEvent event = getEvent();
             if (event != null)
             {
-                for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();)
+                UMOMessage copy = newMessage(message, safe, required);
+                UMOEvent newEvent = new MuleEvent(copy, event);
+                if (safe)
                 {
-                    String key = (String) iterator.next();
-                    if (key == null)
+                    resetAccessControl(copy);
+                }
+                unsafeSetEvent(newEvent);
+                return copy;
+            }
+        }
+        return message;
+    }
+
+    public static UMOMessage unsafeWriteResponse(UMOMessage message)
+    {
+        return internalWriteResponse(message, false, false);
+    }
+
+    public static UMOMessage safeWriteResponse(UMOMessage message)
+    {
+        return internalWriteResponse(message, true, false);
+    }
+
+    public static UMOMessage criticalWriteResponse(UMOMessage message)
+    {
+        return internalWriteResponse(message, true, true);
+    }
+
+    protected static UMOMessage internalWriteResponse(UMOMessage message, boolean safe, boolean required)
+    {
+        if (message != null)
+        {
+            UMOEvent event = getEvent();
+            if (event != null)
+            {
+                UMOMessage copy = newMessage(message, safe, required);
+                combineProperties(event, copy);
+                MuleEvent newEvent = new MuleEvent(copy, event.getEndpoint(), event.getSession(), event.isSynchronous());
+                if (safe)
+                {
+                    resetAccessControl(copy);
+                }
+                unsafeSetEvent(newEvent);
+                return copy;
+            }
+        }
+        return message;
+    }
+
+    protected static void combineProperties(UMOEvent event, UMOMessage message)
+    {
+        for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();)
+        {
+            String key = (String) iterator.next();
+            if (key == null)
+            {
+                logger.warn("Message property key is null: please report the following stack trace to dev@mule.codehaus.org.",
+                        new IllegalArgumentException());
+            }
+            else
+            {
+                if (key.startsWith(MuleProperties.PROPERTY_PREFIX))
+                {
+                    Object newValue = message.getProperty(key);
+                    Object oldValue = event.getMessage().getProperty(key);
+                    if (newValue == null)
                     {
-                        logger.warn("Message property key is null: please report the following stack trace to dev@mule.codehaus.org.",
-                            new IllegalArgumentException());
+                        message.setProperty(key, oldValue);
                     }
-                    else
+                    else if (logger.isInfoEnabled() && !newValue.equals(oldValue))
                     {
-                        if (key.startsWith(MuleProperties.PROPERTY_PREFIX))
-                        {
-                            Object newValue = message.getProperty(key);
-                            Object oldValue = event.getMessage().getProperty(key);
-                            if (newValue == null)
-                            {
-                                message.setProperty(key, oldValue);
-                            }
-                            else if (logger.isInfoEnabled() && !newValue.equals(oldValue))
-                            {
-                                logger.info("Message already contains property " + key + "=" + newValue
-                                            + " not replacing old value: " + oldValue);
-                            }
-                        }
+                        logger.info("Message already contains property " + key + "=" + newValue
+                                + " not replacing old value: " + oldValue);
                     }
                 }
-
-                event = new MuleEvent(message, event.getEndpoint(), event.getSession(), event.isSynchronous());
-                copyAndSetEvent(event);
             }
         }
     }
@@ -135,7 +230,7 @@ public final class RequestContext
      */
     public static void clear()
     {
-        copyAndSetEvent(null);
+        safeSetEvent(null);
     }
 
     public static void setExceptionPayload(UMOExceptionPayload exceptionPayload)
@@ -148,21 +243,57 @@ public final class RequestContext
         return getEvent().getMessage().getExceptionPayload();
     }
 
-    public static final class TraceHolder
-    {
-        public final Throwable throwable;
-        public final long timestamp;
-        public final String tag;
-        public final String threadName;
-        public final String messageName;
 
-        public TraceHolder(final Throwable throwable, final String threadName, final long timestamp, final String tag, String messageName)
+    // utility methods for thread safe access
+
+    protected static void noteUse(String type)
+    {
+//        logger.error("copying " + type, new Exception());
+    }
+
+    protected static UMOEvent newEvent(UMOEvent event)
+    {
+        return newEvent(event, false);
+    }
+
+    protected static UMOEvent newEvent(UMOEvent event, boolean required)
+    {
+        if (event instanceof ThreadSafeAccess)
         {
-            this.throwable = throwable;
-            this.threadName = threadName;
-            this.timestamp = timestamp;
-            this.tag = tag;
-            this.messageName = messageName;
+            if (! required)
+            {
+                noteUse("event");
+            }
+            return (UMOEvent) ((ThreadSafeAccess)event).newThreadCopy();
+        }
+        else
+        {
+            return event;
         }
     }
+
+    protected static UMOMessage newMessage(UMOMessage message, boolean safe, boolean required)
+    {
+        if (safe && message instanceof ThreadSafeAccess)
+        {
+            if (! required)
+            {
+                noteUse("message");
+            }
+            return (UMOMessage) ((ThreadSafeAccess)message).newThreadCopy();
+        }
+        else
+        {
+            return message;
+        }
+    }
+
+    protected static void resetAccessControl(Object object)
+    {
+        if (object instanceof ThreadSafeAccess)
+        {
+            ((ThreadSafeAccess) object).resetAccessControl();
+        }
+    }
+
 }

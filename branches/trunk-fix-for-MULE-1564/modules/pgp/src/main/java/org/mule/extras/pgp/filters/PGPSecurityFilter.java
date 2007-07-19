@@ -118,7 +118,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
 
         try
         {
-            RequestContext.rewriteEvent(new MuleMessage(
+            RequestContext.safeRewriteEvent(new MuleMessage(
                 getUnencryptedMessageWithoutSignature((PGPAuthentication)authResult)));
         }
         catch (Exception e2)
@@ -193,7 +193,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         try
         {
             String mesg = new String(msg);
-            RequestContext.rewriteEvent(new MuleMessage(mesg));
+            RequestContext.safeRewriteEvent(new MuleMessage(mesg));
             logger.debug("Message:" + mesg);
         }
         catch (Exception e2)
