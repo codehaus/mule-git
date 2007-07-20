@@ -53,20 +53,20 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
     implements MessageCountListener, Startable, Stoppable
 {
     private Folder folder = null;
-    private boolean makeBackup;
+    private boolean backupEnabled;
     private String backupFolder = null;
 
     public RetrieveMessageReceiver(UMOConnector connector,
                                    UMOComponent component,
                                    UMOEndpoint endpoint,
                                    long checkFrequency,
-                                   boolean makeBackup,
+                                   boolean backupEnabled,
                                    String backupFolder)
     throws InitialisationException
     {
         super(connector, component, endpoint);
         this.backupFolder = backupFolder;
-        this.makeBackup = makeBackup;
+        this.backupEnabled = backupEnabled;
         this.setFrequency(checkFrequency);
     }
 
@@ -247,7 +247,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
      */
     protected void storeMessage(Message msg) throws IOException, MessagingException
     {
-        if (makeBackup)
+        if (backupEnabled)
         {
             String filename = msg.getFileName();
             if (filename == null)

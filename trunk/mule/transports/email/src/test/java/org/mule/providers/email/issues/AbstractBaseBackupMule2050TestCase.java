@@ -20,17 +20,17 @@ import java.io.File;
 public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTestCase
 {
 
-    private boolean makeBackup;
+    private boolean backupEnabled;
 
-    public AbstractBaseBackupMule2050TestCase(boolean makeBackup)
+    public AbstractBaseBackupMule2050TestCase(boolean backupEnabled)
     {
-        this.makeBackup = makeBackup;
+        this.backupEnabled = backupEnabled;
     }
 
     public UMOConnector getConnector(boolean init) throws Exception
     {
         UMOConnector connector = super.getConnector(init);
-        ((AbstractRetrieveMailConnector) connector).setMakeBackup(makeBackup);
+        ((AbstractRetrieveMailConnector) connector).setBackupEnabled(backupEnabled);
         return connector;
     }
 
@@ -41,7 +41,7 @@ public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTe
         debug(dir);
         super.doTestReceiver();
         debug(dir);
-        assertTrue(dir.getAbsolutePath(), dir.exists() == makeBackup);
+        assertTrue(dir.getAbsolutePath(), dir.exists() == backupEnabled);
     }
 
     protected void debug(File dir)

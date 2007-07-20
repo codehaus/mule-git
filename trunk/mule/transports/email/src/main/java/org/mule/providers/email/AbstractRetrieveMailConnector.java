@@ -36,7 +36,7 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
     /**
      * Should we save backups to backupFolder?
      */
-    private boolean makeBackup = false;
+    private boolean backupEnabled = false;
 
     /**
      * Once a message has been read, should it be deleted
@@ -87,7 +87,7 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
      */
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOEndpoint endpoint) throws Exception
     {
-        Object[] args = {new Long(checkFrequency), Boolean.valueOf(isMakeBackup()), backupFolder};
+        Object[] args = {new Long(checkFrequency), Boolean.valueOf(isBackupEnabled()), backupFolder};
         return serviceDescriptor.createMessageReceiver(this, component, endpoint, args);
     }
 
@@ -101,14 +101,14 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
         this.deleteReadMessages = deleteReadMessages;
     }
 
-    public boolean isMakeBackup()
+    public boolean isBackupEnabled()
     {
-        return makeBackup;
+        return backupEnabled;
     }
 
-    public void setMakeBackup(boolean makeBackup)
+    public void setBackupEnabled(boolean backupEnabled)
     {
-        this.makeBackup = makeBackup;
+        this.backupEnabled = backupEnabled;
     }
 
 }
