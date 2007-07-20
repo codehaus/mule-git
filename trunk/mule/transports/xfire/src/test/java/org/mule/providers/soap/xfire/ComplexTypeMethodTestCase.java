@@ -17,7 +17,6 @@ public class ComplexTypeMethodTestCase extends FunctionalTestCase
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload() instanceof PersonResponse);
         assertTrue(((PersonResponse)result.getPayload()).getPerson().getFirstName().equalsIgnoreCase("Jane"));
-        assertNotNull(Long.valueOf(((PersonResponse)result.getPayload()).getTime()));
     }
 
     public void testSendComplexTypeUsingWSDLXfire() throws Exception
@@ -27,7 +26,6 @@ public class ComplexTypeMethodTestCase extends FunctionalTestCase
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload() instanceof PersonResponse);
         assertTrue(((PersonResponse)result.getPayload()).getPerson().getFirstName().equalsIgnoreCase("Jane"));
-        assertNotNull(Long.valueOf(((PersonResponse)result.getPayload()).getTime()));
     }
 
     protected String getConfigResources() 
