@@ -248,7 +248,10 @@ public final class RequestContext
 
     protected static void noteUse(String type)
     {
-//        logger.error("copying " + type, new Exception());
+        if (logger.isDebugEnabled())
+        {
+            logger.error("copying " + type, new Exception());
+        }
     }
 
     protected static UMOEvent newEvent(UMOEvent event)

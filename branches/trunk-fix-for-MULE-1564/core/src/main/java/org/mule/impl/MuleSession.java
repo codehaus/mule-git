@@ -219,7 +219,7 @@ public final class MuleSession implements UMOSession
 
         if (result != null)
         {
-            RequestContext.safeWriteResponse(result);
+            RequestContext.unsafeWriteResponse(result);
             processResponse(result);
         }
 
@@ -271,13 +271,7 @@ public final class MuleSession implements UMOSession
                              + ", event is: " + event);
             }
             component.dispatchEvent(event);
-            RequestContext.safeWriteResponse(event.getMessage());
-            // need a new instance here because we want to mutate
-            UMOMessage response = event.getMessage();
-            if (response instanceof ThreadSafeAccess)
-            {
-                response = (UMOMessage) ((ThreadSafeAccess)response).newThreadCopy();
-            }
+            UMOMessage response = RequestContext.criticalWriteResponse(event.getMessage());
             processResponse(response);
         }
         else

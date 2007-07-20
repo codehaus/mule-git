@@ -13,7 +13,6 @@ package org.mule.providers.soap.axis;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
-import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.NullPayload;
@@ -126,8 +125,6 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
     protected void doDispatch(UMOEvent event) throws Exception
     {
         Object[] args = getArgs(event);
-        // going to mutate event, so force new instance
-        event = RequestContext.safeSetEvent(event);
         Call call = getCall(event, args);
         // dont use invokeOneWay here as we are already in a thread pool.
         // Axis creates a new thread for every invoke one way call. nasty!

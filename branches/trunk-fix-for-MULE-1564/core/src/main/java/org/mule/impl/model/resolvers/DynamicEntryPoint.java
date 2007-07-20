@@ -180,7 +180,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
                     method = this.getMethodByArgumentType(payload.getClass().getName());
                     if (method != null)
                     {
-                        RequestContext.safeRewriteEvent(new MuleMessage(payload, context.getMessage()));
+                        RequestContext.unsafeRewriteEvent(new MuleMessage(payload, context.getMessage()));
                     }
                 }
                 else
@@ -247,7 +247,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
         if (payload == null)
         {
             payload = context.getTransformedMessage();
-            RequestContext.safeRewriteEvent(new MuleMessage(payload, context.getMessage()));
+            RequestContext.unsafeRewriteEvent(new MuleMessage(payload, context.getMessage()));
         }
 
         if (logger.isDebugEnabled())

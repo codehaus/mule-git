@@ -193,7 +193,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             UMOMessage message = new MuleMessage(NullPayload.getInstance());
             UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
-            event = RequestContext.safeSetEvent(event);
+            RequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_OK);
             response = (HttpResponse)connector.getDefaultResponseTransformer().transform(response);
@@ -263,7 +263,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             UMOMessage message = new MuleMessage(NullPayload.getInstance());
             UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
-            event = RequestContext.safeSetEvent(event);
+            RequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_METHOD_NOT_ALLOWED);
             response.setBodyString(HttpMessages.methodNotAllowed(method).toString() + HttpConstants.CRLF);
@@ -275,7 +275,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             UMOMessage message = new MuleMessage(NullPayload.getInstance());
             UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
-            event = RequestContext.safeSetEvent(event);
+            RequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_BAD_REQUEST);
             response.setBodyString(HttpMessages.malformedSyntax().toString() + HttpConstants.CRLF);
