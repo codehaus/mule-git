@@ -53,17 +53,20 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
     implements MessageCountListener, Startable, Stoppable
 {
     private Folder folder = null;
+    private boolean makeBackup;
     private String backupFolder = null;
 
     public RetrieveMessageReceiver(UMOConnector connector,
                                    UMOComponent component,
                                    UMOEndpoint endpoint,
                                    long checkFrequency,
-                                   String backupFolder) 
+                                   boolean makeBackup,
+                                   String backupFolder)
     throws InitialisationException
     {
         super(connector, component, endpoint);
         this.backupFolder = backupFolder;
+        this.makeBackup = makeBackup;
         this.setFrequency(checkFrequency);
     }
 
@@ -80,15 +83,11 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         store.connect();
         folder = store.getFolder(castConnector().getMailboxFolder());
 
-        // If user explicitly sets backup folder to "" it will disable email back up
-        if (backupFolder == null)
+        // set default value if empty/null
+        if (StringUtils.isEmpty(backupFolder))
         {
             this.backupFolder = 
                 MuleManager.getConfiguration().getWorkingDirectory() + "/mail/" + folder.getName();
-        }
-        else if (StringUtils.EMPTY.equals(backupFolder))
-        {
-            backupFolder = null;
         }
 
         if (backupFolder != null && !this.backupFolder.endsWith(File.separator))
@@ -248,7 +247,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
      */
     protected void storeMessage(Message msg) throws IOException, MessagingException
     {
-        if (backupFolder != null)
+        if (makeBackup)
         {
             String filename = msg.getFileName();
             if (filename == null)
