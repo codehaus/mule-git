@@ -19,6 +19,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/ComplexTypeMethodTestCase.java</exclude>
                         <!-- MULE-1134 -->
                         <exclude>**/XFireConnectorVMFunctionalTestCase.java</exclude>
                         <!-- Only run tests with external dependencies in the tests-external profile -->
