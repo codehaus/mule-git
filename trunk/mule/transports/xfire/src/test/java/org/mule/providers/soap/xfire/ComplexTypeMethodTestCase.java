@@ -9,11 +9,10 @@ import org.mule.umo.UMOMessage;
 
 public class ComplexTypeMethodTestCase extends FunctionalTestCase
 {
-
     public void testSendComplexType() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://inbound", new MuleMessage(new Person("Jane", "Doe")));
+        UMOMessage result = client.send("xfireEndpoint", new MuleMessage(new Person("Jane", "Doe")));
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload() instanceof PersonResponse);
         assertTrue(((PersonResponse)result.getPayload()).getPerson().getFirstName().equalsIgnoreCase("Jane"));
@@ -24,7 +23,7 @@ public class ComplexTypeMethodTestCase extends FunctionalTestCase
     public void testSendComplexTypeUsingWSDLXfire() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://wsdlinbound", new MuleMessage(new Person("Jane", "Doe")));
+        UMOMessage result = client.send("wsdlEndpoint", new MuleMessage(new Person("Jane", "Doe")));
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload() instanceof PersonResponse);
         assertTrue(((PersonResponse)result.getPayload()).getPerson().getFirstName().equalsIgnoreCase("Jane"));
