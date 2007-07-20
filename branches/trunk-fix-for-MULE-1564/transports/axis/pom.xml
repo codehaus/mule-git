@@ -29,6 +29,7 @@
                         <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
                         <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
                         <exclude>**/AxisServletBindingTestCase.java</exclude>
+                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -136,6 +137,12 @@
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jms</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>

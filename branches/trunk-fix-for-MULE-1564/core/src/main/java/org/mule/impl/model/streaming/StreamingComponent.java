@@ -18,7 +18,7 @@ import org.mule.umo.ComponentException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
@@ -59,12 +59,14 @@ public class StreamingComponent extends AbstractComponent
         // Right now we do not support transformers on the Streaming model
         for (Iterator iterator = descriptor.getInboundRouter().getEndpoints().iterator(); iterator.hasNext();)
         {
-            UMOImmutableEndpoint ep = (UMOImmutableEndpoint) iterator.next();
-            if (!ep.isStreaming())
-            {
-                throw new InitialisationException(
-                    CoreMessages.streamingEndpointsMustBeUsedWithStreamingModel(), this);
-            }
+            //Enforce streaming
+            UMOEndpoint ep = (UMOEndpoint) iterator.next();
+            ep.setStreaming(true);
+//            if (!ep.isStreaming())
+//            {
+//                throw new InitialisationException(
+//                    CoreMessages.streamingEndpointsMustBeUsedWithStreamingModel(), this);
+//            }
             // TODO RM*: This restriction could be lifted in future
             if (ep.getTransformer() != null)
             {

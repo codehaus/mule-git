@@ -27,6 +27,8 @@ import org.mule.util.StringUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.Message;
@@ -38,8 +40,6 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
 
 import org.apache.commons.lang.BooleanUtils;
-
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>JmsMessageDispatcher</code> is responsible for dispatching messages to JMS
@@ -220,7 +220,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             {
                 int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, UMOConnector.INT_VALUE_NOT_SET);
                 int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, UMOConnector.INT_VALUE_NOT_SET);
-                
+
                 if (priorityProp != UMOConnector.INT_VALUE_NOT_SET)
                 {
                     priority = priorityProp;

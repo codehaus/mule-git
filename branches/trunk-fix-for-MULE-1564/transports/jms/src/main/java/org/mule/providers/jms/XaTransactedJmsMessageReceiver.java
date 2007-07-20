@@ -22,8 +22,8 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
+import org.mule.util.ClassUtils;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
+public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
     protected final JmsConnector connector;
     protected boolean reuseConsumer;
@@ -67,7 +67,7 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         }
     }
 
-    public TransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
+    public XaTransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
         // TODO AP: find appropriate value for polling frequency with the scheduler;
@@ -91,6 +91,10 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         this.reuseSession = MapUtils.getBooleanValue(endpoint.getProperties(), "reuseSession",
             this.reuseSession);
 
+        // Check if the destination is a queue and
+        // if we are in transactional mode.
+        // If true, set receiveMessagesInTransaction to true.
+        // It will start multiple threads, depending on the threading profile.
         final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
         // If we're using topics we don't want to use multiple receivers as we'll get

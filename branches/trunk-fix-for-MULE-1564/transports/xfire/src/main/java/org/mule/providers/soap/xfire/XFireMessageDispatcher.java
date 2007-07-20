@@ -25,7 +25,6 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.ClassUtils;
-import org.mule.util.StringUtils;
 import org.mule.util.TemplateParser;
 
 import java.util.ArrayList;
@@ -40,7 +39,11 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.xfire.XFire;
+import org.codehaus.xfire.aegis.AegisBindingProvider;
+import org.codehaus.xfire.aegis.type.TypeMapping;
+import org.codehaus.xfire.aegis.type.basic.BeanType;
 import org.codehaus.xfire.client.Client;
 import org.codehaus.xfire.handler.Handler;
 import org.codehaus.xfire.service.OperationInfo;
@@ -240,6 +243,10 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {
+        if (event.getEndpoint().getProperty("complexTypes") != null)
+        {
+            configureClientForComplexTypes(this.client, event);
+        }
         this.client.setTimeout(event.getTimeout());
         this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
         String method = getMethod(event);
@@ -403,5 +410,24 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         }
 
         return soapAction;
+    }
+
+    protected void configureClientForComplexTypes(Client client, UMOEvent event) throws ClassNotFoundException
+    {
+        Map complexTypes = (Map) event.getEndpoint().getProperty("complexTypes");
+        Object[] beans = complexTypes.keySet().toArray();
+
+        AegisBindingProvider bp = (AegisBindingProvider) client.getService().getBindingProvider();
+        TypeMapping typeMapping = bp.getTypeMapping(client.getService());
+
+        // for each complex type
+        for (int i = 0; i < beans.length; i++)
+        {
+            BeanType bt = new BeanType();
+            String[] queue = ((String) complexTypes.get(beans[i])).split(":", 2);
+            bt.setSchemaType(new QName(queue[1], queue[0]));
+            bt.setTypeClass(Class.forName(beans[i].toString()));
+            typeMapping.register(bt);
+        }
     }
 }
