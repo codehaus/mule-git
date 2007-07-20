@@ -521,7 +521,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
                 }
                 else
                 {
-                    throw new IllegalStateException("Cannot write to immutable message");
+                    throw newException("Cannot write to immutable message");
                 }
             }
         }
@@ -535,7 +535,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
                 }
                 else
                 {
-                    throw new IllegalStateException("Only owner thread can write to message: "
+                    throw newException("Only owner thread can write to message: "
                             + ownerThread.get() + "/" + Thread.currentThread());
                 }
             }
@@ -547,7 +547,14 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         }
     }
 
-    private boolean isDisabled()
+    protected IllegalStateException newException(String message)
+    {
+        IllegalStateException exception = new IllegalStateException(message);
+        logger.error("Message access violation", exception);
+        return exception;
+    }
+
+    protected boolean isDisabled()
     {
         return org.apache.commons.collections.MapUtils.getBooleanValue(System.getProperties(),
                 MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, false);

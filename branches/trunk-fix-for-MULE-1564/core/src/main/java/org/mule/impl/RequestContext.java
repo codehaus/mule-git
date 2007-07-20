@@ -37,6 +37,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class RequestContext
 {
+    // setting this to false gives old semantics in non-critical cases
+    private static boolean SAFE = true;
     private static final Log logger = LogFactory.getLog(RequestContext.class);
     private static final ThreadLocal currentEvent = new ThreadLocal();
 
@@ -86,7 +88,7 @@ public final class RequestContext
      */
     public static UMOEvent safeSetEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event));
+        return unsafeSetEvent(newEvent(event, SAFE, false));
     }
 
     /**
@@ -97,7 +99,7 @@ public final class RequestContext
      */
     public static UMOEvent criticalSetEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event, true));
+        return unsafeSetEvent(newEvent(event, true, true));
     }
 
     /**
@@ -123,7 +125,7 @@ public final class RequestContext
      */
     public static UMOMessage safeRewriteEvent(UMOMessage message)
     {
-        return internalRewriteEvent(message, true, false);
+        return internalRewriteEvent(message, SAFE, false);
     }
 
     /**
@@ -166,7 +168,7 @@ public final class RequestContext
 
     public static UMOMessage safeWriteResponse(UMOMessage message)
     {
-        return internalWriteResponse(message, true, false);
+        return internalWriteResponse(message, SAFE, false);
     }
 
     public static UMOMessage criticalWriteResponse(UMOMessage message)
@@ -250,18 +252,13 @@ public final class RequestContext
     {
         if (logger.isDebugEnabled())
         {
-            logger.error("copying " + type, new Exception());
+            logger.debug("copying " + type, new Exception());
         }
     }
 
-    protected static UMOEvent newEvent(UMOEvent event)
+    protected static UMOEvent newEvent(UMOEvent event, boolean safe, boolean required)
     {
-        return newEvent(event, false);
-    }
-
-    protected static UMOEvent newEvent(UMOEvent event, boolean required)
-    {
-        if (event instanceof ThreadSafeAccess)
+        if (safe && event instanceof ThreadSafeAccess)
         {
             if (! required)
             {
