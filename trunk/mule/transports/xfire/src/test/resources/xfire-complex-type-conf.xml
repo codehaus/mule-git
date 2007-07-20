@@ -28,7 +28,7 @@
     </global-endpoints>
     
     <model name="ComplexTypes">
-        <mule-descriptor name="PeopleServiceWS" implementation="org.mule.providers.soap.xfire.testmodels.XfireComplexTypeService">
+        <mule-descriptor name="PeopleServiceWS" implementation="org.mule.providers.soap.xfire.testmodels.XFireComplexTypeService">
             <inbound-router>
                 <endpoint address="xfire:http://localhost:9999/services"/>
             </inbound-router>
