@@ -43,7 +43,7 @@ public class UdpConnectorFunctionalTestCase extends FunctionalTestCase
         while (!ok && numberOfBatches < MAX_NUMBER_OF_BATCHES)
         {
             numberOfBatches = 0 == numberOfBatches ? 1 : numberOfBatches * 2;
-            ok = doTestSome(TOTAL_MESSAGE_COUNT, MAX_PAUSE_PERIOD, TOTAL_MESSAGE_COUNT / numberOfBatches);
+            ok = doTestSome(TOTAL_MESSAGE_COUNT, TOTAL_MESSAGE_COUNT / numberOfBatches);
             if (!ok)
             {
                 logger.warn("UDP failed to send " + TOTAL_MESSAGE_COUNT + " messages in " + numberOfBatches + " batches");
@@ -84,12 +84,11 @@ public class UdpConnectorFunctionalTestCase extends FunctionalTestCase
 
     /**
      * @param numberOfMessages Total number of tests
-     * @param period Wait period collecting messages
      * @param burst Number of mesages to send between wait periods
      * @return true if all messages received
      * @throws Exception
      */
-    protected boolean doTestSome(int numberOfMessages, long period, int burst) throws Exception
+    protected boolean doTestSome(int numberOfMessages, int burst) throws Exception
     {
         logger.info("Trying " + numberOfMessages + " messages in batches of " + burst);
         MuleClient client = new MuleClient();
@@ -104,7 +103,7 @@ public class UdpConnectorFunctionalTestCase extends FunctionalTestCase
 
             if (burst == burstCount || sentPackets == numberOfMessages-1)
             {
-                long pause = period;
+                long pause = MAX_PAUSE_PERIOD;
                 for (int i = 0; i < burstCount; i++)
                 {
                     UMOMessage message = client.receive("vm://foo", pause);
