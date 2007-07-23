@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.modules</groupId>
+        <artifactId>mule-modules</artifactId>
+        <version>2.0-M1</version>
+    </parent>
+    <artifactId>mule-module-wssecurity</artifactId>
+    <!--<packaging>bundle</packaging>-->
+    <name>Web Service Security</name>
+    <description>Mule WS-Security uses Apache's WSS4J and XFire's WSS4JHandlers to secure WebServices using SOAP</description>
+
+    <build>
+         <plugins>
+             <plugin>
+                 <artifactId>maven-surefire-plugin</artifactId>
+                 <configuration>
+                     <excludes>
+                         <exclude>**/*</exclude>
+                     </excludes>
+                 </configuration>
+             </plugin>
+              <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.mule.extras.wssecurity.*
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+         </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>java14</id>
+            <activation>
+                <jdk>1.4</jdk>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <!--
+                Sun's 1.4.x JVMs come with a bundled Crimson XML parser.
+                Unfortunately it is very buggy and does not support validation
+                against an XML Schema, so we have to unconditionally include
+                both xml-apis and xerces (in matching versions!) for JDK 1.4.
+                -->
+                <dependency>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </dependency>
+                <!-- XFire -->
+                <dependency>
+                    <groupId>org.codehaus.xfire</groupId>
+                    <artifactId>xfire-ws-security</artifactId>
+                    <exclusions>
+                        <!-- this is JDK5 only - see below for JDK14 version -->
+                        <exclusion>
+                            <groupId>org.codehaus.xfire</groupId>
+                            <artifactId>bcprov-jdk15</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <!-- re-add BouncyCastle provider for JDK 1.4 -->
+                <dependency>
+                    <groupId>org.codehaus.xfire</groupId>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <version>133</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>java5</id>
+            <activation>
+                <jdk>1.5</jdk>
+            </activation>
+            <dependencies>
+                <!-- XFire -->
+                <dependency>
+                    <groupId>org.codehaus.xfire</groupId>
+                    <artifactId>xfire-ws-security</artifactId>
+                    <exclusions>
+                        <!-- IMPORTANT for JDK5 -->
+                        <exclusion>
+                            <groupId>xml-apis</groupId>
+                            <artifactId>xml-apis</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>xerces</groupId>
+                            <artifactId>xercesImpl</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-axis</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-xfire</artifactId>
+            <version>${version}</version>
+        </dependency>
+        
+        <!-- other profile-independent dependencies -->
+        
+        <!-- common -->
+        <dependency>
+            <groupId>wss4j</groupId>
+            <artifactId>wss4j</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        
+        <!-- Axis: none -->
+        
+        <!-- XFire -->
+        <!-- need to bump the Xalan version -->
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.0</version>
+            <exclusions>
+                <!-- XML was taken care of in the profiles -->
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- For unit tests only -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.0.1</version>
+            <scope>test</scope>
+            <exclusions>
+                <!-- we like slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>                
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>
