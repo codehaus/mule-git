@@ -299,7 +299,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         httpMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new MuleHttpMethodRetryHandler());
 
         httpMethod = execute(event, httpMethod, false);
-
+        
         try
         {
             Properties h = new Properties();

@@ -20,6 +20,7 @@ public class MuleHttpMethodRetryHandler extends DefaultHttpMethodRetryHandler
 {
     public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount)
     {
+//        return false;
         if ((executionCount < this.getRetryCount()) && (exception instanceof SocketException))
         {
             return true;
