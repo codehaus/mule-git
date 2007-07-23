@@ -36,7 +36,7 @@ public class RESTTestCase extends FunctionalTestCase
         
         assertNotNull(reply);
         assertNotNull(reply.getPayloadAsString());
-        assertTrue(reply.getPayloadAsString().contains("Symbol&gt;IBM&lt;"));
+        assertTrue(reply.getPayloadAsString().indexOf("Symbol&gt;IBM&lt;") > -1);
     }
     
     public void testRest2ParamsPost() throws Exception
@@ -45,7 +45,7 @@ public class RESTTestCase extends FunctionalTestCase
         UMOMessage reply  = client.send("vm://in2", new MuleMessage(new Object[]{"MTL","MTL"}));
         
         assertNotNull(reply.getPayloadAsString());
-        assertTrue(reply.getPayloadAsString().contains(">1</double>"));
+        assertTrue(reply.getPayloadAsString().indexOf(">1</double>") > -1);
     }
     
     public void testRest1ParamGet() throws Exception
@@ -55,7 +55,7 @@ public class RESTTestCase extends FunctionalTestCase
         
         assertNotNull(reply);
         assertNotNull(reply.getPayloadAsString());
-        assertTrue(reply.getPayloadAsString().contains("Symbol&gt;IBM&lt;"));
+        assertTrue(reply.getPayloadAsString().indexOf("Symbol&gt;IBM&lt;") > -1);
     }
     
     public void testRest2ParamsGet() throws Exception
@@ -64,7 +64,7 @@ public class RESTTestCase extends FunctionalTestCase
         UMOMessage reply  = client.send("vm://in4", new MuleMessage(new Object[]{"MTL","MTL"}));
         
         assertNotNull(reply.getPayloadAsString());
-        assertTrue(reply.getPayloadAsString().contains(">1</double>"));
+        assertTrue(reply.getPayloadAsString().indexOf(">1</double>") > -1);
     }
 
 }
