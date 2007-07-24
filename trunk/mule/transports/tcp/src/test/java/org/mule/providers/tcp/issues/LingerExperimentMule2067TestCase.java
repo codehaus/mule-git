@@ -46,7 +46,7 @@ public class LingerExperimentMule2067TestCase extends TestCase
 
     public void testThisShowsTheProblem() throws IOException
     {
-        // this shows a problem with repeated open/close that includes sent data
+        // this shows a problem with repeated open/close with a client/server pair
         repeatOpenCloseClientServer(10, 10, PORT, 1000); // ok
         repeatOpenCloseClientServer(10, 10, PORT, 100); // ok
         repeatOpenCloseClientServer(10, 10, PORT, 10); // ok
@@ -140,18 +140,24 @@ public class LingerExperimentMule2067TestCase extends TestCase
             throws IOException
     {
         Server server = new Server(port, serverLinger);
-        new Thread(server).start();
-        for (int i = 0; i < numberOfConnections; i++)
+        try
         {
-            logger.debug("opening socket " + i);
-            Socket client = new Socket("localhost", port);
-            if (NO_LINGER != clientLinger)
+            new Thread(server).start();
+            for (int i = 0; i < numberOfConnections; i++)
             {
-                client.setSoLinger(true, clientLinger);
+                logger.debug("opening socket " + i);
+                Socket client = new Socket("localhost", port);
+                if (NO_LINGER != clientLinger)
+                {
+                    client.setSoLinger(true, clientLinger);
+                }
+                client.close();
             }
-            client.close();
         }
-        server.close();
+        finally
+        {
+            server.close();
+        }
     }
 
     protected static class Server implements Runnable
