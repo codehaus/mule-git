@@ -22,6 +22,30 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Can we avoid the "address already in use" errors by using SO_REUSEADDR?
+ *
+ * Typical results are
+<pre>
+ [07-24 19:32:49] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats without reuse and a pause of 100 ms
+ [07-24 19:33:49] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 57.3 +/- 33.15131973240282
+ [07-24 19:33:49] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats with reuse and a pause of 100 ms
+ [07-24 19:35:32] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 100.0 +/- 0.0
+ [07-24 19:35:32] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats without reuse and a pause of 10 ms
+ [07-24 19:35:48] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 96.8 +/- 7.332121111929359
+ [07-24 19:35:48] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats with reuse and a pause of 10 ms
+ [07-24 19:36:04] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 100.0 +/- 0.0
+ [07-24 19:36:04] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats without reuse and a pause of 1 ms
+ [07-24 19:36:10] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 75.8 +/- 37.690317058894586
+ [07-24 19:36:10] INFO  ReuseExperimentMule2067TestCase [main]: Measuring average run length for 100 repeats with reuse and a pause of 1 ms
+ [07-24 19:36:18] INFO  ReuseExperimentMule2067TestCase [main]: Average run length: 100.0 +/- 0.0
+</pre>
+ * which suggest that enabling address re-use could help with the issue.
+ *
+ * Note that if a single socket (ie a single port number) is reused for all tests we often
+ * zeroes eveywhere (even with waits of 2sec and similar between iterations/tests).  This
+ * suggests that once the error occurs, the socket enters a long-lived "broken" state.
+ *
+ * All this is by AC on linux, dual CPU, Java 1.4 - I suspect results will vary like crazy
+ * in different contexts.
  */
 public class ReuseExperimentMule2067TestCase extends TestCase
 {
@@ -42,11 +66,11 @@ public class ReuseExperimentMule2067TestCase extends TestCase
     public void testMeasureImprovement() throws IOException
     {
         measureMeanRunLength(10, 100, 10, PORT, 100, NO_REUSE);
-        measureMeanRunLength(10, 100, 10, PORT, 100, REUSE);
-        measureMeanRunLength(10, 100, 10, PORT, 10, NO_REUSE);
-        measureMeanRunLength(10, 100, 10, PORT, 10, REUSE);
-        measureMeanRunLength(10, 100, 10, PORT, 1, NO_REUSE);
-        measureMeanRunLength(10, 100, 10, PORT, 1, REUSE);
+        measureMeanRunLength(10, 100, 10, PORT+10, 100, REUSE);
+        measureMeanRunLength(10, 100, 10, PORT+20, 10, NO_REUSE);
+        measureMeanRunLength(10, 100, 10, PORT+30, 10, REUSE);
+        measureMeanRunLength(10, 100, 10, PORT+40, 1, NO_REUSE);
+        measureMeanRunLength(10, 100, 10, PORT+50, 1, REUSE);
     }
 
     protected void measureMeanRunLength(int sampleSize, int numberOfRepeats, int numberOfConnections,
@@ -59,15 +83,13 @@ public class ReuseExperimentMule2067TestCase extends TestCase
         long totalLengthSquared = 0;
         for (int i = 0; i < sampleSize; ++i)
         {
-            int length = repeatOpenCloseClientServer(numberOfRepeats, numberOfConnections, port, pause, reuse, true);
+            int length = repeatOpenCloseClientServer(numberOfRepeats, numberOfConnections, port+i, pause, reuse, true);
             totalLength += length;
             totalLengthSquared += length * length;
-            pause(100);
         }
         double mean = totalLength / (double) sampleSize;
         double sd = Math.sqrt(totalLengthSquared / (double) sampleSize - mean * mean);
         logger.info("Average run length: " + mean + " +/- " + sd);
-        pause(2000);
     }
 
     protected int repeatOpenCloseClientServer(int numberOfRepeats, int numberOfConnections, int port,
