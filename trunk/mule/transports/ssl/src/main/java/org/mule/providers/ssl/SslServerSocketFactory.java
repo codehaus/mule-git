@@ -30,12 +30,14 @@ public class SslServerSocketFactory extends TcpServerSocketFactory
     }
 
     // @Override
-    public ServerSocket createServerSocket(int port, int backlog, InetAddress address) throws IOException
+    public ServerSocket createServerSocket(InetAddress address, int port, int backlog, Boolean reuse) throws IOException
     {
         try
         {
             ServerSocketFactory ssf = tls.getServerSocketFactory();
-            return ssf.createServerSocket(port, backlog, address);
+            ServerSocket socket = ssf.createServerSocket(port, backlog, address);
+            setReuseAddress(socket, reuse);
+            return socket;
         }
         catch (IOException e)
         {
@@ -48,12 +50,14 @@ public class SslServerSocketFactory extends TcpServerSocketFactory
     }
 
     // @Override
-    public ServerSocket createServerSocket(int port, int backlog) throws IOException
+    public ServerSocket createServerSocket(int port, int backlog, Boolean reuse) throws IOException
     {
         try
         {
             ServerSocketFactory ssf = tls.getServerSocketFactory();
-            return ssf.createServerSocket(port, backlog);
+            ServerSocket socket = ssf.createServerSocket(port, backlog);
+            setReuseAddress(socket, reuse);
+            return socket;
         }
         catch (IOException e)
         {

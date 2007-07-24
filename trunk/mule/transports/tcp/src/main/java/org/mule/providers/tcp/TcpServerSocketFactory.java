@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URI;
+import java.net.SocketException;
 
 public class TcpServerSocketFactory implements SimpleServerSocketFactory
 {
 
-    public ServerSocket createServerSocket(URI uri, int backlog) throws IOException
+    public ServerSocket createServerSocket(URI uri, int backlog, Boolean reuse) throws IOException
     {
         String host = StringUtils.defaultIfEmpty(uri.getHost(), "localhost");
         InetAddress inetAddress = InetAddress.getByName(host);
@@ -29,22 +30,34 @@ public class TcpServerSocketFactory implements SimpleServerSocketFactory
                 || inetAddress.isLoopbackAddress()
                 || host.trim().equals("localhost"))
         {
-            return createServerSocket(uri.getPort(), backlog);
+            return createServerSocket(uri.getPort(), backlog, reuse);
         }
         else
         {
-            return createServerSocket(uri.getPort(), backlog, inetAddress);
+            return createServerSocket(inetAddress, uri.getPort(), backlog, reuse);
         }
     }
 
-    public ServerSocket createServerSocket(int port, int backlog, InetAddress address) throws IOException
+    public ServerSocket createServerSocket(InetAddress address, int port, int backlog, Boolean reuse) throws IOException
     {
-        return new ServerSocket(port, backlog, address);
+        ServerSocket socket = new ServerSocket(port, backlog, address);
+        setReuseAddress(socket, reuse);
+        return socket;
     }
 
-    public ServerSocket createServerSocket(int port, int backlog) throws IOException
+    public ServerSocket createServerSocket(int port, int backlog, Boolean reuse) throws IOException
     {
-        return new ServerSocket(port, backlog);
+        ServerSocket socket = new ServerSocket(port, backlog);
+        setReuseAddress(socket, reuse);
+        return socket;
+    }
+
+    protected void setReuseAddress(ServerSocket socket, Boolean reuse) throws SocketException
+    {
+        if (null != reuse && reuse.booleanValue() != socket.getReuseAddress())
+        {
+            socket.setReuseAddress(reuse.booleanValue());
+        }
     }
 
 }
