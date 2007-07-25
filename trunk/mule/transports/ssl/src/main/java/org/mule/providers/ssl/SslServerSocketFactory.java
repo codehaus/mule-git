@@ -16,6 +16,7 @@ import org.mule.umo.security.tls.TlsConfiguration;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 
 import javax.net.ServerSocketFactory;
 
@@ -35,9 +36,7 @@ public class SslServerSocketFactory extends TcpServerSocketFactory
         try
         {
             ServerSocketFactory ssf = tls.getServerSocketFactory();
-            ServerSocket socket = ssf.createServerSocket(port, backlog, address);
-            setReuseAddress(socket, reuse);
-            return socket;
+            return configure(ssf.createServerSocket(), reuse, new InetSocketAddress(address, port), backlog);
         }
         catch (IOException e)
         {
@@ -55,9 +54,7 @@ public class SslServerSocketFactory extends TcpServerSocketFactory
         try
         {
             ServerSocketFactory ssf = tls.getServerSocketFactory();
-            ServerSocket socket = ssf.createServerSocket(port, backlog);
-            setReuseAddress(socket, reuse);
-            return socket;
+            return configure(ssf.createServerSocket(), reuse, new InetSocketAddress(port), backlog);
         }
         catch (IOException e)
         {

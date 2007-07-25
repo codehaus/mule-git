@@ -14,9 +14,9 @@ import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.URI;
-import java.net.SocketException;
 
 public class TcpServerSocketFactory implements SimpleServerSocketFactory
 {
@@ -40,24 +40,24 @@ public class TcpServerSocketFactory implements SimpleServerSocketFactory
 
     public ServerSocket createServerSocket(InetAddress address, int port, int backlog, Boolean reuse) throws IOException
     {
-        ServerSocket socket = new ServerSocket(port, backlog, address);
-        setReuseAddress(socket, reuse);
-        return socket;
+        return configure(new ServerSocket(), reuse, new InetSocketAddress(address, port), backlog);
     }
 
     public ServerSocket createServerSocket(int port, int backlog, Boolean reuse) throws IOException
     {
-        ServerSocket socket = new ServerSocket(port, backlog);
-        setReuseAddress(socket, reuse);
-        return socket;
+        return configure(new ServerSocket(), reuse, new InetSocketAddress(port), backlog);
     }
 
-    protected void setReuseAddress(ServerSocket socket, Boolean reuse) throws SocketException
+    protected ServerSocket configure(ServerSocket socket, Boolean reuse, InetSocketAddress address, int backlog)
+            throws IOException
     {
         if (null != reuse && reuse.booleanValue() != socket.getReuseAddress())
         {
             socket.setReuseAddress(reuse.booleanValue());
         }
+        // bind *after* setting so_reuseaddress
+        socket.bind(address, backlog);
+        return socket;
     }
 
 }
