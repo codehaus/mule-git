@@ -65,6 +65,8 @@ public abstract class AbstractJmsFunctionalTestCase extends AbstractMuleTestCase
 
         // Make sure we are running synchronously
         MuleManager.getConfiguration().setSynchronous(true);
+        // Allow address re-use (avoid "address already in use" problem for mule admin)
+        MuleManager.getConfiguration().setServerUrl("tcp://localhost:60504?reuseAddress=true");
         MuleManager.getConfiguration().getPoolingProfile().setInitialisationPolicy(
             PoolingProfile.INITIALISE_ONE);
 
