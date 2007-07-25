@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.jms.activemq;
+package org.mule.providers.jms.issues;
 
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
@@ -21,13 +21,16 @@ import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public class ActiveMQJmsTransactionFunctionalTestCase extends AbstractJmsTransactionFunctionalTest
+/**
+ * The excluded parts of ActiveMQJmsTransactionFucntionalTestCase.
+ */
+public class ActiveMQJmsTransactionMule2071TestCase extends AbstractJmsTransactionFunctionalTest
 {
     protected ActiveMQConnectionFactory factory = null;
 
-    public ActiveMQJmsTransactionFunctionalTestCase()
+    public ActiveMQJmsTransactionMule2071TestCase()
     {
-        exclude(TRANSACTED_REDELIVERY_TO_DL_DESTINATION); // MULE-2071
+        exclude(ALL ^ TRANSACTED_REDELIVERY_TO_DL_DESTINATION);
     }
 
     public ConnectionFactory getConnectionFactory() throws Exception
