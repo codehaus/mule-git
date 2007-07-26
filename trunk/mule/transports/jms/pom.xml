@@ -22,6 +22,8 @@
                     <forkMode>pertest</forkMode>
                     <excludes>
                         <exclude>**/*Mule2071*.*</exclude>
+                        <!-- MULE-2065 -->
+                        <exclude>**/ActiveMQJmsTransactionFunctionalTestCase.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
