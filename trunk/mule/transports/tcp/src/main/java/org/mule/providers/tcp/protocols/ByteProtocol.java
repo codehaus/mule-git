@@ -133,6 +133,7 @@ public abstract class ByteProtocol implements TcpProtocol
                 len = is.read(buffer, 0, size);
                 if (0 == len)
                 {
+                    // TODO AC this lock is useless, just replace with Thread.sleep()?
                     // wait for non-blocking input stream
                     // use new lock since not expecting notification
                     Object lock = new Object();
