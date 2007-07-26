@@ -119,12 +119,9 @@ public class LingerExperimentMule2067TestCase extends TestCase
             {
                 try
                 {
-                    synchronized(this)
+                    if (pause > 0)
                     {
-                        if (pause > 0)
-                        {
-                            this.wait(pause);
-                        }
+                        Thread.sleep(pause);
                     }
                 }
                 catch (InterruptedException e)
