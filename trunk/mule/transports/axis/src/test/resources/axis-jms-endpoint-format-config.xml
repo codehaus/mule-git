@@ -3,7 +3,7 @@
                                 "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
 <mule-configuration id="test" version="1.0">
-	
+
     <container-context className="org.mule.extras.spring.SpringContainerContext">
         <properties>
             <text-property name="configuration">
@@ -29,7 +29,7 @@
             <property name="specification" value="1.1"/>
         </properties>
     </connector>
-	
+
     <global-endpoints>
         <endpoint name="soapActionDefined" address="axis:jms://soap.my.queue?method=echo">
             <properties>
@@ -41,7 +41,7 @@
         <endpoint name="noMethodDefined" address="axis:jms://soap.my.queue"/>
     </global-endpoints>
     
-	<model name="model">        
+    <model name="model">
         <mule-descriptor name="echoComponent" implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="axis:jms://soap.my.queue"/>
@@ -53,5 +53,5 @@
                 <endpoint address="axis:jms://myComponent"/>
             </inbound-router>
         </mule-descriptor>
-	</model>	
+    </model>    
 </mule-configuration>
