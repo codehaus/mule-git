@@ -719,7 +719,7 @@ public class AxisServiceComponent implements Initialisable, Callable
             new QName(serviceName.substring(1)));
 
         // if using jms or vm we can skip this
-        if (!((endpointUri.getScheme().equalsIgnoreCase("vm"))||(endpointUri.getScheme().equalsIgnoreCase("jms"))))
+        if (!("vm".equalsIgnoreCase(endpointUri.getScheme()) || "jms".equalsIgnoreCase(endpointUri.getScheme())))
         {            
             // Component Name is set by Mule so if its null we can skip this check
             if (service.getOption(AxisConnector.SERVICE_PROPERTY_COMPONENT_NAME) != null)

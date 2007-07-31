@@ -170,7 +170,7 @@ public class UniversalSender extends BasicHandler
             
             // with jms and vm the default SOAPAction will result in the name of the endpoint, which we may not necessarily want. This should be set manually on the endpoint
             String scheme = requestEndpoint.getEndpointURI().getScheme(); 
-            if (!((scheme.equalsIgnoreCase("vm"))||(scheme.equalsIgnoreCase("jms"))))
+            if (!("vm".equalsIgnoreCase(scheme) || "jms".equalsIgnoreCase(scheme)))
             {
                 if (call.useSOAPAction())
                 {
