@@ -1,12 +1,12 @@
 /*
  * $Id$
- * --------------------------------------------------------------------------------------
- * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
- *
- * The software in this package is published under the terms of the MuleSource MPL
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
- */
+  * --------------------------------------------------------------------------------------
+  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+  *
+  * The software in this package is published under the terms of the MuleSource MPL
+  * license, a copy of which has been included with this distribution in the
+  * LICENSE.txt file.
+  */
 
 package org.mule.extras.wssecurity.testcases;
 
@@ -18,10 +18,10 @@ import java.util.Properties;
 
 import org.apache.ws.security.handler.WSHandlerConstants;
 
-public class AxisMultipleConnectorWSSecurityTestCase extends FunctionalTestCase
+public class AxisMultipleConnectorsWSSecurityTestCase extends FunctionalTestCase
 {
     
-    public AxisMultipleConnectorWSSecurityTestCase()
+    public AxisMultipleConnectorsWSSecurityTestCase()
     {
         super();
         this.setDisposeManagerPerSuite(true);
@@ -75,7 +75,7 @@ public class AxisMultipleConnectorWSSecurityTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "axis-multiple-connector.xml";
+        return "axis-multiple-connectors.xml";
     }
 
 }
