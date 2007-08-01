@@ -36,7 +36,6 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
-import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +150,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
 
         for (Iterator iterator = supportedSchemes.iterator(); iterator.hasNext();)
         {
-            String s = (String)iterator.next();
+            String s = (String) iterator.next();
             registerSupportedProtocol(s);
         }
     }
@@ -232,14 +231,14 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         {
             String protocol = (String)iterator.next();
             Object temp = getAxisTransportProtocols().get(protocol);
-            Class clazz = null;
+            Class clazz;
             if (temp instanceof String)
             {
                 clazz = ClassUtils.loadClass(temp.toString(), getClass());
             }
             else
             {
-                clazz = (Class)temp;
+                clazz = (Class) temp;
             }
             Call.setTransportForProtocol(protocol, clazz);
         }
@@ -357,7 +356,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
                 
                 //if the descriptor still contains the original AXIS_SERVICE_COMPONENT_NAME name,
                 //we need to change it to the specific name which is AXIS_SERVICE_COMPONENT_NAME_<connector_name>
-                if (StringUtils.equals(axisDescriptor.getName(), AXIS_SERVICE_COMPONENT_NAME))
+                if (AXIS_SERVICE_COMPONENT_NAME.equals(axisDescriptor.getName()))
                 {
                     axisDescriptor.setName(specificAxisServiceComponentName);
                 }
@@ -378,7 +377,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         // the port is different
         // If we're using VM or Jms we just use the resource infor directly without
         // appending a service name
-        String endpoint = null;
+        String endpoint;
         String scheme = ep.getScheme().toLowerCase();
         if (scheme.equals("jms") || scheme.equals("vm"))
         {
@@ -459,12 +458,12 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     
     private MuleDescriptor getAxisDescriptorFromSystemModel()
     {
-        MuleDescriptor axisDescriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
+        MuleDescriptor axisDescriptor = (MuleDescriptor) MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
             specificAxisServiceComponentName);
         
         if (axisDescriptor == null)
         {
-            axisDescriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
+            axisDescriptor = (MuleDescriptor) MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(
                 AXIS_SERVICE_COMPONENT_NAME);
             
 //            if (axisDescriptor != null)
