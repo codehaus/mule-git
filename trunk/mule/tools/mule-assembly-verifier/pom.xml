@@ -39,6 +39,18 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
+
+        <!-- 
+             WebDAV for remote deployment (necessary as this pom does not have the
+             toplevel pom as parent)
+        -->
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+            </extension>
+        </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo.groovy</groupId>
