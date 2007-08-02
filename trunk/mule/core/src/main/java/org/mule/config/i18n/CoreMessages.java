@@ -821,4 +821,19 @@ public class CoreMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 223);
     }
+
+    public static Message noEntryPointFoundForNoArgsMethod(final Object component, final String methodName)
+    {
+        return createMessage(BUNDLE_PATH, 224, component, methodName);
+    }
+
+    public static Message noDelegateClassAndMethodProvidedForNoArgsWrapper()
+    {
+        return createMessage(BUNDLE_PATH, 225);
+    }
+
+    public static Message noDelegateClassIfDelegateInstanceSpecified()
+    {
+        return createMessage(BUNDLE_PATH, 226);
+    }
 }
