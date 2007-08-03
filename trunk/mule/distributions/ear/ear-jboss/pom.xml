@@ -16,11 +16,24 @@
     </description>
 
     <build>
+        <resources>
+            <!-- 
+                 Filter all resources so we can replace the version number in
+                 jboss-app.xml
+            -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
                 <configuration>
+                    <!-- use the output dir of the filtered resources -->
+                    <earSourceDirectory>${project.build.directory}/classes</earSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>
