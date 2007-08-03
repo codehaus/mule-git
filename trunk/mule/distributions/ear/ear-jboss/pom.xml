@@ -8,11 +8,11 @@
         <artifactId>mule-ear-parent</artifactId>
         <version>1.4.2-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-ear</artifactId>
-    <name>Generic Mule Enterprise Archive</name>
+    <artifactId>mule-ear-jboss</artifactId>
+    <name>Mule Enterprise Archive for JBoss</name>
     <packaging>ear</packaging>
     <description>
-        Enterprise Archive that packages the Mule Resource Adapter.
+        Enterprise Archive that packages the Mule Resource Adapter for JBoss.
     </description>
 
     <build>
@@ -29,7 +29,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mule.distributions.jca</groupId>
-            <artifactId>mule-jca</artifactId>
+            <artifactId>mule-jca-jboss</artifactId>
             <version>${version}</version>
             <type>rar</type>
         </dependency>
@@ -62,6 +62,19 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.modules.jca</groupId>
+            <artifactId>mule-module-jca-jboss</artifactId>
+            <version>${version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules.jca</groupId>
+            <artifactId>mule-module-jca-core</artifactId>
+            <version>${version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
