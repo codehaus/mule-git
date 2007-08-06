@@ -42,8 +42,6 @@ public final class RequestContext
     private static final Log logger = LogFactory.getLog(RequestContext.class);
     private static final ThreadLocal currentEvent = new ThreadLocal();
 
-    public static LinkedBlockingDeque history = new LinkedBlockingDeque();
-
     /** Do not instanciate. */
     private RequestContext()
     {
@@ -76,8 +74,7 @@ public final class RequestContext
      */
     public static UMOEvent unsafeSetEvent(UMOEvent event)
     {
-        currentEvent.set(event);
-        return event;
+        return internalSetEvent(event);
     }
 
     /**
@@ -88,7 +85,7 @@ public final class RequestContext
      */
     public static UMOEvent safeSetEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event, SAFE, false));
+        return internalSetEvent(newEvent(event, SAFE, false));
     }
 
     /**
@@ -99,7 +96,13 @@ public final class RequestContext
      */
     public static UMOEvent criticalSetEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event, true, true));
+        return internalSetEvent(newEvent(event, true, true));
+    }
+
+    private static UMOEvent internalSetEvent(UMOEvent event)
+    {
+        currentEvent.set(event);
+        return event;
     }
 
     /**
@@ -154,7 +157,7 @@ public final class RequestContext
                 {
                     resetAccessControl(copy);
                 }
-                unsafeSetEvent(newEvent);
+                internalSetEvent(newEvent);
                 return copy;
             }
         }
@@ -190,7 +193,7 @@ public final class RequestContext
                 {
                     resetAccessControl(copy);
                 }
-                unsafeSetEvent(newEvent);
+                internalSetEvent(newEvent);
                 return copy;
             }
         }
