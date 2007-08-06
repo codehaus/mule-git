@@ -111,7 +111,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
             event.getEndpoint().getEndpointURI().toString());
-        event = RequestContext.unsafeSetEvent(event);
+        event = RequestContext.criticalSetEvent(event); // MULE-2112
 
         // Apply Security filter if one is set
         UMOImmutableEndpoint endpoint = event.getEndpoint();
