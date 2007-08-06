@@ -10,12 +10,13 @@
 
 package org.mule.providers.jdbc;
 
+import org.mule.tck.providers.AbstractConnectorTestCase;
+import org.mule.umo.provider.UMOConnector;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.hsqldb.jdbc.jdbcDataSource;
-import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 public class JdbcConnectorTestCase extends AbstractConnectorTestCase
 {

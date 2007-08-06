@@ -10,10 +10,11 @@
 
 package org.mule.config.converters;
 
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.Converter;
 import org.mule.MuleManager;
 import org.mule.umo.provider.UMOConnector;
+
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.Converter;
 
 /**
  * <code>ConnectorConverter</code> TODO

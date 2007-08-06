@@ -12,8 +12,6 @@ package org.mule.transformers.simple;
 
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.transformers.simple.ByteArrayToSerializable;
-import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
 import org.apache.commons.lang.SerializationUtils;

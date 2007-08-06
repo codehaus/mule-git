@@ -11,9 +11,6 @@
 package org.mule.util.timer;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.timer.EventTimerTask;
-import org.mule.util.timer.TimeEvent;
-import org.mule.util.timer.TimeEventListener;
 
 import java.util.Timer;
 

@@ -10,12 +10,6 @@
 
 package org.mule.samples.hello;
 
-import org.mule.samples.hello.ChatString;
-import org.mule.samples.hello.ChitChatter;
-import org.mule.samples.hello.Greeter;
-import org.mule.samples.hello.NameString;
-import org.mule.samples.hello.NameStringToChatString;
-import org.mule.samples.hello.StringToNameString;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class HelloSampleTestCase extends AbstractMuleTestCase

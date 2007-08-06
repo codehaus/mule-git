@@ -10,9 +10,6 @@
 
 package org.mule.extras.acegi;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mule.MuleManager;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.MuleProperties;
@@ -25,6 +22,9 @@ import org.mule.umo.UMOEncryptionStrategy;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.security.CredentialsNotSetException;
 import org.mule.umo.security.UnauthorisedException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MuleEndpointEncryptionFilterTestCase extends FunctionalTestCase
 {

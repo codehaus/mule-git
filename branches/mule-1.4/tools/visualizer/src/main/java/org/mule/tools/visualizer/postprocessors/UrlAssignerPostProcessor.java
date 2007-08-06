@@ -13,6 +13,7 @@ package org.mule.tools.visualizer.postprocessors;
 import org.mule.tools.visualizer.components.PostProcessor;
 import org.mule.tools.visualizer.config.GraphConfig;
 import org.mule.tools.visualizer.config.GraphEnvironment;
+import org.mule.util.StringUtils;
 
 import com.oy.shared.lm.graph.Graph;
 import com.oy.shared.lm.graph.GraphNode;
@@ -22,7 +23,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
@@ -97,7 +97,7 @@ public class UrlAssignerPostProcessor implements PostProcessor
             GraphNode node = nodes[i];
             String caption = node.getInfo().getCaption();
             String header = node.getInfo().getHeader();
-            String className = "";
+            String className;
 
             className = extractFullClassName(caption, header);
             String url = getUrlPatternForClass(className);
@@ -146,7 +146,7 @@ public class UrlAssignerPostProcessor implements PostProcessor
 
     private String extractFullClassName(String caption, String header)
     {
-        String className = "";
+        String className;
         className = getAttribute(caption, "className");
         if (className == null)
         {

@@ -11,8 +11,6 @@
 package org.mule.util.counters;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.counters.Counter;
-import org.mule.util.counters.CounterFactory;
 import org.mule.util.counters.CounterFactory.Type;
 
 import java.util.Iterator;

@@ -10,9 +10,9 @@
 
 package org.mule.registry;
 
-import javax.management.ObjectName;
-
 import java.util.List;
+
+import javax.management.ObjectName;
 
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>

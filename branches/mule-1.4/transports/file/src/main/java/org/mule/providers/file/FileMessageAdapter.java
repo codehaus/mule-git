@@ -13,15 +13,15 @@ package org.mule.providers.file;
 import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.file.i18n.FileMessages;
 import org.mule.providers.file.transformers.FileToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.util.ObjectUtils;
 
 import java.io.File;
-
-import org.apache.commons.lang.ObjectUtils;
 
 /**
  * <code>FileMessageAdapter</code> provides a wrapper for a file reference. Users
@@ -53,6 +53,13 @@ public class FileMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, this.getClass());
         }
+    }
+
+    protected FileMessageAdapter(FileMessageAdapter template)
+    {
+        super(template);
+        file = template.file;
+        contents = template.contents;
     }
 
     public Object getPayload()
@@ -143,4 +150,10 @@ public class FileMessageAdapter extends AbstractMessageAdapter
     {
         return file.getAbsolutePath();
     }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new FileMessageAdapter(this);
+    }
+
 }

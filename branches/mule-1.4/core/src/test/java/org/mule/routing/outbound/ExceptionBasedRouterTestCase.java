@@ -10,17 +10,12 @@
 
 package org.mule.routing.outbound;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.filters.RegExFilter;
-import org.mule.routing.outbound.ExceptionBasedRouter;
-import org.mule.routing.outbound.OutboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.UMOException;
@@ -32,6 +27,9 @@ import org.mule.umo.routing.RoutingException;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 {

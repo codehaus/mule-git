@@ -54,6 +54,8 @@ public interface MuleProperties
     String MULE_START_AFTER_CONFIG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
                                                                   + "start.after.config";
 
+    String MULE_THREAD_UNSAFE_MESSAGES_PROPERTY = SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages";
+
     // End System properties
 
     /********************************************************************************
@@ -90,7 +92,7 @@ public interface MuleProperties
     String CONNECTOR_CLASS = "connector";
     String CONNECTOR_MESSAGE_RECEIVER_CLASS = "message.receiver";
     String CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS = "transacted.message.receiver";
-    String CONNECTOR_XA_MESSAGE_RECEIVER_CLASS = "xa.message.receiver";
+    String CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS = "xa.transacted.message.receiver";
     String CONNECTOR_FACTORY = "connector.factory";
     String CONNECTOR_DISPATCHER_FACTORY = "dispatcher.factory";
     String CONNECTOR_TRANSACTION_FACTORY = "transaction.factory";

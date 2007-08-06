@@ -11,7 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.DateUtils;
 
 import java.util.Date;
 

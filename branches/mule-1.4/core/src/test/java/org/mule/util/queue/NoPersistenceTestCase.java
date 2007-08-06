@@ -10,9 +10,6 @@
 
 package org.mule.util.queue;
 
-import org.mule.util.queue.MemoryPersistenceStrategy;
-import org.mule.util.queue.TransactionalQueueManager;
-
 /**
  * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
  * @version $Revision$

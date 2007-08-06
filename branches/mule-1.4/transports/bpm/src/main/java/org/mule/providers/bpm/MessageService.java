@@ -9,9 +9,9 @@
  */
 package org.mule.providers.bpm;
 
-import java.util.Map;
-
 import org.mule.umo.UMOMessage;
+
+import java.util.Map;
 
 /**
  * A message-generation service provided by Mule.  Any BPMS may call this service from

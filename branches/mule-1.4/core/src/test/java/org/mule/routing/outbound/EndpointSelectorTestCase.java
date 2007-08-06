@@ -10,6 +10,14 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.impl.MuleMessage;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.MuleTestUtils;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.UMOSession;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
+
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 
@@ -17,15 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.mule.impl.MuleMessage;
-import org.mule.routing.outbound.EndpointSelector;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 
 /**
  * @author <a href="mailto:carlson@hotpop.com">Travis Carlson</a> Sample config:

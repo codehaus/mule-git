@@ -11,10 +11,13 @@
 package org.mule.extras.spring.config;
 
 import org.mule.MuleManager;
-import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.config.ConfigurationBuilder;
+import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.extras.spring.SpringContainerContext;
 import org.mule.umo.manager.UMOManager;
+
+import java.io.IOException;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,8 +27,6 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
 
 /**
  * This Bean can e used to bootstrap a MuleManager instance in a Spring context. This

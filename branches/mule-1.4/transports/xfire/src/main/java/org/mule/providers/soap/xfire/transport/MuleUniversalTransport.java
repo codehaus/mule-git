@@ -10,6 +10,8 @@
 
 package org.mule.providers.soap.xfire.transport;
 
+import org.mule.providers.soap.xfire.MuleInvoker;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.xfire.MessageContext;
@@ -23,7 +25,6 @@ import org.codehaus.xfire.transport.AbstractTransport;
 import org.codehaus.xfire.transport.Channel;
 import org.codehaus.xfire.transport.DefaultEndpoint;
 import org.codehaus.xfire.wsdl11.WSDL11Transport;
-import org.mule.providers.soap.xfire.MuleInvoker;
 
 /**
  * TODO document

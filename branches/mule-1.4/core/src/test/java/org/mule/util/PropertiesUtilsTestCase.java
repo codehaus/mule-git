@@ -11,8 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.MapUtils;
-import org.mule.util.PropertiesUtils;
 
 import java.util.HashMap;
 import java.util.Map;

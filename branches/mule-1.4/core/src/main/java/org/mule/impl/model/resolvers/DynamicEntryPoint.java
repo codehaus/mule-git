@@ -23,9 +23,6 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.model.UMOEntryPoint;
 import org.mule.util.ClassUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -34,6 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -181,7 +180,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
                     method = this.getMethodByArgumentType(payload.getClass().getName());
                     if (method != null)
                     {
-                        RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
+                        RequestContext.unsafeRewriteEvent(new MuleMessage(payload, context.getMessage()));
                     }
                 }
                 else
@@ -218,7 +217,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
             {
                 // no method for context: try payload
                 payload = context.getTransformedMessage();
-                RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
+                RequestContext.unsafeRewriteEvent(new MuleMessage(payload, context.getMessage()));
 
                 methods = ClassUtils.getSatisfiableMethods(component.getClass(), ClassUtils
                     .getClassTypes(payload), true, true, IgnoredMethodNames);
@@ -248,7 +247,7 @@ public class DynamicEntryPoint implements UMOEntryPoint
         if (payload == null)
         {
             payload = context.getTransformedMessage();
-            RequestContext.rewriteEvent(new MuleMessage(payload, context.getMessage()));
+            RequestContext.unsafeRewriteEvent(new MuleMessage(payload, context.getMessage()));
         }
 
         if (logger.isDebugEnabled())

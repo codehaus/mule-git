@@ -10,11 +10,9 @@
 
 package org.mule.providers;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -56,10 +54,9 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
 
     public DefaultMessageAdapter(Object message, UMOMessageAdapter previous)
     {
+        super(previous);
         if (previous != null)
         {
-            id = previous.getUniqueId();
-
             if (message == null)
             {
                 this.message = NullPayload.getInstance();
@@ -67,30 +64,6 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
             else
             {
                 this.message = message;
-            }
-            for (Iterator iterator = previous.getAttachmentNames().iterator(); iterator.hasNext();)
-            {
-                String name = (String) iterator.next();
-                try
-                {
-                    addAttachment(name, previous.getAttachment(name));
-                }
-                catch (Exception e)
-                {
-                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
-                }
-            }
-            for (Iterator iterator = previous.getPropertyNames().iterator(); iterator.hasNext();)
-            {
-                String name = (String) iterator.next();
-                try
-                {
-                    setProperty(name, previous.getProperty(name));
-                }
-                catch (Exception e)
-                {
-                    throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
-                }
             }
         }
         else
@@ -173,4 +146,10 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
     {
         return id;
     }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new DefaultMessageAdapter(getPayload(), this);
+    }
+
 }

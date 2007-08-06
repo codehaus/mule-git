@@ -9,9 +9,9 @@
         <version>1.4.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-custom</artifactId>
-    <!-- This should be "pom" not "jar" but if it is set to "pom", the list of dependencies gets ignored
-    by the assembly plugin. -->
-    <packaging>jar</packaging>
+    <!-- Packaging 'pom' ensures that maven does not try to bind a plugin to the 
+         'package' phase. We bind the assembly plugin here, that's enough. -->
+    <packaging>pom</packaging>
     <name>Minimal (Custom) Distribution</name>
     <description>Assembles the Mule distribution without including any libraries.</description>
 
@@ -30,15 +30,28 @@
                         <descriptor>assembly.xml</descriptor>
                     </descriptors>
                     <appendAssemblyId>false</appendAssemblyId>
+                    <tarLongFileMode>gnu</tarLongFileMode>
                 </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>assembly</goal>
+                            <!--
+                                'attached' ensures there's only a single run bound to m2's lifecycle.
+                                The default 'assembly' goal would run every plugin in this pom twice.
+                            -->
+                            <goal>attached</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <!-- Do not publish (empty) source jars -->
+                    <attach>false</attach>
+                </configuration>
             </plugin>
         </plugins>
     </build>

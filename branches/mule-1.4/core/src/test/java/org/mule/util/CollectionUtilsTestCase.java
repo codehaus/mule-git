@@ -11,15 +11,11 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.CollectionUtils;
-import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-
-import org.apache.commons.lang.SystemUtils;
 
 public class CollectionUtilsTestCase extends AbstractMuleTestCase
 {

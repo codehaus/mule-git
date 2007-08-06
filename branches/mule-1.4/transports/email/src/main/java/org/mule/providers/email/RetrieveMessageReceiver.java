@@ -25,6 +25,7 @@ import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.routing.RoutingException;
 import org.mule.util.FileUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
 import java.io.File;
@@ -42,8 +43,6 @@ import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Poll a mailbox for messages, remove the messages and route them as events into Mule.
  *
@@ -51,21 +50,24 @@ import org.apache.commons.lang.StringUtils;
  */
 
 public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
-implements MessageCountListener, Startable, Stoppable
+    implements MessageCountListener, Startable, Stoppable
 {
     private Folder folder = null;
+    private boolean backupEnabled;
     private String backupFolder = null;
 
     public RetrieveMessageReceiver(UMOConnector connector,
                                    UMOComponent component,
                                    UMOEndpoint endpoint,
                                    long checkFrequency,
-                                   String backupFolder) 
+                                   boolean backupEnabled,
+                                   String backupFolder)
     throws InitialisationException
     {
-        super(connector, component, endpoint, checkFrequency);
+        super(connector, component, endpoint);
         this.backupFolder = backupFolder;
-        this.connector = (AbstractRetrieveMailConnector) connector;
+        this.backupEnabled = backupEnabled;
+        this.setFrequency(checkFrequency);
     }
 
     private AbstractRetrieveMailConnector castConnector()
@@ -81,15 +83,11 @@ implements MessageCountListener, Startable, Stoppable
         store.connect();
         folder = store.getFolder(castConnector().getMailboxFolder());
 
-        // If user explicitly sets backup folder to "" it will disable email back up
-        if (backupFolder == null)
+        // set default value if empty/null
+        if (StringUtils.isEmpty(backupFolder))
         {
             this.backupFolder = 
                 MuleManager.getConfiguration().getWorkingDirectory() + "/mail/" + folder.getName();
-        }
-        else if (StringUtils.EMPTY.equals(backupFolder))
-        {
-            backupFolder = null;
         }
 
         if (backupFolder != null && !this.backupFolder.endsWith(File.separator))
@@ -249,7 +247,7 @@ implements MessageCountListener, Startable, Stoppable
      */
     protected void storeMessage(Message msg) throws IOException, MessagingException
     {
-        if (backupFolder != null)
+        if (backupEnabled)
         {
             String filename = msg.getFileName();
             if (filename == null)

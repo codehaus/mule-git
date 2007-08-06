@@ -10,6 +10,8 @@
 
 package org.mule.modules.boot;
 
+import org.mule.util.ClassUtils;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,8 +19,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
-
-import org.mule.util.ClassUtils;
 
 public class GuiInstallerLibraryDownloader
 {
@@ -29,7 +29,7 @@ public class GuiInstallerLibraryDownloader
     
     public static void main(String args[]) throws Exception
     {
-        File muleHome = new File(args[0].toString());
+        File muleHome = new File(args[0]);
 
         // Build up a list of libraries from $MULE_HOME/lib/* and add them to the
         // classpath.
@@ -41,16 +41,16 @@ public class GuiInstallerLibraryDownloader
         if (!ClassUtils.isClassOnPath("javax.activation.DataSource", GuiInstallerLibraryDownloader.class))
         {
             if (args.length > 1){
-                proxyHost = args[1].toString();
+                proxyHost = args[1];
             }
             if (args.length > 2){
-                proxyPort = args[2].toString();
+                proxyPort = args[2];
             }
             if (args.length > 3){
-                proxyUsername = args[3].toString();
+                proxyUsername = args[3];
             }
             if (args.length > 4){
-                proxyPassword = args[4].toString();               
+                proxyPassword = args[4];               
             }
             LibraryDownloader downloader = new LibraryDownloader(muleHome, proxyHost, proxyPort, proxyUsername, proxyPassword);
             addLibrariesToClasspath(downloader.downloadLibraries());
@@ -75,7 +75,7 @@ public class GuiInstallerLibraryDownloader
         // get a Method ref from the normal class, but invoke on a proprietary parent
         // object,
         // as this method is usually protected in those classloaders
-        Class refClass = URLClassLoader.class;
+        Class refClass = URLClassLoader.class;                            
         Method methodAddUrl = refClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         methodAddUrl.setAccessible(true);
         for (Iterator it = urls.iterator(); it.hasNext();)

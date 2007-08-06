@@ -31,12 +31,13 @@ import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.ObjectFactory;
+import org.mule.util.StringUtils;
+import org.mule.transaction.XaTransactionFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  * protocol of the connector to be created The service descriptor is in the form of
  * string key value pairs and supports a number of properties, descriptions of which
  * can be found here: http://www.muledocs.org/Transport+Service+Descriptors.
- * 
+ *
  */
 
 public class TransportServiceDescriptor
@@ -69,6 +70,7 @@ public class TransportServiceDescriptor
     private String streamMessageAdapter;
     private String messageReceiver;
     private String transactedMessageReceiver;
+    private String xaTransactedMessageReceiver;
     private String endpointBuilder;
     private String sessionHandler;
     private String defaultInboundTransformer;
@@ -95,6 +97,7 @@ public class TransportServiceDescriptor
         transactionFactory = removeProperty(MuleProperties.CONNECTOR_DISPATCHER_FACTORY);
         messageReceiver = removeProperty(MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS);
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS);
+        xaTransactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS);
         messageAdapter = removeProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER);
         streamMessageAdapter = removeProperty(MuleProperties.CONNECTOR_STREAM_MESSAGE_ADAPTER);
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER);
@@ -118,6 +121,8 @@ public class TransportServiceDescriptor
         messageReceiver = props.getProperty(MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS, messageReceiver);
         transactedMessageReceiver = props.getProperty(
             MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, transactedMessageReceiver);
+        xaTransactedMessageReceiver = props.getProperty(
+            MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, xaTransactedMessageReceiver);
         messageAdapter = props.getProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, messageAdapter);
 
         String temp = props.getProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER);
@@ -206,6 +211,11 @@ public class TransportServiceDescriptor
     public String getTransactedMessageReceiver()
     {
         return transactedMessageReceiver;
+    }
+
+    public String getXaTransactedMessageReceiver()
+    {
+        return xaTransactedMessageReceiver;
     }
 
     public String getDefaultInboundTransformer()
@@ -298,7 +308,7 @@ public class TransportServiceDescriptor
 
             // If the stream.message.adapter is not set streaming should not be used
             throw new TransportServiceException(
-                CoreMessages.objectNotSetInService("stream.message.adapter", 
+                CoreMessages.objectNotSetInService("stream.message.adapter",
                     this.getProtocol() + " service descriptor"));
         }
         try
@@ -388,10 +398,16 @@ public class TransportServiceDescriptor
         if (endpoint.getTransactionConfig() != null
             && endpoint.getTransactionConfig().getAction() != UMOTransactionConfig.ACTION_NONE)
         {
-            if (transactedMessageReceiver != null)
+            boolean xaTx = endpoint.getTransactionConfig().getFactory() instanceof XaTransactionFactory;
+            if (transactedMessageReceiver != null && !xaTx)
             {
                 receiverClass = transactedMessageReceiver;
             }
+            else if (xaTransactedMessageReceiver != null && xaTx)
+            {
+                receiverClass = xaTransactedMessageReceiver;
+            }
+
         }
 
         if (receiverClass != null)

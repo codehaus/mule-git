@@ -10,20 +10,21 @@
 
 package org.mule.providers.email;
 
-import org.apache.commons.lang.StringUtils;
 import org.mule.providers.AbstractConnector;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.util.StringUtils;
 
-import javax.mail.Authenticator;
-import javax.mail.Session;
-import javax.mail.URLName;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Session;
+import javax.mail.URLName;
 
 /**
  * Abstract superclass for mail connectors. Provides Mule with an Authenticator

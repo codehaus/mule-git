@@ -16,6 +16,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.core.io.Resource;
 
 /**
  * <code>MuleApplicationContext</code> is A Simple extension Application context
@@ -26,11 +27,22 @@ import org.springframework.context.support.AbstractXmlApplicationContext;
  */
 public class MuleApplicationContext extends AbstractXmlApplicationContext
 {
+    private final Resource[] configResources;
     private final String[] configLocations;
 
-    public MuleApplicationContext(String configLocation)
+    public MuleApplicationContext(Resource[] configResources)
     {
-        this(new String[]{configLocation});
+        this(configResources, true);
+    }
+
+    public MuleApplicationContext(Resource[] configResources, boolean refresh) throws BeansException
+    {
+        this.configResources = configResources;
+        this.configLocations = null;
+        if (refresh)
+        {
+            refresh();
+        }
     }
 
     public MuleApplicationContext(String[] configLocations)
@@ -41,26 +53,31 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
     public MuleApplicationContext(String[] configLocations, boolean refresh) throws BeansException
     {
         this.configLocations = configLocations;
+        this.configResources = null;
         if (refresh)
         {
             refresh();
         }
     }
 
+    //@Override
+    protected Resource[] getConfigResources() 
+    {
+        return configResources;
+    }
+    
+    //@Override
     protected String[] getConfigLocations()
     {
         return configLocations;
     }
 
-    protected void initBeanDefinitionReader(XmlBeanDefinitionReader xmlBeanDefinitionReader)
-    {
-        super.initBeanDefinitionReader(xmlBeanDefinitionReader);
-    }
-
-    protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws IOException
+    //@Override
+    protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws IOException 
     {
         XmlBeanDefinitionReader beanDefinitionReader = new MuleBeanDefinitionReader(beanFactory,
-            configLocations.length);
+            configResources != null ? configResources.length : configLocations.length);
+
         initBeanDefinitionReader(beanDefinitionReader);
         loadBeanDefinitions(beanDefinitionReader);
     }

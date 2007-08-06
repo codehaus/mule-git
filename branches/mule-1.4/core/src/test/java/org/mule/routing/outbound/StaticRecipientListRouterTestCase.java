@@ -10,20 +10,19 @@
 
 package org.mule.routing.outbound;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mule.impl.MuleMessage;
-import org.mule.routing.outbound.StaticRecipientList;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.RoutingException;
+
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StaticRecipientListRouterTestCase extends AbstractMuleTestCase
 {

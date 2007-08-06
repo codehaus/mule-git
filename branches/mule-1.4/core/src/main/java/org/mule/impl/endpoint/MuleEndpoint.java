@@ -59,7 +59,8 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
                         String endpointEncoding,
                         Map props)
     {
-        super(name, endpointUri, connector, transformer, type, createConnector, endpointEncoding, props);
+        super(name, endpointUri, connector, transformer, type, createConnector, endpointEncoding,
+            props);
     }
 
     public MuleEndpoint(UMOImmutableEndpoint endpoint)
@@ -80,6 +81,18 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         clone.setTransactionConfig(transactionConfig);
         clone.setFilter(filter);
         clone.setSecurityFilter(securityFilter);
+        try
+        {
+            if (responseTransformer != null)
+            {
+                clone.setResponseTransformer((UMOTransformer)responseTransformer.clone());
+            }
+        }
+        catch (CloneNotSupportedException e1)
+        {
+            // TODO throw exception instead of suppressing it
+            logger.error(e1.getMessage(), e1);
+        }
 
         if (remoteSync != null)
         {
@@ -123,7 +136,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         {
             throw new IllegalArgumentException(
                 CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(connector.getProtocol(),
-                endpointUri).getMessage());
+                    endpointUri).getMessage());
         }
         this.endpointUri = endpointUri;
         if (endpointUri != null)
@@ -149,7 +162,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
         {
             throw new IllegalArgumentException(
                 CoreMessages.connectorSchemeIncompatibleWithEndpointScheme(connector.getProtocol(),
-                endpointUri).getMessage());
+                    endpointUri).getMessage());
         }
         this.connector = connector;
     }

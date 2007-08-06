@@ -59,7 +59,7 @@ public class XFireConnector extends AbstractConnector
     public static final String XFIRE_PROPERTY = "xfire";
     public static final String XFIRE_TRANSPORT = "transportClass";
 
-    private static final String CLASSNAME_ANNOTATIONS = "org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations";
+    public static final String CLASSNAME_ANNOTATIONS = "org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations";
     private static final String DEFAULT_BINDING_PROVIDER_CLASS = "org.codehaus.xfire.aegis.AegisBindingProvider";
     private static final String DEFAULT_TYPE_MAPPING_REGISTRY_CLASS = "org.codehaus.xfire.aegis.type.DefaultTypeMappingRegistry";
 
@@ -224,12 +224,13 @@ public class XFireConnector extends AbstractConnector
                 factory.setStyle(SoapConstants.STYLE_MESSAGE);
             }
 
-            // Special handling for XmlBeansBindingProvider
-            if (bindingProvider.equals("org.codehaus.xfire.service.binding.MessageBindingProvider"))
-            {
-                factory.setStyle(SoapConstants.STYLE_DOCUMENT);
-                wsdlBuilderFactoryClass = "org.codehaus.xfire.xmlbeans.XmlBeansWSDLBuilderFactory";
-            }
+            // See MULE-1871
+//            // Special handling for XmlBeansBindingProvider
+//            if (bindingProvider.equals("org.codehaus.xfire.service.binding.MessageBindingProvider"))
+//            {
+//                factory.setStyle(SoapConstants.STYLE_DOCUMENT);
+//                wsdlBuilderFactoryClass = "org.codehaus.xfire.xmlbeans.XmlBeansWSDLBuilderFactory";
+//            }
 
             // If required, create the WSDL builder factory (only XML beans needs
             // this)

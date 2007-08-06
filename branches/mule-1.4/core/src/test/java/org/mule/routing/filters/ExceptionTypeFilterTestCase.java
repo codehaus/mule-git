@@ -10,13 +10,12 @@
 
 package org.mule.routing.filters;
 
-import java.io.IOException;
-
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.routing.filters.ExceptionTypeFilter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
+
+import java.io.IOException;
 
 public class ExceptionTypeFilterTestCase extends AbstractMuleTestCase
 {

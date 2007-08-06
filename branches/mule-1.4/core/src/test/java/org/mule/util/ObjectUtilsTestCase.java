@@ -11,8 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.ObjectUtils;
-import org.mule.util.StringUtils;
 
 public class ObjectUtilsTestCase extends AbstractMuleTestCase
 {

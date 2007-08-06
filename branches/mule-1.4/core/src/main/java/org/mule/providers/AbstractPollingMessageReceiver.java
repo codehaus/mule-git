@@ -18,14 +18,14 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ObjectUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ScheduledFuture;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.resource.spi.work.Work;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledFuture;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * <code>AbstractPollingMessageReceiver</code> implements a base class for polling
@@ -36,19 +36,34 @@ import javax.resource.spi.work.Work;
 public abstract class AbstractPollingMessageReceiver extends AbstractMessageReceiver implements Work
 {
     public static final long DEFAULT_POLL_FREQUENCY = 1000;
-    public static final long STARTUP_DELAY = 1000;
+    public static final TimeUnit DEFAULT_POLL_TIMEUNIT = TimeUnit.MILLISECONDS;
 
-    protected volatile long frequency = DEFAULT_POLL_FREQUENCY;
+    public static final long DEFAULT_STARTUP_DELAY = 1000;
+
+    private long frequency = DEFAULT_POLL_FREQUENCY;
+    private TimeUnit timeUnit = DEFAULT_POLL_TIMEUNIT;
 
     // @GuardedBy(itself)
     protected final List schedules = new LinkedList();
 
     public AbstractPollingMessageReceiver(UMOConnector connector,
                                           UMOComponent component,
+                                          final UMOEndpoint endpoint) throws InitialisationException
+    {
+        super(connector, component, endpoint);
+    }
+
+    /**
+     * @deprecated please use
+     *             {@link #AbstractPollingMessageReceiver(UMOConnector, UMOComponent, UMOEndpoint)
+     *             instead and configure any other properties manually as required.
+     */
+    public AbstractPollingMessageReceiver(UMOConnector connector,
+                                          UMOComponent component,
                                           final UMOEndpoint endpoint,
                                           long frequency) throws InitialisationException
     {
-        super(connector, component, endpoint);
+        this(connector, component, endpoint);
         this.setFrequency(frequency);
     }
 
@@ -63,7 +78,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
                 // polled database or network is slow or returns large amounts of
                 // data.
                 ScheduledFuture schedule = connector.getScheduler().scheduleWithFixedDelay(this,
-                    STARTUP_DELAY, frequency, TimeUnit.MILLISECONDS);
+                    DEFAULT_STARTUP_DELAY, this.getFrequency(), this.getTimeUnit());
                 schedules.add(schedule);
 
                 if (logger.isDebugEnabled())
@@ -148,6 +163,16 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
         {
             frequency = value;
         }
+    }
+
+    public TimeUnit getTimeUnit()
+    {
+        return timeUnit;
+    }
+
+    public void setTimeUnit(TimeUnit timeUnit)
+    {
+        this.timeUnit = timeUnit;
     }
 
     public abstract void poll() throws Exception;

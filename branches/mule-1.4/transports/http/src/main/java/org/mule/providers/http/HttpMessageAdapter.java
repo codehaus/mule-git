@@ -10,18 +10,18 @@
 
 package org.mule.providers.http;
 
+import org.mule.impl.ThreadSafeAccess;
+import org.mule.providers.AbstractMessageAdapter;
+import org.mule.transformers.simple.SerializableToByteArray;
+import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.umo.transformer.UMOTransformer;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
-import org.mule.MuleManager;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.umo.transformer.UMOTransformer;
 
 /**
  * <code>HttpMessageAdapter</code> Wraps an incoming Http Request making the
@@ -39,7 +39,7 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
     private final Object message;
     private boolean http11 = true;
 
-    public HttpMessageAdapter(Object message) throws MessagingException
+    public HttpMessageAdapter(Object message) throws MessageTypeNotSupportedException
     {
         if (message instanceof Object[])
         {
@@ -82,7 +82,6 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         }
 
         // set the encoding
-        String charset = null;
         Header contenttype = getHeader(HttpConstants.HEADER_CONTENT_TYPE);
         if (contenttype != null)
         {
@@ -92,18 +91,17 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
                 NameValuePair param = values[0].getParameterByName("charset");
                 if (param != null)
                 {
-                    charset = param.getValue();
+                    encoding = param.getValue();
                 }
             }
         }
-        if (charset != null)
-        {
-            encoding = charset;
-        }
-        else
-        {
-            encoding = MuleManager.getConfiguration().getEncoding();
-        }
+    }
+
+    protected HttpMessageAdapter(HttpMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+        http11 = template.http11;
     }
 
     /*
@@ -203,4 +201,10 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         }
         return new Header(name, value);
     }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new HttpMessageAdapter(this);
+    }
+
 }

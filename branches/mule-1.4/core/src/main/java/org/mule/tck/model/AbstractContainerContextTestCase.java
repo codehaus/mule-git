@@ -40,7 +40,7 @@ public abstract class AbstractContainerContextTestCase extends AbstractMuleTestC
 
         try
         {
-            result = container.getComponent("abcdefg123456!£$%^n");
+            result = container.getComponent("abcdefg123456!ï¿½$%^n");
             fail("Should throw ObjectNotFoundException for a key that doesn't exist");
         }
         catch (ObjectNotFoundException e)
@@ -73,7 +73,7 @@ public abstract class AbstractContainerContextTestCase extends AbstractMuleTestC
         UMODescriptor descriptor = getTestDescriptor("fruit Bowl", "org.mule.tck.testmodels.fruit.FruitBowl");
         descriptor.setContainer("plexus");
         descriptor.initialise();
-        FruitBowl fruitBowl = (FruitBowl) container.getComponent(descriptor.getImplementation());
+        FruitBowl fruitBowl = (FruitBowl) container.getComponent(getFruitBowlComponentName());
 
         assertNotNull(fruitBowl);
         assertTrue(fruitBowl.hasApple());
@@ -82,4 +82,8 @@ public abstract class AbstractContainerContextTestCase extends AbstractMuleTestC
 
     public abstract UMOContainerContext getContainerContext() throws ConfigurationException;
 
+    protected String getFruitBowlComponentName()
+    {
+        return FruitBowl.class.getName();
+    }
 }

@@ -10,16 +10,15 @@
 
 package org.mule.providers.file;
 
-import java.io.File;
-
 import org.mule.MuleManager;
 import org.mule.impl.RequestContext;
-import org.mule.providers.file.FileConnector;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
+
+import java.io.File;
 
 public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTestCase
 {
@@ -34,7 +33,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
         ((FileConnector)connector).setAutoDelete(false);
                 
         UMOEvent event = getTestEvent("TestData");
-        RequestContext.setEvent(event);
+        event = RequestContext.safeSetEvent(event);
 
         UMOMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName+"?connector=FileConnector", 50000);
         assertNotNull(message.getPayload());
@@ -53,7 +52,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
         ((FileConnector)connector).setAutoDelete(true);
         
         UMOEvent event = getTestEvent("TestData");
-        RequestContext.setEvent(event);
+        event = RequestContext.safeSetEvent(event);
         
         UMOMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName, 50000);
         assertNotNull(message.getPayload());
@@ -66,7 +65,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         super.doSetUp();
         // The working directory is deleted on tearDown
-        tempDir = new File(MuleManager.getConfiguration().getWorkingDirectory(), tempDirName);
+        tempDir = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), tempDirName);
         if (!tempDir.exists())
         {
             tempDir.mkdirs();
@@ -80,7 +79,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         // TestConnector dispatches events via the test: protocol to test://test
         // endpoints, which seems to end up in a directory called "test" :(
-        FileUtils.deleteTree(new File(getTestConnector().getProtocol()));
+        FileUtils.deleteTree(FileUtils.newFile(getTestConnector().getProtocol()));
         super.doTearDown();
     }
     

@@ -12,6 +12,7 @@ package org.mule.tools.visualizer.processor;
 
 import org.mule.tools.visualizer.config.GraphEnvironment;
 import org.mule.tools.visualizer.util.MuleTag;
+import org.mule.util.StringUtils;
 
 import com.oy.shared.lm.graph.Graph;
 import com.oy.shared.lm.graph.GraphEdge;
@@ -20,14 +21,13 @@ import com.oy.shared.lm.graph.GraphNode;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 public abstract class TagProcessor
 {
 
-    // TODO - serious weirdness here, witha  static value set in a constructor...
+    // TODO - serious weirdness here, with a  static value set in a constructor...
     private static GraphEnvironment environment;
 
     public TagProcessor(GraphEnvironment env)

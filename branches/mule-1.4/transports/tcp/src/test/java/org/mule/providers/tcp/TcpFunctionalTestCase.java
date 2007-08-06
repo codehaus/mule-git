@@ -10,12 +10,12 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
-import org.mule.extras.client.MuleClient;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TcpFunctionalTestCase extends FunctionalTestCase 
 {
@@ -38,6 +38,22 @@ public class TcpFunctionalTestCase extends FunctionalTestCase
         Map props = new HashMap();
         UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
+    }
+
+    public void timeMultipleSend() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        Map props = new HashMap();
+        long now = System.currentTimeMillis();
+        int count = 1000;
+        for (int i = 0; i < count; i++)
+        {
+            UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+            assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
+        }
+        long later = System.currentTimeMillis();
+        double speed = count * 1000.0 / (later - now);
+        logger.error(speed + " messages per second");
     }
 
 }

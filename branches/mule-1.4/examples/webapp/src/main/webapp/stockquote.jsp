@@ -33,8 +33,7 @@ Enter a stock symbol:
 </form>
 <p/>
 <table border="1" bordercolor="#990000"  align="left">
-<tr><td>For more information about the Stock Quote example go <a target="_blank" href="http://www.muledocs.org/Stock+Quote+Example">here</a>.<br/>
-To view the source and configuration go <a target="_blank" href="http://svn.mule.codehaus.org/browse/mule/tags/mule-1.4.1/examples/stockquote/">here</a>.</td></tr>
+<tr><td>For more information about the Stock Quote example go <a target="_blank" href="http://www.muledocs.org/Stock+Quote+Example">here</a>.</td></tr>
 </table>
 </body>
 </html>

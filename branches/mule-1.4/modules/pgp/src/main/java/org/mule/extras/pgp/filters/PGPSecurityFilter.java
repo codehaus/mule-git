@@ -28,15 +28,14 @@ import org.mule.umo.security.UMOSecurityContext;
 import org.mule.umo.security.UnauthorisedException;
 import org.mule.umo.security.UnknownAuthenticationTypeException;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collection;
+
 import cryptix.message.LiteralMessage;
 import cryptix.message.Message;
 import cryptix.message.MessageFactory;
 import cryptix.message.SignedMessage;
 import cryptix.pki.KeyBundle;
-
-import java.io.ByteArrayInputStream;
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -119,7 +118,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
 
         try
         {
-            RequestContext.rewriteEvent(new MuleMessage(
+            RequestContext.safeRewriteEvent(new MuleMessage(
                 getUnencryptedMessageWithoutSignature((PGPAuthentication)authResult)));
         }
         catch (Exception e2)
@@ -194,7 +193,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
         try
         {
             String mesg = new String(msg);
-            RequestContext.rewriteEvent(new MuleMessage(mesg));
+            RequestContext.safeRewriteEvent(new MuleMessage(mesg));
             logger.debug("Message:" + mesg);
         }
         catch (Exception e2)

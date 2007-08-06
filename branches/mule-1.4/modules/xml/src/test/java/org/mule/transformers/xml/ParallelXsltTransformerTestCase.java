@@ -10,17 +10,17 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.IOUtils;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.custommonkey.xmlunit.XMLAssert;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transformers.xml.XsltTransformer;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.IOUtils;
 
 public class ParallelXsltTransformerTestCase extends AbstractMuleTestCase
 {

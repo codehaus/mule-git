@@ -11,8 +11,6 @@
 package org.mule.transformers.xml;
 
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.transformers.xml.DomDocumentToXml;
-import org.mule.transformers.xml.XmlToDomDocument;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;

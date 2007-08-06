@@ -12,8 +12,6 @@ package org.mule.providers.soap.axis;
 
 import org.mule.config.MuleProperties;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.service.TransportFactory;
-import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpointURI;
 

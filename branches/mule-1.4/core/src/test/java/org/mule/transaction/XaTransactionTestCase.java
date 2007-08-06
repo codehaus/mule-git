@@ -10,15 +10,14 @@
 
 package org.mule.transaction;
 
+import org.mule.MuleManager;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.umo.UMOTransaction;
+
 import com.mockobjects.dynamic.Mock;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-
-import org.mule.MuleManager;
-import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transaction.XaTransaction;
-import org.mule.umo.UMOTransaction;
 
 public class XaTransactionTestCase extends AbstractMuleTestCase
 {

@@ -16,10 +16,10 @@
 
     <modules>
         <module>acegi</module>
+        <module>all-modules</module>
         <module>builders</module>
         <module>boot</module>
         <module>client</module>
-        <module>wssecurity</module>
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
@@ -31,6 +31,7 @@
         <module>registry</module>
         <module>scripting</module>
         <module>spring</module>
+        <module>wssecurity</module>
         <module>xml</module>
     </modules>
 

@@ -49,7 +49,10 @@ public class LengthProtocol extends DefaultProtocol
         DataInputStream dis = new DataInputStream(is);
         dis.mark(SIZE_INT);
         // this pulls through SIZE_INT bytes
-        super.read(dis, SIZE_INT);
+        if (null == super.read(dis, SIZE_INT))
+        {
+            return null; // eof
+        }
 
         // reset and read the integer
         dis.reset();

@@ -17,6 +17,9 @@ import org.mule.tck.AbstractConfigBuilderTestCase;
 import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.umo.manager.UMOManager;
 
+/**
+ * Tests the Mule-to-Spring XSLT transformation with Autowiring for Mule.
+ */
 public class SpringAutowireConfigBuilderTestCase extends AbstractConfigBuilderTestCase
 {
 
@@ -37,7 +40,7 @@ public class SpringAutowireConfigBuilderTestCase extends AbstractConfigBuilderTe
         assertNotNull(manager.getContainerContext());
 
         Object object = manager.getContainerContext().getComponent(
-            new ContainerKeyPair("spring", "org.mule.tck.testmodels.fruit.FruitBowl"));
+            new ContainerKeyPair("spring", "fruitBowl"));
         assertNotNull(object);
         assertTrue(object instanceof FruitBowl);
         FruitBowl bowl = (FruitBowl)object;

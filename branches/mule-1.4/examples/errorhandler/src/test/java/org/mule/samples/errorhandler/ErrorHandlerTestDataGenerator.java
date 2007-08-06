@@ -12,7 +12,6 @@ package org.mule.samples.errorhandler;
 
 import org.mule.MuleException;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.samples.errorhandler.ExceptionBean;
 import org.mule.samples.errorhandler.exceptions.BusinessException;
 import org.mule.transformers.xml.ObjectToXml;
 import org.mule.umo.lifecycle.FatalException;

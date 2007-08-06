@@ -11,33 +11,31 @@
 package org.mule.extras.spring;
 
 import org.mule.tck.model.AbstractContainerContextTestCase;
-import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.umo.manager.UMOContainerContext;
 
+/**
+ * Tests the Spring container.
+ */
 public class SpringContainerContextTestCase extends AbstractContainerContextTestCase
 {
     SpringContainerContext context;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.tck.model.AbstractComponentResolverTestCase#getConfiguredResolver()
-     */
     public UMOContainerContext getContainerContext()
     {
         return context;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see junit.framework.TestCase#setUp()
-     */
     protected void doSetUp() throws Exception
     {
         context = new SpringContainerContext();
-        context.setConfigFile("test-application-context.xml");
+        context.setConfigResources(getConfigResources());
+    }
+
+    public String getConfigResources()
+    {
+        return "test-application-context.xml";
     }
 
     public void testContainerContext() throws Exception
@@ -58,7 +56,7 @@ public class SpringContainerContextTestCase extends AbstractContainerContextTest
 
         try
         {
-            container.getComponent("abcdefg123456!£$%^n");
+            container.getComponent("abcdefg123456!ï¿½$%^n");
             fail("Should throw ObjectNotFoundException for a key that doesn't exist");
         }
         catch (ObjectNotFoundException e)
@@ -68,7 +66,7 @@ public class SpringContainerContextTestCase extends AbstractContainerContextTest
 
         try
         {
-            Object result = container.getComponent(Apple.class.getName());
+            Object result = container.getComponent("apple");
             assertNotNull("Component should exist in container", result);
         }
         catch (ObjectNotFoundException e)
@@ -77,4 +75,8 @@ public class SpringContainerContextTestCase extends AbstractContainerContextTest
         }
     }
 
+    protected String getFruitBowlComponentName()
+    {
+        return "fruitBowl";
+    }
 }

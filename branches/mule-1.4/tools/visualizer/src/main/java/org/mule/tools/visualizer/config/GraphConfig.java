@@ -23,9 +23,7 @@ import java.util.StringTokenizer;
 
 /**
  * TODO - document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ *
  */
 public class GraphConfig
 {
@@ -42,6 +40,7 @@ public class GraphConfig
     public static final String ARG_URLS = "-urls";
     public static final String ARG_CONFIG = "-config";
     public static final String ARG_WORKING_DIRECTORY = "-workingdir";
+    public static final String ARG_DEBUG = "-debug";
 
     public static final String ARG_SHOW_CONNECTORS = "-showconnectors";
     public static final String ARG_SHOW_MODELS = "-showmodels";
@@ -74,6 +73,7 @@ public class GraphConfig
     private boolean showConfig = false;
     private boolean showAgents = false;
     private boolean showAll = false;
+    private boolean debug = false;
 
     public GraphConfig()
     {
@@ -95,25 +95,26 @@ public class GraphConfig
         setOutputDirectory(getOpt(args, ARG_OUTPUT_DIR, null));
         setOutputFilename(getOpt(args, ARG_OUTPUT_FILE, null));
         setCaption(getOpt(args, ARG_CAPTION, null));
-        setExecuteCommand (getOpt(args, ARG_EXEC, null));
+        setExecuteCommand(getOpt(args, ARG_EXEC, null));
         setKeepDotFiles(Boolean.valueOf(getOpt(args, ARG_KEEP_DOT_FILES, "false")).booleanValue());
         setCombineFiles(Boolean.valueOf(getOpt(args, ARG_COMBINE_FILES, "false")).booleanValue());
         setShowAll(Boolean.valueOf(getOpt(args, ARG_SHOW_ALL, String.valueOf(showAll))).booleanValue());
         if (!showAll)
         {
             setShowConnectors(Boolean.valueOf(
-                getOpt(args, ARG_SHOW_CONNECTORS, String.valueOf(showConnectors))).booleanValue());
+                    getOpt(args, ARG_SHOW_CONNECTORS, String.valueOf(showConnectors))).booleanValue());
             setShowConfig(Boolean.valueOf(getOpt(args, ARG_SHOW_CONFIG, String.valueOf(showConfig)))
-                .booleanValue());
+                    .booleanValue());
             setShowAgents(Boolean.valueOf(getOpt(args, ARG_SHOW_AGENTS, String.valueOf(showAgents)))
-                .booleanValue());
+                    .booleanValue());
             setShowModels(Boolean.valueOf(getOpt(args, ARG_SHOW_MODELS, String.valueOf(showModels)))
-                .booleanValue());
-            setShowTransformers(Boolean.valueOf(getOpt(args, ARG_SHOW_TRANSFORMERS, 
-                String.valueOf(showTransformers))).booleanValue());
+                    .booleanValue());
+            setShowTransformers(Boolean.valueOf(getOpt(args, ARG_SHOW_TRANSFORMERS,
+                    String.valueOf(showTransformers))).booleanValue());
         }
         setMappingsFile(getOpt(args, ARG_MAPPINGS, null));
         setUrlsFile(getOpt(args, ARG_URLS, null));
+        setDebug(Boolean.valueOf(getOpt(args, ARG_DEBUG, String.valueOf(debug))).booleanValue());
 
         return init();
     }
@@ -135,13 +136,42 @@ public class GraphConfig
         ignoredAttributes.add("name");
     }
 
+    /**
+     * Add workingDir parameter.
+     *
+     * @param path - relative to working directorry
+     * @return os dependent path
+     */
     public String applyWorkingDirectory(String path)
+    {
+        return this.applyDirectory(workingDirectory, path);
+    }
+
+    /**
+     * Add outputDir parameter.
+     *
+     * @param path - relative to output directory
+     * @return os dependent path
+     */
+    public String applyOutputDirectory(String path)
+    {
+        return this.applyDirectory(this.getOutputDirectory().getPath(), path);
+    }
+
+    /**
+     * Create os dependent path using directory and relative path.
+     *
+     * @param dirPath - directory
+     * @param path    - relative path
+     * @return os dependent path
+     */
+    protected String applyDirectory(String dirPath, String path)
     {
         if (path == null)
         {
             return null;
         }
-        if (workingDirectory == null)
+        if (dirPath == null)
         {
             return path;
         }
@@ -149,7 +179,7 @@ public class GraphConfig
         {
             return path;
         }
-        return workingDirectory + File.separator + path;
+        return dirPath + File.separator + path;
     }
 
     public void loadProperties(String props) throws IOException
@@ -166,8 +196,8 @@ public class GraphConfig
         templateProps = new Properties();
         if (props != null)
         {
-            for (StringTokenizer stringTokenizer = new StringTokenizer(props, ","); 
-            stringTokenizer.hasMoreTokens();)
+            for (StringTokenizer stringTokenizer = new StringTokenizer(props, ",");
+                 stringTokenizer.hasMoreTokens();)
             {
                 Properties p = new Properties();
                 p.load(new FileInputStream(applyWorkingDirectory(stringTokenizer.nextToken())));
@@ -251,7 +281,7 @@ public class GraphConfig
         {
             files = new ArrayList();
             for (StringTokenizer stringTokenizer = new StringTokenizer(filesString, ","); stringTokenizer
-            .hasMoreTokens();)
+                    .hasMoreTokens();)
             {
                 files.add(applyWorkingDirectory(stringTokenizer.nextToken()));
             }
@@ -483,4 +513,13 @@ public class GraphConfig
         return workingDirectory;
     }
 
+    public boolean isDebug()
+    {
+        return this.debug;
+    }
+
+    public void setDebug(boolean debug)
+    {
+        this.debug = debug;
+    }
 }

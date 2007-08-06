@@ -15,6 +15,7 @@ import org.mule.config.MuleConfiguration;
 import org.mule.config.PoolingProfile;
 import org.mule.config.QueueProfile;
 import org.mule.config.ThreadingProfile;
+
 import org.springframework.beans.factory.FactoryBean;
 
 /**

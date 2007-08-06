@@ -27,6 +27,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.util.SystemUtils;
 
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -37,8 +38,6 @@ import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
-
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * Can receive events over Mule transports. Given an muleEndpoint (or endpoint string

@@ -10,24 +10,24 @@
 
 package org.mule.providers.soap;
 
+import org.mule.config.MuleProperties;
 import org.mule.interceptors.EnvelopeInterceptor;
 import org.mule.umo.Invocation;
 import org.mule.umo.UMOException;
-import org.mule.config.MuleProperties;
 
 /**
  * This Interceptor decorates the current message with a property that tells the
  * DynamicEntryPointResolver to ignore the 'method' property. The reason being is
  * that for the SOAP endpoints have an additional hop - http --->
  * AxisServiceComponent ---> WebService the 'method' param is targetted for the
- * WebService not the AxisServiceComponent, so we eed to ignore it
+ * WebService not the AxisServiceComponent, so we need to ignore it
  */
 public class MethodFixInterceptor extends EnvelopeInterceptor
 {
 
     public void before(Invocation invocation) throws UMOException
     {
-        invocation.getMessage().setProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY, new Boolean(true));
+        invocation.getMessage().setBooleanProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY, true);
     }
 
     public void after(Invocation invocation) throws UMOException

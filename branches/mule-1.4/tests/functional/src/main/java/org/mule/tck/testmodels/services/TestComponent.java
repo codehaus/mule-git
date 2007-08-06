@@ -11,7 +11,6 @@
 package org.mule.tck.testmodels.services;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,6 +27,11 @@ public class TestComponent implements ITestComponent
         logger.info("Received: " + message + " number: " + inc() + " in thread: "
                     + Thread.currentThread().getName());
         return "Received: " + message;
+    }
+    
+    public String receiveBytes(byte[] message) throws Exception
+    {
+        return receive(new String(message)); 
     }
 
     public String throwsException(String message) throws Exception

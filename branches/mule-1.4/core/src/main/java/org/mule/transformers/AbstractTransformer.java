@@ -22,10 +22,9 @@ import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -231,7 +230,7 @@ public abstract class AbstractTransformer implements UMOTransformer
             if (ignoreBadInput)
             {
                 logger.debug("Source type is incompatible with this transformer and property 'ignoreBadInput' is set to true, so the transformer chain will continue.");
-                return src;
+                return nextTransform(src);
             }
             else
             {
@@ -262,12 +261,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
         result = checkReturnClass(result);
 
-        if (nextTransformer != null)
-        {
-            logger.debug("Following transformer in the chain is " + nextTransformer.getName() + " ("
-                            + nextTransformer.getClass().getName() + ")");
-            result = nextTransformer.transform(result);
-        }
+        result = nextTransform(result);
 
         return result;
     }
@@ -428,4 +422,18 @@ public abstract class AbstractTransformer implements UMOTransformer
         return false;
     }
 
+    /**
+     * Safely call the next transformer in chain, if any.
+     */
+    protected Object nextTransform(Object result)
+            throws TransformerException
+    {
+        if (nextTransformer != null)
+        {
+            logger.debug("Following transformer in the chain is " + nextTransformer.getName() + " ("
+                            + nextTransformer.getClass().getName() + ")");
+            result = nextTransformer.transform(result);
+        }
+        return result;
+    }
 }

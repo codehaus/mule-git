@@ -43,12 +43,11 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
 
 import com.mockobjects.dynamic.Mock;
 
 import java.util.HashMap;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Utilities for creating test and Mock Mule objects
@@ -130,12 +129,12 @@ public final class MuleTestUtils
         try
         {
             UMOEvent event = getTestEvent(data);
-            RequestContext.setEvent(event);
+            RequestContext.safeSetEvent(event);
             return RequestContext.getEventContext();
         }
         finally
         {
-            RequestContext.setEvent(null);
+            RequestContext.safeSetEvent(null);
         }
     }
 

@@ -68,12 +68,15 @@ import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.security.UMOSecurityProvider;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ArrayUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.queue.EventFilePersistenceStrategy;
 
 import java.beans.ExceptionListener;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -192,13 +195,18 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         try
         {
             String[] resources = StringUtils.splitAndTrim(configResources, ",");
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("There is/are " + resources.length + " configuration resource(s): " + ArrayUtils.toString(resources));
+            }
             MuleManager.getConfiguration().setConfigResources(resources);
             ReaderResource[] readers = new ReaderResource[resources.length];
+            String resource; 
             for (int i = 0; i < resources.length; i++)
             {
-                InputStream is = loadConfig(resources[i].trim());
-                readers[i] = new ReaderResource(resources[i].trim(),
-                    new InputStreamReader(is, configEncoding));
+                resource = resources[i];
+                readers[i] = new ReaderResource(resource, 
+                                            new InputStreamReader(loadResource(resource), configEncoding));
             }
 
             // Load startup properties if any.
@@ -217,6 +225,21 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
     }
 
     /**
+     * Override this method to provide alternative ways of loading a resource.
+     */
+    protected InputStream loadResource(String configResource) throws ConfigurationException
+    {
+        try
+        {
+            return IOUtils.getResourceAsStream(configResource, getClass());
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource), e);
+        }
+    }
+    
+    /**
      * @deprecated Please use configure(ReaderResource[] configResources, Properties
      *             startupProperties) instead.
      */
@@ -232,6 +255,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         {
             ((MuleManager)MuleManager.getInstance()).addProperties(startupProperties);
         }
+        // Parse the config files with the Digester.
         manager = (MuleManager)process(configResources);
         if (manager == null)
         {

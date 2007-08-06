@@ -10,17 +10,18 @@
 
 package org.mule.management.mbeans;
 
-import java.io.StringWriter;
-import java.util.Collection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.management.stats.printers.CSVPrinter;
 import org.mule.management.stats.printers.HtmlTablePrinter;
 import org.mule.management.stats.printers.XMLPrinter;
 import org.mule.umo.manager.UMOManager;
+
+import java.io.StringWriter;
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>StatisicsService</code> exposes Mule processing statistics

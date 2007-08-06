@@ -30,7 +30,6 @@ import javax.jms.TopicSession;
 import oracle.jms.AQjmsConnection;
 import oracle.jms.AQjmsQueueConnectionFactory;
 import oracle.jms.AQjmsTopicConnectionFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

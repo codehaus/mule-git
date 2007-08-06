@@ -21,7 +21,9 @@
                 <configuration>
                     <forkMode>pertest</forkMode>
                     <excludes>
-                        <exclude implementation="java.lang.String">**/ActiveMQ*.*</exclude>
+                        <exclude>**/*Mule2071*.*</exclude>
+                        <!-- MULE-2065 -->
+                        <exclude>**/ActiveMQJmsTransactionFunctionalTestCase.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

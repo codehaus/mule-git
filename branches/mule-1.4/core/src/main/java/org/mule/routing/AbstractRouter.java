@@ -9,8 +9,8 @@
  */
 package org.mule.routing;
 
-import org.mule.umo.routing.UMORouter;
 import org.mule.management.stats.RouterStatistics;
+import org.mule.umo.routing.UMORouter;
 
 /**
  * Implements the shared methods that all routers have. The implementations of the different

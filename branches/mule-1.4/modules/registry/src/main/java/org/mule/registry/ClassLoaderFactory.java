@@ -10,7 +10,8 @@
 
 package org.mule.registry;
 
-import java.io.File;
+import org.mule.util.FileUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -77,7 +78,7 @@ public class ClassLoaderFactory
         for (int i = 0; i < urls.length; i++)
         {
             String cpElement = (String)paths.get(i);
-            urls[i] = new File(root, cpElement).toURL();
+            urls[i] = FileUtils.newFile(root, cpElement).toURL();
         }
         return urls;
     }

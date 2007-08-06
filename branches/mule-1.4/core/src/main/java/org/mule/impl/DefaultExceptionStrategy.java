@@ -14,8 +14,7 @@ import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-
-import org.apache.commons.lang.ObjectUtils;
+import org.mule.util.ObjectUtils;
 
 /**
  * <code>DefaultExceptionStrategy</code> provides a default exception handling
@@ -48,7 +47,7 @@ public class DefaultExceptionStrategy extends AbstractExceptionListener
     public void handleStandardException(Throwable t)
     {
         markTransactionForRollback();
-        // Attempt to send the exception details to an endpoint i one is set
+        // Attempt to send the exception details to an endpoint if one is set
         if (RequestContext.getEventContext() != null)
         {
             handleMessagingException(RequestContext.getEventContext().getMessage(), t);

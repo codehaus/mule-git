@@ -26,6 +26,8 @@ import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.CustomNotification;
 import org.mule.impl.internal.notifications.CustomNotificationListener;
+import org.mule.impl.internal.notifications.ExceptionNotification;
+import org.mule.impl.internal.notifications.ExceptionNotificationListener;
 import org.mule.impl.internal.notifications.ManagementNotification;
 import org.mule.impl.internal.notifications.ManagementNotificationListener;
 import org.mule.impl.internal.notifications.ManagerNotification;
@@ -38,6 +40,8 @@ import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.internal.notifications.SecurityNotificationListener;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.TransactionNotification;
+import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.model.ModelFactory;
 import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleSecurityManager;
@@ -62,13 +66,12 @@ import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -86,9 +89,9 @@ import java.util.jar.Manifest;
 
 import javax.transaction.TransactionManager;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -253,6 +256,8 @@ public class MuleManager implements UMOManager
         notificationManager.registerEventType(CustomNotification.class, CustomNotificationListener.class);
         notificationManager.registerEventType(ConnectionNotification.class,
             ConnectionNotificationListener.class);
+        notificationManager.registerEventType(ExceptionNotification.class, ExceptionNotificationListener.class);
+        notificationManager.registerEventType(TransactionNotification.class, TransactionNotificationListener.class);
 
         // TODO RM*: This is obviously just a workaround until extension modules can register
         // their own classes for notifications. Need to revisit this when the
@@ -459,16 +464,9 @@ public class MuleManager implements UMOManager
             queueManager = null;
         }
 
-        if (!config.isEmbedded() && startDate > 0)
+        if ((startDate > 0) && logger.isInfoEnabled())
         {
-            if (logger.isInfoEnabled())
-            {
-                logger.info(getEndSplash());
-            }
-            else
-            {
-                System.out.println(getEndSplash());
-            }
+            logger.info(this.getEndSplash());
         }
 
         config = new MuleConfiguration();
@@ -897,16 +895,9 @@ public class MuleManager implements UMOManager
 
             started.set(true);
             starting.set(false);
-            if (!config.isEmbedded())
+            if (logger.isInfoEnabled())
             {
-                if (logger.isInfoEnabled())
-                {
-                    logger.info(getStartSplash());
-                }
-                else
-                {
-                    System.out.println(getStartSplash());
-                }
+                logger.info(this.getStartSplash());
             }
             fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STARTED));
         }
@@ -980,6 +971,7 @@ public class MuleManager implements UMOManager
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED_MODELS));
 
         stopping.set(false);
+        initialised.set(false);
         fireSystemEvent(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED));
     }
 
@@ -1158,7 +1150,7 @@ public class MuleManager implements UMOManager
      *
      * @return a string summary of the server information
      */
-    protected String getStartSplash()
+    private String getStartSplash()
     {
         String notset = CoreMessages.notSet().getMessage();
 

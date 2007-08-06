@@ -25,16 +25,21 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
+import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
+import org.mule.util.SystemUtils;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -42,16 +47,39 @@ import junit.framework.TestCase;
  */
 public abstract class AbstractMuleTestCase extends TestCase
 {
-    protected final Log logger = LogFactory.getLog(getClass());
+    /**
+     * This flag controls whether the text boxes will be logged when starting each test case.
+     */
+    private static final boolean verbose;
+    
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     // This should be set to a string message describing any prerequisites not met
-    protected String prereqs = null;
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
-    private boolean testLogging = System.getProperty("org.mule.test.logging", "false").equalsIgnoreCase(
-        "true");
 
     private static Map testCounters;
+    
+    private TestCaseWatchdog watchdog;
 
+    static
+    {
+        String muleOpts = SystemUtils.getenv("MULE_TEST_OPTS");
+        if (StringUtils.isNotBlank(muleOpts))
+        {
+            Map parsedOpts = SystemUtils.parsePropertyDefinitions(muleOpts);
+            String optVerbose = (String)parsedOpts.get("mule.verbose");
+            verbose = Boolean.valueOf(optVerbose).booleanValue();
+        }
+        else
+        {
+            // per default, revert to the old behaviour
+            verbose = true;
+        }
+
+        // register the custom UrlStreamHandlerFactory.
+        MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
+    }
+    
     public AbstractMuleTestCase()
     {
         super();
@@ -95,7 +123,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             testCounters.clear();
         }
-        log("Cleared all counters");
     }
 
     private void clearCounter()
@@ -104,15 +131,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             testCounters.remove(getClass().getName());
         }
-        log("Cleared counter: " + getClass().getName());
-    }
-
-    private void log(String s)
-    {
-        if (testLogging)
-        {
-            System.err.println(s);
-        }
     }
 
     public String getName()
@@ -120,42 +138,77 @@ public abstract class AbstractMuleTestCase extends TestCase
         return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
     }
 
-    /**
-     * Use this method to do any validation such as check for an installation of a
-     * required server If the current environment does not have the preReqs of the
-     * test return false and the test will be skipped.
-     * 
-     */
-    protected String checkPreReqs()
+    public void run(TestResult result) 
     {
-        return null;
+        if (this.isDisabledInThisEnvironment())
+        {
+            logger.info(this.getClass().getName() + " disabled");
+            return;
+        }
+        
+        super.run(result);
+    }
+     
+    /**
+     * Subclasses can override this method to skip the execution of the entire test class.
+     * 
+     * @return <code>true</code> if the test class should not be run.
+     */
+    protected boolean isDisabledInThisEnvironment()
+    {
+        return false;
+    }
+    
+    /**
+     * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can extend
+     * this class from ConditionalTestCase.
+     * <p/>
+     * Subclasses can override <code>isDisabledInThisEnvironment</code> to skip a single test.
+     */
+    public void runBare() throws Throwable 
+    {
+        // getName will return the name of the method being run. Use the real JUnit implementation,
+        // this class has a different implementation
+        if (this.isDisabledInThisEnvironment(super.getName())) 
+        {
+            logger.warn(this.getClass().getName() + "." + super.getName() + " disabled in this environment");
+            return;
+        }
+        
+        // Let JUnit handle execution
+        super.runBare();
+    }
+
+    /**
+     * Should this test run?
+     * @param testMethodName name of the test method
+     * @return whether the test should execute in the current envionment
+     */
+    protected boolean isDisabledInThisEnvironment(String testMethodName) 
+    {
+        return false;
     }
 
     public boolean isOffline(String method)
     {
         if (offline)
         {
-            System.out.println(StringMessageUtils.getBoilerPlate(
+            logger.warn(StringMessageUtils.getBoilerPlate(
                 "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
     }
 
-    public boolean isPrereqsMet(String method)
-    {
-        prereqs = checkPreReqs();
-        if (prereqs != null)
-        {
-            System.out.println(StringMessageUtils.getBoilerPlate(
-                "WARNING\nPrerequisites for test: " + method + " were not met. skipping test: " + prereqs,
-                '=', 80));
-        }
-        return prereqs == null;
-    }
-
     protected final void setUp() throws Exception
     {
-        System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
+        // start a watchdog thread that kills the VM after 30 minutes timeout
+        watchdog = new TestCaseWatchdog(30, TimeUnit.MINUTES);
+        watchdog.start();
+        
+        if (verbose)
+        {
+            System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));   
+        }
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
 
@@ -168,7 +221,6 @@ public abstract class AbstractMuleTestCase extends TestCase
                     // We dispose here jut in case
                     disposeManager();
                 }
-                log("Pre suiteSetup for test: " + getTestInfo());
                 suitePreSetUp();
             }
             if (!getTestInfo().isDisposeManagerPerSuite())
@@ -176,14 +228,9 @@ public abstract class AbstractMuleTestCase extends TestCase
                 // We dispose here jut in case
                 disposeManager();
             }
-            if (!isPrereqsMet(getClass().getName() + ".setUp()"))
-            {
-                return;
-            }
             doSetUp();
             if (getTestInfo().getRunCount() == 0)
             {
-                log("Post suiteSetup for test: " + getTestInfo());
                 suitePostSetUp();
             }
         }
@@ -220,7 +267,6 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
             {
-                log("Pre suiteTearDown for test: " + getTestInfo());
                 suitePreTearDown();
             }
             doTearDown();
@@ -231,26 +277,32 @@ public abstract class AbstractMuleTestCase extends TestCase
         }
         finally
         {
-            getTestInfo().incRunCount();
-            if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
+            try
             {
-                try
+                getTestInfo().incRunCount();
+                if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
                 {
-                    log("Post suiteTearDown for test: " + getTestInfo());
-                    suitePostTearDown();
+                    try
+                    {
+                        suitePostTearDown();
+                    }
+                    finally
+                    {
+                        clearCounter();
+                        disposeManager();
+                    }
                 }
-                finally
-                {
-                    clearCounter();
-                    disposeManager();
-                }
+            }
+            finally 
+            {
+                // remove the watchdog thread in any case
+                watchdog.cancel();
             }
         }
     }
 
     protected void disposeManager() throws UMOException
     {
-        log("disposing manager. disposeManagerPerSuite=" + getTestInfo().isDisposeManagerPerSuite());
         if (MuleManager.isInstanciated())
         {
             MuleManager.getInstance().dispose();
@@ -373,19 +425,16 @@ public abstract class AbstractMuleTestCase extends TestCase
         {
             testCount = 0;
             runCount = 0;
-            log("Cleared counts for: " + name);
         }
 
         public void incTestCount()
         {
             testCount++;
-            log("Added test: " + name + " " + testCount);
         }
 
         public void incRunCount()
         {
             runCount++;
-            log("Finished Run: " + toString());
         }
 
         public int getTestCount()

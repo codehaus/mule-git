@@ -13,6 +13,7 @@ package org.mule.extras.spring.events;
 import org.mule.MuleManager;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.manager.UMOManager;
+
 import org.springframework.context.support.AbstractApplicationContext;
 
 public class CircularReferenceSpringEventsTestCase extends FunctionalTestCase

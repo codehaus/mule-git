@@ -10,16 +10,6 @@
 
 package org.mule.providers.soap.xfire;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.codehaus.xfire.handler.Handler;
-import org.codehaus.xfire.service.Service;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.umo.UMOComponent;
@@ -30,6 +20,19 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.codehaus.xfire.annotations.WebAnnotations;
+import org.codehaus.xfire.annotations.WebServiceAnnotation;
+import org.codehaus.xfire.handler.Handler;
+import org.codehaus.xfire.service.Service;
 
 /**
  * Used to register an Xfire endpoint registered with Mule and associated with a
@@ -64,7 +67,18 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
             // check if there is the namespace property on the component
             String namespace = (String)component.getDescriptor().getProperties().get(
                 SoapConstants.SOAP_NAMESPACE_PROPERTY);
-            if (namespace == null)
+
+            // check for namespace set as annotation
+            if (connector.isEnableJSR181Annotations())
+            {
+                WebAnnotations wa = (WebAnnotations)ClassUtils.instanciateClass(
+                    XFireConnector.CLASSNAME_ANNOTATIONS, null, this.getClass());
+                WebServiceAnnotation webServiceAnnotation = wa.getWebServiceAnnotation(component
+                    .getDescriptor().getImplementationClass());
+                namespace = webServiceAnnotation.getTargetNamespace();
+            }
+
+            if ((namespace == null) || (namespace.equalsIgnoreCase("")))
             {
                 namespace = MapUtils.getString(props, "namespace",
                     XFireConnector.DEFAULT_MULE_NAMESPACE_URI);
@@ -122,16 +136,16 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
             }
 
             List inList = connector.getServerInHandlers();
-            if(inList != null)
+            if (inList != null)
             {
-                for(int i = 0; i < inList.size(); i++)
+                for (int i = 0; i < inList.size(); i++)
                 {
                     Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
                     Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
                     service.addInHandler(handler);
                 }
             }
-            
+
             boolean sync = endpoint.isSynchronous();
             // default to synchronous if using http
             if (endpoint.getEndpointURI().getScheme().startsWith("http")
@@ -178,7 +192,7 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
     {
         connector.getXfire().getServiceRegistry().unregister(service);
     }
-    
+
     public void doStart() throws UMOException
     {
         // nothing to do

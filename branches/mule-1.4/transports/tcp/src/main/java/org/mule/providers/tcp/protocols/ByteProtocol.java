@@ -13,13 +13,13 @@ package org.mule.providers.tcp.protocols;
 import org.mule.providers.tcp.TcpProtocol;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
-import org.mule.util.IOUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
@@ -135,17 +135,13 @@ public abstract class ByteProtocol implements TcpProtocol
                 {
                     // wait for non-blocking input stream
                     // use new lock since not expecting notification
-                    Object lock = new Object();
-                    synchronized(lock)
+                    try
                     {
-                        try
-                        {
-                            lock.wait(PAUSE_PERIOD);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            // no-op
-                        }
+                        Thread.sleep(PAUSE_PERIOD);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // no-op
                     }
                 }
             }
@@ -155,7 +151,7 @@ public abstract class ByteProtocol implements TcpProtocol
         catch (SocketException e)
         {
             // do not pollute the log with a stacktrace, log only the message
-            logger.debug("Socket exception occured: " + e.getMessage());
+            logger.info("Socket exception occured: " + e.getMessage());
             return EOF;
         }
         catch (SocketTimeoutException e)
