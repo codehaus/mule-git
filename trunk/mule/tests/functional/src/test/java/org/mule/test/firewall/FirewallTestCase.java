@@ -48,9 +48,7 @@ public class FirewallTestCase extends TestCase
         InetAddress aLocalAddress = InetAddress.getLocalHost();
         logger.info("Java returns " + addressToString(aLocalAddress) + " as the 'local' address");
         assertNotSame("No external address", LOCALADDR, aLocalAddress.getHostAddress());
-        // this fails on luntbuild and on my machine (and perhaps on dev.mulesource too)
-        // see MULE-2109 for more details (once i have written things up there)
-//        consistentAddress(aLocalAddress.getHostName(), false);
+        consistentAddress(aLocalAddress.getHostName(), false);
         assertEquals("Inconsistent hostname", aLocalAddress.getHostName(), new HostNameFactory().create(null));
     }
 
@@ -66,15 +64,31 @@ public class FirewallTestCase extends TestCase
         String address = InetAddress.getByName(name).getHostAddress();
         logger.debug("Testing relationship between " + name + " and " + address);
         assertEquals("Name " + name + " is inconsistent", name,
-                canonical ? InetAddress.getByName(name).getCanonicalHostName()
-                        : InetAddress.getByName(name).getHostName());
-        assertEquals("Address " + address + " is inconsistent",
-                address, InetAddress.getByName(address).getHostAddress());
-        assertEquals(name + " -> " + address + " is inconsistent",
-                address, InetAddress.getByName(name).getHostAddress());
-        assertEquals(address + " -> " + name + " is inconsistent", name,
-                canonical ? InetAddress.getByName(address).getCanonicalHostName()
-                        : InetAddress.getByName(address).getHostName());
+                name(InetAddress.getByName(name), canonical));
+        assertEquals("Address " + address + " is inconsistent", address,
+                InetAddress.getByName(address).getHostAddress());
+        // we cannot expect to go from address to name consistently, but we can expect
+        // names always to resolve to the same address, and for addresses not to change
+        // when going via a name (in other words, any aliases are consistent).
+        assertEquals(name + " -> " + address + " is inconsistent", address,
+                InetAddress.getByName(name).getHostAddress());
+        assertEquals(name + " -> " + address + " -> " + name + " -> " + address + " is inconsistent", address,
+                InetAddress.getByName(
+                        name(
+                                InetAddress.getByName(
+                                        InetAddress.getByName(name).getHostAddress()), canonical)).getHostAddress());
+    }
+
+    protected String name(InetAddress address, boolean canonical)
+    {
+        if (canonical)
+        {
+            return address.getCanonicalHostName();
+        }
+        else
+        {
+            return address.getHostName();
+        }
     }
 
     public void testLocalhostTcp() throws Exception
