@@ -36,30 +36,43 @@ public class FirewallTestCase extends TestCase
 
     private SecureRandom random = new SecureRandom();
 
-    public void testNames() throws Exception
+    public void testLoopback() throws Exception
     {
-        consistentAddress(LOCALHOST);
+        consistentAddress(LOCALHOST, true);
+        consistentAddress(LOCALHOST, false);
         assertEquals("Strange name for loopback", LOCALHOST, InetAddress.getByName(LOCALADDR).getCanonicalHostName());
+    }
+
+    public void testLocalHost() throws Exception
+    {
         InetAddress aLocalAddress = InetAddress.getLocalHost();
         logger.info("Java returns " + addressToString(aLocalAddress) + " as the 'local' address");
         assertNotSame("No external address", LOCALADDR, aLocalAddress.getHostAddress());
-        assertNotSame("No extrernal name", LOCALHOST, aLocalAddress.getCanonicalHostName());
-        consistentAddress(aLocalAddress.getCanonicalHostName());
-        assertEquals("Inconsistent hostname", aLocalAddress.getCanonicalHostName(), new HostNameFactory().create(null));
+        consistentAddress(aLocalAddress.getHostName(), false);
+        assertEquals("Inconsistent hostname", aLocalAddress.getHostName(), new HostNameFactory().create(null));
     }
 
-    protected void consistentAddress(String name) throws UnknownHostException
+    public void testCanonicalHost() throws Exception
+    {
+        InetAddress aLocalAddress = InetAddress.getLocalHost();
+        assertNotSame("No extrernal name", LOCALHOST, aLocalAddress.getCanonicalHostName());
+        consistentAddress(aLocalAddress.getCanonicalHostName(), true);
+    }
+
+    protected void consistentAddress(String name, boolean canonical) throws UnknownHostException
     {
         String address = InetAddress.getByName(name).getHostAddress();
         logger.debug("Testing relationship between " + name + " and " + address);
-        assertEquals("Name " + name + " is inconsistent",
-                name, InetAddress.getByName(name).getCanonicalHostName());
+        assertEquals("Name " + name + " is inconsistent", name,
+                canonical ? InetAddress.getByName(name).getCanonicalHostName()
+                        : InetAddress.getByName(name).getHostName());
         assertEquals("Address " + address + " is inconsistent",
                 address, InetAddress.getByName(address).getHostAddress());
         assertEquals(name + " -> " + address + " is inconsistent",
                 address, InetAddress.getByName(name).getHostAddress());
-        assertEquals(address + " -> " + name + " is inconsistent",
-                name, InetAddress.getByName(address).getCanonicalHostName());
+        assertEquals(address + " -> " + name + " is inconsistent", name,
+                canonical ? InetAddress.getByName(address).getCanonicalHostName()
+                        : InetAddress.getByName(address).getHostName());
     }
 
     public void testLocalhostTcp() throws Exception
