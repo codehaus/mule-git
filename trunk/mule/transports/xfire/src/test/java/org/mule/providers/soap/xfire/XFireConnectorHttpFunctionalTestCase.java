@@ -38,7 +38,7 @@ public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoin
     
     public void testBinding() throws Exception
     {
-        String url = "http://localhost:38008/";
+        String url = "http://localhost:62108/";
         String folder = "mule/";
         String componentName = "mycomponent";
         String fullPath = url + folder + componentName;
