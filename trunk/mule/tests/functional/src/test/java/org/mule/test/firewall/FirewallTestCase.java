@@ -30,7 +30,7 @@ public class FirewallTestCase extends TestCase
 
     public static final String LOCALHOST = "localhost";
     public static final String LOCALADDR = "127.0.0.1";
-    public static final int TEST_COUNT = 10;
+    public static final int TEST_COUNT = 1;
 
     protected final Log logger = LogFactory.getLog(this.getClass());
 
