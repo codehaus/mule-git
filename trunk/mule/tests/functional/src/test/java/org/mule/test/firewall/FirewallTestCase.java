@@ -38,7 +38,8 @@ public class FirewallTestCase extends TestCase
 
     public void testLoopback() throws Exception
     {
-        consistentAddress(LOCALHOST, true);
+        // this gives localhost.localdomain on sourceforge
+//        consistentAddress(LOCALHOST, true);
         consistentAddress(LOCALHOST, false);
         assertEquals("Strange name for loopback", LOCALHOST, InetAddress.getByName(LOCALADDR).getCanonicalHostName());
     }
@@ -135,6 +136,7 @@ public class FirewallTestCase extends TestCase
             assertEquals("Failed to send byte via " + addressToString(address, port),
                     1, receiver.getInputStream().read());
             client.close();
+            server.close();
         }
         catch (Exception e)
         {
@@ -156,6 +158,7 @@ public class FirewallTestCase extends TestCase
             assertEquals("Failed to send packet via " + addressToString(address, port),
                     1, packet.getData()[0]);
             client.close();
+            server.close();
         }
         catch (Exception e)
         {
