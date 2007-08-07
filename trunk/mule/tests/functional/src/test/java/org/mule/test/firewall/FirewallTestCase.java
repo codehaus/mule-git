@@ -207,7 +207,7 @@ public class FirewallTestCase extends TestCase
 
     protected String addressToString(InetAddress address)
     {
-        return address.getCanonicalHostName() + "/" + address.getHostAddress();
+        return address.getHostName() + "/" + address.getCanonicalHostName() + "/" + address.getHostAddress();
     }
 
     protected int randomPrivatePort()
