@@ -56,6 +56,12 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
     protected ConcurrentMap attachments = new ConcurrentHashMap();
     protected String encoding = MuleManager.getConfiguration().getEncoding();
 
+    /**
+     * Should we fail when we detect scribbling?  This can be overridden by setting the
+     * property {@link org.mule.config.MuleProperties#MULE_THREAD_UNSAFE_MESSAGES_PROPERTY}
+     */
+    public static final boolean DEFAULT_FAILFAST = false;
+
     protected UMOExceptionPayload exceptionPayload;
     protected String id = UUID.getUUID();
 
@@ -557,7 +563,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
     protected boolean isDisabled()
     {
         return org.apache.commons.collections.MapUtils.getBooleanValue(System.getProperties(),
-                MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, false);
+                MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY, !DEFAULT_FAILFAST);
     }
 
     private synchronized void initAccessControl()

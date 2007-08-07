@@ -17,6 +17,7 @@ import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
+import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.internal.notifications.ConnectionNotification;
@@ -313,7 +314,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
                 message = handleUnacceptedFilter(message);
-                RequestContext.safeSetEvent(new MuleEvent(message, endpoint,
+                RequestContext.setEvent(new MuleEvent(message, endpoint,
                         new MuleSession(message, new NullSessionHandler()), synchronous));
                 return message;
             }
@@ -535,7 +536,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             UMOSession session = new MuleSession(message, connector.getSessionHandler(), component);
             UMOEvent muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
-            muleEvent = RequestContext.unsafeSetEvent(muleEvent);
+            muleEvent = OptimizedRequestContext.unsafeSetEvent(muleEvent);
             message = muleEvent.getMessage();
 
             // Apply Security filter if one is set
@@ -586,7 +587,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 {
                     setExceptionDetails(resultMessage, resultMessage.getExceptionPayload().getException());
                 }
-                RequestContext.unsafeRewriteEvent(resultMessage);
+                OptimizedRequestContext.unsafeRewriteEvent(resultMessage);
             }
             return applyResponseTransformer(resultMessage);
         }

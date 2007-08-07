@@ -18,7 +18,6 @@ import org.mule.umo.UMOMessage;
 
 import java.util.Iterator;
 
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,9 +30,6 @@ import org.apache.commons.logging.LogFactory;
  * are not otherwise available in the scope.  so this is a good place to create a new
  * thread local copy - it will be read because supporting code is expecting mutation.</p>
  *
- * <p>Mutating methods have three versions: safe (default; makes and returns a new copy); unsafe (doesn't
- * make a copy, use only where certain no threading); critical (as safe, but indicates threading a known
- * issue).</p>
  */
 public final class RequestContext
 {
@@ -42,10 +38,8 @@ public final class RequestContext
     private static final Log logger = LogFactory.getLog(RequestContext.class);
     private static final ThreadLocal currentEvent = new ThreadLocal();
 
-    public static LinkedBlockingDeque history = new LinkedBlockingDeque();
-
     /** Do not instanciate. */
-    private RequestContext()
+    protected RequestContext()
     {
         // no-op
     }
@@ -69,50 +63,20 @@ public final class RequestContext
     }
 
     /**
-     * Set an event for out-of-scope thread access.  Unsafe: use only when known to be single threaded.
-     *
-     * @param event - the event to set
-     * @return The event set
-     */
-    public static UMOEvent unsafeSetEvent(UMOEvent event)
-    {
-        currentEvent.set(event);
-        return event;
-    }
-
-    /**
      * Set an event for out-of-scope thread access.  Safe: use by default
      *
      * @param event - the event to set
      * @return A new mutable copy of the event set
      */
-    public static UMOEvent safeSetEvent(UMOEvent event)
+    public static UMOEvent setEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event, SAFE, false));
+        return internalSetEvent(newEvent(event, SAFE, false));
     }
 
-    /**
-     * Set an event for out-of-scope thread access.  Critical: thread safety known to be required
-     *
-     * @param event - the event to set
-     * @return A new mutable copy of the event set
-     */
-    public static UMOEvent criticalSetEvent(UMOEvent event)
+    protected static UMOEvent internalSetEvent(UMOEvent event)
     {
-        return unsafeSetEvent(newEvent(event, true, true));
-    }
-
-    /**
-     * Sets a new message payload in the RequestContext but maintains all other
-     * properties (session, endpoint, synchronous, etc.) from the previous event.
-     * Unsafe: use only when known to be single threaded
-     *
-     * @param message - the new message payload
-     * @return The message set
-     */
-    public static UMOMessage unsafeRewriteEvent(UMOMessage message)
-    {
-        return internalRewriteEvent(message, false, false);
+        currentEvent.set(event);
+        return event;
     }
 
     /**
@@ -123,22 +87,9 @@ public final class RequestContext
      * @param message - the new message payload
      * @return A new copy of the message set
      */
-    public static UMOMessage safeRewriteEvent(UMOMessage message)
+    public static UMOMessage rewriteEvent(UMOMessage message)
     {
         return internalRewriteEvent(message, SAFE, false);
-    }
-
-    /**
-     * Sets a new message payload in the RequestContext but maintains all other
-     * properties (session, endpoint, synchronous, etc.) from the previous event.
-     * Critical: thread safety known to be required
-     *
-     * @param message - the new message payload
-     * @return A new copy of the message set
-     */
-    public static UMOMessage criticalRewriteEvent(UMOMessage message)
-    {
-        return internalRewriteEvent(message, true, true);
     }
 
     protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe, boolean required)
@@ -154,26 +105,16 @@ public final class RequestContext
                 {
                     resetAccessControl(copy);
                 }
-                unsafeSetEvent(newEvent);
+                internalSetEvent(newEvent);
                 return copy;
             }
         }
         return message;
     }
 
-    public static UMOMessage unsafeWriteResponse(UMOMessage message)
-    {
-        return internalWriteResponse(message, false, false);
-    }
-
-    public static UMOMessage safeWriteResponse(UMOMessage message)
+    public static UMOMessage writeResponse(UMOMessage message)
     {
         return internalWriteResponse(message, SAFE, false);
-    }
-
-    public static UMOMessage criticalWriteResponse(UMOMessage message)
-    {
-        return internalWriteResponse(message, true, true);
     }
 
     protected static UMOMessage internalWriteResponse(UMOMessage message, boolean safe, boolean required)
@@ -190,7 +131,7 @@ public final class RequestContext
                 {
                     resetAccessControl(copy);
                 }
-                unsafeSetEvent(newEvent);
+                internalSetEvent(newEvent);
                 return copy;
             }
         }
@@ -232,7 +173,7 @@ public final class RequestContext
      */
     public static void clear()
     {
-        safeSetEvent(null);
+        setEvent(null);
     }
 
     public static void setExceptionPayload(UMOExceptionPayload exceptionPayload)

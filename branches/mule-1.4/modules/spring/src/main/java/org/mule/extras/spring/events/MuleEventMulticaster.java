@@ -502,7 +502,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
                 {
                     UMOSession session = new MuleSession(message,
                         ((AbstractConnector)endpoint.getConnector()).getSessionHandler(), component);
-                    RequestContext.safeSetEvent(new MuleEvent(message, endpoint, session, false));
+                    RequestContext.setEvent(new MuleEvent(message, endpoint, session, false));
                     // transform if necessary
                     if (endpoint.getTransformer() != null)
                     {
