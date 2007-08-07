@@ -23,7 +23,7 @@ public class HostNameFactory implements PropertyFactory
 
     public Object create(Map props) throws Exception
     {
-        return InetAddress.getLocalHost().getHostName();
+        return InetAddress.getLocalHost().getCanonicalHostName();
     }
 
 }

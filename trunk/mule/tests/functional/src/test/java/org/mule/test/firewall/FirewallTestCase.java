@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.DatagramPacket;
+import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
 import junit.framework.TestCase;
@@ -37,13 +38,28 @@ public class FirewallTestCase extends TestCase
 
     public void testNames() throws Exception
     {
-        assertEquals("Strange loopback address", LOCALADDR, InetAddress.getByName(LOCALHOST).getHostAddress());
-        assertEquals("Strange name for loopback", LOCALHOST, InetAddress.getByName(LOCALADDR).getHostName());
+        consistentAddress(LOCALHOST);
+        assertEquals("Strange name for loopback", LOCALHOST, InetAddress.getByName(LOCALADDR).getCanonicalHostName());
         InetAddress aLocalAddress = InetAddress.getLocalHost();
-        assertNotSame("No external address", LOCALADDR, aLocalAddress.getHostAddress());
-        assertNotSame("No extrernal name", LOCALHOST, aLocalAddress.getHostName());
         logger.info("Java returns " + addressToString(aLocalAddress) + " as the 'local' address");
-        assertEquals("Inconsistent hostname", aLocalAddress.getHostName(), new HostNameFactory().create(null));
+        assertNotSame("No external address", LOCALADDR, aLocalAddress.getHostAddress());
+        assertNotSame("No extrernal name", LOCALHOST, aLocalAddress.getCanonicalHostName());
+        consistentAddress(aLocalAddress.getCanonicalHostName());
+        assertEquals("Inconsistent hostname", aLocalAddress.getCanonicalHostName(), new HostNameFactory().create(null));
+    }
+
+    protected void consistentAddress(String name) throws UnknownHostException
+    {
+        String address = InetAddress.getByName(name).getHostAddress();
+        logger.debug("Testing relationship between " + name + " and " + address);
+        assertEquals("Name " + name + " is inconsistent",
+                name, InetAddress.getByName(name).getCanonicalHostName());
+        assertEquals("Address " + address + " is inconsistent",
+                address, InetAddress.getByName(address).getHostAddress());
+        assertEquals(name + " -> " + address + " is inconsistent",
+                address, InetAddress.getByName(name).getHostAddress());
+        assertEquals(address + " -> " + name + " is inconsistent",
+                name, InetAddress.getByName(address).getCanonicalHostName());
     }
 
     public void testLocalhostTcp() throws Exception
@@ -140,7 +156,7 @@ public class FirewallTestCase extends TestCase
         }
         catch (IOException e)
         {
-            logger.error("Could not open TCP Server on " + addressToString(address, port));
+            logger.error("Could not open TCP server on " + addressToString(address, port));
             throw e;
         }
     }
@@ -178,7 +194,7 @@ public class FirewallTestCase extends TestCase
 
     protected String addressToString(InetAddress address)
     {
-        return address.getHostName() + "/" + address.getHostAddress();
+        return address.getCanonicalHostName() + "/" + address.getHostAddress();
     }
 
     protected int randomPrivatePort()
