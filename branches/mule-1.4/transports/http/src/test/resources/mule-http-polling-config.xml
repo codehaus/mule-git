@@ -28,7 +28,7 @@
 
         <mule-descriptor name="pollingUMO" implementation="org.mule.tck.functional.FunctionalTestComponent">
             <inbound-router>
-                <endpoint address="http://marie:marie@localhost:4567" connector="PollingHttpConnector">
+                <endpoint address="http://marie:marie@localhost:60205" connector="PollingHttpConnector">
                     <properties>
                         <property value="300000" name="pollingFrequency"/>
                     </properties>
@@ -43,7 +43,7 @@
 
         <mule-descriptor name="SecureUMO" implementation="org.mule.tck.functional.FunctionalTestComponent">
             <inbound-router>
-                <endpoint address="http://localhost:4567" connector="HttpConnector"/>
+                <endpoint address="http://localhost:60205" connector="HttpConnector"/>
             </inbound-router>
         </mule-descriptor>
     </model>

@@ -27,9 +27,9 @@ import org.w3c.dom.Document;
 
 public class XFireWsdlTestCase extends AbstractMuleTestCase
 {
-    public static final String TEST_URL = "wsdl-xfire:http://localhost:8080/mule-tests-external-xfire/services/TestService?WSDL&method=getTest";
-    public static final String TEST_URL_NOWSDL = "wsdl-xfire:http://localhost:8080/mule-tests-external-xfire/services/TestService?method=getTest";
-    public static final String TEST_URL_WSDL = "http://localhost:8080/mule-tests-external-xfire/services/TestService?wsdl";
+    public static final String TEST_URL = "wsdl-xfire:http://localhost:63080/mule-tests-external-xfire/services/TestService?WSDL&method=getTest";
+    public static final String TEST_URL_NOWSDL = "wsdl-xfire:http://localhost:63080/mule-tests-external-xfire/services/TestService?method=getTest";
+    public static final String TEST_URL_WSDL = "http://localhost:63080/mule-tests-external-xfire/services/TestService?wsdl";
 
     public void testXFireWsdlService() throws Exception
     {

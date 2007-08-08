@@ -10,8 +10,8 @@
     <global-endpoints>
         <!-- for this test the client and server endponts have to be different since, Jetty is a server-only transport so
         we still use the http transport on the client side-->
-        <endpoint name="clientEndpoint" address="http://localhost:60198/rest/Echo" synchronous="true"/>
-        <endpoint name="serverEndpoint" address="jetty:rest://localhost:60198/rest/Echo" synchronous="true"/>
+        <endpoint name="clientEndpoint" address="http://localhost:60204/rest/Echo" synchronous="true"/>
+        <endpoint name="serverEndpoint" address="jetty:rest://localhost:60204/rest/Echo" synchronous="true"/>
     </global-endpoints>
 
     <model name="main">

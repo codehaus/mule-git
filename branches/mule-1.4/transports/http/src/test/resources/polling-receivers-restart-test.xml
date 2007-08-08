@@ -27,7 +27,7 @@
         <mule-descriptor name="Test" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
             <inbound-router>
                 <!-- This is the polling http endpoint, downloading data from our test feed  -->
-                <endpoint name="httpEndpoint" connector="pollingHttp" address="http://localhost:12345/TestServer"/>
+                <endpoint name="httpEndpoint" connector="pollingHttp" address="http://localhost:60206/TestServer"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
@@ -39,7 +39,7 @@
         <mule-descriptor name="TestServer" implementation="org.mule.components.simple.StaticComponent">
             <inbound-router>
                 <!-- This is the server URL hosting our test feed -->
-                <endpoint address="http://localhost:12345" connector="nonPollingHttp"/>
+                <endpoint address="http://localhost:60206" connector="nonPollingHttp"/>
             </inbound-router>
             <properties>
                 <property name="data" value="Here's your content."/>

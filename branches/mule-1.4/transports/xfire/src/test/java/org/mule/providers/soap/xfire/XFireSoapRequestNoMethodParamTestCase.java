@@ -24,7 +24,7 @@ public class XFireSoapRequestNoMethodParamTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage msg = client.send("http://localhost:33381/services/TestComponent",
+        UMOMessage msg = client.send("http://localhost:63381/services/TestComponent",
             new MuleMessage(request));
 
         assertNotNull(msg);

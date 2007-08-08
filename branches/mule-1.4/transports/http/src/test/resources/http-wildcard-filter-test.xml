@@ -7,7 +7,7 @@
     <model name="main">
         <mule-descriptor name="httpIn" implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
-                <endpoint address="http://localhost:60198" synchronous="true">
+                <endpoint address="http://localhost:60201" synchronous="true">
                     <filter className="org.mule.routing.filters.logic.NotFilter">
                         <filter className="org.mule.routing.filters.WildcardFilter" pattern="*xyz*"/>
                     </filter>
