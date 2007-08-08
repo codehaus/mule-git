@@ -35,7 +35,6 @@ import org.codehaus.xfire.wsdl11.WSDL11Transport;
  */
 public class MuleLocalTransport extends AbstractTransport implements SoapTransport, WSDL11Transport
 {
-	
     public static final String SOAP11_HTTP_BINDING = "http://schemas.xmlsoap.org/soap/http";
     public static final String SOAP12_HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
     public static final String BINDING_ID = "urn:xfire:transport:local";
