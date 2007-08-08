@@ -83,6 +83,11 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
                 namespace = MapUtils.getString(props, "namespace",
                     XFireConnector.DEFAULT_MULE_NAMESPACE_URI);
             }
+            
+            //Convert createDefaultBindings string to boolean before rewriting as xfire property
+            if(props.get("createDefaultBindings")!=null){
+         	   props.put("createDefaultBindings", Boolean.valueOf((String)props.get("createDefaultBindings")));  
+            }
 
             if (props.size() == 0)
             {
