@@ -19,9 +19,8 @@
         <dependency>
             <groupId>org.mule.tools</groupId>
             <artifactId>bobberplus</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>${version}</version>
         </dependency>
     </dependencies> 
-
 </project>
 
