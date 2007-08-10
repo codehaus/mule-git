@@ -13,22 +13,10 @@ package org.mule.providers.email;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.provider.UMOConnector;
 
-import com.icegreen.greenmail.user.GreenMailUser;
-import com.icegreen.greenmail.user.UserManager;
-import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.Servers;
 
-import java.util.Properties;
-
 import javax.mail.Message;
-import javax.mail.Message.RecipientType;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Start a (greenmail) mail server with a known message, for use in subclasses.
@@ -39,44 +27,33 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractConnectorTestCase
 {
 
-    // something odd happening here?  50006 seems to have failed a 
-    // couple of times?
-    public static final int INITIAL_SERVER_PORT = 50007;
-    // large enough to jump away from a group of related ports
-    public static final int PORT_INCREMENT = 17;
     // ie must succeed within RETRY_LIMIT attempts
     public static final int RETRY_LIMIT = 2;
     public static final String LOCALHOST = "127.0.0.1";
-    public static final String USER = "bob";
-    public static final String PROVIDER = "example.com";
-    public static final String EMAIL = USER + "@" + PROVIDER;
-    public static final String PASSWORD = "secret";
-    public static final String MESSAGE = "Test Email Message";
-    public static final long STARTUP_PERIOD_MS = 100;
+    public static final String USER = AbstractGreenMailSupport.BOB;
+    public static final String EMAIL = AbstractGreenMailSupport.BOB_EMAIL;
+    public static final String PASSWORD = AbstractGreenMailSupport.PASSWORD;
     
-    private static final AtomicInteger nextPort = new AtomicInteger(INITIAL_SERVER_PORT);
-    private static final Log staticLogger = LogFactory.getLog(AbstractMailConnectorFunctionalTestCase.class);
-
-    private MimeMessage message;
-    private Servers servers;
     private boolean initialEmail = false;
     private String connectorName;
-    
+    private AbstractGreenMailSupport greenMailSupport = new AutoIncrementGreenMailSupport();
+    private MimeMessage message;
+
     protected AbstractMailConnectorFunctionalTestCase(boolean initialEmail, String connectorName)
     {
         this.initialEmail = initialEmail;
         this.connectorName = connectorName;
     }
-    
+
     // @Override
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
         startServers();
     }
-    
+
     // @Override
-    protected void doTearDown() throws Exception 
+    protected void doTearDown() throws Exception
     {
         stopServers();
         super.doTearDown();
@@ -84,59 +61,26 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
 
     private void storeEmail() throws Exception
     {
-        // note that with greenmail 1.1 the Servers object is unreliable
-        // and the approach taken in their examples will not work.
-        // the following does work, but may break in a later version
-        // (there is some confusion in the greenmail code about
-        // whether users are identified by email or name alone)
-        // in which case try retrieving by EMAIL rather than USER
-        UserManager userManager = servers.getManagers().getUserManager();
-        userManager.createUser(EMAIL, USER, PASSWORD);
-        GreenMailUser bob = userManager.getUser(USER);
-        assertNotNull("Failure in greenmail - see comments in test code.", bob);
-        bob.deliver((MimeMessage) getValidMessage());
-        assertEquals(1, servers.getReceivedMessages().length);
+        greenMailSupport.createBobAndStoreEmail(getValidMessage());
     }
-    
-    private void startServers() throws Exception
+
+    protected void startServers() throws Exception
     {
-        servers = new Servers(getSetups());
-        servers.start();
+        greenMailSupport.startServers();
         if (initialEmail)
         {
             storeEmail();
         }
     }
 
-    private static ServerSetup[] getSetups()
+    protected void stopServers() throws Exception
     {
-        staticLogger.debug("generating new servers from: " + nextPort.get());
-        ServerSetup smtp =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTP);
-        ServerSetup smtps =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_SMTPS);
-        ServerSetup pop3 =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3);
-        ServerSetup pop3s =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_POP3S);
-        ServerSetup imap =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAP);
-        ServerSetup imaps =
-                new ServerSetup(nextPort.getAndAdd(PORT_INCREMENT), null, ServerSetup.PROTOCOL_IMAPS);
-        return new ServerSetup[]{smtp, smtps, pop3, pop3s, imap, imaps};
-    }
-
-    private void stopServers() throws Exception
-    {
-        if (null != servers)
-        {
-            servers.stop();
-        }
+        greenMailSupport.stopServers();
     }
 
     protected Servers getServers()
     {
-        return servers;
+        return greenMailSupport.getServers();
     }
 
     // @Override
@@ -144,9 +88,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     {
         if (null == message)
         {
-            message = new MimeMessage(Session.getDefaultInstance(new Properties()));
-            message.setContent(MESSAGE, "text/plain");
-            message.setRecipient(RecipientType.TO, new InternetAddress(EMAIL));
+            message = greenMailSupport.getValidMessage(AbstractGreenMailSupport.ALICE_EMAIL);
         }
         return message;
     }
@@ -165,32 +107,32 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         
     protected String getPop3TestEndpointURI()
     {
-        return buildEndpoint("pop3", servers.getPop3().getPort());
+        return buildEndpoint("pop3", greenMailSupport.getServers().getPop3().getPort());
     }
 
     protected String getPop3sTestEndpointURI()
     {
-        return buildEndpoint("pop3s", servers.getPop3s().getPort());
+        return buildEndpoint("pop3s", greenMailSupport.getServers().getPop3s().getPort());
     }
 
     protected String getImapTestEndpointURI()
     {
-        return buildEndpoint("imap", servers.getImap().getPort());
+        return buildEndpoint("imap", greenMailSupport.getServers().getImap().getPort());
     }
     
     protected String getImapsTestEndpointURI()
     {
-        return buildEndpoint("imaps", servers.getImaps().getPort());
+        return buildEndpoint("imaps", greenMailSupport.getServers().getImaps().getPort());
     }
     
     protected String getSmtpTestEndpointURI()
     {
-        return buildEndpoint("smtp", servers.getSmtp().getPort());
+        return buildEndpoint("smtp", greenMailSupport.getServers().getSmtp().getPort());
     }
     
     protected String getSmtpsTestEndpointURI()
     {
-        return buildEndpoint("smtps", servers.getSmtps().getPort());
+        return buildEndpoint("smtps", greenMailSupport.getServers().getSmtps().getPort());
     }
     
    private String buildEndpoint(String protocol, int port) 
@@ -208,7 +150,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         assertTrue("Did not receive a message with String contents",
             received.getContent() instanceof String);
         String receivedText = ((String) received.getContent()).trim();
-        assertEquals(MESSAGE, receivedText);
+        assertEquals(AbstractGreenMailSupport.MESSAGE, receivedText);
         assertNotNull(received.getRecipients(Message.RecipientType.TO));
         assertEquals(1, received.getRecipients(Message.RecipientType.TO).length);
         assertEquals(received.getRecipients(Message.RecipientType.TO)[0].toString(), EMAIL);

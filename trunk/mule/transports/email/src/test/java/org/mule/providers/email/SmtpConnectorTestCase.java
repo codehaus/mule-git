@@ -108,7 +108,7 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         MuleManager.getInstance().start();
 
         // default transformer is string to mail message, so send string
-        UMOMessage message = new MuleMessage(MESSAGE);
+        UMOMessage message = new MuleMessage(AbstractGreenMailSupport.MESSAGE);
         message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, EMAIL);
         UMOSession session = 
             getTestSession(getTestComponent(getTestDescriptor("apple", Apple.class.getName())));
