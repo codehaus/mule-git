@@ -71,7 +71,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
                 {
                     logger.debug(ObjectUtils.identityToShortString(this) + " scheduled "
                                  + ObjectUtils.identityToShortString(schedule) + " with " + frequency
-                                 + "ms polling frequency");
+                                 + " " + getTimeUnit() + " polling frequency");
                 }
             }
         }
