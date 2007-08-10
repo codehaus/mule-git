@@ -163,7 +163,7 @@ public class DefaultJmxSupportAgent implements UMOAgent
                 }
             }
 
-            // remove this agent once t has registered the other agents
+            // remove this agent once it has registered the other agents
             MuleManager.getInstance().unregisterAgent(name);
         }
         catch (UMOException e)
