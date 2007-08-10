@@ -19,6 +19,6 @@ REM when merging config files.
 REM Note: We can't use it for stockquote-soap-config.xml, because Spring chokes on the line:
 REM   <property name="soapAction" value="${methodNamespace}${method}"/>
 
-IF '%Choice%'=='1' call "%MULE_BASE%\bin\mule.bat" -config ".\conf\stdio-config.xml,.\conf\stockquote-rest-config.xml" -builder spring
-IF '%Choice%'=='2' call "%MULE_BASE%\bin\mule.bat" -config ".\conf\stdio-config.xml,.\conf\stockquote-wsdl-config.xml" -builder spring
+IF '%Choice%'=='1' call "%MULE_BASE%\bin\mule.bat" -config ".\conf\stdio-config.xml,.\conf\stockquote-rest-config.xml"
+IF '%Choice%'=='2' call "%MULE_BASE%\bin\mule.bat" -config ".\conf\stdio-config.xml,.\conf\stockquote-wsdl-config.xml"
 IF '%Choice%'=='3' call "%MULE_BASE%\bin\mule.bat" -config ".\conf\stockquote-soap-config.xml" 
