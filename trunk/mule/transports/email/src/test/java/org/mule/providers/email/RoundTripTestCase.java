@@ -29,7 +29,7 @@ import javax.mail.internet.MimeMessage;
 public class RoundTripTestCase extends FunctionalTestCase
 {
 
-    public static final long WAIT = 3000L;
+    public static final long WAIT_MS = 3000L;
 
     // this places the SMTP server at 62000 and POP at 62002
     private AbstractGreenMailSupport greenMailSupport = new FixedPortGreenMailSupport(62000);
@@ -44,11 +44,11 @@ public class RoundTripTestCase extends FunctionalTestCase
         // first, check that the conversion happened - we should have a copy of
         // the message as rfc822 encoded bytes on vm://rfc822
         MuleClient client = new MuleClient();
-        UMOMessage message = client.receive("vm://rfc822?connector=queue", WAIT);
+        UMOMessage message = client.receive("vm://rfc822?connector=queue", WAIT_MS);
         assertTrue(message.getPayload() instanceof byte[]);
 
         // next, check that the email is received in the server
-        greenMailSupport.getServers().waitForIncomingEmail(WAIT, 1);
+        greenMailSupport.getServers().waitForIncomingEmail(WAIT_MS, 1);
         MimeMessage[] messages = greenMailSupport.getServers().getReceivedMessages();
         assertNotNull("did not receive any messages", messages);
         assertEquals("did not receive 1 mail", 1, messages.length);

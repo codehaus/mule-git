@@ -31,7 +31,8 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     public static final int RETRY_LIMIT = 2;
     public static final String LOCALHOST = "127.0.0.1";
     public static final String USER = AbstractGreenMailSupport.BOB;
-    public static final String EMAIL = AbstractGreenMailSupport.BOB_EMAIL;
+    public static final String FROM = AbstractGreenMailSupport.BOB_EMAIL;
+    public static final String TO = AbstractGreenMailSupport.ALICE_EMAIL;
     public static final String PASSWORD = AbstractGreenMailSupport.PASSWORD;
     
     private boolean initialEmail = false;
@@ -88,7 +89,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
     {
         if (null == message)
         {
-            message = greenMailSupport.getValidMessage(AbstractGreenMailSupport.ALICE_EMAIL);
+            message = greenMailSupport.getValidMessage(TO);
         }
         return message;
     }
@@ -153,7 +154,7 @@ public abstract class AbstractMailConnectorFunctionalTestCase extends AbstractCo
         assertEquals(AbstractGreenMailSupport.MESSAGE, receivedText);
         assertNotNull(received.getRecipients(Message.RecipientType.TO));
         assertEquals(1, received.getRecipients(Message.RecipientType.TO).length);
-        assertEquals(received.getRecipients(Message.RecipientType.TO)[0].toString(), EMAIL);
+        assertEquals(received.getRecipients(Message.RecipientType.TO)[0].toString(), TO);
     }
 
     /**
