@@ -53,6 +53,13 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         assertTrue(c.isQueueEvents());
     }
 
+    public void testManagerIdIsSet()
+    {
+        // The id is the the mule-configuration id from the first config
+        assertEquals("Manager ID has not been properly transformed.",
+                     "Test_Mule_Properties_with_beans", MuleManager.getInstance().getId());
+    }
+
     public void testEndpointPropertyBean()
     {
         UMODescriptor d = MuleManager.getInstance().lookupModel("main").getDescriptor("appleComponent3");
