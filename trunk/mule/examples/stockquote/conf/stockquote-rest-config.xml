@@ -31,8 +31,8 @@
 
     <model name="Sample">
         <mule-descriptor name="HTTPPostSample"
-            			 implementation="org.mule.components.rest.RestServiceWrapper"
-            			 responseTransformer="XmlDecoder Xslt XmlToObject">
+                         implementation="org.mule.components.rest.RestServiceWrapper"
+                         responseTransformer="XmlDecoder Xslt XmlToObject">
             <inbound-router>
                 <endpoint address="vm://stockquote"/>
             </inbound-router>
