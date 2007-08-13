@@ -1,0 +1,25 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="jmsConnectionFactoryXa"
+          class="org.apache.activemq.ActiveMQXAConnectionFactory">
+        <property name="brokerURL">
+            <value>vm://localhost?broker.persistent=false&amp;broker.useJmx=false</value>
+        </property>
+    </bean>
+
+    <bean id="jmsConnectionFactory"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL">
+            <value>vm://localhost?broker.persistent=false&amp;broker.useJmx=false</value>
+        </property>
+    </bean>
+
+
+    <bean id="FunctionalTestRollbackBean" class="org.mule.tck.functional.FunctionalTestComponent">
+        <property name="eventCallback">
+            <bean id="RollbackEventCallback" class="org.mule.test.providers.jms.JmsEventRollback"/>
+        </property>
+    </bean>
+
+
+</beans>

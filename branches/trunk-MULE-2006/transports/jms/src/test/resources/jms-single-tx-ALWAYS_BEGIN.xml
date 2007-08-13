@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd" >
+<mule-configuration id="persistent_vmqueue_test" version="1.0">
+
+    <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true"/>
+
+    <container-context name="spring" className="org.mule.extras.spring.SpringContainerContext">
+        <properties>
+            <property name="configFile" value="jms-tx-spring.xml"/>
+        </properties>
+    </container-context>
+
+    <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
+        <properties>
+            <property name="queueEvents" value="true"/>
+        </properties>
+    </connector>
+
+    <connector name="jmsConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
+        <properties>
+            <container-property name="connectionFactory" reference="jmsConnectionFactory"/>
+            <property name="specification" value="1.1"/>
+        </properties>
+    </connector>
+
+    <model name="TEST">
+
+        <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+            <inbound-router>
+                <endpoint address="vm://in" connector="vmQueue">
+                    <transaction action="NONE"/>
+                </endpoint>
+            </inbound-router>
+
+
+            <outbound-router>
+                <router className="org.mule.routing.outbound.MulticastingRouter">
+                    <endpoint address="jms://in" connector="jmsConnector">
+                        <transaction action="NONE"/>
+                    </endpoint>
+                </router>
+            </outbound-router>
+
+        </mule-descriptor>
+
+
+        <mule-descriptor name="Part2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+            <inbound-router>
+                <endpoint address="jms://in" connector="jmsConnector">
+                    <transaction action="ALWAYS_BEGIN"/>
+                </endpoint>
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="vm://out" connector="vmQueue">
+                    </endpoint>
+                </router>
+            </outbound-router>
+
+            <properties>
+                <property name="returnMessage" value="OUTPUT MESSAGE"/>
+            </properties>
+
+        </mule-descriptor>
+
+    </model>
+
+</mule-configuration>
