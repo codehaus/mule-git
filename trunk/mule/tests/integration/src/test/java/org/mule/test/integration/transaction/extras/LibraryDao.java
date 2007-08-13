@@ -10,33 +10,7 @@
 
 package org.mule.test.integration.transaction.extras;
 
-import java.sql.Types;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-
-public class LibraryDao implements ILibraryDao {
-
-	private JdbcTemplate jdbcTemplate;
- 
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
-		this.jdbcTemplate = jdbcTemplate;
-	}
- 	
-	public boolean insertBook(Book book) throws Exception
-    {
-		String sql = "insert into book (id, title, author) values (?,?,?)";
-		Object args []= new Object[] {Integer.valueOf(book.getSerialNo()), book.getTitle(), book.getAuthor()};
-		int types[] = new int[] {Types.INTEGER, Types.VARCHAR, Types.VARCHAR };
-        try
-        {
-            jdbcTemplate.update(sql, args, types);
-            return true;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            throw e;
-            //return false;
-        }
-	}
+public interface LibraryDao
+{
+    boolean insertBook(Book book) throws Exception;
 }

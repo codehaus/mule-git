@@ -10,24 +10,30 @@
 
 package org.mule.test.integration.transaction;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.List;
-
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.integration.transaction.extras.Book;
 import org.mule.umo.UMOMessage;
 
-public class XATransactionsWithSpringDAO extends FunctionalTestCase{
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.List;
 
-    protected String getConfigResources() {
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
+
+public class XATransactionsWithSpringDAO extends FunctionalTestCase
+{
+
+    /** TODO This is insane, make it 10 seconds max. */
+    private static final int RECEIVE_TIMEOUT = 50000;
+
+    protected String getConfigResources()
+    {
         return "org/mule/test/integration/transaction/xatransactions-with-spring-dao-config.xml";
     }
-           
+
     protected void doPostFunctionalSetUp() throws Exception
     {
         emptyTable();
@@ -57,7 +63,7 @@ public class XATransactionsWithSpringDAO extends FunctionalTestCase{
         try
         {
             con = getConnection();
-            return (List)new QueryRunner().query(con, sql, new ArrayListHandler());
+            return (List) new QueryRunner().query(con, sql, new ArrayListHandler());
         }
         finally
         {
@@ -82,36 +88,36 @@ public class XATransactionsWithSpringDAO extends FunctionalTestCase{
     public void testXATransactionUsingSpringDaoNoRollback() throws Exception
     {
         MuleClient client = new MuleClient();
-        Book book = new Book(1,"testBook", "testAuthor");
-        client.sendNoReceive("jms://my.queue",book,null);
-        UMOMessage result = client.receive("vm://output", 50000);
+        Book book = new Book(1, "testBook", "testAuthor");
+        client.sendNoReceive("jms://my.queue", book, null);
+        UMOMessage result = client.receive("vm://output", RECEIVE_TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
-        assertTrue(((Boolean)result.getPayload()).booleanValue());
+        assertTrue(((Boolean) result.getPayload()).booleanValue());
         int res = execSqlUpdate("UPDATE BOOK SET TITLE = 'My Test' WHERE TITLE='testBook'");
         if (res < 0)
         {
             fail();
         }
     }
-        
+
     public void testXATransactionUsingSpringDaoWithRollback() throws Exception
     {
         MuleClient client = new MuleClient();
-        
-        Book book = new Book(1,"testBook", "testAuthor");
-        client.sendNoReceive("jms://my.queue",book,null);
-        UMOMessage result = client.receive("vm://output", 50000);
+
+        Book book = new Book(1, "testBook", "testAuthor");
+        client.sendNoReceive("jms://my.queue", book, null);
+        UMOMessage result = client.receive("vm://output", RECEIVE_TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
-        assertTrue(((Boolean)result.getPayload()).booleanValue());
+        assertTrue(((Boolean) result.getPayload()).booleanValue());
         int res = execSqlUpdate("UPDATE BOOK SET TITLE = 'My Test' WHERE TITLE='testBook'");
         if (res < 0)
         {
             fail();
         }
-        
-        client.sendNoReceive("jms://my.queue",book,null);
+
+        client.sendNoReceive("jms://my.queue", book, null);
         result = client.receive("vm://output", 5000);
         // need to test that the Spring transaction has really been rolled back... 
         // from log file, it is
