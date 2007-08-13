@@ -30,13 +30,13 @@ import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
  * implementation provides services to test code for creating mock and test objects.
  */
-public abstract class AbstractMuleTestCase extends TestCase
+public abstract class AbstractMuleTestCase extends TestCase implements TestCaseWatchdogTimeoutHandler
 {
     /**
      * This flag controls whether the text boxes will be logged when starting each test case.
@@ -199,10 +199,21 @@ public abstract class AbstractMuleTestCase extends TestCase
         return offline;
     }
 
+    protected TestCaseWatchdog createWatchdog()
+    {
+        return new TestCaseWatchdog(30, TimeUnit.MINUTES, this);
+    }
+
+    public void handleTimeout(long timeout, TimeUnit unit)
+    {
+        logger.fatal("Timeout of " + unit.toMillis(timeout) + "ms exceeded - exiting VM!");
+        Runtime.getRuntime().halt(1);
+    }
+
     protected final void setUp() throws Exception
     {
-        // start a watchdog thread that kills the VM after 30 minutes timeout
-        watchdog = new TestCaseWatchdog(30, TimeUnit.MINUTES);
+        // start a watchdog thread
+        watchdog = createWatchdog();
         watchdog.start();
         
         if (verbose)
