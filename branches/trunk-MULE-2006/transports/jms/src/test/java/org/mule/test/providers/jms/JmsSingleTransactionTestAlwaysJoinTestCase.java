@@ -31,6 +31,10 @@ public class JmsSingleTransactionTestAlwaysJoinTestCase extends AbstractJmsFunct
     protected static final int rollbackTxCount = 0;
     private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-ALWAYS_JOIN.xml";
+    }
 
     public void testAlwaysJoin() throws Exception
     {
@@ -43,11 +47,6 @@ public class JmsSingleTransactionTestAlwaysJoinTestCase extends AbstractJmsFunct
         super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
         super.verifyCountDownLatch(exceptionCountDownLatch, exceptionCount);
 
-    }
-
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-ALWAYS_JOIN.xml";
     }
 
     protected CountDownLatch getBeginTxCoundDownLatch()

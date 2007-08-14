@@ -19,6 +19,10 @@ import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 public class JmsSingleTransactionNoneTestCase extends AbstractJmsFunctionalTestCase
 {
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-NONE.xml";
+    }
 
     public void testWithoutAnyTx() throws Exception
     {
@@ -55,8 +59,4 @@ public class JmsSingleTransactionNoneTestCase extends AbstractJmsFunctionalTestC
         throw new IllegalStateException("Start Tx is forbidden");
     }
 
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-NONE.xml";
-    }
 }

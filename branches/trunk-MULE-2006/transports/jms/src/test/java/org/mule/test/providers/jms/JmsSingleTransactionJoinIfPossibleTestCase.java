@@ -29,6 +29,11 @@ public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunct
     private static final String DEFAULT_OUTPUT_MESSAGE_TX = "OUTPUT MESSAGE-Tx";
     protected static final String DEFUALT_OUTPUT_QUEUE_TX = "vm://out-tx";
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-JOIN_IF_POSSIBLE.xml";
+    }
+
     public void testJoinIfPossible() throws Exception
     {
 
@@ -50,12 +55,6 @@ public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunct
         super.verifyCountDownLatch(beginTxCountDownLatch, beginTxCount);
         super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
 
-    }
-
-
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-JOIN_IF_POSSIBLE.xml";
     }
 
     protected CountDownLatch getBeginTxCoundDownLatch()

@@ -23,11 +23,15 @@ public class JmsClientAcknowledgeTransactionTestCase extends AbstractJmsFunction
     private static final int rollbackTxCount = 0;
     private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
 
+    protected String getConfigResources()
+    {
+        return "jms-client-acknowledge-tx.xml";
+    }
+
     public void testJmsClientAcknowledgeTransaction() throws Exception
     {
         super.runAsynchronousDispatching();
     }
-
 
     protected CountDownLatch getBeginTxCoundDownLatch()
     {
@@ -42,10 +46,5 @@ public class JmsClientAcknowledgeTransactionTestCase extends AbstractJmsFunction
     protected CountDownLatch getRollbackTxCoundDownLatch()
     {
         return rollbackTxCountDownLatch;
-    }
-
-    protected String getConfigResources()
-    {
-        return "jms-client-acknowledge-tx.xml";
     }
 }

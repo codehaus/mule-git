@@ -32,7 +32,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     protected static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
     protected static final String DEFUALT_INPUT_QUEUE = "vm://in";
     protected static final String DEFUALT_OUTPUT_QUEUE = "vm://out";
-    public static final long TIMEOUT = 500000;
+    public static final long TIMEOUT = 5000;
     public static final long LOCK_WAIT = 20000;
     protected static final String MODEL_NAME = "TEST";
     private MuleClient client;

@@ -11,10 +11,6 @@
         </properties>
     </container-context>
 
-
-    <!--transaction-manager factory="org.mule.extras.jotm.JotmTransactionManagerFactory"/-->
-    <!--transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/-->
-
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
         <properties>
             <property name="queueEvents" value="true"/>
@@ -30,86 +26,67 @@
 
     <model name="TEST">
 
-
         <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
                 <endpoint address="vm://in" connector="vmQueue">
-                    <transaction action="NONE"/>
+                    <transaction action="NONE" factory="org.mule.providers.vm.VMTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://middle" connector="jmsConnector">
-                        <transaction action="NONE"/>
-                    </endpoint>
-                    <!--endpoint address="stream://System.out"/-->
+                    <endpoint address="jms://middle" connector="jmsConnector"/>
+                    <endpoint address="jms://catch" connector="jmsConnector"/>
                 </router>
             </outbound-router>
-
         </mule-descriptor>
 
-        <mule-descriptor name="Part2-JOIN" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+        <mule-descriptor name="Part2-BeginTX" implementation="org.mule.components.simple.BridgeComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://middle" connector="jmsConnector">
-                    <transaction action="NONE"/>
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://in" connector="jmsConnector">
-                        <transaction action="BEGIN_OR_JOIN"/>
-                    </endpoint>
-                    <endpoint address="jms://catch" connector="jmsConnector">
-                        <transaction action="NONE"/>
-                    </endpoint>
+                    <endpoint address="jms://in" connector="jmsConnector"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
 
-
-        <mule-descriptor name="Part2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Part3-JoinTX" implementation="org.mule.tck.functional.FunctionalTestComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://in" connector="jmsConnector">
-                    <transaction action="ALWAYS_JOIN"/>
+                    <transaction action="ALWAYS_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE"/>
             </properties>
-
         </mule-descriptor>
 
-        <mule-descriptor name="Part3" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Part4-CatchError" implementation="org.mule.tck.functional.FunctionalTestComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://catch" connector="jmsConnector">
-                    <transaction action="ALWAYS_JOIN"/>
+                    <transaction action="ALWAYS_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out2" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out2" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE ERROR"/>
             </properties>
-
         </mule-descriptor>
-
 
     </model>
 

@@ -24,6 +24,10 @@ public class JmsSingleTransactionBeginOrJoinTestCase extends AbstractJmsFunction
     protected static final int rollbackTxCount = 0;
     private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-BEGIN_OR_JOIN.xml";
+    }
 
     public void testBeginOrJoin() throws Exception
     {
@@ -32,12 +36,6 @@ public class JmsSingleTransactionBeginOrJoinTestCase extends AbstractJmsFunction
         super.verifyCountDownLatch(beginTxCountDownLatch, beginTxCount);
         super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
 
-    }
-
-
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-BEGIN_OR_JOIN.xml";
     }
 
     protected CountDownLatch getBeginTxCoundDownLatch()

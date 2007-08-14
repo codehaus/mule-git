@@ -25,6 +25,11 @@ public class JmsSingleTransactionRollbackTestCase extends AbstractJmsFunctionalT
     protected static final int rollbackTxCount = 1;
     private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-ROLLBACK.xml";
+    }
+
     public void testRollback() throws Exception
     {
         getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
@@ -46,10 +51,5 @@ public class JmsSingleTransactionRollbackTestCase extends AbstractJmsFunctionalT
     protected CountDownLatch getRollbackTxCoundDownLatch()
     {
         return rollbackTxCountDownLatch;
-    }
-
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-ROLLBACK.xml";
     }
 }

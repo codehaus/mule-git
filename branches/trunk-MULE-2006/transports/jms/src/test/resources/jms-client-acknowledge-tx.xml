@@ -34,15 +34,9 @@
                     <transaction action="NONE" factory="org.mule.providers.jms.JmsClientAcknowledgeTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="jms://in" connector="jmsConnector">
-                        <transaction action="NONE"
-                                     factory="org.mule.providers.jms.JmsClientAcknowledgeTransactionFactory"/>
-                    </endpoint>
-
+                    <endpoint address="jms://in" connector="jmsConnector"/>
                 </router>
             </outbound-router>
 
@@ -55,21 +49,15 @@
                                  factory="org.mule.providers.jms.JmsClientAcknowledgeTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE"/>
             </properties>
-
         </mule-descriptor>
 
-
     </model>
-
 </mule-configuration>

@@ -23,6 +23,10 @@ public class JmsSingleTransactionAlwaysBeginTestCase extends AbstractJmsFunction
     protected static final int rollbackTxCount = 0;
     private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
 
+    protected String getConfigResources()
+    {
+        return "jms-single-tx-ALWAYS_BEGIN.xml";
+    }
 
     public void testAlwaysBegin() throws Exception
     {
@@ -31,12 +35,6 @@ public class JmsSingleTransactionAlwaysBeginTestCase extends AbstractJmsFunction
         super.verifyCountDownLatch(beginTxCountDownLatch, beginTxCount);
         super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
 
-    }
-
-
-    protected String getConfigResources()
-    {
-        return "jms-single-tx-ALWAYS_BEGIN.xml";
     }
 
     protected CountDownLatch getBeginTxCoundDownLatch()
