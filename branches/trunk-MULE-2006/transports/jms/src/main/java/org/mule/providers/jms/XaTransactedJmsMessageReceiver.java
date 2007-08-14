@@ -33,8 +33,13 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
+public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
+    public static final long DEFAULT_JMS_POLL_FREQUENCY = 100;
+    public static final TimeUnit DEFAULT_JMS_POLL_TIMEUNIT = TimeUnit.MILLISECONDS;
+    
     protected final JmsConnector connector;
     protected boolean reuseConsumer;
     protected boolean reuseSession;
@@ -67,12 +72,14 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         }
     }
 
-    public TransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
+    public XaTransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
         throws InitialisationException
     {
+        super(umoConnector, component, endpoint);
         // TODO AP: find appropriate value for polling frequency with the scheduler;
         // see setFrequency/setTimeUnit & VMMessageReceiver for more
-        super(umoConnector, component, endpoint);
+        this.setFrequency(DEFAULT_JMS_POLL_FREQUENCY);
+        this.setTimeUnit(DEFAULT_JMS_POLL_TIMEUNIT);
         this.connector = (JmsConnector) umoConnector;
         this.timeout = endpoint.getTransactionConfig().getTimeout();
 
@@ -91,6 +98,10 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
         this.reuseSession = MapUtils.getBooleanValue(endpoint.getProperties(), "reuseSession",
             this.reuseSession);
 
+        // Check if the destination is a queue and
+        // if we are in transactional mode.
+        // If true, set receiveMessagesInTransaction to true.
+        // It will start multiple threads, depending on the threading profile.
         final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
         // If we're using topics we don't want to use multiple receivers as we'll get
@@ -118,12 +129,11 @@ public class TransactedJmsMessageReceiver extends TransactedPollingMessageReceiv
     {
         if (connector.isConnected() && connector.isEagerConsumer())
         {
-            // TODO Fix Bug
+            createConsumer();
             // creating this consumer now would prevent from the actual worker
             // consumer
             // to receive the message!
             //Antoine Borg 08 Dec 2006 - Uncommented for MULE-1150
-            createConsumer();
             // if we comment this line, if one tries to restart the service through
             // JMX,
             // this will fail...

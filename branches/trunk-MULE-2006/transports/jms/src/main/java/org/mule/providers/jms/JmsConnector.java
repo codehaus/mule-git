@@ -458,13 +458,12 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     "Retrieving new jms session from connection: " +
                     "topic={0}, transacted={1}, ack mode={2}, nolocal={3}",
                     new Object[]{Boolean.valueOf(topic),
-                                 Boolean.valueOf(transacted || tx != null),
+                                 Boolean.valueOf(transacted),
                                  new Integer(acknowledgementMode),
                                  Boolean.valueOf(noLocal)}));
         }
 
-        session = jmsSupport.createSession(connection, topic, transacted || tx != null, acknowledgementMode,
-            noLocal);
+        session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
         if (tx != null)
         {
             logger.debug("Binding session to current transaction");
@@ -873,7 +872,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
      *
      * @param eagerConsumer Value to set for property 'eagerConsumer'.
      * @see #eagerConsumer
-     * @see org.mule.providers.jms.TransactedJmsMessageReceiver
+     * @see org.mule.providers.jms.XaTransactedJmsMessageReceiver
      */
     public void setEagerConsumer (final boolean eagerConsumer)
     {

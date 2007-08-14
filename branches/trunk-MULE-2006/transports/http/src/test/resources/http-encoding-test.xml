@@ -7,6 +7,12 @@
 
     <mule-environment-properties serverUrl=""/>
 
+    <connector name="default" className="org.mule.providers.http.HttpConnector">
+        <properties>
+            <property name="reuseAddress" value="true"/>
+        </properties>
+    </connector>
+
     <transformers>
         <transformer name="setResponseContentType" className="org.mule.transformers.simple.MessagePropertiesTransformer">
             <properties>

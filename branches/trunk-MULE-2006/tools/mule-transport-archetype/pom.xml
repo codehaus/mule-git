@@ -6,22 +6,21 @@
     <parent>
         <groupId>org.mule.tools</groupId>
         <artifactId>mule-tools</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <packaging>maven-plugin</packaging>
     <name>Mule Transport Archetype</name>
     <artifactId>mule-transport-archetype</artifactId>
     <groupId>org.mule.tools</groupId>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.3-SNAPSHOT</version>
     <description>Archetype for Mule 1.4 and above transport projects.</description>
 
     <dependencies>
         <dependency>
             <groupId>org.mule.tools</groupId>
             <artifactId>bobberplus</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>${version}</version>
         </dependency>
     </dependencies> 
-
 </project>
 

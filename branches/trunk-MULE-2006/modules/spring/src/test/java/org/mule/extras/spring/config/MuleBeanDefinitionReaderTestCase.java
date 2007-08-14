@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Tests the Mule-to-Spring XSLT transformation.
+ */
 public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestCase
 {
 
@@ -48,6 +51,13 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         VMConnector c = (VMConnector)MuleManager.getInstance().lookupConnector("beanConnector");
         assertNotNull(c);
         assertTrue(c.isQueueEvents());
+    }
+
+    public void testManagerIdIsSet()
+    {
+        // The id is the the mule-configuration id from the first config
+        assertEquals("Manager ID has not been properly transformed.",
+                     "Test_Mule_Properties_with_beans", MuleManager.getInstance().getId());
     }
 
     public void testEndpointPropertyBean()

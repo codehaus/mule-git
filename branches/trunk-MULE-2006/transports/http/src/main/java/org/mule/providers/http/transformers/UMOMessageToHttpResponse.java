@@ -45,8 +45,9 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
 {
     public static final String CUSTOM_HEADER_PREFIX = "";
 
-    private SimpleDateFormat format = null;
-    private String server = null;
+    // @GuardedBy("itself")
+    private SimpleDateFormat format;
+    private String server;
     private SerializableToByteArray serializableToByteArray;
 
     public UMOMessageToHttpResponse()
@@ -67,6 +68,7 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
             server = MuleManager.getConfiguration().getProductName() + "/"
                      + MuleManager.getConfiguration().getProductVersion();
         }
+
         serializableToByteArray = new SerializableToByteArray();
     }
 
@@ -88,7 +90,7 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
 
         try
         {
-            HttpResponse response = null;
+            HttpResponse response;
             if (src instanceof HttpResponse)
             {
                 response = (HttpResponse)src;
@@ -192,7 +194,13 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
 
         int status = msg.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, HttpConstants.SC_OK);
         String version = msg.getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, HttpConstants.HTTP11);
-        String date = format.format(new Date());
+        
+        String date;
+        synchronized (format)
+        {
+            date = format.format(new Date());
+        }
+
         String contentType = msg.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE,
             HttpConstants.DEFAULT_CONTENT_TYPE);
 

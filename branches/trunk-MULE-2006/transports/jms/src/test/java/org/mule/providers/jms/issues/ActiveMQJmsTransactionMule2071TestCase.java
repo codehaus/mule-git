@@ -8,27 +8,30 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.providers.jms.activemq;
+package org.mule.providers.jms.issues;
 
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.JmsTransactionFactory;
-import org.mule.providers.jms.TransactedSingleResourceJmsMessageReceiver;
 import org.mule.providers.jms.activemq.ActiveMqJmsConnector;
 import org.mule.test.integration.providers.jms.AbstractJmsTransactionFunctionalTest;
 import org.mule.umo.UMOTransactionFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public class ActiveMQJmsSingleResourceTransactionFunctionalTestCase extends
-    AbstractJmsTransactionFunctionalTest
+/**
+ * The excluded parts of ActiveMQJmsTransactionFucntionalTestCase.
+ */
+public class ActiveMQJmsTransactionMule2071TestCase extends AbstractJmsTransactionFunctionalTest
 {
     protected ActiveMQConnectionFactory factory = null;
+
+    public ActiveMQJmsTransactionMule2071TestCase()
+    {
+        exclude(ALL ^ TRANSACTED_REDELIVERY_TO_DL_DESTINATION);
+    }
 
     public ConnectionFactory getConnectionFactory() throws Exception
     {
@@ -56,13 +59,6 @@ public class ActiveMQJmsSingleResourceTransactionFunctionalTestCase extends
         connector.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
         connector.setName(CONNECTOR_NAME);
         connector.getDispatcherThreadingProfile().setDoThreading(false);
-        /** Always use the transacted Jms Message receivers for these test cases */
-        Map overrides = new HashMap();
-        overrides.put("message.receiver", TransactedSingleResourceJmsMessageReceiver.class.getName());
-        overrides.put("transacted.message.receiver",
-            TransactedSingleResourceJmsMessageReceiver.class.getName());
-
-        connector.setServiceOverrides(overrides);
         return connector;
     }
 

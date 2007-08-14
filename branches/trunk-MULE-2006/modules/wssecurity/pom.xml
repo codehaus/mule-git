@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-modules</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-wssecurity</artifactId>
     <packaging>jar</packaging>
     <name>Web Service Security</name>
     <description>Mule WS-Security uses Apache's WSS4J and XFire's WSS4JHandlers to secure WebServices using SOAP</description>
-
+    
     <profiles>
         <profile>
             <id>java14</id>
@@ -82,6 +82,7 @@
     </profiles>
 
     <dependencies>
+        
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
@@ -145,6 +146,12 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-stream</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>

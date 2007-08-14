@@ -31,6 +31,7 @@ import org.mule.util.UUID;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -52,12 +53,12 @@ import org.apache.commons.logging.LogFactory;
  * and retrieved by Mule UMO components.
  */
 
-public class MuleEvent extends EventObject implements UMOEvent
+public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
 {
     /**
      * Serial version
      */
-    private static final long serialVersionUID = 7568207722883309919L;
+    private static final long serialVersionUID = 1L;
     /**
      * logger used by this class
      */
@@ -288,7 +289,7 @@ public class MuleEvent extends EventObject implements UMOEvent
 
     protected void setCredentials()
     {
-        if (endpoint.getEndpointURI().getUserInfo() != null)
+        if (null != endpoint && null != endpoint.getEndpointURI() && null != endpoint.getEndpointURI().getUserInfo())
         {
             final String userName = endpoint.getEndpointURI().getUsername();
             final String password = endpoint.getEndpointURI().getPassword();
@@ -654,19 +655,52 @@ public class MuleEvent extends EventObject implements UMOEvent
         return outputStream;
     }
 
+    private void marshallTransformers(UMOTransformer trans, ObjectOutputStream out) throws IOException
+    {
+        if (trans != null)
+        {
+            out.writeObject(trans.getName());
+            marshallTransformers(trans.getNextTransformer(), out);
+        }
+    }
+
+    private UMOTransformer unmarshallTransformers(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        UMOTransformer trans = null;
+        try {
+            String transformerName = (String) in.readObject();
+            trans = MuleManager.getInstance().lookupTransformer(transformerName);
+            trans.setNextTransformer(unmarshallTransformers(in));
+        } catch (OptionalDataException e) {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Failed to load transformers from stream", e);
+            }
+        }
+        return trans;
+    }
+
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
         out.writeObject(endpoint.getEndpointURI().toString());
+        marshallTransformers(endpoint.getTransformer(), out);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
+        logger = LogFactory.getLog(getClass());
         in.defaultReadObject();
         String uri = (String) in.readObject();
+        UMOTransformer trans = unmarshallTransformers(in);
         try
         {
             endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+
+            if (endpoint.getTransformer() == null)
+            {
+                ((UMOEndpoint) endpoint).setTransformer(trans);
+            }
         }
         catch (UMOException e)
         {
@@ -704,6 +738,36 @@ public class MuleEvent extends EventObject implements UMOEvent
             encoding = MuleManager.getConfiguration().getEncoding();
         }
         return encoding;
+    }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        if (message instanceof ThreadSafeAccess)
+        {
+            MuleEvent copy = new MuleEvent((UMOMessage) ((ThreadSafeAccess) message).newThreadCopy(), this);
+            copy.resetAccessControl();
+            return copy;
+        }
+        else
+        {
+            return this;
+        }
+    }
+
+    public void resetAccessControl()
+    {
+        if (message instanceof ThreadSafeAccess)
+        {
+            ((ThreadSafeAccess) message).resetAccessControl();
+        }
+    }
+
+    public void assertAccess(boolean write)
+    {
+        if (message instanceof ThreadSafeAccess)
+        {
+            ((ThreadSafeAccess) message).assertAccess(write);
+        }
     }
 
 }

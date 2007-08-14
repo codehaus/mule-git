@@ -14,7 +14,13 @@
     <xsl:template match="mule-configuration">
         <beans>
             <xsl:if test="$firstContext">
-                <bean id="muleManager" class="org.mule.extras.spring.config.AutowireUMOManagerFactoryBean"/>
+                <bean id="muleManager" class="org.mule.extras.spring.config.AutowireUMOManagerFactoryBean">
+                    <property name="managerId">
+                        <value>
+                            <xsl:value-of select="/mule-configuration/@id"/>
+                        </value>
+                    </property>
+                </bean>
                 <bean id="muleNameProcessor" class="org.mule.extras.spring.config.MuleObjectNameProcessor"/>
             </xsl:if>
             <xsl:apply-templates/>

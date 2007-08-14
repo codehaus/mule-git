@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-modules</artifactId>
@@ -23,6 +23,7 @@
         <module>hivemind</module>
         <module>jaas</module>
         <module>jca</module>
+        <module>jboss-transactions</module>
         <module>jotm</module>
         <module>management</module>
         <module>ognl</module>

@@ -17,6 +17,7 @@ import org.mule.impl.InterceptorsInvoker;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -242,7 +243,7 @@ public class DefaultMuleProxy implements MuleProxy
         {
             if (event.getEndpoint().canReceive())
             {
-                RequestContext.setEvent(event);
+                event = OptimizedRequestContext.unsafeSetEvent(event);
                 Object replyTo = event.getMessage().getReplyTo();
                 ReplyToHandler replyToHandler = getReplyToHandler(event.getMessage(), event.getEndpoint());
                 InterceptorsInvoker invoker = new InterceptorsInvoker(interceptorList, descriptor,
@@ -451,11 +452,11 @@ public class DefaultMuleProxy implements MuleProxy
             if (event.getEndpoint().canReceive())
             {
                 // dispatch the next receiver
-                RequestContext.setEvent(event);
+                event = OptimizedRequestContext.criticalSetEvent(event);
                 Object replyTo = event.getMessage().getReplyTo();
                 ReplyToHandler replyToHandler = getReplyToHandler(event.getMessage(), event.getEndpoint());
-                InterceptorsInvoker invoker = new InterceptorsInvoker(interceptorList, descriptor,
-                    event.getMessage());
+                InterceptorsInvoker invoker =
+                        new InterceptorsInvoker(interceptorList, descriptor,  event.getMessage());
 
                 // do stats
                 long startTime = 0;

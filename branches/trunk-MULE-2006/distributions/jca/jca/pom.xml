@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.distributions.jca</groupId>
         <artifactId>mule-jca-parent</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <artifactId>mule-jca</artifactId>
     <name>Generic JCA Resource Adapter</name>
@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>org.mule.tools</groupId>
                 <artifactId>mule-assembly-verifier</artifactId>
-                <version>1.0</version>
+                <!-- version is provided by the global pluginManagement -->
                 <executions>
                     <execution>
                         <phase>verify</phase>

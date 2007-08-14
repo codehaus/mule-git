@@ -32,7 +32,7 @@
             <value>0</value>
         </property>
         <property name="maxThreadsActive">
-            <value>8</value>
+            <value>16</value>
         </property>
         <property name="maxThreadsIdle">
             <value>4</value>

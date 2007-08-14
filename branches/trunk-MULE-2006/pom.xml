@@ -7,7 +7,7 @@
     <groupId>org.mule</groupId>
     <artifactId>mule</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.3-SNAPSHOT</version>
 
     <!-- Organization -->
     <organization>
@@ -386,7 +386,6 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-2-SNAPSHOT</version>
             </extension>
         </extensions>
 
@@ -397,6 +396,17 @@
         </filters
         -->
 
+        <!-- specify versions of the plugins used in child poms here -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.mule.tools</groupId>
+                    <artifactId>mule-assembly-verifier</artifactId>
+                    <version>1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <!-- Enforce minimum maven version.
                  This must be done through the maven-enforcer-plugin as per 
@@ -405,6 +415,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+                <!-- MULE-2070: 1.0-alpha-3 is broke so enforce previous version  -->
+                <version>1.0-alpha-2</version>
                 <executions>
                     <execution>
                         <id>enforce-maven-version</id>
@@ -578,13 +590,6 @@
             </plugin>
 
             <plugin>
-                <!--
-                    When using IDEA 7 (Selena) builds 7020 and above
-                    make sure to apply the patch from
-                    http://jira.codehaus.org/browse/MIDEA-96 .
-                    Otherwise project will not open. One may need to
-                    run 'mvn idea:clean' before generating a new project.
-                -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-idea-plugin</artifactId>
                 <configuration>

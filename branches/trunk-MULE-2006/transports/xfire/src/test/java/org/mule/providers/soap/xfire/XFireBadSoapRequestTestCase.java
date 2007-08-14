@@ -46,7 +46,7 @@ public class XFireBadSoapRequestTestCase extends FunctionalTestCase
                              + "</ssss>"
                              + "</soap:Body>" + "</soap:Envelope>";
 
-        UMOMessage reply = client.send("http://localhost:33381/services/TestComponent", new MuleMessage(
+        UMOMessage reply = client.send("http://localhost:63381/services/TestComponent", new MuleMessage(
             soapRequest));
 
         assertNotNull(reply);

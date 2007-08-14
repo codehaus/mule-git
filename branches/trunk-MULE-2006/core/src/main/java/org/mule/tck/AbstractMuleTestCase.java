@@ -25,6 +25,7 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
+import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
@@ -34,6 +35,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
  * implementation provides services to test code for creating mock and test objects.
  */
-public abstract class AbstractMuleTestCase extends TestCase
+public abstract class AbstractMuleTestCase extends TestCase implements TestCaseWatchdogTimeoutHandler
 {
     /**
      * Top-level directories under <code>.mule</code> which are not deleted on each
@@ -61,6 +65,8 @@ public abstract class AbstractMuleTestCase extends TestCase
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
 
     private static Map testCounters;
+    
+    private TestCaseWatchdog watchdog;
 
     static
     {
@@ -76,6 +82,9 @@ public abstract class AbstractMuleTestCase extends TestCase
             // per default, revert to the old behaviour
             verbose = true;
         }
+
+        // register the custom UrlStreamHandlerFactory.
+        MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
     }
     
     public AbstractMuleTestCase()
@@ -197,8 +206,23 @@ public abstract class AbstractMuleTestCase extends TestCase
         return offline;
     }
 
+    protected TestCaseWatchdog createWatchdog()
+    {
+        return new TestCaseWatchdog(30, TimeUnit.MINUTES, this);
+    }
+
+    public void handleTimeout(long timeout, TimeUnit unit)
+    {
+        logger.fatal("Timeout of " + unit.toMillis(timeout) + "ms exceeded - exiting VM!");
+        Runtime.getRuntime().halt(1);
+    }
+
     protected final void setUp() throws Exception
     {
+        // start a watchdog thread
+        watchdog = createWatchdog();
+        watchdog.start();
+        
         if (verbose)
         {
             System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));   
@@ -271,18 +295,26 @@ public abstract class AbstractMuleTestCase extends TestCase
         }
         finally
         {
-            getTestInfo().incRunCount();
-            if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
+            try
             {
-                try
+                getTestInfo().incRunCount();
+                if (getTestInfo().getRunCount() == getTestInfo().getTestCount())
                 {
-                    suitePostTearDown();
+                    try
+                    {
+                        suitePostTearDown();
+                    }
+                    finally
+                    {
+                        clearCounter();
+                        disposeManager();
+                    }
                 }
-                finally
-                {
-                    clearCounter();
-                    disposeManager();
-                }
+            }
+            finally 
+            {
+                // remove the watchdog thread in any case
+                watchdog.cancel();
             }
         }
     }

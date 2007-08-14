@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.distributions.ear</groupId>
         <artifactId>mule-ear-parent</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <artifactId>mule-ear</artifactId>
     <name>Generic Mule Enterprise Archive</name>
@@ -33,6 +33,7 @@
             <version>${version}</version>
             <type>rar</type>
         </dependency>
+
         <!-- do not bundle the examples in the EAR -->
         <dependency>
             <groupId>org.mule.examples</groupId>
@@ -55,6 +56,12 @@
             <artifactId>mule-modules-all</artifactId>
             <version>${version}</version>
             <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- do not bundle junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

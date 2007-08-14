@@ -11,6 +11,7 @@
 package org.mule.providers.email;
 
 import org.mule.umo.UMOComponent;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
 
@@ -77,6 +78,17 @@ public class SmtpConnector extends AbstractMailConnector
     public String getProtocol()
     {
         return "smtp";
+    }
+
+    //@java.lang.Override
+    protected void doInitialise() throws InitialisationException
+    {
+        //If the User ID for SMTP is an email address and the from address is not set, then
+        //use the username
+        if(getFromAddress()==null && getUsername()!=null && getUsername().indexOf('@') > -1)
+        {
+            setFromAddress(getUsername());
+        }
     }
 
     /*

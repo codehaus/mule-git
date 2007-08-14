@@ -18,7 +18,7 @@
     </connector>
 
     <global-endpoints>
-        <endpoint name="clientEndpoint" address="https://localhost:60198" synchronous="true" connector="httpConnector"/>
+        <endpoint name="clientEndpoint" address="https://localhost:60202" synchronous="true" connector="httpConnector"/>
     </global-endpoints>
 
     <model name="main">

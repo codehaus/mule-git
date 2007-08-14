@@ -132,7 +132,7 @@ public class MuleManagerComponent implements Callable, Initialisable
             ep.setTransformer(null);
             UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(),
                 context.isSynchronous());
-            RequestContext.setEvent(event);
+            event = RequestContext.setEvent(event);
 
             if (context.isSynchronous())
             {

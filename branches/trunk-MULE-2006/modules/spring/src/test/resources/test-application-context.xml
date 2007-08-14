@@ -1,24 +1,20 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-    <bean id="org.mule.tck.testmodels.fruit.FruitBowl" class="org.mule.tck.testmodels.fruit.FruitBowl">
+    <bean id="fruitBowl" class="org.mule.tck.testmodels.fruit.FruitBowl">
         <property name="fruit">
             <list>
-                <ref local="org.mule.tck.testmodels.fruit.Apple"/>
-                <ref local="org.mule.tck.testmodels.fruit.Banana"/>
+                <ref local="apple"/>
+                <ref local="banana"/>
             </list>
         </property>
     </bean>
 
-    <bean id="java.lang.String" class="java.lang.String">
-    </bean>
+    <bean id="string" class="java.lang.String" />
 
-    <bean id="org.mule.tck.testmodels.fruit.Apple" class="org.mule.tck.testmodels.fruit.Apple">
-    </bean>
+    <bean id="apple" class="org.mule.tck.testmodels.fruit.Apple" />
 
-    <bean id="org.mule.tck.testmodels.fruit.Banana" class="org.mule.tck.testmodels.fruit.Banana">
-    </bean>
+    <bean id="banana" class="org.mule.tck.testmodels.fruit.Banana" />
 
-    <bean id="org.mule.tck.testmodels.fruit.Orange" class="org.mule.tck.testmodels.fruit.Orange">
-    </bean>
+    <bean id="orange" class="org.mule.tck.testmodels.fruit.Orange" />
 </beans>

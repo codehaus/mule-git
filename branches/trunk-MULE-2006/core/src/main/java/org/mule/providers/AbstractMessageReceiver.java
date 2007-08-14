@@ -17,6 +17,7 @@ import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
+import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.internal.notifications.ConnectionNotification;
@@ -312,9 +313,10 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 //message listener yet. So we need to create a new context so that EventAwareTransformers can be applied
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
+                message = handleUnacceptedFilter(message);
                 RequestContext.setEvent(new MuleEvent(message, endpoint,
                         new MuleSession(message, new NullSessionHandler()), synchronous));
-                return handleUnacceptedFilter(message);
+                return message;
             }
         }
         return listener.onMessage(message, trans, synchronous, outputStream);
@@ -534,7 +536,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             UMOSession session = new MuleSession(message, connector.getSessionHandler(), component);
             UMOEvent muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
-            RequestContext.setEvent(muleEvent);
+            muleEvent = OptimizedRequestContext.unsafeSetEvent(muleEvent);
+            message = muleEvent.getMessage();
 
             // Apply Security filter if one is set
             boolean authorised = false;
@@ -580,11 +583,11 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             }
             if (resultMessage != null)
             {
-                RequestContext.rewriteEvent(resultMessage);
                 if (resultMessage.getExceptionPayload() != null)
                 {
                     setExceptionDetails(resultMessage, resultMessage.getExceptionPayload().getException());
                 }
+                OptimizedRequestContext.unsafeRewriteEvent(resultMessage);
             }
             return applyResponseTransformer(resultMessage);
         }
@@ -647,7 +650,10 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 // endpoint.getConnector().getProtocol() + ". Error is: " +
                 // e.getMessage());
                 // }
-                returnMessage = new MuleMessage(result, returnMessage);
+
+                // need to add properties that may have been set in various transformers
+//                returnMessage = new MuleMessage(result, returnMessage);
+                returnMessage = new MuleMessage(result, RequestContext.getEvent().getMessage());
                 // }
                 //
             }
