@@ -125,6 +125,7 @@ public class SslConnectorFunctionalTestCase extends AbstractProviderFunctionalTe
                 callbackCount++;
                 String result = "Received Async event: " + context.getMessageAsString();
                 assertNotNull(context.getOutputStream());
+                assertNotNull(context.getMessage().getProperty(SslConnector.LOCAL_CERTIFICATES));
 
                 if (!((ResponseOutputStream)context.getOutputStream()).getSocket().isClosed())
                 {
