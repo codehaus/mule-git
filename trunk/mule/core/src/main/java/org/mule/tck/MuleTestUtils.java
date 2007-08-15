@@ -22,6 +22,7 @@ import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;
+import org.mule.providers.AbstractConnector;
 import org.mule.tck.testmodels.mule.TestAgent;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
@@ -111,6 +112,24 @@ public final class MuleTestUtils
         connector.setName("testConnector");
         endpoint.setConnector(connector);
         endpoint.setEndpointURI(new MuleEndpointURI("test://test"));
+        endpoint.setName(name);
+        endpoint.setType(type);
+        return endpoint;
+    }
+    
+    public static UMOEndpoint getTestSchemeMetaInfoEndpoint(String name, String type, String protocol)
+        throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint();
+        // need to build endpoint this way to avoid depenency to any endpoint jars
+        AbstractConnector connector = null;
+        connector = (AbstractConnector) ClassUtils.loadClass("org.mule.tck.testmodels.mule.TestConnector",
+            AbstractMuleTestCase.class).newInstance();
+
+        connector.setName("testConnector");
+        connector.registerSupportedProtocol(protocol);
+        endpoint.setConnector(connector);
+        endpoint.setEndpointURI(new MuleEndpointURI("test:" + protocol + "://test"));
         endpoint.setName(name);
         endpoint.setType(type);
         return endpoint;
