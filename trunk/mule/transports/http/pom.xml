@@ -39,6 +39,7 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/*Mule1389TestCase.java</exclude>
+                                <exclude>**/HttpsFunctionalTestCase.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
