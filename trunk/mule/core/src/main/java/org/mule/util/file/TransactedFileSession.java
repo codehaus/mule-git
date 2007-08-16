@@ -24,10 +24,7 @@ import java.io.RandomAccessFile;
 import org.apache.commons.io.IOUtils;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class TransactedFileSession extends DefaultXASession implements FileSession
 {

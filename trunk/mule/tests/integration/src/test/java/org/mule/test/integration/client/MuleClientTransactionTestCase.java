@@ -26,10 +26,6 @@ import org.mule.umo.UMOTransactionConfig;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
 public class MuleClientTransactionTestCase extends FunctionalTestCase
 {
 

@@ -24,13 +24,6 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 
-/**
- * <code>TcpMessageDispatcher</code> will send transformed mule events over tcp.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
-
 public class JbiMessageDispatcher extends AbstractMessageDispatcher
 {
     private JbiConnector connector;

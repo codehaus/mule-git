@@ -17,10 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class AxisWsdlConnector extends AxisConnector
 {

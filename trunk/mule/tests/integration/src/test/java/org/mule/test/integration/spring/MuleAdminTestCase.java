@@ -17,10 +17,6 @@ import org.mule.extras.spring.config.SpringConfigurationBuilder;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
 public class MuleAdminTestCase extends FunctionalTestCase
 {
 

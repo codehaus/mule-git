@@ -12,9 +12,6 @@ package org.mule.registry;
 
 import java.util.List;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public interface Library extends Entry
 {
 

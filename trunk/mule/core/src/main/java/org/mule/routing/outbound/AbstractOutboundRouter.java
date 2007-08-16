@@ -34,11 +34,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>AbstractOutboundRouter</code> is a base router class that tracks
- * statistics about message processing through the router.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * <code>AbstractOutboundRouter</code> is a base router class that tracks statistics
+ * about message processing through the router.
  */
 public abstract class AbstractOutboundRouter extends AbstractRouter implements UMOOutboundRouter
 {
@@ -233,7 +230,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
 
     public void addEndpoint(UMOEndpoint endpoint)
     {
-        //TODO RM** endpoint.setType(UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        // TODO RM** endpoint.setType(UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoints.add(endpoint);
     }
 
@@ -313,8 +310,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         catch (Exception ex)
         {
             throw (IllegalArgumentException) new IllegalArgumentException(
-                "Couldn't instanciate property extractor class " + className
-                ).initCause(ex);
+                "Couldn't instanciate property extractor class " + className).initCause(ex);
         }
     }
 

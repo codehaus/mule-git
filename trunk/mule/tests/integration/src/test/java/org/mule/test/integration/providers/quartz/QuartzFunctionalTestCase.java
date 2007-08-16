@@ -23,10 +23,6 @@ import java.util.Map;
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class QuartzFunctionalTestCase extends AbstractMuleTestCase
 {
     protected static CountDownLatch countDown;

@@ -15,10 +15,7 @@ import org.mule.config.MuleConfiguration;
 
 /**
  * <code>MuleConfigurationService</code> exposes the MuleConfiguration settings as
- * a management service
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * a management service.
  */
 public class MuleConfigurationService implements MuleConfigurationServiceMBean
 {

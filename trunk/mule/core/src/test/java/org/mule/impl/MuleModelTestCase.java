@@ -16,10 +16,6 @@ import org.mule.umo.model.UMOModel;
 
 import java.util.Iterator;
 
-/**
- * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a>
- * @version $Revision$
- */
 public class MuleModelTestCase extends AbstractMuleTestCase
 {
 

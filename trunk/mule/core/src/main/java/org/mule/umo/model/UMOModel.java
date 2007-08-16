@@ -26,9 +26,6 @@ import java.util.List;
  * The <code>UMOModel</code> encapsulates and manages the runtime behaviour of a
  * Mule Server instance. It is responsible for maintaining the UMOs instances and
  * their configuration.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface UMOModel extends Lifecycle, Initialisable
 {

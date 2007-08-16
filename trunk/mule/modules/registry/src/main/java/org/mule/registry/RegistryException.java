@@ -15,10 +15,7 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.UMOException;
 
 /**
- * Base Registry exception thrown when reading or writing to the registry
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Base Registry exception thrown when reading or writing to the registry.
  */
 public class RegistryException extends UMOException
 {

@@ -17,9 +17,6 @@ import org.mule.util.FileUtils;
 
 import java.io.File;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- */
 public class FilePersistenceTestCase extends FunctionalTestCase
 {
 

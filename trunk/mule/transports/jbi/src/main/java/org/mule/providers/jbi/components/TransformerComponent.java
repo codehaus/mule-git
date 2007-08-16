@@ -21,10 +21,7 @@ import javax.jbi.messaging.NormalizedMessage;
 import javax.xml.transform.Source;
 
 /**
- * Mule transformers can be reused in side a Jbi container
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Mule transformers can be reused inside a Jbi container.
  */
 public class TransformerComponent extends AbstractJbiComponent
 {

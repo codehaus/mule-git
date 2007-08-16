@@ -45,9 +45,6 @@ import org.w3c.dom.DocumentFragment;
 /**
  * A base Jbi component implementation. This is agnostic to any particular Jbi
  * container
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public abstract class AbstractJbiComponent implements Component, Work, ComponentLifeCycle
 {

@@ -18,9 +18,6 @@ import org.mule.umo.manager.UMOContainerContext;
 
 /**
  * Test case for a context container whose backend is an HiveMind Registry
- * 
- * @author <a href="mailto:mlusetti@gmail.com">Massimo Lusetti</a>
- * @version $Revision$
  */
 public class HiveMindContextTestCase extends AbstractContainerContextTestCase
 {

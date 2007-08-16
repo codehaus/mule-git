@@ -14,9 +14,6 @@ import java.util.List;
 
 import javax.management.ObjectName;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public interface RegistryComponent extends Entry
 {
 

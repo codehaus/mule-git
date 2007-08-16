@@ -19,10 +19,7 @@ import org.mule.transformers.xml.XmlToObject;
 import org.mule.util.ObjectFactory;
 
 /**
- * A dummy property factory for creating a Jndi context
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * A dummy property factory for creating a Jndi context.
  */
 public class DummyInitialContextFactory implements ObjectFactory
 {

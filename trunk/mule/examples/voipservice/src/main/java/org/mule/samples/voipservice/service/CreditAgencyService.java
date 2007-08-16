@@ -16,9 +16,6 @@ import org.mule.samples.voipservice.to.CreditProfileTO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * @author Binildas Christudas
- */
 public class CreditAgencyService implements CreditAgency
 {
 
@@ -26,7 +23,6 @@ public class CreditAgencyService implements CreditAgency
 
     public CreditProfileTO getCreditProfile(CreditProfileTO creditProfileTO)
     {
-
         logger.info("Inside CreditAgencyService.getCreditProfile() ***************");
         creditProfileTO.setCreditScore(1000000);
         return creditProfileTO;

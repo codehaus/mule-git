@@ -12,9 +12,6 @@ package org.mule.registry;
 
 /**
  * TODO document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface EntryFactory
 {

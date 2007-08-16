@@ -23,10 +23,7 @@ import javax.jbi.messaging.NormalizedMessage;
 
 /**
  * <code>JbiMessageAdapter</code> translates a JBI NormalizedMessage to a
- * UMOMessage
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * UMOMessage.
  */
 
 public class JbiMessageAdapter extends AbstractMessageAdapter
