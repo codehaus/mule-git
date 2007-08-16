@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MPL style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -28,10 +28,10 @@ public class MuleInstallerListener extends SimpleInstallerListener
     {
         super();
     }
-    
+
     public void beforePacks(AutomatedInstallData idata, Integer npacks, AbstractUIProgressHandler handler) throws Exception
     {
-        List availablePacks = idata.availablePacks;  
+        List availablePacks = idata.availablePacks;
         for (int i = 0; i < availablePacks.size(); i++){
             String packagePath = "/"+ ((Pack)availablePacks.get(i)).name;
             File dir = new File(idata.getInstallPath()+packagePath);
@@ -40,10 +40,10 @@ public class MuleInstallerListener extends SimpleInstallerListener
             }
         }
     }
-    
+
     public void afterPacks(AutomatedInstallData idata, AbstractUIProgressHandler handler) throws Exception{
         if (!idata.installSuccess){
-            List availablePacks = idata.availablePacks;  
+            List availablePacks = idata.availablePacks;
             for (int i = 0; i < availablePacks.size(); i++){
                 String packagePath = "/"+ ((Pack)availablePacks.get(i)).name;
                 File dir = new File(idata.getInstallPath()+packagePath);

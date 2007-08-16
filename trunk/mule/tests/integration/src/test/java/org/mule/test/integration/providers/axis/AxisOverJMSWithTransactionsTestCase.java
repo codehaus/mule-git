@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MPL style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -30,12 +30,12 @@ public class AxisOverJMSWithTransactionsTestCase extends FunctionalTestCase
             {
                 connector = (AxisConnector)connectorArray[i];
             }
-        }      
+        }
         assertNotNull(connector);
         MuleDescriptor axisDescriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel(ModelHelper.SYSTEM_MODEL).getDescriptor(connector.AXIS_SERVICE_COMPONENT_NAME);
         assertNotNull(axisDescriptor.getInboundRouter().getEndpoint("jms.TestComponent").getTransactionConfig());
     }
-    
+
     public void testTransactionsOverAxis() throws Exception{
         MuleClient client = new MuleClient();
         client.dispatch("axis:jms://TestComponent?method=echo", new MuleMessage("test"));
@@ -43,7 +43,7 @@ public class AxisOverJMSWithTransactionsTestCase extends FunctionalTestCase
         assertNotNull(message.getPayload());
         assertTrue(message.getPayloadAsString().equals("test"));
     }
-    
+
     protected String getConfigResources()
     {
         return "org/mule/test/integration/providers/axis/axis-over-jms-config.xml";
