@@ -28,7 +28,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <!-- MULE-2131 -->
+                        <exclude>**/ResponseTransformerMule2165TestCase.*</exclude>
                         <exclude>**/EndpointTransformerMule2131TestCase.*</exclude>
                     </excludes>
                 </configuration>

@@ -63,7 +63,7 @@ public class EndpointTransformerMule2131TestCase extends FunctionalTestCase
     protected void doTestTransformed(String endpoint) throws Exception
     {
         String response = receive(send(), endpoint);
-        assertEquals(MESSAGE + StringAppendTransformer.TRANSFORMED, response);
+        assertEquals(MESSAGE + StringAppendTransformer.DEFAULT_TEXT, response);
     }
 
     protected String receive(MuleClient client, String endpoint) throws Exception

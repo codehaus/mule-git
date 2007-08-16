@@ -16,11 +16,32 @@ import org.mule.umo.transformer.TransformerException;
 public class StringAppendTransformer extends AbstractTransformer
 {
 
-    public static final String TRANSFORMED = " transformed";
+    public static final String DEFAULT_TEXT = " transformed";
+    private String text;
+
+    public StringAppendTransformer()
+    {
+        this(DEFAULT_TEXT);
+    }
+
+    public StringAppendTransformer(String text)
+    {
+        setText(text);
+    }
 
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
-        return ((String) src) + TRANSFORMED;
+        return ((String) src) + getText();
     }
 
+    public String getText()
+    {
+        return text;
+    }
+
+    public void setText(String text)
+    {
+        this.text = text;
+    }
+    
 }
