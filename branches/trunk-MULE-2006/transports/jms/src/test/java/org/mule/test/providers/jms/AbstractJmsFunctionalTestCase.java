@@ -11,16 +11,17 @@ package org.mule.test.providers.jms;
 
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
+import org.mule.umo.provider.UMOConnector;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main idea
@@ -28,28 +29,30 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 {
 
-    protected static final String DEFAULT_MESSAGE = "INPUT MESSAGE";
-    protected static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
-    protected static final String DEFUALT_INPUT_QUEUE = "vm://in";
-    protected static final String DEFUALT_OUTPUT_QUEUE = "vm://out";
+    public static final String DEFAULT_MESSAGE = "INPUT MESSAGE";
+    public static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
+    public static final String DEFUALT_INPUT_QUEUE = "vm://in";
+    public static final String DEFUALT_OUTPUT_QUEUE = "vm://out";
+    public static final String CONNECTOR_NAME = "jmsConnector";
     public static final long TIMEOUT = 5000;
-    public static final long LOCK_WAIT = 20000;
-    protected static final String MODEL_NAME = "TEST";
+    public static final long LOCK_WAIT = 1000;
     private MuleClient client;
-
-    private AtomicBoolean success = new AtomicBoolean(true);
 
     protected void doPostFunctionalSetUp() throws Exception
     {
         MuleManager.getInstance().registerListener(getUMOServerNotificationListener());
         client = new MuleClient();
+        TestExceptionStrategy exceptionListener =
+                new TestExceptionStrategy(getControlCounter());
+        UMOConnector umoCnn = MuleManager.getInstance().lookupConnector(CONNECTOR_NAME);
+        umoCnn.setExceptionListener(exceptionListener);
+
     }
 
     protected void doFunctionalTearDown() throws Exception
     {
         client.dispose();
     }
-
 
     protected UMOServerNotificationListener getUMOServerNotificationListener()
     {
@@ -76,53 +79,21 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         };
     }
 
-    protected void verifyCountDownLatch(CountDownLatch countDownLatch, int maxSize) throws InterruptedException
-    {
-        countDownLatch.await(LOCK_WAIT, TimeUnit.MILLISECONDS);
-        assertTrue("Only " + (maxSize - countDownLatch.getCount()) + " of " + maxSize
-                   + " checkpoints hit", countDownLatch.getCount() == 0);
-
-    }
-
-    protected abstract CountDownLatch getBeginTxCoundDownLatch();
-
-    protected abstract CountDownLatch getCommitTxCoundDownLatch();
-
-    protected abstract CountDownLatch getRollbackTxCoundDownLatch();
+    protected abstract ControlCounter getControlCounter();
 
     protected void onBeganTx(UMOServerNotification notification)
     {
-        if (this.getBeginTxCoundDownLatch().getCount() == 0)
-        {
-            //throw new IllegalStateException("Permitted transactions are exhausted");
-            logger.error("Permitted transactions are exhausted");
-            success.set(false);
-
-        }
-        this.getBeginTxCoundDownLatch().countDown();
+        this.getControlCounter().getBeginTxInfo().countDown();
     }
 
     protected void onCommitedTx(UMOServerNotification notification)
     {
-        if (this.getCommitTxCoundDownLatch().getCount() == 0)
-        {
-            logger.error("Permitted commited transactions  are exhausted");
-            success.set(false);
-            //throw new IllegalStateException("Permitted commited transactions  are exhausted");
-        }
-        this.getCommitTxCoundDownLatch().countDown();
+        this.getControlCounter().getCommitTxInfo().countDown();
     }
 
     protected void onRolledbackTx(UMOServerNotification notification)
     {
-        if (this.getRollbackTxCoundDownLatch().getCount() == 0)
-        {
-            //throw new IllegalStateException("Permitted rolledback transactions are exhausted");
-            logger.error("Permitted rolledback transactions are exhausted");
-            success.set(false);
-        }
-        this.getRollbackTxCoundDownLatch().countDown();
-
+        this.getControlCounter().getRollbackTxInfo().countDown();
     }
 
     protected MuleClient getClient()
@@ -130,15 +101,140 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         return client;
     }
 
-    protected void runAsynchronousDispatching() throws Exception
+    protected UMOMessage runAsynchronousDispatching() throws Exception
     {
         client.dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
         UMOMessage result = client.receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
-        assertNull(result.getExceptionPayload());
         assertEquals(DEFAULT_OUTPUT_MESSAGE, result.getPayload());
-        assertEquals(success.get(), true);
+        return result;
     }
 
+    public static class TestExceptionStrategy extends DefaultExceptionStrategy
+    {
+
+        private final ControlCounter info;
+
+        public TestExceptionStrategy(ControlCounter info)
+        {
+            this.info = info;
+        }
+
+        public void handleMessagingException(UMOMessage message, Throwable t)
+        {
+            logger.debug("@@@handleMessagingException@@@ " + message + " :: " + t);
+            info.getExceptionInfo().countDown();
+        }
+    }
+
+
+    public static class ControlCounter
+    {
+
+        private TxInfo beginTxInfo;
+        private TxInfo commitTxInfo;
+        private TxInfo rollbackTxInfo;
+        private TxInfo exceptionInfo;
+
+        public ControlCounter(int beginCount, int commitCount, int rollbackCount)
+        {
+            beginTxInfo = new TxInfo(beginCount);
+            commitTxInfo = new TxInfo(commitCount);
+            rollbackTxInfo = new TxInfo(rollbackCount);
+        }
+
+        public ControlCounter(int beginCount, int commitCount, int rollbackCount, int exceptionCount)
+        {
+            this(beginCount, commitCount, rollbackCount);
+            exceptionInfo = new TxInfo(exceptionCount);
+        }
+
+        public TxInfo getExceptionInfo()
+        {
+            return exceptionInfo;
+        }
+
+        public TxInfo getBeginTxInfo()
+        {
+            return beginTxInfo;
+        }
+
+        public TxInfo getCommitTxInfo()
+        {
+            return commitTxInfo;
+        }
+
+        public TxInfo getRollbackTxInfo()
+        {
+            return rollbackTxInfo;
+        }
+
+        public void verifySingleTx() throws InterruptedException
+        {
+            beginTxInfo.verify();
+            commitTxInfo.verify();
+            rollbackTxInfo.verify();
+        }
+
+        public void verifyXaTx() throws InterruptedException
+        {
+            commitTxInfo.verify();
+        }
+
+
+        public class TxInfo
+        {
+            private int maxTxSize;
+            private CountDownLatch txCountDownLatch;
+            private volatile boolean success = true;
+
+            public TxInfo(int maxTxSize)
+            {
+                this.maxTxSize = maxTxSize;
+                this.txCountDownLatch = new CountDownLatch(this.maxTxSize);
+            }
+
+            public void await()
+                    throws InterruptedException
+            {
+                txCountDownLatch.await();
+            }
+
+            public void countDown()
+            {
+
+
+                if (txCountDownLatch.getCount() == 0)
+                {
+                    success = false;
+                }
+                else
+                {
+                    txCountDownLatch.countDown();
+                }
+
+            }
+
+            public long getCount()
+            {
+                return txCountDownLatch.getCount();
+            }
+
+            public boolean isSuccess()
+            {
+                return success;
+            }
+
+            public void verify() throws InterruptedException
+            {
+                assertTrue(isSuccess());
+                txCountDownLatch.await(LOCK_WAIT, TimeUnit.MILLISECONDS);
+                assertTrue("Only " + (maxTxSize - txCountDownLatch.getCount()) + " of " + maxTxSize
+                           + " checkpoints hit", txCountDownLatch.getCount() == 0);
+
+            }
+
+        }
+    }
 }

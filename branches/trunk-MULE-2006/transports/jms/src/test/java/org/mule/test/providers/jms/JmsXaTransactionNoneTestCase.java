@@ -12,8 +12,22 @@ package org.mule.test.providers.jms;
 /**
  * Comment
  */
-public class JmsXaTransactionNoneTestCase extends JmsSingleTransactionNoneTestCase
+public class JmsXaTransactionNoneTestCase extends AbstractJmsFunctionalTestCase
 {
+
+    ControlCounter blackBoxTx = new ControlCounter(99, 0, 99);
+
+    protected ControlCounter getControlCounter()
+    {
+        return blackBoxTx;
+    }
+
+    public void testNoneTransaction() throws Exception
+    {
+        this.runAsynchronousDispatching();
+        //getControlCounter().verifyXaTx();
+    }
+
 
     protected String getConfigResources()
     {

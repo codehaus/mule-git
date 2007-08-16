@@ -12,8 +12,23 @@ package org.mule.test.providers.jms;
 /**
  * Comment
  */
-public class JmsXaTransactionAlwaysJoinTestCase extends JmsSingleTransactionTestAlwaysJoinTestCase
+public class JmsXaTransactionAlwaysJoinTestCase extends AbstractJmsFunctionalTestCase
 {
+    ControlCounter blackBoxTx = new ControlCounter(99, 1, 99, 1);
+
+    protected ControlCounter getControlCounter()
+    {
+        return blackBoxTx;
+    }
+
+    public void testAlwaysJoin() throws Exception
+    {
+        this.runAsynchronousDispatching();
+        //getControlCounter().verifyXaTx();
+        getControlCounter().getExceptionInfo().verify();
+    }
+
+
     protected String getConfigResources()
     {
         return "jms-xa-tx-ALWAYS_JOIN.xml";

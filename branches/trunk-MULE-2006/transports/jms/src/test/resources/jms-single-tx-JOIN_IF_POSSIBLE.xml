@@ -11,10 +11,6 @@
         </properties>
     </container-context>
 
-
-    <!--transaction-manager factory="org.mule.extras.jotm.JotmTransactionManagerFactory"/-->
-    <!--transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/-->
-
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
         <properties>
             <property name="queueEvents" value="true"/>
@@ -44,7 +40,8 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Part2-CreateTX" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+        <mule-descriptor name="Part2-CreateTX" implementation="org.mule.components.simple.BridgeComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://middle" connector="jmsConnector">
                     <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
@@ -58,7 +55,8 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Part3-WithoutTx" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Part3-WithoutTx" implementation="org.mule.tck.functional.FunctionalTestComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://withoutTx" connector="jmsConnector">
                     <transaction action="JOIN_IF_POSSIBLE" factory="org.mule.providers.jms.JmsTransactionFactory"/>

@@ -11,8 +11,6 @@
         </properties>
     </container-context>
 
-
-    <!--transaction-manager factory="org.mule.extras.jotm.JotmTransactionManagerFactory"/-->
     <transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/>
 
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
@@ -33,84 +31,65 @@
         <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
                 <endpoint address="vm://in" connector="vmQueue">
-                    <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.transaction.XaTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
-
             <outbound-router>
-                <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://middle" connector="jmsConnector">
-                        <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
-                    </endpoint>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <!-- Disabled because mule can't suspend tx-->
+                    <!--endpoint address="jms://middle" connector="jmsConnector"/>
+                    <endpoint address="jms://withoutTx" connector="jmsConnector"/-->
+                    <endpoint address="jms://withTx" connector="jmsConnector"/>
                 </router>
             </outbound-router>
-
         </mule-descriptor>
 
-        <mule-descriptor name="Part2-JOIN" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+        <!--mule-descriptor name="Part2-CreateTX" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
                 <endpoint address="jms://middle" connector="jmsConnector">
-                    <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.transaction.XaTransactionFactory"/>
                 </endpoint>
             </inbound-router>
 
             <outbound-router>
                 <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://withoutTx" connector="jmsConnector">
-                        <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
-                    </endpoint>
-                    <endpoint address="jms://withTx" connector="jmsConnector">
-                        <transaction action="BEGIN_OR_JOIN" factory="org.mule.transaction.XaTransactionFactory"/>
-                    </endpoint>
+                    <endpoint address="jms://withTx" connector="jmsConnector"/>
                 </router>
             </outbound-router>
-
-
         </mule-descriptor>
 
-        <mule-descriptor name="Part2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Part3-WithoutTx" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
             <inbound-router>
                 <endpoint address="jms://withoutTx" connector="jmsConnector">
                     <transaction action="JOIN_IF_POSSIBLE" factory="org.mule.transaction.XaTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out-wtx" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE-NoTx"/>
             </properties>
+        </mule-descriptor-->
 
-        </mule-descriptor>
-
-        <mule-descriptor name="PartTx" implementation="org.mule.tck.functional.FunctionalTestComponent"
+        <mule-descriptor name="Part4-WithTx" implementation="org.mule.tck.functional.FunctionalTestComponent"
                          singleton="true">
             <inbound-router>
                 <endpoint address="jms://withTx" connector="jmsConnector">
                     <transaction action="JOIN_IF_POSSIBLE" factory="org.mule.transaction.XaTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out-tx" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE-Tx"/>
             </properties>
-
         </mule-descriptor>
-
-
     </model>
 
 </mule-configuration>

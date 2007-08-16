@@ -11,8 +11,6 @@ package org.mule.test.providers.jms;
 
 import org.mule.umo.manager.UMOServerNotification;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-
 /**
  * Comment
  */
@@ -29,20 +27,11 @@ public class JmsSingleTransactionNoneTestCase extends AbstractJmsFunctionalTestC
         super.runAsynchronousDispatching();
     }
 
-    protected CountDownLatch getBeginTxCoundDownLatch()
+    protected ControlCounter getControlCounter()
     {
         return null;
     }
 
-    protected CountDownLatch getCommitTxCoundDownLatch()
-    {
-        return null;
-    }
-
-    protected CountDownLatch getRollbackTxCoundDownLatch()
-    {
-        return null;
-    }
 
     protected void onBeganTx(UMOServerNotification notification)
     {

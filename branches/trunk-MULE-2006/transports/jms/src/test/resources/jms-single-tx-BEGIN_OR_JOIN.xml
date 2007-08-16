@@ -11,10 +11,6 @@
         </properties>
     </container-context>
 
-
-    <!--transaction-manager factory="org.mule.extras.jotm.JotmTransactionManagerFactory"/-->
-    <!--transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/-->
-
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
         <properties>
             <property name="queueEvents" value="true"/>

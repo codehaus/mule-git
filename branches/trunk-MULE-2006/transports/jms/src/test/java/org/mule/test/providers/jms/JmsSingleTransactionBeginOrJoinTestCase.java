@@ -9,20 +9,15 @@
  */
 package org.mule.test.providers.jms;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import org.mule.umo.UMOMessage;
 
 /**
- * Comment
+ * If use single TM the tx will be always new
  */
 public class JmsSingleTransactionBeginOrJoinTestCase extends AbstractJmsFunctionalTestCase
 {
 
-    protected static final int beginTxCount = 1;
-    private final CountDownLatch beginTxCountDownLatch = new CountDownLatch(beginTxCount);
-    protected static final int commitTxCount = 1;
-    private final CountDownLatch commitTxCountDownLatch = new CountDownLatch(commitTxCount);
-    protected static final int rollbackTxCount = 0;
-    private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
+    private final ControlCounter blackBoxTx = new ControlCounter(2, 2, 0);
 
     protected String getConfigResources()
     {
@@ -31,26 +26,15 @@ public class JmsSingleTransactionBeginOrJoinTestCase extends AbstractJmsFunction
 
     public void testBeginOrJoin() throws Exception
     {
-        super.runAsynchronousDispatching();
-
-        super.verifyCountDownLatch(beginTxCountDownLatch, beginTxCount);
-        super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
-
+        UMOMessage message = super.runAsynchronousDispatching();
+        getControlCounter().verifySingleTx();
+        assertNull(message.getExceptionPayload());
     }
 
-    protected CountDownLatch getBeginTxCoundDownLatch()
+    protected ControlCounter getControlCounter()
     {
-        return beginTxCountDownLatch;
+        return blackBoxTx;
     }
 
-    protected CountDownLatch getCommitTxCoundDownLatch()
-    {
-        return commitTxCountDownLatch;
-    }
-
-    protected CountDownLatch getRollbackTxCoundDownLatch()
-    {
-        return rollbackTxCountDownLatch;
-    }
 
 }

@@ -11,8 +11,6 @@
         </properties>
     </container-context>
 
-
-    <!--transaction-manager factory="org.mule.extras.jotm.JotmTransactionManagerFactory"/-->
     <transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/>
 
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
@@ -32,16 +30,15 @@
 
         <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
-                <endpoint address="vm://in" connector="vmQueue"/>
+                <endpoint address="vm://in" connector="vmQueue">
+                    <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
+                </endpoint>
             </inbound-router>
-
-
             <outbound-router>
-                <router className="org.mule.routing.outbound.MulticastingRouter">
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="jms://in" connector="jmsConnector"/>
                 </router>
             </outbound-router>
-
         </mule-descriptor>
 
 
@@ -51,21 +48,15 @@
                     <transaction action="NONE" factory="org.mule.transaction.XaTransactionFactory"/>
                 </endpoint>
             </inbound-router>
-
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue">
-                    </endpoint>
+                    <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
-
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE"/>
             </properties>
-
         </mule-descriptor>
 
-
     </model>
-
 </mule-configuration>

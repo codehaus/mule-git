@@ -9,11 +9,28 @@
  */
 package org.mule.test.providers.jms;
 
+import org.mule.umo.UMOMessage;
+
 /**
  * Comment
  */
-public class JmsXaTransactionRollbackTestCase extends JmsSingleTransactionRollbackTestCase
+public class JmsXaTransactionRollbackTestCase extends AbstractJmsFunctionalTestCase
 {
+    ControlCounter blackBoxTx = new ControlCounter(99, 0, 99);
+
+    protected ControlCounter getControlCounter()
+    {
+        return blackBoxTx;
+    }
+
+    public void testRollback() throws Exception
+    {
+        getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
+        assertNull(result);
+        //getControlCounter().verifyXaTx();
+    }
+
 
     protected String getConfigResources()
     {

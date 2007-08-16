@@ -15,9 +15,9 @@
     </bean>
 
 
-    <bean id="FunctionalTestRollbackBean" class="org.mule.tck.functional.FunctionalTestComponent">
-        <property name="eventCallback">
-            <bean id="RollbackEventCallback" class="org.mule.test.providers.jms.JmsEventRollback"/>
+    <bean id="functionalTestRollbackBean" class="org.mule.tck.functional.FunctionalTestComponent">
+        <property name="throwException">
+            <value>true</value>
         </property>
     </bean>
 

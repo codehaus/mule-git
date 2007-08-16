@@ -34,12 +34,29 @@
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://in" connector="jmsConnector"/>
+                    <endpoint address="jms://middle" connector="jmsConnector"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
 
         <mule-descriptor name="Part2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+            <inbound-router>
+                <endpoint address="jms://middle" connector="jmsConnector">
+                    <transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                </endpoint>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jms://in" connector="jmsConnector">
+                    </endpoint>
+                </router>
+            </outbound-router>
+            <properties>
+                <property name="returnMessage" value="OUTPUT MESSAGE"/>
+            </properties>
+        </mule-descriptor>
+
+        <mule-descriptor name="Part3" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
             <inbound-router>
                 <endpoint address="jms://in" connector="jmsConnector">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>

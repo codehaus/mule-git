@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-        "http://mule.mulesource.org/dtds/mule-configuration.dtd" >
-<mule-configuration id="persistent_vmqueue_test" version="1.0">
 
-    <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true"/>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="jms_tx_rollback" version="1.0">
+
+    <mule-environment-properties recoverableMode="false" serverUrl="tcp://localhost:60504?synchronous=true"/>
 
     <container-context name="spring" className="org.mule.extras.spring.SpringContainerContext">
         <properties>
@@ -26,7 +28,8 @@
 
     <model name="TEST">
 
-        <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+        <mule-descriptor name="Part1-Input" implementation="org.mule.components.simple.BridgeComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="vm://in" connector="vmQueue">
                     <transaction action="NONE" factory="org.mule.providers.vm.VMTransactionFactory"/>
@@ -39,7 +42,7 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Part2" implementation="FunctionalTestRollbackBean" singleton="true">
+        <mule-descriptor name="Part2-Rollback" implementation="functionalTestRollbackBean" singleton="true">
             <inbound-router>
                 <endpoint address="jms://in" connector="jmsConnector">
                     <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
@@ -47,7 +50,9 @@
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue"/>
+                    <endpoint address="vm://out" connector="vmQueue">
+                        <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                    </endpoint>
                 </router>
             </outbound-router>
             <properties>

@@ -11,20 +11,13 @@ package org.mule.test.providers.jms;
 
 import org.mule.umo.UMOMessage;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-
 /**
  * Comment
  */
 public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunctionalTestCase
 {
 
-    protected static final int beginTxCount = 1;
-    private final CountDownLatch beginTxCountDownLatch = new CountDownLatch(beginTxCount);
-    protected static final int commitTxCount = 1;
-    private final CountDownLatch commitTxCountDownLatch = new CountDownLatch(commitTxCount);
-    protected static final int rollbackTxCount = 0;
-    private final CountDownLatch rollbackTxCountDownLatch = new CountDownLatch(rollbackTxCount);
+    private final ControlCounter blackBoxTx = new ControlCounter(1, 1, 0);
     private static final String DEFAULT_OUTPUT_MESSAGE_NOTX = "OUTPUT MESSAGE-NoTx";
     private static final String DEFAULT_OUTPUT_MESSAGE_TX = "OUTPUT MESSAGE-Tx";
     protected static final String DEFUALT_OUTPUT_QUEUE_TX = "vm://out-tx";
@@ -36,15 +29,12 @@ public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunct
 
     public void testJoinIfPossible() throws Exception
     {
-
         getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
         UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
-        //!!!assertEquals(success.get(),true);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());
         assertEquals(DEFAULT_OUTPUT_MESSAGE_NOTX, result.getPayload());
-
 
         result = getClient().receive(DEFUALT_OUTPUT_QUEUE_TX, TIMEOUT);
         assertNotNull(result);
@@ -52,24 +42,12 @@ public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunct
         assertNull(result.getExceptionPayload());
         assertEquals(DEFAULT_OUTPUT_MESSAGE_TX, result.getPayload());
 
-        super.verifyCountDownLatch(beginTxCountDownLatch, beginTxCount);
-        super.verifyCountDownLatch(commitTxCountDownLatch, commitTxCount);
-
+        getControlCounter().verifySingleTx();
     }
 
-    protected CountDownLatch getBeginTxCoundDownLatch()
+    protected ControlCounter getControlCounter()
     {
-        return beginTxCountDownLatch;
-    }
-
-    protected CountDownLatch getCommitTxCoundDownLatch()
-    {
-        return commitTxCountDownLatch;
-    }
-
-    protected CountDownLatch getRollbackTxCoundDownLatch()
-    {
-        return rollbackTxCountDownLatch;
+        return blackBoxTx;
     }
 
 }

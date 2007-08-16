@@ -9,11 +9,27 @@
  */
 package org.mule.test.providers.jms;
 
+import org.mule.umo.UMOMessage;
+
 /**
  * Comment
  */
-public class JmsXaTransactionBeginOrJoinTestCase extends JmsSingleTransactionBeginOrJoinTestCase
+public class JmsXaTransactionBeginOrJoinTestCase extends AbstractJmsFunctionalTestCase
 {
+
+    ControlCounter blackBoxTx = new ControlCounter(99, 1, 99);
+
+    public void testBeginOrJoin() throws Exception
+    {
+        UMOMessage message = super.runAsynchronousDispatching();
+        //getControlCounter().verifyXaTx();
+        assertNull(message.getExceptionPayload());
+    }
+
+    protected ControlCounter getControlCounter()
+    {
+        return blackBoxTx;
+    }
 
     protected String getConfigResources()
     {
