@@ -29,7 +29,7 @@ public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunct
 
     public void testJoinIfPossible() throws Exception
     {
-        getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        getClient().dispatch(DEFAULT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
         UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());

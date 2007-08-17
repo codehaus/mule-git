@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-        "http://mule.mulesource.org/dtds/mule-configuration.dtd" >
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 <mule-configuration id="persistent_vmqueue_test" version="1.0">
 
     <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true"/>
@@ -35,14 +36,14 @@
                 </endpoint>
             </inbound-router>
             <outbound-router>
-                <router className="org.mule.routing.outbound.MulticastingRouter">
-                    <endpoint address="jms://middle" connector="jmsConnector"/>
-                    <endpoint address="jms://catch" connector="jmsConnector"/>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jms://in" connector="jmsConnector"/>
+                    <!--endpoint address="jms://catch" connector="jmsConnector"/-->
                 </router>
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Part2-BeginTX" implementation="org.mule.components.simple.BridgeComponent"
+        <!--mule-descriptor name="Part2-BeginTX" implementation="org.mule.components.simple.BridgeComponent"
                          singleton="true">
             <inbound-router>
                 <endpoint address="jms://middle" connector="jmsConnector">
@@ -54,7 +55,7 @@
                     <endpoint address="jms://in" connector="jmsConnector"/>
                 </router>
             </outbound-router>
-        </mule-descriptor>
+        </mule-descriptor-->
 
         <mule-descriptor name="Part3-JoinTX" implementation="org.mule.tck.functional.FunctionalTestComponent"
                          singleton="true">
@@ -73,7 +74,7 @@
             </properties>
         </mule-descriptor>
 
-        <mule-descriptor name="Part4-CatchError" implementation="org.mule.tck.functional.FunctionalTestComponent"
+        <!--mule-descriptor name="Part4-CatchError" implementation="org.mule.tck.functional.FunctionalTestComponent"
                          singleton="true">
             <inbound-router>
                 <endpoint address="jms://catch" connector="jmsConnector">
@@ -88,7 +89,7 @@
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE ERROR"/>
             </properties>
-        </mule-descriptor>
+        </mule-descriptor-->
 
     </model>
 

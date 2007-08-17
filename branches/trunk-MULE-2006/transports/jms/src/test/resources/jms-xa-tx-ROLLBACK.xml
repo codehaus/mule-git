@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN"
-        "http://mule.mulesource.org/dtds/mule-configuration.dtd" >
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 <mule-configuration id="persistent_vmqueue_test" version="1.0">
 
     <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true"/>
@@ -23,6 +24,7 @@
         <properties>
             <container-property name="connectionFactory" reference="jmsConnectionFactoryXa"/>
             <property name="specification" value="1.1"/>
+            <property name="maxRedelivery" value="2"/>
         </properties>
     </connector>
 

@@ -25,7 +25,9 @@ public class JmsSingleTransactionRollbackTestCase extends AbstractJmsFunctionalT
 
     public void testRollback() throws Exception
     {
-        getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        //for (int i=0;i<10;i++)
+        getClient().dispatch(DEFAULT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+
         UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
         assertNull(result);
         getControlCounter().verifySingleTx();

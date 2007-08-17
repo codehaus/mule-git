@@ -31,7 +31,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     public static final String DEFAULT_MESSAGE = "INPUT MESSAGE";
     public static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
-    public static final String DEFUALT_INPUT_QUEUE = "vm://in";
+    public static final String DEFAULT_INPUT_QUEUE = "vm://in";
     public static final String DEFUALT_OUTPUT_QUEUE = "vm://out";
     public static final String CONNECTOR_NAME = "jmsConnector";
     public static final long TIMEOUT = 5000;
@@ -103,7 +103,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     protected UMOMessage runAsynchronousDispatching() throws Exception
     {
-        client.dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        client.dispatch(DEFAULT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
         UMOMessage result = client.receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
@@ -124,7 +124,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         public void handleMessagingException(UMOMessage message, Throwable t)
         {
             logger.debug("@@@handleMessagingException@@@ " + message + " :: " + t);
-            info.getExceptionInfo().countDown();
+            if (info.getExceptionInfo()!=null) info.getExceptionInfo().countDown();
         }
     }
 

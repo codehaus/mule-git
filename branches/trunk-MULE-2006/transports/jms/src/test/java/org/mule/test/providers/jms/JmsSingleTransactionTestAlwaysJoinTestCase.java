@@ -9,6 +9,8 @@
  */
 package org.mule.test.providers.jms;
 
+import org.mule.umo.UMOMessage;
+
 /**
  * Comment
  */
@@ -25,7 +27,9 @@ public class JmsSingleTransactionTestAlwaysJoinTestCase extends AbstractJmsFunct
     public void testAlwaysJoin() throws Exception
     {
 
-        this.runAsynchronousDispatching();
+        getClient().dispatch(DEFAULT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
+        assertNull(result);
         getControlCounter().verifySingleTx();
         getControlCounter().getExceptionInfo().verify();
     }

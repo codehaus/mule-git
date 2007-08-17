@@ -23,6 +23,7 @@
         <properties>
             <container-property name="connectionFactory" reference="jmsConnectionFactory"/>
             <property name="specification" value="1.1"/>
+            <property name="maxRedelivery" value="2"/>
         </properties>
     </connector>
 
@@ -32,7 +33,7 @@
                          singleton="true">
             <inbound-router>
                 <endpoint address="vm://in" connector="vmQueue">
-                    <transaction action="NONE" factory="org.mule.providers.vm.VMTransactionFactory"/>
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
             </inbound-router>
             <outbound-router>
@@ -50,9 +51,7 @@
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out" connector="vmQueue">
-                        <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
-                    </endpoint>
+                    <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
             <properties>

@@ -25,8 +25,8 @@ public class JmsXaTransactionRollbackTestCase extends AbstractJmsFunctionalTestC
 
     public void testRollback() throws Exception
     {
-        getClient().dispatch(DEFUALT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
-        UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT);
+        getClient().dispatch(DEFAULT_INPUT_QUEUE, DEFAULT_MESSAGE, null);
+        UMOMessage result = getClient().receive(DEFUALT_OUTPUT_QUEUE, TIMEOUT*10);
         assertNull(result);
         //getControlCounter().verifyXaTx();
     }
