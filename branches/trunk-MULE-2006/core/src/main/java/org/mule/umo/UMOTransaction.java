@@ -63,6 +63,6 @@ public interface UMOTransaction
 
     boolean isRollbackOnly() throws TransactionException;
 
-    boolean isXaTx();
+    boolean isXa();
 
 }

@@ -148,7 +148,7 @@ public abstract class AbstractSingleResourceTransaction extends AbstractTransact
         return key;
     }
 
-    public boolean isXaTx()
+    public boolean isXa()
     {
         return false;
     }
