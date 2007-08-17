@@ -124,6 +124,11 @@ public class TransactionNotificationsTestCase extends AbstractMuleTestCase
         {
             // nothing to do
         }
+
+        public boolean isXaTx()
+        {
+            return false;
+        }
     }
 
 }

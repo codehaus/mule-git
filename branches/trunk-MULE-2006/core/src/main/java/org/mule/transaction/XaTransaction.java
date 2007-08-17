@@ -283,5 +283,8 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-    
+    public boolean isXaTx()
+    {
+        return true;
+    }
 }

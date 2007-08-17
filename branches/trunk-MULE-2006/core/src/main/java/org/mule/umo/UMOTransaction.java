@@ -62,4 +62,7 @@ public interface UMOTransaction
     void setRollbackOnly() throws TransactionException;
 
     boolean isRollbackOnly() throws TransactionException;
+
+    boolean isXaTx();
+
 }
