@@ -40,7 +40,16 @@
         <transformer name="ChatStringToString" className="org.mule.samples.hello.ChatStringToString"
             returnClass="java.lang.String"/>
         <transformer name="HttpRequestToString" className="org.mule.samples.hello.HttpRequestToString"
-            returnClass="java.lang.String"/>    
+            returnClass="java.lang.String"/>
+
+        <!-- workaround for http://mule.mulesource.org/jira/browse/MULE-1827 -->            
+        <transformer name="PlainTextResponseTransformer" className="org.mule.transformers.simple.MessagePropertiesTransformer">
+            <properties>
+                <map name="addProperties">
+                    <property name="Content-Type" value="text/plain"/>
+                </map>
+            </properties>
+        </transformer>   
     </transformers>
 
     <model name="helloSample">
@@ -54,7 +63,7 @@
                 <endpoint address="http://localhost:8888" transformers="HttpRequestToString StringToNameString"/>
                 
                 <!-- Incoming Servlet requests -->
-                <endpoint address="servlet://rest" transformers="StringToNameString"/>
+                <endpoint address="servlet://rest" transformers="StringToNameString" responseTransformers="PlainTextResponseTransformer"/>
 
                 <!-- Incoming VM requests -->
                 <endpoint address="vm://greeter" transformers="StringToNameString"/>
