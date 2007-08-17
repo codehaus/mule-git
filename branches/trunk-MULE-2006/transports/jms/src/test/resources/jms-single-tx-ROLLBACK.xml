@@ -32,9 +32,7 @@
         <mule-descriptor name="Part1-Input" implementation="org.mule.components.simple.BridgeComponent"
                          singleton="true">
             <inbound-router>
-                <endpoint address="vm://in" connector="vmQueue">
-                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
-                </endpoint>
+                <endpoint address="vm://in" connector="vmQueue"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">

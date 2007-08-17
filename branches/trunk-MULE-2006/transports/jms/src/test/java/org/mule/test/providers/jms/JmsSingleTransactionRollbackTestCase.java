@@ -16,7 +16,7 @@ import org.mule.umo.UMOMessage;
  */
 public class JmsSingleTransactionRollbackTestCase extends AbstractJmsFunctionalTestCase
 {
-    private final ControlCounter blackBoxTx = new ControlCounter(1, 0, 1);
+    private final ControlCounter blackBoxTx = new ControlCounter(2, 0, 2, 0);
 
     protected String getConfigResources()
     {
