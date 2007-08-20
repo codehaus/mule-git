@@ -11,7 +11,7 @@
     <transformers>
         <transformer name="Xslt" className="org.mule.transformers.xml.XsltTransformer">
             <properties>
-                <property name="xslFile" value="target/test-classes/stylesheet.xsl"/>
+                <property name="xslFile" value="stylesheet.xsl"/>
             </properties>
         </transformer>
     </transformers >
