@@ -25,10 +25,7 @@ import org.mule.util.StringUtils;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
@@ -47,8 +44,6 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransformer
 {
     private final SerializableToByteArray serializableToByteArray;
-    public static final Set ignornedProperties = new HashSet(Arrays.asList(new String[]{
-        HttpConstants.HEADER_CONTENT_LENGTH}));
 
     public ObjectToHttpClientMethodRequest()
     {
