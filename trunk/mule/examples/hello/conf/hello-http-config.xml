@@ -80,9 +80,17 @@
         the transformer will transform the result event and pass it back as the http response -->
         <mule-descriptor name="ChitChatUMO" implementation="org.mule.samples.hello.ChitChatter">
             <inbound-router>
-                <endpoint address="vm://chitchatter" transformers="NameStringToChatString" 
-                    responseTransformers="ChatStringToString"/>
+                <endpoint address="vm://chitchatter" transformers="NameStringToChatString"/>
             </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.MulticastingRouter">
+                    <endpoint address="vm://responder" transformers="ChatStringToString"/>
+                </router>
+            </outbound-router>
+            <response-router>
+                <endpoint address="vm://responder"/>
+                <router transformer="ChatStringToString" className="org.mule.routing.response.SingleResponseRouter"/>
+            </response-router>
         </mule-descriptor>
     </model>
 </mule-configuration>
