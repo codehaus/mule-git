@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MuleSource MPL
+ * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -187,7 +187,6 @@ public class XsltTransformer extends AbstractXmlTransformer
      * Returns the StreamSource corresponding to xslFile
      * 
      * @return The StreamSource
-     * @throws InitialisationException
      */
     protected StreamSource getStreamSource() throws InitialisationException
     {
@@ -246,7 +245,7 @@ public class XsltTransformer extends AbstractXmlTransformer
         {
             StreamSource source = XsltTransformer.this.getStreamSource();
             String factoryClassName = XsltTransformer.this.getXslTransformerFactory();
-            TransformerFactory factory = null;
+            TransformerFactory factory;
 
             if (StringUtils.isNotEmpty(factoryClassName))
             {
@@ -330,7 +329,7 @@ public class XsltTransformer extends AbstractXmlTransformer
      * Sets the the current maximum number of idle transformer objects allowed in the
      * pool
      * 
-     * @param maxIdleTransformers New maximum size to set
+     * @param maxActiveTransformers New maximum size to set
      */
     public void setMaxActiveTransformers(int maxActiveTransformers)
     {

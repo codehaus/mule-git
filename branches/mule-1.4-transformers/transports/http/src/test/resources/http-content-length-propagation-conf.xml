@@ -8,14 +8,14 @@
 
 <mule-environment-properties synchronous="true"/>
 
-	<transformers>
-		<transformer name="Xslt" className="org.mule.transformers.xml.XsltTransformer">
-			<properties>
-				<property name="xslFile" value="target/test-classes/stylesheet.xsl"/>
-			</properties>
-		</transformer>
-	</transformers >
-	
+    <transformers>
+        <transformer name="Xslt" className="org.mule.transformers.xml.XsltTransformer">
+            <properties>
+                <property name="xslFile" value="stylesheet.xsl"/>
+            </properties>
+        </transformer>
+    </transformers >
+    
     <model name="PSMaxIntegration">
 
         <mule-descriptor name="PSMaxMsg1" implementation="org.mule.components.simple.BridgeComponent" >
@@ -28,7 +28,7 @@
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-					<endpoint address="http://localhost:8087"/>
+                    <endpoint address="http://localhost:8087"/>
                 </router>
             </outbound-router>
         </mule-descriptor>

@@ -5,60 +5,43 @@ import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformers.xml.XsltTransformer;
 import org.mule.umo.UMOMessage;
+import org.mule.util.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 
 public class HttpContentLengthPropagationTestCase extends FunctionalTestCase
 {
-	private static final String payload_path = "target/test-classes/test-xml-payload.xml";
-	private static final String stylesheet_path = "target/test-classes/stylesheet.xsl";
-	private byte[] fileContents;
-	
-	public HttpContentLengthPropagationTestCase()
-	{
-	    super();
-	    this.setDisposeManagerPerSuite(true);
-	}
+    private static final String NAME_PAYLOAD = "test-xml-payload.xml";
+    private static final String NAME_STYLESHEET = "stylesheet.xsl";
 
-	protected String getConfigResources() 
-	{
-		return "http-content-length-propagation-conf.xml";
-	}
-	
-	private void readFile(String path) throws IOException
-	{
-	    FileInputStream stream = new FileInputStream(path);
-        File file = new File(path);
-        fileContents = new byte[(int)file.length()];
-        int bytesRead;
-        int totalbytesRead = 0;
-        
-        while(totalbytesRead < file.length())
-        {
-            bytesRead = stream.read(fileContents, totalbytesRead, (int)file.length());
-            totalbytesRead += bytesRead;
-        }
-	}
-	
-	public byte[] localTransform() throws Exception
-	{
-	    XsltTransformer trans = new XsltTransformer();
-	    trans.setXslFile(stylesheet_path);
+    public HttpContentLengthPropagationTestCase()
+    {
+        super();
+        this.setDisposeManagerPerSuite(true);
+    }
 
-        return (byte[])trans.doTransform(fileContents, "UTF-8");
-	}
-	
-	public void testContentLengthPropagation() throws Exception
-	{
-		readFile(payload_path);
-		
-		MuleClient client = new MuleClient();
-		UMOMessage result = client.send("http://localhost:8085", new MuleMessage(fileContents));
-		
-		assertEquals(new String(localTransform()), result.getPayloadAsString());
+    protected String getConfigResources()
+    {
+        return "http-content-length-propagation-conf.xml";
+    }
 
-	}
+    public void testContentLengthPropagation() throws Exception
+    {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(NAME_PAYLOAD);
+        assertNotNull("Payload test file not found.", is);
+        byte[] fileContents = IOUtils.toByteArray(is);
+
+
+
+        MuleClient client = new MuleClient();
+        UMOMessage result = client.send("http://localhost:8085", new MuleMessage(fileContents));
+
+        XsltTransformer trans = new XsltTransformer();
+        trans.setXslFile(NAME_STYLESHEET);
+        final byte[] locallyTransformedBytes = (byte[]) trans.doTransform(fileContents, "UTF-8");
+
+        assertEquals(new String(locallyTransformedBytes), result.getPayloadAsString());
+
+    }
 
 }
