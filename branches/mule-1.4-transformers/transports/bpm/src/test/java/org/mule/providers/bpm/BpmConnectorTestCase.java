@@ -1,5 +1,5 @@
 /*
- * $Id
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -18,14 +18,16 @@ import com.mockobjects.dynamic.Mock;
 /**
  * Generic connector tests.
  */
-public class BpmConnectorTestCase extends AbstractConnectorTestCase {
+public class BpmConnectorTestCase extends AbstractConnectorTestCase
+{
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getConnector()
      */
-    public UMOConnector getConnector() throws Exception {
+    public UMOConnector createConnector() throws Exception
+    {
         ProcessConnector c = new ProcessConnector();
         c.setName("ProcessConnector");
 
@@ -41,19 +43,22 @@ public class BpmConnectorTestCase extends AbstractConnectorTestCase {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getValidMessage()
      */
-    public Object getValidMessage() throws Exception {
+    public Object getValidMessage() throws Exception
+    {
         return "test";
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getTestEndpointURI()
      */
-    public String getTestEndpointURI() {
+    public String getTestEndpointURI()
+    {
         return "bpm://dummyProcess?processId=1234";
     }
+
 }

@@ -23,7 +23,8 @@ import java.net.DatagramPacket;
 public class MulticastConnectorTestCase extends AbstractConnectorTestCase
 {
 
-    public UMOConnector getConnector() throws Exception
+    // @Override
+    public UMOConnector createConnector() throws Exception
     {
         MulticastConnector c = new MulticastConnector();
         c.setName("MulticastConnector");

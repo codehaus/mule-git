@@ -22,7 +22,8 @@ public class VMConnectorTestCase extends AbstractConnectorTestCase
      * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
-    public UMOConnector getConnector() throws Exception
+    // @Override
+    public UMOConnector createConnector() throws Exception
     {
         VMConnector conn = new VMConnector();
         conn.setName("TestVM");

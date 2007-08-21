@@ -21,6 +21,7 @@ import org.mule.providers.AbstractConnector;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
+import org.mule.umo.UMODescriptor;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
@@ -35,16 +36,29 @@ import java.beans.ExceptionListener;
 import java.util.HashMap;
 
 /**
- * <code>AbstractConnectorTestCase</code> tests common behaviour of all endpoints
- * and provides 'reminder' methods for implementation specific interface methods
+ * <code>AbstractConnectorTestCase</code> tests common behaviour of all endpoints and
+ * provides 'reminder' methods for implementation specific interface methods
  */
 public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 {
-    protected MuleDescriptor descriptor;
+    private MuleDescriptor descriptor;
+    private UMOConnector connector;
+    private UMOModel model;
 
-    protected UMOConnector connector;
+    public MuleDescriptor getDescriptor()
+    {
+        return descriptor;
+    }
 
-    protected UMOModel model;
+    public UMOConnector getConnector()
+    {
+        return connector;
+    }
+
+    public UMOModel getModel()
+    {
+        return model;
+    }
 
     /*
      * (non-Javadoc)
@@ -59,7 +73,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         manager.registerModel(model);
         descriptor = getTestDescriptor("apple", Apple.class.getName());
         MuleManager.getInstance().start();
-        connector = getConnector();
+        connector = createConnector();
     }
 
     protected void doTearDown() throws Exception
@@ -147,7 +161,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             fail("cannot register null");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            // expected
         }
 
         try
@@ -156,7 +171,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             fail("cannot register null");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            // expected
         }
 
         try
@@ -165,7 +181,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             fail("cannot register null");
         }
         catch (Exception e)
-        { /* expected */
+        {
+            // expected
         }
 
         connector.registerListener(component, endpoint);
@@ -215,7 +232,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             fail("Should throw IllegalArgumentException if name set to null");
         }
         catch (IllegalArgumentException e)
-        { /* expected */
+        {
+            // expected
         }
 
         connector.setName("Test");
@@ -237,7 +255,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
     {
         UMOConnector connector = getConnector();
         assertNotNull(connector);
-        
+
         UMOMessageDispatcherFactory factory = connector.getDispatcherFactory();
         assertNotNull(factory);
     }
@@ -257,7 +275,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         }
     }
 
-    public abstract UMOConnector getConnector() throws Exception;
+    public abstract UMOConnector createConnector() throws Exception;
 
     public abstract Object getValidMessage() throws Exception;
 

@@ -25,7 +25,9 @@ import java.io.IOException;
 
 public class HttpsConnectorTestCase extends AbstractConnectorTestCase
 {
-    public UMOConnector getConnector() throws Exception
+
+    // @Override
+    public UMOConnector createConnector() throws Exception
     {
         return createConnector(true);
     }
