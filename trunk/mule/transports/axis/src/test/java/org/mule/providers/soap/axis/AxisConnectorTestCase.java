@@ -15,12 +15,13 @@ import org.mule.umo.provider.UMOConnector;
 
 public class AxisConnectorTestCase extends AbstractConnectorTestCase
 {
+
     public String getTestEndpointURI()
     {
         return "axis:http://localhost:38009/axis";
     }
 
-    public UMOConnector getConnector() throws Exception
+    public UMOConnector createConnector() throws Exception
     {
         AxisConnector c = new AxisConnector();
         c.initialise();
@@ -31,4 +32,5 @@ public class AxisConnectorTestCase extends AbstractConnectorTestCase
     {
         return "Test Message";
     }
+
 }

@@ -24,6 +24,7 @@ import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         super(false, connectorName);
     }
 
-   public UMOConnector getConnector(boolean init) throws Exception
+   public UMOConnector createConnector(boolean init) throws Exception
     {
         SmtpConnector c = new SmtpConnector();
         c.setName(getConnectorName());
@@ -72,8 +73,10 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     // @Override
     public void testConnectorListenerSupport() throws Exception
     {
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
         MuleDescriptor d = getTestDescriptor("anApple", Apple.class.getName());
+        UMOModel model = getModel();
         UMOComponent component = model.registerComponent(d);
         UMOEndpoint endpoint = 
             new MuleEndpoint("test", new MuleEndpointURI(getTestEndpointURI()), connector,
@@ -99,7 +102,7 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         HashMap props = new HashMap();
 
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.getManager().registerConnector(getConnector(false));
+        builder.getManager().registerConnector(createConnector(false));
         UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
         builder.registerComponent(FunctionalTestComponent.class.getName(), 
             "testComponent", null, endpoint, props);

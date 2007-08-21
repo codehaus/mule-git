@@ -60,7 +60,8 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
-    public UMOConnector getConnector() throws Exception
+    // @Override
+    public UMOConnector createConnector() throws Exception
     {
         UMOConnector connector = new FileConnector();
         connector.setName("testFile");
@@ -84,7 +85,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
         Mock session = MuleTestUtils.getMockSession();
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
-        UMOComponent component = getTestComponent(descriptor);
+        UMOComponent component = getTestComponent(getDescriptor());
         UMOEvent event = getTestEvent("TestData");
 
         connector.registerListener(component, endpoint);
@@ -105,12 +106,11 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
         UMOEvent event = getTestEvent("TestData");
-        UMOComponent component = getTestComponent(descriptor);
+        UMOComponent component = getTestComponent(getDescriptor());
 
         connector.registerListener(component, endpoint);
         connector.startConnector();
         connector.send(new ImmutableMuleEndpoint("file:/foo", false), event);
-
     }
 
     public Object getValidMessage() throws Exception
@@ -123,14 +123,14 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testConnectorPollingFrequency() throws Exception
     {
-        FileConnector connector = (FileConnector)getConnector();
+        FileConnector connector = (FileConnector) getConnector();
         connector.setPollingFrequency(POLLING_FREQUENCY);
 
         UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-        UMOComponent component = getTestComponent(descriptor);
+        UMOComponent component = getTestComponent(getDescriptor());
         UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
         assertEquals("Connector's polling frequency must not be ignored.", POLLING_FREQUENCY,
-            ((FileMessageReceiver)receiver).getFrequency());
+            ((FileMessageReceiver) receiver).getFrequency());
     }
 
     /**
@@ -138,7 +138,7 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testPollingFrequencyEndpointOverride() throws Exception
     {
-        FileConnector connector = (FileConnector)getConnector();
+        FileConnector connector = (FileConnector) getConnector();
         // set some connector-level value which we are about to override
         connector.setPollingFrequency(-1);
 
@@ -149,9 +149,9 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
         props.put(FileConnector.PROPERTY_POLLING_FREQUENCY, String.valueOf(POLLING_FREQUENCY_OVERRIDE));
         endpoint.setProperties(props);
 
-        UMOComponent component = getTestComponent(descriptor);
+        UMOComponent component = getTestComponent(getDescriptor());
         UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
         assertEquals("Polling frequency endpoint override must not be ignored.", POLLING_FREQUENCY_OVERRIDE,
-            ((FileMessageReceiver)receiver).getFrequency());
+            ((FileMessageReceiver) receiver).getFrequency());
     }
 }

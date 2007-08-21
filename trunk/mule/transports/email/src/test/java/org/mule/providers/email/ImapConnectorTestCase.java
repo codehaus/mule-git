@@ -23,7 +23,7 @@ public class ImapConnectorTestCase extends AbstractReceivingMailConnectorTestCas
         super("ImapConnector");
     }
     
-    public UMOConnector getConnector(boolean init) throws Exception
+    public UMOConnector createConnector(boolean init) throws Exception
     {
         ImapConnector connector = new ImapConnector();
         connector.setName(getConnectorName());

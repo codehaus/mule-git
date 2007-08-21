@@ -20,6 +20,7 @@ public class SystemStreamConnectorTestCase extends AbstractConnectorTestCase
      * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
+    // @Override
     public UMOConnector createConnector() throws Exception
     {
         UMOConnector connector = new SystemStreamConnector();
@@ -33,16 +34,9 @@ public class SystemStreamConnectorTestCase extends AbstractConnectorTestCase
         return "stream://System.out";
     }
 
-    public UMOConnector getConnector() throws Exception
-    {
-        UMOConnector cnn = new SystemStreamConnector();
-        cnn.setName("TestStream");
-        cnn.initialise();
-        return cnn;
-    }
-
     public Object getValidMessage() throws Exception
     {
         return "Test Message";
     }
+
 }

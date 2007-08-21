@@ -23,13 +23,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * Given an endpoint ({@link #getTestEndpointURI()}) this waits for up to 10 seconds,
- * hoping to receive the message stored in the mail server.  It also runs the unit tests
+ * hoping to receive the message stored in the mail server. It also runs the unit tests
  * defined way down in {@link org.mule.tck.providers.AbstractConnectorTestCase}.
  */
 public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
 
-    public static final int POLL_PERIOD_MS = 1000; 
+    public static final int POLL_PERIOD_MS = 1000;
     public static final int WAIT_PERIOD_MS = 3 * POLL_PERIOD_MS;
 
     protected AbstractReceivingMailConnectorTestCase(String connectorName)
@@ -51,15 +51,15 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         {
             public synchronized void eventReceived(UMOEventContext context, Object component)
             {
-                try 
+                try
                 {
                     logger.debug("woot - event received");
                     logger.debug("context: " + context);
                     logger.debug("component: " + component);
                     assertMessageOk(context.getMessage().getPayload());
                     countDown.countDown();
-                } 
-                catch (Exception e) 
+                }
+                catch (Exception e)
                 {
                     // counter will not be incremented
                     logger.error(e.getMessage(), e);
@@ -68,9 +68,9 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         });
 
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.getManager().registerConnector(getConnector(false));
-        builder.registerComponent(
-            FunctionalTestComponent.class.getName(), "testComponent", getTestEndpointURI(), null, props);
+        builder.getManager().registerConnector(createConnector(false));
+        builder.registerComponent(FunctionalTestComponent.class.getName(), "testComponent",
+            getTestEndpointURI(), null, props);
 
         logger.debug("starting mule");
         MuleManager.getInstance().start();

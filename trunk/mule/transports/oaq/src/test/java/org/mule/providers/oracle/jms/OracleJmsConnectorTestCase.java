@@ -26,7 +26,8 @@ public class OracleJmsConnectorTestCase extends AbstractConnectorTestCase
 
     private OracleJmsConnector connector;
 
-    public UMOConnector getConnector() throws Exception
+    // @Override
+    public UMOConnector createConnector() throws Exception
     {
         if (connector == null)
         {
