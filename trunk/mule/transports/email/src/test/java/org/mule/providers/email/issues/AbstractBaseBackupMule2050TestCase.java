@@ -27,7 +27,8 @@ public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTe
         this.backupEnabled = backupEnabled;
     }
 
-    public UMOConnector getConnector(boolean init) throws Exception
+    // @Override
+    public UMOConnector createConnector(boolean init) throws Exception
     {
         UMOConnector connector = super.createConnector(init);
         ((AbstractRetrieveMailConnector) connector).setBackupEnabled(backupEnabled);
