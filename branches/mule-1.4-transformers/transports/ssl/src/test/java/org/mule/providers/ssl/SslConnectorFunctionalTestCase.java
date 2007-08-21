@@ -21,14 +21,15 @@ import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.provider.UMOConnector;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.net.URI;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Note that this test doesn't test the socket from the connector itself (and so ran
@@ -124,6 +125,7 @@ public class SslConnectorFunctionalTestCase extends AbstractProviderFunctionalTe
                 callbackCount++;
                 String result = "Received Async event: " + context.getMessageAsString();
                 assertNotNull(context.getOutputStream());
+                assertNotNull(context.getMessage().getProperty(SslConnector.LOCAL_CERTIFICATES));
 
                 if (!((ResponseOutputStream)context.getOutputStream()).getSocket().isClosed())
                 {

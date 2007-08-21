@@ -16,9 +16,6 @@ import org.mule.registry.RegistryComponent;
 import org.mule.registry.RegistryException;
 import org.mule.registry.Unit;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public abstract class AbstractUnit extends AbstractEntry implements Unit
 {
 

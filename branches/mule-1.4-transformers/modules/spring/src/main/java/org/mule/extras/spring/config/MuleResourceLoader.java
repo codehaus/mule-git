@@ -10,67 +10,42 @@
 
 package org.mule.extras.spring.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.util.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
- * <code>MuleResourceLoader</code> is a custom Spring resource loader that calls
- * standard Mule methods for loading resource files.
+ * By default, a resource is loaded directly from the classpath.  Override this method to try loading it
+ * from the file system first.
  */
-public class MuleResourceLoader extends DefaultResourceLoader implements ResourcePatternResolver
+public class MuleResourceLoader extends DefaultResourceLoader 
 {
     protected transient Log logger = LogFactory.getLog(MuleResourceLoader.class);
-
-    public Resource getResource(String rsc)
-    {
-        return getResourceByPath(rsc);
-    }
-
+    
+    /**
+     * By default, a resource is loaded directly from the classpath.  Override this method to try loading it
+     * from the file system first.
+     */
+    //@Override
     protected Resource getResourceByPath(String path)
     {
-        InputStream is = null;
-        try
+        Resource r = new FileSystemResource(path);
+        if (logger.isDebugEnabled())
         {
-            is = IOUtils.getResourceAsStream(path, getClass());
+            logger.debug("Attempting to load resource from file system: " + ((FileSystemResource) r).getFile().getAbsolutePath());
         }
-        catch (IOException e)
+        if (r.exists())
         {
-            logger.error("Unable to load Spring resource " + path + " : " + e.getMessage());
-            return null;
-        }
-
-        if (is != null)
-        {
-            return new InputStreamResource(is);
+            return r;
         }
         else
         {
-            logger.error("Unable to locate Spring resource " + path);
-            return null;
+            logger.debug("Resource does not exist on file system, loading from classpath.");
+            r = new ClassPathResource(path, getClassLoader());
+            return r;
         }
-    }
-
-    public Resource[] getResources(String rsc) throws IOException
-    {
-        if (rsc == null)
-        {
-            throw new IOException("No resources to read");
-        }
-        String[] resourcesNames = org.springframework.util.StringUtils.tokenizeToStringArray(rsc, ",;", true,
-            true);
-        Resource[] resources = new Resource[resourcesNames.length];
-        for (int i = 0; i < resourcesNames.length; ++i)
-        {
-            resources[i] = getResourceByPath(resourcesNames[i]);
-        }
-        return resources;
     }
 }

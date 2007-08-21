@@ -10,30 +10,38 @@
 
 package org.mule.providers.xmpp.transformers;
 
-import java.util.Iterator;
-
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.XMPPError;
 import org.mule.providers.xmpp.XmppConnector;
 import org.mule.transformers.AbstractEventAwareTransformer;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
 
+import java.util.Iterator;
+
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.XMPPError;
+
 /**
  * Creates an Xmpp message packet from a UMOMessage
  */
 public class ObjectToXmppPacket extends AbstractEventAwareTransformer
 {
-
     public ObjectToXmppPacket()
     {
-        registerSourceType(String.class);
+        this.registerSourceType(String.class);
+        this.registerSourceType(Message.class);
         setReturnClass(Message.class);
     }
 
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException
     {
+        // Make the transformer match its wiki documentation: we accept Messages and Strings. 
+        // No special treatment for Messages is needed
+        if (src instanceof Message)
+        {
+            return src;
+        }
+        
         Message result = new Message();
 
         UMOMessage msg = context.getMessage();
@@ -67,9 +75,10 @@ public class ObjectToXmppPacket extends AbstractEventAwareTransformer
             }
         }
 
+        // copy the payload. Since it can only be a String (other objects wouldn't be passed in through
+        // AbstractTransformer) the following is safe.
         result.setBody((String) src);
         
         return result;
     }
-
 }

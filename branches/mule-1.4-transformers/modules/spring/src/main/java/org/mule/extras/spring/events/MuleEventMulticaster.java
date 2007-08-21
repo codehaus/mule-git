@@ -47,9 +47,6 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArraySet;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,6 +54,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArraySet;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -637,7 +636,13 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
             for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
             {
                 String endpoint = (String)iterator.next();
-                descriptor.getInboundRouter().addEndpoint(new MuleEndpoint(endpoint, true));
+                MuleEndpoint ep = new MuleEndpoint(endpoint, true);
+
+                // check whether the endpoint has already been set on the MuleEventMulticastor
+                if (descriptor.getInboundRouter().getEndpoint(ep.getName()) == null)
+                {
+                    descriptor.getInboundRouter().addEndpoint(ep);
+                }
             }
         }
     }

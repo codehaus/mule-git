@@ -10,7 +10,9 @@
 
 package org.mule.impl;
 
+import org.mule.MuleManager;
 import org.mule.config.ExceptionHelper;
+import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.impl.message.ExceptionMessage;
 import org.mule.providers.NullPayload;
 import org.mule.transaction.TransactionCoordination;
@@ -29,13 +31,12 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.routing.RoutingException;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.beans.ExceptionListener;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -86,6 +87,8 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
 
     public void exceptionThrown(Exception e)
     {
+        fireNotification(new ExceptionNotification(e));
+        
         Throwable t = getExceptionType(e, RoutingException.class);
         if (t != null)
         {
@@ -237,7 +240,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 }
                 UMOEvent exceptionEvent = new MuleEvent(exceptionMessage, endpoint, new MuleSession(
                     exceptionMessage, new MuleSessionHandler()), true);
-                RequestContext.setEvent(exceptionEvent);
+                exceptionEvent = RequestContext.setEvent(exceptionEvent);
                 endpoint.send(exceptionEvent);
 
                 if (logger.isDebugEnabled())
@@ -329,6 +332,18 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
     public boolean isInitialised()
     {
         return initialised.get();
+    }
+
+    /**
+     * Fires a server notification to all registered
+     * {@link org.mule.impl.internal.notifications.ExceptionNotificationListener}
+     * eventManager.
+     *
+     * @param notification the notification to fire.
+     */
+    protected void fireNotification(ExceptionNotification notification)
+    {
+        MuleManager.getInstance().fireNotification(notification);
     }
 
     /**

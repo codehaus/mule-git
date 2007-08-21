@@ -38,10 +38,7 @@ import org.apache.commons.digester.RuleSetBase;
 import org.xml.sax.Attributes;
 
 /**
- * A digester rule set that loads rules for <properties> tags and its child tags;
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * A digester rule set that loads rules for <properties> tags and its child tags.
  */
 public class MulePropertiesRuleSet extends RuleSetBase
 {

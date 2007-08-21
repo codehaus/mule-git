@@ -10,7 +10,8 @@
 
 package org.mule.registry;
 
-import java.io.File;
+import org.mule.util.FileUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -21,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public class ClassLoaderFactory
 {
 
@@ -77,7 +75,7 @@ public class ClassLoaderFactory
         for (int i = 0; i < urls.length; i++)
         {
             String cpElement = (String)paths.get(i);
-            urls[i] = new File(root, cpElement).toURL();
+            urls[i] = FileUtils.newFile(root, cpElement).toURL();
         }
         return urls;
     }
@@ -85,8 +83,6 @@ public class ClassLoaderFactory
     /**
      * ClassLoader for a component. This class loader is able to resolve class either
      * by first looking at the parent ot itself.
-     * 
-     * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
      */
     public static class JbiClassLoader extends URLClassLoader
     {
@@ -138,8 +134,6 @@ public class ClassLoaderFactory
 
     /**
      * ClassLoader for shared libraries
-     * 
-     * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
      */
     public static class DelegatingClassLoader extends SecureClassLoader
     {

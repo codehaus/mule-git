@@ -21,8 +21,8 @@ import org.mule.transformers.xml.XmlToObject;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouter;
+import org.mule.umo.routing.UMOOutboundRouterCollection;
 
 /**
  * Test the creation of various endpoints from the service descriptor

@@ -13,8 +13,8 @@ package org.mule.providers.tcp.protocols;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Test by reading characters from a fixed StringBuffer instead of a TCP port.

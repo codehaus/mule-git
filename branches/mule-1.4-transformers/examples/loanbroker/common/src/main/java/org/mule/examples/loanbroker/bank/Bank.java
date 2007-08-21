@@ -26,10 +26,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>Bank</code> is a representation of a bank form which to obtain loan
+ * <code>Bank</code> is a representation of a bank from which to obtain loan
  * quotes.
- * 
- * @author Gregor Hohpe, Bobby Wolfe, et al. EI Patterns
  */
 
 public class Bank implements UMODescriptorAware, Serializable, BankService
@@ -42,7 +40,7 @@ public class Bank implements UMODescriptorAware, Serializable, BankService
     /**
      * logger used by this class
      */
-    protected static transient Log logger = LogFactory.getLog(Bank.class);
+    protected static final Log logger = LogFactory.getLog(Bank.class);
 
     private String bankName;
     private double primeRate;

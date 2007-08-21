@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
+import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.impl.endpoint.MuleEndpoint;
 
 import com.mockobjects.dynamic.Mock;
 

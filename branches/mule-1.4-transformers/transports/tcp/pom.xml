@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-tcp</artifactId>
     <packaging>jar</packaging>
@@ -20,11 +20,23 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <excludes>
+                        <exclude>**/*Mule1389TestCase.java</exclude>
                 <exclude>**/*Mule1687TestCase.java</exclude>
-                <exclude>**/*Mule1692TestCase.java</exclude>
+                        <exclude>**/*Mule2067TestCase.java</exclude>
             </excludes>
           </configuration>
         </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
       </plugins>
     </build>
 
@@ -42,4 +54,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

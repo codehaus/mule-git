@@ -10,6 +10,11 @@
 
 package org.mule.providers.soap.axis.wsdl;
 
+import org.mule.providers.soap.SoapConstants;
+import org.mule.providers.soap.axis.AxisMessageDispatcher;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,16 +28,9 @@ import org.apache.axis.client.Service;
 import org.apache.axis.wsdl.gen.Parser;
 import org.apache.axis.wsdl.symbolTable.ServiceEntry;
 import org.apache.axis.wsdl.symbolTable.SymTabEntry;
-import org.mule.providers.soap.SoapConstants;
-import org.mule.providers.soap.axis.AxisMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 /**
- * Creates and Axis client services from WSDL and invokes it
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Creates and Axis client services from WSDL and invokes it.
  */
 public class AxisWsdlMessageDispatcher extends AxisMessageDispatcher
 {

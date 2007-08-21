@@ -12,8 +12,6 @@ package org.mule.providers.udp.functional;
 
 import org.mule.tck.FunctionalTestCase;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -22,6 +20,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class UdpRoundTripTestCase extends FunctionalTestCase
 {
@@ -33,8 +33,8 @@ public class UdpRoundTripTestCase extends FunctionalTestCase
 
     public void testSendAndReceiveUDP() throws IOException
     {
-        int outPort = 9001;
-        int inPort = 9002;
+        int outPort = 61000;
+        int inPort = 61001;
 
         // the socket we talk to
         DatagramSocket socket = new DatagramSocket(inPort, InetAddress.getLocalHost());

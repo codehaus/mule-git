@@ -10,14 +10,6 @@
 
 package org.mule.util.queue;
 
-import org.mule.util.queue.FilePersistenceStrategy;
-import org.mule.util.queue.QueueConfiguration;
-import org.mule.util.queue.TransactionalQueueManager;
-
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
 public class FilePersistenceTestCase extends AbstractTransactionQueueManagerTestCase
 {
 

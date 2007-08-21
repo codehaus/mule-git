@@ -10,16 +10,10 @@
 
 package org.mule.routing.inbound;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.routing.AggregationException;
 import org.mule.routing.LoggingCatchAllStrategy;
-import org.mule.routing.inbound.AbstractEventAggregator;
-import org.mule.routing.inbound.EventGroup;
-import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
@@ -29,6 +23,9 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.UMOInboundRouterCollection;
+
+import java.util.Iterator;
+import java.util.Map;
 
 public class EventAggregatorTestCase extends AbstractMuleTestCase
 {

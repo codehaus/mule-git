@@ -10,11 +10,12 @@
 
 package org.mule.test.config;
 
-import org.apache.commons.beanutils.Converter;
 import org.mule.config.converters.EndpointConverter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.endpoint.UMOEndpoint;
+
+import org.apache.commons.beanutils.Converter;
 
 public class EndpointConverterTestCase extends AbstractMuleTestCase
 {

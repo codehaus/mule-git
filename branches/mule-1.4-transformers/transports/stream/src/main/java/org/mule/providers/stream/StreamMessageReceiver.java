@@ -17,12 +17,11 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.SystemUtils;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PushbackInputStream;
-
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * <code>StreamMessageReceiver</code> is a listener for events from Mule components
@@ -41,7 +40,8 @@ public class StreamMessageReceiver extends AbstractPollingMessageReceiver
                                  UMOEndpoint endpoint,
                                  long checkFrequency) throws InitialisationException
     {
-        super(connector, component, endpoint, checkFrequency);
+        super(connector, component, endpoint);
+        this.setFrequency(checkFrequency);
 
         this.connector = (StreamConnector)connector;
         String streamName = endpoint.getEndpointURI().getAddress();

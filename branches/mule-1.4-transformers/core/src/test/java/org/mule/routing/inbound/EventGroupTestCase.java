@@ -12,7 +12,6 @@ package org.mule.routing.inbound;
 
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
-import org.mule.routing.inbound.EventGroup;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.umo.UMOEvent;

@@ -10,13 +10,13 @@
 
 package org.mule.providers.file;
 
-import java.io.File;
-
 import org.mule.MuleManager;
-import org.mule.providers.file.FileMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.FileUtils;
+
+import java.io.File;
 
 public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
@@ -32,7 +32,7 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         super.doSetUp();
 
         // The working directory is deleted on tearDown
-        File dir = new File(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
+        File dir = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
         if (!dir.exists())
         {
             dir.mkdirs();

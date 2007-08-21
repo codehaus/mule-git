@@ -11,7 +11,6 @@
 package org.mule.umo;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.FutureMessageResult;
 import org.mule.umo.transformer.TransformerException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;

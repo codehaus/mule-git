@@ -11,8 +11,6 @@
 package org.mule.routing.filters;
 
 import org.mule.impl.MuleMessage;
-import org.mule.routing.filters.EqualsFilter;
-import org.mule.routing.filters.WildcardFilter;
 import org.mule.routing.filters.logic.AndFilter;
 import org.mule.routing.filters.logic.NotFilter;
 import org.mule.routing.filters.logic.OrFilter;

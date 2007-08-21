@@ -16,13 +16,9 @@ import org.mule.config.MuleDtdResolver;
 import org.mule.config.MuleProperties;
 import org.mule.config.ReaderResource;
 import org.mule.config.builders.i18n.BuildersMessages;
-import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.umo.UMOFilter;
-import org.mule.util.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,22 +89,6 @@ public abstract class AbstractDigesterConfiguration
         });
     }
 
-    // protected ReaderResource[] parseResources(String configResources) throws
-    // ConfigurationException {
-    // String[] resources = Utility.split(configResources, ",");
-    // MuleManager.getConfiguration().setConfigResources(resources);
-    // ReaderResource[] readers = new ReaderResource[resources.length];
-    // for (int i = 0; i < resources.length; i++) {
-    // try {
-    // readers[i] = new ReaderResource(resources[i].trim(),
-    // new InputStreamReader(loadConfig(resources[i].trim()), "UTF-8"));
-    // } catch (UnsupportedEncodingException e) {
-    // throw new ConfigurationException(e);
-    // }
-    // }
-    // return readers;
-    // }
-
     protected Object process(ReaderResource[] configResources) throws ConfigurationException
     {
         Object result = null;
@@ -128,38 +108,6 @@ public abstract class AbstractDigesterConfiguration
         }
 
         return result;
-    }
-
-    /**
-     * Attempt to load a configuration resource from the file system, classpath, or
-     * as a URL, in that order.
-     * 
-     * @param configResource Mule configuration resources
-     * @return an InputStream to the resource
-     * @throws ConfigurationException if the resource could not be loaded by any
-     *             means
-     */
-    protected InputStream loadConfig(String configResource) throws ConfigurationException
-    {
-        InputStream is = null;
-        try
-        {
-            is = IOUtils.getResourceAsStream(configResource, getClass());
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException(
-                CoreMessages.cannotLoadFromClasspath(configResource), e);
-        }
-
-        if (is != null)
-        {
-            return is;
-        }
-        else
-        {
-            throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource));
-        }
     }
 
     public abstract String getRootName();

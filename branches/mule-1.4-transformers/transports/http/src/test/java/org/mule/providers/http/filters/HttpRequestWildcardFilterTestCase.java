@@ -33,7 +33,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
         return "http-wildcard-filter-test.xml";
     }
 
-    private static final String HTTP_ENDPOINT = "http://localhost:60198";
+    private static final String HTTP_ENDPOINT = "http://localhost:60201";
     private static final String TEST_MESSAGE = "Hello=World";
     private static final String TEST_BAD_MESSAGE = "xyz";
 
@@ -62,7 +62,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
         props.put(HttpConstants.METHOD_GET, "true");
         MuleClient client = new MuleClient();
         UMOMessage result = client.send(HTTP_ENDPOINT, TEST_BAD_MESSAGE, props);
-        assertEquals(result.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 0), HttpConstants.SC_NOT_ACCEPTABLE);
+        assertEquals(HttpConstants.SC_NOT_ACCEPTABLE, result.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 0));
         assertNotNull(result.getExceptionPayload());
     }
 }

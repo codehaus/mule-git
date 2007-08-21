@@ -20,14 +20,13 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>TcpStreamingMessageReceiver</code> establishes a TCP client connection to
@@ -37,30 +36,19 @@ import org.apache.commons.lang.StringUtils;
  * so this forces the pollingFrequency property to zero so no pause occurs in the
  * PollingMessageReceiver class.
  */
-// TODO SF: check how this works with the 1.4 connector scheduler
+// TODO AC: check how this works with the 1.4 connector scheduler
 public class TcpStreamingMessageReceiver extends AbstractPollingMessageReceiver
 {
     protected Socket clientSocket = null;
-
     protected DataInputStream dataIn = null;
-
     protected TcpProtocol protocol = null;
 
-    public TcpStreamingMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
-        throws InitialisationException
-    {
-        this(connector, component, endpoint, 0);
-    }
-
-    private TcpStreamingMessageReceiver(UMOConnector connector,
+    public TcpStreamingMessageReceiver(UMOConnector connector,
                                         UMOComponent component,
-                                        UMOEndpoint endpoint,
-                                        long frequency) throws InitialisationException
+                                        UMOEndpoint endpoint) throws InitialisationException
     {
-        super(connector, component, endpoint, frequency);
+        super(connector, component, endpoint);
         protocol = ((TcpConnector)connector).getTcpProtocol();
-        // TODO SF: this seems wrong since 0 is ignored as value
-        setFrequency(0);
     }
 
     protected void doDispose()
@@ -88,7 +76,6 @@ public class TcpStreamingMessageReceiver extends AbstractPollingMessageReceiver
         }
         catch (Exception e)
         {
-            logger.error(e);
             throw new ConnectException(TcpMessages.failedToBindToUri(uri), e, this);
         }
     }
@@ -114,9 +101,9 @@ public class TcpStreamingMessageReceiver extends AbstractPollingMessageReceiver
 
     public void poll() throws Exception
     {
-        // TODO SF: this seems wrong since 0 is ignored as value
+        // TODO AC: this seems wrong since 0 is ignored as value
         setFrequency(0); // make sure this is zero and not overridden via config
-        // TODO SF: check if this cast is ok
+        // TODO AC: check if this cast is ok
         byte[] data = (byte[])protocol.read(dataIn);
         if (data != null)
         {

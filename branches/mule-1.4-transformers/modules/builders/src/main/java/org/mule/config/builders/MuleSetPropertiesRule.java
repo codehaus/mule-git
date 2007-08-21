@@ -16,10 +16,7 @@ import org.xml.sax.Attributes;
 /**
  * this rule Allows for template parameters to be parse on the configuration file
  * attributes in the form of ${param-name}. These will get resolved against
- * properties set in the mule-properites element
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * properties set in the mule-properites element.
  */
 public class MuleSetPropertiesRule extends SetPropertiesRule
 {

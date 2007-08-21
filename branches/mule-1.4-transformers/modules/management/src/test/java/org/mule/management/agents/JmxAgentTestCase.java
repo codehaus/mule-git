@@ -16,10 +16,6 @@ import org.mule.tck.AbstractMuleTestCase;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.rmi.server.RMIClientSocketFactory;
-import java.net.Socket;
-import java.io.IOException;
-import java.io.Serializable;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;

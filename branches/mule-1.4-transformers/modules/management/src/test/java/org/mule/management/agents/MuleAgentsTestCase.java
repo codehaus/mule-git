@@ -10,14 +10,13 @@
 
 package org.mule.management.agents;
 
-import org.mule.management.agents.JmxAgent;
-import org.mule.management.agents.Mx4jAgent;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.manager.UMOManager;
 
+import java.util.List;
+
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import java.util.List;
 
 public class MuleAgentsTestCase extends AbstractMuleTestCase
 {

@@ -10,14 +10,12 @@
 
 package org.mule.samples.voipservice.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.samples.voipservice.interfaces.BankAgency;
 import org.mule.samples.voipservice.to.CreditProfileTO;
 
-/**
- * @author Binildas Christudas
- */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class BankAgencyService implements BankAgency
 {
 

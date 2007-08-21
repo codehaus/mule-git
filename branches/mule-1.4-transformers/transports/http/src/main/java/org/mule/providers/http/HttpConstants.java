@@ -10,12 +10,13 @@
 
 package org.mule.providers.http;
 
+import org.mule.config.MuleProperties;
+import org.mule.util.MapUtils;
+
 import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.mule.config.MuleProperties;
-import org.mule.util.MapUtils;
 
 /**
  * <code>HttpConstants</code> for request and response headers
@@ -177,7 +178,7 @@ public class HttpConstants
             HEADER_IF_MODIFIED_SINCE, HEADER_IF_NONE_MATCH, HEADER_IF_RANGE, HEADER_IF_UNMODIFIED_SINCE,
             HEADER_MAX_FORWARDS, HEADER_PRAGMA, HEADER_PROXY_AUTHORIZATION, HEADER_RANGE, HEADER_REFERER,
             HEADER_TE, HEADER_TRAILER, HEADER_TRANSFER_ENCODING, HEADER_UPGRADE, HEADER_USER_AGENT,
-            HEADER_VIA, HEADER_WARNING};
+            HEADER_VIA, HEADER_WARNING, HEADER_CONTENT_LENGTH};
 
         REQUEST_HEADER_NAMES = Collections.unmodifiableMap(MapUtils.mapWithKeysAndValues(
             CaseInsensitiveMap.class, strings, strings));

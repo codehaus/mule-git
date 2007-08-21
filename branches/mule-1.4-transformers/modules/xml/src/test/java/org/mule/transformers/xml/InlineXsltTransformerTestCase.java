@@ -10,7 +10,6 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.transformers.xml.XsltTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 

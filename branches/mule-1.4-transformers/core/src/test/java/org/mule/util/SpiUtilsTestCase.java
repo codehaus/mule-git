@@ -14,8 +14,6 @@ import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.Fruit;
-import org.mule.util.IOUtils;
-import org.mule.util.SpiUtils;
 
 import java.io.InputStream;
 import java.util.Properties;

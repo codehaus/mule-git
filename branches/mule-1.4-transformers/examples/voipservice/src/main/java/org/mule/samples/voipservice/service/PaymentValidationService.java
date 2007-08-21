@@ -10,17 +10,15 @@
 
 package org.mule.samples.voipservice.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.samples.voipservice.interfaces.PaymentValidation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Binildas Christudas
- */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PaymentValidationService implements PaymentValidation
 {
 
@@ -28,7 +26,6 @@ public class PaymentValidationService implements PaymentValidation
 
     public List getCreditVendors(String cardType)
     {
-
         logger.info("Inside PaymentValidationService.getCreditVendors() ***************");
         List endPoints = new ArrayList();
         endPoints.add(MuleManager.getInstance().lookupEndpointIdentifier(CREDIT_AGENCY_LOOKUP_NAME, null));

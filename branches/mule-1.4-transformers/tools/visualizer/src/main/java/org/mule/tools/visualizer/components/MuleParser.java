@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -27,6 +27,7 @@ import com.oy.shared.lm.graph.Graph;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,9 +66,20 @@ public class MuleParser
 
     }
 
+    public void parseMuleConfig(InputStream in, Graph graph) throws JDOMException, IOException
+    {
+        Document doc = builder.build(in);
+        parseMuleConfig(doc, graph);
+    }
+
     public void parseMuleConfig(File myFile, Graph graph) throws JDOMException, IOException
     {
         Document doc = builder.build(myFile);
+        parseMuleConfig(doc, graph);
+    }
+
+    public void parseMuleConfig(Document doc, Graph graph) throws JDOMException, IOException
+    {
         Element root = doc.getRootElement();
         String caption = root.getAttribute("id").getValue();
         if (caption != null)

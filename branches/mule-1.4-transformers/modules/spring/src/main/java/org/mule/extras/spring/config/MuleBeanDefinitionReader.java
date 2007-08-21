@@ -10,6 +10,9 @@
 
 package org.mule.extras.spring.config;
 
+import org.mule.config.MuleDtdResolver;
+import org.mule.umo.transformer.UMOTransformer;
+
 import java.io.IOException;
 
 import javax.xml.transform.Source;
@@ -22,8 +25,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.io.DOMReader;
-import org.mule.config.MuleDtdResolver;
-import org.mule.umo.transformer.UMOTransformer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -49,12 +50,15 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
     public MuleBeanDefinitionReader(BeanDefinitionRegistry beanDefinitionRegistry, int configCount)
     {
         super(beanDefinitionRegistry);
-        // default resource loader
+
+        setDocumentReaderClass(MuleBeanDefinitionDocumentReader.class);
         setResourceLoader(new MuleResourceLoader());
         // TODO Make this configurable as a property somehow.
         setValidationMode(VALIDATION_DTD);
         setEntityResolver(createEntityResolver());
         this.configCount = configCount;
+        
+        // TransformerEditor is used to convert Transformer names into transformer Objects.
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,
             new TransformerEditor());
     }

@@ -7,7 +7,7 @@ Integration Patterns book.
 There are several variations of the same application which illustrate different architectural 
 styles and Mule constructs.
 
-For more information, refer to http://mule.mulesource.org/wiki/display/MULE/Loan+Broker
+For more information, refer to http://www.muledocs.org/Loan+Broker+Example
 
 +----------------------+
 | Building the example |

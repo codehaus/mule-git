@@ -10,25 +10,33 @@
 
 package org.mule.providers.soap.xfire.transport;
 
+import org.mule.providers.soap.xfire.MuleInvoker;
+import org.mule.umo.manager.UMOWorkManager;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.xfire.MessageContext;
+import org.codehaus.xfire.service.Binding;
 import org.codehaus.xfire.service.Service;
+import org.codehaus.xfire.soap.Soap11;
+import org.codehaus.xfire.soap.Soap12;
 import org.codehaus.xfire.soap.SoapTransport;
 import org.codehaus.xfire.soap.SoapTransportHelper;
+import org.codehaus.xfire.soap.SoapVersion;
 import org.codehaus.xfire.transport.AbstractTransport;
 import org.codehaus.xfire.transport.Channel;
 import org.codehaus.xfire.transport.DefaultEndpoint;
 import org.codehaus.xfire.transport.MapSession;
 import org.codehaus.xfire.transport.Session;
 import org.codehaus.xfire.wsdl11.WSDL11Transport;
-import org.mule.providers.soap.xfire.MuleInvoker;
-import org.mule.umo.manager.UMOWorkManager;
 
 /**
  * TODO document
  */
 public class MuleLocalTransport extends AbstractTransport implements SoapTransport, WSDL11Transport
 {
+    public static final String SOAP11_HTTP_BINDING = "http://schemas.xmlsoap.org/soap/http";
+    public static final String SOAP12_HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
     public static final String BINDING_ID = "urn:xfire:transport:local";
     public static final String URI_PREFIX = "xfire.local://";
 
@@ -106,5 +114,21 @@ public class MuleLocalTransport extends AbstractTransport implements SoapTranspo
     public String[] getSoapTransportIds()
     {
         return new String[]{BINDING_ID};
+    }
+    
+    public Binding findBinding(MessageContext context, Service service)
+    {
+        SoapVersion version = context.getCurrentMessage().getSoapVersion();
+
+        if (version instanceof Soap11)
+        {
+            return service.getBinding(SOAP11_HTTP_BINDING);
+        }
+        else if (version instanceof Soap12)
+        {
+            return service.getBinding(SOAP12_HTTP_BINDING);
+        }
+
+        return super.findBinding(context, service);
     }
 }

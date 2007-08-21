@@ -10,6 +10,8 @@
 
 package org.mule.providers.http;
 
+import org.mule.MuleManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -22,7 +24,6 @@ import org.apache.commons.httpclient.HeaderGroup;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.mule.MuleManager;
 
 /**
  * A http request wrapper

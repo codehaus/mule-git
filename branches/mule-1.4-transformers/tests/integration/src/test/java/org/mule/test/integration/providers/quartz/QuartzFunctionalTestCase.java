@@ -17,16 +17,12 @@ import org.mule.providers.quartz.QuartzConnector;
 import org.mule.providers.quartz.jobs.MuleClientReceiveJob;
 import org.mule.tck.AbstractMuleTestCase;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 public class QuartzFunctionalTestCase extends AbstractMuleTestCase
 {
     protected static CountDownLatch countDown;

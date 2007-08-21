@@ -14,10 +14,7 @@ import org.mule.config.i18n.Message;
 import org.mule.umo.lifecycle.FatalException;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class FatalConnectException extends FatalException
 {

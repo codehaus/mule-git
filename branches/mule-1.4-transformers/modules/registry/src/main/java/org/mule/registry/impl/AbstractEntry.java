@@ -17,9 +17,6 @@ import org.mule.registry.RegistryException;
 import java.io.IOException;
 import java.io.Serializable;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public abstract class AbstractEntry implements Entry, Serializable
 {
 

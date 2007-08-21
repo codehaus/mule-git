@@ -10,6 +10,9 @@
 
 package org.mule.routing.filters.xml;
 
+import org.mule.impl.MuleMessage;
+import org.mule.tck.AbstractMuleTestCase;
+
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -20,9 +23,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.InvalidXPathException;
-import org.mule.impl.MuleMessage;
-import org.mule.routing.filters.xml.JXPathFilter;
-import org.mule.tck.AbstractMuleTestCase;
 import org.xml.sax.InputSource;
 
 public class JXPathFilterTestCase extends AbstractMuleTestCase

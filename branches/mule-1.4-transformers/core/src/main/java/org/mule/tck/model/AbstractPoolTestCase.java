@@ -18,9 +18,8 @@ import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.model.UMOPoolFactory;
+import org.mule.util.ExceptionUtils;
 import org.mule.util.ObjectPool;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 {

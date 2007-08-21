@@ -11,8 +11,6 @@
 package org.mule.transformers.simple;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.simple.ByteArrayToObject;
-import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
 public class ObjectByteArrayTransformersWithStringsTestCase extends AbstractTransformerTestCase

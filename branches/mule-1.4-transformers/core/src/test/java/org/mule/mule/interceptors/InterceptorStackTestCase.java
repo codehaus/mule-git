@@ -10,10 +10,6 @@
 
 package org.mule.mule.interceptors;
 
-import com.mockobjects.dynamic.Mock;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
-
 import org.mule.interceptors.InterceptorStack;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.Invocation;
@@ -22,15 +18,13 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOInterceptor;
 import org.mule.umo.UMOMessage;
 
+import com.mockobjects.dynamic.Mock;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TODO: document this class
- * 
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
 public class InterceptorStackTestCase extends AbstractMuleTestCase
 {
 

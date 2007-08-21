@@ -12,9 +12,6 @@ package org.mule.registry;
 
 /**
  * Represents a Component type in the registry
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class ComponentType
 {

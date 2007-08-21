@@ -11,8 +11,6 @@
 package org.mule.transformers.simple;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.simple.ByteArrayToString;
-import org.mule.transformers.simple.StringToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Arrays;

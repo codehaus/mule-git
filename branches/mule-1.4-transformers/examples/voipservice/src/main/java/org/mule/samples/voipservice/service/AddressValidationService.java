@@ -10,14 +10,12 @@
 
 package org.mule.samples.voipservice.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.samples.voipservice.interfaces.AddressValidation;
 import org.mule.samples.voipservice.to.AddressTO;
 
-/**
- * @author Binildas Christudas
- */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class AddressValidationService implements AddressValidation
 {
 

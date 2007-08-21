@@ -18,10 +18,6 @@ import org.mule.tck.testmodels.mule.TestExceptionStrategy;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.endpoint.UMOEndpoint;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class MuleDescriptorTestCase extends AbstractMuleTestCase
 {
     public void testDescriptorDefaults() throws Exception

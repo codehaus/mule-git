@@ -10,11 +10,6 @@
 
 package org.mule.providers.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mule.MuleManager;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.ConnectException;
@@ -27,6 +22,11 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO
@@ -46,11 +46,11 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
                                String readStmt,
                                String ackStmt) throws InitialisationException
     {
-        super(connector, component, endpoint, ((JdbcConnector)connector).getPollingFrequency());
+        super(connector, component, endpoint);
+        this.setFrequency(((JdbcConnector)connector).getPollingFrequency());
+        this.setReceiveMessagesInTransaction(false);
 
-        this.receiveMessagesInTransaction = false;
         this.connector = (JdbcConnector)connector;
-
         this.readParams = new ArrayList();
         this.readStmt = this.connector.parseStatement(readStmt, this.readParams);
         this.ackParams = new ArrayList();

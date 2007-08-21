@@ -16,12 +16,12 @@ is usually something like the following:
 
 Linux / Unix
 ------------
-export MULE_HOME=/opt/mule-1.3
+export MULE_HOME=/opt/mule
 export PATH=$PATH:$MULE_HOME/bin
 
 Windows
 -------
-set MULE_HOME=C:\Program Files\mule-1.3
+set MULE_HOME=C:\Mule
 set PATH=%PATH%;%MULE_HOME%\bin
 
 (or by using the System utility in the Control Panel for Windows NT/2000/XP)
@@ -66,13 +66,13 @@ The distribution you have downloaded contains the following:
 | GETTING STARTED |
 +-----------------+
 Take a look at the latest documentation on our website:
-http://mule.mulesource.org/wiki/display/MULE/Getting+Started+Guide
+http://www.muledocs.org/Getting+Started+Guide
 
 User Guide:
-http://mule.mulesource.org/wiki/display/MULE/User+Guide
+http://www.muledocs.org/User+Guide
 
 Example Applications:
-http://mule.mulesource.org/wiki/display/MULE/Mule+Examples
+http://www.muledocs.org/Examples
 
 +----------+
 | FEEDBACK |

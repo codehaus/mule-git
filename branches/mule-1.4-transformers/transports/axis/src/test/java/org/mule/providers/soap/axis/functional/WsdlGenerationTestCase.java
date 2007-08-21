@@ -47,7 +47,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:8081/services/EchoService1?wsdl", null, props);
+        UMOMessage result = client.send("http://localhost:62081/services/EchoService1?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
@@ -66,7 +66,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         assertEquals("EchoService1", doc.valueOf("/wsdl:definitions/wsdl:service/@name"));
 
         assertEquals("EchoService1", doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/@name"));
-        assertEquals("http://localhost:8081/services/EchoService1",
+        assertEquals("http://localhost:62081/services/EchoService1",
             doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/wsdlsoap:address/@location"));
 
     }
@@ -77,7 +77,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:8082/services/EchoService2?wsdl", null, props);
+        UMOMessage result = client.send("http://localhost:62082/services/EchoService2?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
@@ -91,7 +91,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
             doc.valueOf("/wsdl:definitions/wsdl:binding/wsdl:operation[@name='echo']/wsdl:output[@name='echoResponse']/wsdlsoap:body/@namespace"));
         assertEquals("muleService", doc.valueOf("/wsdl:definitions/wsdl:service/@name"));
         assertEquals("muleServicePort", doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/@name"));
-        assertEquals("http://localhost:8082/services/EchoService2",
+        assertEquals("http://localhost:62082/services/EchoService2",
             doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/wsdlsoap:address/@location"));
 
     }
@@ -102,7 +102,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:8083/services/EchoService3?wsdl", null, props);
+        UMOMessage result = client.send("http://localhost:62083/services/EchoService3?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
@@ -116,7 +116,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
             doc.valueOf("/wsdl:definitions/wsdl:binding/wsdl:operation[@name='echo']/wsdl:output[@name='echoResponse']/wsdlsoap:body/@namespace"));
         assertEquals("muleService1", doc.valueOf("/wsdl:definitions/wsdl:service/@name"));
         assertEquals("muleServicePort1", doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/@name"));
-        assertEquals("http://localhost:8083/services/EchoService3",
+        assertEquals("http://localhost:62083/services/EchoService3",
             doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/wsdlsoap:address/@location"));
 
     }

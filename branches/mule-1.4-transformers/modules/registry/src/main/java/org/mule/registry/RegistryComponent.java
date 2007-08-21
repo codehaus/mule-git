@@ -10,13 +10,10 @@
 
 package org.mule.registry;
 
-import javax.management.ObjectName;
-
 import java.util.List;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
+import javax.management.ObjectName;
+
 public interface RegistryComponent extends Entry
 {
 

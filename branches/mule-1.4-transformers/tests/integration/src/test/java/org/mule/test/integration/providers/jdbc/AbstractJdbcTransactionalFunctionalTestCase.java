@@ -24,14 +24,10 @@ import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.UMOTransactionFactory;
 import org.mule.umo.endpoint.UMOEndpoint;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.util.HashMap;
 
-/**
- * @author Guillaume Nodet
- * @version $Revision$
- */
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class AbstractJdbcTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase
 {
 

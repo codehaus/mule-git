@@ -75,7 +75,7 @@ public final class TransportFactory
     public static UMOEndpoint createEndpoint(UMOEndpointURI uri, String type) throws EndpointException
     {
         String scheme = uri.getFullScheme();
-        UMOConnector connector = null;
+        UMOConnector connector;
         try
         {
             if (uri.getCreateConnector() == ALWAYS_CREATE_CONNECTOR)
@@ -157,7 +157,7 @@ public final class TransportFactory
         throws TransportFactoryException
     {
         UMOTransformer trans = null;
-        String transId = null;
+        String transId;
         if (type == 2)
         {
             transId = url.getResponseTransformers();
@@ -250,7 +250,7 @@ public final class TransportFactory
     {
         String scheme = url.getSchemeMetaInfo();
 
-        UMOConnector connector = null;
+        UMOConnector connector;
         TransportServiceDescriptor csd = getServiceDescriptor(scheme);
         // Make sure we can create the endpoint/connector using this service
         // method
@@ -392,7 +392,14 @@ public final class TransportFactory
     private static UMOConnector getOrCreateConnectorByProtocol(UMOEndpointURI uri, int create)
         throws TransportFactoryException
     {
-        UMOConnector connector = getConnectorByProtocol(uri.getFullScheme());
+        final String connectorName = uri.getConnectorName();
+        UMOConnector connector = MuleManager.getInstance().lookupConnector(connectorName);
+        if (connector != null)
+        {
+            return connector;
+        }
+
+        connector = getConnectorByProtocol(uri.getFullScheme());
         if (ALWAYS_CREATE_CONNECTOR == create
             || (connector == null && create == GET_OR_CREATE_CONNECTOR))
         {
@@ -470,12 +477,8 @@ public final class TransportFactory
             {
                 return false;
             }
-            if (!protocol.equals(csdKey.protocol))
-            {
-                return false;
-            }
+            return protocol.equals(csdKey.protocol);
 
-            return true;
         }
 
         // @Override

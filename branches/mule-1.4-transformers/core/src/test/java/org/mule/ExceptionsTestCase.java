@@ -10,7 +10,6 @@
 
 package org.mule;
 
-import org.mule.MuleException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.tck.AbstractMuleTestCase;

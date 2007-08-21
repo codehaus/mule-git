@@ -28,15 +28,14 @@ import org.mule.umo.security.UMOSecurityContext;
 import org.mule.umo.security.UnauthorisedException;
 import org.mule.umo.security.UnknownAuthenticationTypeException;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collection;
+
 import cryptix.message.LiteralMessage;
 import cryptix.message.Message;
 import cryptix.message.MessageFactory;
 import cryptix.message.SignedMessage;
 import cryptix.pki.KeyBundle;
-
-import java.io.ByteArrayInputStream;
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -10,17 +10,14 @@
 
 package org.mule.management.agents;
 
-import javax.management.ObjectName;
-
 import org.mule.config.i18n.Message;
 import org.mule.management.ManagementException;
 
+import javax.management.ObjectName;
+
 /**
  * <code>JmxManagementException</code> is thrown by the Jmx agents if an error
- * occurs while executing an operation
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * occurs while executing an operation.
  */
 public class JmxManagementException extends ManagementException
 {

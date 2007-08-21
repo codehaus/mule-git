@@ -10,14 +10,14 @@
 
 package org.mule.providers.file.transformers;
 
-import java.io.File;
-import java.io.FileWriter;
-
-import org.mule.providers.file.transformers.FileToString;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.FileUtils;
 import org.mule.util.SystemUtils;
+
+import java.io.File;
+import java.io.FileWriter;
 
 /**
  * Test case for FileToString transformer
@@ -36,7 +36,7 @@ public class FileToStringTestCase extends AbstractTransformerTestCase
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
-        _testData = new File(SystemUtils.JAVA_IO_TMPDIR, "FileToStringTestData");
+        _testData = FileUtils.newFile(SystemUtils.JAVA_IO_TMPDIR, "FileToStringTestData");
         FileWriter fw = new FileWriter(_testData);
         fw.write(_resultData);
         fw.close();

@@ -12,7 +12,6 @@ package org.mule.transformers;
 
 import org.mule.providers.NullPayload;
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 

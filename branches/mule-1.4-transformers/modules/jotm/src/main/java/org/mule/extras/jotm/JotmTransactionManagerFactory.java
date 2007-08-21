@@ -11,19 +11,17 @@
 package org.mule.extras.jotm;
 
 import org.mule.umo.manager.UMOTransactionManagerFactory;
-import org.objectweb.jotm.Current;
-import org.objectweb.jotm.Jotm;
 
 import javax.transaction.TransactionManager;
+
+import org.objectweb.jotm.Current;
+import org.objectweb.jotm.Jotm;
 
 /**
  * This factory retrieves the transaction manager for <a
  * href="http://jotm.objectweb.org">JOTM </a>. If an existing JOTM instance exists
  * (for example if running on JOnAS) it will retrieve it, else if will create a new
  * local JOTM instance.
- * 
- * @author Guillaume Nodet
- * @version $Revision$
  */
 public class JotmTransactionManagerFactory implements UMOTransactionManagerFactory
 {

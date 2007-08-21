@@ -6,10 +6,10 @@ Building the Mule GUI Installer Using IzPack Version 3.10
 4.) Add the MuleInstallerListener.jar and the provided MuleInstallerListener folder in the following location:
 	%IZPACK_HOME%/bin/customActions
 5.) Add the following configuration to the IzPack build file (under build.listeners) or substitute the build file with the one provided in mule\tools\installer\Modified IzPack Build File
-	
+
 	<build-installer-listener name="MuleInstallerListener">
 	      <include name="com/izpack/mule/installer/custom/listener/MuleInstallerListener.java"/>
-	</build-installer-listener>	
+    </build-installer-listener>
 
 6.) Use the ant tool to rebuild IzPack
 7.) Build the Mule installer from the mule/tools/installer/config folder using the following command:

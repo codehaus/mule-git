@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -50,7 +50,7 @@ public class GraphRenderer
 
     }
 
-    public void saveGraph(Graph graph, String filename, File outFolder) throws IOException
+    public String saveGraph(Graph graph, String filename, File outFolder) throws IOException
     {
         // output graph to *.gif
         final String dotFileName = new File(outFolder, filename + ".dot").getAbsolutePath();
@@ -78,6 +78,7 @@ public class GraphRenderer
             PostRenderer element = (PostRenderer) iter.next();
             element.postRender(env, context, graph);
         }
+        return gifFileName;
     }
 
     private String getSaveExecutable() throws FileNotFoundException

@@ -18,9 +18,6 @@ import org.mule.util.StringMessageUtils;
 
 /**
  * <code>DefaultHandler</code> TODO (document class)
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class DefaultHandler extends AbstractExceptionHandler
 {

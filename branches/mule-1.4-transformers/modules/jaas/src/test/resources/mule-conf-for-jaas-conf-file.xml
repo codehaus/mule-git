@@ -6,7 +6,7 @@
 <mule-configuration id="Mule_Sample" version="1.0">
 	
 	<mule-environment-properties serverUrl="" synchronous="true"/>
-	
+
     <security-manager>
 		<security-provider name="JaasProvider" className="org.mule.extras.jaas.JaasSimpleAuthenticationProvider">
             <properties>
@@ -20,7 +20,7 @@
             </properties>
         </encryption-strategy>
 	</security-manager>
-	
+
     <model name="test">
 		<mule-descriptor name="TestUMO" implementation="org.mule.tck.functional.FunctionalTestComponent">
 			<inbound-router>
@@ -29,9 +29,9 @@
 	                         <properties>
 		                         <property name="strategyName" value="PBE"/>
 			                 </properties>
-				      </security-filter> 
-				</endpoint>			
+                      </security-filter>
+                </endpoint>
 			</inbound-router>
-		</mule-descriptor>	
-	</model> 
+        </mule-descriptor>
+    </model>
 </mule-configuration>

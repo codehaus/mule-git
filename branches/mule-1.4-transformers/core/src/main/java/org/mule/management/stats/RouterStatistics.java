@@ -22,10 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <code>RouterStatistics</code> todo
- *
- * @author <a href="mailto:S.Vanmeerhaege@gfdi.be">Vanmeerhaeghe Stéphane</a>
- * @version $Revision$
+ * <code>RouterStatistics</code> TODO
  */
 public class RouterStatistics implements Statistics
 {
@@ -98,7 +95,7 @@ public class RouterStatistics implements Statistics
 
     /**
      * Increment routed message for multiple endpoints
-     *
+     * 
      * @param endpoints The endpoint collection
      */
     public void incrementRoutedMessage(Collection endpoints)
@@ -119,7 +116,7 @@ public class RouterStatistics implements Statistics
 
     /**
      * Increment routed message for an endpoint
-     *
+     * 
      * @param endpoint The endpoint
      */
     public synchronized void incrementRoutedMessage(UMOImmutableEndpoint endpoint)

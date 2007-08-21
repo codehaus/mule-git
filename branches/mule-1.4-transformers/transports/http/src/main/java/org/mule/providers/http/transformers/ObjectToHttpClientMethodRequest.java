@@ -21,6 +21,7 @@ import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.transformer.TransformerException;
+import org.mule.util.StringUtils;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -34,7 +35,6 @@ import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>ObjectToHttpClientMethodRequest</code> transforms a UMOMessage into a
@@ -145,7 +145,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 PostMethod postMethod = new PostMethod(uri.toString());
                 setHeaders(postMethod, context);
                 String paramName = msg.getStringProperty(HttpConnector.HTTP_POST_BODY_PARAM_PROPERTY, null);
-                // postMethod.setRequestContentLength(PostMethod.CONTENT_LENGTH_AUTO);
+                
                 if (paramName == null)
                 {
                     // Call method to manage the parameter array
@@ -201,24 +201,25 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 httpMethod = postMethod;
             }
 
-            //Allow the user to set HttpMethodParams as an object on the message
+            // Allow the user to set HttpMethodParams as an object on the message
             HttpMethodParams params = (HttpMethodParams)msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
-            if(params!=null)
+            if (params != null)
             {
                 httpMethod.setParams(params);
             }
             else
             {
-                //TODO we should propbably set other propserties here
-                String httpVersion = msg.getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, HttpConstants.HTTP11);
-                if(HttpConstants.HTTP10.equals(httpVersion))
+                // TODO we should propbably set other propserties here
+                String httpVersion = msg.getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY,
+                    HttpConstants.HTTP11);
+                if (HttpConstants.HTTP10.equals(httpVersion))
                 {
                     httpMethod.getParams().setVersion(HttpVersion.HTTP_1_0);
                 }
                 else
                 {
                     httpMethod.getParams().setVersion(HttpVersion.HTTP_1_1);
-                }                
+                }
             }
             return httpMethod;
         }
@@ -237,6 +238,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
             headerName = (String)iterator.next();
+
             headerValue = msg.getStringProperty(headerName, null);
             if (HttpConstants.REQUEST_HEADER_NAMES.get(headerName) == null)
             {
@@ -244,23 +246,11 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 {
                     headerName = new StringBuffer(30).append("X-").append(headerName).toString();
                 }
-                // Make sure we have a valid header name otherwise we will
-                // corrupt the request
-                // If it is Content-Length we should check the Response Headers
-                // before setting it
-                if (headerName.startsWith(HttpConstants.HEADER_CONTENT_LENGTH))
-                {
-                    if (httpMethod.getResponseHeader(HttpConstants.HEADER_CONTENT_LENGTH) == null)
-                    {
-                        httpMethod.addRequestHeader(headerName, headerValue);
-                    }
-                }
-                else
-                {
-                    httpMethod.addRequestHeader(headerName, headerValue);
-                }
+
+                httpMethod.addRequestHeader(headerName, headerValue);
             }
         }
+
 
         if (context.getMessage().getPayload() instanceof InputStream)
         {

@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -17,12 +17,14 @@ import org.apache.velocity.runtime.log.LogSystem;
 
 public class VelocityLogger implements LogSystem
 {
+    private final boolean debugEnabled;
 
     private GraphEnvironment environment = null;
 
     public VelocityLogger(GraphEnvironment environment)
     {
         this.environment = environment;
+        this.debugEnabled = environment.getConfig().isDebug();
     }
 
     public void init(RuntimeServices arg0) throws Exception
@@ -34,7 +36,10 @@ public class VelocityLogger implements LogSystem
     {
         if (environment != null)
         {
-            environment.log(arg1);
+            if(arg0 >= ERROR_ID || debugEnabled)
+            {
+                environment.log(arg1);
+            }
         }
     }
 

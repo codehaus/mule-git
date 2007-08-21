@@ -160,8 +160,10 @@ public final class MuleSession implements UMOSession
         UMOEvent event = createOutboundEvent(message, endpoint, null);
 
         dispatchEvent(event);
-        RequestContext.writeResponse(event.getMessage());
-        processResponse(event.getMessage());
+
+        // need a new copy here because we are going to mutate it (checked necessary)
+        UMOMessage response = OptimizedRequestContext.criticalWriteResponse(event.getMessage());
+        processResponse(response);
     }
 
     public UMOMessage sendEvent(UMOMessage message, String endpointName) throws UMOException
@@ -217,7 +219,7 @@ public final class MuleSession implements UMOSession
 
         if (result != null)
         {
-            RequestContext.writeResponse(result);
+            OptimizedRequestContext.unsafeWriteResponse(result);
             processResponse(result);
         }
 
@@ -269,9 +271,8 @@ public final class MuleSession implements UMOSession
                              + ", event is: " + event);
             }
             component.dispatchEvent(event);
-            RequestContext.writeResponse(event.getMessage());
-            processResponse(event.getMessage());
-
+            UMOMessage response = OptimizedRequestContext.criticalWriteResponse(event.getMessage());
+            processResponse(response);
         }
         else
         {
@@ -324,7 +325,7 @@ public final class MuleSession implements UMOSession
                 }
 
                 UMOMessage response = event.getEndpoint().send(event);
-                RequestContext.writeResponse(response);
+                OptimizedRequestContext.unsafeWriteResponse(response);
                 processResponse(response);
                 return response;
             }
@@ -342,7 +343,7 @@ public final class MuleSession implements UMOSession
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug("dispatching event to component: " + component.getDescriptor().getName()
+                logger.debug("sending event to component: " + component.getDescriptor().getName()
                              + " event is: " + event);
             }
             return component.sendEvent(event);

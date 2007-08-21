@@ -13,7 +13,6 @@ package org.mule.routing.outbound;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.routing.filters.PayloadTypeFilter;
-import org.mule.routing.outbound.FilteringListMessageSplitter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;

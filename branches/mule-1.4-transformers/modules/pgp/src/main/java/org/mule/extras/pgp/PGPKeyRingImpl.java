@@ -14,15 +14,14 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.IOUtils;
 
-import cryptix.pki.ExtendedKeyStore;
-import cryptix.pki.KeyBundle;
-
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import cryptix.pki.ExtendedKeyStore;
+import cryptix.pki.KeyBundle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

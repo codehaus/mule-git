@@ -15,7 +15,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
-import org.mule.impl.RequestContext;
+import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.management.stats.ComponentStatistics;
 import org.mule.providers.AbstractConnector;
@@ -34,13 +34,12 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.concurrent.WaitableBoolean;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -195,6 +194,7 @@ public abstract class AbstractComponent implements UMOComponent
 
             doStop();
             stopped.set(true);
+            initialised.set(false);
             fireComponentNotification(ComponentNotification.COMPONENT_STOPPED);
         }
     }
@@ -414,7 +414,7 @@ public abstract class AbstractComponent implements UMOComponent
             logger.debug("Component: " + descriptor.getName() + " has received synchronous event on: "
                          + event.getEndpoint().getEndpointURI());
         }
-        RequestContext.setEvent(event);
+        event = OptimizedRequestContext.unsafeSetEvent(event);
         return doSend(event);
     }
 

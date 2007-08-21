@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MPL style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -13,13 +13,13 @@ package org.mule.providers.tcp.protocols;
 import org.mule.providers.tcp.TcpProtocol;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
-import org.mule.util.IOUtils;
 import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
@@ -135,12 +135,9 @@ public abstract class ByteProtocol implements TcpProtocol
                 {
                     // wait for non-blocking input stream
                     // use new lock since not expecting notification
-                    Object lock = new Object();
-                    synchronized(lock)
-                    {
                         try
                         {
-                            lock.wait(PAUSE_PERIOD);
+                        Thread.sleep(PAUSE_PERIOD);
                         }
                         catch (InterruptedException e)
                         {
@@ -148,14 +145,13 @@ public abstract class ByteProtocol implements TcpProtocol
                         }
                     }
                 }
-            }
             while (0 == len);
             return len;
         }
         catch (SocketException e)
         {
             // do not pollute the log with a stacktrace, log only the message
-            logger.debug("Socket exception occured: " + e.getMessage());
+            logger.info("Socket exception occured: " + e.getMessage());
             return EOF;
         }
         catch (SocketTimeoutException e)

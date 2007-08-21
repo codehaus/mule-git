@@ -10,13 +10,14 @@
 
 package org.mule.test.config;
 
-import org.apache.commons.beanutils.Converter;
 import org.mule.MuleManager;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.manager.UMOManager;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+
+import org.apache.commons.beanutils.Converter;
 
 public abstract class AbstractConverterTestCase extends AbstractMuleTestCase
 {

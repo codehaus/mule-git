@@ -11,8 +11,6 @@
 package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.ArrayUtils;
-import org.mule.util.StringUtils;
 
 import java.util.List;
 

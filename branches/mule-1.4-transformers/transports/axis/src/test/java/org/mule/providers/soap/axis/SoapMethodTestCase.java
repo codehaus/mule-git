@@ -10,22 +10,19 @@
 
 package org.mule.providers.soap.axis;
 
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+
 public class SoapMethodTestCase extends AbstractMuleTestCase
 {
+
     public void testNamedParameterParsing() throws Exception
     {
         SoapMethod method = new SoapMethod("getFruit",

@@ -29,18 +29,18 @@
         </properties>
     </connector>
 
-	<model name="Test-Case" type="seda">		
+    <model name="Test-Case" type="seda">
 		<mule-descriptor name="TestComponent" implementation="org.mule.components.simple.EchoComponent" singleton="true">
 			<inbound-router>
 				<endpoint address="axis:jms://TestComponent">
 					<transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
-				</endpoint> 
+                </endpoint>
 			</inbound-router>
 			<outbound-router>
 				<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
 					<endpoint address="jms://testout"/>
 				</router>
 			</outbound-router>
-		</mule-descriptor>		
+        </mule-descriptor>
 	</model>
 </mule-configuration>

@@ -10,8 +10,6 @@
 
 package org.mule.samples.voipservice.client;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleManager;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
@@ -27,9 +25,9 @@ import org.mule.util.StringMessageUtils;
 
 import java.io.IOException;
 
-/**
- * @author Binildas Christudas
- */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class VoipConsumer
 {
 

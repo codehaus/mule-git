@@ -11,46 +11,47 @@
 package org.mule.config.builders;
 
 import org.mule.config.ConfigurationException;
-
-import javax.servlet.ServletContext;
+import org.mule.util.FileUtils;
 
 import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 
 /**
  * <code>WebappMuleXmlConfigurationBuilder</code> will first try and load config
  * resources from the Servlet context. If this fails it fails back to the methods
  * used by the MuleXmlConfigurationBuilder.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- * @see org.mule.config.builders.MuleXmlConfigurationBuilder
  */
 public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuilder
 {
     private ServletContext context;
+    
+    /**
+     * Classpath within the servlet context (e.g., "WEB-INF/classes").  Mule will attempt to load config 
+     * files from here first, and then from the remaining classpath.
+     */
+    private String webappClasspath;
 
-    public WebappMuleXmlConfigurationBuilder(ServletContext context) throws ConfigurationException
+    public WebappMuleXmlConfigurationBuilder(ServletContext context, String webappClasspath) 
+        throws ConfigurationException
     {
         super();
         this.context = context;
+        this.webappClasspath = webappClasspath;
     }
 
     /**
-     * ConfigResource can be a url, a path on the local file system or a resource
-     * name on the classpath Finds and loads the configuration resource by doing the
-     * following - 1. load it from the servelet context /WEB-INF 2. load it form the
-     * classpath 3. load it from from the local file system 4. load it as a url
-     * 
-     * @param configResource a single configuration resource
-     * @return an inputstream to the resource
-     * @throws org.mule.config.ConfigurationException
+     * Attempt to load any resource from the Servlet Context first, then from the classpath.
      */
-    protected InputStream loadConfig(String configResource) throws ConfigurationException
+    protected InputStream loadResource(String resource) throws ConfigurationException
     {
-        InputStream is = context.getResourceAsStream(configResource);
+        String resourcePath = FileUtils.newFile(webappClasspath, resource).getPath();
+        logger.debug("Searching for resource " + resourcePath + " in Servlet Context.");
+        InputStream is = context.getResourceAsStream(resourcePath);
         if (is == null)
         {
-            is = super.loadConfig(configResource);
+            logger.debug("Resource " + resourcePath + " not found in Servlet Context, loading from classpath");
+            is = super.loadResource(resource);
         }
         return is;
     }

@@ -17,9 +17,6 @@ import org.mule.umo.provider.UMOMessageDispatcher;
 
 /**
  * <code>TcpMessageDispatcherFactory</code> TODO
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 
 public class JbiMessageDispatcherFactory extends AbstractMessageDispatcherFactory

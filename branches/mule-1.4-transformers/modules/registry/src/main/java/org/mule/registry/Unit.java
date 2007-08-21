@@ -10,9 +10,6 @@
 
 package org.mule.registry;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public interface Unit extends Entry
 {
 

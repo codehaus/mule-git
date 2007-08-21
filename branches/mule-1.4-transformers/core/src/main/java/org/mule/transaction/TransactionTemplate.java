@@ -45,6 +45,23 @@ public class TransactionTemplate
 
             if (action == UMOTransactionConfig.ACTION_NONE && tx != null)
             {
+                //TODO RM*: I'm not sure there is any value in throwing an exection here, since
+                //there may be a transaction in progress but has nothing to to with this invocation
+                //so maybe we just process outside the tx. Not sure yet
+                //return callback.doInTransaction();
+
+                /*
+                    Reply from AP: There is value at the moment, at least in having fewer surprises
+                    with a more explicit config. Current behavior is that of 'Never' TX attribute
+                    in Java EE parlance.
+
+                    What you refer to, however, is the 'Not Supported' TX behavior. A SUSPEND is performed
+                    in this case with (optional) RESUME later.
+
+                    Revamping/enhancing the TX attributes in Mule is coming next on my action list for
+                    transactions in Mule after bringing Atomikos & ArjunaTS on-board and ditching a broken JOTM.
+                 */
+
                 throw new IllegalTransactionStateException(
                     CoreMessages.transactionAvailableButActionIs("None"));
             }
@@ -56,7 +73,7 @@ public class TransactionTemplate
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_JOIN && tx == null)
             {
                 throw new IllegalTransactionStateException(
-                    CoreMessages.transactionAvailableButActionIs("Always Join"));
+                    CoreMessages.transactionNotAvailableButActionIs("Always Join"));
             }
 
             if (action == UMOTransactionConfig.ACTION_ALWAYS_BEGIN

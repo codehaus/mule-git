@@ -11,7 +11,6 @@
 package org.mule.routing.filters;
 
 import org.mule.impl.MuleMessage;
-import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
 

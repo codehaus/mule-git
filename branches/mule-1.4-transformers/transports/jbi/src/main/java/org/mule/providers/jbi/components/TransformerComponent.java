@@ -10,6 +10,9 @@
 
 package org.mule.providers.jbi.components;
 
+import org.mule.umo.transformer.TransformerException;
+import org.mule.umo.transformer.UMOTransformer;
+
 import javax.jbi.messaging.InOnly;
 import javax.jbi.messaging.InOut;
 import javax.jbi.messaging.MessageExchange;
@@ -17,14 +20,8 @@ import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 import javax.xml.transform.Source;
 
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
-
 /**
- * Mule transformers can be reused in side a Jbi container
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Mule transformers can be reused inside a Jbi container.
  */
 public class TransformerComponent extends AbstractJbiComponent
 {

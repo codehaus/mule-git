@@ -19,8 +19,11 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
+import org.mule.util.NumberUtils;
+import org.mule.util.StringUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
 
@@ -35,6 +38,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
+
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * <code>JmsMessageDispatcher</code> is responsible for dispatching messages to JMS
@@ -201,21 +206,29 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             String priorityString = (String)eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
             String persistentDeliveryString = (String)eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
 
-            long ttl = Message.DEFAULT_TIME_TO_LIVE;
-            int priority = Message.DEFAULT_PRIORITY;
-            boolean persistent = Message.DEFAULT_DELIVERY_MODE == DeliveryMode.PERSISTENT;
+            long ttl = StringUtils.isNotBlank(ttlString)
+                                ? NumberUtils.toLong(ttlString)
+                                : Message.DEFAULT_TIME_TO_LIVE;
+            int priority = StringUtils.isNotBlank(priorityString)
+                                ? NumberUtils.toInt(priorityString)
+                                : Message.DEFAULT_PRIORITY;
+            boolean persistent = StringUtils.isNotBlank(persistentDeliveryString)
+                                ? BooleanUtils.toBoolean(persistentDeliveryString)
+                                : connector.isPersistentDelivery();
 
-            if (ttlString != null)
+            if (connector.isHonorQosHeaders())
             {
-                ttl = Long.parseLong(ttlString);
-            }
-            if (priorityString != null)
-            {
-                priority = Integer.parseInt(priorityString);
-            }
-            if (persistentDeliveryString != null)
-            {
-                persistent = Boolean.valueOf(persistentDeliveryString).booleanValue();
+                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, UMOConnector.INT_VALUE_NOT_SET);
+                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, UMOConnector.INT_VALUE_NOT_SET);
+
+                if (priorityProp != UMOConnector.INT_VALUE_NOT_SET)
+                {
+                    priority = priorityProp;
+                }
+                if (deliveryModeProp != UMOConnector.INT_VALUE_NOT_SET)
+                {
+                    persistent = deliveryModeProp == DeliveryMode.PERSISTENT;
+                }
             }
 
             if (logger.isDebugEnabled())

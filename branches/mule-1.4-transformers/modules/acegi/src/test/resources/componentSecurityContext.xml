@@ -11,19 +11,19 @@
             </value>
         </property>
     </bean>
-	
+
     <bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="inMemoryDaoImpl"/>	
+        <property name="userDetailsService" ref="inMemoryDaoImpl"/>
     </bean>
-	
+
 	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
 		<property name="providers">
 			<list>
 		        <ref local="daoAuthenticationProvider"/>
 		    </list>
 		 </property>
-	</bean> 
-	
+    </bean>
+
 	<bean id="accessDecisionManager" class='org.acegisecurity.vote.AffirmativeBased'>
 		<property name="decisionVoters">
 			<list>
@@ -31,9 +31,9 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/> 
-	
+
+    <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
+
 	<bean id="EchoComponent" class="org.mule.components.simple.EchoComponent"/>
 
 	<bean id="EchoComponentSecurity" class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
@@ -44,8 +44,8 @@
 				org.mule.umo.lifecycle.Callable.onCall=ROLE_ADMIN
 		    </value>
 	    </property>
-	</bean> 
-	
+    </bean>
+
 	<bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="interceptorNames">
 			<list><value>EchoComponentSecurity</value></list>
@@ -54,5 +54,5 @@
 		    <list><value>EchoComponent</value></list>
 	    </property>
 	</bean>
-	
+
 </beans>

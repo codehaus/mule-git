@@ -10,22 +10,20 @@
 
 package org.mule.providers.jbi;
 
+import org.mule.impl.ThreadSafeAccess;
+import org.mule.providers.AbstractMessageAdapter;
+import org.mule.umo.MessagingException;
+import org.mule.umo.provider.MessageTypeNotSupportedException;
+
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.jbi.messaging.NormalizedMessage;
 
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-
 /**
  * <code>JbiMessageAdapter</code> translates a JBI NormalizedMessage to a
- * UMOMessage
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * UMOMessage.
  */
 
 public class JbiMessageAdapter extends AbstractMessageAdapter
@@ -56,6 +54,12 @@ public class JbiMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, getClass());
         }
+    }
+
+    protected JbiMessageAdapter(JbiMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
     }
 
     public void setProperty(Object key, Object value)
@@ -115,6 +119,11 @@ public class JbiMessageAdapter extends AbstractMessageAdapter
     public Set getAttachmentNames()
     {
         return message.getAttachmentNames();
+    }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new JbiMessageAdapter(this);
     }
 
 }

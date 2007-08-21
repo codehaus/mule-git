@@ -10,12 +10,14 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
 import org.mule.providers.soap.i18n.SoapMessages;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.umo.MessagingException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.StringUtils;
 
 import java.util.Iterator;
 
@@ -25,7 +27,6 @@ import javax.xml.soap.SOAPMessage;
 
 import org.apache.axis.MessageContext;
 import org.apache.axis.attachments.AttachmentPart;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>AxisMessageAdapter</code> wraps a soap message. The payload of the adapter
@@ -100,6 +101,14 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
         }
     }
 
+    public AxisMessageAdapter(AxisMessageAdapter template)
+    {
+        super(template);
+        payload = template.payload;
+        message = template.message;
+        trans = template.trans;
+    }
+
     /**
      * Converts the message implementation into a String representation
      * 
@@ -139,7 +148,10 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
 
     public void addAttachment(String name, DataHandler dataHandler) throws Exception
     {
-        message.addAttachmentPart(new AttachmentPart(dataHandler));
+        if (null != message)
+        {
+            message.addAttachmentPart(new AttachmentPart(dataHandler));
+        }
         super.addAttachment(name, dataHandler);
     }
 
@@ -155,4 +167,10 @@ public class AxisMessageAdapter extends AbstractMessageAdapter
             throw new SOAPException(SoapMessages.cannotRemoveSingleAttachment().toString());
         }
     }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new AxisMessageAdapter(this);
+    }
+
 }

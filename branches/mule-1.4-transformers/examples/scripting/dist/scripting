@@ -2,7 +2,10 @@
 
 # There is no need to call this if you set the MULE_HOME in your environment
 if [ -z "$MULE_HOME" ] ; then
-  MULE_HOME=../..
+  # find the name of the real MULE_HOME which is two levels up
+  MULE_HOME=`pwd`
+  MULE_HOME=`dirname $MULE_HOME`
+  MULE_HOME=`dirname $MULE_HOME`
   export MULE_HOME
 fi
 

@@ -13,7 +13,6 @@ package org.mule.providers.http;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.ConnectException;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
@@ -27,6 +26,7 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,12 +48,11 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
@@ -87,18 +86,19 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             client = new HttpClient();
             client.setState(state);
             client.setHttpConnectionManager(connector.getClientConnectionManager());
-
+            //RM* This isn't a good idea since if the connection is not re-used a HEAD request is sent for
+            //every invocation.
             // test the connection via HEAD
-            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
-            try
-            {
-                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
-            }
-            catch (Exception e)
-            {
-                throw new ConnectException(
-                    HttpMessages.failedToConnect(endpoint.getEndpointURI().getUri()), e, this);
-            }
+//            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
+//            try
+//            {
+//                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
+//            }
+//            catch (Exception e)
+//            {
+//                throw new ConnectException(
+//                    HttpMessages.failedToConnect(endpoint.getEndpointURI().getUri()), e, this);
+//            }
         }
 
     }
@@ -294,11 +294,12 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
      * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
-    {
+    {        
         HttpMethod httpMethod = getMethod(event);
+        httpMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new MuleHttpMethodRetryHandler());
 
         httpMethod = execute(event, httpMethod, false);
-
+        
         try
         {
             Properties h = new Properties();

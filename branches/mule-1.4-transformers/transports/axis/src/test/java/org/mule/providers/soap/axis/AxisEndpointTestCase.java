@@ -12,17 +12,12 @@ package org.mule.providers.soap.axis;
 
 import org.mule.config.MuleProperties;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.service.TransportFactory;
-import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.endpoint.UMOEndpointURI;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class AxisEndpointTestCase extends AbstractMuleTestCase
 {
+
     public void testEndpoint() throws Exception
     {
         String url = "axis:http://www.xmethods.net/wsdl/query.wsdl?method=getSomething&param1=1&param2=2";

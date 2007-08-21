@@ -16,6 +16,8 @@ import org.mule.util.MapUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
 import org.mule.util.concurrent.WaitPolicy;
 
+import java.util.Map;
+
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
@@ -23,9 +25,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.SynchronousQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
-import java.util.Map;
-
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 /**
@@ -40,7 +39,7 @@ public class ThreadingProfile
     /**
      * Default value for MAX_THREADS_ACTIVE
      */
-    public static final int DEFAULT_MAX_THREADS_ACTIVE = 8;
+    public static final int DEFAULT_MAX_THREADS_ACTIVE = 16;
 
     /**
      * Default value for MAX_THREADS_IDLE

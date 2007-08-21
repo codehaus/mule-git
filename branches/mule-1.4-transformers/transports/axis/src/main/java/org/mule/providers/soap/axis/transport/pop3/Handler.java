@@ -10,17 +10,14 @@
 
 package org.mule.providers.soap.axis.transport.pop3;
 
+import org.mule.providers.soap.axis.transport.VoidURLConnection;
+
 import java.net.URL;
 import java.net.URLConnection;
-
-import org.mule.providers.soap.axis.transport.VoidURLConnection;
 
 /**
  * A Dummy Url handler for handling pop3. This is needed becuase Axis uses
  * urlStreamHandlers to parse non-http urls.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class Handler extends java.net.URLStreamHandler
 {

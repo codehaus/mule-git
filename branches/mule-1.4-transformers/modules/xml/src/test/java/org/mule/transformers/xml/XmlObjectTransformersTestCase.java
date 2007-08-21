@@ -11,8 +11,6 @@
 package org.mule.transformers.xml;
 
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transformers.xml.ObjectToXml;
-import org.mule.transformers.xml.XmlToObject;
 import org.mule.umo.transformer.UMOTransformer;
 
 public class XmlObjectTransformersTestCase extends AbstractXmlTransformerTestCase

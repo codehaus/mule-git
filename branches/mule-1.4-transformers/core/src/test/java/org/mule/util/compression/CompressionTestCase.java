@@ -11,8 +11,6 @@
 package org.mule.util.compression;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.compression.CompressionHelper;
-import org.mule.util.compression.CompressionStrategy;
 
 import java.util.Arrays;
 

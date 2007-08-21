@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the BSD style
+ * The software in this package is published under the terms of the MuleSource MPL
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -39,8 +39,8 @@ public class GalleryPostGrapher extends AbstractIndexer
     public void postGrapher(GraphEnvironment env)
     {
         File[] htmlFiles = getFiles(env.getConfig(), ".gif");
-        String targetFile = env.getConfig().applyWorkingDirectory(
-            env.getProperty("muleGalleryOutputName", "gallery.html"));
+        String targetFile = env.getConfig().applyOutputDirectory(
+                env.getProperty("muleGalleryOutputName", "gallery.html"));
         doRendering(env, htmlFiles, template, targetFile);
 
     }

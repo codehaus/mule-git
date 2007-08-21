@@ -11,13 +11,13 @@
 package org.mule.providers.ftp;
 
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOMessage;
 import org.mule.providers.ftp.server.NamedPayload;
+import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FtpFunctionalTestCase extends BaseServerTestCase
+public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
 {
 
     private static int PORT = 60198;

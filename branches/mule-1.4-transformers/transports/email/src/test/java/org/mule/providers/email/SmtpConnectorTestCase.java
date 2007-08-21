@@ -26,8 +26,9 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
 
-import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
+
+import javax.mail.internet.MimeMessage;
 
 /**
  * Send a message via SMTP to a (greenmail) server.
@@ -107,8 +108,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         MuleManager.getInstance().start();
 
         // default transformer is string to mail message, so send string
-        UMOMessage message = new MuleMessage(MESSAGE);
-        message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, EMAIL);
+        UMOMessage message = new MuleMessage(AbstractGreenMailSupport.MESSAGE);
+        message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, TO);
         UMOSession session = 
             getTestSession(getTestComponent(getTestDescriptor("apple", Apple.class.getName())));
         MuleEvent event = 

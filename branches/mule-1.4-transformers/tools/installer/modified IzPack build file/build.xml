@@ -137,13 +137,13 @@
     
     09.09.2005: (Marc.Eppelmann)
 		Added start.sh to the shipped files in bin-folder.
-		
+
 	10.01.2006: (by Fabrice Mirabile)
 		Added the splashscreen to the cleandistreg target
-		
+
 	06.04.2006: (Marc Eppelmann)
 	    Inserted the fix.crlf target in the depends-list of target "all" to prevent encoding problems.
-	    
+
 	26.06.2006: (Marc Eppelmann)
 	    Extracted / Reordered some dist related targets to prevent double copy actions.
         Also fixed the fix.crlf basedir
@@ -839,7 +839,7 @@
 
 	<build-installer-listener name="MuleInstallerListener">
 	      <include name="com/izpack/mule/installer/custom/listener/MuleInstallerListener.java"/>
-	</build-installer-listener>	
+    </build-installer-listener>
     </target>
 
     <!-- ====================================================================== -->
@@ -905,8 +905,8 @@
             description="Creates the javadoc-api and customer documentation">
 
     </target>
-	
-	
+
+
     <!-- - - - - - - - - - - - - - - - - - 
           target: taskdef                      
          - - - - - - - - - - - - - - - - - -->
@@ -916,8 +916,8 @@
                  classpath="${basedir}/lib/compiler.jar"
                  classname="com.izforge.izpack.ant.IzPackTask" />
     </target>
-	
-	
+
+
     <!-- - - - - - - - - - - - - - - - - - 
           target: copy.natives                      
          - - - - - - - - - - - - - - - - - -->
@@ -981,7 +981,7 @@
         <echo message="Copies the bin files to the dist directory" />
         <copy todir="${dist.dir}/bin" includeEmptyDirs="yes" overwrite="yes">
             <fileset dir="${dist-files.dir}">
-                <include name="compile*" />            	
+                <include name="compile*" />
                 <include name="lcp.bat" />
             	<include name="start.sh"/>
             </fileset>
@@ -1023,20 +1023,20 @@
                 compressionlevel="9" />
     	<echo>
 sucessfully created:
-${dist.dir}/${installer.name}${ver}.${rel}.jar    		
+${dist.dir}/${installer.name}${ver}.${rel}.jar
     	</echo>
     </target>
-	
-	
+
+
     <!-- - - - - - - - - - - - - - - - - - 
           target: prepare.install.dist                      
          - - - - - - - - - - - - - - - - - -->
     <target name="prepare.install.dist" depends="taskdef.dist, copy.dist.natives, copy.dist.files, replace.dist.buildnumber, fix.crlf">
             
     </target>
-	
+
     <!-- =================================
-	   Creates a normal installer for IzPack 
+       Creates a normal installer for IzPack
 	  ================================= -->
   <!--  <target name="generate.installer" depends="prepare.install.dist">
         <antcall target="exec.izpack.compiler">
@@ -1052,7 +1052,7 @@ ${dist.dir}/${installer.name}${ver}.${rel}.jar
 		<param name="listener-dir" value="MuleInstallerListener"/>
 		<param name="listener-include" value="com\izpack\mule\installer\custom\listener"/>
 	</antcall>
-    </target>	
+    </target>
 
     <!--
         Fixes CR/LF by applying the Unix convention (\n for endlines).
@@ -1078,7 +1078,7 @@ Fixing linefeeds for several files in:
         </fixcrlf>
     	<fixcrlf srcdir="${dist.bin.dir}" eol="unix" eof="remove">
     	  <include name="**/*.sh"/>
-    	  <include name="compile"/>	    	
+          <include name="compile"/>
     	</fixcrlf>
     </target>
 

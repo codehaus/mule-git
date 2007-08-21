@@ -11,8 +11,8 @@
 package org.mule.providers.soap.xfire;
 
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.soap.xfire.testmodels.XFireEnabledFaultMessage;
 import org.mule.providers.soap.xfire.testmodels.CustomFault;
+import org.mule.providers.soap.xfire.testmodels.XFireEnabledFaultMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import org.codehaus.xfire.fault.XFireFault;
@@ -26,7 +26,7 @@ public class XFireComponentExceptionStrategyTestCase extends FunctionalTestCase
 
         try
         {
-            client.send("xfire:http://localhost:10181/services/XFireDefault?method=testXFireException", "TEST", null);
+            client.send("xfire:http://localhost:63181/services/XFireDefault?method=testXFireException", "TEST", null);
         }
         catch (org.mule.umo.provider.DispatchException ex)
         {
@@ -42,7 +42,7 @@ public class XFireComponentExceptionStrategyTestCase extends FunctionalTestCase
 
         try
         {
-            client.send("xfire:http://localhost:10181/services/XFireWithExceptionStrategy?method=testXFireException", "TEST", null);
+            client.send("xfire:http://localhost:63181/services/XFireWithExceptionStrategy?method=testXFireException", "TEST", null);
         }
         catch (org.mule.umo.provider.DispatchException ex)
         {
@@ -63,7 +63,7 @@ public class XFireComponentExceptionStrategyTestCase extends FunctionalTestCase
 
         try
         {
-            client.send("xfire:http://localhost:10181/services/XFireWithExceptionStrategy?method=testNonXFireException", "TEST", null);
+            client.send("xfire:http://localhost:63181/services/XFireWithExceptionStrategy?method=testNonXFireException", "TEST", null);
         }
         catch (org.mule.umo.provider.DispatchException ex)
         {

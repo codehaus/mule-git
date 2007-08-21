@@ -10,6 +10,11 @@
 
 package org.mule.management.mbeans;
 
+import org.mule.MuleManager;
+import org.mule.umo.UMOException;
+import org.mule.util.IOUtils;
+import org.mule.util.StringMessageUtils;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -17,16 +22,9 @@ import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.MuleManager;
-import org.mule.umo.UMOException;
-import org.mule.util.IOUtils;
-import org.mule.util.StringMessageUtils;
 
 /**
  * <code>MuleService</code> exposes certain Mule server functions for management
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class MuleService implements MuleServiceMBean
 {

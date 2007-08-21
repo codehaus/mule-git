@@ -12,7 +12,7 @@ package org.mule.providers.ftp.issues;
 
 import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.ftp.BaseServerTestCase;
+import org.mule.providers.ftp.AbstractFtpServerTestCase;
 import org.mule.providers.ftp.server.NamedPayload;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
@@ -25,7 +25,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
-public class MultiStreamMule1696TestCase extends BaseServerTestCase
+public class MultiStreamMule1696TestCase extends AbstractFtpServerTestCase
 {
 
     public static final String TEST_MESSAGE_2 = "Another test message";

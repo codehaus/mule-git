@@ -19,19 +19,16 @@ import org.mule.registry.RegistryDescriptor;
 import org.mule.registry.RegistryException;
 import org.mule.registry.Unit;
 
-import javax.management.ObjectName;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.management.ObjectName;
+
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public abstract class AbstractRegistryComponent extends AbstractEntry implements RegistryComponent
 {

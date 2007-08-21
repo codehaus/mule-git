@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-modules</artifactId>
@@ -16,6 +16,7 @@
 
     <modules>
         <module>acegi</module>
+        <module>all-modules</module>
         <module>builders</module>
         <module>boot</module>
         <module>client</module>

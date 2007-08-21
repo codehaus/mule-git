@@ -11,6 +11,7 @@
 package org.mule.extras.spring.remoting;
 
 import org.mule.tck.FunctionalTestCase;
+
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 public class SpringRemotingTestCase extends FunctionalTestCase

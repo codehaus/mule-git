@@ -21,7 +21,7 @@ import org.mortbay.util.InetAddrPort;
 
 public class AxisServletBindingTestCase extends AbstractSoapFunctionalTestCase
 {
-    public static final int HTTP_PORT = 18088;
+    public static final int HTTP_PORT = 62088;
 
     private Server httpServer;
 
@@ -45,7 +45,10 @@ public class AxisServletBindingTestCase extends AbstractSoapFunctionalTestCase
     // @Override
     protected void suitePostTearDown() throws Exception
     {
-        httpServer.stop();
+       if (null != httpServer)
+       {
+           httpServer.stop();
+       }
     }
 
     public String getConfigResources()

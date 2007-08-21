@@ -19,12 +19,11 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.UMONestedRouter;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -64,7 +63,7 @@ public class NestedInvocationHandler implements InvocationHandler
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
 
-        UMOMessage message = new MuleMessage(args[0]);
+        UMOMessage message = new MuleMessage(args);
         UMONestedRouter router = (UMONestedRouter) routers.get(method.getName());
         if (router == null)
         {

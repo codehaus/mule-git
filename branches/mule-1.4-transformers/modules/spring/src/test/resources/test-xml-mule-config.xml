@@ -17,7 +17,7 @@
     <mule-environment-properties
         synchronous="false"
         model="main">
-        <threading-profile id="default" maxBufferSize="0" maxThreadsActive="8"
+        <threading-profile id="default" maxBufferSize="0" maxThreadsActive="16"
             maxThreadsIdle="4" poolExhaustedAction="WAIT" threadTTL="60001"/>
         <pooling-profile exhaustedAction="WAIT" maxActive="8" maxIdle="4" maxWait="4000" initialisationPolicy="INITIALISE_FIRST"/>
         <queue-profile maxOutstandingMessages="100" persistent="true"/>
@@ -53,7 +53,7 @@
             <properties>
                 <property name="org.mule.useManagerProperties" value="true"/>
                 <property name="beanProperty2" value="12"/>
-                <container-property name="containerProperty" reference="java.lang.String"/>
+                <container-property name="containerProperty" reference="string"/>
             </properties>
         </transformer>
         <transformer name="Default" className="org.mule.transformers.NoActionTransformer" />

@@ -11,8 +11,6 @@
 package org.mule.transformers.simple;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.simple.ByteArrayToHexString;
-import org.mule.transformers.simple.HexStringToByteArray;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 

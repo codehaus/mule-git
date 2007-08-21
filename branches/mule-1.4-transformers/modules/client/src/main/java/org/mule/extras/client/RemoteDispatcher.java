@@ -34,14 +34,13 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.security.UMOCredentials;
 import org.mule.util.MuleObjectHelper;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Callable;
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.Callable;
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -107,7 +106,7 @@ public class RemoteDispatcher implements Disposable
     public void dispatchToRemoteComponent(String component, Object payload, Map messageProperties)
         throws UMOException
     {
-        doToRemoteComponent(component, payload, messageProperties, true);
+        doToRemoteComponent(component, payload, messageProperties, false);
     }
 
     /**
@@ -310,10 +309,10 @@ public class RemoteDispatcher implements Disposable
         if (logger.isDebugEnabled())
         {
             logger.debug("MuleClient sending remote call to: " + action.getResourceIdentifier() + ". At "
-                         + serverEndpoint.toString() + " .Event is: " + event);
+                         + serverEndpoint.toString() + " . Event is: " + event);
         }
 
-        UMOMessage result = null;
+        UMOMessage result;
 
         try
         {

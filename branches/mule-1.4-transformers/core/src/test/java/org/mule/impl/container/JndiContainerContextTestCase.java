@@ -18,16 +18,12 @@ import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.manager.UMOContainerContext;
 
-import javax.naming.Context;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import javax.naming.Context;
+
 public class JndiContainerContextTestCase extends AbstractContainerContextTestCase
 {
     JndiContainerContext context;

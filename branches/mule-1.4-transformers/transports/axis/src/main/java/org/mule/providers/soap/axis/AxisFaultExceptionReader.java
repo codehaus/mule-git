@@ -10,19 +10,17 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.config.ExceptionReader;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.axis.AxisFault;
-import org.mule.config.ExceptionReader;
 
 /**
  * Will format and display additional information stored with an Axis fault that is
- * usually hidden when logged
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * usually hidden when logged.
  */
 public class AxisFaultExceptionReader implements ExceptionReader
 {

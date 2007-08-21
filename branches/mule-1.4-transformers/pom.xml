@@ -7,7 +7,7 @@
     <groupId>org.mule</groupId>
     <artifactId>mule</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.3-SNAPSHOT</version>
 
     <!-- Organization -->
     <organization>
@@ -46,7 +46,13 @@
     </scm>
 
     <properties>
-        <springVersion>2.0.5</springVersion>
+        <!--
+            The above project.url will not be picked up in the manifest,
+            instead a module artifact id is erroneously substituted.
+         -->
+        <productUrl>http://mule.mulesource.org</productUrl>
+        <springVersion>2.0.6</springVersion>
+        <xfireVersion>1.2.6</xfireVersion>
         <coberturaVersion>2.1</coberturaVersion>
     </properties>
 
@@ -160,6 +166,103 @@
                 <artifactId>log4j</artifactId>
                 <version>1.2.14</version>
             </dependency>
+            <!-- commons-codec is used by the http transport and commons-httpclient
+                 in different versions.
+            -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-core</artifactId>
+                <version>${xfireVersion}</version>
+                <exclusions>
+                    <!-- we like slf4j -->
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>                
+                    <exclusion>
+                        <!-- we want the newer version below -->
+                        <groupId>woodstox</groupId>
+                        <artifactId>wstx-asl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xmlParserAPIs</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-aegis</artifactId>
+                <version>${xfireVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-annotations</artifactId>
+                <version>${xfireVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>qdox</groupId>
+                        <artifactId>qdox</artifactId>
+                    </exclusion>
+                    <!-- xfire-annotations dependends on commons-attributes,
+                    which in turn pulls in an ancient ant-1.5 ?! -->
+                    <exclusion>
+                        <groupId>ant</groupId>
+                        <artifactId>ant</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- the following dependency is required to make the xfire-annotations
+            work with jsr181 JDK5 annotations -->
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-java5</artifactId>
+                <version>${xfireVersion}</version>
+            </dependency>
+            <!-- the following dependency will be needed for xmlbeans testing
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-xmlbeans</artifactId>
+                <version>${xfireVersion}</version>
+            </dependency>
+            -->
+            <!-- the following dependency will be needed for jaxb2 model annotations
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-jaxb2</artifactId>
+                <version>${xfireVersion}</version>
+            </dependency>
+            -->
+            <dependency>
+                <groupId>org.codehaus.xfire</groupId>
+                <artifactId>xfire-ws-security</artifactId>
+                <version>${xfireVersion}</version>
+                <exclusions>
+                    <!-- we like slf4j -->
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>                
+                    <!-- this should really be in test scope -->
+                    <exclusion>
+                        <groupId>jmock</groupId>
+                        <artifactId>jmock</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -177,7 +280,7 @@
     </ciManagement>
     
     <distributionManagement>
-        <downloadUrl>http://mule.mulesource.org/Download</downloadUrl>
+        <downloadUrl>http://mule.mulesource.org/display/MULE/Download</downloadUrl>
         <repository>
             <id>mule-releases</id>
             <name>Mule Release Repository</name>
@@ -273,12 +376,6 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
         -->
-        <!-- for buildnumber plugin -->
-        <pluginRepository>
-            <id>tlc</id>
-            <name>TLC Repository</name>
-            <url>http://commons.ucalgary.ca/pub/m2</url>
-        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -289,7 +386,6 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-2-SNAPSHOT</version>
             </extension>
         </extensions>
 
@@ -300,6 +396,17 @@
         </filters
         -->
 
+        <!-- specify versions of the plugins used in child poms here -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.mule.tools</groupId>
+                    <artifactId>mule-assembly-verifier</artifactId>
+                    <version>1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <!-- Enforce minimum maven version.
                  This must be done through the maven-enforcer-plugin as per 
@@ -308,6 +415,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+                <!-- MULE-2070: 1.0-alpha-3 is broke so enforce previous version  -->
+                <version>1.0-alpha-2</version>
                 <executions>
                     <execution>
                         <id>enforce-maven-version</id>
@@ -321,7 +430,7 @@
                                     <version>[2.0.6,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <!-- minimum version is 1.4, higher versions allowed -->
+                                    <!-- minimum version is 1.4.2, Java 5 and higher not allowed -->
                                     <version>[1.4.2,1.5.0)</version>
                                 </requireJavaVersion>
                             </rules>
@@ -356,31 +465,6 @@
                 -->
             </plugin>
 
-            <!-- add repository revision to manifests -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>maven-buildnumber-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- never touch svn -->
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <!--
-                    <format>{0,date,yyyy-MMM-dd-HH:mm:ss}</format>
-                    <items>
-                        <item>timestamp</item>
-                    </items>
-                    -->
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -399,14 +483,14 @@
                         </manifest>
                         <!-- Custom Entries -->
                         <manifestEntries>
-                            <More-Info>For more information go to ${pom.url}</More-Info>
+                            <More-Info>For more information go to ${productUrl}</More-Info>
                             <Support>Get commercial support: ${pom.organization.url}/support</Support>
                             <Description>Mule ESB and Integration Platform</Description>
                             <License>MulesSource MPL http://www.mulesource.com/MSPL/</License>
                             <Vendor-Url>${pom.organization.url}</Vendor-Url>
-                            <Product-Url>${pom.url}</Product-Url>
+                            <Product-Url>${productUrl}</Product-Url>
                             <Dtd-Public-Id>-//${pom.organization.name} //DTD mule-configuration XML V1.0//EN</Dtd-Public-Id>
-                            <Dtd-System-Id>${pom.url}/dtds</Dtd-System-Id>
+                            <Dtd-System-Id>${productUrl}/dtds</Dtd-System-Id>
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
                             <!--Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date-->
                             <!-- include repository revision from buildnumber plugin -->
@@ -750,6 +834,55 @@
                 </site>
             </distributionManagement>
         </profile>
+
+        <profile>
+            <id>buildnumber-plugin</id>
+            <activation>
+                <property>
+                    <!--
+                         This profile is activated if NO system property
+                         'skipBuildnumber' is found. Disable this profile
+                         by specifying -DskipBuildnumber=true on the commandline
+                    -->
+                    <name>!skipBuildnumber</name>
+                </property>
+            </activation>
+            <pluginRepositories>
+                <!-- for buildnumber plugin -->
+                <pluginRepository>
+                    <id>tlc</id>
+                    <name>TLC Repository</name>
+                    <url>http://commons.ucalgary.ca/pub/m2</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <build>
+                <plugins>
+                    <!-- add repository revision to manifests -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>maven-buildnumber-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>create</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- never touch svn -->
+                            <doCheck>false</doCheck>
+                            <doUpdate>false</doUpdate>
+                            <!--
+                                <format>{0,date,yyyy-MMM-dd-HH:mm:ss}</format>
+                                <items>
+                                    <item>timestamp</item>
+                                </items>
+                            -->
+                        </configuration>
+                     </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
-

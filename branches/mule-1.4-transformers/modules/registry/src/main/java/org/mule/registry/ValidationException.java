@@ -10,18 +10,14 @@
 
 package org.mule.registry;
 
-import org.apache.commons.lang.SystemUtils;
-
 import org.mule.config.i18n.MessageFactory;
+import org.mule.util.SystemUtils;
 
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Is thrown when an object loaded from a descriptor is invalid
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Is thrown when an object loaded from a descriptor is invalid.
  */
 public class ValidationException extends RegistryException
 {

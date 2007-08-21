@@ -10,6 +10,12 @@
 
 package org.mule.management.agents;
 
+import org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory;
+import org.mule.umo.security.provider.SecurityProviderFactory;
+import org.mule.umo.security.provider.SecurityProviderInfo;
+import org.mule.util.FileUtils;
+import org.mule.util.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,12 +35,6 @@ import javax.net.ssl.TrustManagerFactory;
 import mx4j.log.Log;
 import mx4j.log.Logger;
 import mx4j.tools.adaptor.ssl.SSLAdaptorServerSocketFactoryMBean;
-
-import org.mule.umo.security.provider.AutoDiscoverySecurityProviderFactory;
-import org.mule.umo.security.provider.SecurityProviderFactory;
-import org.mule.umo.security.provider.SecurityProviderInfo;
-import org.mule.util.IOUtils;
-import org.mule.util.FileUtils;
 
 /**
  * This MBean creates SSLServerSocket instances.
@@ -63,8 +63,6 @@ import org.mule.util.FileUtils;
  * <li> {@link #setKeyManagerPassword}("keypwd");
  * </ul>
  * before {@link #createServerSocket} is called.
- * 
- * @version $Revision$
  */
 public class IBMSslAdapterServerSocketFactory implements SSLAdaptorServerSocketFactoryMBean
 {

@@ -12,12 +12,14 @@ package org.mule.providers.http.servlet;
 
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.i18n.ServletMessages;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.provider.UniqueIdNotSupportedException;
+import org.mule.util.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * <code>HttpRequestMessageAdapter</code> is a Mule message adapter for
@@ -96,6 +97,13 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         {
             throw new MessageTypeNotSupportedException(message, getClass());
         }
+    }
+
+    protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
+    {
+        super(template);
+        message = template.message;
+        request = template.request;
     }
 
     /*
@@ -284,4 +292,10 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
         return replyto;
     }
+
+    public ThreadSafeAccess newThreadCopy()
+    {
+        return new HttpRequestMessageAdapter(this);
+    }
+
 }

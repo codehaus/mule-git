@@ -10,22 +10,15 @@
 
 package org.mule.util.queue;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.concurrent.Latch;
-import org.mule.util.queue.Queue;
-import org.mule.util.queue.QueueConfiguration;
-import org.mule.util.queue.QueueSession;
-import org.mule.util.queue.TransactionalQueueManager;
 import org.mule.util.xa.AbstractResourceManager;
 
 import java.util.Random;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- * @version $Revision$
- */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMuleTestCase
 {
 

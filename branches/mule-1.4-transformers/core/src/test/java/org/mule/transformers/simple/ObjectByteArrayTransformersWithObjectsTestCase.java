@@ -10,8 +10,6 @@
 
 package org.mule.transformers.simple;
 
-import org.mule.transformers.simple.ByteArrayToObject;
-import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.umo.transformer.UMOTransformer;
 
 public class ObjectByteArrayTransformersWithObjectsTestCase extends SerialisedObjectTransformersTestCase

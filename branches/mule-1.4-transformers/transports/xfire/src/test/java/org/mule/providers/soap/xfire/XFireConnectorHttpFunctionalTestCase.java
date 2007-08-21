@@ -10,6 +10,10 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.extras.client.MuleClient;
+import org.mule.tck.providers.soap.AbstractSoapUrlEndpointFunctionalTestCase;
+import org.mule.umo.UMOMessage;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,9 +22,6 @@ import java.util.Map;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.mule.extras.client.MuleClient;
-import org.mule.tck.providers.soap.AbstractSoapUrlEndpointFunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpointFunctionalTestCase
 {
@@ -37,7 +38,7 @@ public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoin
     
     public void testBinding() throws Exception
     {
-        String url = "http://localhost:38008/";
+        String url = "http://localhost:62108/";
         String folder = "mule/";
         String componentName = "mycomponent";
         String fullPath = url + folder + componentName;

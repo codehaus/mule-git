@@ -10,19 +10,16 @@
 
 package org.mule.providers.soap.axis;
 
-import javax.xml.namespace.QName;
-
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
+import javax.xml.namespace.QName;
+
 public class SoapActionTemplateTestCase extends AbstractMuleTestCase
 {
+
     public void testHostInfoReplace() throws Exception
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint(

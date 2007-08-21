@@ -11,7 +11,6 @@
 package org.mule.routing.filters;
 
 import org.mule.impl.MuleMessage;
-import org.mule.routing.filters.PayloadTypeFilter;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class PayloadTypeFilterTestCase extends AbstractMuleTestCase
