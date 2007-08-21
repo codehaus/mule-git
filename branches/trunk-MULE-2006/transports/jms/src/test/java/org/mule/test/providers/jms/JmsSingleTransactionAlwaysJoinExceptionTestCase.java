@@ -12,9 +12,9 @@ package org.mule.test.providers.jms;
 import org.mule.umo.UMOMessage;
 
 /**
- * Comment
+ * Catch exception
  */
-public class JmsSingleTransactionTestAlwaysJoinTestCase extends AbstractJmsFunctionalTestCase
+public class JmsSingleTransactionAlwaysJoinExceptionTestCase extends AbstractJmsFunctionalTestCase
 {
 
     private final ControlCounter blackBoxTx = new ControlCounter(0, 0, 0, 1);

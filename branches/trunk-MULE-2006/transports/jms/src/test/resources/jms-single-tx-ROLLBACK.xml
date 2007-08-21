@@ -21,7 +21,7 @@
 
     <connector name="jmsConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
         <properties>
-            <container-property name="connectionFactory" reference="jmsConnectionFactory"/>
+            <container-property name="connectionFactory" reference="jmsConnectionFactoryRollback"/>
             <property name="specification" value="1.1"/>
             <property name="maxRedelivery" value="2"/>
         </properties>
@@ -41,11 +41,41 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Part2-Rollback" implementation="functionalTestRollbackBean" singleton="true">
+        <mule-descriptor name="Part2-parepare" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
                 <endpoint address="jms://in" connector="jmsConnector">
                     <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jms://roll" connector="jmsConnector"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="Part2-Rollback" implementation="functionalTestRollbackBean" singleton="true">
+            <inbound-router>
+                <endpoint address="jms://roll" connector="jmsConnector">
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                </endpoint>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="vm://out" connector="vmQueue"/>
+                </router>
+            </outbound-router>
+            <exception-strategy className="org.mule.impl.DefaultComponentExceptionStrategy">
+                <endpoint address="jms://error.queue"/>
+            </exception-strategy>
+            <properties>
+                <property name="returnMessage" value="OUTPUT MESSAGE ERROR"/>
+            </properties>
+        </mule-descriptor>
+
+        <mule-descriptor name="Part3-Error" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+            <inbound-router>
+                <endpoint address="jms://error.queue" connector="jmsConnector"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">

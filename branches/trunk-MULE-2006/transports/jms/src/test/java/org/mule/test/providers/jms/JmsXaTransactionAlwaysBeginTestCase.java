@@ -26,7 +26,7 @@ public class JmsXaTransactionAlwaysBeginTestCase extends AbstractJmsFunctionalTe
     public void testAlwaysBegin() throws Exception
     {
         UMOMessage message = super.runAsynchronousDispatching();
-        //getControlCounter().verifyXaTx();
+        getControlCounter().verifyXaTx();
         assertNull(message.getExceptionPayload());
     }
 

@@ -12,6 +12,22 @@
         <property name="brokerURL">
             <value>vm://localhost?broker.persistent=false&amp;broker.useJmx=false</value>
         </property>
+
+    </bean>
+
+    <bean id="redeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+        <property name="maximumRedeliveries"><value>2</value></property>
+    </bean>
+
+    <bean id="jmsConnectionFactoryRollback"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL">
+            <value>vm://localhost?broker.persistent=false&amp;broker.useJmx=false</value>
+        </property>
+        <property name="redeliveryPolicy">
+            <ref bean="redeliveryPolicy"/>
+        </property>
+
     </bean>
 
 

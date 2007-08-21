@@ -13,6 +13,7 @@ import org.mule.umo.UMOMessage;
 
 /**
  * Test jms using JmsClientAcknowledgeTransactionFactory
+ * TODO need to investigate it, what is the different?
  */
 public class JmsClientAcknowledgeTransactionTestCase extends AbstractJmsFunctionalTestCase
 {

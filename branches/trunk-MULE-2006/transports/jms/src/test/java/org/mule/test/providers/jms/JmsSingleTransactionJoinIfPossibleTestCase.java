@@ -12,7 +12,8 @@ package org.mule.test.providers.jms;
 import org.mule.umo.UMOMessage;
 
 /**
- * Comment
+ * TODO Incorrect test
+ * Expect: JOIN_IF_POSSIBLE =NONE
  */
 public class JmsSingleTransactionJoinIfPossibleTestCase extends AbstractJmsFunctionalTestCase
 {

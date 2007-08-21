@@ -12,7 +12,8 @@ package org.mule.test.providers.jms;
 import org.mule.umo.UMOMessage;
 
 /**
- * Comment
+ * TODO - Incorrect test
+ * Actual - need to suspend tx
  */
 public class JmsXaTransactionJoinIfPossibleTestCase extends AbstractJmsFunctionalTestCase
 {

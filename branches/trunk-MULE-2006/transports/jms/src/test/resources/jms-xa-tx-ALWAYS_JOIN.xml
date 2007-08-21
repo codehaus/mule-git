@@ -4,7 +4,12 @@
         "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 <mule-configuration id="persistent_vmqueue_test" version="1.0">
 
-    <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true"/>
+    <mule-environment-properties recoverableMode="true" serverUrl="tcp://localhost:60504?synchronous=true">
+
+        <threading-profile id="default" maxThreadsActive="1" maxThreadsIdle="1" maxBufferSize="1"/>
+        <pooling-profile maxActive="1" exhaustedAction="FAIL" initialisationPolicy="INITIALISE_ONE" maxIdle="2"/>
+
+    </mule-environment-properties>
 
     <container-context name="spring" className="org.mule.extras.spring.SpringContainerContext">
         <properties>
@@ -41,6 +46,11 @@
                     <!--endpoint address="jms://catch" connector="jmsConnector"/-->
                 </router>
             </outbound-router>
+
+            <threading-profile id="default" maxThreadsActive="1" maxThreadsIdle="1" maxBufferSize="1"/>
+            <pooling-profile maxActive="1" exhaustedAction="FAIL" initialisationPolicy="INITIALISE_ONE" maxIdle="1"/>
+
+
         </mule-descriptor>
 
         <!--mule-descriptor name="Part2-BeginTX" implementation="org.mule.components.simple.BridgeComponent"
@@ -69,6 +79,10 @@
                     <endpoint address="vm://out" connector="vmQueue"/>
                 </router>
             </outbound-router>
+
+            <threading-profile id="default" maxThreadsActive="1" maxThreadsIdle="1"/>
+            <pooling-profile maxActive="1" exhaustedAction="FAIL" initialisationPolicy="INITIALISE_ONE" maxIdle="1"/>
+
             <properties>
                 <property name="returnMessage" value="OUTPUT MESSAGE"/>
             </properties>

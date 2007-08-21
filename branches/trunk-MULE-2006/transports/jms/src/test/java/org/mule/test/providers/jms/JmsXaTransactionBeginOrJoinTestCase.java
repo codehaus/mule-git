@@ -22,7 +22,7 @@ public class JmsXaTransactionBeginOrJoinTestCase extends AbstractJmsFunctionalTe
     public void testBeginOrJoin() throws Exception
     {
         UMOMessage message = super.runAsynchronousDispatching();
-        //getControlCounter().verifyXaTx();
+        getControlCounter().verifyXaTx();
         assertNull(message.getExceptionPayload());
     }
 

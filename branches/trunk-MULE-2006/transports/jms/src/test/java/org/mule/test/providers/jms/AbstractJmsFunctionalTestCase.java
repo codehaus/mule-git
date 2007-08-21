@@ -15,10 +15,16 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transaction.XaTransaction;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.concurrent.ConcurrentHashSet;
+
+import java.lang.reflect.Field;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -29,12 +35,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 {
 
+    private static final String ARJUNA_UID_PATTERN = ".*?(-?\\w*):(-?\\w*):(-?\\w*):(-?\\w*).*";
     public static final String DEFAULT_MESSAGE = "INPUT MESSAGE";
     public static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
     public static final String DEFAULT_INPUT_QUEUE = "vm://in";
     public static final String DEFUALT_OUTPUT_QUEUE = "vm://out";
     public static final String CONNECTOR_NAME = "jmsConnector";
-    public static final long TIMEOUT = 5000;
+    public static final long TIMEOUT = 10000;
     public static final long LOCK_WAIT = 1000;
     private MuleClient client;
 
@@ -60,7 +67,8 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         {
             public void onNotification(UMOServerNotification notification)
             {
-                logger.info("The transaction action is - " + notification.getActionName());
+                TransactionNotification txNotification = (TransactionNotification) notification;
+                logger.info("The transaction action is - " + txNotification.getActionName() + " " + txNotification.getTransactionStringId());
                 switch (notification.getAction())
                 {
                     case TransactionNotification.TRANSACTION_BEGAN:
@@ -83,6 +91,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     protected void onBeganTx(UMOServerNotification notification)
     {
+        getControlCounter().registerGlobalTx(getXAArjunaUid(notification));
         this.getControlCounter().getBeginTxInfo().countDown();
     }
 
@@ -111,6 +120,34 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         return result;
     }
 
+    private String getXAArjunaUid(UMOServerNotification notification)
+    {
+        Object tx = notification.getSource();
+        if (tx instanceof XaTransaction)
+        {
+            try
+            {
+                Field field = tx.getClass().getDeclaredField("transaction");
+                field.setAccessible(true);
+                Object object = field.get(tx);
+                String toString = object.toString();
+                Pattern pattern = Pattern.compile(ARJUNA_UID_PATTERN);
+                Matcher matcher = pattern.matcher(toString);
+                if (matcher.find())
+                {
+                    //TODO may be it's a global tx uid
+                    return matcher.group(1) + ":" + matcher.group(2) + ":" + matcher.group(3);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.error(e);
+            }
+        }
+        return null;
+    }
+
+
     public static class TestExceptionStrategy extends DefaultExceptionStrategy
     {
 
@@ -124,18 +161,23 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         public void handleMessagingException(UMOMessage message, Throwable t)
         {
             logger.debug("@@@handleMessagingException@@@ " + message + " :: " + t);
-            if (info.getExceptionInfo()!=null) info.getExceptionInfo().countDown();
+            if (info.getExceptionInfo() != null)
+            {
+                info.getExceptionInfo().countDown();
+            }
         }
     }
 
 
-    public static class ControlCounter
+    public class ControlCounter
     {
 
         private TxInfo beginTxInfo;
         private TxInfo commitTxInfo;
         private TxInfo rollbackTxInfo;
         private TxInfo exceptionInfo;
+        ConcurrentHashSet globalTx = new ConcurrentHashSet();
+
 
         public ControlCounter(int beginCount, int commitCount, int rollbackCount)
         {
@@ -148,6 +190,14 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         {
             this(beginCount, commitCount, rollbackCount);
             exceptionInfo = new TxInfo(exceptionCount);
+        }
+
+        public void registerGlobalTx(String uid)
+        {
+            if (uid != null)
+            {
+                globalTx.add(uid);
+            }
         }
 
         public TxInfo getExceptionInfo()
@@ -179,7 +229,8 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
         public void verifyXaTx() throws InterruptedException
         {
-            commitTxInfo.verify();
+            logger.debug("GLOBALTX :: " + globalTx);
+            assertEquals(globalTx.size(), commitTxInfo.maxTxSize);
         }
 
 
