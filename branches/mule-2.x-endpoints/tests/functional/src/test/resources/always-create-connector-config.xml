@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+    <mule:endpoint name="inbound" address="test:/inbound" createConnector="ALWAYS_CREATE"/>
+    <mule:endpoint name="outbound" address="test://outbound" createConnector="ALWAYS_CREATE"/>
+
+    <mule:model-seda name="dual connector test">
+        <mule:service name="inbound listener">
+            <mule:echo-component/>
+            <mule:inbound-router>
+                <mule:endpoint ref="inbound"/>
+            </mule:inbound-router>
+            <mule:outbound-router>
+                <mule:pass-through-router>
+                    <mule:endpoint ref="outbound"/>
+                </mule:pass-through-router>
+            </mule:outbound-router>
+        </mule:service>
+    </mule:model-seda>
+
+    <!-- model name="Dual Connector Test">
+        <mule-descriptor name="Inbound Listener"
+            implementation="org.mule.components.simple.EchoComponent">
+            <inbound-router>
+                <global-endpoint name="inbound"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <global-endpoint name="outbound"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model -->
+
+</beans>
