@@ -14,12 +14,12 @@ import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 
 /**
- * <code>StringToNameString</code> converts from a String to a NameString object.
+ * The transformation removes break-lines and newlines from the string, which
+ * potentially could have been added during a <code>stdin</code> input operation.
  */
-public class StringToNameString extends AbstractTransformer
+public class StdinToNameString extends AbstractTransformer
 {
-
-    public StringToNameString()
+    public StdinToNameString()
     {
         super();
         this.registerSourceType(String.class);
@@ -36,11 +36,10 @@ public class StringToNameString extends AbstractTransformer
         
         if (src instanceof String)
         {
-            String name = (String) src;
-            nameString.setName(name);
+            name = (String) src;
+            nameString.setName(name.replaceAll("\r", "").replaceAll("\n", "").trim());            
         }
         
         return nameString;
     }
-
 }

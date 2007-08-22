@@ -25,6 +25,11 @@ public class NameString implements Serializable
     private String name;
     private String greeting;
 
+    public NameString()
+    {
+        this.name = null;
+    }
+    
     public NameString(String name)
     {
         this.name = name;

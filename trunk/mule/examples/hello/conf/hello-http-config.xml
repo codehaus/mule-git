@@ -39,8 +39,8 @@
             returnClass="org.mule.samples.hello.ChatString"/>
         <transformer name="ChatStringToString" className="org.mule.samples.hello.ChatStringToString"
             returnClass="java.lang.String"/>
-        <transformer name="HttpRequestToString" className="org.mule.samples.hello.HttpRequestToString"
-            returnClass="java.lang.String"/>
+        <transformer name="HttpRequestToNameString" className="org.mule.samples.hello.HttpRequestToNameString"
+            returnClass="org.mule.samples.hello.NameString"/>
 
         <!-- workaround for http://mule.mulesource.org/jira/browse/MULE-1827 -->            
         <transformer name="PlainTextResponseTransformer" className="org.mule.transformers.simple.MessagePropertiesTransformer">
@@ -60,7 +60,7 @@
         <mule-descriptor name="GreeterUMO" implementation="org.mule.samples.hello.Greeter">
             <inbound-router>
                 <!-- Incoming HTTP requests -->
-                <endpoint address="http://localhost:8888" transformers="HttpRequestToString StringToNameString"/>
+                <endpoint address="http://localhost:8888" transformers="HttpRequestToNameString"/>
                 
                 <!-- Incoming Servlet requests -->
                 <endpoint address="servlet://rest" transformers="StringToNameString" responseTransformers="PlainTextResponseTransformer"/>

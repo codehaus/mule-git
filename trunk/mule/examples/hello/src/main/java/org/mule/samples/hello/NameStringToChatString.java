@@ -14,7 +14,7 @@ import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 
 /**
- * <code>NameStringToChatString</code> cnverts from a NameString object to a
+ * <code>NameStringToChatString</code> converts from a NameString object to a
  * ChatString object.
  */
 public class NameStringToChatString extends AbstractTransformer
@@ -33,14 +33,16 @@ public class NameStringToChatString extends AbstractTransformer
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
-        ChatString string = new ChatString();
-        NameString ns = (NameString)src;
-        string.append(ns.getGreeting());
-        String name = ns.getName();
-        // strip out the new line from the console
-        name = name.replaceAll("\n", "");
-        string.append(name);
-        return string;
+        ChatString chatString = new ChatString();
+        
+        if (src instanceof NameString)
+        {
+            NameString nameString = (NameString) src;
+            chatString.append(nameString.getGreeting());
+            chatString.append(nameString.getName());
+        }
+        
+        return chatString;
     }
 
 }

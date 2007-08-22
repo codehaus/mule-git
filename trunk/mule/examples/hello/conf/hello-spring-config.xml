@@ -32,7 +32,7 @@
            determine which method to call on our components based on the return types of these
            transformers.
        -->
-    <bean id="StringToNameString" singleton="false" class="org.mule.samples.hello.StringToNameString">
+    <bean id="StdinToNameString" singleton="false" class="org.mule.samples.hello.StdinToNameString">
         <property name="returnClass"><value>org.mule.samples.hello.NameString</value></property>
     </bean>
 
@@ -72,7 +72,7 @@
                 <property name="endpointURI">
                     <bean class="org.mule.impl.endpoint.MuleEndpointURI">
                         <constructor-arg>
-                            <value>stream://System.in?transformers=StringToNameString</value>
+                            <value>stream://System.in?transformers=StdinToNameString</value>
                         </constructor-arg>
                     </bean>
                </property>
