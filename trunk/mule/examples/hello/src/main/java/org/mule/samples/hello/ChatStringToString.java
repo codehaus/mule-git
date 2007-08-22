@@ -24,6 +24,7 @@ public class ChatStringToString extends AbstractTransformer
     {
         super();
         this.registerSourceType(ChatString.class);
+        this.setReturnClass(String.class);
     }
 
     /*

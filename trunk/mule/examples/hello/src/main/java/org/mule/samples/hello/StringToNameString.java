@@ -23,6 +23,7 @@ public class StringToNameString extends AbstractTransformer
     {
         super();
         this.registerSourceType(String.class);
+        this.setReturnClass(NameString.class);
     }
 
     /*
@@ -32,15 +33,7 @@ public class StringToNameString extends AbstractTransformer
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
-        NameString nameString = new NameString();
-        
-        if (src instanceof String)
-        {
-            String name = (String) src;
-            nameString.setName(name);
-        }
-        
-        return nameString;
+        return new NameString((String) src);
     }
 
 }

@@ -25,6 +25,7 @@ public class HttpRequestToNameString extends AbstractTransformer
         super();
         this.registerSourceType(String.class);
         this.registerSourceType(byte[].class);
+        this.setReturnClass(NameString.class);
     }
 
     /*
