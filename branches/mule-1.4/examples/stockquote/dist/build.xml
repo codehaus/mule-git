@@ -12,7 +12,7 @@
 
     <property name="dir.java" value="src"/>
     <property name="dir.conf" value="conf"/>
-    <property name="dir.resources" value="resources"/>
+    <property name="dir.resources" value="${dir.java}/main/resources"/>
     <property name="dir.build" value="target"/>
     <property name="dir.classes" value="${dir.build}/classes"/>
 
