@@ -98,16 +98,21 @@ public class HttpRequestToNameString extends AbstractTransformer
 
                 nameValue = requestQuery.substring(nameParameterPos + NAME_REQUEST_PARAMETER.length(), nextParameterValuePos);
             }
-            try
+            
+            if (nameValue != null && nameValue.length() > 0)
             {
-                nameValue = URLDecoder.decode(nameValue, "UTF-8");
-            }
-            catch (UnsupportedEncodingException uee)
-            {
-                logger.error(uee.getMessage());
+                try
+                {
+                    nameValue = URLDecoder.decode(nameValue, "UTF-8");
+                }
+                catch (UnsupportedEncodingException uee)
+                {
+                    logger.error(uee.getMessage());
+                }
             }
         }
-        else
+
+        if (nameValue == null)
         {
             nameValue = "";
         }

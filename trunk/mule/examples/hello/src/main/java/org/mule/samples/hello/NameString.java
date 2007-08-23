@@ -66,5 +66,10 @@ public class NameString implements Serializable
     {
         this.greeting = greeting;
     }
+    
+    public boolean isValid()
+    {
+        return name != null && name.length() > 0;
+    }
 
 }

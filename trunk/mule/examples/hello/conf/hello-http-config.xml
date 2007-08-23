@@ -33,14 +33,11 @@
     <mule-environment-properties synchronous="true"/>
     
     <transformers>
-        <transformer name="StringToNameString" className="org.mule.samples.hello.StringToNameString"
-            returnClass="org.mule.samples.hello.NameString"/>
-        <transformer name="NameStringToChatString" className="org.mule.samples.hello.NameStringToChatString"
-            returnClass="org.mule.samples.hello.ChatString"/>
-        <transformer name="ChatStringToString" className="org.mule.samples.hello.ChatStringToString"
-            returnClass="java.lang.String"/>
-        <transformer name="HttpRequestToNameString" className="org.mule.samples.hello.HttpRequestToNameString"
-            returnClass="org.mule.samples.hello.NameString"/>
+        <transformer name="StringToNameString" className="org.mule.samples.hello.StringToNameString"/>
+        <transformer name="NameStringToChatString" className="org.mule.samples.hello.NameStringToChatString"/>
+        <transformer name="ChatStringToString" className="org.mule.samples.hello.ChatStringToString"/>
+        <transformer name="HttpRequestToNameString" className="org.mule.samples.hello.HttpRequestToNameString"/>
+        <transformer name="ExceptionToString" className="org.mule.samples.hello.ExceptionToString"/>
 
         <!-- workaround for http://mule.mulesource.org/jira/browse/MULE-1827 -->            
         <transformer name="PlainTextResponseTransformer" className="org.mule.transformers.simple.MessagePropertiesTransformer">
@@ -70,10 +67,21 @@
             </inbound-router>
 
             <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
                     <endpoint address="vm://chitchatter"/>
+                    <filter expectedType="org.mule.samples.hello.NameString" className="org.mule.routing.filters.PayloadTypeFilter"/>
+                </router>
+                
+                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
+                    <endpoint address="vm://userErrorHandler"/>
+                    <filter expectedType="java.lang.Exception" className="org.mule.routing.filters.PayloadTypeFilter"/>
                 </router>
             </outbound-router>
+
+            <!-- Route unexpected errors to separate error handler -->
+            <exception-strategy className="org.mule.impl.DefaultComponentExceptionStrategy">
+                <endpoint address="vm://systemErrorHandler"/>
+            </exception-strategy>
         </mule-descriptor>
 
         <!-- note the response transformer on this component. even though there is no outbound provider
@@ -84,6 +92,21 @@
                     responseTransformers="ChatStringToString"/>
             </inbound-router>
         </mule-descriptor>
+
+        <!-- This error handler returns user error messages to caller -->
+        <mule-descriptor name="UserErrorHandler" implementation="org.mule.components.simple.PassThroughComponent">
+            <inbound-router>
+                <endpoint address="vm://userErrorHandler" responseTransformers="ExceptionToString"/>
+            </inbound-router>
+        </mule-descriptor>
+                
+        <!-- Handle any unexpected errors -->
+        <mule-descriptor name="SystemErrorHandler" implementation="org.mule.components.simple.PassThroughComponent">
+            <inbound-router>
+                <endpoint address="vm://systemErrorHandler"/>
+            </inbound-router>
+        </mule-descriptor>
+                
     </model>
 </mule-configuration>
 
