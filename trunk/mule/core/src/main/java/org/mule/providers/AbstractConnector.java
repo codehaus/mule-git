@@ -492,15 +492,15 @@ public abstract class AbstractConnector
     protected void disposeWorkManagers()
     {
         logger.debug("Disposing dispatcher work manager");
-        UMOWorkManager workManager = (UMOWorkManager)dispatcherWorkManager.get();
+        UMOWorkManager workManager = (UMOWorkManager) dispatcherWorkManager.get();
         if (workManager != null)
         {
             workManager.dispose();
         }
         dispatcherWorkManager.set(null);
-        
+
         logger.debug("Disposing receiver work manager");
-        workManager = (UMOWorkManager)receiverWorkManager.get();
+        workManager = (UMOWorkManager) receiverWorkManager.get();
         if (workManager != null)
         {
             workManager.dispose();
