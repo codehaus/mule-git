@@ -12,7 +12,10 @@ package org.mule.tck.testmodels.mule;
 
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.model.DefaultMuleProxy;
+import org.mule.providers.ReplyToHandler;
 import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.model.UMOModel;
 import org.mule.util.object.ObjectPool;
 
@@ -33,6 +36,10 @@ public class TestMuleProxy extends DefaultMuleProxy
     public Object getComponent()
     {
         return component;
+    }
+    
+    public ReplyToHandler getReplyToHandler(UMOMessage message, UMOImmutableEndpoint endpoint){
+        return super.getReplyToHandler(message, endpoint);
     }
 }
 

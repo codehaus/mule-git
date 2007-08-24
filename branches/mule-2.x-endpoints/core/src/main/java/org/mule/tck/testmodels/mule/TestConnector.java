@@ -15,6 +15,7 @@ import org.mule.providers.AbstractConnector;
 import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.AbstractMessageDispatcherFactory;
 import org.mule.providers.AbstractMessageReceiver;
+import org.mule.providers.ReplyToHandler;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -144,6 +145,11 @@ public class TestConnector extends AbstractConnector
     public void destroyReceiver(UMOMessageReceiver receiver, UMOEndpoint endpoint) throws Exception
     {
         // nothing to do
+    }
+    
+    public ReplyToHandler getReplyToHandler()
+    {
+        return new TestReplyToHandler(getDefaultResponseTransformer());
     }
 
     public class DummyMessageAdapter extends AbstractMessageAdapter implements UMOStreamMessageAdapter
