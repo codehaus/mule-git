@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:test="http://www.mulesource.org/schema/mule/test/2.0"
+    xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/test/2.0 http://www.mulesource.org/schema/mule/test/2.0/mule-test.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+
+
+    <mule:endpoint name="appleInEndpoint" address="test://AppleQueue" />
+    <mule:endpoint name="appleResponseEndpoint" address="test://AppleResponseQueue" />
+    <mule:endpoint name="orangeEndpoint" address="test://orangeQ"/>
+    <mule:endpoint name="otherEndpoint" address="test://other"/>
+    
+
+    <mule:model-custom name="main" class="org.mule.tck.testmodels.mule.TestSedaModel">
+
+        <mule:service name="orangeComponent">
+            <mule:component scope="singleton" class="org.mule.tck.testmodels.fruit.Orange"/>
+            <mule:inbound-router>
+                <mule:endpoint name="orangeComponentInboundEndpoint" ref="orangeEndpoint" />
+            </mule:inbound-router>
+            <mule:outbound-router>
+                <mule:pass-through-router>
+                    <mule:endpoint name="orangeComponentOutboundEndpoint" ref="appleInEndpoint" />
+                </mule:pass-through-router>
+            </mule:outbound-router>
+        </mule:service>
+        
+        <mule:service name="appleComponent">
+            <mule:component scope="singleton" class="org.mule.tck.testmodels.fruit.Apple"/>
+            <mule:inbound-router>
+                <mule:endpoint ref="appleInEndpoint" />
+                <mule:endpoint name="appleComponentInboundEndpoint" address="test://AppleQueue2" />
+            </mule:inbound-router>
+            <mule:outbound-router>
+                <mule:multicasting-router>
+                    <mule:endpoint address="test://OrangeQueue2"/>
+                    <mule:endpoint name="appleComponentOutboundEndpoint" address="test://other" />
+                </mule:multicasting-router>
+            </mule:outbound-router>
+             <mule:response-router>
+                <mule:endpoint ref="appleResponseEndpoint"/>
+            </mule:response-router>
+        </mule:service>
+
+    </mule:model-custom>
+</beans>
