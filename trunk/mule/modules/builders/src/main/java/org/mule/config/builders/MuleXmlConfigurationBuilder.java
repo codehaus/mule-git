@@ -231,7 +231,12 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
     {
         try
         {
-            return IOUtils.getResourceAsStream(configResource, getClass());
+            InputStream input = IOUtils.getResourceAsStream(configResource, getClass());
+            if (input == null)
+            {
+                throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource));
+            }
+            return input;
         }
         catch (IOException e)
         {
