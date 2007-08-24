@@ -173,6 +173,7 @@ public class MuleServer implements Runnable
 
     public MuleServer(String configResources)
     {
+        this();
         setConfigurationResources(configResources);
     }
 
@@ -270,15 +271,7 @@ public class MuleServer implements Runnable
     {
         logger.info("Mule Server starting...");
 
-        // TODO Why is this disabled?
-        // registerShutdownHook();
-
-        // install an RMI security manager in case we expose any RMI objects
-        //if (System.getSecurityManager() == null)
-        //{
-            // TODO Why is this disabled?
-            // System.setSecurityManager(new RMISecurityManager());
-        //}
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         // create a new ConfigurationBuilder that is disposed afterwards
         Class cfgBuilderClass = ClassUtils.loadClass(getConfigBuilderClassName(), MuleServer.class);
@@ -301,7 +294,7 @@ public class MuleServer implements Runnable
      * 
      * @param e the exception that caused the shutdown
      */
-    void shutdown(Throwable e)
+    public void shutdown(Throwable e)
     {
         Message msg = CoreMessages.fatalErrorWhileRunning();
         UMOException muleException = ExceptionHelper.getRootMuleException(e);
@@ -324,13 +317,16 @@ public class MuleServer implements Runnable
 
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.fatal(shutdownMessage);
+        
+        // make sure that Mule is shutdown correctly.
+        MuleManager.getInstance().dispose();
         System.exit(0);
     }
 
     /**
      * shutdown the server. This just displays the time the server shut down
      */
-    void shutdown()
+    public void shutdown()
     {
         logger.info("Mule server shutting dow due to normal shutdown request");
         List msgs = new ArrayList();
@@ -338,7 +334,10 @@ public class MuleServer implements Runnable
         msgs.add(CoreMessages.serverStartedAt(MuleManager.getInstance().getStartDate()).getMessage());
         msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
-
+        logger.info(shutdownMessage);
+        
+        // make sure that Mule is shutdown correctly.
+        MuleManager.getInstance().dispose();
         System.exit(0);
 
     }
@@ -375,5 +374,17 @@ public class MuleServer implements Runnable
     public static void setStartupPropertiesFile(String startupPropertiesFile)
     {
         MuleServer.startupPropertiesFile = startupPropertiesFile;
+    }
+    
+    /**
+     * This class is installed only for MuleServer running as commandline app. A clean Mule 
+     * shutdown can be achieved by disposing the {@link MuleManager}.
+     */
+    private class ShutdownThread extends Thread
+    {
+        public void run()
+        {
+            MuleManager.getInstance().dispose();
+        }
     }
 }
