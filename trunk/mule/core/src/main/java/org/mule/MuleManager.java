@@ -62,7 +62,6 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
@@ -90,6 +89,7 @@ import java.util.jar.Manifest;
 import javax.transaction.TransactionManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.logging.Log;
@@ -258,22 +258,6 @@ public class MuleManager implements UMOManager
             ConnectionNotificationListener.class);
         notificationManager.registerEventType(ExceptionNotification.class, ExceptionNotificationListener.class);
         notificationManager.registerEventType(TransactionNotification.class, TransactionNotificationListener.class);
-
-        // TODO RM*: This is obviously just a workaround until extension modules can register
-        // their own classes for notifications. Need to revisit this when the
-        // ManagementContext is implemented properly.
-        try
-        {
-            Class spaceNotificationClass = ClassUtils.loadClass(
-                "org.mule.impl.space.SpaceMonitorNotification", this.getClass());
-            Class spaceListenerClass = ClassUtils.loadClass(
-                "org.mule.impl.space.SpaceMonitorNotificationListener", this.getClass());
-            notificationManager.registerEventType(spaceNotificationClass, spaceListenerClass);
-        }
-        catch (ClassNotFoundException cnf)
-        {
-            // ignore - apparently not available
-        }
     }
 
     /**
