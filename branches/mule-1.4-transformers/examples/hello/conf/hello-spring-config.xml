@@ -30,19 +30,12 @@
            used to transform the inbound events for the Greeter and Chatter components into
            objects they understand.  The entryPointResolver configured on the Model below will
            determine which method to call on our components based on the return types of these
-           transformers.
+           transformers. The Exception transformer will provide the exception message as a
+           String. 
        -->
-    <bean id="StringToNameString" singleton="false" class="org.mule.samples.hello.StringToNameString">
-        <property name="returnClass"><value>org.mule.samples.hello.NameString</value></property>
-    </bean>
-
-    <bean id="NameStringToChatString" singleton="false" class="org.mule.samples.hello.NameStringToChatString">
-        <property name="returnClass"><value>org.mule.samples.hello.ChatString</value></property>
-    </bean>
-
-    <bean id="ChatStringToString" singleton="false" class="org.mule.samples.hello.ChatStringToString">
-        <property name="returnClass"><value>java.lang.String</value></property>
-    </bean>
+    <bean id="StdinToNameString" singleton="false" class="org.mule.samples.hello.StdinToNameString"/>
+    <bean id="NameStringToChatString" singleton="false" class="org.mule.samples.hello.NameStringToChatString"/>
+    <bean id="ChatStringToString" singleton="false" class="org.mule.samples.hello.ChatStringToString"/>
 
     <!--
         An interceptor is a peice of code that can be configued to execute
@@ -72,7 +65,7 @@
                 <property name="endpointURI">
                     <bean class="org.mule.impl.endpoint.MuleEndpointURI">
                         <constructor-arg>
-                            <value>stream://System.in?transformers=StringToNameString</value>
+                            <value>stream://System.in?transformers=StdinToNameString</value>
                         </constructor-arg>
                     </bean>
                </property>

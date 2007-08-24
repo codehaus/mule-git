@@ -10,7 +10,6 @@
 
 package org.mule;
 
-
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
@@ -62,7 +61,6 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
@@ -90,6 +88,7 @@ import java.util.jar.Manifest;
 import javax.transaction.TransactionManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.logging.Log;
@@ -188,11 +187,6 @@ public class MuleManager implements UMOManager
     private AtomicBoolean disposed = new AtomicBoolean(false);
 
     /**
-     * Holds a reference to the deamon running the Manager if any
-     */
-    private static MuleServer server = null;
-
-    /**
      * Maintains a reference to any interceptor stacks configured on the manager
      */
     private Map interceptorsMap = new HashMap();
@@ -228,8 +222,6 @@ public class MuleManager implements UMOManager
      */
     private static Log logger = LogFactory.getLog(MuleManager.class);
 
-    private ShutdownContext shutdownContext = new ShutdownContext(true, null);
-
     /**
      * Default Constructor
      */
@@ -241,7 +233,6 @@ public class MuleManager implements UMOManager
         }
         containerContext = new MultiContainerContext();
         securityManager = new MuleSecurityManager();
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         // create the event manager
         notificationManager = new ServerNotificationManager();
@@ -258,22 +249,6 @@ public class MuleManager implements UMOManager
             ConnectionNotificationListener.class);
         notificationManager.registerEventType(ExceptionNotification.class, ExceptionNotificationListener.class);
         notificationManager.registerEventType(TransactionNotification.class, TransactionNotificationListener.class);
-
-        // TODO RM*: This is obviously just a workaround until extension modules can register
-        // their own classes for notifications. Need to revisit this when the
-        // ManagementContext is implemented properly.
-        try
-        {
-            Class spaceNotificationClass = ClassUtils.loadClass(
-                "org.mule.impl.space.SpaceMonitorNotification", this.getClass());
-            Class spaceListenerClass = ClassUtils.loadClass(
-                "org.mule.impl.space.SpaceMonitorNotificationListener", this.getClass());
-            notificationManager.registerEventType(spaceNotificationClass, spaceListenerClass);
-        }
-        catch (ClassNotFoundException cnf)
-        {
-            // ignore - apparently not available
-        }
     }
 
     /**
@@ -991,32 +966,6 @@ public class MuleManager implements UMOManager
         logger.info("Connectors have been stopped successfully");
     }
 
-    /**
-     * If the <code>MuleManager</code> was started from the <code>MuleServer</code>
-     * daemon then this will be called by the Server
-     *
-     * @param server a reference to the <code>MuleServer</code>.
-     */
-    void setServer(MuleServer server)
-    {
-        MuleManager.server = server;
-    }
-
-    /**
-     * Shuts down the whole server tring to shut down all resources cleanly on the
-     * way
-     *
-     * @param e an exception that caused the <code>shutdown()</code> method to be
-     *            called. If e is null the shutdown message will just display a time
-     *            when the server was shutdown. Otherwise the exception information
-     *            will also be displayed.
-     */
-    public void shutdown(Throwable e, boolean aggressive)
-    {
-        shutdownContext = new ShutdownContext(aggressive, e);
-        System.exit(0);
-    }
-
     public UMOModel lookupModel(String name)
     {
         return (UMOModel) models.get(name);
@@ -1599,70 +1548,5 @@ public class MuleManager implements UMOManager
     public void setQueueManager(QueueManager queueManager)
     {
         this.queueManager = queueManager;
-    }
-
-    /**
-     * The shutdown thread used by the server when its main thread is terminated
-     */
-    private class ShutdownThread extends Thread
-    {
-        Throwable t;
-        boolean aggressive = true;
-
-        public ShutdownThread()
-        {
-            super();
-            this.t = shutdownContext.getException();
-            this.aggressive = shutdownContext.isAggressive();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.lang.Runnable#run()
-         */
-        public void run()
-        {
-            dispose();
-            if (!aggressive)
-            {
-                // FIX need to check if there are any outstanding
-                // operations to be done?
-            }
-
-            if (server != null)
-            {
-                if (t != null)
-                {
-                    server.shutdown(t);
-                }
-                else
-                {
-                    server.shutdown();
-                }
-            }
-        }
-    }
-
-    private class ShutdownContext
-    {
-        private boolean aggressive = false;
-        private Throwable exception = null;
-
-        public ShutdownContext(boolean aggressive, Throwable exception)
-        {
-            this.aggressive = aggressive;
-            this.exception = exception;
-        }
-
-        public boolean isAggressive()
-        {
-            return aggressive;
-        }
-
-        public Throwable getException()
-        {
-            return exception;
-        }
     }
 }

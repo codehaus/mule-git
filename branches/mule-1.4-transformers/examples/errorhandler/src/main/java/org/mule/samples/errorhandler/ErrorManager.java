@@ -95,7 +95,7 @@ public class ErrorManager
             else if (eh instanceof FatalHandler)
             {
                 logger.fatal(LocaleMessage.fatalHandling(e));
-                ((MuleManager)MuleManager.getInstance()).shutdown(e, false);
+                ((MuleManager)MuleManager.getInstance()).dispose();
             }
             else
             {
@@ -136,6 +136,6 @@ public class ErrorManager
         // If this method has been called, all other handlers failed
         // this is all we can do
         logger.fatal(LocaleMessage.fatalException(t), t);
-        ((MuleManager)MuleManager.getInstance()).shutdown(t, false);
+        ((MuleManager)MuleManager.getInstance()).dispose();
     }
 }

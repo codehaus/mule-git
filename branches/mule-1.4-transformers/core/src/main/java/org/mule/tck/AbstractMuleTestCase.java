@@ -24,20 +24,31 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.ClassUtils;
+import org.mule.util.CollectionUtils;
 import org.mule.util.FileUtils;
+import org.mule.util.IOUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,18 +58,20 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMuleTestCase extends TestCase implements TestCaseWatchdogTimeoutHandler
 {
-    /**
-     * This flag controls whether the text boxes will be logged when starting each test case.
-     */
-    private static final boolean verbose;
-    
+    // A logger that should be suitable for most test cases.
     protected final Log logger = LogFactory.getLog(this.getClass());
 
-    // This should be set to a string message describing any prerequisites not met
+    // Controls whether text boxes will be logged when starting each test case.
+    private static boolean verbose = true;
+
+    // A Map of test case extension objects. JUnit creates a new TestCase instance for
+    // every method, so we need to record metainfo outside the test.
+    private static final Map testInfos = Collections.synchronizedMap(new HashMap());
+
+    // Should be set to a string message describing any prerequisites not met.
     private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
 
-    private static Map testCounters;
-    
+    // Barks if the test exceeds its time limit
     private TestCaseWatchdog watchdog;
 
     static
@@ -83,54 +96,30 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     public AbstractMuleTestCase()
     {
         super();
-        if (testCounters == null)
-        {
-            testCounters = new HashMap();
-        }
-        addTest();
-    }
 
-    protected void addTest()
-    {
-        TestInfo info = (TestInfo) testCounters.get(getClass().getName());
+        TestInfo info = (TestInfo) testInfos.get(getClass().getName());
         if (info == null)
         {
-            info = new TestInfo(getClass().getName());
-            testCounters.put(getClass().getName(), info);
+            info = this.createTestInfo();
+            testInfos.put(getClass().getName(), info);
         }
+
         info.incTestCount();
     }
 
-    protected void setDisposeManagerPerSuite(boolean val)
+    protected TestInfo createTestInfo()
     {
-        getTestInfo().setDisposeManagerPerSuite(val);
+        return new TestInfo(this);
     }
 
     protected TestInfo getTestInfo()
     {
-        TestInfo info = (TestInfo) testCounters.get(getClass().getName());
-        if (info == null)
-        {
-            info = new TestInfo(getClass().getName());
-            testCounters.put(getClass().getName(), info);
-        }
-        return info;
+        return (TestInfo) testInfos.get(this.getClass().getName());
     }
 
-    private void clearAllCounters()
+    private void clearInfo()
     {
-        if (testCounters != null)
-        {
-            testCounters.clear();
-        }
-    }
-
-    private void clearCounter()
-    {
-        if (testCounters != null)
-        {
-            testCounters.remove(getClass().getName());
-        }
+        testInfos.remove(this.getClass().getName());
     }
 
     public String getName()
@@ -140,25 +129,27 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public void run(TestResult result) 
     {
+        if (this.isExcluded())
+        {
+            if (verbose)
+            {
+                logger.info(this.getClass().getName() + " excluded");
+            }
+            return;
+        }
+
         if (this.isDisabledInThisEnvironment())
         {
-            logger.info(this.getClass().getName() + " disabled");
+            if (verbose)
+            {
+                logger.info(this.getClass().getName() + " disabled");
+            }
             return;
         }
         
         super.run(result);
     }
-     
-    /**
-     * Subclasses can override this method to skip the execution of the entire test class.
-     * 
-     * @return <code>true</code> if the test class should not be run.
-     */
-    protected boolean isDisabledInThisEnvironment()
-    {
-        return false;
-    }
-    
+
     /**
      * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can extend
      * this class from ConditionalTestCase.
@@ -180,6 +171,27 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     /**
+     * Subclasses can override this method to skip the execution of the entire test class.
+     * 
+     * @return <code>true</code> if the test class should not be run.
+     */
+    protected boolean isDisabledInThisEnvironment()
+    {
+        return false;
+    }
+
+    /**
+     * Indicates whether this test has been explicitly disabled through the configuration
+     * file loaded by TestInfo.
+     * 
+     * @return whether the test has been explicitly disabled
+     */
+    protected boolean isExcluded()
+    {
+        return getTestInfo().isExcluded();
+    }
+
+    /**
      * Should this test run?
      * @param testMethodName name of the test method
      * @return whether the test should execute in the current envionment
@@ -197,6 +209,16 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                 "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
+    }
+
+    protected boolean isDisposeManagerPerSuite()
+    {
+        return getTestInfo().isDisposeManagerPerSuite();
+    }
+
+    protected void setDisposeManagerPerSuite(boolean val)
+    {
+        getTestInfo().setDisposeManagerPerSuite(val);
     }
 
     protected TestCaseWatchdog createWatchdog()
@@ -220,6 +242,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         {
             System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));   
         }
+
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
         MuleManager.getConfiguration().setServerUrl(StringUtils.EMPTY);
 
@@ -280,7 +303,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             {
                 suitePreTearDown();
             }
+
             doTearDown();
+
             if (!getTestInfo().isDisposeManagerPerSuite())
             {
                 disposeManager();
@@ -299,7 +324,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                     }
                     finally
                     {
-                        clearCounter();
+                        clearInfo();
                         disposeManager();
                     }
                 }
@@ -404,48 +429,48 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getManager(true);
     }
 
-    protected void finalize() throws Throwable
-    {
-        try
-        {
-            clearAllCounters();
-        }
-        finally
-        {
-            super.finalize();
-        }
-    }
-
-    protected class TestInfo
+    public static class TestInfo
     {
         /**
          * Whether to dispose the manager after every method or once all tests for
          * the class have run
          */
         private boolean disposeManagerPerSuite = false;
+        private boolean excluded = false;
         private int testCount = 0;
         private int runCount = 0;
         private String name;
 
-        public TestInfo(String name)
+        public TestInfo(TestCase test)
         {
-            this.name = name;
-        }
+            this.name = test.getClass().getName();
 
-        public void clearCounts()
-        {
-            testCount = 0;
-            runCount = 0;
-        }
+            // load test exclusions
+            try
+            {
+                URL fileUrl = IOUtils.getResourceAsUrl("mule-test-exclusions.txt", this.getClass());
 
-        public void incTestCount()
-        {
-            testCount++;
-        }
+                if (fileUrl != null)
+                {
+                    Iterator lines = FileUtils.lineIterator(FileUtils.newFile(fileUrl.getFile()));
+                    Iterator filtered = IteratorUtils.filteredIterator(lines, new Predicate()
+                    {
+                        public boolean evaluate(Object object)
+                        {
+                            String line = StringUtils.trimToEmpty((String) object);
+                            return (StringUtils.isNotEmpty(line) && line.charAt(0) != '#');
+                        }
+                    });
 
-        public void incRunCount()
-        {
-            runCount++;
+                    Set valid = new HashSet();
+                    CollectionUtils.addAll(valid, filtered);
+                    excluded = valid.contains(ClassUtils.getShortClassName(test.getClass()));
+                }
+            }
+            catch (IOException ioex)
+            {
+                // ignore
+            }
         }
 
         public int getTestCount()
@@ -453,9 +478,19 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             return testCount;
         }
 
+        public void incTestCount()
+        {
+            testCount++;
+        }
+
         public int getRunCount()
         {
             return runCount;
+        }
+
+        public void incRunCount()
+        {
+            runCount++;
         }
 
         public String getName()
@@ -471,6 +506,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         public void setDisposeManagerPerSuite(boolean disposeManagerPerSuite)
         {
             this.disposeManagerPerSuite = disposeManagerPerSuite;
+        }
+
+        public boolean isExcluded()
+        {
+            return excluded;
         }
 
         public String toString()
