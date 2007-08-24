@@ -966,21 +966,6 @@ public class MuleManager implements UMOManager
         logger.info("Connectors have been stopped successfully");
     }
 
-//    /**
-//     * Shuts down the whole server tring to shut down all resources cleanly on the
-//     * way
-//     *
-//     * @param e an exception that caused the <code>shutdown()</code> method to be
-//     *            called. If e is null the shutdown message will just display a time
-//     *            when the server was shutdown. Otherwise the exception information
-//     *            will also be displayed.
-//     */
-//    public void shutdown(Throwable e, boolean aggressive)
-//    {
-//        shutdownContext = new ShutdownContext(aggressive, e);
-//        System.exit(0);
-//    }
-
     public UMOModel lookupModel(String name)
     {
         return (UMOModel) models.get(name);
