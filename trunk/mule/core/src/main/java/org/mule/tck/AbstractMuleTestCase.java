@@ -42,11 +42,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
-
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -69,7 +67,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     private static final Map testInfos = Collections.synchronizedMap(new HashMap());
 
     // Should be set to a string message describing any prerequisites not met.
-    private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
+    private boolean offline = "true".equalsIgnoreCase(System.getProperty("org.mule.offline"));
 
     // Barks if the test exceeds its time limit
     private TestCaseWatchdog watchdog;
