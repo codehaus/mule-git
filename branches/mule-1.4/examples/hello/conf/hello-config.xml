@@ -106,8 +106,9 @@
             <interceptor name="default"/>
         </mule-descriptor>
         
-        <!-- This error handler returns user error messages to caller -->
-        <mule-descriptor name="UserErrorHandler" implementation="org.mule.components.simple.PassThroughComponent">
+        <!-- This error handler returns user error messages to caller. Errors could also be routed elsewhere,
+            e.g. into an error file, send via email to a list, stored in a database, etc. -->
+        <mule-descriptor name="UserErrorHandler" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="vm://userErrorHandler" transformers="ExceptionToString"/>
             </inbound-router>
@@ -118,11 +119,17 @@
             </outbound-router>
         </mule-descriptor>
                 
-        <!-- Handle any unexpected errors -->
-        <mule-descriptor name="SystemErrorHandler" implementation="org.mule.components.simple.PassThroughComponent">
+        <!-- Handle any unexpected errors. Errors could also be routed elsewhere,
+            e.g. into an error file, send via email to a list, stored in a database, etc. -->
+        <mule-descriptor name="SystemErrorHandler" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="vm://systemErrorHandler"/>
             </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="stream://System.err"/>
+                </router>
+            </outbound-router>            
         </mule-descriptor>        
     </model>
 </mule-configuration>
