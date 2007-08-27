@@ -1,8 +1,8 @@
 package org.mule.impl;
 
 import org.mule.components.simple.NoArgsCallWrapper;
-import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -18,6 +18,10 @@ import java.util.Map;
 
 public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 {
+    public NoArgsCallWrapperTestCase()
+    {
+        setStartContext(true);
+    }
 
     public void testNoArgsCallWrapper() throws Exception
     {
@@ -25,12 +29,11 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
         properties.put("delegateClass", Apple.class.getName());
         properties.put("delegateMethod", "toString");
 
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-        UMOEndpoint endpoint = builder.createEndpoint("test://in", null, true);
-        MuleDescriptor desc = (MuleDescriptor) builder.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
-        builder.registerComponent(desc);
+        UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+        MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+        managementContext.getRegistry().registerService(desc, managementContext);
 
-        UMOComponent component = builder.getModel().getComponent("WrapperUMO");
+        UMOComponent component = managementContext.getRegistry().lookupSystemModel().getComponent("WrapperUMO");
 
         UMOEvent event = getTestEvent("Test", desc, endpoint);
         UMOMessage reply = component.sendEvent(event);
@@ -46,12 +49,11 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
         properties.put("delegateClass", Apple.class.getName());
         properties.put("delegateMethod", "wash");
 
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-        UMOEndpoint endpoint = builder.createEndpoint("test://in", null, true);
-        MuleDescriptor desc = (MuleDescriptor) builder.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
-        builder.registerComponent(desc);
+        UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+        MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+        managementContext.getRegistry().registerService(desc, managementContext);
 
-        UMOComponent component = builder.getModel().getComponent("WrapperUMO");
+        UMOComponent component = managementContext.getRegistry().lookupSystemModel().getComponent("WrapperUMO");
 
         UMOEvent event = getTestEvent("Test", desc, endpoint);
         UMOMessage reply = component.sendEvent(event);
@@ -68,12 +70,11 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
         properties.put("delegateClass", Apple.class.getName());
         properties.put("delegateMethod", "methodReturningNull");
 
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-        UMOEndpoint endpoint = builder.createEndpoint("test://in", null, true);
-        MuleDescriptor desc = (MuleDescriptor) builder.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
-        builder.registerComponent(desc);
+        UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+        MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+        managementContext.getRegistry().registerService(desc, managementContext);
 
-        UMOComponent component = builder.getModel().getComponent("WrapperUMO");
+        UMOComponent component = managementContext.getRegistry().lookupSystemModel().getComponent("WrapperUMO");
 
         UMOEvent event = getTestEvent("Test", desc, endpoint);
         UMOMessage reply = component.sendEvent(event);
@@ -84,11 +85,11 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 
     public void testNoConfigurationProvided() throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-
         try
         {
-            builder.registerComponent(NoArgsCallWrapper.class.getName(), "WrapperUMO", "test://in", null, Collections.EMPTY_MAP);
+            UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+            MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, Collections.EMPTY_MAP);
+            managementContext.getRegistry().registerService(desc, managementContext);
         }
         catch (UMOException e)
         {
@@ -101,13 +102,14 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 
     public void testOnlyDelegateClassProvided() throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
         Map properties = new HashMap();
         properties.put("delegateClass", Apple.class.getName());
 
         try
         {
-            builder.registerComponent(NoArgsCallWrapper.class.getName(), "WrapperUMO", "test://in", null, properties);
+            UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+            MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+            managementContext.getRegistry().registerService(desc, managementContext);
         }
         catch (UMOException e)
         {
@@ -120,13 +122,14 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 
     public void testOnlyDelegateMethodProvided() throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
         Map properties = new HashMap();
         properties.put("delegateMethod", "someMethod");
 
         try
         {
-            builder.registerComponent(NoArgsCallWrapper.class.getName(), "WrapperUMO", "test://in", null, properties);
+            UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+            MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+            managementContext.getRegistry().registerService(desc, managementContext);
         }
         catch (UMOException e)
         {
@@ -139,15 +142,15 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 
     public void testDelegateInstanceAndClassProvided() throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-
         Map properties = new HashMap();
         properties.put("delegateClass", Apple.class.getName());
         properties.put("delegateInstance", new Apple());
 
         try
         {
-            builder.registerComponent(NoArgsCallWrapper.class.getName(), "WrapperUMO", "test://in", null, properties);
+            UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+            MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+            managementContext.getRegistry().registerService(desc, managementContext);
         }
         catch (UMOException e)
         {
@@ -160,14 +163,14 @@ public class NoArgsCallWrapperTestCase extends AbstractMuleTestCase
 
     public void testDelegateInstanceWithoutMethodProvided() throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder(true);
-
         Map properties = new HashMap();
         properties.put("delegateInstance", new Apple());
 
         try
         {
-            builder.registerComponent(NoArgsCallWrapper.class.getName(), "WrapperUMO", "test://in", null, properties);
+            UMOEndpoint endpoint = managementContext.getRegistry().createEndpointFromUri("test://in", UMOEndpoint.ENDPOINT_TYPE_RECEIVER, managementContext);
+            MuleDescriptor desc = (MuleDescriptor) MuleTestUtils.createDescriptor(NoArgsCallWrapper.class.getName(), "WrapperUMO", endpoint, null, properties);
+            managementContext.getRegistry().registerService(desc, managementContext);
         }
         catch (UMOException e)
         {

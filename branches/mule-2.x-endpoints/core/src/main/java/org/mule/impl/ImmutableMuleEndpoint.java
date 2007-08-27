@@ -21,7 +21,6 @@ import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.providers.service.TransportFactory;
 import org.mule.providers.service.TransportFactoryException;
-import org.mule.registry.DeregistrationException;
 import org.mule.registry.RegistrationException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -50,6 +49,7 @@ import java.util.regex.Pattern;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -530,7 +530,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             {
                 try
                 {
-                    connector = TransportFactory.getOrCreateConnectorByProtocol(this);
+                    connector = TransportFactory.getOrCreateConnectorByProtocol(this, managementContext);
                     if (connector == null)
                     {
                         throw new InitialisationException(
@@ -701,26 +701,6 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             // setEndpoint should be idempotent
             target.setEndpoint(this);
         }
-    }
-
-    public void register() throws RegistrationException
-    {
-        if (connector == null || connector.getRegistryId() == null)
-            throw new RegistrationException("Unable to find the endpoint's connector registryId");
-
-        registryId =
-            managementContext.getRegistry().registerMuleObject(connector, this).getId();
-    }
-
-    public void deregister() throws DeregistrationException
-    {
-        managementContext.getRegistry().deregisterComponent(registryId);
-        registryId = null;
-    }
-
-    public String getRegistryId()
-    {
-        return registryId;
     }
 
     /**
