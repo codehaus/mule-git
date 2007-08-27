@@ -384,7 +384,10 @@ public class MuleServer implements Runnable
     {
         public void run()
         {
-            MuleManager.getInstance().dispose();
+            if (MuleManager.isInstanciated())
+            {
+                MuleManager.getInstance().dispose();
+            }
         }
     }
 }

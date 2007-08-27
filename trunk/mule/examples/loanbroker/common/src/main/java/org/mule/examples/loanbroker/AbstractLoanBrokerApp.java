@@ -75,7 +75,10 @@ public abstract class AbstractLoanBrokerApp
     
     protected void dispose() throws Exception
     {
-        MuleManager.getInstance().dispose();
+        if (MuleManager.isInstanciated())
+        {
+            MuleManager.getInstance().dispose();
+        }
     }
 
     protected void run(boolean synchronous) throws Exception
