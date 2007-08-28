@@ -89,20 +89,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             client = new HttpClient();
             client.setState(state);
-            client.setHttpConnectionManager(connector.getClientConnectionManager());
-            //RM* This isn't a good idea since if the connection is not re-used a HEAD request is sent for
-            //every invocation.
-            // test the connection via HEAD
-//            HeadMethod method = new HeadMethod(endpoint.getEndpointURI().getAddress());
-//            try
-//            {
-//                client.executeMethod(getHostConfig(endpoint.getEndpointURI().getUri()), method);
-//            }
-//            catch (Exception e)
-//            {
-//                throw new ConnectException(
-//                    HttpMessages.failedToConnect(endpoint.getEndpointURI().getUri()), e, this);
-//            }
         }
 
     }
