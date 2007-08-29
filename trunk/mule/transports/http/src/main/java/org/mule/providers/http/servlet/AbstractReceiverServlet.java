@@ -10,6 +10,7 @@
 
 package org.mule.providers.http.servlet;
 
+import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpResponse;
 import org.mule.umo.UMOMessage;
@@ -107,7 +108,9 @@ public abstract class AbstractReceiverServlet extends HttpServlet
     {
         if (message == null)
         {
-            servletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            int status = message.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 
+                HttpServletResponse.SC_NO_CONTENT);
+            servletResponse.setStatus(status);
             if (feedback)
             {
                 servletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -131,6 +134,8 @@ public abstract class AbstractReceiverServlet extends HttpServlet
                 {
                     httpResponse.setHeader(new Header(HttpConstants.HEADER_CONTENT_TYPE, ct));
                 }
+                httpResponse.setStatusLine(httpResponse.getHttpVersion(), 
+                    message.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, HttpServletResponse.SC_OK));
             }
 
             Header contentTypeHeader = httpResponse.getFirstHeader(HttpConstants.HEADER_CONTENT_TYPE);
