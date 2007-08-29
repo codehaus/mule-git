@@ -89,6 +89,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             client = new HttpClient();
             client.setState(state);
+            client.setHttpConnectionManager(connector.getClientConnectionManager());
         }
 
     }
