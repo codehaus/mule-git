@@ -36,7 +36,7 @@ public class EmailRoundTripTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "round-trip-test.xml";
+        return "email-round-trip-test.xml";
     }
 
     public void testRoundTrip() throws UMOException, InterruptedException
@@ -58,7 +58,8 @@ public class EmailRoundTripTestCase extends FunctionalTestCase
      * Start the servers when the test starts
      * @throws Exception
      */
-    protected void doPreFunctionalSetUp() throws Exception
+    // @Override
+    protected void suitePreSetUp() throws Exception
     {
         greenMailSupport.startServers();
         greenMailSupport.createBobAndStoreEmail(greenMailSupport.getValidMessage(AbstractGreenMailSupport.ALICE_EMAIL));
@@ -68,7 +69,8 @@ public class EmailRoundTripTestCase extends FunctionalTestCase
      * Stop the servers when the test ends
      * @throws Exception
      */
-    protected void doFunctionalTearDown() throws Exception
+    // @Override
+    protected void suitePostTearDown() throws Exception
     {
         greenMailSupport.stopServers();
     }

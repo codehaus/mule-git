@@ -19,10 +19,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <!-- http://mule.mulesource.org/jira/browse/MULE-2188 -->
-                        <exclude>**/EmailRoundTripTestCase.java</exclude>
-                        <!-- http://mule.mulesource.org/jira/browse/MULE-2189 -->
-                        <exclude>**/Rfc822ByteArrayTestCase.java</exclude>
+                        <!-- http://mule.mulesource.org/jira/browse/MULE-2201 -->
+                        <exclude>**/SmtpMimeFunctionalTestCase.*</exclude>
+                        <exclude>**/SmtpFunctionalTestCase.*</exclude>
+                        <exclude>**/SmtpsFunctionalTestCase.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
