@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule</groupId>
+        <artifactId>mule</artifactId>
+        <version>1.4.2</version>
+    </parent>
+    <groupId>org.mule.transports</groupId>
+    <artifactId>mule-transports</artifactId>
+    <packaging>pom</packaging>
+    <name>Mule Transports</name>
+
+    <modules>
+        <module>all-transports</module>
+        <module>axis</module>
+        <module>bpm</module>
+        <module>ejb</module>
+        <module>email</module>
+        <module>file</module>
+        <module>ftp</module>
+        <module>http</module>
+        <module>jbi</module>
+        <module>jbpm</module>
+        <module>jdbc</module>
+        <module>jms</module>
+        <module>multicast</module>
+        <module>oaq</module>
+        <module>quartz</module>
+        <module>rmi</module>
+        <module>soap</module>
+        <module>ssl</module>
+        <module>stream</module>
+        <module>tcp</module>
+        <module>udp</module>
+        <module>vm</module>
+        <module>xfire</module>
+        <module>xmpp</module>
+    </modules>
+
+    <dependencies>
+        <!-- every transport depends at least on core -->
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <!-- Now that m2 dependency resolution works, activation
+             should ONLY come via core or (in the future) core-api, but there is
+             OF COURSE a bug with m2's handling of provided dependencies:
+             http://jira.codehaus.org/browse/MNG-2205
+        -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- many transports use FunctionalTestCase -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- required for ConfigurationBuilders at runtime -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-builders</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
