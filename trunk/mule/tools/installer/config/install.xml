@@ -95,6 +95,7 @@
             <file src="../resources/INSTALL.txt" targetdir="$INSTALL_PATH"/>
             <file src="../resources/LICENSE.txt" targetdir="$INSTALL_PATH"/>
             <file src="../resources/USAGE.txt" targetdir="$INSTALL_PATH"/>
+            <executable targetfile="../resources/permissions.sh" targetdir="$INSTALL_PATH" stage="postinstall" os="unix"/>
         </pack>
         <pack name="bin" required="yes">
             <description>The compiled distribution code</description>
