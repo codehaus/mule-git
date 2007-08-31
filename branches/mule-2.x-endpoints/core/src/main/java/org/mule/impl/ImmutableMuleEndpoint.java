@@ -300,12 +300,12 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         filter = source.getFilter();
         securityFilter = source.getSecurityFilter();
 
-        if(connectionStrategy == null)
+        if (connectionStrategy == null)
         {
             connectionStrategy = source.getConnectionStrategy();
         }
 
-        if(source.getManagementContext()!=null)
+        if (source.getManagementContext() != null)
         {
             initialise();
         }
@@ -393,7 +393,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                    .append(":<password>").append("@")
                    .append(uri.getHost()).append(uri.getRawPath()).toString();
             }
-            if ( uri.getRawQuery() != null)
+            if (uri.getRawQuery() != null)
             {
                sanitizedEndPointUri = sanitizedEndPointUri + "?" + uri.getRawQuery();
             }
@@ -510,7 +510,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         endpointUri.initialise();
 
-        if(endpointEncoding==null)
+        if (endpointEncoding == null)
         {
             endpointEncoding = RegistryContext.getConfiguration().getDefaultEncoding();
         }
@@ -623,7 +623,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             remoteSyncTimeout = Integer.valueOf(rsTimeout);
         }
 
-        if(connectionStrategy==null)
+        if (connectionStrategy == null)
         {
             connectionStrategy = new SingleAttemptConnectionStrategy();
         }
@@ -818,7 +818,6 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         return value;
     }
 
-
     // TODO the following methods should most likely be lifecycle-enabled
 
     public void dispatch(UMOEvent event) throws DispatchException
@@ -829,8 +828,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
         else
         {
-            //TODO: Either remove because this should never happen or i18n the message
-            throw new IllegalStateException("The connector on the endpoint: " + toString() + "is null. Please contact " + MuleManifest.getDevListEmail());
+            //TODO Either remove because this should never happen or i18n the message
+            throw new IllegalStateException("The connector on the endpoint: " + toString() + " is null. Please contact " + MuleManifest.getDevListEmail());
         }
     }
 
@@ -842,8 +841,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
         else
         {
-            //TODO: Either remove because this should never happen or i18n the message
-            throw new IllegalStateException("The connector on the endpoint: " + toString() + "is null. Please contact " + MuleManifest.getDevListEmail());
+            //TODO Either remove because this should never happen or i18n the message
+            throw new IllegalStateException("The connector on the endpoint: " + toString() + " is null. Please contact " + MuleManifest.getDevListEmail());
         }
     }
 
@@ -855,8 +854,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
         else
         {
-            //TODO: Either remove because this should never happen or i18n the message
-            throw new IllegalStateException("The connector on the endpoint: " + toString() + "is null. Please contact " + MuleManifest.getDevListEmail());
+            //TODO Either remove because this should never happen or i18n the message
+            throw new IllegalStateException("The connector on the endpoint: " + toString() + " is null. Please contact " + MuleManifest.getDevListEmail());
         }
     }
 

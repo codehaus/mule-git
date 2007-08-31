@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MuleSource MPL
+ * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -58,7 +58,7 @@ public class XmlFilterNamespaceHandlerTestCase extends FunctionalTestCase
         assertTrue(((FilteringOutboundRouter) routers.get(0)).getFilter() instanceof JXPathFilter);
         JXPathFilter filter = (JXPathFilter) ((FilteringOutboundRouter) routers.get(0)).getFilter();
         assertEquals("filter xml for content", filter.getExpectedValue());
-        assertEquals("/spring:beans/mule:model-seda/mule:service[2]/@name", filter.getPattern());
+        assertEquals("/mule:mule/mule:model/mule:service[2]/@name", filter.getPattern());
         assertNotNull(filter.getNamespaces());
         Map namespaces = filter.getNamespaces();
         assertEquals(2, namespaces.size());

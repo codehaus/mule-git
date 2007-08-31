@@ -3,14 +3,14 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MuleSource MPL
+ * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
 package org.mule.providers.quartz.config;
 
 import org.mule.config.spring.parsers.collection.ChildMapDefinitionParser;
-import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
+import org.mule.config.spring.parsers.generic.MuleChildDefinitionParser;
 import org.mule.providers.quartz.QuartzConnector;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
@@ -25,7 +25,7 @@ public class QuartzNamespaceHandler extends NamespaceHandlerSupport
     }
 }
 
-class QuartzConnectorDefinitionParser extends OrphanDefinitionParser
+class QuartzConnectorDefinitionParser extends MuleChildDefinitionParser
 {
     public QuartzConnectorDefinitionParser()
     {

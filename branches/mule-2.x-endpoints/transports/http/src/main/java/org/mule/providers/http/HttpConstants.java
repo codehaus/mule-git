@@ -3,7 +3,7 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MuleSource MPL
+ * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
@@ -178,7 +178,7 @@ public class HttpConstants
             HEADER_IF_MODIFIED_SINCE, HEADER_IF_NONE_MATCH, HEADER_IF_RANGE, HEADER_IF_UNMODIFIED_SINCE,
             HEADER_MAX_FORWARDS, HEADER_PRAGMA, HEADER_PROXY_AUTHORIZATION, HEADER_RANGE, HEADER_REFERER,
             HEADER_TE, HEADER_TRAILER, HEADER_TRANSFER_ENCODING, HEADER_UPGRADE, HEADER_USER_AGENT,
-            HEADER_VIA, HEADER_WARNING};
+            HEADER_VIA, HEADER_WARNING, HEADER_CONTENT_LENGTH};
 
         REQUEST_HEADER_NAMES = Collections.unmodifiableMap(MapUtils.mapWithKeysAndValues(
             CaseInsensitiveMap.class, strings, strings));
