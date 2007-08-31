@@ -10,7 +10,8 @@
     <property name="app.name" value="mule-example-loanbroker-common-tests"/>
     <property environment="env"/>
 
-    <property name="dir.java" value="src"/>
+    <property name="dir.java" value="src"/>
+
     <property name="dir.build" value="target"/>
     <property name="dir.classes" value="${dir.build}/classes"/>
     <property name="dir.common" value="../common"/>
@@ -60,7 +61,8 @@
                target="1.4">
             <classpath refid="classpath.mule"/>
         </javac>
-        
+        
+
     </target>
 
    <target name="package" 
