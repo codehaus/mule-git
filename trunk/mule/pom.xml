@@ -682,7 +682,7 @@
                         <link>http://jakarta.apache.org/commons/lang/api-2.1/</link>
                         <link>http://jakarta.apache.org/commons/logging/commons-logging-1.0.4/docs/apidocs/</link>
                         <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
-                        <link>http://logging.apache.org/log4j/docs/api/</link>
+                        <link>http://logging.apache.org/log4j/1.2/apidocs/</link>
                         <link>http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/</link>
                         <!-- site is dead? -->
                         <!-- link>http://www.junit.org/junit/javadoc/3.8.1/</link -->
