@@ -15,11 +15,13 @@
 
     <model name="test">
         <mule-descriptor name="mycomponent"
-            implementation="org.mule.components.simple.NullComponent"
-            inboundEndpoint="vm://mycomponent">
+            implementation="org.mule.components.simple.NullComponent">
+            <inbound-router>
+                <endpoint address="vm://component.in"/>
+            </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://mycomponent.out"/>
+                    <endpoint address="vm://component.out"/>
                 </router>
             </outbound-router>
 
