@@ -14,8 +14,8 @@ import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.transformer.TransformerException;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class CsvToDataSet extends AbstractCsvTransformer
             return null;
         }
 
-        InputStream dataSource = this.createInputStream(src);
+        Reader dataSource = this.createReader(src);
         Parser parser = DefaultParserFactory.getInstance().newDelimitedParser(dataSource,
             this.getDelimiter(), this.getQualifier());
 
@@ -60,15 +60,16 @@ public class CsvToDataSet extends AbstractCsvTransformer
         return dataSet;
     }
 
-    private InputStream createInputStream(Object src) throws TransformerException
+    private Reader createReader(Object src) throws TransformerException
     {
         if (src instanceof byte[])
         {
-            return new ByteArrayInputStream((byte[]) src);
+            byte[] bytes = (byte[]) src;
+            return new StringReader(new String(bytes));
         }
         if (src instanceof String)
         {
-            return new ByteArrayInputStream(((String) src).getBytes());
+            return new StringReader((String) src);
         }
 
         // TODO localized error message

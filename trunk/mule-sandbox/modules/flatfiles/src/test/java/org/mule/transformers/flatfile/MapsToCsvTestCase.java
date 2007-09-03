@@ -11,7 +11,6 @@
 package org.mule.transformers.flatfile;
 
 import org.mule.umo.transformer.TransformerException;
-import org.mule.util.FileUtils;
 import org.mule.util.FilenameUtils;
 
 import java.io.File;
