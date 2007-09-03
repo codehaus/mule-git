@@ -1,8 +1,9 @@
 package net.sf.pzfilereader.writer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
 
 import junit.framework.Assert;
 
@@ -14,10 +15,8 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
 {
     public void testWriteFixedLength() throws Exception
     {
-        OutputStream out = new ByteArrayOutputStream();
-
-        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
+        StringWriter out = new StringWriter();
+        Writer writer = new FixedWriterFactory(this.getMapping()).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -34,10 +33,8 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
     
     public void testWriterWithDifferentFillChar() throws Exception
     {
-        OutputStream out = new ByteArrayOutputStream();
-
-        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        Writer writer = new FixedWriterFactory(mapping, '.').createWriter(out);
+        StringWriter out = new StringWriter();
+        Writer writer = new FixedWriterFactory(this.getMapping(), '.').createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -57,7 +54,8 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         try
         {
             InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("BrokenMapping.pzmap.xml");
-            new FixedWriterFactory(mapping);
+            InputStreamReader mappingReader = new InputStreamReader(mapping);
+            new FixedWriterFactory(mappingReader);
             Assert.fail();
         }
         catch (InitialisationException ie)
@@ -68,10 +66,8 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
     
     public void testWriteStringWiderThanColumnDefinition() throws Exception
     {
-        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
-        OutputStream out = new ByteArrayOutputStream();
-        
-        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
+        StringWriter out = new StringWriter();        
+        Writer writer = new FixedWriterFactory(this.getMapping()).createWriter(out);
         try
         {
             writer.addRecordEntry("STATE", "THISISTOOLONG");
@@ -85,10 +81,8 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
     
     public void testWriteNullColumn() throws Exception
     {
-        OutputStream out = new ByteArrayOutputStream();
-        
-        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
+        StringWriter out = new StringWriter();
+        Writer writer = new FixedWriterFactory(this.getMapping()).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -102,6 +96,12 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         
         String expected = this.normalizeLineEnding("                                   DOE                                1234 CIRCLE CT                                                                                      ELYRIA                                                                                              OH44035");
         Assert.assertEquals(expected, out.toString());
+    }
+    
+    private Reader getMapping()
+    {
+        InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
+        return new InputStreamReader(mapping);
     }
 }
 

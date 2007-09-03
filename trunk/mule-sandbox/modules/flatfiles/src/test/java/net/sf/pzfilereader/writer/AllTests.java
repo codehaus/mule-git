@@ -1,3 +1,4 @@
+
 package net.sf.pzfilereader.writer;
 
 import junit.framework.Test;
@@ -10,8 +11,8 @@ public class AllTests
     {
         TestSuite suite = new TestSuite("Test for net.sf.pzfilereader.writer");
         //$JUnit-BEGIN$
-        suite.addTestSuite(FixedLengthWriterTestCase.class);
         suite.addTestSuite(DelimiterWriterTestCase.class);
+        suite.addTestSuite(FixedLengthWriterTestCase.class);
         //$JUnit-END$
         return suite;
     }
