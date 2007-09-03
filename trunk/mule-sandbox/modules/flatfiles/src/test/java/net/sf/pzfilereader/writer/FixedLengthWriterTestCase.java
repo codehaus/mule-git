@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import junit.framework.Assert;
 
 import net.sf.flatpack.InitialisationException;
+import net.sf.flatpack.writer.FixedWriterFactory;
+import net.sf.flatpack.writer.PZWriter;
 
 public class FixedLengthWriterTestCase extends PZWriterTestCase
 {

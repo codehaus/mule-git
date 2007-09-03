@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import net.sf.flatpack.writer.DelimiterWriterFactory;
+import net.sf.flatpack.writer.PZWriter;
+
 import junit.framework.Assert;
 
 public class DelimiterWriterTestCase extends PZWriterTestCase

@@ -1,5 +1,5 @@
 
-package net.sf.pzfilereader.writer;
+package net.sf.flatpack.writer;
 
 import java.io.IOException;
 import java.io.InputStream;

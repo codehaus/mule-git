@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.writer.DelimiterWriterFactory;
-import net.sf.pzfilereader.writer.PZWriter;
+import net.sf.flatpack.writer.DelimiterWriterFactory;
+import net.sf.flatpack.writer.PZWriter;
 
 public class MapsToCsv extends AbstractTransformer
 {
