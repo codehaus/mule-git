@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.structure.ColumnMetaData;
-import net.sf.pzfilereader.util.PZConstants;
+import net.sf.flatpack.structure.ColumnMetaData;
+import net.sf.flatpack.util.FPConstants;
 
 public class FixedLengthWriter extends AbstractPZWriter
 {
@@ -95,7 +95,7 @@ public class FixedLengthWriter extends AbstractPZWriter
 
     protected boolean validateColumnTitle(String columnTitle)
     {
-        Map columnNameToIndex = (Map) columnMapping.get(PZConstants.COL_IDX);
+        Map columnNameToIndex = (Map) columnMapping.get(FPConstants.COL_IDX);
         return columnNameToIndex.keySet().contains(columnTitle);
     }
 
@@ -117,7 +117,7 @@ public class FixedLengthWriter extends AbstractPZWriter
      */
     private List getColumnMetaData()
     {
-        return (List) columnMapping.get(PZConstants.DETAIL_ID);
+        return (List) columnMapping.get(FPConstants.DETAIL_ID);
     }
 
     private ColumnMetaData getColumnMetaData(String columnName)

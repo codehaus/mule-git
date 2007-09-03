@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.DataSet;
+import net.sf.flatpack.DataSet;
 
 public class DataSetToMaps extends AbstractTransformer
 {

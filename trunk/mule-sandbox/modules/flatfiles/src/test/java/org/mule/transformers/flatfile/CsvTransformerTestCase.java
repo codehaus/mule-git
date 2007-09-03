@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
-import net.sf.pzfilereader.DataSet;
+import net.sf.flatpack.DataSet;
 
 public class CsvTransformerTestCase extends AbstractTransformerTestCase
 {

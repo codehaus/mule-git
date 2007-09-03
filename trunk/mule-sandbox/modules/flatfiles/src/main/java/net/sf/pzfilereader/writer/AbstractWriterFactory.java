@@ -1,3 +1,4 @@
+
 package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
@@ -8,9 +9,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.pzfilereader.InitialisationException;
-import net.sf.pzfilereader.util.PZConstants;
-import net.sf.pzfilereader.xml.PZMapParser;
+import net.sf.flatpack.InitialisationException;
+import net.sf.flatpack.util.FPConstants;
+import net.sf.flatpack.xml.MapParser;
 
 import org.jdom.JDOMException;
 
@@ -21,39 +22,38 @@ public abstract class AbstractWriterFactory extends Object implements PZWriterFa
     protected AbstractWriterFactory()
     {
         super();
-        
+
         mapping = new HashMap();
-        mapping.put(PZConstants.DETAIL_ID, new ArrayList());
-        mapping.put(PZConstants.COL_IDX, new HashMap());
+        mapping.put(FPConstants.DETAIL_ID, new ArrayList());
+        mapping.put(FPConstants.COL_IDX, new HashMap());
     }
-    
+
     protected AbstractWriterFactory(Map mapping)
     {
         super();
         this.mapping = mapping;
     }
-    
+
     protected AbstractWriterFactory(InputStream mappingSrc) throws IOException
     {
         this();
-        
+
         try
         {
-            mapping = PZMapParser.parse(mappingSrc);
+            mapping = MapParser.parse(mappingSrc);
         }
         catch (JDOMException jde)
         {
             throw new InitialisationException(jde);
         }
     }
-    
+
     protected Map getColumnMapping()
     {
-        // TODO DO: return deep mutable clone here or better: make the Map a first class citizen of the library
+        // TODO DO: return deep mutable clone here or better: make the Map a first class
+        // citizen of the library
         return Collections.unmodifiableMap(mapping);
     }
 
     public abstract PZWriter createWriter(OutputStream out) throws IOException;
 }
-
-

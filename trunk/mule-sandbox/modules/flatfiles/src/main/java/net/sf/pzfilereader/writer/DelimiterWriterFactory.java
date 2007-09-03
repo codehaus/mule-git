@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.structure.ColumnMetaData;
-import net.sf.pzfilereader.util.PZConstants;
+import net.sf.flatpack.structure.ColumnMetaData;
+import net.sf.flatpack.util.FPConstants;
 
 import org.jdom.JDOMException;
 
@@ -81,8 +81,8 @@ public class DelimiterWriterFactory extends AbstractWriterFactory
     public void addColumnTitle(String columnTitle)
     {
         Map columnMapping = this.getColumnMapping();
-        List columnMetaDatas = (List)columnMapping.get(PZConstants.DETAIL_ID);
-        Map columnIndices = (Map)columnMapping.get(PZConstants.COL_IDX);
+        List columnMetaDatas = (List)columnMapping.get(FPConstants.DETAIL_ID);
+        Map columnIndices = (Map)columnMapping.get(FPConstants.COL_IDX);
         
         ColumnMetaData metaData = new ColumnMetaData();
         metaData.setColName(columnTitle);

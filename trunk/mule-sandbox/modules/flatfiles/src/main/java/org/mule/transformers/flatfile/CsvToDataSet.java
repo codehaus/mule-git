@@ -19,33 +19,32 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.pzfilereader.DataError;
-import net.sf.pzfilereader.DataSet;
-import net.sf.pzfilereader.DefaultPZParserFactory;
-import net.sf.pzfilereader.PZParser;
+import net.sf.flatpack.DataError;
+import net.sf.flatpack.DataSet;
+import net.sf.flatpack.DefaultParserFactory;
+import net.sf.flatpack.Parser;
 
 public class CsvToDataSet extends AbstractCsvTransformer
 {
     public CsvToDataSet()
     {
-        super();        
+        super();
         this.registerSourceType(byte[].class);
         this.registerSourceType(String.class);
         this.setReturnClass(DataSet.class);
     }
-    
+
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
         if (src == null)
         {
             return null;
         }
-        
+
         InputStream dataSource = this.createInputStream(src);
-        PZParser parser = 
-            DefaultPZParserFactory.getInstance().newDelimitedParser(dataSource, 
-                this.getDelimiter(), this.getQualifier());
-        
+        Parser parser = DefaultParserFactory.getInstance().newDelimitedParser(dataSource,
+            this.getDelimiter(), this.getQualifier());
+
         DataSet dataSet = parser.parse();
         if (dataSet == null)
         {
@@ -60,7 +59,7 @@ public class CsvToDataSet extends AbstractCsvTransformer
 
         return dataSet;
     }
-    
+
     private InputStream createInputStream(Object src) throws TransformerException
     {
         if (src instanceof byte[])
@@ -69,22 +68,22 @@ public class CsvToDataSet extends AbstractCsvTransformer
         }
         if (src instanceof String)
         {
-            return new ByteArrayInputStream(((String)src).getBytes());
+            return new ByteArrayInputStream(((String) src).getBytes());
         }
-        
+
         // TODO localized error message
         String message = "Could not create a transformer for input of type " + src.getClass().getName();
         throw new TransformerException(MessageFactory.createStaticMessage(message));
     }
-    
+
     private Message buildErrorMessage(List errors)
     {
         StringBuffer message = new StringBuffer(128);
-        
+
         Iterator errorIter = errors.iterator();
         while (errorIter.hasNext())
         {
-            DataError error = (DataError)errorIter.next();
+            DataError error = (DataError) errorIter.next();
             message.append("line ");
             message.append(error.getLineNo());
             message.append(": ");
@@ -98,5 +97,3 @@ public class CsvToDataSet extends AbstractCsvTransformer
         return MessageFactory.createStaticMessage(message.toString());
     }
 }
-
-

@@ -11,8 +11,6 @@
 package org.mule.transformers.csv;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.csv.CSVToMaps;
-import org.mule.transformers.csv.MapsToCSV;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 

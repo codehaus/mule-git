@@ -14,12 +14,12 @@ import org.mule.umo.transformer.TransformerException;
 
 import java.util.Arrays;
 
-import net.sf.pzfilereader.DataSet;
-
-import org.apache.commons.lang.StringUtils;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import net.sf.flatpack.DataSet;
+
+import org.apache.commons.lang.StringUtils;
 
 public class CsvToDataSetTestCase extends TestCase
 {

@@ -19,7 +19,7 @@ import java.util.Map;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import net.sf.pzfilereader.DataSet;
+import net.sf.flatpack.DataSet;
 
 public class DataSetToMapsTestCase extends TestCase
 {

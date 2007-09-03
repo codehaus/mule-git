@@ -1,3 +1,4 @@
+
 package net.sf.pzfilereader.writer;
 
 import java.io.IOException;
@@ -7,8 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.pzfilereader.structure.ColumnMetaData;
-import net.sf.pzfilereader.util.PZConstants;
+import net.sf.flatpack.structure.ColumnMetaData;
+import net.sf.flatpack.util.FPConstants;
 
 public class DelimiterWriter extends AbstractPZWriter
 {
@@ -25,7 +26,7 @@ public class DelimiterWriter extends AbstractPZWriter
         this.qualifier = qualifier;
 
         columnTitles = new ArrayList();
-        List columns = (List) columnMapping.get(PZConstants.DETAIL_ID);
+        List columns = (List) columnMapping.get(FPConstants.DETAIL_ID);
         Iterator columnIter = columns.iterator();
         while (columnIter.hasNext())
         {

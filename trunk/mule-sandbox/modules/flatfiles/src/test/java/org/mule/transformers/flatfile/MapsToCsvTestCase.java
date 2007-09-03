@@ -24,7 +24,7 @@ import java.util.Map;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import net.sf.pzfilereader.InitialisationException;
+import net.sf.flatpack.InitialisationException;
 
 import org.apache.commons.lang.SystemUtils;
 

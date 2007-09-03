@@ -12,7 +12,7 @@ package org.mule.transformers.flatfile;
 
 import java.util.Map;
 
-import net.sf.pzfilereader.DataSet;
+import net.sf.flatpack.DataSet;
 
 public class FilteringDataSetToMaps extends DataSetToMaps
 {

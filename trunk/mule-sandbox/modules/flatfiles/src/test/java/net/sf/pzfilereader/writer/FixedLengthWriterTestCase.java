@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import junit.framework.Assert;
 
-import net.sf.pzfilereader.InitialisationException;
+import net.sf.flatpack.InitialisationException;
 
 public class FixedLengthWriterTestCase extends PZWriterTestCase
 {
