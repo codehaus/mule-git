@@ -1,8 +1,8 @@
+
 package net.sf.flatpack.writer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
@@ -25,36 +25,34 @@ public class DelimiterWriterFactory extends AbstractWriterFactory
         this.delimiter = delimiter;
         this.qualifier = qualifier;
     }
-    
-    public DelimiterWriterFactory(InputStream mappingSrc) throws IOException, JDOMException
+
+    public DelimiterWriterFactory(Reader mappingSrc) throws IOException, JDOMException
     {
         this(mappingSrc, DEFAULT_DELIMITER);
     }
 
-    public DelimiterWriterFactory(InputStream mappingSrc, char delimiter)
-        throws IOException, JDOMException
+    public DelimiterWriterFactory(Reader mappingSrc, char delimiter) throws IOException, JDOMException
     {
         this(mappingSrc, delimiter, DEFAULT_QUALIFIER);
     }
 
-    public DelimiterWriterFactory(InputStream mappingSrc, char delimiter, char qualifier)
-        throws IOException
+    public DelimiterWriterFactory(Reader mappingSrc, char delimiter, char qualifier) throws IOException
     {
         super(mappingSrc);
         this.delimiter = delimiter;
         this.qualifier = qualifier;
     }
-    
+
     public DelimiterWriterFactory(Map mapping)
     {
         this(mapping, DEFAULT_DELIMITER, DEFAULT_QUALIFIER);
     }
-    
+
     public DelimiterWriterFactory(Map mapping, char delimiter)
     {
         this(mapping, delimiter, DEFAULT_QUALIFIER);
     }
-    
+
     public DelimiterWriterFactory(Map mapping, char delimiter, char qualifier)
     {
         super(mapping);
@@ -72,22 +70,22 @@ public class DelimiterWriterFactory extends AbstractWriterFactory
         return qualifier;
     }
 
-    public PZWriter createWriter(OutputStream out) throws IOException
+    public Writer createWriter(java.io.Writer out) throws IOException
     {
         return new DelimiterWriter(this.getColumnMapping(), out, delimiter, qualifier);
     }
-    
+
     // TODO DO: check that no column titles can be added after first nextRecord
     public void addColumnTitle(String columnTitle)
     {
         Map columnMapping = this.getColumnMapping();
-        List columnMetaDatas = (List)columnMapping.get(FPConstants.DETAIL_ID);
-        Map columnIndices = (Map)columnMapping.get(FPConstants.COL_IDX);
-        
+        List columnMetaDatas = (List) columnMapping.get(FPConstants.DETAIL_ID);
+        Map columnIndices = (Map) columnMapping.get(FPConstants.COL_IDX);
+
         ColumnMetaData metaData = new ColumnMetaData();
         metaData.setColName(columnTitle);
         columnMetaDatas.add(metaData);
-        
+
         Integer columnIndex = new Integer(columnMetaDatas.indexOf(metaData));
         columnIndices.put(columnIndex, columnTitle);
     }

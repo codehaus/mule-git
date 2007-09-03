@@ -1,8 +1,8 @@
+
 package net.sf.flatpack.writer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
 import java.util.Map;
 
 import org.jdom.JDOMException;
@@ -19,18 +19,18 @@ public class FixedWriterFactory extends AbstractWriterFactory
         this.pad = DEFAULT_PADDING_CHARACTER;
     }
 
-    public FixedWriterFactory(InputStream mappingSrc) throws IOException, JDOMException
+    public FixedWriterFactory(Reader mappingSrc) throws IOException, JDOMException
     {
         this(mappingSrc, DEFAULT_PADDING_CHARACTER);
     }
 
-    public FixedWriterFactory(InputStream mappingSrc, char fillChar) throws IOException
+    public FixedWriterFactory(Reader mappingSrc, char fillChar) throws IOException
     {
         super(mappingSrc);
         this.pad = fillChar;
     }
 
-    public PZWriter createWriter(OutputStream output) throws IOException
+    public Writer createWriter(java.io.Writer output) throws IOException
     {
         return new FixedLengthWriter(this.getColumnMapping(), output, pad);
     }

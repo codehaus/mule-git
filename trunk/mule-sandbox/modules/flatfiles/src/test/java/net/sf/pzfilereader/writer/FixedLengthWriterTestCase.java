@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import net.sf.flatpack.InitialisationException;
 import net.sf.flatpack.writer.FixedWriterFactory;
-import net.sf.flatpack.writer.PZWriter;
+import net.sf.flatpack.writer.Writer;
 
 public class FixedLengthWriterTestCase extends PZWriterTestCase
 {
@@ -17,7 +17,7 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         OutputStream out = new ByteArrayOutputStream();
 
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
+        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -37,7 +37,7 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         OutputStream out = new ByteArrayOutputStream();
 
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory(mapping, '.').createWriter(out);
+        Writer writer = new FixedWriterFactory(mapping, '.').createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");
@@ -71,7 +71,7 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
+        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
         try
         {
             writer.addRecordEntry("STATE", "THISISTOOLONG");
@@ -88,7 +88,7 @@ public class FixedLengthWriterTestCase extends PZWriterTestCase
         OutputStream out = new ByteArrayOutputStream();
         
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("FixedLength.pzmap.xml");        
-        PZWriter writer = new FixedWriterFactory(mapping).createWriter(out);
+        Writer writer = new FixedWriterFactory(mapping).createWriter(out);
 
         writer.addRecordEntry("LASTNAME", "DOE");
         writer.addRecordEntry("ADDRESS", "1234 CIRCLE CT");

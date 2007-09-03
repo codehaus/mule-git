@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import net.sf.flatpack.writer.DelimiterWriterFactory;
-import net.sf.flatpack.writer.PZWriter;
+import net.sf.flatpack.writer.Writer;
 
 import junit.framework.Assert;
 
@@ -25,7 +25,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         factory.addColumnTitle("STATE");
         factory.addColumnTitle("ZIP");
         
-        PZWriter writer = factory.createWriter(out);
+        Writer writer = factory.createWriter(out);
         // write one line of data ... not in the correct order of fields
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
@@ -48,7 +48,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
+        Writer writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("FIRSTNAME", "JOHN");
         writer.addRecordEntry("ZIP", "44035");
@@ -69,7 +69,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         InputStream mapping = this.getClass().getClassLoader().getResourceAsStream("DelimitedWithHeader.pzmap.xml");
         OutputStream out = new ByteArrayOutputStream();
         
-        PZWriter writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
+        Writer writer = new DelimiterWriterFactory(mapping, ';', '"').createWriter(out);
         // note that we do not provide values for FIRSTNAME and ADDRESS
         writer.addRecordEntry("LASTNAME", "ANAME");
         writer.addRecordEntry("ZIP", "44035");
@@ -88,7 +88,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
     {
         try
         {
-            PZWriter writer = new DelimiterWriterFactory(';','"').createWriter(new ByteArrayOutputStream());
+            Writer writer = new DelimiterWriterFactory(';','"').createWriter(new ByteArrayOutputStream());
             writer.addRecordEntry("ThisColumnDoesNotExist", "foo");
             Assert.fail("Writing to a DelimiterWriter without column mapping is not supported");
         }
@@ -117,7 +117,7 @@ public class DelimiterWriterTestCase extends PZWriterTestCase
         factory.addColumnTitle("col2");
         
         OutputStream out = new ByteArrayOutputStream();
-        PZWriter writer = factory.createWriter(out);
+        Writer writer = factory.createWriter(out);
         writer.addRecordEntry("col1", "value;with;delimiter");
         writer.addRecordEntry("col2", "normal value");
         writer.nextRecord();

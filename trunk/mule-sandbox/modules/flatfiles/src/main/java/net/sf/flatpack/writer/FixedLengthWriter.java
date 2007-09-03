@@ -1,7 +1,6 @@
 package net.sf.flatpack.writer;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -10,12 +9,12 @@ import java.util.Map;
 import net.sf.flatpack.structure.ColumnMetaData;
 import net.sf.flatpack.util.FPConstants;
 
-public class FixedLengthWriter extends AbstractPZWriter
+public class FixedLengthWriter extends AbstractWriter
 {
     private final Map columnMapping;
     private final char padChar;
 
-    protected FixedLengthWriter(Map parsedMapping, OutputStream output, char padChar) throws IOException
+    protected FixedLengthWriter(Map parsedMapping, java.io.Writer output, char padChar) throws IOException
     {
         super(output);
         this.columnMapping = parsedMapping;

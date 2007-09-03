@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.flatpack.writer.DelimiterWriterFactory;
-import net.sf.flatpack.writer.PZWriter;
+import net.sf.flatpack.writer.Writer;
 
 public class MapsToCsv extends AbstractTransformer
 {
@@ -51,7 +51,7 @@ public class MapsToCsv extends AbstractTransformer
         try
         {
             File outputFile = this.createOutputFile(outputPath);
-            PZWriter writer = this.createWriter(outputFile);
+            Writer writer = this.createWriter(outputFile);
             
             Iterator rowIter = ((List)src).iterator();
             while (rowIter.hasNext())
@@ -85,7 +85,7 @@ public class MapsToCsv extends AbstractTransformer
         return outputFile;
     }
 
-    private PZWriter createWriter(File outputFile) throws TransformerException, IOException
+    private Writer createWriter(File outputFile) throws TransformerException, IOException
     {
         if (delimiter.length() > 1)
         {
@@ -109,7 +109,7 @@ public class MapsToCsv extends AbstractTransformer
         return new DelimiterWriterFactory(mappingStream, delimiterChar, qualifierChar).createWriter(output);
     }
 
-    private void writeRow(PZWriter writer, Map row) throws IOException
+    private void writeRow(Writer writer, Map row) throws IOException
     {
         Iterator keyIter = row.keySet().iterator();
         while (keyIter.hasNext())

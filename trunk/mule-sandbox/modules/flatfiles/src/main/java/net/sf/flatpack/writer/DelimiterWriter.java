@@ -2,7 +2,6 @@
 package net.sf.flatpack.writer;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,14 +10,14 @@ import java.util.Map;
 import net.sf.flatpack.structure.ColumnMetaData;
 import net.sf.flatpack.util.FPConstants;
 
-public class DelimiterWriter extends AbstractPZWriter
+public class DelimiterWriter extends AbstractWriter
 {
     private char delimiter;
     private char qualifier;
     private List columnTitles = null;
     private boolean columnTitlesWritten = false;
 
-    protected DelimiterWriter(Map columnMapping, OutputStream output, char delimiter, char qualifier)
+    protected DelimiterWriter(Map columnMapping, java.io.Writer output, char delimiter, char qualifier)
         throws IOException
     {
         super(output);

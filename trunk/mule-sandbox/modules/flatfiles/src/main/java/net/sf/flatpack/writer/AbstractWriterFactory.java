@@ -2,8 +2,7 @@
 package net.sf.flatpack.writer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import net.sf.flatpack.xml.MapParser;
 
 import org.jdom.JDOMException;
 
-public abstract class AbstractWriterFactory extends Object implements PZWriterFactory
+public abstract class AbstractWriterFactory extends Object implements WriterFactory
 {
     private Map mapping;
 
@@ -34,13 +33,13 @@ public abstract class AbstractWriterFactory extends Object implements PZWriterFa
         this.mapping = mapping;
     }
 
-    protected AbstractWriterFactory(InputStream mappingSrc) throws IOException
+    protected AbstractWriterFactory(Reader mappingSrc) throws IOException
     {
         this();
 
         try
         {
-            mapping = MapParser.parse(mappingSrc);
+            mapping = MapParser.parse(mappingSrc, null);
         }
         catch (JDOMException jde)
         {
@@ -55,5 +54,5 @@ public abstract class AbstractWriterFactory extends Object implements PZWriterFa
         return Collections.unmodifiableMap(mapping);
     }
 
-    public abstract PZWriter createWriter(OutputStream out) throws IOException;
+    public abstract Writer createWriter(java.io.Writer out) throws IOException;
 }
