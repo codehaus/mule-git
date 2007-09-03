@@ -33,7 +33,6 @@ public class MapsToCsvTestCase extends TestCase
     public void testInvalidDelimiter()
     {
         MapsToCsv transformer = new MapsToCsv();
-        transformer.setOutputPath("/tmp");
         transformer.setDelimiter("too long");
         try
         {
@@ -49,7 +48,6 @@ public class MapsToCsvTestCase extends TestCase
     public void testInvalidQualifier()
     {
         MapsToCsv transformer = new MapsToCsv();
-        transformer.setOutputPath("/tmp");
         transformer.setDelimiter(",");
         transformer.setQualifier("too long");
         try
@@ -70,7 +68,6 @@ public class MapsToCsvTestCase extends TestCase
                 
         MapsToCsv transformer = new MapsToCsv();
         transformer.setMapping(this.getTestResource("BrokenMapping.pzmap.xml").getAbsolutePath());
-        transformer.setOutputPath(tempFile.getAbsolutePath());
         try
         {
             transformer.transform(Collections.EMPTY_LIST);
@@ -101,14 +98,9 @@ public class MapsToCsvTestCase extends TestCase
         List input = new ArrayList();
         input.add(row);
         
-        File tempFile = File.createTempFile("flatfile", "csv");
-        
         MapsToCsv transformer = new MapsToCsv();
-        transformer.setOutputPath(tempFile.getAbsolutePath());
         transformer.setMapping(this.getTestResource("DelimitedWithHeader.pzmap.xml").getAbsolutePath());
-        File result = (File)transformer.transform(input);
-        
-        String csvString = FileUtils.readFileToString(result);
+        String csvString = (String)transformer.transform(input);
         
         String expected = "FIRSTNAME;LASTNAME;ADDRESS;CITY;STATE;ZIP"
             + SystemUtils.LINE_SEPARATOR

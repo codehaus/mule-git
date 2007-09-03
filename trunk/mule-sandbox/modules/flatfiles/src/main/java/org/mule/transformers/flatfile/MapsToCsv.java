@@ -13,14 +13,11 @@ package org.mule.transformers.flatfile;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.transformers.flatfile.i18n.FlatfileMessages;
 import org.mule.umo.transformer.TransformerException;
-import org.mule.util.StringUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +25,14 @@ import java.util.Map;
 import net.sf.flatpack.writer.DelimiterWriterFactory;
 import net.sf.flatpack.writer.Writer;
 
+/**
+ * This transformer accepts a {@link List} of {@link Map}s and transforms each {@link Map} to 
+ * a row in a CSV file. The transformer will return a {@link String} containing the CSV.
+ */
 public class MapsToCsv extends AbstractTransformer
 {
     private String delimiter;
     private String qualifier;
-    private String outputPath;
     private String mapping;
     
     public MapsToCsv()
@@ -42,7 +42,7 @@ public class MapsToCsv extends AbstractTransformer
         qualifier = String.valueOf(DelimiterWriterFactory.DEFAULT_QUALIFIER);
         mapping = null;
 
-        this.setReturnClass(File.class);
+        this.setReturnClass(String.class);
         this.registerSourceType(List.class);
     }
     
@@ -50,8 +50,8 @@ public class MapsToCsv extends AbstractTransformer
     {
         try
         {
-            File outputFile = this.createOutputFile(outputPath);
-            Writer writer = this.createWriter(outputFile);
+            StringWriter output = new StringWriter();
+            Writer writer = this.createWriter(output);
             
             Iterator rowIter = ((List)src).iterator();
             while (rowIter.hasNext())
@@ -61,7 +61,7 @@ public class MapsToCsv extends AbstractTransformer
             }
             
             writer.close();
-            return outputFile;
+            return output.toString();
         }
         catch (IOException iox)
         {
@@ -69,23 +69,7 @@ public class MapsToCsv extends AbstractTransformer
         }
     }
 
-    private File createOutputFile(String path) throws TransformerException
-    {
-        if (StringUtils.isEmpty(path))
-        {
-            throw new TransformerException(FlatfileMessages.outputPathMustBeSet());
-        }
-        
-        File outputFile = new File(path);
-        if (outputFile.canWrite() == false)
-        {
-            throw new TransformerException(FlatfileMessages.cannotWriteToFile(outputFile));
-        }
-        
-        return outputFile;
-    }
-
-    private Writer createWriter(File outputFile) throws TransformerException, IOException
+    private Writer createWriter(java.io.Writer output) throws TransformerException, IOException
     {
         if (delimiter.length() > 1)
         {
@@ -103,10 +87,9 @@ public class MapsToCsv extends AbstractTransformer
         {
             throw new TransformerException(FlatfileMessages.missingMappingFile());
         }
-        InputStream mappingStream = new FileInputStream(mapping);
+        Reader mappingReader = new FileReader(this.mapping);
         
-        OutputStream output = new FileOutputStream(outputFile);
-        return new DelimiterWriterFactory(mappingStream, delimiterChar, qualifierChar).createWriter(output);
+        return new DelimiterWriterFactory(mappingReader, delimiterChar, qualifierChar).createWriter(output);
     }
 
     private void writeRow(Writer writer, Map row) throws IOException
@@ -128,16 +111,6 @@ public class MapsToCsv extends AbstractTransformer
     public void setDelimiter(String delimiter)
     {
         this.delimiter = delimiter;
-    }
-
-    public String getOutputPath()
-    {
-        return outputPath;
-    }
-
-    public void setOutputPath(String outputPath)
-    {
-        this.outputPath = outputPath;
     }
 
     public String getQualifier()
