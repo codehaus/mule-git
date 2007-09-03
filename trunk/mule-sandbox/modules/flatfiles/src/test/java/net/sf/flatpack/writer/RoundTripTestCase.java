@@ -1,4 +1,4 @@
-package net.sf.pzfilereader.writer;
+package net.sf.flatpack.writer;
 
 import junit.framework.TestCase;
 
