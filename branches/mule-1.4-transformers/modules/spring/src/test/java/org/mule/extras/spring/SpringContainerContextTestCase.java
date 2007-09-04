@@ -11,7 +11,6 @@
 package org.mule.extras.spring;
 
 import org.mule.tck.model.AbstractContainerContextTestCase;
-import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.umo.manager.UMOContainerContext;
 

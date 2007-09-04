@@ -113,7 +113,7 @@
                 </router>
             </outbound-router>
 
-            <response-router timeout="1000000">
+            <response-router timeout="10000">
                 <endpoint address="LoanQuotes"/>
                 <router className="org.mule.examples.loanbroker.routers.BankQuotesResponseAggregator"/>
             </response-router>

@@ -26,10 +26,11 @@ import org.mule.util.StringMessageUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.properties.PropertyExtractor;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -230,7 +231,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
 
     public void addEndpoint(UMOEndpoint endpoint)
     {
-        // TODO RM** endpoint.setType(UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        endpoint.setType(UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoints.add(endpoint);
     }
 
