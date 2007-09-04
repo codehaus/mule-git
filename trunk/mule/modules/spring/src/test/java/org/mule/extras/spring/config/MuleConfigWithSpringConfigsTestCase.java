@@ -22,6 +22,7 @@ public class MuleConfigWithSpringConfigsTestCase extends MultipleSpringContextsT
 {
     public String getConfigResources()
     {
+        // Note that test-application-context.xml uses XSD, test-application-context-2.xml uses DTD
         return "test-xml-mule-config.xml, test-application-context.xml, test-application-context-2.xml";
     }
     

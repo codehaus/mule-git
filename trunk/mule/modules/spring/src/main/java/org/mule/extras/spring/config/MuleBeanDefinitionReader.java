@@ -33,6 +33,7 @@ import org.springframework.beans.factory.xml.BeansDtdResolver;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.xml.XmlValidationModeDetector;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 
@@ -53,8 +54,8 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
 
         setDocumentReaderClass(MuleBeanDefinitionDocumentReader.class);
         setResourceLoader(new MuleResourceLoader());
-        // TODO Make this configurable as a property somehow.
-        setValidationMode(VALIDATION_DTD);
+        // use spring 2.x's capability to autodetect whether DTD or XSD is used in the config files
+        setValidationMode(XmlValidationModeDetector.VALIDATION_AUTO);
         setEntityResolver(createEntityResolver());
         this.configCount = configCount;
         
