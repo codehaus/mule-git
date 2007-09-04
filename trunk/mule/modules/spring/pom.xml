@@ -13,6 +13,20 @@
     <name>Spring Extensions</name>
     <description>Provides extensions to use the Spring framework with Mule such as utilising the the Spring container to build components managed by Mule.</description>   
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <!-- MULE-2260 - needs investigation -->
+                        <exclude>**/SpringTransactionBindingTestCase.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>java14</id>
