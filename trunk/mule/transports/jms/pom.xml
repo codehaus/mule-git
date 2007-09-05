@@ -24,6 +24,7 @@
                         <exclude>**/*Mule2071*.*</exclude>
                         <!-- MULE-2065 -->
                         <exclude>**/ActiveMQJmsTransactionFunctionalTestCase.*</exclude>
+                        <exclude>**/ActiveMQJmsXaTransactionFunctionalTestCase.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
