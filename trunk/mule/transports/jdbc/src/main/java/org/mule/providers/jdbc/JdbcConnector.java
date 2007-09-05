@@ -32,8 +32,6 @@ import org.mule.util.properties.MessagePropertyExtractor;
 import org.mule.util.properties.PayloadPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
 import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -49,6 +47,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 
@@ -64,8 +64,6 @@ public class JdbcConnector extends AbstractConnector
 
     private static final Pattern STATEMENT_ARGS = Pattern.compile("\\$\\{[^\\}]*\\}");
     
-    private Map propertyExtractorCache = new ConcurrentHashMap();
-
     /* Register the SQL Exception reader if this class gets loaded */
     static
     {
@@ -84,6 +82,8 @@ public class JdbcConnector extends AbstractConnector
     protected String queryRunner = DEFAULT_QUERY_RUNNER;
     protected Set queryValueExtractors;
     protected Set propertyExtractors;
+
+    protected ConcurrentMap propertyExtractorCache = new ConcurrentHashMap();
 
     protected void doInitialise() throws InitialisationException
     {
@@ -582,17 +582,17 @@ public class JdbcConnector extends AbstractConnector
             boolean foundValue = false;
             if (message != null)
             {
-                PropertyExtractor pe = (PropertyExtractor)propertyExtractorCache.get(query + param);
+                PropertyExtractor pe = (PropertyExtractor) propertyExtractorCache.get(query + param);
                 if (pe == null) 
                 {
                     for (Iterator iterator = propertyExtractors.iterator(); iterator.hasNext();)
                     {
-                        pe = (PropertyExtractor)iterator.next();
+                        pe = (PropertyExtractor) iterator.next();
                         value = pe.getProperty(name, message);
                         if (value != null)
                         {                       
                             foundValue = true;
-                            propertyExtractorCache.put(query + param,pe);
+                            propertyExtractorCache.putIfAbsent(query + param, pe);
                             break;
                         }    
                     }
@@ -602,7 +602,7 @@ public class JdbcConnector extends AbstractConnector
                     value = pe.getProperty(name, message);
                     foundValue = true;
                 }
-                if (value.equals(StringUtils.EMPTY) && pe instanceof BeanPropertyExtractor)
+                if (StringUtils.EMPTY.equals(value) && pe instanceof BeanPropertyExtractor)
                 {
                     value = null;
                 }    
