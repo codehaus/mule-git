@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.transports</groupId>
+        <artifactId>mule-transports</artifactId>
+        <version>1.4.3-SNAPSHOT</version>
+    </parent>
+    <artifactId>mule-transport-jms</artifactId>
+    <packaging>jar</packaging>
+    <name>JMS Transport</name>
+    <description>A Mule transport for Jms Connectivity.</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                    <excludes>
+                        <exclude>**/*Mule2071*.*</exclude>
+                        <!-- MULE-2065 -->
+                        <exclude>**/ActiveMQJmsTransactionFunctionalTestCase.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-tcp</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-jotm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>4.1.0-incubator</version>
+            <scope>test</scope>
+            <!-- Exclude everything except activeio-core, mx4j and
+                 geronimo-j2ee-management_1.0_spec -->
+            <exclusions>
+                <exclusion>
+                  <groupId>org.apache.geronimo.specs</groupId>
+                  <artifactId>geronimo-jms_1.1_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.apache.activemq</groupId>
+                  <artifactId>activemq-jaas</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>commons-pool</groupId>
+                  <artifactId>commons-pool</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.apache.derby</groupId>
+                  <artifactId>derby</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>activemq</groupId>
+                  <artifactId>jmdns</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>xalan</groupId>
+                  <artifactId>xalan</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.apache.xbean</groupId>
+                  <artifactId>xbean-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.apache.geronimo.specs</groupId>
+                  <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>org.apache.geronimo.specs</groupId>
+                  <artifactId>geronimo-j2ee-jacc_1.0_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>backport-util-concurrent</groupId>
+                  <artifactId>backport-util-concurrent</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>commons-logging</groupId>
+                  <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>howl</groupId>
+                  <artifactId>howl-logger</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>log4j</groupId>
+                  <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>geronimo</groupId>
+                  <artifactId>geronimo-kernel</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>geronimo</groupId>
+                  <artifactId>geronimo-j2ee</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>activesoap</groupId>
+                  <artifactId>jaxp-api</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>mx4j</groupId>
+                  <artifactId>mx4j-jmx</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>mx4j</groupId>
+                  <artifactId>mx4j-remote</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>mx4j</groupId>
+                  <artifactId>mx4j-tools</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>mx4j</groupId>
+                  <artifactId>mx4j-impl</artifactId>
+                </exclusion>
+           </exclusions>
+        </dependency>
+
+    </dependencies>
+</project>
