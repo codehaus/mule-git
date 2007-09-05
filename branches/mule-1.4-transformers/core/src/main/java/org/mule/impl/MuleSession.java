@@ -209,6 +209,14 @@ public final class MuleSession implements UMOSession
         UMOEvent event = createOutboundEvent(message, endpoint, null);
         UMOMessage result = sendEvent(event);
 
+        // Handles the situation where a response has been received via a remote
+        // ReplyTo channel.
+        if (endpoint.isRemoteSync() && endpoint.getResponseTransformer() != null && result != null)
+        {
+            Object response = endpoint.getResponseTransformer().transform(result.getPayload());
+            result = new MuleMessage(response, result);
+        }
+
         if (result != null)
         {
             OptimizedRequestContext.unsafeWriteResponse(result);
