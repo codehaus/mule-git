@@ -32,6 +32,8 @@ import org.mule.util.properties.MessagePropertyExtractor;
 import org.mule.util.properties.PayloadPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -61,6 +63,8 @@ public class JdbcConnector extends AbstractConnector
     private static final String DEFAULT_RESULTSET_HANDLER = "org.apache.commons.dbutils.handlers.MapListHandler";
 
     private static final Pattern STATEMENT_ARGS = Pattern.compile("\\$\\{[^\\}]*\\}");
+    
+    private Map propertyExtractorCache = new ConcurrentHashMap();
 
     /* Register the SQL Exception reader if this class gets loaded */
     static
@@ -564,9 +568,10 @@ public class JdbcConnector extends AbstractConnector
         return sb.toString();
     }
 
-    public Object[] getParams(UMOImmutableEndpoint endpoint, List paramNames, Object message)
+    public Object[] getParams(UMOImmutableEndpoint endpoint, List paramNames, Object message, String query)
         throws Exception
     {
+        
         Object[] params = new Object[paramNames.size()];
         for (int i = 0; i < paramNames.size(); i++)
         {
@@ -577,21 +582,31 @@ public class JdbcConnector extends AbstractConnector
             boolean foundValue = false;
             if (message != null)
             {
-                for (Iterator iterator = propertyExtractors.iterator(); iterator.hasNext();)
+                PropertyExtractor pe = (PropertyExtractor)propertyExtractorCache.get(query + param);
+                if (pe == null) 
                 {
-                    PropertyExtractor pe = (PropertyExtractor)iterator.next();
-                    value = pe.getProperty(name, message);
-                    if (value != null)
+                    for (Iterator iterator = propertyExtractors.iterator(); iterator.hasNext();)
                     {
-                        if (value.equals(StringUtils.EMPTY) && pe instanceof BeanPropertyExtractor)
-                        {
-                            value = null;
-                        }
-                        foundValue = true;
-                        break;
+                        pe = (PropertyExtractor)iterator.next();
+                        value = pe.getProperty(name, message);
+                        if (value != null)
+                        {                       
+                            foundValue = true;
+                            propertyExtractorCache.put(query + param,pe);
+                            break;
+                        }    
                     }
                 }
-            }
+                else 
+                {
+                    value = pe.getProperty(name, message);
+                    foundValue = true;
+                }
+                if (value.equals(StringUtils.EMPTY) && pe instanceof BeanPropertyExtractor)
+                {
+                    value = null;
+                }    
+            }                
             if (!foundValue)
             {
                 value = endpoint.getProperty(name);
