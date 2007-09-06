@@ -96,7 +96,7 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
             if (this.ackStmt != null)
             {
 
-                Object[] ackParams = connector.getParams(endpoint, this.ackParams, umoMessage);
+                Object[] ackParams = connector.getParams(endpoint, this.ackParams, umoMessage, this.endpoint.getEndpointURI().getAddress());
                 int nbRows = connector.createQueryRunner().update(con, this.ackStmt, ackParams);
                 if (nbRows != 1)
                 {
@@ -150,7 +150,7 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
                 throw new ConnectException(e, this);
             }
 
-            Object[] readParams = connector.getParams(endpoint, this.readParams, null);
+            Object[] readParams = connector.getParams(endpoint, this.readParams, null, this.endpoint.getEndpointURI().getAddress());
             Object results = connector.createQueryRunner().query(con, this.readStmt, readParams,
                 connector.createResultSetHandler());
             return (List)results;
