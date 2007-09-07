@@ -20,12 +20,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkMode>pertest</forkMode>
-                    <excludes>
-                        <exclude>**/*Mule2071*.*</exclude>
-                        <!-- MULE-2065 -->
-                        <exclude>**/ActiveMQJmsTransactionFunctionalTestCase.*</exclude>
-                        <exclude>**/ActiveMQJmsXaTransactionFunctionalTestCase.*</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
