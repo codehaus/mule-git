@@ -12,31 +12,6 @@
     <packaging>jar</packaging>
     <name>SOAP Transport: Axis</name>
     <description>A Mule transport for Soap Connectivity using Axis.</description>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <!-- Only run tests with external dependencies in the tests-external profile -->
-                        <exclude>**/AxisExternalServerTest.java</exclude>
-                        <exclude>**/VmToAxisProxyTestCase.java</exclude>
-
-                        <!-- MULE-1553 -->
-                        <exclude>**/AxisConnectorHttpsTestCase.java</exclude>
-                        <exclude>**/AxisConnectorJmsFunctionalTestCase.java</exclude>
-                        <exclude>**/AxisConnectorJmsTopicsFunctionalTestCase.java</exclude>
-                        <exclude>**/AxisConnectorVMFunctionalTestCase.java</exclude>
-                        <exclude>**/AxisServletBindingTestCase.java</exclude>
-                        <exclude>**/SoapAttachmentsFunctionalTestCase.java</exclude>
-                        <!-- MULE-2164 -->
-                        <exclude>**/AxisEndpointMule2164TestCase.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>
