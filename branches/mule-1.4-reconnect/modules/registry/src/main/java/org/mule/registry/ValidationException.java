@@ -1,0 +1,51 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.registry;
+
+import org.mule.config.i18n.MessageFactory;
+import org.mule.util.SystemUtils;
+
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Is thrown when an object loaded from a descriptor is invalid.
+ */
+public class ValidationException extends RegistryException
+{
+    /**
+     * Serial version
+     */
+    private static final long serialVersionUID = -8798792301579785598L;
+
+    public ValidationException(String vaildationError)
+    {
+        super(MessageFactory.createStaticMessage(vaildationError));
+    }
+
+    public ValidationException(List vaildationErrors)
+    {
+        this(createMessage(vaildationErrors));
+    }
+
+    private static String createMessage(List vaildationErrors)
+    {
+        // TODO i18n
+        StringBuffer buf = new StringBuffer();
+        buf.append("The following validation errors occurred");
+        for (Iterator iterator = vaildationErrors.iterator(); iterator.hasNext();)
+        {
+            String s = (String)iterator.next();
+            buf.append(SystemUtils.LINE_SEPARATOR).append(s);
+        }
+        return buf.toString();
+    }
+}
