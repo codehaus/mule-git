@@ -188,7 +188,7 @@
         <spring-property name="hibernateProperties">
             <props>
                 <!-- These properties may depend on your database -->
-                <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
                 <prop key="hibernate.query.substitutions">true 1, false 0</prop>
                 <prop key="hibernate.jdbc.batch_size">0</prop>
                 <!-- Create/update the database tables automatically when the JVM starts up -->
@@ -208,10 +208,10 @@
 
     <!-- JBPM Datasource -->
     <bean id="jbpmDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <spring-property name="driverClassName"><value>org.hsqldb.jdbcDriver</value></spring-property>
-        <spring-property name="url"><value>jdbc:hsqldb:mem:.;sql.enforce_strict_size=true</value></spring-property>
-        <spring-property name="username"><value>sa</value></spring-property>
-        <spring-property name="password"><value></value></spring-property>
+        <spring-property name="driverClassName"><value>org.apache.derby.jdbc.EmbeddedDriver</value></spring-property>
+        <spring-property name="url"><value>jdbc:derby:muleEmbeddedDB;create=true;sql.enforce_strict_size=true</value></spring-property>
+        <!--spring-property name="username"><value>sa</value></spring-property>
+        <spring-property name="password"><value></value></spring-property-->
     </bean>
 
     <!-- JBPM data types -->

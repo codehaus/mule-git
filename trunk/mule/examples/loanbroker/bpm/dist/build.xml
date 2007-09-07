@@ -30,8 +30,8 @@
              dest="${dir.user.lib}/bsh-1.3.0.jar"
              verbose="true"
              usetimestamp="true"/>
-        <get src="${url.maven.repo}/hsqldb/hsqldb/1.8.0.7/hsqldb-1.8.0.7.jar"
-             dest="${dir.user.lib}/hsqldb-1.8.0.7.jar"
+        <get src="${url.maven.repo}/org/apache/derby/derby/10.3.1.4/derby-10.3.1.4.jar"
+             dest="${dir.user.lib}/derby-10.3.1.4.jar"
              verbose="true"
              usetimestamp="true"/>
     </target>
