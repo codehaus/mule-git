@@ -20,8 +20,8 @@ import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
 
@@ -71,62 +71,6 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
     public MuleEndpoint(String uri, boolean receiver) throws UMOException
     {
         super(uri, receiver);
-    }
-
-    public Object clone()
-    {
-        UMOEndpoint clone = new MuleEndpoint(name, endpointUri, connector, transformer, type,
-            createConnector, endpointEncoding, properties);
-
-        clone.setTransactionConfig(transactionConfig);
-        clone.setFilter(filter);
-        clone.setSecurityFilter(securityFilter);
-        try
-        {
-            if (responseTransformer != null)
-            {
-                clone.setResponseTransformer((UMOTransformer)responseTransformer.clone());
-            }
-        }
-        catch (CloneNotSupportedException e1)
-        {
-            // TODO throw exception instead of suppressing it
-            logger.error(e1.getMessage(), e1);
-        }
-
-        if (remoteSync != null)
-        {
-            clone.setRemoteSync(isRemoteSync());
-        }
-        if (remoteSyncTimeout != null)
-        {
-            clone.setRemoteSyncTimeout(getRemoteSyncTimeout());
-        }
-
-        if (synchronous != null)
-        {
-            clone.setSynchronous(synchronous.booleanValue());
-        }
-
-        clone.setDeleteUnacceptedMessages(deleteUnacceptedMessages);
-
-        clone.setInitialState(initialState);
-        if (initialised.get())
-        {
-            try
-            {
-                clone.initialise();
-            }
-            catch (InitialisationException e)
-            {
-                // this really should never happen as the endpoint is already
-                // initialised
-                // TODO Mule-863: Then die or be quiet!
-                logger.error(e.getMessage(), e);
-            }
-        }
-
-        return clone;
     }
 
     public void setEndpointURI(UMOEndpointURI endpointUri) throws EndpointException
@@ -328,4 +272,10 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
     {
         properties.put(key, value);
     }
+    
+    public void setRetryPolicyFactory(UMOPolicyFactory factory)
+    {
+        this.retryPolicyFactory = factory;
+    }
+
 }

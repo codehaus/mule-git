@@ -399,7 +399,7 @@ a connection to the underlying resource
 
 <!--
     The fully qualified classname to instanciate the connector strategy. This class must
-    implement <i>org.mule.providers.ConnectionStrategy</i>
+    implement <i>org.mule.util.retry.PolicyFactory</i>
 -->
 <!ATTLIST connection-strategy className            NMTOKEN        #REQUIRED>
 
@@ -519,7 +519,7 @@ Jndi
 
 -->
 
-<!ELEMENT endpoint ((transaction)?, (filter)?, (security-filter)?, (properties)?)>
+<!ELEMENT endpoint ((transaction)?, (filter)?, (security-filter)?, (retry-policy)?, (properties)?)>
 
 <!--
     The name attribute is used to bind a <i>endpoint</i> to a logical name in the system
@@ -619,6 +619,18 @@ Jndi
     or NEVER which will require a connector to be pre-configured.
 -->
 <!ATTLIST endpoint createConnector    (GET_OR_CREATE | ALWAYS_CREATE | NEVER_CREATE)       #IMPLIED>
+
+<!--
+The <i>retry-policy-factory</i> element specifies a strategy implementation used when making
+a connection to the underlying resource
+-->
+<!ELEMENT retry-policy (properties?)>
+
+<!--
+    The fully qualified classname to instanciate the retry strategy. This class must
+    implement <i>org.mule.util.retry.PolicyFactory</i>
+-->
+<!ATTLIST retry-policy factory             NMTOKEN        #REQUIRED>
 
 <!--
     A global endpoint reference
@@ -811,9 +823,6 @@ Jndi
 -->
 <!ATTLIST agent ref                     CDATA                 #IMPLIED>
 
-<![IGNORE[
-   <!ELEMENT configuration>
-]]>
 <!--
     A Container context is used to retrieve object properties from the container.
     A container property is referenced using the container-property element.

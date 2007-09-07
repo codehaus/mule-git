@@ -11,8 +11,8 @@
 package org.mule.providers.jms;
 
 import org.mule.impl.MuleMessage;
+import org.mule.impl.retry.policies.NoRetryPolicyFactory;
 import org.mule.providers.ConnectException;
-import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.providers.TransactedPollingMessageReceiver;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
 import org.mule.transaction.TransactionCoordination;
@@ -76,8 +76,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         throws InitialisationException
     {
         super(umoConnector, component, endpoint);
-        // TODO AP: find appropriate value for polling frequency with the scheduler;
-        // see setFrequency/setTimeUnit & VMMessageReceiver for more
+        // TODO AP: verify that these values for XA polling are appropriate "in the real world"
         this.setFrequency(DEFAULT_JMS_POLL_FREQUENCY);
         this.setTimeUnit(DEFAULT_JMS_POLL_TIMEUNIT);
         this.connector = (JmsConnector) umoConnector;
@@ -86,7 +85,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         // If reconnection is set, default reuse strategy to false
         // as some jms brokers will not detect lost connections if the
         // same consumer / session is used
-        if (this.connectionStrategy instanceof SingleAttemptConnectionStrategy)
+        if (this.connectionStrategy.getPolicyFactory() instanceof NoRetryPolicyFactory)
         {
             this.reuseConsumer = true;
             this.reuseSession = true;

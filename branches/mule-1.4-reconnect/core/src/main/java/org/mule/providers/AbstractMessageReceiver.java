@@ -23,6 +23,7 @@ import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
+import org.mule.impl.retry.RetryTemplate;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -33,9 +34,13 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.umo.retry.RetryContext;
+import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.security.SecurityException;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
@@ -46,6 +51,7 @@ import org.mule.util.concurrent.WaitableBoolean;
 import java.io.OutputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -102,7 +108,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     private UMOWorkManager workManager;
 
-    protected ConnectionStrategy connectionStrategy;
+    protected UMORetryTemplate connectionStrategy;
 
     /**
      * Creates the Message Receiver
@@ -138,7 +144,14 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             throw new InitialisationException(e, this);
         }
 
-        connectionStrategy = this.connector.getConnectionStrategy();
+        if(endpoint.getRetryPolicyFactory()!=null)
+        {
+            connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+        }
+        else
+        {
+            connectionStrategy = this.connector.getConnectionStrategy();
+        }
     }
 
     /*
@@ -161,6 +174,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         if (exception instanceof ConnectException)
         {
             logger.info("Exception caught is a ConnectException, disconnecting receiver and invoking ReconnectStrategy");
+
             try
             {
                 disconnect();
@@ -170,19 +184,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 connector.getExceptionListener().exceptionThrown(e);
             }
         }
+
         connector.getExceptionListener().exceptionThrown(exception);
-        if (exception instanceof ConnectException)
-        {
-            try
-            {
-                logger.warn("Reconnecting after exception: " + exception.getMessage(), exception);
-                connectionStrategy.connect(this);
-            }
-            catch (UMOException e)
-            {
-                connector.getExceptionListener().exceptionThrown(e);
-            }
-        }
     }
 
     /**
@@ -393,45 +396,19 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             return;
         }
 
-        if (connecting.compareAndSet(false, true))
+        connectionStrategy.execute(new UMORetryCallback()
         {
-            if (logger.isDebugEnabled())
+            public void doWork(RetryContext context) throws Exception
             {
-                logger.debug("Connecting: " + this);
+                doConnect();
+                connected.set(true);
             }
 
-            connectionStrategy.connect(this);
-
-            logger.info("Connected: " + this);
-            return;
-        }
-
-        try
-        {
-            this.doConnect();
-            connected.set(true);
-            connecting.set(false);
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_CONNECTED));
-        }
-        catch (Exception e)
-        {
-            connected.set(false);
-            connecting.set(false);
-
-            connector.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_FAILED));
-
-            if (e instanceof ConnectException)
+            public String getWorkDescription()
             {
-                throw (ConnectException) e;
+                return getConnectionDescription();
             }
-            else
-            {
-                throw new ConnectException(e, this);
-            }
-        }
+        });
     }
 
     public void disconnect() throws Exception
@@ -452,17 +429,23 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     public String getConnectionDescription()
     {
-        return endpoint.getEndpointURI().toString();
+        return "endpoint." + endpoint.getEndpointURI().toString();
     }
 
     public final void start() throws UMOException
     {
         if (stopped.compareAndSet(true, false))
         {
-            if (!connected.get())
+            // Make sure we are connected
+            try
             {
-                connectionStrategy.connect(this);
+                connect();
             }
+            catch (Exception e)
+            {
+                throw new LifecycleException(e, this);
+            }
+
             doStart();
         }
     }

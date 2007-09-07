@@ -5,9 +5,10 @@
 
 <mule-configuration version="1.0">
 
-    <mule-environment-properties serverUrl=""/>
-    
-    <container-context className="org.mule.extras.spring.SpringContainerContext">
+    <mule-environment-properties serverUrl="" />
+
+    <container-context
+        className="org.mule.extras.spring.SpringContainerContext">
         <properties>
             <text-property name="configuration">
                 <![CDATA[
@@ -18,13 +19,16 @@
                             <bean id="connectorES" class="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
                         </property>
                         <property name="connectionStrategy">
-                            <bean id="connectionStrategy" class="org.mule.providers.SimpleRetryConnectionStrategy">
-                                <property name="retryCount">
-                                    <value>4</value>
-                                </property>
-                                <property name="frequency">
-                                    <value>3000</value>
-                                </property>
+                            <bean id="connectionStrategy" class="org.mule.impl.retry.RetryTemplate">
+                                <constructor-arg>
+                                    <bean class="org.mule.impl.retry.policies.SimpleRetryPolicyFactory">
+                                        <property name="retryCount" value="4"/>
+                                        <property name="frequency" value="3000"/>
+                                    </bean>
+                                </constructor-arg>
+                                <constructor-arg>
+                                    <bean class="org.mule.providers.ConnectNotifier"/>
+                                </constructor-arg>
                             </bean>
                         </property>
                     </bean>
@@ -41,14 +45,15 @@
         </properties>
     </container-context>
 
-    <connector name="testConnector" ref="springTestConnector"/>
+    <connector name="testConnector" ref="springTestConnector" />
 
     <transformers>
-        <transformer name="testTransformer" ref="springTestTransformer"/>
+        <transformer name="testTransformer" ref="springTestTransformer" />
     </transformers>
 
     <global-endpoints>
-        <endpoint name="foo" address="test://foo" connector="testConnector" transformers="testTransformer"/>
+        <endpoint name="foo" address="test://foo"
+            connector="testConnector" transformers="testTransformer" />
     </global-endpoints>
 
 </mule-configuration>

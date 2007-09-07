@@ -11,6 +11,7 @@
 package org.mule.extras.spring.config;
 
 import org.mule.config.MuleDtdResolver;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.io.IOException;
@@ -62,6 +63,8 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
         // TransformerEditor is used to convert Transformer names into transformer Objects.
         ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMOTransformer.class,
             new TransformerEditor());
+        ((DefaultListableBeanFactory)beanDefinitionRegistry).registerCustomEditor(UMORetryTemplate.class,
+            new RetryTemplateEditor());
     }
 
     public int registerBeanDefinitions(Document document, Resource resource) throws BeansException

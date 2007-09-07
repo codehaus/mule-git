@@ -19,10 +19,10 @@ import org.mule.config.pool.CommonsPoolFactory;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.interceptors.LoggingInterceptor;
 import org.mule.interceptors.TimerInterceptor;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.SimpleRetryConnectionStrategy;
 import org.mule.providers.service.TransportFactory;
 import org.mule.routing.filters.PayloadTypeFilter;
 import org.mule.routing.filters.RegExFilter;
@@ -68,9 +68,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertNotNull(c.getExceptionListener());
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
         assertNotNull(c.getConnectionStrategy());
-        assertTrue(c.getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
-        assertEquals(4, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getRetryCount());
-        assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
+        assertTrue(c.getConnectionStrategy().getPolicyFactory() instanceof SimpleRetryPolicyFactory);
+        assertEquals(4, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getRetryCount());
+        assertEquals(3000, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getFrequency());
     }
 
     // @Override

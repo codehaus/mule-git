@@ -29,6 +29,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
@@ -44,6 +45,7 @@ import java.util.regex.Pattern;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -163,6 +165,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
      * determines if a new connector should be created for this endpoint
      */
     protected int createConnector = TransportFactory.GET_OR_CREATE_CONNECTOR;
+
+    protected UMOPolicyFactory retryPolicyFactory;
 
     /**
      * Default constructor.
@@ -306,6 +310,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         filter = source.getFilter();
         securityFilter = source.getSecurityFilter();
+        retryPolicyFactory = source.getRetryPolicyFactory();
     }
 
     /*
@@ -390,6 +395,19 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         clone.setFilter(filter);
         clone.setSecurityFilter(securityFilter);
 
+        try
+        {
+            if (responseTransformer != null)
+            {
+                clone.setResponseTransformer((UMOTransformer)responseTransformer.clone());
+            }
+        }
+        catch (CloneNotSupportedException e1)
+        {
+            // TODO throw exception instead of suppressing it
+            logger.error(e1.getMessage(), e1);
+        }
+
         if (remoteSync != null)
         {
             clone.setRemoteSync(isRemoteSync());
@@ -407,6 +425,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         clone.setDeleteUnacceptedMessages(deleteUnacceptedMessages);
 
         clone.setInitialState(initialState);
+        clone.setRetryPolicyFactory(retryPolicyFactory);
+
         if (initialised.get())
         {
             try
@@ -959,6 +979,11 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             //TODO: Either remove because this should never happen or i18n the message
             throw new IllegalStateException("The connector on the endpoint: " + toString() + "is null. Please contact dev@mule.codehaus.org");
         }
+    }
+    
+    public UMOPolicyFactory getRetryPolicyFactory()
+    {
+        return retryPolicyFactory;
     }
 
 }

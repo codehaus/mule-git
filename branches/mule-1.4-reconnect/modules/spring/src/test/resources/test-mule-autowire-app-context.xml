@@ -119,7 +119,7 @@
             <bean id="connectorES" class="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
         </property>
         <property name="connectionStrategy">
-            <bean id="connectionStrategy" class="org.mule.providers.SimpleRetryConnectionStrategy">
+            <bean id="connectionStrategy" class="org.mule.impl.retry.policies.SimpleRetryPolicyFactory">
                 <property name="retryCount">
                     <value>4</value>
                 </property>

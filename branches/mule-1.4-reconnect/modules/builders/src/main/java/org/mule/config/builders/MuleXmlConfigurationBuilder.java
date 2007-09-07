@@ -33,10 +33,11 @@ import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.model.ModelFactory;
 import org.mule.impl.model.resolvers.DynamicEntryPointResolver;
+import org.mule.impl.retry.RetryTemplate;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.interceptors.InterceptorStack;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.ConnectionStrategy;
+import org.mule.providers.ConnectNotifier;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.routing.nested.NestedRouter;
@@ -59,6 +60,7 @@ import org.mule.umo.manager.UMOManager;
 import org.mule.umo.manager.UMOTransactionManagerFactory;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMONestedRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouter;
@@ -137,7 +139,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
     public static final String INTERCEPTOR_INTERFACE = UMOInterceptor.class.getName();
     public static final String ROUTER_INTERFACE = UMOOutboundRouter.class.getName();
     public static final String EXCEPTION_STRATEGY_INTERFACE = ExceptionListener.class.getName();
-    public static final String CONNECTION_STRATEGY_INTERFACE = ConnectionStrategy.class.getName();
+    public static final String RETRY_POLICY_INTERFACE = UMOPolicyFactory.class.getName();
 
     protected UMOManager manager;
 
@@ -435,17 +437,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         digester.addSetNext(path + "/persistence-strategy", "setPersistenceStrategy");
 
         // Connection strategy
-        digester.addObjectCreate(path + "/connection-strategy", CONNECTION_STRATEGY_INTERFACE, "className");
-        addMulePropertiesRule(path + "/connection-strategy", digester);
-        // digester.addSetNext(path + "/connection-strategy",
-        // "setConnectionStrategy");
-        digester.addRule(path + "/connection-strategy", new SetNextRule("setConnectionStrategy")
-        {
-            public void end(String s, String s1) throws Exception
-            {
-                super.end(s, s1);
-            }
-        });
+        addConnectionStrategyRules(digester, path);
 
         digester.addRule(path, new Rule()
         {
@@ -453,6 +445,42 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
             {
                 MuleManager.setConfiguration((MuleConfiguration)digester.peek());
             }
+        });
+    }
+
+    protected void addConnectionStrategyRules(Digester digester, String path)
+    {
+        digester.addObjectCreate(path + "/connection-strategy", RETRY_POLICY_INTERFACE, "className");
+        addMulePropertiesRule(path + "/connection-strategy", digester);
+        // digester.addSetNext(path + "/connection-strategy",
+        // "setConnectionStrategy");
+        digester.addRule(path + "/connection-strategy", new SetNextRule("setConnectionStrategy")
+        {
+            //@Override
+            public void end(String namespace, String name) throws Exception
+            {
+                UMOPolicyFactory pf = (UMOPolicyFactory)digester.pop();
+                digester.push(new RetryTemplate(pf, new ConnectNotifier()));
+                super.end();
+            }
+        });
+    }
+
+    protected void addRetryPolicyRules( String path, Digester digester)
+    {
+        digester.addObjectCreate(path + "/retry-policy", RETRY_POLICY_INTERFACE, "factory");
+        addMulePropertiesRule(path + "/retry-policy", digester);
+        // digester.addSetNext(path + "/connection-strategy",
+        // "setConnectionStrategy");
+        digester.addRule(path + "/retry-policy", new SetNextRule("setRetryPolicyFactory")
+        {
+            //@Override
+            //public void end(String namespace, String name) throws Exception
+            //{
+                //UMOPolicyFactory pf = (UMOPolicyFactory)digester.pop();
+                //digester.push(new RetryTemplate(pf, new ConnectNotifier()));
+                //super.end();
+           // }
         });
     }
 
@@ -619,10 +647,9 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         digester.addRule(path + "/threading-profile", threadingRule);
 
         // Connection strategy
-        digester.addObjectCreate(path + "/connection-strategy", CONNECTION_STRATEGY_INTERFACE, "className");
-        addMulePropertiesRule(path + "/connection-strategy", digester);
-        digester.addSetNext(path + "/connection-strategy", "setConnectionStrategy");
+        addConnectionStrategyRules(digester, path);
 
+        // Exception strategy
         addExceptionStrategyRules(digester, path);
 
         // register conntector
@@ -1063,6 +1090,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         // todo test
         addMulePropertiesRule(path, digester, "setProperties");
         addTransactionConfigRules(path, digester);
+        addRetryPolicyRules(path, digester);
 
         addFilterRules(digester, path);
         if (method != null)

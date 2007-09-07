@@ -19,6 +19,7 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
+import org.mule.impl.retry.RetryTemplate;
 import org.mule.providers.service.TransportFactory;
 import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.providers.service.TransportServiceException;
@@ -34,6 +35,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.DisposeException;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.ConnectorException;
@@ -46,6 +48,9 @@ import org.mule.umo.provider.UMOMessageDispatcherFactory;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.provider.UMOSessionHandler;
 import org.mule.umo.provider.UMOStreamMessageAdapter;
+import org.mule.umo.retry.RetryContext;
+import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
@@ -78,7 +83,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-import org.apache.commons.beanutils.BeanUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -207,7 +212,7 @@ public abstract class AbstractConnector
      */
     protected volatile UMOTransformer defaultResponseTransformer;
 
-    protected volatile ConnectionStrategy connectionStrategy;
+    protected volatile UMORetryTemplate connectionStrategy;
 
     protected final WaitableBoolean connected = new WaitableBoolean(false);
 
@@ -341,14 +346,16 @@ public abstract class AbstractConnector
 
         if (!this.isStarted())
         {
-            if (!this.isConnected())
+            startOnConnect.set(true);
+
+            // Make sure we are connected
+            try
             {
-                startOnConnect.set(true);
-                // Don't call getConnectionStrategy(), it clones the connection strategy.
-                // Connectors should have a single reconnection thread, unlike per receiver/dispatcher
-                connectionStrategy.connect(this);
-                // Only start once we are connected
-                return;
+                connect();
+            }
+            catch (Exception e)
+            {
+                throw new LifecycleException(e, this);
             }
 
             if (logger.isInfoEnabled())
@@ -1052,14 +1059,14 @@ public abstract class AbstractConnector
      *
      * @return Value for property 'connectionStrategy'.
      */
-    public ConnectionStrategy getConnectionStrategy()
+    public UMORetryTemplate getConnectionStrategy()
     {
         // not happy with this but each receiver needs its own instance
         // of the connection strategy and using a factory just introduces extra
         // implementation
         try
         {
-            return (ConnectionStrategy) BeanUtils.cloneBean(connectionStrategy);
+            return new RetryTemplate(connectionStrategy.getPolicyFactory(), connectionStrategy.getRetryNotifier());
         }
         catch (Exception e)
         {
@@ -1072,7 +1079,7 @@ public abstract class AbstractConnector
      *
      * @param connectionStrategy Value to set for property 'connectionStrategy'.
      */
-    public void setConnectionStrategy(ConnectionStrategy connectionStrategy)
+    public void setConnectionStrategy(UMORetryTemplate connectionStrategy)
     {
         this.connectionStrategy = connectionStrategy;
     }
@@ -1146,67 +1153,22 @@ public abstract class AbstractConnector
             return;
         }
 
-        /*
-            Until the recursive startConnector() -> connect() -> doConnect() -> connect()
-            calls are unwound between a connector and connection strategy, this call has
-            to be here, and not below (commented out currently). Otherwise, e.g. WebspherMQ
-            goes into an endless reconnect thrashing loop, see MULE-1150 for more details.
-        */
-        try
+        connectionStrategy.execute(new UMORetryCallback()
         {
-            if (connecting.get())
+            public void doWork(RetryContext context) throws Exception
             {
-                this.doConnect();
+                doConnect();
             }
 
-            if (connecting.compareAndSet(false, true))
+            public String getWorkDescription()
             {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Connecting: " + this);
-                }
-
-                connectionStrategy.connect(this);
-
-                logger.info("Connected: " + getConnectionDescription());
-                // This method calls itself so the connecting flag is set first, then
-                // the connection is made on the second call
-                return;
+                return getConnectionDescription();
             }
+        });
 
+        connected.set(true);
 
-            // see the explanation above
-            //this.doConnect();
-            connected.set(true);
-            connecting.set(false);
-
-            this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_CONNECTED));
-        }
-        catch (Exception e)
-        {
-            connected.set(false);
-            connecting.set(false);
-
-            this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
-                ConnectionNotification.CONNECTION_FAILED));
-
-            if (e instanceof ConnectException || e instanceof FatalConnectException)
-            {
-                // rethrow
-                throw e;
-            }
-            else
-            {
-                throw new ConnectException(e, this);
-            }
-        }
-
-        if (startOnConnect.get())
-        {
-            this.startConnector();
-        }
-        else
+        if (receivers != null)
         {
             for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
             {
@@ -1214,7 +1176,7 @@ public abstract class AbstractConnector
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Connecting receiver on endpoint: "
-                                    + receiver.getEndpoint().getEndpointURI());
+                            + receiver.getEndpoint().getEndpointURI());
                 }
                 receiver.connect();
             }
@@ -1246,7 +1208,7 @@ public abstract class AbstractConnector
     /** {@inheritDoc} */
     public String getConnectionDescription()
     {
-        return this.toString();
+        return "connector." + getProtocol() + "." + getName();
     }
 
     /** {@inheritDoc} */

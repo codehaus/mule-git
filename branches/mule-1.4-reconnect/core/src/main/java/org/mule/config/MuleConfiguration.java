@@ -13,9 +13,11 @@ package org.mule.config;
 import org.mule.MuleManager;
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.ConnectionStrategy;
-import org.mule.providers.SingleAttemptConnectionStrategy;
+import org.mule.impl.retry.RetryTemplate;
+import org.mule.impl.retry.policies.NoRetryPolicyFactory;
+import org.mule.providers.ConnectNotifier;
 import org.mule.umo.manager.DefaultWorkListener;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.queue.EventFilePersistenceStrategy;
@@ -32,7 +34,6 @@ import java.util.jar.Manifest;
 
 import javax.resource.spi.work.WorkListener;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -238,7 +239,7 @@ public class MuleConfiguration
      * The default connection Strategy used for a connector when one hasn't been
      * defined for the connector
      */
-    private ConnectionStrategy connectionStrategy = new SingleAttemptConnectionStrategy();
+    private UMORetryTemplate connectionStrategy = new RetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier());
 
     private WorkListener workListener = new DefaultWorkListener();
 
@@ -583,11 +584,11 @@ public class MuleConfiguration
      * 
      * @return a clone of the default Connection strategy
      */
-    public ConnectionStrategy getConnectionStrategy()
+    public UMORetryTemplate getConnectionStrategy()
     {
         try
         {
-            return (ConnectionStrategy) BeanUtils.cloneBean(connectionStrategy);
+            return new RetryTemplate(connectionStrategy.getPolicyFactory(), connectionStrategy.getRetryNotifier());
         }
         catch (Exception e)
         {
@@ -602,7 +603,7 @@ public class MuleConfiguration
      * 
      * @param connectionStrategy the default strategy to use
      */
-    public void setConnectionStrategy(ConnectionStrategy connectionStrategy)
+    public void setConnectionStrategy(UMORetryTemplate connectionStrategy)
     {
         this.connectionStrategy = connectionStrategy;
     }

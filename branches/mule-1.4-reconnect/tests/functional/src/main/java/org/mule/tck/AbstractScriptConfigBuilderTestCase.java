@@ -14,9 +14,9 @@ import org.mule.MuleManager;
 import org.mule.impl.AbstractExceptionListener;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.container.DescriptorContainerKeyPair;
+import org.mule.impl.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.interceptors.LoggingInterceptor;
 import org.mule.interceptors.TimerInterceptor;
-import org.mule.providers.SimpleRetryConnectionStrategy;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.filters.xml.JXPathFilter;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
@@ -67,9 +67,9 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         assertNotNull(c.getExceptionListener());
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
         assertNotNull(c.getConnectionStrategy());
-        assertTrue(c.getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
-        assertEquals(4, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getRetryCount());
-        assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
+        assertTrue(c.getConnectionStrategy().getPolicyFactory() instanceof SimpleRetryPolicyFactory);
+        assertEquals(4, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getRetryCount());
+        assertEquals(3000, ((SimpleRetryPolicyFactory)c.getConnectionStrategy().getPolicyFactory()).getFrequency());
     }
 
     public void testGlobalEndpointConfig()

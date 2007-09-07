@@ -293,15 +293,15 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
                     try
                     {
-                        connectionStrategy.connect(jmsConnector);
-                        jmsConnector.initialise();
-                        jmsConnector.startConnector();
+                        connect();
+                        initialise();
+                        startConnector();
                     }
                     catch (FatalConnectException fcex)
                     {
                         logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
                     }
-                    catch (UMOException umoex)
+                    catch (Exception umoex)
                     {
                         throw new UnhandledException("Failed to recover a connector.", umoex);
                     }
