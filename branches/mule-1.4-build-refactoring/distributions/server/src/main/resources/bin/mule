@@ -211,7 +211,7 @@ esac
 # Resolve the architecture
 UNAME_PROC_OPTION="-m"
 if [ "$DIST_OS" == "aix" ]; then
-    UNAME_PROCE_OPTION="-p"
+    UNAME_PROC_OPTION="-p"
 fi
 
 PROC_ARCH=`uname $UNAME_PROC_OPTION | tr [:upper:] [:lower:] | tr -d [:blank:]`

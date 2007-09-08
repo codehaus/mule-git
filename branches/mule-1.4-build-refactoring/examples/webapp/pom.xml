@@ -56,17 +56,6 @@
                     </connectors>
                  </configuration>       
             </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <!-- These tests are a work-in-progress -->
-                        <exclude>**/JettyTestCase.java</exclude>
-                        <exclude>**/TomcatTestCase.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

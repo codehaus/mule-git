@@ -46,6 +46,9 @@ hivemind-lib-1.1.1
 howl-logger-0.1.11
 javassist-3.0
 jaxen-1.1.1
+jbossts-common-4.2.3-SP5
+jbossts-jta-4.2.3-SP5-patched
+jbossts-jta-integration-4.2.3-SP5
 jbpm-3.1.4
 jcl104-over-slf4j-1.4.3
 jdom-1.0
@@ -76,6 +79,7 @@ mule-module-builders
 mule-module-client
 mule-module-hivemind
 mule-module-jaas
+mule-module-jbossts
 mule-module-jotm
 mule-module-management
 mule-module-ognl

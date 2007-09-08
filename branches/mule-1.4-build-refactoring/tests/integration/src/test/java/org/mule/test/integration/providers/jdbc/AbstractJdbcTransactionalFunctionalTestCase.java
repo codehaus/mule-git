@@ -69,7 +69,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         initialiseComponent(UMOTransactionConfig.ACTION_ALWAYS_BEGIN, callback);
         MuleManager.getInstance().start();
 
-        execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
+        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
                       + "', NULL, NULL)");
 
         synchronized (called)

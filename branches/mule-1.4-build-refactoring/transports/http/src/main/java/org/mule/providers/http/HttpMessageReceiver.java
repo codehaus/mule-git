@@ -478,8 +478,8 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             
             if (receiver == null) 
             {
-				receiver = findReceiverByStem(connector.getReceivers(), uriStr);
-			}
+                receiver = findReceiverByStem(connector.getReceivers(), uriStr);
+            }
            
             if (receiver == null && logger.isWarnEnabled())
             {
@@ -493,7 +493,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         return receiver;
     }
 
-	public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
+    public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
     {
         int match = 0;
         UMOMessageReceiver receiver = null;

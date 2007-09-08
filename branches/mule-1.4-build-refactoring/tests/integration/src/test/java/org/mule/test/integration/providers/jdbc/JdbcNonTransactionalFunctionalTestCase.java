@@ -26,10 +26,6 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.enhydra.jdbc.standard.StandardDataSource;
-
 public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase
 {
 
@@ -64,10 +60,9 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         MuleEndpoint muleEndpoint = new MuleEndpoint("jdbc://?sql=SELECT * FROM TEST", true);
         UMOMessage message = muleEndpoint.receive(1000);
         assertResultSetEmpty(message);
-
-        execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
-                        + "', NULL, NULL)");
-
+        
+        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
+            + "', NULL, NULL)");
         message = muleEndpoint.receive(1000);
         assertResultSetNotEmpty(message);
     }
@@ -101,8 +96,8 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
 
         assertResultSetEmpty(message);
 
-        execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
-                        + "', NULL, NULL)");
+        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
+            + "', NULL, NULL)");
 
         message = muleEndpoint.receive(1000);
         assertResultSetNotEmpty(message);
@@ -114,7 +109,7 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         initialiseComponent(null);
         MuleManager.getInstance().start();
 
-        execSqlUpdate("INSERT INTO TEST(ID, TYPE, DATA, ACK, RESULT) VALUES (NULL, 1, '" + DEFAULT_MESSAGE
+        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
                         + "', NULL, NULL)");
 
         long t0 = System.currentTimeMillis();
@@ -143,16 +138,6 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         props.put("eventCallback", callback);
         builder.registerComponent(JdbcFunctionalTestComponent.class.getName(), "testComponent", getInDest(),
             getOutDest(), props);
-    }
-
-    protected DataSource createDataSource() throws Exception
-    {
-        StandardDataSource ds = new StandardDataSource();
-        ds.setDriverName("org.hsqldb.jdbcDriver");
-        ds.setUrl("jdbc:hsqldb:mem:.");
-        ds.setUser("sa");
-        ds.setPassword("");
-        return ds;
     }
 
 }

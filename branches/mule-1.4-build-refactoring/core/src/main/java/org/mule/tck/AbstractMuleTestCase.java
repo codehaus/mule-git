@@ -56,11 +56,19 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMuleTestCase extends TestCase implements TestCaseWatchdogTimeoutHandler
 {
-    // A logger that should be suitable for most test cases.
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    /**
+     * Top-level directories under <code>.mule</code> which are not deleted on each
+     * test case recycle. This is required, e.g. to play nice with transaction manager
+     * recovery service object store.
+     */
+    public static final String[] IGNORED_DOT_MULE_DIRS = new String[] {"transaction-log"};
 
-    // Controls whether text boxes will be logged when starting each test case.
-    private static boolean verbose = true;
+    /**
+     * This flag controls whether the text boxes will be logged when starting each test case.
+     */
+    private static final boolean verbose;
+
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     // A Map of test case extension objects. JUnit creates a new TestCase instance for
     // every method, so we need to record metainfo outside the test.
@@ -90,7 +98,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         // register the custom UrlStreamHandlerFactory.
         MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
     }
-    
+
     public AbstractMuleTestCase()
     {
         super();
@@ -125,7 +133,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
     }
 
-    public void run(TestResult result) 
+    public void run(TestResult result)
     {
         if (this.isExcluded())
         {
@@ -144,7 +152,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             }
             return;
         }
-        
+
         super.run(result);
     }
 
@@ -154,23 +162,23 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
      * <p/>
      * Subclasses can override <code>isDisabledInThisEnvironment</code> to skip a single test.
      */
-    public void runBare() throws Throwable 
+    public void runBare() throws Throwable
     {
         // getName will return the name of the method being run. Use the real JUnit implementation,
         // this class has a different implementation
-        if (this.isDisabledInThisEnvironment(super.getName())) 
+        if (this.isDisabledInThisEnvironment(super.getName()))
         {
             logger.warn(this.getClass().getName() + "." + super.getName() + " disabled in this environment");
             return;
         }
-        
+
         // Let JUnit handle execution
         super.runBare();
     }
 
     /**
      * Subclasses can override this method to skip the execution of the entire test class.
-     * 
+     *
      * @return <code>true</code> if the test class should not be run.
      */
     protected boolean isDisabledInThisEnvironment()
@@ -181,7 +189,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     /**
      * Indicates whether this test has been explicitly disabled through the configuration
      * file loaded by TestInfo.
-     * 
+     *
      * @return whether the test has been explicitly disabled
      */
     protected boolean isExcluded()
@@ -194,7 +202,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
      * @param testMethodName name of the test method
      * @return whether the test should execute in the current envionment
      */
-    protected boolean isDisabledInThisEnvironment(String testMethodName) 
+    protected boolean isDisabledInThisEnvironment(String testMethodName)
     {
         return false;
     }
@@ -235,10 +243,10 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         // start a watchdog thread
         watchdog = createWatchdog();
         watchdog.start();
-        
+
         if (verbose)
         {
-            System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));   
+            System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
         }
 
         MuleManager.getConfiguration().getDefaultThreadingProfile().setDoThreading(false);
@@ -327,7 +335,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                     }
                 }
             }
-            finally 
+            finally
             {
                 // remove the watchdog thread in any case
                 watchdog.cancel();
@@ -341,7 +349,10 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         {
             MuleManager.getInstance().dispose();
         }
-        FileUtils.deleteTree(FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory()));
+
+        // do not delete TM recovery object store, everything else is good to go
+        FileUtils.deleteTree(FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory()),
+                             IGNORED_DOT_MULE_DIRS);
         FileUtils.deleteTree(FileUtils.newFile("./ActiveMQ"));
         MuleManager.setConfiguration(new MuleConfiguration());
     }
