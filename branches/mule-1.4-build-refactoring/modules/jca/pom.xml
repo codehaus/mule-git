@@ -26,7 +26,8 @@
         <module>jca-jboss</module>
     </modules>
 
-    <dependencies>
+    <!-- TODO review these dependencies in the JCA package -->
+<!--    <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
@@ -63,5 +64,5 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${version}</version>
         </dependency>
-    </dependencies>
+    </dependencies>-->
 </project>

@@ -36,6 +36,11 @@
         </plugins>
     </build>
 
+    <!--
+        This is a special case where dependency inheritance is wanted and makes
+        sense: both JCA distributions differ only in JBoss specific details so
+        they *must* have the same dependencies.
+    -->
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -71,12 +76,10 @@
             <version>${version}</version>
             <type>pom</type>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-
         <!-- re-declaration of dependencies that never ever may end up in the .rar -->
         <dependency>
             <groupId>org.mule.examples</groupId>

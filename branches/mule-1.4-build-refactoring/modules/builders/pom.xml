@@ -90,8 +90,13 @@
             </dependencies>
         </profile>
     </profiles>
-    
+
     <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
         <!-- Used by MuleXmlBuilderContextServlet -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>

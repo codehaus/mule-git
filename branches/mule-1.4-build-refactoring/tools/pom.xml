@@ -52,13 +52,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.mule</groupId>
-            <artifactId>mule-core</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

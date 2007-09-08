@@ -13,7 +13,7 @@
     <name>SOAP Transport</name>
     <description>A Mule transport for SOAP connectivity. The transport will use Axis, Glue or XFire
         depending on which is on the classpath.</description>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -125,18 +125,20 @@
             </dependencies>
         </profile>
     </profiles>
-    
+
     <dependencies>
         <!-- required for the SOAP TCK classes -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-http</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- required with compile-time scope for FunctionalTestCase subclasses -->
         <dependency>

@@ -15,6 +15,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
@@ -27,5 +38,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

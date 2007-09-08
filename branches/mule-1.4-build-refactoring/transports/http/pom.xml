@@ -53,23 +53,19 @@
             <artifactId>mule-transport-ssl</artifactId>
             <version>${version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
-
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
         </dependency>
-
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>org.mortbay.jetty</artifactId>
             <version>5.1.12</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-servlet_2.4_spec</artifactId>
@@ -82,12 +78,17 @@
 
         <!-- for functional tests only -->
         <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-tcp</artifactId>
@@ -95,14 +96,12 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-stream</artifactId>
@@ -110,5 +109,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

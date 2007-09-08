@@ -13,7 +13,7 @@
     <name>Pico Extensions</name>
     <description>Provides extensions to use PicoContainer with Mule, such as using the container as a
         factory for Mule managed objects.</description>
-    
+
     <profiles>
         <profile>
             <id>java14</id>
@@ -59,8 +59,13 @@
             </dependencies>
         </profile>
     </profiles>
-    
+
     <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer</artifactId>

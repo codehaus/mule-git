@@ -12,7 +12,13 @@
     <packaging>jar</packaging>
     <name>JDBC Transport</name>
     <description>A Mule transport for JDBC connectivity.</description>
+
     <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
@@ -22,8 +28,7 @@
             <groupId>xapool</groupId>
             <artifactId>xapool</artifactId>
             <version>1.4</version>
-        </dependency>
-        
+        </dependency>        
         <!-- For unit tests only -->
         <dependency>
             <groupId>hsqldb</groupId>

@@ -20,7 +20,6 @@
             <artifactId>mule-transport-bpm</artifactId>
             <version>${version}</version>
         </dependency>
-
         <!-- jBPM --> 
         <dependency>
             <groupId>org.jbpm</groupId>
@@ -34,7 +33,6 @@
             <version>1.3.0</version>
             <optional>true</optional>
         </dependency>        
-
         <!-- Only needed for Spring-based configuration -->
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -52,7 +50,6 @@
             <artifactId>spring-modules-jbpm31-nodeps</artifactId>
             <version>0.8a</version>
         </dependency>
-
         <!-- Hibernate --> 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -106,7 +103,6 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.0.4</version>
         </dependency>
-
         <!-- Simple Java DB for persistence -->
         <dependency>
             <groupId>hsqldb</groupId>
@@ -114,7 +110,6 @@
             <version>1.8.0.7</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>

@@ -3,16 +3,21 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  <parent>
+    <parent>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-modules</artifactId>
         <version>1.4.3-SNAPSHOT</version>
     </parent>
-  <artifactId>mule-module-management</artifactId>
-  <name>Management Extensions</name>
-  <description>Management Extensions for Mule</description>
+    <artifactId>mule-module-management</artifactId>
+    <name>Management Extensions</name>
+    <description>Management Extensions for Mule</description>
 
-  <dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
@@ -47,6 +52,5 @@
             <artifactId>mx4j-remote</artifactId>
             <version>2.1.1</version>
         </dependency>
-
   </dependencies>
 </project>

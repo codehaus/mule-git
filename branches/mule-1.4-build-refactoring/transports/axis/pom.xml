@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
     <name>SOAP Transport: Axis</name>
     <description>A Mule transport for Soap Connectivity using Axis.</description>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -82,16 +82,11 @@
             <artifactId>mule-transport-soap</artifactId>
             <version>${version}</version>
         </dependency>
-
-        <!-- Needed for common SOAP test classes -->
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-soap</artifactId>
+            <artifactId>mule-transport-http</artifactId>
             <version>${version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
-        
         <dependency>
             <groupId>axis</groupId>
             <artifactId>axis</artifactId>
@@ -112,21 +107,36 @@
             <version>1.5.1</version>
         </dependency>
         <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+        </dependency>
+
+        <!-- TODO remove these -->
+        <!-- need to explicitly mark javax.mail as provided -->
+<!--        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <scope>provided</scope>
+        </dependency>-->
+<!--        <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <scope>test</scope>
+        </dependency>-->
+
+        <!-- Needed for common SOAP test classes -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-soap</artifactId>
+            <version>${version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
-        <!-- needed by the Axis Service component -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
-        </dependency>
-        <!-- need to explicitly mark javax.mail as provided -->
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>

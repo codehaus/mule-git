@@ -10,7 +10,7 @@
     <artifactId>mule-module-registry</artifactId>
     <name>Configuration Registry</name>
     <description>Mule Registry for distributed configurations</description>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>

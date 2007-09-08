@@ -14,6 +14,11 @@
     <description>Mule functional test framework (TCK)</description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
         <!-- required for JXPathFilter -->
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -35,6 +40,5 @@
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

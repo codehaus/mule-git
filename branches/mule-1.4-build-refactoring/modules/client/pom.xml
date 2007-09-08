@@ -12,6 +12,7 @@
     <packaging>jar</packaging>
     <name>Mule Client</name>
     <description>MuleClient is a simple interface for Mule clients to send and receive events from local or remote Mule Servers.</description>   
+
     <dependencies>
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -25,5 +26,4 @@
             <version>${version}</version>
         </dependency>
     </dependencies>
-
 </project>
