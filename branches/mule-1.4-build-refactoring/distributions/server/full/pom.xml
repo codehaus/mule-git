@@ -159,10 +159,6 @@
                     <artifactId>mule-module-jca-jboss</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.mule.modules</groupId>
-                    <artifactId>mule-module-registry</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>xalan</groupId>
                     <artifactId>xalan</artifactId>
                 </exclusion>

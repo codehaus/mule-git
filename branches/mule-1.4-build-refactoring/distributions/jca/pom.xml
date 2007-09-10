@@ -62,10 +62,6 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.mule.modules</groupId>
-                    <artifactId>mule-module-registry</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.mule.modules</groupId>
                     <artifactId>mule-module-jbossts</artifactId>
                 </exclusion>
                 <exclusion>
