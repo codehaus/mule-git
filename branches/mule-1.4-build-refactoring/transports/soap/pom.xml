@@ -149,11 +149,6 @@
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
-            <!--
-                TODO MULE-10221: JAX-RPC pulls in servlet-2.4, which causes conflicts
-                when Mule is deployed to a Web/J2EE server but is needed otherwise.
-                Possible workaround: <scope>provided</scope>
-            -->
             <exclusions>
                 <!-- JAX-RPC pulls in SAAJ which pulls in activation -->
                 <exclusion>
