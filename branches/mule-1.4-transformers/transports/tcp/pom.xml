@@ -14,18 +14,7 @@
     <description>A Mule transport for Tcp Connectivity. This transport supplies a tcp Server and client implementation.</description>
 
     <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <excludes>
-                        <exclude>**/*Mule1389TestCase.java</exclude>
-                <exclude>**/*Mule1687TestCase.java</exclude>
-                        <exclude>**/*Mule2067TestCase.java</exclude>
-            </excludes>
-          </configuration>
-        </plugin>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -37,7 +26,7 @@
                     </execution>
                 </executions>
             </plugin>
-      </plugins>
+        </plugins>
     </build>
 
     <dependencies>

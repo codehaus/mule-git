@@ -22,13 +22,13 @@
         <module>client</module>
         <module>hivemind</module>
         <module>jaas</module>
+        <module>jboss-transactions</module>
         <module>jca</module>
         <module>jotm</module>
         <module>management</module>
         <module>ognl</module>
         <module>pgp</module>
         <module>picocontainer</module>
-        <module>registry</module>
         <module>scripting</module>
         <module>spring</module>
         <module>wssecurity</module>

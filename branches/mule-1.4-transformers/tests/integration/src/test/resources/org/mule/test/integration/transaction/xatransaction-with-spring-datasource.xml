@@ -29,7 +29,7 @@
         </property>
     </bean>
   
-    <bean id="libraryDao" class="org.mule.test.integration.transaction.extras.LibraryDao" singleton="false">
+    <bean id="libraryDao" class="org.mule.test.integration.transaction.extras.JdbcLibraryDao" singleton="false">
         <property name="jdbcTemplate">
             <ref bean="jdbcTemplate" />
         </property>
@@ -49,10 +49,10 @@
             <ref local="jotm"/>
         </property>
         <property name="driverName">
-            <value>org.hsqldb.jdbcDriver</value>
+            <value>org.apache.derby.jdbc.EmbeddedDriver</value>
         </property>
         <property name="url">
-            <value>jdbc:hsqldb:mem:.</value>
+            <value>jdbc:derby:muleEmbeddedDB;create=true</value>
         </property>
     </bean>
     

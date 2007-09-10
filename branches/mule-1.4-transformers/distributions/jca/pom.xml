@@ -57,7 +57,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.mule.modules</groupId>
-                    <artifactId>mule-module-registry</artifactId>
+                    <artifactId>mule-module-jbossts</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>xalan</groupId>
