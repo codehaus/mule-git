@@ -11,9 +11,6 @@ org.mule.test.integration.providers.xmpp.XmppFunctionalTestCase
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration2TestCase
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
 
-# MULE-2244
-org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
-
 # MULE-2257
 org.mule.test.usecases.sync.TcpJmsResponseTestCase
 
@@ -25,9 +22,9 @@ org.mule.test.integration.VisualizerServiceTestCase
 org.mule.test.integration.spring.events.async.SpringEventsJmsAsyncExampleTestCase
 
 org.mule.test.integration.client.RemoteExceptionTestCase
+org.mule.test.integration.client.MuleClientRemotingHttpTestCase
 org.mule.test.integration.client.MuleClientRemotingJmsTestCase
 org.mule.test.integration.transaction.OutboundTransactionsTestCase
-org.mule.test.integration.client.MuleClientRemotingHttpTestCase
 
 # These tests work when run from the IDE (IntelliJ)
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration3TestCase
@@ -38,3 +35,4 @@ org.mule.test.integration.providers.jms.NestedRouterTestCase
 
 # MULE-2258: fails on the build server
 org.mule.test.usecases.sync.TcpToFileTestCase
+
