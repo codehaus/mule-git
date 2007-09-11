@@ -108,7 +108,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-        	UMOMessageReceiver receiver = getReceiverForURI(request);
+            UMOMessageReceiver receiver = getReceiverForURI(request);
             UMOMessage responseMessage;
             UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
@@ -132,7 +132,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-        	UMOMessageReceiver receiver = getReceiverForURI(request);
+            UMOMessageReceiver receiver = getReceiverForURI(request);
             UMOMessage responseMessage;
             UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "POST");
@@ -286,7 +286,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             // any of the receiver keys.
             if (receiver == null) 
             {
-				receiver = HttpMessageReceiver.findReceiverByStem(connector.getReceivers(), uri);
+                receiver = HttpMessageReceiver.findReceiverByStem(connector.getReceivers(), uri);
             }
             
             // This is some bizarre piece of code so the XFire Servlet code works.
@@ -310,7 +310,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
                         }
                     }
                 }
-			}
+            }
             
             if (receiver == null)
             {
