@@ -37,13 +37,16 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleServer implements Runnable
 {
+    public static final String VERSION_ARG_NAME = "version";
+
     public static final String CLI_OPTIONS[][] = {
             {"builder", "true", "Configuration Builder Type"},
             {"config", "true", "Configuration File"},
             {"main", "true", "Main Class"},
             {"mode", "true", "Run Mode"},
+            {VERSION_ARG_NAME, "false", "Show product and version information"},
             {"props", "true", "Startup Properties"}
-        };
+    };
 
     /**
      * Don't use a class object so the core doesn't depend on mule-module-builders.
@@ -88,16 +91,15 @@ public class MuleServer implements Runnable
 
     /**
      * Application entry point.
-     * 
+     *
      * @param args command-line args
      */
     public static void main(String[] args)
     {
-        MuleServer server = new MuleServer();
 
         Map options = Collections.EMPTY_MAP;
 
-        try 
+        try
         {
             options = SystemUtils.getCommandLineOptions(args, CLI_OPTIONS);
         }
@@ -106,7 +108,16 @@ public class MuleServer implements Runnable
             System.err.println(me.toString());
             System.exit(1);
         }
-        
+
+//        print version string
+        if (options.containsKey(VERSION_ARG_NAME))
+        {
+            System.out.println(CoreMessages.productInformation().toString());
+            return;
+        }
+
+        MuleServer server = new MuleServer();
+
         // set our own UrlStreamHandlerFactory to become more independent of system properties
         MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
 
@@ -179,9 +190,9 @@ public class MuleServer implements Runnable
 
     /**
      * Start the mule server
-     * 
+     *
      * @param ownThread determines if the server will run in its own daemon thread or
-     *            the current calling thread
+     *                  the current calling thread
      */
     public void start(boolean ownThread)
     {
@@ -217,10 +228,10 @@ public class MuleServer implements Runnable
      * Sets the configuration builder to use for this server. Note that if a builder
      * is not set and the server's start method is called the default is an instance
      * of <code>MuleXmlConfigurationBuilder</code>.
-     * 
+     *
      * @param builderClassName the configuration builder FQN to use
      * @throws ClassNotFoundException if the class with the given name can not be
-     *             loaded
+     *                                loaded
      */
     public static void setConfigBuilderClassName(String builderClassName) throws ClassNotFoundException
     {
@@ -246,7 +257,7 @@ public class MuleServer implements Runnable
     /**
      * Returns the class name of the configuration builder used to create this
      * MuleServer.
-     * 
+     *
      * @return FQN of the current config builder
      */
     public static String getConfigBuilderClassName()
@@ -264,7 +275,7 @@ public class MuleServer implements Runnable
     /**
      * Initializes this daemon. Derived classes could add some extra behaviour if
      * they wish.
-     * 
+     *
      * @throws Exception if failed to initialize
      */
     protected void initialize() throws Exception
@@ -291,7 +302,7 @@ public class MuleServer implements Runnable
 
     /**
      * Will shut down the server displaying the cause and time of the shutdown
-     * 
+     *
      * @param e the exception that caused the shutdown
      */
     public void shutdown(Throwable e)
@@ -317,7 +328,7 @@ public class MuleServer implements Runnable
 
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.fatal(shutdownMessage);
-        
+
         // make sure that Mule is shutdown correctly.
         MuleManager.getInstance().dispose();
         System.exit(0);
@@ -335,7 +346,7 @@ public class MuleServer implements Runnable
         msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
         shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.info(shutdownMessage);
-        
+
         // make sure that Mule is shutdown correctly.
         MuleManager.getInstance().dispose();
         System.exit(0);
@@ -348,7 +359,7 @@ public class MuleServer implements Runnable
 
     /**
      * Getter for property messengerURL.
-     * 
+     *
      * @return Value of property messengerURL.
      */
     public String getConfigurationResources()
@@ -358,7 +369,7 @@ public class MuleServer implements Runnable
 
     /**
      * Setter for property messengerURL.
-     * 
+     *
      * @param configurationResources New value of property configurationResources.
      */
     public void setConfigurationResources(String configurationResources)
@@ -375,9 +386,9 @@ public class MuleServer implements Runnable
     {
         MuleServer.startupPropertiesFile = startupPropertiesFile;
     }
-    
+
     /**
-     * This class is installed only for MuleServer running as commandline app. A clean Mule 
+     * This class is installed only for MuleServer running as commandline app. A clean Mule
      * shutdown can be achieved by disposing the {@link MuleManager}.
      */
     private class ShutdownThread extends Thread

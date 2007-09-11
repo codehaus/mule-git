@@ -29,11 +29,6 @@ import java.util.List;
  */
 public class MuleBootstrap
 {
-
-    public static final String CLI_OPTIONS[][] = {
-            {"version", "false", "Version"}
-    };
-
     /**
      * Do not instantiate MuleBootstrap.
      */
@@ -107,19 +102,6 @@ public class MuleBootstrap
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
 
-//        print version string
-        try
-        {
-            if (SystemUtils.hasCommandLineOption("version", args, CLI_OPTIONS))
-            {
-                System.out.println(CoreMessages.productInformation().toString());
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            ReflectionHelper.wrapperStop(-1);
-        }
 
         // the core jar has been added dynamically, this construct will run with
         // a new Mule classpath now
