@@ -11,6 +11,8 @@
 package org.mule.modules.boot;
 
 import org.mule.MuleServer;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.util.SystemUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -27,7 +29,6 @@ import java.util.List;
  */
 public class MuleBootstrap
 {
-
     /**
      * Do not instantiate MuleBootstrap.
      */
@@ -38,7 +39,7 @@ public class MuleBootstrap
 
     /**
      * Entry point.
-     * 
+     *
      * @param args command-line arguments
      * @throws Exception in case of any fatal problem
      */
@@ -46,7 +47,6 @@ public class MuleBootstrap
     {
         // Make sure MULE_HOME is set.
         File muleHome = null;
-
         String muleHomeVar = System.getProperty("mule.home");
         // Note: we can't use StringUtils.isBlank() here because we don't have that
         // library yet.
@@ -57,7 +57,7 @@ public class MuleBootstrap
         if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory())
         {
             throw new IllegalArgumentException(
-                "Either MULE_HOME is not set or does not contain a valid directory.");
+                    "Either MULE_HOME is not set or does not contain a valid directory.");
         }
 
         File muleBase;
@@ -68,7 +68,7 @@ public class MuleBootstrap
             muleBase = new File(muleBaseVar).getCanonicalFile();
         }
         else
-        {                                                                          
+        {
             muleBase = muleHome;
         }
 
@@ -102,6 +102,7 @@ public class MuleBootstrap
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
 
+
         // the core jar has been added dynamically, this construct will run with
         // a new Mule classpath now
         String mainClassName = null;
@@ -132,20 +133,20 @@ public class MuleBootstrap
     }
 
     private static void addLibrariesToClasspath(List urls)
-        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
 
         ClassLoader sys = ClassLoader.getSystemClassLoader();
         if (!(sys instanceof URLClassLoader))
         {
             throw new IllegalArgumentException(
-                "PANIC: Mule has been started with an unsupported classloader: " + sys.getClass().getName()
-                                + ". " + "Please report this error to user<at>mule<dot>codehaus<dot>org");
+                    "PANIC: Mule has been started with an unsupported classloader: " + sys.getClass().getName()
+                    + ". " + "Please report this error to user<at>mule<dot>codehaus<dot>org");
         }
 
         // system classloader is in this case the one that launched the application,
         // which is usually something like a JDK-vendor proprietary AppClassLoader
-        URLClassLoader sysCl = (URLClassLoader)sys;
+        URLClassLoader sysCl = (URLClassLoader) sys;
 
         /*
          * IMPORTANT NOTE: The more 'natural' way would be to create a custom
@@ -170,7 +171,7 @@ public class MuleBootstrap
         methodAddUrl.setAccessible(true);
         for (Iterator it = urls.iterator(); it.hasNext();)
         {
-            URL url = (URL)it.next();
+            URL url = (URL) it.next();
             // System.out.println("Adding: " + url.toExternalForm());
             methodAddUrl.invoke(sysCl, new Object[]{url});
         }
