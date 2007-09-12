@@ -50,7 +50,6 @@ import org.apache.commons.logging.LogFactory;
  * can be found here: http://www.muledocs.org/Transport+Service+Descriptors.
  *
  */
-
 public class TransportServiceDescriptor
 {
     /**
@@ -94,7 +93,7 @@ public class TransportServiceDescriptor
         connector = removeProperty(MuleProperties.CONNECTOR_CLASS);
         connectorFactory = removeProperty(MuleProperties.CONNECTOR_FACTORY);
         dispatcherFactory = removeProperty(MuleProperties.CONNECTOR_DISPATCHER_FACTORY);
-        transactionFactory = removeProperty(MuleProperties.CONNECTOR_DISPATCHER_FACTORY);
+        transactionFactory = removeProperty(MuleProperties.CONNECTOR_TRANSACTION_FACTORY);
         messageReceiver = removeProperty(MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS);
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS);
         xaTransactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS);
