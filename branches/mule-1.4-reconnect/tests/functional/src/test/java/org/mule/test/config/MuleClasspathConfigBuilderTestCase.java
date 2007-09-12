@@ -16,14 +16,15 @@ import org.mule.config.builders.MuleClasspathConfigurationBuilder;
 
 /**
  * Test Case for MuleClasspathCofigurationBuilder. It borrows everything from the
- * corresponding MuleXml config builder and just substitute the builder itself since
- * the config files are in the tests classpath.
+ * corresponding MuleXml config builder and just substitute the builder itself since the
+ * config files are in the tests classpath.
  */
 public class MuleClasspathConfigBuilderTestCase extends MuleXmlConfigBuilderTestCase
 {
     /**
      * Get the builder
      */
+    // @Override
     public ConfigurationBuilder getBuilder()
     {
         try
