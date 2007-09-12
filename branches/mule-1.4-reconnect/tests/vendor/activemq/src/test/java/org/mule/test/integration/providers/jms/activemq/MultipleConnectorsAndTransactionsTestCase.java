@@ -1,5 +1,5 @@
 /*
- * $Id: MultipleConnectorsAndTransactionsTestCase.java 5157 2007-02-16 04:04:27Z aperepel $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *

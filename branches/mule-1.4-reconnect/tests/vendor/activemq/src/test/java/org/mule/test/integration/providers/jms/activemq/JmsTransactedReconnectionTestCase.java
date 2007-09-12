@@ -1,5 +1,5 @@
 /*
- * $Id: JmsTransactedReconnectionTestCase.java 3588 2006-10-16 16:35:51Z holger $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *

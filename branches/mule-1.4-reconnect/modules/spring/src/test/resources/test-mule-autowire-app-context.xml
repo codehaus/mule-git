@@ -46,19 +46,19 @@
     </bean>
     <bean id="poolingProfile" class="org.mule.config.PoolingProfile">
         <property name="maxWait">
-            <value>4000</value>
+            <value>10001</value>
         </property>
         <property name="maxActive">
-            <value>8</value>
+            <value>10</value>
         </property>
         <property name="maxIdle">
-            <value>4</value>
+            <value>5</value>
         </property>
         <property name="initialisationPolicy">
             <value>1</value>
         </property>
         <property name="exhaustedAction">
-            <value>2</value>
+            <value>1</value>
         </property>
     </bean>
     <bean id="queueProfile" class="org.mule.config.QueueProfile">
@@ -624,13 +624,13 @@
         <property name="poolingProfile">
             <bean id="localPoolingProfile" class="org.mule.config.PoolingProfile">
                 <property name="maxWait">
-                    <value>4000</value>
+                    <value>4002</value>
                 </property>
                 <property name="maxActive">
-                    <value>5</value>
+                    <value>9</value>
                 </property>
                 <property name="maxIdle">
-                    <value>5</value>
+                    <value>6</value>
                 </property>
                 <property name="initialisationPolicy">
                     <value>2</value>

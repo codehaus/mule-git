@@ -11,16 +11,16 @@
 package org.mule.modules.boot;
 
 import org.mule.MuleServer;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.util.SystemUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
@@ -29,17 +29,16 @@ import java.util.List;
  */
 public class MuleBootstrap
 {
-    /**
-     * Do not instantiate MuleBootstrap.
-     */
+    private static final String MULE_MODULE_BOOT_POM_FILE_PATH = "META-INF/maven/org.mule.modules/mule-module-boot/pom.properties";
+
     private MuleBootstrap()
     {
-        super();
+        // utility class only
     }
 
     /**
      * Entry point.
-     *
+     * 
      * @param args command-line arguments
      * @throws Exception in case of any fatal problem
      */
@@ -47,6 +46,7 @@ public class MuleBootstrap
     {
         // Make sure MULE_HOME is set.
         File muleHome = null;
+
         String muleHomeVar = System.getProperty("mule.home");
         // Note: we can't use StringUtils.isBlank() here because we don't have that
         // library yet.
@@ -57,7 +57,7 @@ public class MuleBootstrap
         if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory())
         {
             throw new IllegalArgumentException(
-                    "Either MULE_HOME is not set or does not contain a valid directory.");
+                "Either MULE_HOME is not set or does not contain a valid directory.");
         }
 
         File muleBase;
@@ -77,15 +77,14 @@ public class MuleBootstrap
         DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
         addLibrariesToClasspath(classPath.getURLs());
 
-        // If the license ack file isn't on the classpath, we need to
-        // display the EULA and make sure the user accepts it before continuing
-        if (ReflectionHelper.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null)
+        setSystemMuleVersion();
+
+        if (!LicenseHandler.isLicenseAccepted())
         {
-            LicenseHandler licenseHandler = new LicenseHandler(muleHome, muleBase);
             // If the user didn't accept the license, then we have to exit
             // Exiting this way insures that the wrapper won't try again
             // (by default it'll try to start 3 times)
-            if (!licenseHandler.getAcceptance())
+            if (!LicenseHandler.getAcceptance())
             {
                 ReflectionHelper.wrapperStop(-1);
             }
@@ -101,7 +100,6 @@ public class MuleBootstrap
             LibraryDownloader downloader = new LibraryDownloader(muleBase);
             addLibrariesToClasspath(downloader.downloadLibraries());
         }
-
 
         // the core jar has been added dynamically, this construct will run with
         // a new Mule classpath now
@@ -132,16 +130,33 @@ public class MuleBootstrap
         ReflectionHelper.wrapperMain(appArgs);
     }
 
+    private static void setSystemMuleVersion()
+    {
+        try
+        {
+            URL mavenPropertiesUrl = ReflectionHelper.getResource(MULE_MODULE_BOOT_POM_FILE_PATH, MuleBootstrap.class);
+            Properties mavenProperties = new Properties();
+            mavenProperties.load(mavenPropertiesUrl.openStream());
+            
+            System.setProperty("mule.version", mavenProperties.getProperty("version"));
+            System.setProperty("mule.reference.version", mavenProperties.getProperty("version") + '-' + (new Date()).getTime());
+        }
+        catch (Exception ignore)
+        {
+            // ignore
+        }
+    }
+
     private static void addLibrariesToClasspath(List urls)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
 
         ClassLoader sys = ClassLoader.getSystemClassLoader();
         if (!(sys instanceof URLClassLoader))
         {
             throw new IllegalArgumentException(
-                    "PANIC: Mule has been started with an unsupported classloader: " + sys.getClass().getName()
-                    + ". " + "Please report this error to user<at>mule<dot>codehaus<dot>org");
+                "PANIC: Mule has been started with an unsupported classloader: " + sys.getClass().getName()
+                                + ". " + "Please report this error to user<at>mule<dot>codehaus<dot>org");
         }
 
         // system classloader is in this case the one that launched the application,
