@@ -57,12 +57,16 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testManagerConfig() throws Exception
     {
+        super.testManagerConfig();
+
         assertNotNull(MuleManager.getInstance().getTransactionManager());
     }
 
     // @Override
     public void testConnectorConfig() throws Exception
     {
+        super.testConnectorConfig();
+
         TestConnector c = (TestConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
         assertNotNull(c);
         assertNotNull(c.getExceptionListener());
@@ -76,6 +80,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testGlobalEndpointConfig()
     {
+        super.testGlobalEndpointConfig();
+
         UMOEndpoint endpoint = MuleManager.getInstance().lookupEndpoint("fruitBowlEndpoint");
         assertNotNull(endpoint);
         assertEquals(endpoint.getEndpointURI().getAddress(), "fruitBowlPublishQ");
@@ -89,6 +95,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testEndpointConfig()
     {
+        super.testEndpointConfig();
+
         String endpointString = MuleManager.getInstance().lookupEndpointIdentifier("Test Queue", null);
         assertEquals(endpointString, "test://test.queue");
         // test that endpoints have been resolved on endpoints
@@ -103,6 +111,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testInterceptorStacks()
     {
+        super.testInterceptorStacks();
+
         UMOInterceptorStack stack = MuleManager.getInstance().lookupInterceptorStack("default");
         assertNotNull(stack);
         assertEquals(2, stack.getInterceptors().size());
@@ -120,6 +130,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testTransformerConfig()
     {
+        super.testTransformerConfig();
+
         UMOTransformer t = MuleManager.getInstance().lookupTransformer("TestCompressionTransformer");
         assertNotNull(t);
         assertTrue(t instanceof TestCompressionTransformer);
@@ -130,8 +142,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testModelConfig() throws Exception
     {
-        UMOModel model = MuleManager.getInstance().lookupModel("main");
         super.testModelConfig();
+
+        UMOModel model = MuleManager.getInstance().lookupModel("main");
         assertTrue(model.isComponentRegistered("appleComponent"));
         assertTrue(model.isComponentRegistered("appleComponent2"));
     }
@@ -235,25 +248,25 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 
     public void testPoolingConfig()
     {
-        // test config
+        // test MuleManager config
         PoolingProfile pp = MuleManager.getConfiguration().getPoolingProfile();
-        assertEquals(8, pp.getMaxActive());
-        assertEquals(4, pp.getMaxIdle());
-        assertEquals(4000, pp.getMaxWait());
-        assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
-        assertEquals(1, pp.getInitialisationPolicy());
+        assertEquals(10, pp.getMaxActive());
+        assertEquals(5, pp.getMaxIdle());
+        assertEquals(10001, pp.getMaxWait());
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_WAIT, pp.getExhaustedAction());
+        assertEquals(PoolingProfile.INITIALISE_ONE, pp.getInitialisationPolicy());
         assertTrue(pp.getPoolFactory() instanceof CommonsPoolFactory);
 
-        // test override
+        // test per-descriptor overrides
         MuleDescriptor descriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel("main").getDescriptor(
             "appleComponent2");
         pp = descriptor.getPoolingProfile();
 
-        assertEquals(5, pp.getMaxActive());
-        assertEquals(5, pp.getMaxIdle());
-        assertEquals(4000, pp.getMaxWait());
+        assertEquals(9, pp.getMaxActive());
+        assertEquals(6, pp.getMaxIdle());
+        assertEquals(4002, pp.getMaxWait());
         assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
-        assertEquals(2, pp.getInitialisationPolicy());
+        assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
     }
 
     public void testQueueProfileConfig()

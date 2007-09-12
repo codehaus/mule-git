@@ -14,10 +14,8 @@ import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
-import org.mule.config.PoolingProfile;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
-import org.mule.config.pool.CommonsPoolFactory;
 import org.mule.impl.MuleDescriptor;
 import org.mule.providers.AbstractConnector;
 import org.mule.routing.outbound.AbstractOutboundRouter;
@@ -31,7 +29,6 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOResponseRouterCollection;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.ObjectPool;
 import org.mule.util.properties.JXPathPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
 
@@ -46,6 +43,7 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
         return "test-xml-mule-config.xml,test-xml-mule-config-split.xml,test-xml-mule-config-split-properties.xml";
     }
 
+    // @Override
     public ConfigurationBuilder getBuilder()
     {
         try
@@ -154,8 +152,12 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
         assertNotNull(d.getInboundEndpoint().getResponseTransformer());
     }
 
+    // @Override
     public void testTransformerConfig()
     {
+        // first of all test generic transformer configuration
+        super.testTransformerConfig();
+
         UMOTransformer t = MuleManager.getInstance().lookupTransformer("TestCompressionTransformer");
         assertNotNull(t);
         assertTrue(t instanceof TestCompressionTransformer);
@@ -188,6 +190,7 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
      * 
      * @throws MuleException
      */
+    // @Override
     public void testThreadingConfig() throws MuleException
     {
         // test config
@@ -206,7 +209,7 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
         assertEquals(0, tp.getPoolExhaustedAction());
         assertEquals(60001, tp.getThreadTTL());
 
-        // test thatvalues not set retain a default value
+        // test that values not set retain a default value
         AbstractConnector c = (AbstractConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
         tp = c.getDispatcherThreadingProfile();
         assertEquals(2, tp.getMaxBufferSize());
@@ -223,29 +226,6 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
         assertEquals(6, tp.getMaxThreadsIdle());
         assertEquals(0, tp.getPoolExhaustedAction());
         assertEquals(60001, tp.getThreadTTL());
-    }
-
-    public void testPoolingConfig()
-    {
-        // test config
-        PoolingProfile pp = MuleManager.getConfiguration().getPoolingProfile();
-        assertEquals(8, pp.getMaxActive());
-        assertEquals(4, pp.getMaxIdle());
-        assertEquals(4000, pp.getMaxWait());
-        assertEquals(ObjectPool.DEFAULT_EXHAUSTED_ACTION, pp.getExhaustedAction());
-        assertEquals(1, pp.getInitialisationPolicy());
-        assertTrue(pp.getPoolFactory() instanceof CommonsPoolFactory);
-
-        // test override
-        MuleDescriptor descriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel("main").getDescriptor(
-            "appleComponent2");
-        pp = descriptor.getPoolingProfile();
-
-        assertEquals(8, pp.getMaxActive());
-        assertEquals(4, pp.getMaxIdle());
-        assertEquals(4000, pp.getMaxWait());
-        assertEquals(ObjectPool.DEFAULT_EXHAUSTED_ACTION, pp.getExhaustedAction());
-        assertEquals(2, pp.getInitialisationPolicy());
     }
 
     public void testGlobalEndpointOverrides()
