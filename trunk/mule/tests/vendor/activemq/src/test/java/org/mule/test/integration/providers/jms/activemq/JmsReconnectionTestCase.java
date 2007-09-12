@@ -1,5 +1,5 @@
 /*
- * $Id: JmsReconnectionTestCase.java 5154 2007-02-16 03:49:15Z aperepel $
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
