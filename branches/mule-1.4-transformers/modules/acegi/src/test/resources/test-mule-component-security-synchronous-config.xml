@@ -5,7 +5,7 @@
 
 <mule-configuration id="Mule_Sample" version="1.0">
 
-	<mule-environment-properties synchronous="true"/>
+    <mule-environment-properties synchronous="true"/>
 
     <container-context className="org.mule.extras.spring.SpringContainerContext">
         <properties>
@@ -13,7 +13,7 @@
         </properties>
     </container-context>
 
-	<security-manager>
+    <security-manager>
         <security-provider name="memory-dao" className="org.mule.extras.acegi.AcegiProviderAdapter">
             <properties>
                 <container-property name="delegate" reference="daoAuthenticationProvider"/>
@@ -27,16 +27,16 @@
     </security-manager>
 
     <model name="test">
-		<mule-descriptor name="EchoUMO" implementation="EchoComponent">
-			<inbound-router>
-				<endpoint address="vm://test">
-					<security-filter className="org.mule.impl.security.filters.MuleEncryptionEndpointSecurityFilter">
-	                         <properties>
-		                         <property name="strategyName" value="PBE"/>
-			                 </properties>
-				     </security-filter>
-				</endpoint>
-			</inbound-router>
-		</mule-descriptor>
+        <mule-descriptor name="EchoUMO" implementation="EchoComponent">
+            <inbound-router>
+                <endpoint address="vm://test">
+                    <security-filter className="org.mule.impl.security.filters.MuleEncryptionEndpointSecurityFilter">
+                             <properties>
+                                 <property name="strategyName" value="PBE"/>
+                             </properties>
+                     </security-filter>
+                </endpoint>
+            </inbound-router>
+        </mule-descriptor>
     </model>
 </mule-configuration>

@@ -16,16 +16,16 @@
             </inbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="HttpWithoutRemoteSynch" implementation="org.mule.components.simple.EchoComponent">
-			<inbound-router>
+         <mule-descriptor name="HttpWithoutRemoteSynch" implementation="org.mule.components.simple.EchoComponent">
+            <inbound-router>
                 <endpoint address="http://localhost:8999" transformers="ByteArrayToString" synchronous="true"/>
-			</inbound-router>
+            </inbound-router>
         </mule-descriptor>
 
-		<mule-descriptor name="HttpWithRemoteSynch" implementation="org.mule.components.simple.EchoComponent">
-			<inbound-router>
-				<endpoint address="http://localhost:8989" transformers="ByteArrayToString" remoteSync="true"/>
-			</inbound-router>
+        <mule-descriptor name="HttpWithRemoteSynch" implementation="org.mule.components.simple.EchoComponent">
+            <inbound-router>
+                <endpoint address="http://localhost:8989" transformers="ByteArrayToString" remoteSync="true"/>
+            </inbound-router>
         </mule-descriptor>
     </model>
 </mule-configuration>
