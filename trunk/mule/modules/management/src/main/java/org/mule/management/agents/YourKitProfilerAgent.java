@@ -11,6 +11,7 @@
 package org.mule.management.agents;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.YourKitProfilerService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
@@ -20,6 +21,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.management.InstanceNotFoundException;
@@ -87,15 +89,22 @@ public class YourKitProfilerAgent implements UMOAgent
     {
         try
         {
-            mBeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
+            final List servers = MBeanServerFactory.findMBeanServer(null);
+            if (servers.isEmpty())
+            {
+                throw new InitialisationException(ManagementMessages.noMBeanServerAvailable(), this);
+            }
+
+            mBeanServer = (MBeanServer) servers.get(0);
+
             final ObjectName objectName = jmxSupport.getObjectName(JMX_OBJECT_NAME);
             // unregister existing YourKit MBean first if required
             unregisterMBeansIfNecessary();
             mBeanServer.registerMBean(new YourKitProfilerService(), objectName);
         }
-        catch(NoClassDefFoundError ncde)
+        catch (NoClassDefFoundError ncde)
         {
-            if("com/yourkit/api/Controller".equals(ncde.getMessage()))
+            if ("com/yourkit/api/Controller".equals(ncde.getMessage()))
             {
                 logger.warn("Cannot find YourKit API. JMX Agent won't start.");
             }
@@ -103,10 +112,6 @@ public class YourKitProfilerAgent implements UMOAgent
             {
                 throw ncde;
             }
-        }
-        catch(IndexOutOfBoundsException iobe)
-        {
-            logger.error("Cannot find MBeanServer.");
         }
         catch (Exception e)
         {
@@ -126,7 +131,7 @@ public class YourKitProfilerAgent implements UMOAgent
             Set yjpMBeans = mBeanServer.queryMBeans(jmxSupport.getObjectName("yjpagent*:*"), null);
             for (Iterator it = yjpMBeans.iterator(); it.hasNext();)
             {
-                ObjectInstance objectInstance = (ObjectInstance)it.next();
+                ObjectInstance objectInstance = (ObjectInstance) it.next();
                 ObjectName theName = objectInstance.getObjectName();
                 mBeanServer.unregisterMBean(theName);
             }
