@@ -10,16 +10,20 @@
 package org.mule.management.agents;
 
 import org.mule.management.AbstractMuleJmxTestCase;
+import org.mule.management.support.JmxSupportFactory;
+import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
+import org.mule.management.support.JmxSupport;
 import org.mule.management.mbeans.YourKitProfilerService;
-
-import javax.management.ObjectName;
 
 public class YourKitProfilerTestCase extends AbstractMuleJmxTestCase
 {
+    private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
+    private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
+
     public void testRedeploy() throws Exception
     {
         mBeanServer.registerMBean(new YourKitProfilerService(),
-            ObjectName.getInstance(YourKitProfilerAgent.JMX_OBJECT_NAME));
+            jmxSupport.getObjectName(YourKitProfilerAgent.JMX_OBJECT_NAME));
 
         YourKitProfilerAgent agent = new YourKitProfilerAgent();
         agent.initialise();
