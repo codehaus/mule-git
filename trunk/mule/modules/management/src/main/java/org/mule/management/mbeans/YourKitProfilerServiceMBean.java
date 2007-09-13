@@ -36,7 +36,6 @@ public interface YourKitProfilerServiceMBean
     /**
      * This method is just a convenient replacement of captureSnapshot(YourKitProfilerServiceMBean.SNAPSHOT_WITH_HEAP)
      * @return absolute path to the captured snapshot.
-     * @throws Exception
      */
     public String captureMemorySnapshot() throws Exception;
 
@@ -136,7 +135,6 @@ public interface YourKitProfilerServiceMBean
 
     /**
      * @return array of 2 elements: [0] - size of objects in heap before GC, bytes, [1] - size of objects in heap after GC, bytes
-     * @throws Exception
      */
     public long[] forceGC() throws Exception;
 
@@ -170,14 +168,14 @@ public interface YourKitProfilerServiceMBean
     public void stopMonitorProfiling() throws Exception;
 
     /**
-     * Starts new daemon thread which calls {@link captureMemorySnapshot()} every N seconds.
+     * Starts new daemon thread which calls {@link #captureMemorySnapshot()} every N seconds.
      * @param seconds delay between calls
      * @see #captureMemorySnapshot()
      */
     public void startCapturingMemorySnapshotEverySeconds(final int seconds);
 
     /**
-     * Stops daemon thread started by {@link startCapturingMemorySnapshotEverySeconds(int)}
+     * Stops daemon thread started by {@link #startCapturingMemorySnapshotEverySeconds(int)}
      * @see #startCapturingMemorySnapshotEverySeconds(int)
      */
     public void stopCapturingMemorySnapshot();
