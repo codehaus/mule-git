@@ -19,7 +19,7 @@ public class YourKitProfilerTestCase extends AbstractMuleJmxTestCase
     public void testRedeploy() throws Exception
     {
         mBeanServer.registerMBean(new YourKitProfilerService(),
-            ObjectName.getInstance(Log4jAgent.JMX_OBJECT_NAME));
+            ObjectName.getInstance(YourKitProfilerAgent.JMX_OBJECT_NAME));
 
         YourKitProfilerAgent agent = new YourKitProfilerAgent();
         agent.initialise();
