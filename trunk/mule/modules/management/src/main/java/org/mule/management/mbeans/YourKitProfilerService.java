@@ -30,14 +30,15 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
         try
         {
             controller = new Controller();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            logger.error("Failed to instantiate controller", e);
+            logger.error("Failed to instantiate profiler controller. " + e.getMessage());
         }
     }
 
     public String getHost()
-    {                           
+    {
         return controller.getHost();
     }
 
@@ -98,7 +99,10 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
 
     public void startCapturingMemorySnapshotEverySeconds(final int seconds)
     {
-        if(this.capturing) return;
+        if (this.capturing)
+        {
+            return;
+        }
 
         this.capturing = true;
         final Thread thread = new Thread(
