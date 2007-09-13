@@ -49,7 +49,7 @@ if (debugEnabled || profileEnabled) {
         if (profileEnabled) {
             String profileArg = null
             if (args.size() - 1 > profileArgIndex ) {
-                if(args[profileArgIndex + 1][1] != '-') {
+                if(args[profileArgIndex + 1][0] != '-') {
                     profileArg = args[profileArgIndex + 1]
                 }
             }
