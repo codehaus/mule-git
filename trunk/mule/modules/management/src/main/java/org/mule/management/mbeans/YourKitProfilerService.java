@@ -25,64 +25,75 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
     private Controller controller;
     private boolean capturing = false;
 
+    public YourKitProfilerService()
+    {
+        try
+        {
+            controller = new Controller();
+        } catch (Exception e)
+        {
+            logger.error("Failed to instantiate controller", e);
+        }
+    }
+
     public String getHost()
     {                           
-        return getController().getHost();
+        return controller.getHost();
     }
 
     public int getPort()
     {
-        return getController().getPort();
+        return controller.getPort();
     }
 
     public String captureMemorySnapshot() throws Exception
     {
-        return getController().captureMemorySnapshot();
+        return controller.captureMemorySnapshot();
     }
 
     public String captureSnapshot(long snapshotFlags) throws Exception
     {
-        return getController().captureSnapshot(snapshotFlags);
+        return controller.captureSnapshot(snapshotFlags);
     }
 
     public void startAllocationRecording(long mode) throws Exception
     {
-        getController().startAllocationRecording(mode);
+        controller.startAllocationRecording(mode);
     }
 
     public void stopAllocationRecording() throws Exception
     {
-        getController().stopAllocationRecording();
+        controller.stopAllocationRecording();
     }
 
     public void startCPUProfiling(long mode, String filters) throws Exception
     {
-        getController().startCPUProfiling(mode, filters);
+        controller.startCPUProfiling(mode, filters);
     }
 
     public void stopCPUProfiling() throws Exception
     {
-        getController().stopCPUProfiling();
+        controller.stopCPUProfiling();
     }
 
     public void startMonitorProfiling() throws Exception
     {
-        getController().startMonitorProfiling();
+        controller.startMonitorProfiling();
     }
 
     public void stopMonitorProfiling() throws Exception
     {
-        getController().stopMonitorProfiling();
+        controller.stopMonitorProfiling();
     }
 
     public void advanceGeneration(String description)
     {
-        getController().advanceGeneration(description);
+        controller.advanceGeneration(description);
     }
 
     public long[] forceGC() throws Exception
     {
-        return getController().forceGC();
+        return controller.forceGC();
     }
 
     public void startCapturingMemorySnapshotEverySeconds(final int seconds)
@@ -99,7 +110,7 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
                         {
                             while (capturing)
                             {
-                                getController().captureMemorySnapshot();
+                                controller.captureMemorySnapshot();
                                 Thread.sleep(seconds * 1000 /* millis in second */);
                             }
                         }
@@ -117,17 +128,5 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
     public void stopCapturingMemorySnapshot()
     {
         this.capturing = false;
-    }
-
-    private Controller getController()
-    {
-        try
-        {
-            if (controller == null) controller = new Controller();
-        } catch (Exception e)
-        {
-            logger.error("Failed to instantiate controller", e);
-        }
-        return controller;
     }
 }

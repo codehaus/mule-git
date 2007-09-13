@@ -30,6 +30,9 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class YourKitProfilerAgent implements UMOAgent
 {
 
@@ -40,6 +43,10 @@ public class YourKitProfilerAgent implements UMOAgent
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
 
+    /**
+     * Logger used by this class
+     */
+    protected static final Log logger = LogFactory.getLog(YourKitProfilerAgent.class);
 
     /*
      * (non-Javadoc)
@@ -85,6 +92,21 @@ public class YourKitProfilerAgent implements UMOAgent
             // unregister existing YourKit MBean first if required
             unregisterMBeansIfNecessary();
             mBeanServer.registerMBean(new YourKitProfilerService(), objectName);
+        }
+        catch(NoClassDefFoundError ncde)
+        {
+            if("com/yourkit/api/Controller".equals(ncde.getMessage()))
+            {
+                logger.warn("Cannot find YourKit API. JMX Agent won't start.");
+            }
+            else
+            {
+                throw ncde;
+            }
+        }
+        catch(IndexOutOfBoundsException iobe)
+        {
+            logger.error("Cannot find MBeanServer.");
         }
         catch (Exception e)
         {
