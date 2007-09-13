@@ -28,6 +28,7 @@ public class SpringAutowireConfigBuilderTestCase extends AbstractConfigBuilderTe
         return "test-mule-autowire-app-context.xml,test-application-context.xml";
     }
 
+    // @Override
     public ConfigurationBuilder getBuilder()
     {
         return new SpringConfigurationBuilder();

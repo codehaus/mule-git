@@ -37,14 +37,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleServer implements Runnable
 {
-    public static final String VERSION_ARG_NAME = "version";
 
     public static final String CLI_OPTIONS[][] = {
             {"builder", "true", "Configuration Builder Type"},
             {"config", "true", "Configuration File"},
             {"main", "true", "Main Class"},
             {"mode", "true", "Run Mode"},
-            {VERSION_ARG_NAME, "false", "Show product and version information"},
+            {"version", "false", "Show product and version information"},
             {"props", "true", "Startup Properties"}
     };
 
@@ -110,7 +109,7 @@ public class MuleServer implements Runnable
         }
 
 //        print version string
-        if (options.containsKey(VERSION_ARG_NAME))
+        if (options.containsKey("version"))
         {
             System.out.println(CoreMessages.productInformation().toString());
             return;

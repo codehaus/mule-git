@@ -147,6 +147,11 @@
     <!-- ***************************************************
          BPMS Configuration
          *************************************************** -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <spring-property name="location">
+            <value>classpath:derby.properties</value>
+        </spring-property>
+    </bean>
     <!-- BPMS object for Mule's BPM Connector -->
     <bean id="jbpm" class="org.mule.providers.bpm.jbpm.Jbpm" destroy-method="destroy">
         <spring-property name="jbpmConfiguration">
@@ -209,7 +214,7 @@
     <!-- JBPM Datasource -->
     <bean id="jbpmDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <spring-property name="driverClassName"><value>org.apache.derby.jdbc.EmbeddedDriver</value></spring-property>
-        <spring-property name="url"><value>jdbc:derby:muleEmbeddedDB;create=true;sql.enforce_strict_size=true</value></spring-property>
+        <spring-property name="url"><value>${database.connection}</value></spring-property>
         <!--spring-property name="username"><value>sa</value></spring-property>
         <spring-property name="password"><value></value></spring-property-->
     </bean>
