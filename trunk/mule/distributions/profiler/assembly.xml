@@ -38,7 +38,6 @@ Assembly descriptor for the YourKit Profiler distribution.
   <dependencySets>
 
     <!-- Non-Mule libraries -->
-    <!-- TODO: uncomment when yjp-controller-api is added to repository
     <dependencySet>
       <outputDirectory>lib/opt</outputDirectory>
       <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
@@ -46,7 +45,6 @@ Assembly descriptor for the YourKit Profiler distribution.
         <include>com.yourkit:yjp-controller-api-redist</include>
       </includes>
     </dependencySet>
-       -->
   </dependencySets>
 
 </assembly>
