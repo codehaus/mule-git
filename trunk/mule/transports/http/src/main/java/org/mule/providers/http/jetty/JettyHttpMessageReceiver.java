@@ -130,6 +130,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
 
 
         context.addHandler(handler);
+        // setAttribute is already synchronized in Jetty
         context.setAttribute("messageReceiver", this);
 
     }
