@@ -12,7 +12,6 @@ package org.mule.routing.filters.xml;
 
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOMessage;
-import org.mule.util.StringMessageUtils;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -60,16 +59,35 @@ public class JXPathFilter implements UMOFilter
 
     public boolean accept(UMOMessage obj)
     {
-        return accept(obj.getPayload());
-    }
-
-    private boolean accept(Object obj)
-    {
-        if (obj == null)
+        if (obj == null || obj.getPayload() == null)
         {
             logger.warn("Applying JXPathFilter to null object.");
             return false;
         }
+        if (obj.getPayload() instanceof Document)
+        {
+            return accept((Document) obj.getPayload());
+        }
+        else
+        {
+            try
+            {
+                return accept(DocumentHelper.parseText(obj.getPayloadAsString()));
+            }
+            catch (DocumentException docExc)
+            {
+                logger.warn("JXPathFilter unable to parse XML document: " + docExc.getMessage(), docExc);
+            }
+            catch (Exception exc)
+            {
+                logger.warn("Error while converting payload to String: " + exc.getMessage(), exc);
+            }
+            return false;
+        }
+    }
+
+    private boolean accept(Document document)
+    {
         if (expression == null)
         {
             logger.warn("Expression for JXPathFilter is not set.");
@@ -96,48 +114,17 @@ public class JXPathFilter implements UMOFilter
         Object xpathResult = null;
         boolean accept = false;
 
-        // Payload is a DOM Document
-        if (obj instanceof Document)
+        if (namespaces == null)
         {
-            if (namespaces == null)
-            {
-                // no namespace defined, let's perform a direct evaluation
-                xpathResult = ((Document)obj).valueOf(expression);
-            }
-            else
-            {
-                // create an xpath expression with namespaces and evaluate it
-                XPath xpath = DocumentHelper.createXPath(expression);
-                xpath.setNamespaceURIs(namespaces);
-                xpathResult = xpath.valueOf(obj);
-            }
-
+            // no namespace defined, let's perform a direct evaluation
+            xpathResult = document.valueOf(expression);
         }
-        // Payload is a String of XML
-        else if (obj instanceof String)
-        {
-            try
-            {
-                return accept(DocumentHelper.parseText((String)obj));
-            }
-            catch (DocumentException e)
-            {
-                logger.warn("JXPathFilter unable to parse XML document: " + e.getMessage(), e);
-                if (logger.isDebugEnabled())
-                    logger.debug("XML = " + StringMessageUtils.truncate((String)obj, 200, false));
-                return false;
-            }
-        }
-        // Payload is a Java object
         else
         {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Passing object of type " + obj.getClass().getName() + " to JXPathContext");
-            }
-            JXPathContext context = JXPathContext.newContext(obj);
-            initialise(context);
-            xpathResult = context.getValue(expression);
+            // create an xpath expression with namespaces and evaluate it
+            XPath xpath = DocumentHelper.createXPath(expression);
+            xpath.setNamespaceURIs(namespaces);
+            xpathResult = xpath.valueOf(document);
         }
 
         if (logger.isDebugEnabled())
@@ -307,4 +294,5 @@ public class JXPathFilter implements UMOFilter
     {
         this.lenient = lenient;
     }
+
 }
