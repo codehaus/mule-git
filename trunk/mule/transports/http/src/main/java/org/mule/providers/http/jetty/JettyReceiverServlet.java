@@ -29,6 +29,7 @@ public class JettyReceiverServlet extends MuleReceiverServlet
 
     private UMOMessageReceiver receiver;
 
+    //@Override
     protected void doInit(ServletConfig servletConfig) throws ServletException
     {
         final ServletContext servletContext = servletConfig.getServletContext();
@@ -42,6 +43,7 @@ public class JettyReceiverServlet extends MuleReceiverServlet
         }
     }
 
+    //@Override
     protected UMOMessageReceiver getReceiverForURI(HttpServletRequest httpServletRequest)
         throws EndpointException
     {
