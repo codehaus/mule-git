@@ -19,7 +19,7 @@
     </description>
 
     <properties>
-        <muleVersion>1.4.2</muleVersion>
+        <muleVersion>1.4.3</muleVersion>
         <groovyMojoVersion>1.0-beta-1</groovyMojoVersion>
     </properties>
 
