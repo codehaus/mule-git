@@ -3,14 +3,16 @@
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the MuleSource MPL
+ * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
 
 package org.mule.management.agents;
 
+import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.YourKitProfilerService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
@@ -18,16 +20,15 @@ import org.mule.management.support.JmxSupportFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
+import org.mule.util.ClassUtils;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
-import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
@@ -35,10 +36,14 @@ import org.apache.commons.logging.LogFactory;
 
 public class YourKitProfilerAgent implements UMOAgent
 {
+    /**
+     * MBean name to register under.
+     */
+    public static final String PROFILER_OBJECT_NAME = "name=Profiler";
 
-    private String name = "YourKit Profiler Agent";
+    private String name = "Profiler Agent";
     private MBeanServer mBeanServer;
-    public static final String JMX_OBJECT_NAME = "yjpagent:name=YourKitProfiler";
+    private ObjectName profilerName;
 
     private JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     private JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
@@ -49,10 +54,10 @@ public class YourKitProfilerAgent implements UMOAgent
     protected static final Log logger = LogFactory.getLog(YourKitProfilerAgent.class);
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.umo.manager.UMOAgent#getName()
-     */
+    * (non-Javadoc)
+    *
+    * @see org.mule.umo.manager.UMOAgent#getName()
+    */
     public String getName()
     {
         return this.name;
@@ -75,7 +80,7 @@ public class YourKitProfilerAgent implements UMOAgent
      */
     public String getDescription()
     {
-        return "YourKit Profiler JMX Agent";
+        return "Profiler JMX Agent";
     }
 
     /*
@@ -85,51 +90,76 @@ public class YourKitProfilerAgent implements UMOAgent
      */
     public void initialise() throws InitialisationException
     {
+        if(!isApiAvailable())
+        {
+            logger.warn("Cannot find YourKit API. Profiler JMX Agent will be unregistered.");
+            unregisterMeQuietly();
+            return;
+        }
+
+        final List servers = MBeanServerFactory.findMBeanServer(null);
+        if(servers.isEmpty())
+        {
+            throw new InitialisationException(ManagementMessages.noMBeanServerAvailable(), this);
+        }
+
         try
         {
-            mBeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
-            final ObjectName objectName = jmxSupport.getObjectName(JMX_OBJECT_NAME);
+            mBeanServer = (MBeanServer) servers.get(0);
+
+            profilerName = jmxSupport.getObjectName(jmxSupport.getDomainName() + ":" + PROFILER_OBJECT_NAME);
+
             // unregister existing YourKit MBean first if required
             unregisterMBeansIfNecessary();
-            mBeanServer.registerMBean(new YourKitProfilerService(), objectName);
+            mBeanServer.registerMBean(new YourKitProfilerService(), profilerName);
         }
-        catch(NoClassDefFoundError ncde)
+        catch(Exception e)
         {
-            if("com/yourkit/api/Controller".equals(ncde.getMessage()))
-            {
-                logger.warn("Cannot find YourKit API. JMX Agent won't start.");
-            }
-            else
-            {
-                throw ncde;
-            }
-        }
-        catch(IndexOutOfBoundsException iobe)
-        {
-            logger.error("Cannot find MBeanServer.");
-        }
-        catch (Exception e)
-        {
-            throw new InitialisationException(CoreMessages.failedToStart("JMX Agent"), e, this);
+            throw new InitialisationException(CoreMessages.failedToStart(this.getName()), e, this);
         }
     }
 
     /**
-     * Unregister all YourKit MBeans if there are any left over the old deployment
+     * Unregister Profiler MBean if there are any left over the old deployment
      */
     protected void unregisterMBeansIfNecessary()
-        throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException
+            throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException
     {
-        if (mBeanServer.isRegistered(jmxSupport.getObjectName(JMX_OBJECT_NAME)))
+        if(mBeanServer == null || profilerName == null)
         {
-            // unregister all yjpMBeans
-            Set yjpMBeans = mBeanServer.queryMBeans(jmxSupport.getObjectName("yjpagent*:*"), null);
-            for (Iterator it = yjpMBeans.iterator(); it.hasNext();)
-            {
-                ObjectInstance objectInstance = (ObjectInstance)it.next();
-                ObjectName theName = objectInstance.getObjectName();
-                mBeanServer.unregisterMBean(theName);
-            }
+            return;
+        }
+        if(mBeanServer.isRegistered(profilerName))
+        {
+            mBeanServer.unregisterMBean(profilerName);
+        }
+    }
+
+    /**
+     * Quietly unregister ourselves.
+     */
+    protected void unregisterMeQuietly()
+    {
+        try
+        {
+            // remove the agent from the list, it's not functional
+            MuleManager.getInstance().unregisterAgent(this.getName());
+        }
+        catch (UMOException e)
+        {
+            // not interested, really
+        }
+    }
+
+    private boolean isApiAvailable()
+    {
+        try{
+            ClassUtils.getClass("com.yourkit.api.Controller");
+            return true;
+        }
+        catch(ClassNotFoundException e)
+        {
+            return false;
         }
     }
 
@@ -160,7 +190,15 @@ public class YourKitProfilerAgent implements UMOAgent
      */
     public void dispose()
     {
-        // nothing to do
+        try
+        {
+            unregisterMBeansIfNecessary();
+        }
+        catch (Exception e)
+        {
+            logger.error("Couldn't unregister MBean: "
+                         + (profilerName != null ? profilerName.getCanonicalName() : "null"), e);
+        }
     }
 
     /*

@@ -8,6 +8,8 @@ Assembly descriptor for the YourKit Profiler distribution.
     <format>tar.gz</format>
   </formats>
 
+  <includeBaseDirectory>false</includeBaseDirectory>
+
   <fileSets>
     <fileSet>
       <directory>src/main/resources</directory>
@@ -39,7 +41,7 @@ Assembly descriptor for the YourKit Profiler distribution.
 
     <!-- Non-Mule libraries -->
     <dependencySet>
-      <outputDirectory>lib/opt</outputDirectory>
+      <outputDirectory>lib/user</outputDirectory>
       <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
       <includes>
         <include>com.yourkit:yjp-controller-api-redist</include>
