@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>Mule</display-name>
+    <description>Mule Web App Samples</description>
+
+    <!-- Classpath within the servlet context.  Mule will attempt to load config 
+         files from here first, and then from the remaining classpath. -->
+    <context-param>
+        <param-name>org.mule.webapp.classpath</param-name>
+        <param-value>/WEB-INF/classes</param-value>
+    </context-param>
+
+    <context-param>
+        <!-- If using the SpringContextLoaderListener, use this param name -->
+        <!--<param-name>contextConfigLocation</param-name>-->
+        <param-name>org.mule.config</param-name>
+        <param-value>
+            jmx-config.xml,
+            echo-config.xml,
+            hello-http-config.xml,
+            servlet-config.xml,
+            stockquote-rest-config.xml,
+            loan-broker-sync-config.xml,
+            loan-broker-vm-endpoints-config.xml
+        </param-value>
+    </context-param>
+
+<!--    <listener>-->
+<!--        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
+<!--    </listener>-->
+
+    <!--
+    To use a MuleXml configuration file use this context listener
+    -->
+    <listener>
+        <listener-class>org.mule.config.builders.MuleXmlBuilderContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>muleRESTServlet</servlet-name>
+        <servlet-class>org.mule.providers.http.servlet.MuleRESTReceiverServlet</servlet-class>
+        <init-param>
+            <param-name>org.mule.servlet.timeout</param-name>
+            <param-value>4000</param-value>
+            <description>request timeout</description>
+        </init-param>
+        <!-- If a servlet is read-only it will not receive doPut or doDelete events -->
+        <init-param>
+            <param-name>readonly</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>muleServlet</servlet-name>
+        <servlet-class>org.mule.providers.http.servlet.MuleReceiverServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>muleRESTServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>muleServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
