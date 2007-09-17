@@ -11,9 +11,12 @@
 package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
+import org.mule.RegistryContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -37,6 +40,12 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
      * The message object wrapped by this adapter
      */
     protected Object message;
+
+    
+    protected DefaultMessageAdapter()
+    {
+        super();
+    }
 
     /**
      * Creates a default message adapter with properties and attachments
@@ -168,12 +177,25 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
                 return new String((byte[]) message);
             }
         }
-        else
+        else if (message instanceof String)
         {
-            return message.toString();
+            return (String) message;
+        }
+        else 
+        {
+            // TODO-DBD: We should consider having more default transformers 
+            // built into the class if transformer lookup takes too long
+            
+            return (String) getPayload(String.class);
         }
     }
 
+    public Object getPayload(Class outputType) throws TransformerException
+    {
+        message = super.getPayload(outputType);
+        return message;
+    }
+    
     /**
      * Converts the message implementation into a String representation
      *

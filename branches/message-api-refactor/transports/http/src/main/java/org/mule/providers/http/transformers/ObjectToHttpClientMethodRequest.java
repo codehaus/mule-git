@@ -23,16 +23,23 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Iterator;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.methods.TraceMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
 /**
@@ -121,7 +128,6 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             if (HttpConstants.METHOD_GET.equals(method))
             {
                 httpMethod = new GetMethod(uri.toString());
-                setHeaders(httpMethod, context);
                 String paramName = msg.getStringProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
                     HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY);
                 String query = uri.getQuery();
@@ -139,67 +145,55 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 httpMethod.setQueryString(query);
 
             }
-            else
+            else if (HttpConstants.METHOD_POST.equalsIgnoreCase(method))
             {
                 PostMethod postMethod = new PostMethod(uri.toString());
-                setHeaders(postMethod, context);
                 String paramName = msg.getStringProperty(HttpConnector.HTTP_POST_BODY_PARAM_PROPERTY, null);
                 
                 if (paramName == null)
                 {
                     // Call method to manage the parameter array
                     addParameters(uri.getQuery(), postMethod);
-                    // Dont set a POST payload if the body is a Null Payload.
-                    // This way client calls
-                    // can control if a POST body is posted explicitly
-                    if (!(context.getMessage().getPayload() instanceof NullPayload))
-                    {
-                        // See if we have a MIME type set
-                        String mimeType = msg.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, null);
-
-                        if (src instanceof String)
-                        {
-                            // Ensure that we strip the encoding information from the
-                            // encoding type
-                            if (mimeType != null)
-                            {
-                                int parameterIndex = mimeType.indexOf(";");
-                                if (parameterIndex > 0)
-                                {
-                                    mimeType = mimeType.substring(0, parameterIndex);
-                                }
-                            }
-                            if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
-
-                            postMethod.setRequestEntity(new StringRequestEntity(src.toString(), mimeType,
-                                encoding));
-                        }
-                        else if (src instanceof InputStream)
-                        {
-                            // TODO Danger here! We don't know if the content is
-                            // really text or not
-                            if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
-                            postMethod.setRequestEntity(new InputStreamRequestEntity((InputStream)src,
-                                mimeType));
-                        }
-                        else
-                        {
-                            // TODO Danger here! We don't know if the content is
-                            // really text or not
-                            if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
-                            byte[] buffer = (byte[])serializableToByteArray.doTransform(src, encoding);
-                            postMethod.setRequestEntity(new ByteArrayRequestEntity(buffer, mimeType));
-                        }
-                    }
+                    setupEntityMethod(src, encoding, context, msg, uri, postMethod);
                 }
                 else
                 {
                     postMethod.addParameter(paramName, src.toString());
                 }
-
+                
                 httpMethod = postMethod;
             }
+            else if (HttpConstants.METHOD_PUT.equalsIgnoreCase(method))
+            {
+                PutMethod putMethod = new PutMethod(uri.toString());
 
+                setupEntityMethod(src, encoding, context, msg, uri, putMethod);
+                
+                httpMethod = putMethod;
+            }
+            else if (HttpConstants.METHOD_DELETE.equalsIgnoreCase(method))
+            {
+                httpMethod = new DeleteMethod(uri.toString());
+            }
+            else if (HttpConstants.METHOD_HEAD.equalsIgnoreCase(method))
+            {
+                httpMethod = new HeadMethod(uri.toString());
+            }
+            else if (HttpConstants.METHOD_OPTIONS.equalsIgnoreCase(method))
+            {
+                httpMethod = new OptionsMethod(uri.toString());
+            }
+            else if (HttpConstants.METHOD_TRACE.equalsIgnoreCase(method))
+            {
+                httpMethod = new TraceMethod(uri.toString());
+            }
+            else
+            {
+                throw new TransformerException(HttpMessages.unsupportedMethod(method));
+            }
+
+            setHeaders(httpMethod, context);
+            
             // Allow the user to set HttpMethodParams as an object on the message
             HttpMethodParams params = (HttpMethodParams)msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
             if (params != null)
@@ -226,6 +220,59 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         {
             throw new TransformerException(this, e);
         }
+    }
+
+    private void setupEntityMethod(Object src,
+                                   String encoding,
+                                   UMOEventContext context,
+                                   UMOMessage msg,
+                                   URI uri,
+                                   EntityEnclosingMethod postMethod)
+        throws UnsupportedEncodingException, TransformerException
+    {
+        // Dont set a POST payload if the body is a Null Payload.
+        // This way client calls
+        // can control if a POST body is posted explicitly
+        if (!(context.getMessage().getPayload() instanceof NullPayload))
+        {
+            // See if we have a MIME type set
+            String mimeType = msg.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, null);
+
+            if (src instanceof String)
+            {
+                // Ensure that we strip the encoding information from the
+                // encoding type
+                if (mimeType != null)
+                {
+                    int parameterIndex = mimeType.indexOf(";");
+                    if (parameterIndex > 0)
+                    {
+                        mimeType = mimeType.substring(0, parameterIndex);
+                    }
+                }
+                if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
+
+                postMethod.setRequestEntity(new StringRequestEntity(src.toString(), mimeType,
+                    encoding));
+            }
+            else if (src instanceof InputStream)
+            {
+                // TODO Danger here! We don't know if the content is
+                // really text or not
+                if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
+                postMethod.setRequestEntity(new InputStreamRequestEntity((InputStream)src,
+                    mimeType));
+            }
+            else
+            {
+                // TODO Danger here! We don't know if the content is
+                // really text or not
+                if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
+                byte[] buffer = (byte[])serializableToByteArray.doTransform(src, encoding);
+                postMethod.setRequestEntity(new ByteArrayRequestEntity(buffer, mimeType));
+            }
+        }
+       
     }
 
     protected void setHeaders(HttpMethod httpMethod, UMOEventContext context)

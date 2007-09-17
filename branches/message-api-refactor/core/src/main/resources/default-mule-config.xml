@@ -155,4 +155,8 @@
 
     <!--<mule:properties-container includeSystemProperties="true" name="_muleSystemModelProperties"/>-->
 
+    <!-- Default Transformers -->
+    <bean name="_muleObjectToString" class="org.mule.transformers.simple.ObjectToString"/>
+    <bean name="_muleObjectToByteArray" class="org.mule.transformers.simple.ObjectToByteArray"/>
+    
 </beans>

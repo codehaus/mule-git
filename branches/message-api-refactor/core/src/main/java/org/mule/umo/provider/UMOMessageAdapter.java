@@ -11,6 +11,7 @@
 package org.mule.umo.provider;
 
 import org.mule.umo.UMOExceptionPayload;
+import org.mule.umo.transformer.TransformerException;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -98,6 +99,8 @@ public interface UMOMessageAdapter extends Serializable
      */
     Object getPayload();
 
+    Object getPayload(Class outputType) throws TransformerException;
+    
     /**
      * gets the unique identifier for the message. It's up to the implementation to
      * ensure a unique id

@@ -73,6 +73,16 @@ public class HttpMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 15, property);
     }
+
+    public static Message unsupportedMethod(String method)
+    {
+        return createMessage(BUNDLE_PATH, 16, method);
+    }
+
+    public static Message couldNotSendExpect100()
+    {
+        return createMessage(BUNDLE_PATH, 17);
+    }
 }
 
 

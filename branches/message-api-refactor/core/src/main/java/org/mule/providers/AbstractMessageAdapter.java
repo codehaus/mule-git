@@ -10,19 +10,6 @@
 
 package org.mule.providers;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.MuleManifest;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.util.FileUtils;
-import org.mule.util.MapUtils;
-import org.mule.util.StringUtils;
-import org.mule.util.UUID;
-
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
@@ -32,13 +19,28 @@ import java.util.Set;
 
 import javax.activation.DataHandler;
 
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mule.MuleRuntimeException;
+import org.mule.RegistryContext;
+import org.mule.config.MuleManifest;
+import org.mule.config.MuleProperties;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.ThreadSafeAccess;
+import org.mule.umo.UMOExceptionPayload;
+import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.FileUtils;
+import org.mule.util.MapUtils;
+import org.mule.util.StringUtils;
+import org.mule.util.UUID;
+
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractMessageAdapter</code> provides a base implementation for simple
@@ -440,8 +442,39 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         assertAccess(READ);
         return getPayloadAsString(getEncoding());
     }
+    
+    public byte[] getPayloadAsBytes() throws Exception
+    {
+        assertAccess(READ);
+        return (byte[]) getPayload(byte[].class);
+    }    
+    
+    public Object getPayload(Class outputType) throws TransformerException
+    {
+        if (outputType == null) {
+            return getPayload();
+        }
+        
+        Class inputCls = getPayload().getClass();
+        UMOTransformer transformer = 
+            RegistryContext.getRegistry().lookupTransformer(inputCls, outputType);
+        
+        if (transformer == null)
+        {
+            throw new TransformerException(CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
+        }
+        System.out.println("Transforming "  + getPayload()  +  " to " + outputType);
+        // Do we need to replace the message now?
+        try {
+            return transformer.transform(getPayload());
+        } catch (TransformerException e) {
+            System.out.println("failed");
+            throw e;
+        }
+    }
 
-    protected byte[] convertToBytes(Object object) throws TransformerException, UnsupportedEncodingException
+    protected byte[] convertToBytes(Object object) 
+        throws TransformerException, UnsupportedEncodingException
     {
         assertAccess(READ);
         if (object instanceof String)
@@ -467,9 +500,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         }
         else
         {
-            throw new TransformerException(
-                CoreMessages.transformOnObjectNotOfSpecifiedType(object.getClass().getName(), 
-                    "byte[] or " + Serializable.class.getName()));
+            return (byte[]) getPayload(byte[].class);
         }
     }
 

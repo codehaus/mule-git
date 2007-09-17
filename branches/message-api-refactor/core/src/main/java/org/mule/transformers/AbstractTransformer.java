@@ -10,6 +10,10 @@
 
 package org.mule.transformers;
 
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
@@ -20,16 +24,8 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
-import org.mule.impl.MuleMessage;
-import org.mule.impl.RequestContext;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-
-import java.util.List;
-import java.util.Iterator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractTransformer</code> is a base class for all transformers.

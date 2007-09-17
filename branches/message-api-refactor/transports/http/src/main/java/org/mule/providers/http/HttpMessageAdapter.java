@@ -10,39 +10,34 @@
 
 package org.mule.providers.http;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.umo.transformer.UMOTransformer;
-
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
+import org.mule.impl.ThreadSafeAccess;
+import org.mule.providers.DefaultMessageAdapter;
 
 /**
  * <code>HttpMessageAdapter</code> Wraps an incoming Http Request making the
  * payload and headers available as standard message adapter.
  */
-public class HttpMessageAdapter extends AbstractMessageAdapter
+public class HttpMessageAdapter extends DefaultMessageAdapter
 {
     /**
      * Serial version
      */
     private static final long serialVersionUID = -1544495479333000422L;
 
-    private static final UMOTransformer transformer = new SerializableToByteArray();
-
-    private final Object message;
     private boolean http11 = true;
 
-    public HttpMessageAdapter(Object message) throws MessageTypeNotSupportedException
+    public HttpMessageAdapter(Object message)
     {
         if (message instanceof Object[])
         {
+            // This case comes from the HttpMessageReceiver...
+            
             this.message = ((Object[])message)[0];
             if (((Object[])message).length > 1)
             {
@@ -60,21 +55,16 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
                 }
             }
         }
-        else if (message instanceof byte[])
-        {
-            this.message = message;
-            // If the adapter is being created as part of a response flow, just wrap
-            // the HttpResponse
-        }
         else if (message instanceof HttpResponse)
         {
             this.message = message;
             return;
         }
-        else
+        else 
         {
-            throw new MessageTypeNotSupportedException(message, getClass());
+            this.message = message;
         }
+        
         String temp = getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, null);
         if (HttpConstants.HTTP10.equalsIgnoreCase(temp))
         {
@@ -114,51 +104,6 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         return message;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.umo.providers.UMOMessageAdapter#getPayloadAsBytes()
-     */
-    public byte[] getPayloadAsBytes() throws Exception
-    {
-        if (message instanceof byte[])
-        {
-            return (byte[])message;
-        }
-        else if (message instanceof String)
-        {
-            return message.toString().getBytes();
-        }
-        else
-        {
-            return (byte[])transformer.transform(message);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.umo.providers.UMOMessageAdapter#getPayloadAsString(String
-     *      encoding)
-     */
-    public String getPayloadAsString(String encoding) throws Exception
-    {
-        if (message instanceof byte[])
-        {
-            if (encoding != null)
-            {
-                return new String((byte[])message, encoding);
-            }
-            else
-            {
-                return new String((byte[])message);
-            }
-        }
-        else
-        {
-            return message.toString();
-        }
-    }
 
     /*
      * (non-Javadoc)

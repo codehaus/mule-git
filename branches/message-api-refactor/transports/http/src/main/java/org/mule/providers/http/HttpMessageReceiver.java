@@ -10,6 +10,18 @@
 
 package org.mule.providers.http;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.resource.spi.work.Work;
+
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.cookie.MalformedCookieException;
 import org.mule.RegistryContext;
 import org.mule.transformers.TransformerUtils;
 import org.mule.impl.MuleEvent;
@@ -37,18 +49,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
-
-import java.io.IOException;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.resource.spi.work.Work;
-
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.cookie.MalformedCookieException;
+import org.mule.util.StringUtils;
 
 /**
  * <code>HttpMessageReceiver</code> is a simple http server that can be used to
@@ -174,17 +175,14 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 return doHead(requestLine);
             }
             else if (method.equals(HttpConstants.METHOD_GET)
-                    || method.equals(HttpConstants.METHOD_POST))
-            {
-                return doGetOrPost(request, requestLine);
-            }
-            else if (method.equals(HttpConstants.METHOD_OPTIONS)
+                    || method.equals(HttpConstants.METHOD_POST)
+                    || method.equals(HttpConstants.METHOD_OPTIONS)
                     || method.equals(HttpConstants.METHOD_PUT)
                     || method.equals(HttpConstants.METHOD_DELETE)
                     || method.equals(HttpConstants.METHOD_TRACE)
                     || method.equals(HttpConstants.METHOD_CONNECT))
             {
-                return doOtherValid(requestLine, method);
+                return doRequest(request, requestLine);
             }
             else
             {
@@ -202,22 +200,15 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected HttpResponse doGetOrPost(HttpRequest request, RequestLine requestLine) throws IOException, UMOException
+        protected HttpResponse doRequest(HttpRequest request, RequestLine requestLine) throws IOException, UMOException
         {
             Map headers = parseHeaders(request);
 
             // TODO Mule 2.0 generic way to set stream message adapter
-            UMOMessageAdapter adapter;
-            if (endpoint.isStreaming() && request.getBody() != null)
-            {
-                adapter = buildStreamingAdapter(request, headers);
-            }
-            else
-            {
-                adapter = buildStandardAdapter(request, headers);
-            }
+            UMOMessageAdapter adapter = buildStandardAdapter(request, headers);
+            
             UMOMessage message = new MuleMessage(adapter);
-
+            
             if (logger.isDebugEnabled())
             {
                 logger.debug(message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY));
@@ -284,20 +275,46 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected UMOMessageAdapter buildStreamingAdapter(HttpRequest request, Map headers) throws MessagingException
+        protected UMOMessageAdapter buildStandardAdapter(final HttpRequest request, 
+                                                         final Map headers) throws MessagingException, TransformerException, IOException
         {
-            UMOMessageAdapter adapter = connector.getStreamMessageAdapter(request.getBody(), conn.getOutputStream());
-            for (Iterator iterator = headers.entrySet().iterator(); iterator.hasNext();)
+            final RequestLine requestLine = request.getRequestLine();
+            
+            InputStream is = request.getBody();
+            Object body = null;
+            if (is != null) 
             {
-                Map.Entry entry = (Map.Entry)iterator.next();
-                adapter.setProperty((String)entry.getKey(), entry.getValue());
+                is = new DelegatingInputStream(is) 
+                {
+                    public void close() throws IOException
+                    {
+                        super.close();
+                        
+                        try
+                        {
+                            sendExpect100(headers, requestLine);
+                        }
+                        catch (TransformerException e)
+                        {
+                            IOException e2 = new IOException(HttpMessages.couldNotSendExpect100().toString());
+                            e2.initCause(e);
+                            throw e2;
+                        }
+                    }
+                };
+                body = is;
             }
-            return adapter;
+            else
+            {
+                body = StringUtils.EMPTY;
+            }
+            return connector.getMessageAdapter(new Object[]{body, headers});
         }
 
-        protected UMOMessageAdapter buildStandardAdapter(HttpRequest request, Map headers) throws MessagingException, TransformerException, IOException
+        private void sendExpect100(Map headers, RequestLine requestLine)
+            throws TransformerException, IOException
         {
-            RequestLine requestLine = request.getRequestLine();
+            System.out.println("writing expect 100");
             // respond with status code 100, for Expect handshake
             // according to rfc 2616 and http 1.1
             // the processing will continue and the request will be fully
@@ -318,13 +335,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     conn.writeResponse(transformResponse(expected));
                 }
             }
-
-            Object body = request.getBodyBytes();
-            if (body == null)
-            {
-                body = requestLine.getUri();
-            }
-            return connector.getMessageAdapter(new Object[]{body, headers});
         }
 
         protected HttpResponse buildFailureResponse(RequestLine requestLine, UMOMessage message) throws TransformerException
@@ -473,7 +483,14 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
 
             // try again
-            receiver = connector.lookupReceiver(requestUri.toString());
+            String uriStr = requestUri.toString();
+            receiver = connector.lookupReceiver(uriStr);
+            
+            if (receiver == null) 
+            {
+				receiver = findReceiverByStem(connector.getReceivers(), uriStr);
+			}
+           
             if (receiver == null && logger.isWarnEnabled())
             {
                 logger.warn("No receiver found with secondary lookup on connector: " + connector.getName()
@@ -486,10 +503,27 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         return receiver;
     }
 
+	public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
+    {
+        int match = 0;
+        UMOMessageReceiver receiver = null;
+        for (Iterator itr = receivers.entrySet().iterator(); itr.hasNext();)
+        {
+            Map.Entry e = (Map.Entry)itr.next();
+            String key = (String)e.getKey();
+            UMOMessageReceiver candidate = (UMOMessageReceiver)e.getValue();
+            if (uriStr.startsWith(key) && match < key.length())
+            {
+                match = key.length();
+                receiver = candidate;
+            }
+        }
+        return receiver;
+    }
+	
     protected HttpResponse transformResponse(Object response) throws TransformerException
     {
         return (HttpResponse) TransformerUtils.applyAllTransformersToObject(
                 connector.getDefaultResponseTransformers(), response);
     }
-
 }
