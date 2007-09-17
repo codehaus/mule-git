@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
-        <version>1.4.3-SNAPSHOT</version>
+        <version>1.4.4-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.distributions</groupId>
     <artifactId>mule-distributions</artifactId>
@@ -45,6 +45,7 @@
         <module>embedded</module>
         <!-- <module>extras</module> -->
         <module>jca</module>
+        <module>profiler</module>
         <module>server</module>
     </modules>
 </project>

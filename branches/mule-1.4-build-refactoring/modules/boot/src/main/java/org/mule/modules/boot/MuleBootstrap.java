@@ -17,8 +17,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
@@ -27,13 +29,11 @@ import java.util.List;
  */
 public class MuleBootstrap
 {
+    private static final String MULE_MODULE_BOOT_POM_FILE_PATH = "META-INF/maven/org.mule.modules/mule-module-boot/pom.properties";
 
-    /**
-     * Do not instantiate MuleBootstrap.
-     */
     private MuleBootstrap()
     {
-        super();
+        // utility class only
     }
 
     /**
@@ -68,7 +68,7 @@ public class MuleBootstrap
             muleBase = new File(muleBaseVar).getCanonicalFile();
         }
         else
-        {                                                                          
+        {
             muleBase = muleHome;
         }
 
@@ -77,15 +77,14 @@ public class MuleBootstrap
         DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
         addLibrariesToClasspath(classPath.getURLs());
 
-        // If the license ack file isn't on the classpath, we need to
-        // display the EULA and make sure the user accepts it before continuing
-        if (ReflectionHelper.getResource("META-INF/mule/license.props", MuleBootstrap.class) == null)
+        setSystemMuleVersion();
+
+        if (!LicenseHandler.isLicenseAccepted())
         {
-            LicenseHandler licenseHandler = new LicenseHandler(muleHome, muleBase);
             // If the user didn't accept the license, then we have to exit
             // Exiting this way insures that the wrapper won't try again
             // (by default it'll try to start 3 times)
-            if (!licenseHandler.getAcceptance())
+            if (!LicenseHandler.getAcceptance())
             {
                 ReflectionHelper.wrapperStop(-1);
             }
@@ -131,6 +130,23 @@ public class MuleBootstrap
         ReflectionHelper.wrapperMain(appArgs);
     }
 
+    private static void setSystemMuleVersion()
+    {
+        try
+        {
+            URL mavenPropertiesUrl = ReflectionHelper.getResource(MULE_MODULE_BOOT_POM_FILE_PATH, MuleBootstrap.class);
+            Properties mavenProperties = new Properties();
+            mavenProperties.load(mavenPropertiesUrl.openStream());
+            
+            System.setProperty("mule.version", mavenProperties.getProperty("version"));
+            System.setProperty("mule.reference.version", mavenProperties.getProperty("version") + '-' + (new Date()).getTime());
+        }
+        catch (Exception ignore)
+        {
+            // ignore
+        }
+    }
+
     private static void addLibrariesToClasspath(List urls)
         throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
@@ -145,7 +161,7 @@ public class MuleBootstrap
 
         // system classloader is in this case the one that launched the application,
         // which is usually something like a JDK-vendor proprietary AppClassLoader
-        URLClassLoader sysCl = (URLClassLoader)sys;
+        URLClassLoader sysCl = (URLClassLoader) sys;
 
         /*
          * IMPORTANT NOTE: The more 'natural' way would be to create a custom
@@ -170,7 +186,7 @@ public class MuleBootstrap
         methodAddUrl.setAccessible(true);
         for (Iterator it = urls.iterator(); it.hasNext();)
         {
-            URL url = (URL)it.next();
+            URL url = (URL) it.next();
             // System.out.println("Adding: " + url.toExternalForm());
             methodAddUrl.invoke(sysCl, new Object[]{url});
         }

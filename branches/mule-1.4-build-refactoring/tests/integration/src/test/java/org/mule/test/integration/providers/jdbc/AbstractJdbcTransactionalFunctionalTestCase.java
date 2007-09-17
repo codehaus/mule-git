@@ -15,6 +15,8 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.internal.notifications.TransactionNotification;
+import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.tck.functional.EventCallback;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
@@ -23,19 +25,22 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.UMOTransactionFactory;
 import org.mule.umo.endpoint.UMOEndpoint;
-
-import java.util.HashMap;
+import org.mule.umo.manager.UMOServerNotification;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class AbstractJdbcTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase
+import java.util.HashMap;
+
+public abstract class AbstractJdbcTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase  implements TransactionNotificationListener
 {
 
     private UMOTransaction currentTx;
+    protected boolean rollbacked = false;
 
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
+        MuleManager.getInstance().registerListener(this);
         currentTx = null;
     }
 
@@ -80,8 +85,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
 
         Thread.sleep(1000);
 
-        assertNotNull(currentTx);
-        assertTrue(currentTx.isRolledBack());
+        assertTrue(rollbacked);
 
         Object[] obj = execSqlQuery("SELECT COUNT(*) FROM TEST WHERE TYPE = 2");
         assertNotNull(obj);
@@ -121,6 +125,14 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         descriptor.setProperties(props);
         UMOComponent component = model.registerComponent(descriptor);
         return component;
+    }
+    
+    public void onNotification(UMOServerNotification notification)
+    {
+        if (notification.getAction() == TransactionNotification.TRANSACTION_ROLLEDBACK)
+        {
+            this.rollbacked = true;
+        }   
     }
 
     abstract protected UMOTransactionFactory getTransactionFactory();

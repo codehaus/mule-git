@@ -21,10 +21,10 @@ public class GroovyScriptConfigurationBuilderTestCase extends AbstractScriptConf
         return "mule-config.groovy";
     }
 
+    // @Override
     public ConfigurationBuilder getBuilder()
     {
         return new ScriptConfigurationBuilder("groovy");
-
     }
 
 }

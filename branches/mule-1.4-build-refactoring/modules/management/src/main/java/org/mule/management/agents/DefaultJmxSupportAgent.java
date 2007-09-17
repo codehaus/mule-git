@@ -35,6 +35,7 @@ public class DefaultJmxSupportAgent implements UMOAgent
     private String name = "Default Jmx";
     private boolean loadJdmkAgent = false;
     private boolean loadMx4jAgent = false;
+    private boolean loadProfilerAgent = false;
     private String port;
     private String host;
 
@@ -163,6 +164,15 @@ public class DefaultJmxSupportAgent implements UMOAgent
                 }
             }
 
+            if (loadProfilerAgent)
+            {
+                agent = createProfilerAgent();
+                if (!isAgentRegistered(agent))
+                {
+                    MuleManager.getInstance().registerAgent(agent);
+                }
+            }
+
             // remove this agent once it has registered the other agents
             MuleManager.getInstance().unregisterAgent(name);
         }
@@ -238,6 +248,11 @@ public class DefaultJmxSupportAgent implements UMOAgent
         return new JdmkAgent();
     }
 
+    protected YourKitProfilerAgent createProfilerAgent()
+    {
+        return new YourKitProfilerAgent();
+    }
+
     protected boolean isAgentRegistered(UMOAgent agent)
     {
         return MuleManager.getInstance().lookupAgent(agent.getName()) != null;
@@ -283,6 +298,23 @@ public class DefaultJmxSupportAgent implements UMOAgent
         this.loadMx4jAgent = loadMx4jAgent;
     }
 
+    /**
+     * Getter for property 'loadProfilerAgent'.
+     * @return Value for property 'loadProfilerAgent'.
+     */
+    public boolean isLoadProfilerAgent()
+    {
+        return loadProfilerAgent;
+    }
+
+    /**
+     * Setter for property 'loadProfilerAgent'.
+     * @param loadProfilerAgent Value to set for property 'loadProfilerAgent'.
+     */
+    public void setLoadProfilerAgent(boolean loadProfilerAgent)
+    {
+        this.loadProfilerAgent = loadProfilerAgent;
+    }
 
     /**
      * Getter for property 'port'.

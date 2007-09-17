@@ -9,25 +9,25 @@
  */
 package org.mule.providers;
 
+import org.mule.impl.MuleMessage;
+import org.mule.transaction.TransactionCallback;
+import org.mule.transaction.TransactionCoordination;
+import org.mule.transaction.TransactionTemplate;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.transaction.TransactionTemplate;
-import org.mule.transaction.TransactionCallback;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.impl.MuleMessage;
+import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.OutputStream;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.resource.spi.work.Work;
 
 /**
- * A base Worker used by Transport {@link UMOMessageReciever} implementations.
+ * A base Worker used by Transport {@link org.mule.umo.provider.UMOMessageReceiver} implementations.
  */
 public abstract class AbstractReceiverWorker implements Work
 {
@@ -104,7 +104,7 @@ public abstract class AbstractReceiverWorker implements Work
 
                         MuleMessage muleMessage = new MuleMessage(adapter); 
                         preRouteMuleMessage(muleMessage);
-                        UMOMessage result = receiver.routeMessage(muleMessage, tx,  endpoint.isSynchronous(), out);
+                        UMOMessage result = receiver.routeMessage(muleMessage, tx,  tx != null || endpoint.isSynchronous(), out);
                         if(result!=null)
                         {
                             o = postProcessMessage(result);

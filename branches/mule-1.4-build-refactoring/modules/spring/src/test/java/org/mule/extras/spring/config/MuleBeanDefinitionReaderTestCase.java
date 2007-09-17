@@ -39,6 +39,7 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         return "test-xml-mule-config-split-with-beans.xml,test-xml-mule-config.xml,test-application-context.xml,test-xml-mule-config-split.xml,test-mule-to-spring-with-xslt.xml";
     }
 
+    // @Override
     public ConfigurationBuilder getBuilder()
     {
         return new SpringConfigurationBuilder();
