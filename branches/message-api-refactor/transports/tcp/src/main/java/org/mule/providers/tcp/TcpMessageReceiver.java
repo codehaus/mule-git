@@ -12,8 +12,6 @@ package org.mule.providers.tcp;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
-import org.mule.impl.model.streaming.CloseCountDownInputStream;
-import org.mule.impl.model.streaming.CloseCountDownOutputStream;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.AbstractReceiverResourceWorker;
 import org.mule.providers.ConnectException;
@@ -49,7 +47,6 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -215,14 +212,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
     protected Work createWork(Socket socket) throws IOException
     {
-        if (endpoint.isStreaming())
-        {
-            return new TcpStreamWorker(socket, this);
-        }
-        else
-        {
+//        if (endpoint.isStreaming())
+//        {
+//            return new TcpStreamWorker(socket, this);
+//        }
+//        else
+//        {
             return new TcpWorker(socket, this);
-        }
+//        }
     }
 
     protected class TcpWorker extends AbstractReceiverResourceWorker implements Disposable
@@ -354,41 +351,41 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
     }
 
-    protected class TcpStreamWorker extends TcpWorker
-    {
-
-        private CountDownLatch latch;
-
-        public TcpStreamWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
-        {
-            super(socket, receiver);
-        }
-
-        //Override
-        protected Object getNextMessage(Object resource) throws Exception
-        {
-            //all we can do for streaming is connect the streams
-            if (endpoint.isSynchronous())
-            {
-                latch = new CountDownLatch(2);
-                dataOut = new CloseCountDownOutputStream(dataOut, latch);
-            }
-            else
-            {
-                latch = new CountDownLatch(2);
-            }
-            dataIn = new CloseCountDownInputStream(dataIn, latch);
-
-            UMOMessageAdapter adapter = connector.getMessageAdapter(dataIn, dataOut);
-            return adapter;
-
-        }
-
-        //@Override
-        protected void handleResults(List messages) throws Exception
-        {
-            latch.await();
-        }
-    }
+//    protected class TcpStreamWorker extends TcpWorker
+//    {
+//
+//        private CountDownLatch latch;
+//
+//        public TcpStreamWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
+//        {
+//            super(socket, receiver);
+//        }
+//
+//        //Override
+//        protected Object getNextMessage(Object resource) throws Exception
+//        {
+//            //all we can do for streaming is connect the streams
+//            if (endpoint.isSynchronous())
+//            {
+//                latch = new CountDownLatch(2);
+//                dataOut = new CloseCountDownOutputStream(dataOut, latch);
+//            }
+//            else
+//            {
+//                latch = new CountDownLatch(2);
+//            }
+//            dataIn = new CloseCountDownInputStream(dataIn, latch);
+//
+//            UMOMessageAdapter adapter = connector.getMessageAdapter(dataIn, dataOut);
+//            return adapter;
+//
+//        }
+//
+//        //@Override
+//        protected void handleResults(List messages) throws Exception
+//        {
+//            latch.await();
+//        }
+//    }
 
 }

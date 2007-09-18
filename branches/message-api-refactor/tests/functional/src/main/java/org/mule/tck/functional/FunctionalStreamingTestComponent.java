@@ -10,7 +10,6 @@
 
 package org.mule.tck.functional;
 
-import org.mule.impl.model.streaming.StreamingService;
 import org.mule.umo.UMOEventContext;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
@@ -19,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * @see org.mule.tck.functional.EventCallback
  */
 
-public class FunctionalStreamingTestComponent implements StreamingService
+public class FunctionalStreamingTestComponent 
 {
     protected transient Log logger = LogFactory.getLog(getClass());
 

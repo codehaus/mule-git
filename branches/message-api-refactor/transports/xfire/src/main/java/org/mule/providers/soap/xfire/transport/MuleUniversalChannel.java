@@ -209,6 +209,8 @@ public class MuleUniversalChannel extends AbstractChannel
         {
             public void write(UMOEvent event, OutputStream out) throws IOException
             {
+                writeHeaders(message, event);
+                
                 try
                 {
                     Attachments atts = message.getAttachments();
@@ -239,30 +241,6 @@ public class MuleUniversalChannel extends AbstractChannel
                 }
             }
 
-            public Map getHeaders(UMOEvent event)
-            {
-                Map headers = new HashMap();
-                headers.put(HttpConstants.HEADER_CONTENT_TYPE, getSoapMimeType(message));
-                headers.put(SoapConstants.SOAP_ACTION, message.getProperty(SoapConstants.SOAP_ACTION));
-                UMOMessage msg = event.getMessage();
-                for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
-                {
-                    String headerName = (String)iterator.next();
-                    Object headerValue = msg.getStringProperty(headerName, null);
-
-                    // let us filter only MULE properties except MULE_USER,
-                    // Content-Type and Content-Lenght; all other properties are
-                    // allowed through including custom headers
-                    if ((!headerName.startsWith(MuleProperties.PROPERTY_PREFIX) || (MuleProperties.MULE_USER_PROPERTY.compareTo(headerName) == 0))
-                        && (!HttpConstants.HEADER_CONTENT_TYPE.equalsIgnoreCase(headerName))
-                        && (!HttpConstants.HEADER_CONTENT_LENGTH.equalsIgnoreCase(headerName)))
-                    {
-                        headers.put(headerName, headerValue);
-                    }
-                }
-
-                return headers;
-            }
         };
 
         // We can create a generic StreamMessageAdapter here as the underlying
@@ -311,6 +289,30 @@ public class MuleUniversalChannel extends AbstractChannel
 
     }
 
+    public void writeHeaders(OutMessage message, UMOEvent event)
+    {
+        UMOMessage umoMsg = event.getMessage();
+        umoMsg.setProperty(HttpConstants.HEADER_CONTENT_TYPE, getSoapMimeType(message));
+        umoMsg.setProperty(SoapConstants.SOAP_ACTION, message.getProperty(SoapConstants.SOAP_ACTION));
+        
+        UMOMessage msg = event.getMessage();
+        for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
+        {
+            String headerName = (String)iterator.next();
+            Object headerValue = msg.getStringProperty(headerName, null);
+
+            // let us filter only MULE properties except MULE_USER,
+            // Content-Type and Content-Lenght; all other properties are
+            // allowed through including custom headers
+            if ((!headerName.startsWith(MuleProperties.PROPERTY_PREFIX) || (MuleProperties.MULE_USER_PROPERTY.compareTo(headerName) == 0))
+                && (!HttpConstants.HEADER_CONTENT_TYPE.equalsIgnoreCase(headerName))
+                && (!HttpConstants.HEADER_CONTENT_LENGTH.equalsIgnoreCase(headerName)))
+            {
+                umoMsg.setProperty(headerName, headerValue);
+            }
+        }
+    }
+    
     public void close()
     {
         // nothing to do here

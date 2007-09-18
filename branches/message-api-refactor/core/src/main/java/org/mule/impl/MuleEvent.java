@@ -351,11 +351,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             }
             
             // Do we need to replace the message now?
-            try {
-                return transformer.transform(transformedMessage);
-            } catch (TransformerException e) {
-                throw e;
-            }
+            transformedMessage =  transformer.transform(transformedMessage);
         }
         return transformedMessage;
     }

@@ -18,7 +18,6 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatching;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.io.Serializable;
 import java.util.List;
