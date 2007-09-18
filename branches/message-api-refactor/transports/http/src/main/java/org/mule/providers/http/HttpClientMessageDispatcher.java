@@ -17,7 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.Cookie;
@@ -47,13 +46,12 @@ import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
-import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
+import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.provider.UMOStreamMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringUtils;
@@ -299,7 +297,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         return httpMethod;
     }
 
-    private HttpMethod createEntityMethod(UMOEvent event, Object body, EntityEnclosingMethod postMethod)
+    private HttpMethod createEntityMethod(UMOEvent event, 
+                                          Object body, 
+                                          EntityEnclosingMethod postMethod)
         throws TransformerException
     {
         HttpMethod httpMethod;
@@ -308,25 +308,31 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             ObjectToHttpClientMethodRequest trans = new ObjectToHttpClientMethodRequest();
             httpMethod = (HttpMethod)trans.transform(body.toString());
         }
-        else if (body instanceof UMOStreamMessageAdapter)
-        {
-            UMOStreamMessageAdapter sma = (UMOStreamMessageAdapter)body;
-            Map headers = sma.getOutputHandler().getHeaders(event);
-            for (Iterator iterator = headers.entrySet().iterator(); iterator.hasNext();)
-            {
-                Map.Entry entry = (Map.Entry)iterator.next();
-                postMethod.addRequestHeader((String)entry.getKey(), (String)entry.getValue());
-            }
-            postMethod.setRequestEntity(new StreamPayloadRequestEntity((StreamMessageAdapter)body, event));
-            postMethod.setContentChunked(true);
-            httpMethod = postMethod;
-        }
-        else
+        else if (body instanceof byte[])
         {
             byte[] buffer = event.getTransformedMessageAsBytes();
             postMethod.setRequestEntity(new ByteArrayRequestEntity(buffer, event.getEncoding()));
             httpMethod = postMethod;
         }
+        else 
+        {
+            if (!(body instanceof OutputHandler)) 
+            {
+                body = event.getTransformedMessage(OutputHandler.class);
+            }
+            
+            OutputHandler outputHandler = (OutputHandler)body;
+            Map headers = outputHandler.getHeaders(event);
+            for (Iterator iterator = headers.entrySet().iterator(); iterator.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry)iterator.next();
+                postMethod.addRequestHeader((String)entry.getKey(), (String)entry.getValue());
+            }
+            postMethod.setRequestEntity(new StreamPayloadRequestEntity(outputHandler, event));
+            postMethod.setContentChunked(true);
+            httpMethod = postMethod;
+        }
+        
         return httpMethod;
     }
 
@@ -436,12 +442,12 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
     private class StreamPayloadRequestEntity implements RequestEntity
     {
-        private UMOStreamMessageAdapter messageAdapter;
+        private OutputHandler outputHandler;
         private UMOEvent event;
 
-        public StreamPayloadRequestEntity(UMOStreamMessageAdapter messageAdapter, UMOEvent event)
+        public StreamPayloadRequestEntity(OutputHandler outputHandler, UMOEvent event)
         {
-            this.messageAdapter = messageAdapter;
+            this.outputHandler = outputHandler;
             this.event = event;
         }
 
@@ -452,7 +458,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
         public void writeRequest(OutputStream outputStream) throws IOException
         {
-            messageAdapter.getOutputHandler().write(event, outputStream);
+            outputHandler.write(event, outputStream);
         }
 
         public long getContentLength()

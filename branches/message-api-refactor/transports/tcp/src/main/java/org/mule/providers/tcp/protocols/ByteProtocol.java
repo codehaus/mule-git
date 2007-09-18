@@ -10,12 +10,6 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.providers.tcp.TcpProtocol;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.provider.UMOStreamMessageAdapter;
-import org.mule.util.ClassUtils;
-import org.mule.util.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +20,10 @@ import java.net.SocketTimeoutException;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mule.providers.tcp.TcpProtocol;
+import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
 
 /**
  * This Abstract class has been introduced so as to have the byte protocols (i.e. the
@@ -57,11 +55,11 @@ public abstract class ByteProtocol implements TcpProtocol
 
     public void write(OutputStream os, Object data) throws IOException
     {
-        if (data instanceof UMOStreamMessageAdapter)
+        if (data instanceof InputStream)
         {
             if (streamOk)
             {
-                IOUtils.copy(((UMOStreamMessageAdapter) data).getInputStream(), os);
+                IOUtils.copy((InputStream) data, os);
                 os.flush();
                 os.close();
             }

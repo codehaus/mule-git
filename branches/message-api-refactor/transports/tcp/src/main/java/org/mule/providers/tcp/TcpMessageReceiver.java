@@ -379,7 +379,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
             dataIn = new CloseCountDownInputStream(dataIn, latch);
 
-            UMOMessageAdapter adapter = connector.getStreamMessageAdapter(dataIn, dataOut);
+            UMOMessageAdapter adapter = connector.getMessageAdapter(dataIn, dataOut);
             return adapter;
 
         }

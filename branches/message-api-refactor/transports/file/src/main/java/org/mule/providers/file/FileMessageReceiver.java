@@ -166,24 +166,18 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         File destinationFile = null;
         String sourceFileOriginalName = sourceFile.getName();
         //Create a message adapter here to pass to the fileName parser
-        UMOMessageAdapter msgAdapter;
-        if (endpoint.isStreaming())
+        UMOMessageAdapter msgAdapter = null;
+        try 
         {
-            try
-            {
-                msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(sourceFile), null);
-            }
-            catch (FileNotFoundException e)
-            {
-                //we can ignore since we did manage to acquire a lock, but just in case
-                logger.error("File being read disappeared!", e);
-                return;
-            }
+            connector.getMessageAdapter(new FileInputStream(sourceFile));
         }
-        else
+        catch (FileNotFoundException e)
         {
-            msgAdapter = connector.getMessageAdapter(sourceFile);
+            //we can ignore since we did manage to acquire a lock, but just in case
+            logger.error("File being read disappeared!", e);
+            return;
         }
+        
         msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
 
         // set up destination file
@@ -227,14 +221,8 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 }
 
                 // create new MessageAdapter for destinationFile
-                if (endpoint.isStreaming())
-                {
-                    msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(destinationFile), null);
-                }
-                else
-                {
-                    msgAdapter = connector.getMessageAdapter(destinationFile);
-                }
+                msgAdapter = connector.getMessageAdapter(new FileInputStream(destinationFile));
+                
                 msgAdapter.setProperty(FileConnector.PROPERTY_FILENAME, destinationFile.getName());
                 msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
             }
