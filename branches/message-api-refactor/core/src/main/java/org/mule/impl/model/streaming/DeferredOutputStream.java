@@ -10,7 +10,6 @@
 package org.mule.impl.model.streaming;
 
 import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.streaming.StreamMessageAdapter;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
@@ -20,7 +19,6 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -90,24 +88,25 @@ public class DeferredOutputStream extends OutputStream
 
     protected OutputStream getOutputStream() throws IOException
     {
-        StreamMessageAdapter adapter = (StreamMessageAdapter) event.getMessage().getAdapter();
-        OutputStream temp = getOutputStreamFromRouter();
-        if (temp == null)
-        {
-            temp = adapter.getOutputStream();
-        }
-        if (temp == null)
-        {
-            throw new IOException("No output stream was found for the current event: " + event);
-        }
-        else if (getBuffer() > 0)
-        {
-            return new BufferedOutputStream(temp, getBuffer());
-        }
-        else
-        {
-            return temp;
-        }
+//        StreamMessageAdapter adapter = (StreamMessageAdapter) event.getMessage().getAdapter();
+//        OutputStream temp = getOutputStreamFromRouter();
+//        if (temp == null)
+//        {
+//            temp = adapter.getOutputStream();
+//        }
+//        if (temp == null)
+//        {
+//            throw new IOException("No output stream was found for the current event: " + event);
+//        }
+//        else if (getBuffer() > 0)
+//        {
+//            return new BufferedOutputStream(temp, getBuffer());
+//        }
+//        else
+//        {
+//            return temp;
+//        }
+        return null;
     }
 
 

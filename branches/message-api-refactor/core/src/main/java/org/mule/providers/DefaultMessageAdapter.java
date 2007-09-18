@@ -11,12 +11,10 @@
 package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
-import org.mule.RegistryContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Iterator;
 import java.util.Map;

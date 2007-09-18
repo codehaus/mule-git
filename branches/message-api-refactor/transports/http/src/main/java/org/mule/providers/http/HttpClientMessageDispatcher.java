@@ -322,12 +322,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             }
             
             OutputHandler outputHandler = (OutputHandler)body;
-            Map headers = outputHandler.getHeaders(event);
-            for (Iterator iterator = headers.entrySet().iterator(); iterator.hasNext();)
-            {
-                Map.Entry entry = (Map.Entry)iterator.next();
-                postMethod.addRequestHeader((String)entry.getKey(), (String)entry.getValue());
-            }
             postMethod.setRequestEntity(new StreamPayloadRequestEntity(outputHandler, event));
             postMethod.setContentChunked(true);
             httpMethod = postMethod;
