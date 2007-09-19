@@ -634,6 +634,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <!-- 
+                     see http://jira.codehaus.org/browse/MJAVADOC-145 which is
+                     fixed with v2.4 of the javadoc plugin which is not yet released.
+                -->
+                <version>2.2</version>
                 <configuration>
                     <minmemory>128m</minmemory>
                     <maxmemory>512</maxmemory>
