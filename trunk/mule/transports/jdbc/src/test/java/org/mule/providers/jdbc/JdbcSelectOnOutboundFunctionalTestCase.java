@@ -74,7 +74,7 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 
     protected void suitePreSetUp() throws Exception
     {
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit("src/test/resources/derby.properties", "database.name");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit("src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties", "database.name");
         super.suitePreSetUp();
     }
     

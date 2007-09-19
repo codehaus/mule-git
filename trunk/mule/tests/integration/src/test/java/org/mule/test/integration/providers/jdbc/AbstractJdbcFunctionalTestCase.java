@@ -26,6 +26,7 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.MuleDerbyTestUtils;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,8 +67,9 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
     {
         if (!derbySetupDone)
         {
-            String dbName = MuleDerbyTestUtils.loadDatabaseName("src/test/resources/derby.properties", "database.name");
-            MuleDerbyTestUtils.defaultDerbyCleanAndInit("src/test/resources/derby.properties", "database.name");
+            String propertiesFileLocation = "src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties";
+            String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesFileLocation, "database.name");
+            MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesFileLocation, "database.name");
             EMBEDDED_CONNECTION_STRING = "jdbc:derby:" + dbName;
             CLIENT_CONNECTION_STRING = "jdbc:derby://localhost:1527/"+ dbName +";create=true";
             derbySetupDone = true;

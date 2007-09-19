@@ -44,7 +44,7 @@ public class MuleDerbyTestUtils
     
     public static void cleanupDerbyDb(String derbySystemHome, String databaseName) throws IOException, SQLException
     {
-        FileUtils.deleteTree(new File(derbySystemHome + "/" + databaseName));
+        FileUtils.deleteTree(new File(derbySystemHome + File.separator + databaseName));
     }
     
     public static void createDataBase(String databaseName) throws SQLException
