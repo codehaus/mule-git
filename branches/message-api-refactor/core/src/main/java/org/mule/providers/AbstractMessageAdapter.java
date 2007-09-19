@@ -465,12 +465,8 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         }
         System.out.println("Transforming "  + getPayload()  +  " to " + outputType);
         // Do we need to replace the message now?
-        try {
-            return transformer.transform(getPayload());
-        } catch (TransformerException e) {
-            System.out.println("failed");
-            throw e;
-        }
+        
+        return transformer.transform(getPayload());
     }
 
     protected byte[] convertToBytes(Object object) 

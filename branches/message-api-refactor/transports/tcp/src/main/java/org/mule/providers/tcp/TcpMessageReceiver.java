@@ -47,7 +47,9 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
@@ -229,7 +231,9 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         protected OutputStream dataOut;
         protected AtomicBoolean closed = new AtomicBoolean(false);
         protected TcpProtocol protocol;
-
+        protected int streamCount = 0;
+        final protected Object notifyObject = new Object();
+        
         public TcpWorker(Object resource, AbstractMessageReceiver receiver) throws IOException
         {
             super(resource, receiver, new ResponseOutputStream((Socket) resource));
@@ -243,7 +247,20 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             {
                 tcpConnector.configureSocket(TcpConnector.SERVER, socket);
 
-                dataIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                final Object notify = notifyObject;
+                dataIn = new DataInputStream(new BufferedInputStream(socket.getInputStream())) 
+                {
+                    public void close() throws IOException
+                    {
+                        System.out.println("closing input stream");
+                        super.close();
+
+                        synchronized (notifyObject)
+                        {
+                            notify.notifyAll();
+                        }
+                    }
+                };
                 dataOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             }
             catch (IOException e)
@@ -259,6 +276,24 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         public void release()
         {
+            synchronized (notifyObject)
+            {
+                while (streamCount > 0)
+                {
+                    System.out.println("waiting for stream close");
+                    try
+                    {
+                        notifyObject.wait();
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+            
+            
             closed.set(true);
             try
             {
@@ -294,17 +329,23 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         protected Object getNextMessage(Object resource) throws Exception
         {
+            System.out.println("Getting next message " + this.receiver.getEndpointURI());
             while (!socket.isClosed() && !disposing.get())
             {
                 try
                 {
                     Object readMsg = protocol.read(dataIn);
+                    System.out.println("read " + readMsg);
                     if (readMsg == null)
                     {
                         return null;
                     }
                     else
                     {
+                        if (readMsg instanceof InputStream) 
+                        {
+                            streamCount++;
+                        }
                         return readMsg;
                     }
                 }
@@ -322,12 +363,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         //@Override
         protected void handleResults(List messages) throws Exception
         {
+           
             //should send back only if remote synch is set or no outbound endpoints
             if (endpoint.isRemoteSync() || !component.getDescriptor().getOutboundRouter().hasEndpoints())
             {
                 for (Iterator iterator = messages.iterator(); iterator.hasNext();)
                 {
                     Object o = iterator.next();
+                    System.out.println("Writing " + o + " in " + this);
                     protocol.write(dataOut, o);
                     dataOut.flush();
                 }
@@ -350,42 +393,5 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         }
 
     }
-
-//    protected class TcpStreamWorker extends TcpWorker
-//    {
-//
-//        private CountDownLatch latch;
-//
-//        public TcpStreamWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
-//        {
-//            super(socket, receiver);
-//        }
-//
-//        //Override
-//        protected Object getNextMessage(Object resource) throws Exception
-//        {
-//            //all we can do for streaming is connect the streams
-//            if (endpoint.isSynchronous())
-//            {
-//                latch = new CountDownLatch(2);
-//                dataOut = new CloseCountDownOutputStream(dataOut, latch);
-//            }
-//            else
-//            {
-//                latch = new CountDownLatch(2);
-//            }
-//            dataIn = new CloseCountDownInputStream(dataIn, latch);
-//
-//            UMOMessageAdapter adapter = connector.getMessageAdapter(dataIn, dataOut);
-//            return adapter;
-//
-//        }
-//
-//        //@Override
-//        protected void handleResults(List messages) throws Exception
-//        {
-//            latch.await();
-//        }
-//    }
 
 }

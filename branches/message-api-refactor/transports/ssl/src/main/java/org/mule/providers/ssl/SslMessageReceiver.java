@@ -43,14 +43,14 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
 
     protected Work createWork(Socket socket) throws IOException
     {
-        if (endpoint.isStreaming())
-        {
-            return new SslStreamWorker(socket, this);
-        }
-        else
-        {
+//        if (endpoint.isStreaming())
+//        {
+//            return new SslStreamWorker(socket, this);
+//        }
+//        else
+//        {
             return new SslWorker(socket, this);
-        }
+//        }
     }
 
     private void preRoute(MuleMessage message) throws Exception
@@ -86,18 +86,18 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
         }
     }
 
-    protected class SslStreamWorker extends TcpStreamWorker
-    {
-        public SslStreamWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
-        {
-            super(socket, receiver);
-            ((SSLSocket) socket).addHandshakeCompletedListener(SslMessageReceiver.this);
-        }
-
-        protected void preRouteMuleMessage(MuleMessage message) throws Exception
-        {
-            preRoute(message);
-        }
-    }
+//    protected class SslStreamWorker extends TcpStreamWorker
+//    {
+//        public SslStreamWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
+//        {
+//            super(socket, receiver);
+//            ((SSLSocket) socket).addHandshakeCompletedListener(SslMessageReceiver.this);
+//        }
+//
+//        protected void preRouteMuleMessage(MuleMessage message) throws Exception
+//        {
+//            preRoute(message);
+//        }
+//    }
 
 }
