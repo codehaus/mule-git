@@ -16,7 +16,6 @@ import org.mule.providers.file.FileConnector;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 
@@ -89,21 +88,10 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
 
     protected FTPFile[] listFiles() throws Exception
     {
-        final UMOEndpointURI uri = endpoint.getEndpointURI();
-        FTPClient client = connector.getFtp(uri);
-
+        FTPClient client = null;
         try
         {
-            connector.enterActiveOrPassiveMode(client, endpoint);
-            connector.setupFileType(client, endpoint);
-
-            final String path = uri.getPath();
-            if (!client.changeWorkingDirectory(path))
-            {
-                throw new IOException(MessageFormat.format("Failed to change working directory to {0}. Ftp error: {1}",
-                                                           new Object[] {path, new Integer(client.getReplyCode())}));
-            }
-
+            client = connector.createFtpClient(endpoint);
             FTPFile[] files = client.listFiles();
 
             if (!FTPReply.isPositiveCompletion(client.getReplyCode()))
@@ -133,29 +121,24 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         }
         finally
         {
-            connector.releaseFtp(uri, client);
+            if (client != null)
+            {
+                connector.releaseFtp(endpoint.getEndpointURI(), client);
+            }
         }
     }
 
     protected void processFile(FTPFile file) throws Exception
     {
         logger.debug("entering processFile()");
-        UMOEndpointURI uri = endpoint.getEndpointURI();
-        FTPClient client = connector.getFtp(uri);
-
+        
+        FTPClient client = null;
         try
         {
-            connector.enterActiveOrPassiveMode(client, endpoint);
-            connector.setupFileType(client, endpoint);
-
-            final String fileName = file.getName();
-            final String path = uri.getPath();
+            client = connector.createFtpClient(endpoint);
             
-            if (!client.changeWorkingDirectory(path))
-            {
-                throw new IOException(MessageFormat.format("Failed to change working directory to {0}. Ftp error: {1}",
-                                                           new Object[] {path, new Integer(client.getReplyCode())}));            }
-
+            final String fileName = file.getName();
+            
             UMOMessage message;
             if (endpoint.isStreaming())
             {
@@ -185,7 +168,10 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         finally
         {
             logger.debug("leaving processFile()");
-            connector.releaseFtp(uri, client);
+            if (client != null)
+            {
+                connector.releaseFtp(endpoint.getEndpointURI(), client);
+            }
         }
     }
 

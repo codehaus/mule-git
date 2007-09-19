@@ -24,11 +24,7 @@
         <mule-descriptor name="TestUMO" implementation="org.mule.tck.functional.FunctionalTestComponent">
             <inbound-router>
                 <endpoint address="vm://test">
-                    <security-filter className="org.mule.impl.security.filters.MuleEncryptionEndpointSecurityFilter">
-                             <properties>
-                                 <property name="strategyName" value="PBE"/>
-                             </properties>
-                      </security-filter>
+                    <security-filter className="org.mule.extras.jaas.filters.JaasSecurityFilter"/>
                 </endpoint>
             </inbound-router>
         </mule-descriptor>
