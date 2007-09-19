@@ -17,8 +17,6 @@ import org.mule.umo.UMOException;
 import org.mule.util.MuleDerbyTestUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Executes the LoanBroker BPM example.
