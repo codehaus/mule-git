@@ -12,6 +12,7 @@
     <packaging>jar</packaging>
     <name>Multicast Transport</name>
     <description>A Mule transport for Udp Multicasting. This transport supplies a Multicast Data Packet dispatcher and client implementation.</description>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -19,6 +20,12 @@
             <version>${version}</version>
         </dependency>
         <!-- Functional testing -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>

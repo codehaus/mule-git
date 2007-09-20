@@ -44,23 +44,17 @@
             <artifactId>mule-transport-soap</artifactId>
             <version>${version}</version>
         </dependency>
-
-        <!-- Needed for common SOAP test classes -->
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-soap</artifactId>
+            <artifactId>mule-transport-http</artifactId>
             <version>${version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
-
         <!-- This is needed by org.mule.providers.soap.xfire.transport.MuleUniversalChannel -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
         </dependency>
-
         <!-- XFire dependencies -->
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
@@ -139,7 +133,6 @@
             <artifactId>jdom</artifactId>
             <version>1.0</version>
         </dependency>
-
         <!-- re-add woodstox with newer groupId & version -->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
@@ -154,7 +147,6 @@
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
         <!-- Remove for now since it introduces cyclic dependencies
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -163,22 +155,26 @@
             <scope>test</scope>
         </dependency>
         -->
-
-        <!-- for integrtion tests -->
+        <!-- Needed for common SOAP test classes -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-soap</artifactId>
+            <version>${version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
          <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
-
         <!-- Better testing of XML -->
         <dependency>
             <groupId>xmlunit</groupId>
@@ -186,6 +182,5 @@
             <version>1.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

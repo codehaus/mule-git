@@ -14,10 +14,11 @@ import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.NullPayload;
-import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
+import org.mule.util.MuleDerbyTestUtils;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -62,6 +63,13 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         logger.debug(updated + " rows deleted");
 
         super.doFunctionalTearDown();
+    }
+
+    protected void suitePreSetUp() throws Exception
+    {
+        InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
+        super.suitePreSetUp();
     }
     
     public void testSelectOnOutbound() throws Exception

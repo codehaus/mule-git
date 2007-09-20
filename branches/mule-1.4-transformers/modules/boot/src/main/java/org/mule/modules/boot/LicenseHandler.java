@@ -10,9 +10,9 @@
 
 package org.mule.modules.boot;
 
-import org.mule.modules.boot.util.FileUtils;
-import org.mule.modules.boot.util.JarUtils;
-import org.mule.modules.boot.util.MuleUtils;
+import org.mule.util.ClassUtils;
+import org.mule.util.FileUtils;
+import org.mule.util.JarUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
  * This class has methods for displaying the EULA and saving the license acceptance
  * acknowledgment.
  */
-public class LicenseHandler
+public final class LicenseHandler
 {
     private static final Log logger = LogFactory.getLog(LicenseHandler.class);
     
@@ -44,14 +44,19 @@ public class LicenseHandler
     private static final String LICENSE_TEXT_JAR_FILE_PATH = "META-INF/mule/" + LICENSE_TEXT_FILENAME;
     private static final String LICENSE_PROPERTIES_JAR_FILE_PATH = "META-INF/mule/license.props";
     
+    private LicenseHandler()
+    {
+        // used as utility class at this point only
+    }
+    
     public static boolean isLicenseAccepted() throws Exception
     {
-        return ReflectionHelper.getResource(LICENSE_PROPERTIES_JAR_FILE_PATH, LicenseHandler.class) != null;
+        return ClassUtils.getResource(LICENSE_PROPERTIES_JAR_FILE_PATH, LicenseHandler.class) != null;
     }
     
     public static File getLicenseFile()
     {
-        return new File(MuleUtils.getMuleHomeFile(), LICENSE_TEXT_FILENAME);
+        return new File(MuleBootstrapUtils.getMuleHomeFile(), LICENSE_TEXT_FILENAME);
     }
     
     /**
@@ -68,7 +73,7 @@ public class LicenseHandler
         
         try
         {
-            if (!getLicenseFile().exists() || !MuleUtils.getMuleLibDir().exists())
+            if (!getLicenseFile().exists() || !MuleBootstrapUtils.getMuleLibDir().exists())
             {
                 System.out.println("\nYour Mule installation seems to be incomplete. Please try downloading it again from http://mule.mulesource.org/display/MULE/Download and start again.");
                 hasAccepted = false;
@@ -101,14 +106,14 @@ public class LicenseHandler
     {
         if (licenseInfo != null && !isLicenseAccepted())
         {
-            if (!MuleUtils.getMuleLibDir().canWrite())
+            if (!MuleBootstrapUtils.getMuleLibDir().canWrite())
             {
-                throw new Exception("No write permissions for " + MuleUtils.MULE_LOCAL_JAR_FILENAME + 
+                throw new Exception("No write permissions for " + MuleBootstrapUtils.MULE_LOCAL_JAR_FILENAME + 
                     " to MULE_HOME. If you are using MULE_BASE and multiple deployments, please ask your administrator to run Mule for the first time.");
             }
             File tempJarFile = createTempLicenseJarFile(licenseInfo);
-            FileUtils.removeFile(MuleUtils.getMuleLocalJarFile());
-            FileUtils.renameFile(tempJarFile, MuleUtils.getMuleLocalJarFile());
+            MuleBootstrapUtils.getMuleLocalJarFile().delete();
+            FileUtils.renameFile(tempJarFile, MuleBootstrapUtils.getMuleLocalJarFile());
         }
     }
 
@@ -163,7 +168,7 @@ public class LicenseHandler
                 }
                 catch (Exception ignore)
                 {
-                    logger.debug(ignore);
+                    logger.debug("Error closing fileReader: " + ignore.getMessage());
                 }
             }
         }
@@ -193,7 +198,7 @@ public class LicenseHandler
         jarEntries.put(LICENSE_PROPERTIES_JAR_FILE_PATH, licenseInfo.toString());
         jarEntries.put(LICENSE_TEXT_JAR_FILE_PATH, getLicenseFile());
 
-        File tempJar = File.createTempFile(MuleUtils.MULE_LOCAL_JAR_FILENAME, null);
+        File tempJar = File.createTempFile(MuleBootstrapUtils.MULE_LOCAL_JAR_FILENAME, null);
 
         try
         {
@@ -207,7 +212,7 @@ public class LicenseHandler
             }
             else
             {
-                throw new Exception("Unable to create temporary jar file for " + MuleUtils.MULE_LOCAL_JAR_FILENAME);
+                throw new Exception("Unable to create temporary jar file for " + MuleBootstrapUtils.MULE_LOCAL_JAR_FILENAME);
             }
         }
 

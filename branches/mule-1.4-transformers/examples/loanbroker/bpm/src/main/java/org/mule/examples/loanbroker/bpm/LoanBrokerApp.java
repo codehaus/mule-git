@@ -14,6 +14,10 @@ import org.mule.config.ConfigurationBuilder;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
 import org.mule.umo.UMOException;
+import org.mule.util.MuleDerbyTestUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * Executes the LoanBroker BPM example.
@@ -29,6 +33,14 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
     {
         LoanBrokerApp loanBrokerApp = new LoanBrokerApp("loan-broker-bpm-mule-config.xml");
         loanBrokerApp.run(false);
+    }
+    
+    protected void init() throws Exception
+    {
+        // before initialisation occurs, the database must be cleaned and a new one created
+        FileInputStream propsStream = new FileInputStream("conf" + File.separator + "derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propsStream, "database.name");
+        super.init();
     }
 
     protected ConfigurationBuilder getConfigBuilder() throws UMOException

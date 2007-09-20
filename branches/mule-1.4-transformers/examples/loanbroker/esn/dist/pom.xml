@@ -12,7 +12,6 @@
     <name>Loan Broker ESN Example</name>
     <description>The Loan Broker example application is based on the example presented in the Enterprise Integration Patterns book. This chapter of the book is available online so you can see a detailed description of the application here (http://www.eaipatterns.com/ComposedMessagingWS.html).</description>
 
-
     <dependencies>
         <dependency>
             <groupId>org.mule.examples</groupId>
@@ -28,6 +27,11 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
             <version>${muleVersion}</version>
         </dependency>
         <dependency>
@@ -76,10 +80,10 @@
                                     <destFileName>${artifactId}.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
-                        </configuration>
+                </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
-    </build>    
+    </build>
 </project>

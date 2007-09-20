@@ -12,7 +12,25 @@
     <packaging>jar</packaging>
     <name>Loan Broker Example: Shared classes</name>
 
-    <build>    
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-builders</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-xml</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
         <plugins>
             <!-- "mvn install" will copy the target jar to the $MULE_HOME/lib/user directory,
                 overwriting the previous one. -->
@@ -43,5 +61,5 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>    
+    </build>
 </project>

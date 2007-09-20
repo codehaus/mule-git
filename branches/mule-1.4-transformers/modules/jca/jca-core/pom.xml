@@ -12,4 +12,22 @@
     <name>Common artifacts for JCA Resource Adapters</name>
     <packaging>jar</packaging>
     <description>Sources and resources for a Resource Adapter</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 </project>

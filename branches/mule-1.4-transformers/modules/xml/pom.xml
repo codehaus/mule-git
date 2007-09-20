@@ -11,7 +11,7 @@
     <artifactId>mule-module-xml</artifactId>
     <name>XML Extensions</name>
     <description>Functionality for working with XML</description>
-    
+
     <profiles>
         <profile>
             <id>java14</id>
@@ -200,8 +200,14 @@
             </dependencies>
         </profile>
     </profiles>
-    
+
     <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+
         <!-- Used for de/serialising objects -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
@@ -226,13 +232,18 @@
             <version>3.2.1</version>
         </dependency>
 
-        <!-- Better testing of XML -->        
+        <!-- Better testing of XML -->
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
             <version>1.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <!-- activation is only needed for running unit tests -->
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
-   
 </project>
