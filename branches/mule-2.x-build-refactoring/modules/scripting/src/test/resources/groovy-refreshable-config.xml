@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:scripting="http://www.mulesource.org/schema/mule/scripting/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/scripting/2.0 http://www.mulesource.org/schema/mule/scripting/2.0/mule-scripting.xsd">
+
+    <!-- a module can allow new namespaces to be introduced.. -->
+    <scripting:lang>
+        <lang:groovy id="groovy_class_callable" refresh-check-delay="100"
+                     script-source="classpath:groovy-dynamic-script-callable.groovy"/>
+        <lang:groovy id="groovy_class_bean" refresh-check-delay="100"
+                     script-source="classpath:groovy-dynamic-script-bean.groovy"/>
+    </scripting:lang>
+
+    <!-- ..or you can just drop into spring -->
+    <spring:beans>
+        <lang:groovy id="groovy_class_changeInterfaces" refresh-check-delay="100"
+                     script-source="classpath:groovy-dynamic-script.groovy"/>
+    </spring:beans>
+
+    <!--
+        The script for this bean will always extend froom the Callable interface, therefore we do not need
+        to set the attribute methodName. The GroovyRefreshableBeanBuilder will check for this interface
+        and if the bean does inherit from this interface, it will execute the onCall() method 
+    -->
+    <scripting:groovyRefreshable name="groovyRefreshableCallable" refreshableBean-ref="groovy_class_callable"/>
+
+    <!--
+        The script for this class will never inherit from the Callable interface. Due to this fact, the user
+        will need to set methodName attribute and the GroovyRefreshableBeanBuilder will execute this method
+    -->
+    <scripting:groovyRefreshable name="groovyRefreshableBean" refreshableBean-ref="groovy_class_bean"
+                                 methodName="receive"/>
+
+    <!--
+        The test case will set the script to a class which extends from the Callable inteface, and executes
+        the onCall() method. Following that, the test case will change the script to an object which does not extend from
+        the Callable and execute the method specified by the methodName attribute. This tests whether the 
+        GroovyRefreshableBeanBuilder supports a change in the interfaces implemented by the refreshable bean.
+    -->
+    <scripting:groovyRefreshable name="groovyRefreshableBeanChangeInterfaces"
+                                 refreshableBean-ref="groovy_class_changeInterfaces" methodName="receive"/>
+
+    <model name="main">
+
+        <service name="GroovyUMO_Callable">
+            <component instance-ref="groovyRefreshableCallable" scope="singleton"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://groovy_refresh_callable"/>
+            </inbound-router>
+        </service>
+
+        <service name="GroovyUMO_Bean">
+            <component instance-ref="groovyRefreshableBean" scope="singleton"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://groovy_refresh_bean"/>
+            </inbound-router>
+        </service>
+
+        <service name="GroovyUMO_ChangeIntefaces">
+            <component instance-ref="groovyRefreshableBeanChangeInterfaces" scope="singleton"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://groovy_refresh_changeInterfaces"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+</mule>

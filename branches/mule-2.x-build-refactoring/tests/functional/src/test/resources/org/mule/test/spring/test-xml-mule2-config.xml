@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:util="http://www.springframework.org/schema/util"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:mxml="http://www.mulesource.org/schema/mule/xml/2.0"
+      xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd">
+
+    <configuration serverId="test_Spring" defaultSynchronousEndpoints="false" domainId="org.mule">
+        <default-threading-profile maxBufferSize="0" maxThreadsActive="16" maxThreadsIdle="4" poolExhaustedAction="WAIT"
+                                   threadTTL="60001"/>
+    </configuration>
+
+    <environment-property name="doCompression" value="true"/>
+    <environment-property name="beanProperty1" value="this was set from the manager properties!"/>
+    <environment-property name="OS_Version" value="not found"/>
+
+
+    <!-- TODO ConnectionStrategies on endpoints -->
+    <!-- Remove Endpoint Identifiers -->
+    <!-- remove interceptor stacks -->
+    <!--<custom-transaction-manager-factory class="org.mule.tck.testmodels.mule.TestTransactionManagerFactory"/>-->
+    <spring:bean name="txManagerFactory" class="org.mule.tck.testmodels.mule.TestTransactionManagerFactory"/>
+
+    <!--<mgmt:jmx-default-config name="jmxAgent"/>-->
+    <!--<mgmt:rmi-server name="rmiAgent"/>-->
+    <!--<mgmt:jmx-server name="jmxAgent">-->
+    <!--<mgmt:connector-server url="service:jmx:rmi:///jndi/rmi://localhost:1099/server" rebind="true"/>-->
+    <!--</mgmt:jmx-server>-->
+
+    <!--<mgmt:chainsaw-notifications chainsawHost="localhost" chainsawPort="20202" name="chainsaw">-->
+    <!--<mgmt:level-mappings>-->
+    <!--<spring:entry key="ModelNotification.stop" value="warn"/>-->
+    <!--</mgmt:level-mappings>-->
+    <!--</mgmt:chainsaw-notifications>-->
+
+    <custom-connector name="dummyConnector" class="org.mule.tck.testmodels.mule.TestConnector">
+
+        <dispatcher-threading-profile maxBufferSize="2"/>
+        <custom-exception-strategy class="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
+    </custom-connector>
+
+    <custom-transformer name="TestCompressionTransformer"
+                        class="org.mule.tck.testmodels.mule.TestCompressionTransformer" returnClass="java.lang.String">
+        <spring:property name="beanProperty2" value="12"/>
+        <spring:property name="containerProperty" value="myString"/>
+    </custom-transformer>
+
+    <transformer-no-action name="Default"/>
+
+    <endpoint name="fruitBowlEndpoint" address="test://fruitBowlPublishQ">
+        <mxml:jxpath-filter expectedValue="bar" pattern="name">
+            <mxml:namespace prefix="foo" uri="http://foo.com"/>
+            <mxml:namespace prefix="bar" uri="http://bar.com"/>
+        </mxml:jxpath-filter>
+    </endpoint>
+    <endpoint name="waterMelonEndpoint" address="test://test.queue"/>
+    <endpoint name="appleInEndpoint" address="test://AppleQueue"/>
+    <endpoint name="appleResponseEndpoint" address="test://AppleResponseQueue"/>
+    <endpoint name="orangeEndpoint" address="test://orangeQ">
+        <properties>
+            <spring:entry key="beanProperty2" value="12"/>
+            <spring:entry key="containerProperty" value="myString"/>
+        </properties>
+    </endpoint>
+
+    <!-- TODO RM*: Add an interceptor wrapper and use spring AOP to configure these -->
+    <!--<interceptor-stack name="default">-->
+    <!--<interceptor className="org.mule.interceptors.LoggingInterceptor"/>-->
+    <!--<interceptor className="org.mule.interceptors.TimerInterceptor"/>-->
+    <!--</interceptor-stack>-->
+
+    <spring:bean name="apple" class="org.mule.tck.testmodels.fruit.Apple"/>
+
+    <spring:bean name="orange" class="org.mule.tck.testmodels.fruit.Orange"/>
+
+    <model name="main">
+
+        <custom-exception-strategy class="org.mule.tck.testmodels.mule.TestExceptionStrategy">
+            <outbound-endpoint address=" test://component.exceptions "/>
+        </custom-exception-strategy>
+
+        <custom-entrypoint-resolver class="org.mule.tck.testmodels.mule.TestEntryPointResolver"/>
+
+        <service name="orangeComponent">
+            <component scope="singleton" instance-ref="orange"/>
+            <inbound-router>
+
+                <forwarding-catch-all-strategy>
+                    <outbound-endpoint address="test://catch.all"/>
+                </forwarding-catch-all-strategy>
+                <inbound-endpoint name="Orange" address="test://orange/" transformer-ref="TestCompressionTransformer"
+                                  responseTransformer-ref="TestCompressionTransformer"/>
+                <inbound-endpoint ref="orangeEndpoint" transformer-ref="TestCompressionTransformer">
+                    <payload-type-filter expectedType="java.lang.String"/>
+                    <properties>
+                        <spring:entry key="testLocal" value="value1"/>
+                    </properties>
+                </inbound-endpoint>
+            </inbound-router>
+
+            <nested-router>
+                <binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="wash">
+                    <outbound-endpoint address="test://do.wash"/>
+                </binding>
+                <binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="polish">
+                    <outbound-endpoint address="test://do.polish"/>
+                </binding>
+            </nested-router>
+
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint ref="appleInEndpoint" transformer-ref="TestCompressionTransformer"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+
+            <response-router timeout="10001">
+                <response-endpoint address="test://response1"/>
+                <response-endpoint ref="appleResponseEndpoint"/>
+                <custom-response-router class="org.mule.tck.testmodels.mule.TestResponseAggregator"/>
+            </response-router>
+
+            <default-component-exception-strategy>
+                <outbound-endpoint address="test://orange.exceptions"/>
+            </default-component-exception-strategy>
+
+            <meta-info>
+                <spring:entry key="brand" value="Juicy Baby!"/>
+                <spring:entry key="segments" value="9"/>
+                <spring:entry key="radius" value="4.21"/>
+                <spring:entry key="mapProperties">
+                    <spring:map>
+                        <spring:entry key="prop1" value="prop1"/>
+                        <spring:entry key="prop2" value="prop2"/>
+                    </spring:map>
+                </spring:entry>
+                <spring:entry key="listProperties">
+                    <spring:list>
+                        <spring:value>prop1</spring:value>
+                        <spring:value>prop2</spring:value>
+                        <spring:value>prop3</spring:value>
+                    </spring:list>
+                </spring:entry>
+                <spring:entry key="arrayProperties">
+                    <spring:list>
+                        <spring:value>prop4</spring:value>
+                        <spring:value>prop5</spring:value>
+                        <spring:value>prop6</spring:value>
+                    </spring:list>
+                </spring:entry>
+            </meta-info>
+        </service>
+
+        <service name="appleComponent">
+            <component scope="singleton" instance-ref="apple"/>
+            <inbound-router>
+                <custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
+                <inbound-endpoint ref="appleInEndpoint"/>
+                <selective-consumer-router>
+                    <payload-type-filter expectedType="java.lang.String"/>
+                </selective-consumer-router>
+                <idempotent-receiver-router>
+                </idempotent-receiver-router>
+            </inbound-router>
+
+            <outbound-router>
+                <custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
+                <filtering-router transformer-ref="TestCompressionTransformer">
+                    <outbound-endpoint address="test://appleQ2" name="TestApple-Out"/>
+                    <payload-type-filter expectedType="java.lang.String"/>
+                </filtering-router>
+
+                <filtering-router>
+                    <outbound-endpoint ref="waterMelonEndpoint"/>
+                    <and-filter>
+                        <regex-filter pattern="the quick brown (.*)"/>
+                        <regex-filter pattern="(.*) brown (.*)"/>
+                    </and-filter>
+                </filtering-router>
+            </outbound-router>
+
+            <!--<custom-exception-strategy class="org.mule.impl.DefaultExceptionStrategy"/>-->
+            <default-connector-exception-strategy/>
+        </service>
+    </model>
+</mule>
