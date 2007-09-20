@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.boot.util;
+package org.mule.util;
 
 import java.net.Socket;
 import java.net.URL;
@@ -16,11 +16,11 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public final class NetUtils
+public final class NetworkUtils
 {
-    private static final Log logger = LogFactory.getLog(NetUtils.class);
+    private static final Log logger = LogFactory.getLog(NetworkUtils.class);
     
-    private NetUtils()
+    private NetworkUtils()
     {
         // utility class only
     }

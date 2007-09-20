@@ -1,5 +1,5 @@
 /*
- * $Id:$
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -8,22 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.boot.util;
+package org.mule.util;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.Socket;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class implements a timeout feature on socket connections.
  */
 public final class TimedSocket
 {
-    private static final Log logger = LogFactory.getLog(TimedSocket.class);
-    
     private static final int WATCHDOG_FREQUENCY = 100;
 
     private TimedSocket()
@@ -61,7 +56,7 @@ public final class TimedSocket
             }
             catch (InterruptedException unexpectedInterruption)
             {
-                logger.debug("Unexpected watchdog interruption", unexpectedInterruption);
+                throw new InterruptedIOException("Connection interruption: " + unexpectedInterruption.getMessage());
             }
 
             timer += WATCHDOG_FREQUENCY;
