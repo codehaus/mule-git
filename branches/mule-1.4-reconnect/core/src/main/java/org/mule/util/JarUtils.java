@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.boot.util;
+package org.mule.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,7 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class JarUtils
+public final class JarUtils
 {
     private static final Log logger = LogFactory.getLog(JarUtils.class);
 
@@ -92,7 +92,7 @@ public class JarUtils
             combinedEntries.putAll(entries);
             File tmpJarFile = File.createTempFile(jarFile.getName(), null);
             createJarFileEntries(tmpJarFile, combinedEntries);
-            FileUtils.removeFile(jarFile);
+            jarFile.delete();
             FileUtils.renameFile(tmpJarFile, jarFile);
         }
     }

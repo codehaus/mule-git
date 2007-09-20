@@ -12,7 +12,9 @@ package org.mule.test.integration.transaction;
 
 import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.util.MuleDerbyTestUtils;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
@@ -22,10 +24,23 @@ import org.apache.commons.dbutils.handlers.ArrayListHandler;
 
 public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
 {
-
+    private static String connectionString;
+    
     protected String getConfigResources()
     {
         return "org/mule/test/integration/transaction/xabridge-jms-jdbc-mule.xml";
+    }
+    
+    protected void suitePreSetUp() throws Exception
+    {
+        InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesStream, "database.name");
+
+        propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
+        connectionString = "jdbc:derby:" + dbName;
+
+        super.suitePreSetUp();
     }
 
     protected void doPostFunctionalSetUp() throws Exception
@@ -48,7 +63,7 @@ public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
     protected Connection getConnection() throws Exception
     {
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-        return DriverManager.getConnection("jdbc:derby:muleEmbeddedDB;create=true");
+        return DriverManager.getConnection(connectionString);
     }
 
     protected List execSqlQuery(String sql) throws Exception

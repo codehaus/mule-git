@@ -1,5 +1,5 @@
 /*
- * $Id:$
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.modules.boot.util;
+package org.mule.util;
 
 import org.mule.tck.AbstractMuleTestCase;
 

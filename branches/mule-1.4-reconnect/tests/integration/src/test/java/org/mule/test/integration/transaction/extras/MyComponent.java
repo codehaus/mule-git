@@ -10,15 +10,23 @@
 
 package org.mule.test.integration.transaction.extras;
 
-import org.mule.MuleManager;
-
 public class MyComponent
 {
+    private LibraryDao library;
+    
     public boolean doInsertTitle(Book book) throws Exception
     {
-        // TODO this LibraryDao must be injected, not looked up directly
-        LibraryDao library = (LibraryDao) MuleManager.getInstance().getContainerContext().getComponent("myManager");
         return library.insertBook(book);
+    }
+
+    public LibraryDao getLibrary()
+    {
+        return library;
+    }
+
+    public void setLibrary(LibraryDao library)
+    {
+        this.library = library;
     }
 }
 

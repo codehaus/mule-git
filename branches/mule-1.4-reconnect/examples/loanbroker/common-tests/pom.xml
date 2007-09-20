@@ -11,6 +11,7 @@
     <artifactId>mule-example-loanbroker-common-tests</artifactId>
     <packaging>jar</packaging>
     <name>Loan Broker Example: Shared classes for unit tests</name>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.examples</groupId>

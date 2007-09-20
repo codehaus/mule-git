@@ -10,185 +10,79 @@
 
 package org.mule.modules.boot;
 
-import org.mule.MuleServer;
-
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+
+import org.tanukisoftware.wrapper.WrapperSimpleApp;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
  * Wrapper. <p/> MuleBootstrap class is responsible for constructing Mule's classpath
  * from the Mule home folder.
+ * 
+ * IMPORTANT NOTE:
+ * <p>When using external functionality from packages outside of <code>./lib/boot</code>
+ * you must not use them within <code>main(String args[])</code>. Although this will safely
+ * work with Sun's VM it'll fail on e.g. JRockit. In general, it is recommended to test
+ * against JRockit in addition to Sun's VM when making changes within this module.</p> 
  */
-public class MuleBootstrap
+public final class MuleBootstrap
 {
-    private static final String MULE_MODULE_BOOT_POM_FILE_PATH = "META-INF/maven/org.mule.modules/mule-module-boot/pom.properties";
+    public static final String MAIN_CLASS_MULE_SERVER = "org.mule.modules.boot.MuleServerWrapper";
 
     private MuleBootstrap()
     {
         // utility class only
     }
 
-    /**
-     * Entry point.
-     * 
-     * @param args command-line arguments
-     * @throws Exception in case of any fatal problem
-     */
     public static void main(String args[]) throws Exception
     {
-        // Make sure MULE_HOME is set.
-        File muleHome = null;
+        File muleHome = lookupMuleHome();
+        File muleBase = lookupMuleBase();
 
-        String muleHomeVar = System.getProperty("mule.home");
-        // Note: we can't use StringUtils.isBlank() here because we don't have that
-        // library yet.
-        if (muleHomeVar != null && !muleHomeVar.trim().equals("") && !muleHomeVar.equals("%MULE_HOME%"))
-        {
-            muleHome = new File(muleHomeVar).getCanonicalFile();
-        }
-        if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory())
-        {
-            throw new IllegalArgumentException(
-                "Either MULE_HOME is not set or does not contain a valid directory.");
-        }
-
-        File muleBase;
-
-        String muleBaseVar = System.getProperty("mule.base");
-        if (muleBaseVar != null && !muleBaseVar.trim().equals("") && !muleBaseVar.equals("%MULE_BASE%"))
-        {
-            muleBase = new File(muleBaseVar).getCanonicalFile();
-        }
-        else
+        if (muleBase == null)
         {
             muleBase = muleHome;
         }
 
-        // Build up a list of libraries from $MULE_HOME/lib/* and add them to the
-        // classpath.
-        DefaultMuleClassPathConfig classPath = new DefaultMuleClassPathConfig(muleHome, muleBase);
-        addLibrariesToClasspath(classPath.getURLs());
-
-        setSystemMuleVersion();
-
-        if (!LicenseHandler.isLicenseAccepted())
+        MuleBootstrapUtils.addLocalJarFilesToClasspath(muleHome, muleBase);
+        MuleBootstrapUtils.addExternalJarFilesToClasspath(muleHome, null);
+        wrapperMain(MAIN_CLASS_MULE_SERVER, args);
+    }
+    
+    private static File lookupMuleHome() throws Exception
+    {
+        File muleHome = null;
+        String muleHomeVar = System.getProperty("mule.home");
+        
+        if (muleHomeVar != null && !muleHomeVar.trim().equals("") && !muleHomeVar.equals("%MULE_HOME%"))
         {
-            // If the user didn't accept the license, then we have to exit
-            // Exiting this way insures that the wrapper won't try again
-            // (by default it'll try to start 3 times)
-            if (!LicenseHandler.getAcceptance())
-            {
-                ReflectionHelper.wrapperStop(-1);
-            }
+            muleHome = new File(muleHomeVar).getCanonicalFile();
         }
 
-        // One-time download to get libraries not included in the Mule distribution
-        // due to silly licensing restrictions.
-        // 
-        // Now we will download these libraries to MULE_BASE/lib/user. In
-        // a standard installation, MULE_BASE will be MULE_HOME.
-        if (!ReflectionHelper.isClassOnPath("javax.activation.DataSource", MuleBootstrap.class))
+        if (muleHome == null || !muleHome.exists() || !muleHome.isDirectory())
         {
-            LibraryDownloader downloader = new LibraryDownloader(muleBase);
-            addLibrariesToClasspath(downloader.downloadLibraries());
+            throw new IllegalArgumentException("Either MULE_HOME is not set or does not contain a valid directory.");
         }
-
-        // the core jar has been added dynamically, this construct will run with
-        // a new Mule classpath now
-        String mainClassName = null;
-
-        try
+        return muleHome;
+    }
+    
+    private static File lookupMuleBase() throws Exception
+    {
+        File muleBase = null;
+        String muleBaseVar = System.getProperty("mule.base");
+        
+        if (muleBaseVar != null && !muleBaseVar.trim().equals("") && !muleBaseVar.equals("%MULE_BASE%"))
         {
-            final String[][] cliOptions = ReflectionHelper.getCliOptions();
-            mainClassName = ReflectionHelper.getCommandLineOption("main", args, cliOptions);
+            muleBase = new File(muleBaseVar).getCanonicalFile();
         }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            ReflectionHelper.wrapperStop(-1);
-        }
-
-        if (mainClassName == null)
-        {
-            mainClassName = MuleServer.class.getName();
-        }
-
-        // Add the main class name as the first argument to the Wrapper.
+        return muleBase;
+    }
+    
+    private static void wrapperMain(String mainClass, String[] args) throws Exception
+    {
         String[] appArgs = new String[args.length + 1];
-        appArgs[0] = mainClassName;
+        appArgs[0] = mainClass;
         System.arraycopy(args, 0, appArgs, 1, args.length);
-
-        // Call the wrapper
-        ReflectionHelper.wrapperMain(appArgs);
-    }
-
-    private static void setSystemMuleVersion()
-    {
-        try
-        {
-            URL mavenPropertiesUrl = ReflectionHelper.getResource(MULE_MODULE_BOOT_POM_FILE_PATH, MuleBootstrap.class);
-            Properties mavenProperties = new Properties();
-            mavenProperties.load(mavenPropertiesUrl.openStream());
-            
-            System.setProperty("mule.version", mavenProperties.getProperty("version"));
-            System.setProperty("mule.reference.version", mavenProperties.getProperty("version") + '-' + (new Date()).getTime());
-        }
-        catch (Exception ignore)
-        {
-            // ignore
-        }
-    }
-
-    private static void addLibrariesToClasspath(List urls)
-        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
-    {
-
-        ClassLoader sys = ClassLoader.getSystemClassLoader();
-        if (!(sys instanceof URLClassLoader))
-        {
-            throw new IllegalArgumentException(
-                "PANIC: Mule has been started with an unsupported classloader: " + sys.getClass().getName()
-                                + ". " + "Please report this error to user<at>mule<dot>codehaus<dot>org");
-        }
-
-        // system classloader is in this case the one that launched the application,
-        // which is usually something like a JDK-vendor proprietary AppClassLoader
-        URLClassLoader sysCl = (URLClassLoader) sys;
-
-        /*
-         * IMPORTANT NOTE: The more 'natural' way would be to create a custom
-         * URLClassLoader and configure it, but then there's a chicken-and-egg
-         * problem, as all classes MuleBootstrap depends on would have been loaded by
-         * a parent classloader, and not ours. There's no straightforward way to
-         * change this, and is documented in a Sun's classloader guide. The solution
-         * would've involved overriding the ClassLoader.findClass() method and
-         * modifying the semantics to be child-first, but that way we are calling for
-         * trouble. Hacking the primordial classloader is a bit brutal, but works
-         * perfectly in case of running from the command-line as a standalone app.
-         * All Mule embedding options then delegate the classpath config to the
-         * embedder (a developer embedding Mule in the app), thus classloaders are
-         * not modified in those scenarios.
-         */
-
-        // get a Method ref from the normal class, but invoke on a proprietary parent
-        // object,
-        // as this method is usually protected in those classloaders
-        Class refClass = URLClassLoader.class;
-        Method methodAddUrl = refClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-        methodAddUrl.setAccessible(true);
-        for (Iterator it = urls.iterator(); it.hasNext();)
-        {
-            URL url = (URL) it.next();
-            // System.out.println("Adding: " + url.toExternalForm());
-            methodAddUrl.invoke(sysCl, new Object[]{url});
-        }
-    }
+        WrapperSimpleApp.main(appArgs);
+    }    
 }

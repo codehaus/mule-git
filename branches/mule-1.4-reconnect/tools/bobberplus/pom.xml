@@ -39,7 +39,6 @@
             <artifactId>plexus-interactivity-api</artifactId>
             <version>1.0-alpha-6</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -66,5 +65,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

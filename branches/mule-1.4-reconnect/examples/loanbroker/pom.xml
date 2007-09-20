@@ -23,7 +23,6 @@
         <!--
         <module>bpel</module>
         <module>rules</module>
-        <module>spaces</module>
         <module>benchmark</module>
         -->
     </modules>

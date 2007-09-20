@@ -42,7 +42,7 @@
             <version>${muleVersion}</version>
         </dependency>
     </dependencies>
-    
+
     <repositories>
         <repository>
             <id>codehaus</id>
@@ -85,7 +85,7 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-  
+
     <build>
         <defaultGoal>install</defaultGoal>
 

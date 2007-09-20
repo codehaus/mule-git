@@ -24,7 +24,9 @@ import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.util.MuleDerbyTestUtils;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,16 +50,34 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
     public static final String SQL_ACK = "UPDATE TEST SET ACK = ${NOW} WHERE ID = ${id} AND TYPE = ${type} AND DATA = ${data}";
     public static final String SQL_WRITE = "INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES(${type}, ${payload}, NULL, NULL)";
     
-    public static final String EMBEDDED_CONNECTION_STRING = "jdbc:derby:muleEmbeddedDB;create=true";
+    public static String EMBEDDED_CONNECTION_STRING;
     public static final String EMBEDDED_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
     
-    public static final String CLIENT_CONNECTION_STRING = "jdbc:derby://localhost:1527/muleEmbeddedDB;create=true";
+    public static String CLIENT_CONNECTION_STRING ;
     public static final String CLIENT_DRIVER_NAME = "org.apache.derby.jdbc.ClientDriver";
 
     protected UMOConnector connector;
     protected static UMOManager manager;
     protected UMOModel model;
     protected DataSource dataSource;
+    
+    private static boolean derbySetupDone = false;
+    
+    protected void suitePreSetUp() throws Exception
+    {
+        if (!derbySetupDone)
+        {
+            InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+            String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesStream, "database.name");
+
+            propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+            MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
+            EMBEDDED_CONNECTION_STRING = "jdbc:derby:" + dbName;
+            CLIENT_CONNECTION_STRING = "jdbc:derby://localhost:1527/"+ dbName +";create=true";
+            derbySetupDone = true;
+        }
+        super.suitePreSetUp();
+    }
 
     protected void doSetUp() throws Exception
     {
