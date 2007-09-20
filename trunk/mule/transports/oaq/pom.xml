@@ -12,6 +12,7 @@
     <packaging>jar</packaging>
     <name>JMS Transport: Oracle AQ</name>
     <description>Adds Oracle-specific functionality to the standard Mule JMS transport.</description>
+
     <dependencies>
         <!-- The standard JMS transport for Mule -->
         <dependency>
@@ -43,15 +44,13 @@
             <version>9.2.0.5</version> 
             <scope>provided</scope>
         </dependency>
-
-	    <!-- The Oracle JMS implementation (oracle.jms.*) -->
+        <!-- The Oracle JMS implementation (oracle.jms.*) -->
         <dependency>
             <groupId>oracle</groupId>
             <artifactId>aqapi13</artifactId>
             <version>9i</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- For XMLType support only -->
         <dependency>
             <groupId>oracle</groupId>

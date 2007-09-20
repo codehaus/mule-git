@@ -28,6 +28,5 @@
             <artifactId>jbossts-jta-integration</artifactId>
             <version>4.2.3-SP5</version>
         </dependency>
-
     </dependencies>
 </project>

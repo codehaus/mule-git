@@ -182,5 +182,4 @@
         </profile>
         <!-- no need for a jdk5 profile since we don't have to exclude anything -->
     </profiles>
-
 </project>

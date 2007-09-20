@@ -25,6 +25,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+        </dependency>
         <!-- we need both axis and xfire -->
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -34,6 +39,16 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-xfire</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-stream</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
         </dependency>
         <!-- Use the SpringConfigurationBuilder as a workaround because the MuleXmlConfigurationBuilder 

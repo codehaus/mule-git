@@ -101,56 +101,36 @@
             </dependencies>
         </profile>
     </profiles>
-    
-    <dependencies>
-        <!-- TODO This can't be in the parent pom.xml because it creates a cyclic dependency: 
-                mule-tests-functional -> mule-module-builders -> mule-tests-functional -->
-        <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
 
+    <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
         </dependency>
-
         <!-- Used by MuleEventMulticaster -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-builders</artifactId>
             <version>${version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-management</artifactId>
             <version>${version}</version>
         </dependency>
-
         <!-- Used by SpringTransactionFactory -->
-        <!-- TODO: verify whether this dependency is really required. -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jms_1.1_spec</artifactId>
         </dependency>
 
-        <!--
-            TODO this is a hack. Duplicate declaration (original is in the top pom.xml)
-            makes Spring happy to compile when run from the project root folder,
-            otherwise it cannot find classes from commons-logging.
-
-            It seems m2 dependency visibility hierarchy is limited to 1 level deep.
-        -->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2</version>
-        </dependency>
-
         <!-- For test cases only -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
@@ -170,5 +150,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>
