@@ -11,7 +11,6 @@
 package org.mule.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class MuleDerbyTestUtils extends Object
+public class MuleDerbyTestUtils
 {
     private static final String DERBY_DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
     
@@ -69,7 +68,7 @@ public class MuleDerbyTestUtils extends Object
         }
     }
     
-    public static String loadDatabaseName(InputStream propertiesStream, String propertyName) throws FileNotFoundException, IOException
+    public static String loadDatabaseName(InputStream propertiesStream, String propertyName) throws IOException
     {
         Properties derbyProperties = new Properties();
         derbyProperties.load(propertiesStream);
