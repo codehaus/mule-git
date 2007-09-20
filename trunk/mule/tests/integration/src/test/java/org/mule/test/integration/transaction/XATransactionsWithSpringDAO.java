@@ -17,7 +17,7 @@ import org.mule.test.integration.transaction.extras.Book;
 import org.mule.umo.UMOMessage;
 import org.mule.util.MuleDerbyTestUtils;
 
-import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
@@ -27,7 +27,6 @@ import org.apache.commons.dbutils.handlers.ArrayListHandler;
 
 public class XATransactionsWithSpringDAO extends FunctionalTestCase
 {
-
     /** TODO This is insane, make it 10 seconds max. */
     private static final int RECEIVE_TIMEOUT = 50000;
     private static String connectionString;
@@ -39,9 +38,11 @@ public class XATransactionsWithSpringDAO extends FunctionalTestCase
     
     protected void suitePreSetUp() throws Exception
     {
-        String propertiesFileLocation = "src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties";
-        String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesFileLocation, "database.name");
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesFileLocation, "database.name");
+        InputStream derbyProperties = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        String dbName = MuleDerbyTestUtils.loadDatabaseName(derbyProperties, "database.name");
+
+        derbyProperties = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(derbyProperties, "database.name");
         connectionString = "jdbc:derby:" + dbName;
 
         super.suitePreSetUp();

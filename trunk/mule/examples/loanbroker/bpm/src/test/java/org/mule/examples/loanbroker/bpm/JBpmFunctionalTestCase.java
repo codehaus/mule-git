@@ -21,6 +21,8 @@ import org.mule.providers.bpm.ProcessConnector;
 import org.mule.util.MuleDerbyTestUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 
 public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase
@@ -33,7 +35,8 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         // set the derby.system.home system property to make sure that all derby databases are
         // created in maven's target directory
         
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit("conf" + File.separator + "derby.properties", "database.name");
+        InputStream propsStream = new FileInputStream("conf" + File.separator + "derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propsStream, "database.name");
 
         super.suitePreSetUp();
     }

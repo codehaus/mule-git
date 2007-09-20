@@ -14,7 +14,7 @@ import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.MuleDerbyTestUtils;
 
-import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
@@ -24,8 +24,8 @@ import org.apache.commons.dbutils.handlers.ArrayListHandler;
 
 public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
 {
-
     private static String connectionString;
+    
     protected String getConfigResources()
     {
         return "org/mule/test/integration/transaction/xabridge-jms-jdbc-mule.xml";
@@ -33,9 +33,11 @@ public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
     
     protected void suitePreSetUp() throws Exception
     {
-        String propertiesFileLocation = "src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties";
-        String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesFileLocation, "database.name");
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesFileLocation, "database.name");
+        InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesStream, "database.name");
+
+        propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
         connectionString = "jdbc:derby:" + dbName;
 
         super.suitePreSetUp();

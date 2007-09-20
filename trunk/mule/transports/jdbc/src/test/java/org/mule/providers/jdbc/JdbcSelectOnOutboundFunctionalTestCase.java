@@ -14,22 +14,15 @@ import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.NullPayload;
-import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
-import org.mule.util.FileUtils;
 import org.mule.util.MuleDerbyTestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.derby.jdbc.EmbeddedDriver;
 
 public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 {
@@ -74,7 +67,8 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 
     protected void suitePreSetUp() throws Exception
     {
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit("src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties", "database.name");
+        InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
         super.suitePreSetUp();
     }
     

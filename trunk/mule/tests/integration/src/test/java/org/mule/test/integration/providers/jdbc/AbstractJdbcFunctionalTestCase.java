@@ -26,7 +26,7 @@ import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.MuleDerbyTestUtils;
 
-import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,9 +67,11 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
     {
         if (!derbySetupDone)
         {
-            String propertiesFileLocation = "src" + File.separator + "test" + File.separator + "resources" + File.separator + "derby.properties";
-            String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesFileLocation, "database.name");
-            MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesFileLocation, "database.name");
+            InputStream propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+            String dbName = MuleDerbyTestUtils.loadDatabaseName(propertiesStream, "database.name");
+
+            propertiesStream = this.getClass().getClassLoader().getResourceAsStream("derby.properties");
+            MuleDerbyTestUtils.defaultDerbyCleanAndInit(propertiesStream, "database.name");
             EMBEDDED_CONNECTION_STRING = "jdbc:derby:" + dbName;
             CLIENT_CONNECTION_STRING = "jdbc:derby://localhost:1527/"+ dbName +";create=true";
             derbySetupDone = true;
@@ -101,8 +103,7 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
     {
         try
         {
-            int updated = execSqlUpdate("DELETE FROM TEST");
-            int x = updated;
+            execSqlUpdate("DELETE FROM TEST");
         }
         catch (Exception e)
         {

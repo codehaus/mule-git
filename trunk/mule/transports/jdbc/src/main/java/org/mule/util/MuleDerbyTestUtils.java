@@ -10,19 +10,20 @@
 
 package org.mule.util;
 
-import org.mule.util.FileUtils;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.derby.jdbc.EmbeddedDriver;
 
-public class MuleDerbyTestUtils
+public class MuleDerbyTestUtils extends Object
 {
+    private static final String DERBY_DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
+    
     //class cannot be instantiated
     private MuleDerbyTestUtils()
     {
@@ -44,30 +45,44 @@ public class MuleDerbyTestUtils
     
     public static void cleanupDerbyDb(String derbySystemHome, String databaseName) throws IOException, SQLException
     {
+        // TODO stop derby database
         FileUtils.deleteTree(new File(derbySystemHome + File.separator + databaseName));
     }
     
     public static void createDataBase(String databaseName) throws SQLException
     {
-        EmbeddedDriver embeddedDriver = new EmbeddedDriver();
-        embeddedDriver.connect("jdbc:derby:" + databaseName + ";create=true", null);
+        // Do not use the EmbeddedDriver class here directly to avoid compile time references
+        // on derby.jar
+        try
+        {
+            Driver derbyDriver = (Driver) ClassUtils.instanciateClass(DERBY_DRIVER_CLASS, new Object[0]);
+            
+            Method connectMethod = derbyDriver.getClass().getMethod("connect", 
+                new Class[] { String.class, Properties.class });
+            
+            String connectionName = "jdbc:derby:" + databaseName + ";create=true";
+            connectMethod.invoke(derbyDriver, new Object[] { connectionName, null });
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException("Error creating the database " + databaseName, ex);
+        }
     }
     
-    public static String loadDatabaseName(String propertiesLocation, String propertyName) throws FileNotFoundException, IOException
+    public static String loadDatabaseName(InputStream propertiesStream, String propertyName) throws FileNotFoundException, IOException
     {
         Properties derbyProperties = new Properties();
-        derbyProperties.load(new FileInputStream(propertiesLocation));
+        derbyProperties.load(propertiesStream);
         return derbyProperties.getProperty(propertyName);
     }
     
-    public static void defaultDerbyCleanAndInit(String propertiesLocation, String propertyName) throws IOException, SQLException
+    public static void defaultDerbyCleanAndInit(InputStream propertiesStream, String propertyName) throws IOException, SQLException
     {
         String derbyHome = setDerbyHome();
-        String dbName = loadDatabaseName(propertiesLocation, propertyName);
+        String dbName = loadDatabaseName(propertiesStream, propertyName);
         cleanupDerbyDb(derbyHome, dbName);
         createDataBase(dbName);
     }
-
 }
 
 
