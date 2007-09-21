@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mule.tools</groupId>
             <artifactId>bobberplus</artifactId>
             <version>${version}</version>
@@ -89,5 +94,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

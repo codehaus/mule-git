@@ -495,14 +495,14 @@
             <name>Apache Incubating Release Distribution Repository</name>
             <url>http://people.apache.org/repo/m2-incubating-repository</url>
         </repository>
-        <repository>
+<!--        <repository>
             <id>apache.snapshots</id>
             <name>Apache Development Snapshot Repository</name>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
-        </repository>
+        </repository>-->
     </repositories>
 
     <pluginRepositories>
@@ -539,7 +539,6 @@
             <name>Mule Dependencies</name>
             <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
         </pluginRepository>
-
     </pluginRepositories>
 
     <build>
