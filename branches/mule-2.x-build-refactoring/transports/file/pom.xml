@@ -26,20 +26,6 @@
                      </excludes>
                  </configuration>
              </plugin>
-              <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Mule-Transports>
-                            file
-                        </Mule-Transports>
-                        <Export-Package>
-                            org.mule.providers.file.*
-                        </Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -80,4 +66,28 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>osgi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <Mule-Transports>
+                                    file
+                                </Mule-Transports>
+                                <Export-Package>
+                                    org.mule.providers.file.*
+                                </Export-Package>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

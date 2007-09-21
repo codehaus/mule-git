@@ -15,18 +15,6 @@
 
     <build>
         <plugins>
-              <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Export-Package>
-                            org.mule.providers.soap.axis.*
-                        </Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -83,6 +71,24 @@
                     <type>jar</type>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>osgi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <Export-Package>
+                                    org.mule.providers.soap.axis.*
+                                </Export-Package>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

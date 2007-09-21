@@ -12,24 +12,6 @@
     <!--<packaging>bundle</packaging>-->
     <name>XML Extensions</name>
     <description>Functionality for working with XML</description>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <!-- TODO This module needs reorganization in order to properly export its packages. -->
-                        <Export-Package>
-                            org.mule.transformers.xml,
-                            org.mule.routing.filters.xml
-                        </Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>
@@ -217,6 +199,26 @@
                     </exclusions>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>osgi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <!-- TODO This module needs reorganization in order to properly export its packages. -->
+                                <Export-Package>
+                                    org.mule.transformers.xml,
+                                    org.mule.routing.filters.xml
+                                </Export-Package>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

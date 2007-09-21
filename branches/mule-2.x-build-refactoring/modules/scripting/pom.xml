@@ -24,19 +24,6 @@
                     </excludes>
                 </configuration>
              </plugin>
-              <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <!-- TODO This module needs reorganization in order to properly export its packages. -->
-                        <Export-Package>
-                            org.mule.components.script.*,
-                            org.mule.transformers.script.*
-                        </Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
          </plugins>
     </build>
 
@@ -161,4 +148,27 @@
         </dependency>
         <!-- spring dynamic scripting -->
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>osgi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <!-- TODO This module needs reorganization in order to properly export its packages. -->
+                                <Export-Package>
+                                    org.mule.components.script.*,
+                                    org.mule.transformers.script.*
+                                </Export-Package>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
