@@ -12,10 +12,13 @@ package org.mule.providers.tcp.integration;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.model.MuleProxy;
 import org.mule.providers.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
+import org.mule.tck.testmodels.mule.TestMuleProxy;
+import org.mule.tck.testmodels.mule.TestSedaComponent;
 import org.mule.tck.testmodels.mule.TestSedaModel;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
@@ -80,7 +83,8 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
         assertTrue(model instanceof TestSedaModel);
         
         UMOComponent component = model.getComponent("testComponent");
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getInstance();
+        MuleProxy proxy = ((TestSedaComponent) component).getProxy();
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)  ((TestMuleProxy) proxy).getComponent();
         assertNotNull(ftc);
 //        assertEquals(1, ftc.getNumber());
 

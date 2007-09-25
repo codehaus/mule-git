@@ -477,9 +477,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 requestUri.append(path);
             }
 
-            if (logger.isTraceEnabled())
+            if (logger.isDebugEnabled())
             {
-                logger.trace("Secondary lookup of receiver on connector: " + connector.getName()
+                logger.debug("Secondary lookup of receiver on connector: " + connector.getName()
                         + " with URI key: " + requestUri.toString());
             }
 
@@ -491,7 +491,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             {
 				receiver = findReceiverByStem(connector.getReceivers(), uriStr);
 			}
-           
+
             if (receiver == null && logger.isWarnEnabled())
             {
                 logger.warn("No receiver found with secondary lookup on connector: " + connector.getName()
@@ -503,8 +503,14 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         return receiver;
     }
-
-	public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
+    
+    protected HttpResponse transformResponse(Object response) throws TransformerException
+    {
+        return (HttpResponse) TransformerUtils.applyAllTransformersToObject(
+                connector.getDefaultResponseTransformers(), response);
+    }
+    
+    public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
     {
         int match = 0;
         UMOMessageReceiver receiver = null;
@@ -521,10 +527,5 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         }
         return receiver;
     }
-	
-    protected HttpResponse transformResponse(Object response) throws TransformerException
-    {
-        return (HttpResponse) TransformerUtils.applyAllTransformersToObject(
-                connector.getDefaultResponseTransformers(), response);
-    }
+
 }

@@ -33,14 +33,22 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.concurrent.Latch;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.CodeSource;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,24 +58,38 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMuleTestCase extends TestCase implements TestCaseWatchdogTimeoutHandler
 {
+
+    /**
+     * Top-level directories under <code>.mule</code> which are not deleted on each
+     * test case recycle. This is required, e.g. to play nice with transaction manager
+     * recovery service object store.
+     */
+    public static final String[] IGNORED_DOT_MULE_DIRS = new String[] {"transaction-log"};
+
+    protected static UMOManagementContext managementContext;
+
     /**
      * This flag controls whether the text boxes will be logged when starting each test case.
      */
     private static final boolean verbose;
 
+    // A Map of test case extension objects. JUnit creates a new TestCase instance for
+    // every method, so we need to record metainfo outside the test.
+    private static final Map testInfos = Collections.synchronizedMap(new HashMap());
+
+    // A logger that should be suitable for most test cases.
+    protected final transient Log logger = LogFactory.getLog(this.getClass());
+
     /**
      * Start the ManagementContext once it's configured (defaults to false for AbstractMuleTestCase, true for FunctionalTestCase).
      */
     private boolean startContext = false;
-    
-    // This should be set to a string message describing any prerequisites not met
-    private boolean offline = System.getProperty("org.mule.offline", "false").equalsIgnoreCase("true");
 
-    private static Map testCounters;
-    
+    // Should be set to a string message describing any prerequisites not met.
+    private boolean offline = "true".equalsIgnoreCase(System.getProperty("org.mule.offline"));
+
+    // Barks if the test exceeds its time limit
     private TestCaseWatchdog watchdog;
-
-    protected static UMOManagementContext managementContext;
 
     static
     {
@@ -90,71 +112,45 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     /** Convenient test message for unit testing. */
     public static final String TEST_MESSAGE = "Test Message";
-    
-    /** 
-     * Default timeout for multithreaded tests (using CountDownLatch, WaitableBoolean, etc.), 
-     * in milliseconds.  The higher this value, the more reliable the test will be, so it 
-     * should be set high for Continuous Integration.  However, this can waste time during 
-     * day-to-day development cycles, so you may want to temporarily lower it while debugging.  
+
+    /**
+     * Default timeout for multithreaded tests (using CountDownLatch, WaitableBoolean, etc.),
+     * in milliseconds.  The higher this value, the more reliable the test will be, so it
+     * should be set high for Continuous Integration.  However, this can waste time during
+     * day-to-day development cycles, so you may want to temporarily lower it while debugging.
      */
     public static final long LOCK_TIMEOUT = 30000;
 
     /** Use this as a semaphore to the unit test to indicate when a callback has successfully been called. */
     protected Latch callbackCalled;
-    
-    protected final transient Log logger = LogFactory.getLog(getClass());
 
     public AbstractMuleTestCase()
     {
         super();
-        if (testCounters == null)
-        {
-            testCounters = new HashMap();
-        }
-        addTest();
-    }
 
-    protected void addTest()
-    {
-        TestInfo info = (TestInfo) testCounters.get(getClass().getName());
+        TestInfo info = (TestInfo) testInfos.get(getClass().getName());
         if (info == null)
         {
-            info = new TestInfo(getClass().getName());
-            testCounters.put(getClass().getName(), info);
+            info = this.createTestInfo();
+            testInfos.put(getClass().getName(), info);
         }
+
         info.incTestCount();
     }
 
-    protected void setDisposeManagerPerSuite(boolean val)
+    protected TestInfo createTestInfo()
     {
-        getTestInfo().setDisposeManagerPerSuite(val);
+        return new TestInfo(this);
     }
 
     protected TestInfo getTestInfo()
     {
-        TestInfo info = (TestInfo) testCounters.get(getClass().getName());
-        if (info == null)
-        {
-            info = new TestInfo(getClass().getName());
-            testCounters.put(getClass().getName(), info);
-        }
-        return info;
+        return (TestInfo) testInfos.get(this.getClass().getName());
     }
 
-    private void clearAllCounters()
+    private void clearInfo()
     {
-        if (testCounters != null)
-        {
-            testCounters.clear();
-        }
-    }
-
-    private void clearCounter()
-    {
-        if (testCounters != null)
-        {
-            testCounters.remove(getClass().getName());
-        }
+        testInfos.remove(this.getClass().getName());
     }
 
     public String getName()
@@ -168,23 +164,25 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public void run(TestResult result)
     {
+        if (this.isExcluded())
+        {
+            if (verbose)
+            {
+                logger.info(this.getClass().getName() + " excluded");
+            }
+            return;
+        }
+
         if (this.isDisabledInThisEnvironment())
         {
-            logger.info(this.getClass().getName() + " disabled");
+            if (verbose)
+            {
+                logger.info(this.getClass().getName() + " disabled");
+            }
             return;
         }
 
         super.run(result);
-    }
-
-    /**
-     * Subclasses can override this method to skip the execution of the entire test class.
-     *
-     * @return <code>true</code> if the test class should not be run.
-     */
-    protected boolean isDisabledInThisEnvironment()
-    {
-        return false;
     }
 
     /**
@@ -208,6 +206,27 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     /**
+     * Subclasses can override this method to skip the execution of the entire test class.
+     *
+     * @return <code>true</code> if the test class should not be run.
+     */
+    protected boolean isDisabledInThisEnvironment()
+    {
+        return false;
+    }
+
+    /**
+     * Indicates whether this test has been explicitly disabled through the configuration
+     * file loaded by TestInfo.
+     *
+     * @return whether the test has been explicitly disabled
+     */
+    protected boolean isExcluded()
+    {
+        return getTestInfo().isExcluded();
+    }
+
+    /**
      * Should this test run?
      * @param testMethodName name of the test method
      * @return whether the test should execute in the current envionment
@@ -227,6 +246,16 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return offline;
     }
 
+    protected boolean isDisposeManagerPerSuite()
+    {
+        return getTestInfo().isDisposeManagerPerSuite();
+    }
+
+    protected void setDisposeManagerPerSuite(boolean val)
+    {
+        getTestInfo().setDisposeManagerPerSuite(val);
+    }
+
     protected TestCaseWatchdog createWatchdog()
     {
         return new TestCaseWatchdog(30, TimeUnit.MINUTES, this);
@@ -243,7 +272,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         // start a watchdog thread
         watchdog = createWatchdog();
         watchdog.start();
-        
+
         if (verbose)
         {
             System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
@@ -313,7 +342,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         return "";
     }
-    
+
     /**
      * Run <strong>before</strong> any testcase setup.
      */
@@ -335,6 +364,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         try
         {
             doTearDown();
+
             if (!getTestInfo().isDisposeManagerPerSuite())
             {
                 disposeManager();
@@ -353,12 +383,12 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                     }
                     finally
                     {
-                        clearCounter();
+                        clearInfo();
                         disposeManager();
                     }
                 }
             }
-            finally 
+            finally
             {
                 // remove the watchdog thread in any case
                 watchdog.cancel();
@@ -374,7 +404,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             {
                 if (RegistryContext.getRegistry() != null)
                 {
-                    FileUtils.deleteTree(FileUtils.newFile(RegistryContext.getConfiguration().getWorkingDirectory()));
+                    final String workingDir = RegistryContext.getConfiguration().getWorkingDirectory();
+                    // do not delete TM recovery object store, everything else is good to go
+                    FileUtils.deleteTree(FileUtils.newFile(workingDir), IGNORED_DOT_MULE_DIRS);
                 }
                 managementContext.dispose();
             }
@@ -456,49 +488,68 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         return MuleTestUtils.getTestDescriptor(name, implementation, managementContext);
     }
-
-    protected void finalize() throws Throwable
-    {
-        try
-        {
-            clearAllCounters();
-        }
-        finally
-        {
-            super.finalize();
-        }
-    }
-
-    protected class TestInfo
+   
+    public static class TestInfo
     {
         /**
          * Whether to dispose the manager after every method or once all tests for
          * the class have run
          */
+        private final String name;
         private boolean disposeManagerPerSuite = false;
+        private boolean excluded = false;
         private int testCount = 0;
         private int runCount = 0;
-        private String name;
 
-        public TestInfo(String name)
+        // TODO HH: MULE-2414
+        // this is a shorter version of the snippet from:
+        // http://www.davidflanagan.com/blog/2005_06.html#000060
+        // (see comments; DF's "manual" version works fine too)
+        public static URL getClassPathRoot(Class clazz)
         {
-            this.name = name;
+            CodeSource cs = clazz.getProtectionDomain().getCodeSource();
+            return (cs != null ? cs.getLocation() : null);
         }
 
-        public void clearCounts()
+        public TestInfo(TestCase test)
         {
-            testCount = 0;
-            runCount = 0;
-        }
+            this.name = test.getClass().getName();
 
-        public void incTestCount()
-        {
-            testCount++;
-        }
+            // load test exclusions
+            try
+            {
+                // TODO HH: MULE-2414
+                // This may fail with jar files (such as in maven) since
+                // IOUtils/ClassUtils uses delegation-first to locate resources in
+                // jar files, which may then not be accessible to the actual test class.
+                // URL fileUrl = IOUtils.getResourceAsUrl("mule-test-exclusions.txt", test.getClass());
 
-        public void incRunCount()
-        {
-            runCount++;
+                // TODO HH: MULE-2414
+                // We find the physical classpath root URL of the test class and
+                // use that to find the correct resource. Works fine everywhere,
+                // regardless of classloaders.
+                URL[] urls = new URL[]{getClassPathRoot(test.getClass())};
+                URL fileUrl = new URLClassLoader(urls).getResource("mule-test-exclusions.txt");
+
+                if (fileUrl != null)
+                {
+                    // this iterates over all lines in the exclusion file
+                    Iterator lines = FileUtils.lineIterator(FileUtils.newFile(fileUrl.getFile()));
+
+                    // ..and this finds non-comments that match the test case name
+                    excluded = IteratorUtils.filteredIterator(lines, new Predicate()
+                    {
+                        public boolean evaluate(Object object)
+                        {
+                            return StringUtils.equals(name, StringUtils.trimToEmpty((String) object));
+                        }
+                    }).hasNext();
+                }
+            }
+            catch (IOException ioex)
+            {
+                // ignore
+            }
         }
 
         public int getTestCount()
@@ -506,9 +557,19 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             return testCount;
         }
 
+        public void incTestCount()
+        {
+            testCount++;
+        }
+
         public int getRunCount()
         {
             return runCount;
+        }
+
+        public void incRunCount()
+        {
+            runCount++;
         }
 
         public String getName()
@@ -524,6 +585,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         public void setDisposeManagerPerSuite(boolean disposeManagerPerSuite)
         {
             this.disposeManagerPerSuite = disposeManagerPerSuite;
+        }
+
+        public boolean isExcluded()
+        {
+            return excluded;
         }
 
         public String toString()

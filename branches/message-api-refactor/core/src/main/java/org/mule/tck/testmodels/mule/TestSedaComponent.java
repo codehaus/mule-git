@@ -11,7 +11,6 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.impl.MuleDescriptor;
-import org.mule.impl.model.ComponentFactory;
 import org.mule.impl.model.MuleProxy;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;
@@ -25,20 +24,9 @@ import org.mule.util.object.ObjectPool;
  */
 public class TestSedaComponent extends SedaComponent
 {
-    private Object component;
-
     public TestSedaComponent(MuleDescriptor descriptor, SedaModel model)
     {
         super(descriptor, model);
-    }
-
-    public Object getInstance() throws UMOException
-    {
-        if (component == null)
-        {
-            component = ComponentFactory.createService(getDescriptor());
-        }
-        return component;
     }
 
     public MuleProxy createComponentProxy(Object component, MuleDescriptor descriptor, UMOModel model, ObjectPool proxyPool) 

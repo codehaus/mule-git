@@ -15,13 +15,13 @@
     <description>Modules which extend the Mule Core but do not qualify as Transports</description>
 
     <modules>
-        <module>1to2migration</module>
         <module>acegi</module>
         <module>all-modules</module>
         <module>builders</module>
         <module>boot</module>
         <module>client</module>
         <module>jaas</module>
+        <module>jboss-transactions</module>
         <module>jca</module>
         <module>jotm</module>
         <module>management</module>
@@ -31,7 +31,7 @@
         <module>spring</module>
         <module>wssecurity</module>
         <module>xml</module>
-        <!-- Mule 3.x 
+        <!-- Mule 3.x
         <module>persistence</module>
         <module>registry</module>
         -->

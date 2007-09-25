@@ -32,6 +32,8 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
 {
 
     private JdbcConnector connector;
+    private static final String STORED_PROCEDURE_PREFIX = "{ ";
+    private static final String STORED_PROCEDURE_SUFFIX = " }";
 
     public JdbcMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
@@ -48,50 +50,26 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     {
         // template method
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.providers.AbstractMessageDispatcher#doDispatch(org.mule.umo.UMOEvent)
-     */
-    protected void doDispatch(UMOEvent event) throws Exception
+    
+    protected void executeWriteStatement(UMOEvent event, String writeStmt) throws Exception
     {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Dispatch event: " + event);
-        }
-
-        UMOImmutableEndpoint endpoint = event.getEndpoint();
-        String writeStmt = endpoint.getEndpointURI().getAddress();
-        String str;
-        if ((str = this.connector.getQuery(endpoint, writeStmt)) != null)
-        {
-            writeStmt = str;
-        }
-        writeStmt = StringUtils.trimToEmpty(writeStmt);
-        if (StringUtils.isBlank(writeStmt))
-        {
-            throw new IllegalArgumentException("Missing a write statement");
-        }
-        if (!"insert".equalsIgnoreCase(writeStmt.substring(0, 6))
-            && !"update".equalsIgnoreCase(writeStmt.substring(0, 6))
-            && !"delete".equalsIgnoreCase(writeStmt.substring(0, 6)))
-        {
-            throw new IllegalArgumentException(
-                "Write statement should be an insert / update / delete sql statement");
-        }
         List paramNames = new ArrayList();
         writeStmt = connector.parseStatement(writeStmt, paramNames);
 
         Object[] paramValues = connector.getParams(endpoint, paramNames, new MuleMessage(
-            event.getTransformedMessage()));
+            event.getTransformedMessage()), this.endpoint.getEndpointURI().getAddress());
 
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
         Connection con = null;
         try
         {
             con = this.connector.getConnection();
-
+            
+            if ("call".equalsIgnoreCase(writeStmt.substring(0, 4)))
+            {
+                writeStmt = STORED_PROCEDURE_PREFIX + writeStmt + STORED_PROCEDURE_SUFFIX;
+            }
+            
             int nbRows = connector.createQueryRunner().update(con, writeStmt, paramValues);
             if (nbRows != 1)
             {
@@ -113,6 +91,61 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
             throw e;
         }
     }
+    
+    protected String getStatement(UMOImmutableEndpoint endpoint)
+    {
+        String writeStmt = endpoint.getEndpointURI().getAddress();
+        String str;
+        if ((str = this.connector.getQuery(endpoint, writeStmt)) != null)
+        { 
+            writeStmt = str;
+        }
+        writeStmt = StringUtils.trimToEmpty(writeStmt);
+        if (StringUtils.isBlank(writeStmt))
+        {
+            throw new IllegalArgumentException("Missing statement");
+        }
+        
+        return writeStmt;
+    }
+    
+    protected boolean isWriteStatement(String writeStmt)
+    {
+        if (!"insert".equalsIgnoreCase(writeStmt.substring(0, 6))
+                        && !"update".equalsIgnoreCase(writeStmt.substring(0, 6))
+                        && !"delete".equalsIgnoreCase(writeStmt.substring(0, 6))
+                        && !"merge".equalsIgnoreCase(writeStmt.substring(0, 5))
+                        && !"call".equalsIgnoreCase(writeStmt.substring(0, 4)))
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mule.providers.AbstractMessageDispatcher#doDispatch(org.mule.umo.UMOEvent)
+     */
+    protected void doDispatch(UMOEvent event) throws Exception
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Dispatch event: " + event);
+        }
+        
+        String writeStmt = getStatement(event.getEndpoint());
+        
+        if (!isWriteStatement(writeStmt))
+        {
+            throw new IllegalArgumentException(
+                "Write statement should be an insert / update / delete / merge sql statement, or a stored-procedure call");
+        }
+        
+        this.executeWriteStatement(event, writeStmt);
+        
+    }
 
     /*
      * (non-Javadoc)
@@ -121,8 +154,16 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {
-        doDispatch(event);
-        return event.getMessage();
+        String statement = getStatement(event.getEndpoint());
+        
+        if (isWriteStatement(statement))
+        {
+            executeWriteStatement(event, statement);
+            return event.getMessage();
+        }
+        
+        return doReceive(event.getTimeout());
+        
     }
 
     /**
@@ -133,8 +174,8 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
      *            no data becomes available before the timeout elapses, null will be
      *            returned
      * @return the result of the request wrapped in a UMOMessage object. Null will be
-     *         returned if no data was avaialable
-     * @throws Exception if the call to the underlying protocal cuases an exception
+     *         returned if no data was available
+     * @throws Exception if the call to the underlying protocol causes an exception
      */
     protected UMOMessage doReceive(long timeout) throws Exception
     {
@@ -164,7 +205,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
             do
             {
                 result = connector.createQueryRunner().query(con, readStmt,
-                    connector.getParams(endpoint, readParams, null), connector.createResultSetHandler());
+                    connector.getParams(endpoint, readParams, null, this.endpoint.getEndpointURI().getAddress()), connector.createResultSetHandler());
                 if (result != null)
                 {
                     if (logger.isDebugEnabled())
@@ -193,7 +234,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
             if (ackStmt != null)
             {
                 int nbRows = connector.createQueryRunner().update(con, ackStmt,
-                    connector.getParams(endpoint, ackParams, result));
+                    connector.getParams(endpoint, ackParams, result, ackStmt));
                 if (nbRows != 1)
                 {
                     logger.warn("Row count for ack should be 1 and not " + nbRows);
