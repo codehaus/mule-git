@@ -46,8 +46,14 @@ public class ObjectToByteArray extends SerializableToByteArray
             {
                 InputStream is = (InputStream) src;
                 ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-                IOUtils.copy(is, byteOut);
-                is.close();
+                try 
+                {
+                    IOUtils.copy(is, byteOut);
+                }
+                finally 
+                {
+                    is.close();
+                }
                 return byteOut.toByteArray();
             }
         }

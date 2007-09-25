@@ -14,8 +14,9 @@ import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
+import org.mule.tck.testmodels.mule.TestSedaModel;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
 import org.mule.umo.model.UMOModel;
 
 import java.util.HashMap;
@@ -24,8 +25,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This test is more about testing the streaming model than the TCP provider, really.
@@ -33,10 +32,10 @@ import org.apache.commons.logging.LogFactory;
 public class StreamingTestCase extends FunctionalTestCase
 {
 
-    private static final Log logger = LogFactory.getLog(StreamingTestCase.class);
-    public static final int TIMEOUT = 3000;
+    public static final int TIMEOUT = 300000;
     public static final String TEST_MESSAGE = "Test TCP Request";
     public static final String RESULT = "Received stream; length: 16; 'Test...uest'";
+
 
     public StreamingTestCase()
     {
@@ -50,12 +49,51 @@ public class StreamingTestCase extends FunctionalTestCase
 
     public void testSend() throws Exception
     {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference message = new AtomicReference();
+        final AtomicInteger loopCount = new AtomicInteger(0);
+
+        EventCallback callback = new EventCallback()
+        {
+            public synchronized void eventReceived(UMOEventContext context, Object component)
+            {
+                System.out.println("Got callback");
+                try
+                {
+                    logger.info("called " + loopCount.incrementAndGet() + " times");
+                    FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
+                    // without this we may have problems with the many repeats
+                    if (1 == latch.getCount())
+                    {
+                        message.set(ftc.getSummary());
+                        assertEquals(RESULT, message.get());
+                        latch.countDown();
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        };
+
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
+        // this works only if singleton set in descriptor
 
-        String strResult = result.getPayloadAsString();
-        assertEquals(TEST_MESSAGE, strResult);
+        UMOModel model = managementContext.getRegistry().lookupModel("echoModel");
+        assertTrue(model instanceof TestSedaModel);
+        
+        UMOComponent component = model.getComponent("testComponent");
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getInstance();
+        assertNotNull(ftc);
+        
+        ftc.setEventCallback(callback, TEST_MESSAGE.length());
+
+        client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());
+
+        latch.await(10, TimeUnit.SECONDS);
+        assertEquals(RESULT, message.get());
     }
 
 }

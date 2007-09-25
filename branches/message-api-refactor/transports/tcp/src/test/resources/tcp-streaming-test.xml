@@ -13,22 +13,23 @@
     <tcp:connector name="default" validateConnections="false"
             tcpProtocolClassName="org.mule.providers.tcp.protocols.StreamingProtocol"/>
 
-    <model name="echoModel">
+    <model name="echoModel" class="org.mule.tck.testmodels.mule.TestSedaModel">
 
         <service name="echo">
             <component class="org.mule.components.simple.BridgeComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65432" synchronous="true"/>
             </inbound-router>
+            
             <outbound-router>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="{some-namespace}name" synchronous="true"/>
+                    <outbound-endpoint address="tcp://localhost:65433" synchronous="true"/>
                 </outbound-pass-through-router>
             </outbound-router>
         </service>
 
         <service name="testComponent">
-            <component scope="singleton" class="org.mule.providers.tcp.integration.StreamTestComponent"/>
+            <component scope="singleton" class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65433" synchronous="true"/>
             </inbound-router>

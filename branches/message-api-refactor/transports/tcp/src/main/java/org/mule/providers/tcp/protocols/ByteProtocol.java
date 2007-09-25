@@ -59,9 +59,7 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             if (streamOk)
             {
-                IOUtils.copy((InputStream) data, os);
-                os.flush();
-                os.close();
+                copyStream((InputStream)data, os);
             }
             else
             {
@@ -81,7 +79,8 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             // TODO SF: encoding is lost/ignored; it is probably a good idea to have
             // a separate "stringEncoding" property on the protocol
-            writeByteArray(os, ((String) data).getBytes());
+            String s = (String) data;
+            writeByteArray(os, s.getBytes(getStringEncoding(s)));
         }
         else if (data instanceof Serializable)
         {
@@ -91,6 +90,20 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             throw new IllegalArgumentException("Cannot serialize data: " + data);
         }
+    }
+
+    protected void copyStream(InputStream is, OutputStream os) throws IOException
+    {
+        IOUtils.copy((InputStream) is, os);
+    }
+
+    /**
+     * Override this if you'd like to change the String encoding for a message.
+     * @return
+     */
+    protected String getStringEncoding(String s)
+    {
+        return "UTF-8";
     }
 
     protected void writeByteArray(OutputStream os, byte[] data) throws IOException

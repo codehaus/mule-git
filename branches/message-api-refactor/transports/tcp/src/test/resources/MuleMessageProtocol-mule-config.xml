@@ -22,7 +22,7 @@
                 <inbound-endpoint address="vm://in"/>
             </inbound-router>
             <outbound-router>
-                <message-chunking-router messageSize="90">
+                <message-chunking-router messageSize="1000">
                     <outbound-endpoint address="tcp://localhost:63994"/>
                 </message-chunking-router>
             </outbound-router>

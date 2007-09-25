@@ -30,6 +30,7 @@ import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
+import org.mule.impl.model.streaming.DelegatingInputStream;
 import org.mule.providers.ConnectException;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.i18n.HttpMessages;

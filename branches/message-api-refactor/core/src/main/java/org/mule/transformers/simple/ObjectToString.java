@@ -43,17 +43,27 @@ public class ObjectToString extends AbstractTransformer
 
         if (src instanceof InputStream)
         {
+            InputStream is = (InputStream) src;
             try
             {
-                InputStream is = (InputStream) src;
                 ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
                 IOUtils.copy(is, byteOut);
-                is.close();
                 output = new String(byteOut.toByteArray(), encoding);
             }
             catch (IOException e)
             {
                 throw new TransformerException(CoreMessages.errorReadingStream(), e);
+            }
+            finally
+            {
+                try
+                {
+                    is.close();
+                }
+                catch (IOException e)
+                {
+                    logger.warn("Could not close stream: " + e.getMessage());
+                }
             }
         }
         else if (src instanceof Map)

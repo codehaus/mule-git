@@ -10,88 +10,73 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.impl.RequestContext;
+import org.mule.providers.tcp.TcpInputStream;
 import org.mule.providers.tcp.TcpProtocol;
-import org.mule.providers.tcp.i18n.TcpMessages;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.OutputHandler;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.util.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
-public class StreamingProtocol implements TcpProtocol
+public class StreamingProtocol extends EOFProtocol implements TcpProtocol
 {
+
+    public StreamingProtocol()
+    {
+        super();
+    }
 
     public Object read(InputStream is) throws IOException
     {
+        if (is instanceof TcpInputStream)
+        {
+            ((TcpInputStream) is).setStreaming(true);
+        }
+        
         return is;
     }
 
-    public void write(OutputStream os, Object data) throws IOException
+    /**
+     * 
+     * @param is
+     * @param os
+     * @throws IOException
+     */
+    protected void copyStream(InputStream is, OutputStream os) throws IOException
     {
-        boolean understood = false;
-        if (data instanceof UMOMessage)
+        try
         {
-            understood = process(os, ((UMOMessage) data).getPayload());
-            
-            if (!understood) 
+            int limit = getLimit();
+            byte[] buffer = new byte[bufferSize];
+            int len;
+            int remain = remaining(limit, limit, 0);
+            int total = 0;
+            boolean repeat;
+            do
             {
-                try
+                len = copy(is, buffer, os, remain);
+                total += len;
+                remain = remaining(limit, remain, len);
+                repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
+                
+                // Flush the data if we didn't fill up the whole buffer
+                // in case we're at the end of the stream and the receiving
+                // side is waiting for the end of the data before closing the socket
+                if (len > 0 && len < buffer.length)
                 {
-                    process(os, ((UMOMessage) data).getPayload(OutputHandler.class));
-                }
-                catch (TransformerException e)
-                {
-                    IOException e2 = new IOException();
-                    e2.initCause(e);
-                    throw e2;
+                    os.flush();
                 }
             }
-        } 
-        else 
-        {
-            understood = process(os, data);
+            while (repeat);
         }
-        
-        if (!understood)
+        finally
         {
-            throw new IOException(TcpMessages.invalidStreamingOutputType(data.getClass()).toString());
-        }   
+            is.close();
+        }
     }
 
-    private boolean process(OutputStream os, Object data) throws IOException, UnsupportedEncodingException
+    protected int getLimit()
     {
-        if (data instanceof InputStream)
-        {
-            System.out.println("Writing message in StreamingProtocol");
-            InputStream is = (InputStream) data;
-            IOUtils.copy(is, os);
-            is.close();
-            System.out.println("Closing iS");
-            return true;
-        }
-        else if (data instanceof OutputHandler)
-        {
-            ((OutputHandler) data).write(RequestContext.getEvent(), os);
-            return true;
-        }
-        else if (data instanceof String)
-        {
-            String enc = RequestContext.getEvent().getEncoding();
-            os.write(((String) data).getBytes(enc));
-            return true;
-        }
-        else if (data instanceof byte[])
-        {
-            os.write((byte[]) data);
-            return true;
-        }
-     
-        return false;
+        return UNLIMITED;
     }
 
 }

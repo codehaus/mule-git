@@ -11,11 +11,12 @@
 package org.mule.tck.functional;
 
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.lifecycle.Callable;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @see org.mule.tck.functional.EventCallback
  */
 
-public class FunctionalStreamingTestComponent 
+public class FunctionalStreamingTestComponent implements Callable
 {
     protected transient Log logger = LogFactory.getLog(getClass());
 
@@ -63,14 +64,16 @@ public class FunctionalStreamingTestComponent
     {
         return summary;
     }
-
+ 
     public int getNumber()
     {
         return number;
     }
 
-    public void call(InputStream in, OutputStream unused, UMOEventContext context) throws Exception
+    public Object onCall(UMOEventContext context) throws Exception
     {
+        System.out.println("Functional invoked");
+        InputStream in = (InputStream) context.getMessage().getPayload(InputStream.class);
         try
         {
             logger.debug("arrived at " + toString());
@@ -86,13 +89,14 @@ public class FunctionalStreamingTestComponent
             int bytesRead = 0;
             while (bytesRead >= 0)
             {
-                bytesRead = in.read(buffer);
+                bytesRead = read(in, buffer);
                 if (bytesRead > 0)
                 {
                     if (logger.isDebugEnabled())
                     {
                         logger.debug("read " + bytesRead + " bytes");
                     }
+//                    System.out.println("read " + streamLength + " bytes");
                     streamLength += bytesRead;
                     int startOfEndBytes = 0;
                     for (int i = 0; startDataSize < STREAM_SAMPLE_SIZE && i < bytesRead; ++i)
@@ -115,15 +119,27 @@ public class FunctionalStreamingTestComponent
                 }
             }
 
+            System.out.println("total: " + streamLength);
+            in.close();
         }
         catch (Exception e)
         {
+            in.close();
+            
+            e.printStackTrace();
             if (logger.isDebugEnabled())
             {
                 logger.debug(e);
             }
             throw e;
         }
+        System.out.println("Finished Fnctional Invoke");
+        return null;
+    }
+
+    protected int read(InputStream in, byte[] buffer) throws IOException
+    {
+        return in.read(buffer);
     }
 
     private void doCallback(byte[] startData, int startDataSize,

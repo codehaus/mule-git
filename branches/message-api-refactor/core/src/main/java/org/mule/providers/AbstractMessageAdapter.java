@@ -451,21 +451,25 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
     
     public Object getPayload(Class outputType) throws TransformerException
     {
-        if (outputType == null) {
+        if (outputType == null)
+        {
             return getPayload();
         }
-        
+
         Class inputCls = getPayload().getClass();
-        UMOTransformer transformer = 
-            RegistryContext.getRegistry().lookupTransformer(inputCls, outputType);
-        
+        if (outputType.isAssignableFrom(inputCls))
+        {
+            return getPayload();
+        }
+        UMOTransformer transformer = RegistryContext.getRegistry().lookupTransformer(inputCls, outputType);
+
         if (transformer == null)
         {
             throw new TransformerException(CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
         }
-        System.out.println("Transforming "  + getPayload()  +  " to " + outputType);
+        System.out.println("Transforming " + getPayload() + " to " + outputType);
         // Do we need to replace the message now?
-        
+
         return transformer.transform(getPayload());
     }
 

@@ -16,6 +16,8 @@ import org.mule.providers.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
+import org.mule.tck.testmodels.mule.TestSedaModel;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.model.UMOModel;
 
@@ -75,8 +77,10 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
         MuleClient client = new MuleClient();
 
         UMOModel model = managementContext.getRegistry().lookupModel("echoModel");
-        FunctionalStreamingTestComponent ftc =
-                (FunctionalStreamingTestComponent) model.getComponent("testComponent").getInstance();
+        assertTrue(model instanceof TestSedaModel);
+        
+        UMOComponent component = model.getComponent("testComponent");
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component.getInstance();
         assertNotNull(ftc);
 //        assertEquals(1, ftc.getNumber());
 
@@ -93,7 +97,7 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
         client.dispatch(endpoint, new MuleMessage(adapter));
 
         // if we assume 1MB/sec then we need at least...
-        int pause = (int) Math.max(size / ONE_MB, 10);
+        int pause = (int) Math.max(size / ONE_MB, 10) + 100000;
         logger.info("Waiting for up to " + pause + " seconds");
 
         latch.await(pause, TimeUnit.SECONDS);
