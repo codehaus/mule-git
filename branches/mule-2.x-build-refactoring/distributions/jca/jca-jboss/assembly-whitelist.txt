@@ -1,5 +1,6 @@
 acegi-security-1.0.1
 antlr-2.7.6
+aopalliance-1.0
 axis-1.4
 axis-jaxrpc-1.4
 axis-saaj-1.4

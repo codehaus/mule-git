@@ -328,6 +328,6 @@
                   <classifier>jdk14</classifier>
                 </dependency>
             </dependencies>
-        </profile>        
+        </profile>
     </profiles>
 </project>
