@@ -14,11 +14,16 @@ import org.mule.MuleManager;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.activemq.ActiveMqJmsConnector;
+import org.mule.providers.jms.xa.SessionInvocationHandler;
 import org.mule.transaction.XaTransactionFactory;
 import org.mule.umo.UMOTransactionFactory;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Session;
 import javax.transaction.TransactionManager;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -90,4 +95,25 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
         // there will always be a transaction available if using an Xa connector
         // so this will always fail
     }
+
+    public void testIsSameMethod() throws Throwable
+    {
+        MuleManager.getInstance().start();
+
+        assertNotNull(connector);
+        assertNotNull(connector.getConnection());
+        assertTrue(Proxy.isProxyClass(connector.getConnection().getClass()));
+        Connection connection = connector.getConnection();
+        Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+        assertTrue(Proxy.isProxyClass(session.getClass()));
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(session);
+        assertEquals(invocationHandler.getClass(), org.mule.providers.jms.xa.SessionInvocationHandler.class);
+        SessionInvocationHandler sessionInvocationHandler = (SessionInvocationHandler) invocationHandler;
+        assertTrue(sessionInvocationHandler.getXAResource().isSameRM(sessionInvocationHandler.getXAResource()));
+        assertTrue(sessionInvocationHandler.getXAResource().isSameRM(sessionInvocationHandler.getTargetObject().getXAResource()));
+//        assertTrue(sessionInvocationHandler.getTargetObject().getXAResource().isSameRM(sessionInvocationHandler.getXAResource()));
+
+    }
+
+
 }

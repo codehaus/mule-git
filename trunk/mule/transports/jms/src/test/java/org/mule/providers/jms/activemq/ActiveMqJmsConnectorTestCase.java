@@ -13,6 +13,7 @@ package org.mule.providers.jms.activemq;
 import org.mule.providers.jms.DefaultJmsTopicResolver;
 import org.mule.providers.jms.JmsTopicResolver;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
+import org.mule.providers.jms.xa.ConnectionInvocationHandler;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestTransactionManagerFactory;
 
@@ -39,7 +40,7 @@ public class ActiveMqJmsConnectorTestCase extends AbstractMuleTestCase
     {
         ActiveMQXAConnectionFactory factory = new ActiveMQXAConnectionFactory("vm://localhost?broker.persistent=false&broker.useJmx=false");
 
-        ConnectionFactoryWrapper wrapper = new ConnectionFactoryWrapper(factory, new TestTransactionManagerFactory().create());
+        ConnectionFactoryWrapper wrapper = new ConnectionFactoryWrapper(factory);
         // can be a proxy
         Connection connection = wrapper.createConnection();
         assertNotNull(connection);
@@ -51,8 +52,8 @@ public class ActiveMqJmsConnectorTestCase extends AbstractMuleTestCase
             Method cleanupMethod;
             if (Proxy.isProxyClass(clazz))
             {
-                ConnectionFactoryWrapper.ConnectionInvocationHandler handler =
-                        (ConnectionFactoryWrapper.ConnectionInvocationHandler) Proxy.getInvocationHandler(connection);
+                ConnectionInvocationHandler handler =
+                        (ConnectionInvocationHandler) Proxy.getInvocationHandler(connection);
                 // this is really an XA connection
                 connection = (Connection) handler.getTargetObject();
                 Class realConnectionClass = connection.getClass();
