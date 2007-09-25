@@ -28,7 +28,7 @@
 
         <!-- Due to the Maven 2.0.4 prerequisites.
             By default, maven-plugin-test-plugin uses 2.0.1 -->
-<!--        <dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-embedder</artifactId>
             <version>2.0.4</version>
@@ -39,7 +39,7 @@
             <artifactId>maven-core</artifactId>
             <version>2.0.4</version>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,6 +64,18 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <!-- 
+                         all repositories for org.apache.maven.shared.file-management seem to
+                         be broken. Hard-code a dependency here so the build will not fail
+                         -->
+                    <dependency>
+                        <groupId>org.apache.maven.shared</groupId>
+                        <artifactId>file-management</artifactId>
+                        <version>1.1</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <!-- Testing the result of the it pom.xml -->
