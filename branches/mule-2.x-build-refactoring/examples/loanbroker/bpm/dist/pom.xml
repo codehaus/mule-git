@@ -41,6 +41,11 @@
             <version>1.8.0.7</version>
             <scope>provided</scope> 
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jdbc</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
     </dependencies>
 
     <build>    
