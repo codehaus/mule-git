@@ -1,0 +1,14 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# MULE-1134
+org.mule.providers.soap.xfire.XFireConnectorVMFunctionalTestCase
+
+# tests with external dependencies
+org.mule.providers.soap.xfire.XFireWsdlTestCase
+
+# Cyclic dependency with axis ... hold for now
+org.mule.providers.soap.xfire.XFireServiceUsingAxisEndpointTestCase
+org.mule.providers.soap.xfire.ComplexTypeMethodTestCase
+

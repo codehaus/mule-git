@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule</groupId>
+        <artifactId>mule</artifactId>
+        <version>1.4.4-SNAPSHOT</version>
+    </parent>
+    <groupId>org.mule.distributions</groupId>
+    <artifactId>mule-distributions</artifactId>
+    <packaging>pom</packaging>
+    <name>Mule Distributions</name>
+
+    <distributionManagement>
+        <repository>
+            <id>mule-dist-releases</id>
+            <name>Mule Distributions Release Repository</name>
+            <url>dav:https://dav.codehaus.org/dist/mule/</url>
+        </repository>
+        <snapshotRepository>
+            <id>mule-dist-snapshots</id>
+            <name>Mule Distributions Snapshot Repository</name>
+            <url>dav:https://dav.codehaus.org/snapshots.dist/mule/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <repositoryId>mule-dist-releases</repositoryId>
+                    <snapshotRepositoryId>mule-dist-snapshots</snapshotRepositoryId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>ear</module>
+        <module>embedded</module>
+        <!-- <module>extras</module> -->
+        <module>jca</module>
+        <module>profiler</module>
+        <module>server</module>
+    </modules>
+</project>
