@@ -12,7 +12,7 @@ package org.mule.providers.jms.activemq;
 
 import org.mule.providers.ConnectException;
 import org.mule.providers.jms.JmsConnector;
-import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
+import org.mule.providers.jms.xa.ConnectionInvocationHandler;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -50,8 +50,8 @@ public class ActiveMqJmsConnector extends JmsConnector
             Method cleanupMethod;
             if (Proxy.isProxyClass(clazz))
             {
-                ConnectionFactoryWrapper.ConnectionInvocationHandler handler =
-                        (ConnectionFactoryWrapper.ConnectionInvocationHandler) Proxy.getInvocationHandler(connection);
+                ConnectionInvocationHandler handler =
+                        (ConnectionInvocationHandler) Proxy.getInvocationHandler(connection);
                 // this is really an XA connection, bypass the java.lang.reflect.Proxy as it
                 // can't delegate to non-interfaced methods (like proprietary 'cleanup' one)
                 // TODO check if CGlib will manage to enhance the AMQ connection class,

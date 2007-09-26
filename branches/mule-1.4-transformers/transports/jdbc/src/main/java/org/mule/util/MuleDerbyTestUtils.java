@@ -11,16 +11,16 @@
 package org.mule.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class MuleDerbyTestUtils extends Object
+public class MuleDerbyTestUtils
 {
     private static final String DERBY_DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
     
@@ -43,9 +43,41 @@ public class MuleDerbyTestUtils extends Object
         return derbySystemHome.getAbsolutePath();
     }
     
+    /**
+     * Properly shutdown an embedded Derby database
+     * 
+     * @throws SQLException
+     * @see <h href="http://db.apache.org/derby/docs/10.3/devguide/tdevdvlp20349.html">Derby docs</a>
+     */
+    public static void stopDatabase() throws SQLException
+    {
+        try
+        {
+            // force loading the driver so it's available even if no prior connection to the
+            // database was made
+            ClassUtils.instanciateClass(DERBY_DRIVER_CLASS, new Object[0]);
+
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+        }
+        catch (SQLException sqlex)
+        {
+            // this exception is documented to be thrown upon shutdown
+            if (sqlex.getSQLState().equals("XJ015") == false)
+            {
+                throw sqlex;
+            }
+        }
+        catch (Exception ex)
+        {
+            // this can only happen when the driver class is not in classpath. In this case, just
+            // throw up
+            throw new RuntimeException(ex);
+        }
+    }
+    
     public static void cleanupDerbyDb(String derbySystemHome, String databaseName) throws IOException, SQLException
     {
-        // TODO stop derby database
+        stopDatabase();
         FileUtils.deleteTree(new File(derbySystemHome + File.separator + databaseName));
     }
     
@@ -69,7 +101,7 @@ public class MuleDerbyTestUtils extends Object
         }
     }
     
-    public static String loadDatabaseName(InputStream propertiesStream, String propertyName) throws FileNotFoundException, IOException
+    public static String loadDatabaseName(InputStream propertiesStream, String propertyName) throws IOException
     {
         Properties derbyProperties = new Properties();
         derbyProperties.load(propertiesStream);
