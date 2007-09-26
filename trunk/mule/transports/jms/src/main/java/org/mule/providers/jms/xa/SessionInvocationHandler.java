@@ -114,6 +114,11 @@ public class SessionInvocationHandler implements InvocationHandler
 
     protected void enlist() throws Exception
     {
+        if (isEnlisted())
+        {
+            return;
+        }
+
         if (ConnectionFactoryWrapper.logger.isDebugEnabled())
         {
             ConnectionFactoryWrapper.logger.debug("Enlistment request: " + this);
@@ -122,14 +127,14 @@ public class SessionInvocationHandler implements InvocationHandler
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null && ConnectionFactoryWrapper.logger.isDebugEnabled())
         {
-            ConnectionFactoryWrapper.logger.debug("Can't enlist resource, Mule transaction is null");
+            ConnectionFactoryWrapper.logger.debug("Mule transaction is null, but enlist method is called");
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
             throw new IllegalStateException("Can't enlist resource, Mule transaction is not instance of XaTransaction " + transaction);
         }
 
-        if (transaction != null && !enlisted)
+        if (transaction != null && !isEnlisted())
         {
             if (ConnectionFactoryWrapper.logger.isDebugEnabled())
             {

@@ -444,19 +444,37 @@ public class ConnectionWrapper implements Connection
 
     protected void enlist() throws Exception
     {
+        if (isEnlisted())
+        {
+            return;
+        }
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Enlistment request: " + this);
+        }
+
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null && logger.isDebugEnabled())
         {
-            logger.debug("Mule transaction is null, but call enlist method");
+            logger.debug("Mule transaction is null, but enlist method is called");
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
             throw new IllegalStateException("Can't enlist resource, Mule transaction is not instance of XaTransaction " + transaction);
         }
-        if (transaction != null && !enlisted)
+        if (transaction != null && !isEnlisted())
         {
             enlisted = ((XaTransaction) transaction).enlistResource(xaConnection.getXAResource());
         }
     }
 
+    public boolean isEnlisted()
+    {
+        return enlisted;
+    }
+
+    public void setEnlisted(boolean enlisted)
+    {
+        this.enlisted = enlisted;
+    }
 }
