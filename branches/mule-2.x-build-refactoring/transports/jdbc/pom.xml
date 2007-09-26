@@ -50,9 +50,18 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <scope>test</scope>
+            <!-- TODO ensure proper merge from trunk where MuleDerbyTestUtils
+                 does not have a compile time dependency on Derby
+            -->
+            <!-- <scope>test</scope> -->
         </dependency>
     </dependencies>
 
