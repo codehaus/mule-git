@@ -71,7 +71,6 @@ mule-example-loanbroker-esn
 mule-example-scripting
 mule-example-stockquote
 mule-example-voipservice
-mule-module-1to2migration
 mule-module-acegi
 mule-module-boot
 mule-module-builders
@@ -117,7 +116,6 @@ ognl-2.6.9
 opensaml-1.0.1
 org.mortbay.jetty-5.1.12
 oro-2.0.7
-oy-lm-1.1
 quartz-all-1.5.2
 retrotranslator-runtime-1.2.1
 script-api-1.0-jdk14
@@ -137,8 +135,6 @@ spring-remoting-2.0.6
 spring-support-2.0.6
 stax-api-1.0.1
 stax-utils-20040917
-velocity-1.4
-velocity-dep-1.4
 wrapper-3.2.3
 wsdl4j-1.6.1
 wss4j-1.5.0

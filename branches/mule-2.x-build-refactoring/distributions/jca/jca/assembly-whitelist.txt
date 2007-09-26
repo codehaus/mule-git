@@ -45,7 +45,6 @@ log4j-1.2.14
 mockobjects-core-0.09
 mule-core
 mule-module-acegi
-mule-module-boot
 mule-module-builders
 mule-module-client
 mule-module-jca-core
