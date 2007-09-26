@@ -38,7 +38,7 @@
 				</router>
 			</outbound-router>
 			<properties>
-				<property name="wsdlFile" value="src/test/resources/localWsdl.wsdl"/>
+				<property name="wsdlFile" value="localWsdl.wsdl"/>
 			</properties>
         </mule-descriptor>
 
