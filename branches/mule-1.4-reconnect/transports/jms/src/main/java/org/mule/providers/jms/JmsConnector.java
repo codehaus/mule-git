@@ -251,8 +251,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             if (MuleManager.getInstance().getTransactionManager() != null)
             {
-                connectionFactory = new ConnectionFactoryWrapper(connectionFactory, MuleManager.getInstance()
-                    .getTransactionManager());
+                connectionFactory = new ConnectionFactoryWrapper(connectionFactory);
             }
         }
 

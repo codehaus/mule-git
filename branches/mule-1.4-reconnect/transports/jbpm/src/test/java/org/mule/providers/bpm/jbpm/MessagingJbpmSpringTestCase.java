@@ -18,21 +18,24 @@ import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
 /**
- * Tests the connector against jBPM with a process which generates a Mule message and 
- * processes its response.
- * jBPM is instantiated by Spring using the Spring jBPM module.
+ * Tests the connector against jBPM with a process which generates a Mule message and processes its response. jBPM is
+ * instantiated by Spring using the Spring jBPM module.
  */
-public class MessagingJbpmSpringTestCase extends AbstractJbmpTestCase {
+public class MessagingJbpmSpringTestCase extends AbstractJbmpTestCase
+{
 
-    protected ConfigurationBuilder getBuilder() throws Exception {
+    protected ConfigurationBuilder getBuilder() throws Exception
+    {
         return new SpringConfigurationBuilder();
     }
 
-    protected String getConfigResources() {
+    protected String getConfigResources()
+    {
         return "mule-jbpm-spring-config.xml";
     }
 
-    public void testSendMessageProcess() throws Exception {
+    public void testSendMessageProcess() throws Exception
+    {
         // Deploy the process definition.
         ((Jbpm) bpms).deployProcess("message-process.xml");
 
@@ -40,7 +43,8 @@ public class MessagingJbpmSpringTestCase extends AbstractJbmpTestCase {
         Object process;
         BPMS bpms = connector.getBpms();
         MuleClient client = new MuleClient();
-        try {
+        try
+        {
             // Create a new process.
             response = client.send("bpm://message", "data", null);
             process = response.getPayload();
@@ -56,7 +60,9 @@ public class MessagingJbpmSpringTestCase extends AbstractJbmpTestCase {
 
             // The process should have ended.
             assertTrue(bpms.hasEnded(process));
-        } finally {
+        }
+        finally
+        {
             client.dispose();
         }
     }
