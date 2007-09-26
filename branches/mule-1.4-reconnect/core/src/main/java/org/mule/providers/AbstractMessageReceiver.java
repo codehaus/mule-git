@@ -24,6 +24,8 @@ import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.retry.RetryTemplate;
+import org.mule.impl.retry.async.AsynchronousRetryTemplate;
+import org.mule.impl.retry.async.ConnectLatch;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -34,12 +36,11 @@ import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
-import org.mule.umo.retry.RetryContext;
 import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.UMORetryContext;
 import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.security.SecurityException;
 import org.mule.umo.transformer.TransformerException;
@@ -48,9 +49,9 @@ import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.concurrent.WaitableBoolean;
 
-import java.io.OutputStream;
-
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
+import java.io.OutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -110,6 +111,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     protected UMORetryTemplate connectionStrategy;
 
+    protected boolean startOnConnect = false;
+
     /**
      * Creates the Message Receiver
      * 
@@ -146,11 +149,25 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
         if(endpoint.getRetryPolicyFactory()!=null)
         {
-            connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+            if(endpoint.getRetryPolicyFactory().isConnectAsynchronously())
+            {
+                connectionStrategy = new AsynchronousRetryTemplate(
+                        new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier()),
+                        workManager, new ConnectLatch(this.connector));
+            }
+            else
+            {
+                connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+            }
+        }
+        else if(this.connector.getConnectionStrategy().getPolicyFactory().isConnectAsynchronously())
+        {
+            connectionStrategy = this.connector.getConnectionStrategy(workManager);
         }
         else
         {
             connectionStrategy = this.connector.getConnectionStrategy();
+
         }
     }
 
@@ -396,19 +413,38 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             return;
         }
 
-        connectionStrategy.execute(new UMORetryCallback()
+        final UMORetryCallback callback = new UMORetryCallback()
         {
-            public void doWork(RetryContext context) throws Exception
+            public void doWork(UMORetryContext context) throws Exception
             {
                 doConnect();
                 connected.set(true);
+                if(startOnConnect)
+                {
+                    start();
+                }
             }
 
             public String getWorkDescription()
             {
                 return getConnectionDescription();
             }
-        });
+        };
+
+
+        if(isAsyncConnections())
+        {
+            connector.getConnectionStrategy(workManager).execute(callback);
+        }
+        else
+        {
+            connectionStrategy.execute(callback);
+        }
+        
+        if(startOnConnect)
+        {
+            start();
+        }
     }
 
     public void disconnect() throws Exception
@@ -429,23 +465,19 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
     public String getConnectionDescription()
     {
-        return "endpoint." + endpoint.getEndpointURI().toString();
+        return "endpoint.inbound." + endpoint.getEndpointURI().toString();
     }
 
     public final void start() throws UMOException
     {
+        if(!connected.get())
+        {
+            startOnConnect = true;
+            return;
+        }
+
         if (stopped.compareAndSet(true, false))
         {
-            // Make sure we are connected
-            try
-            {
-                connect();
-            }
-            catch (Exception e)
-            {
-                throw new LifecycleException(e, this);
-            }
-
             doStart();
         }
     }
@@ -660,6 +692,12 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     public String getReceiverKey()
     {
         return receiverKey;
+    }
+
+    public boolean isAsyncConnections()
+    {
+        //TODO
+         return true;
     }
 
     public String toString()

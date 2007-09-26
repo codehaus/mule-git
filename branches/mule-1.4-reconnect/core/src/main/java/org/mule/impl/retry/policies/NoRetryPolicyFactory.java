@@ -10,14 +10,13 @@
 package org.mule.impl.retry.policies;
 
 import org.mule.umo.retry.PolicyStatus;
-import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.retry.UMOTemplatePolicy;
 
 /**
  * This polciy does what it says on the tin.  It will allow a {@link UMORetryTemplate} to execute
  * once and then stop.
  */
-public class NoRetryPolicyFactory implements UMOPolicyFactory
+public class NoRetryPolicyFactory extends AbstractPolicyFactory
 {
     public UMOTemplatePolicy create()
     {
@@ -30,5 +29,11 @@ public class NoRetryPolicyFactory implements UMOPolicyFactory
         {
             return PolicyStatus.policyExhaused(null);
         }
+    }
+
+
+    public String toString()
+    {
+        return "NoRetryPolicy{}";
     }
 }

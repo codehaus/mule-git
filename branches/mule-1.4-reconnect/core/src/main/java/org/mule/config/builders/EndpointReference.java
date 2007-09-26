@@ -188,7 +188,7 @@ public class EndpointReference
                 ep.setTransactionConfig(transactionConfig);
             }
 
-            ep.initialise();
+
             Method m = object.getClass().getMethod(propertyName, new Class[]{UMOEndpoint.class});
             if (m == null)
             {

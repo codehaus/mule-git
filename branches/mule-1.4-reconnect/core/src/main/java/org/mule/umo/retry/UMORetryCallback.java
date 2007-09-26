@@ -22,7 +22,7 @@ package org.mule.umo.retry;
 
 public interface UMORetryCallback
 {
-    public void doWork(RetryContext context) throws Exception;
+    public void doWork(UMORetryContext context) throws Exception;
 
     public String getWorkDescription();
 }

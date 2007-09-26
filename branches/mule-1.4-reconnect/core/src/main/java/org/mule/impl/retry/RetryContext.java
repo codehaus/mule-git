@@ -7,16 +7,17 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.umo.retry;
+package org.mule.impl.retry;
 
 import org.mule.umo.UMOMessage;
+import org.mule.umo.retry.UMORetryContext;
 
 import java.util.Map;
 
 /**
  * TODO
  */
-public class RetryContext
+public class RetryContext implements UMORetryContext
 {
     private UMOMessage[] returnMessages;
     private Map metaInfo;

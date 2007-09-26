@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="tcp_functional_test" version="1.0">
+
+    <mule-environment-properties serverUrl=""/>
+
+    <connector name="jmsConnector" className="org.mule.providers.jms.JmsConnector">
+
+        <properties>
+            <property name="specification" value="1.1"/>
+            <property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+            <property name="jndiInitialFactory"
+                      value="org.apache.activemq.jndi.ActiveMQInitialContextFactory"/>
+            <map name="connectionFactoryProperties">
+                <property name="brokerURL" value="tcp://localhost:61616"/>
+            </map>
+        </properties>
+
+        <connection-strategy className="org.mule.impl.retry.policies.SimpleRetryPolicyFactory">
+            <properties>
+                <property name="retryCount" value="40"/>
+                <property name="frequency" value="2000"/>
+                <property name="connectAsynchronously" value="true"/>
+            </properties>
+        </connection-strategy>
+    </connector>
+
+
+
+    <global-endpoints>
+        <endpoint name="clientEndpoint" address="jms://client"/>
+        <endpoint name="outboundEndpoint" address="jms://out"/>
+    </global-endpoints>
+
+    <model name="main">
+        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalTestComponent">
+            <inbound-router>
+                <global-endpoint name="clientEndpoint"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <global-endpoint name="outboundEndpoint"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+
+</mule-configuration>

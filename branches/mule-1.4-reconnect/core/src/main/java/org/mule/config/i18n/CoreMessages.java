@@ -14,6 +14,7 @@ import org.mule.config.MuleConfiguration;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.util.ClassUtils;
 import org.mule.util.DateUtils;
 import org.mule.util.StringMessageUtils;
@@ -839,6 +840,15 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 226);
     }
 
+    public static Message failedToConnect(String what, UMOPolicyFactory policy)
+    {
+        return createMessage(BUNDLE_PATH, 228, what, policy);
+    }
+
+    public static Message notConnectedYet(String what)
+    {
+        return createMessage(BUNDLE_PATH, 229, what);
+    }
     /**
      * Returns a message that is a product informatin.
      *

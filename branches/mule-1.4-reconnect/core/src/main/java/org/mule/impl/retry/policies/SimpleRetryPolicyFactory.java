@@ -11,7 +11,6 @@
 package org.mule.impl.retry.policies;
 
 import org.mule.umo.retry.PolicyStatus;
-import org.mule.umo.retry.UMOPolicyFactory;
 import org.mule.umo.retry.UMOTemplatePolicy;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
  * This policy allows the user to configure how namy times a retry should be attempted and
  * how much time to wait between retries.
  */
-public class SimpleRetryPolicyFactory implements UMOPolicyFactory
+public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
 {
     /**
      * logger used by this class
@@ -175,5 +174,17 @@ public class SimpleRetryPolicyFactory implements UMOPolicyFactory
                 return new AtomicInteger(0);
             }
         }
+    }
+
+
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("SimpleRetryPolicy");
+        sb.append("{frequency=").append(frequency);
+        sb.append(", retryCount=").append(retryCount);
+        sb.append(", connectAsync=").append(isConnectAsynchronously());
+        sb.append('}');
+        return sb.toString();
     }
 }

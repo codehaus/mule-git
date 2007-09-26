@@ -9,15 +9,17 @@
  */
 package org.mule.impl.retry;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.FatalConnectException;
-import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.retry.PolicyStatus;
 import org.mule.umo.retry.UMOPolicyFactory;
-import org.mule.umo.retry.UMORetryNotifier;
 import org.mule.umo.retry.UMORetryCallback;
+import org.mule.umo.retry.UMORetryContext;
+import org.mule.umo.retry.UMORetryNotifier;
+import org.mule.umo.retry.UMORetryTemplate;
 import org.mule.umo.retry.UMOTemplatePolicy;
-import org.mule.umo.retry.RetryContext;
-import org.mule.config.i18n.CoreMessages;
+
+import java.io.InterruptedIOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +59,7 @@ public class RetryTemplate implements UMORetryTemplate
         this.notifier = notifier;
     }
 
-    public RetryContext execute(UMORetryCallback callback) throws FatalConnectException
+    public UMORetryContext execute(UMORetryCallback callback) throws FatalConnectException
     {
         PolicyStatus status = null;
         UMOTemplatePolicy policy = policyFactory.create();
@@ -82,7 +84,7 @@ public class RetryTemplate implements UMORetryTemplate
                     {
                         notifier.failed(context, e);
                     }
-                    if (e instanceof InterruptedException)
+                    if (e instanceof InterruptedException || e instanceof InterruptedIOException)
                     {
                         logger.error("Process was interrupted (InterruptedException), ceasing process");
                         break;
@@ -91,6 +93,17 @@ public class RetryTemplate implements UMORetryTemplate
                 status = policy.applyPolicy();
             }
             while (status.isOk());
+
+            if(status==null || status.isOk())
+            {
+                return context;
+            }
+            else
+            {
+                throw new FatalConnectException(
+                        CoreMessages.failedToConnect(context.getDescription(), policyFactory),
+                        status.getThrowable(), this);
+            }
         }
         finally
         {
@@ -102,7 +115,6 @@ public class RetryTemplate implements UMORetryTemplate
                 }
             }
         }
-        return context;
 
     }
 

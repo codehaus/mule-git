@@ -13,8 +13,8 @@ package org.mule.providers;
 import org.mule.MuleManager;
 import org.mule.config.ExceptionHelper;
 import org.mule.impl.internal.notifications.ConnectionNotification;
-import org.mule.umo.retry.RetryContext;
 import org.mule.umo.retry.UMORetryNotifier;
+import org.mule.umo.retry.UMORetryContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +29,7 @@ public class ConnectNotifier implements UMORetryNotifier
      */
     protected transient final Log logger = LogFactory.getLog(ConnectNotifier.class);
 
-    public void sucess(RetryContext context)
+    public void sucess(UMORetryContext context)
     {
         if (logger.isDebugEnabled())
         {
@@ -39,7 +39,7 @@ public class ConnectNotifier implements UMORetryNotifier
         fireConnectNotification(ConnectionNotification.CONNECTION_CONNECTED, context.getDescription());
     }
 
-    public void failed(RetryContext context, Throwable e)
+    public void failed(UMORetryContext context, Throwable e)
     {
 
         fireConnectNotification(ConnectionNotification.CONNECTION_FAILED, context.getDescription());
@@ -50,7 +50,7 @@ public class ConnectNotifier implements UMORetryNotifier
             msg.append("Failed to connect/reconnect: ").append(context.getDescription());
             Throwable t = ExceptionHelper.getRootException(e);
             msg.append(". Root Exception was: ").append(ExceptionHelper.writeException(t));
-            logger.error(msg.toString(), e);
+            logger.error(msg.toString());
         }
     }
 

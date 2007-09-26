@@ -344,7 +344,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         for (Iterator iterator = endpoints.values().iterator(); iterator.hasNext();)
         {
             UMOEndpoint ep = (UMOEndpoint)iterator.next();
-            ep.initialise();
+
             manager.unregisterEndpoint(ep.getName());
             manager.registerEndpoint(ep);
         }

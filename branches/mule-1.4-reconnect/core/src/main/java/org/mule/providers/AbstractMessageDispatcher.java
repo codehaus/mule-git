@@ -31,9 +31,9 @@ import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.retry.RetryContext;
 import org.mule.umo.retry.UMORetryCallback;
 import org.mule.umo.retry.UMORetryTemplate;
+import org.mule.umo.retry.UMORetryContext;
 import org.mule.util.ClassUtils;
 
 import java.beans.ExceptionListener;
@@ -199,9 +199,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         final UMOEvent currentEvent = RequestContext.getEvent();
         try
         {
-            RetryContext context = connectionStrategy.execute(new UMORetryCallback()
+            UMORetryContext context = connectionStrategy.execute(new UMORetryCallback()
             {
-                public void doWork(RetryContext context) throws Exception
+                public void doWork(UMORetryContext context) throws Exception
                 {
                     // Make sure we are connected
                     connect();
@@ -257,9 +257,9 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
     {
         try
         {
-            RetryContext context = connectionStrategy.execute(new UMORetryCallback()
+            UMORetryContext context = connectionStrategy.execute(new UMORetryCallback()
             {
-                public void doWork(RetryContext context) throws Exception
+                public void doWork(UMORetryContext context) throws Exception
                 {
                     // Make sure we are connected
                     connect();
@@ -274,7 +274,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
 
                 public String getWorkDescription()
                 {
-                    return getWorkDescription();
+                    return getConnectionDescription();
                 }
             });
             return context.getFirstReturnMessage();
@@ -463,7 +463,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      */
     public String getConnectionDescription()
     {
-        return "endpoint." + endpoint.getEndpointURI().toString();
+        return "endpoint.outbound." + endpoint.getEndpointURI().toString();
     }
 
     public synchronized void reconnect() throws Exception
@@ -516,7 +516,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 connectionStrategy.execute(new UMORetryCallback()
                 {
 
-                    public void doWork(RetryContext context) throws Exception
+                    public void doWork(UMORetryContext context) throws Exception
                     {
 
                         RequestContext.setEvent(event);

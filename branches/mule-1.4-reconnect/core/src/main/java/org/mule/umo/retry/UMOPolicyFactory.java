@@ -18,5 +18,7 @@ package org.mule.umo.retry;
  */
 public interface UMOPolicyFactory
 {
-    public UMOTemplatePolicy create();
+    UMOTemplatePolicy create();
+
+    boolean isConnectAsynchronously();
 }

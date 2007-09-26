@@ -34,4 +34,15 @@ public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
         return new SimpleRetryPolicy(frequency, RETRY_COUNT_FOREVER);
     }
 
+
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("RetryForeverPolicy");
+        sb.append("{frequency=").append(frequency);
+        sb.append(", connectAsync=").append(isConnectAsynchronously());
+        sb.append('}');
+        return sb.toString();
+    }
+
 }
