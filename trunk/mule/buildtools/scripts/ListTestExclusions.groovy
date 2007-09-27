@@ -17,7 +17,7 @@ def scanner = ant.fileScanner
     }
 }
 
-lines = [];
+def lines = []
 
 scanner.each
 {
@@ -30,7 +30,7 @@ scanner.each
     }
 }
 
-Collections.sort(lines)
+lines.sort()
 
 lines.each
 {
