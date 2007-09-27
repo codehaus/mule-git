@@ -853,4 +853,14 @@ public class CoreMessages extends MessageFactory
                              StringUtils.defaultString(config.getVendorName(), notset) + " " + StringUtils.defaultString(config.getVendorUrl(), notset));
     }
 
+    public static Message failedToGetXATransaction()
+    {
+        return createMessage(BUNDLE_PATH, 228);
+    }
+
+    public static Message cannotEnlistResource(Object tx)
+    {
+        return createMessage(BUNDLE_PATH, 229, tx.getClass());
+    }
+
 }

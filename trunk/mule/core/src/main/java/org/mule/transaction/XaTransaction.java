@@ -291,12 +291,12 @@ public class XaTransaction extends AbstractTransaction
         TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
         try
         {
-            Transaction tx = txManager.getTransaction();
-            if (tx == null)
+            Transaction jtaTransaction = txManager.getTransaction();
+            if (jtaTransaction == null)
             {
-                throw new TransactionException(MessageFactory.createStaticMessage("XATransaction is null"));
+                throw new TransactionException(CoreMessages.failedToGetXATransaction());
             }
-            return tx.enlistResource(resource);
+            return jtaTransaction.enlistResource(resource);
         }
         catch (RollbackException e)
         {
