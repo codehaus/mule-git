@@ -19,6 +19,7 @@ import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
@@ -204,10 +205,12 @@ public abstract class AbstractTransformer implements UMOTransformer
     {
         String encoding = null;
 
-        if (src instanceof UMOMessage && !isSourceTypeSupported(UMOMessage.class))
+        if (src instanceof UMOMessageAdapter 
+                        && !isSourceTypeSupported(UMOMessageAdapter.class, true)
+                        && !isSourceTypeSupported(UMOMessage.class, true))
         {
-            encoding = ((UMOMessage) src).getEncoding();
-            src = ((UMOMessage) src).getPayload();
+            encoding = ((UMOMessageAdapter) src).getEncoding();
+            src = ((UMOMessageAdapter) src).getPayload();
         }
 
         if (encoding == null && endpoint != null)

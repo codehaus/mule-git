@@ -10,14 +10,15 @@
 
 package org.mule.providers.http;
 
+import org.mule.impl.ThreadSafeAccess;
+import org.mule.providers.DefaultMessageAdapter;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.DefaultMessageAdapter;
 
 /**
  * <code>HttpMessageAdapter</code> Wraps an incoming Http Request making the
@@ -41,16 +42,28 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
             this.message = ((Object[])message)[0];
             if (((Object[])message).length > 1)
             {
-                Map props = (Map)((Object[])message)[1];
-                for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
+                Object second = ((Object[])message)[1];
+                if (second instanceof Map)
                 {
-                    Map.Entry e = (Map.Entry)iterator.next();
-                    String key = (String)e.getKey();
-                    Object value = e.getValue();
-                    // skip incoming null values
-                    if (value != null)
+                    Map props = (Map) second;
+                    for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
                     {
-                        setProperty(key, value);
+                        Map.Entry e = (Map.Entry)iterator.next();
+                        String key = (String)e.getKey();
+                        Object value = e.getValue();
+                        // skip incoming null values
+                        if (value != null)
+                        {
+                            setProperty(key, value);
+                        }
+                    }
+                }
+                else if (second instanceof Header[])
+                {
+                    Header[] headers = (Header[]) second;
+                    for (int i = 0; i < headers.length; i++)
+                    {
+                       setProperty(headers[i].getName(), headers[i].getValue());
                     }
                 }
             }
@@ -93,17 +106,6 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
         message = template.message;
         http11 = template.http11;
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.umo.providers.UMOMessageAdapter#getPayload()
-     */
-    public Object getPayload()
-    {
-        return message;
-    }
-
 
     /*
      * (non-Javadoc)

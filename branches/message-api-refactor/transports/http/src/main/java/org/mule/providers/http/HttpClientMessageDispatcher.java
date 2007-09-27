@@ -350,13 +350,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 body = is;
             }
             
-            HttpMessageAdapter adapter = new HttpMessageAdapter(body);
-
             Header[] headers = httpMethod.getResponseHeaders();
-            for (int i = 0; i < headers.length; i++)
-            {
-                adapter.setProperty(headers[i].getName(), headers[i].getValue());
-            }
+            HttpMessageAdapter adapter = new HttpMessageAdapter(new Object[]{body, headers});
 
             String status = String.valueOf(httpMethod.getStatusCode());
 

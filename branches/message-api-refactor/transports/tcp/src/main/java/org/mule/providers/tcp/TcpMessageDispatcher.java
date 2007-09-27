@@ -72,6 +72,12 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
                     {
                         return null;
                     }
+                    
+                    if (result instanceof UMOMessage)
+                    {
+                    	return (UMOMessage) result;
+                    }
+                    
                     return new MuleMessage(connector.getMessageAdapter(result));
                 }
                 catch (SocketTimeoutException e)

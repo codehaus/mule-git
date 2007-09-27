@@ -10,20 +10,6 @@
 
 package org.mule.impl;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.EventObject;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleException;
 import org.mule.RegistryContext;
 import org.mule.config.MuleProperties;
@@ -43,6 +29,21 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.MapUtils;
 import org.mule.util.UUID;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.EventObject;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleEvent</code> represents any data event occuring in the Mule
@@ -334,24 +335,27 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             List transformers = endpoint.getTransformers();
             if (null != transformers)
             {
-                transformedMessage = TransformerUtils.applyAllTransformers(transformers, message).getPayload(outputType);
+                transformedMessage = TransformerUtils.applyAllTransformers(transformers, message).getPayload(
+                    outputType);
             }
             else
             {
                 transformedMessage = message.getPayload(outputType);
             }
-        } else if (outputType != null && !transformedMessage.getClass().isAssignableFrom(outputType)) {
+        }
+        else if (outputType != null && !transformedMessage.getClass().isAssignableFrom(outputType))
+        {
             Class inputCls = transformedMessage.getClass();
-            UMOTransformer transformer = 
-                RegistryContext.getRegistry().lookupTransformer(inputCls, outputType);
-            
+            UMOTransformer transformer = RegistryContext.getRegistry()
+                .lookupTransformer(inputCls, outputType);
+
             if (transformer == null)
             {
-                throw new TransformerException(CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
+                throw new TransformerException(
+                    CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
             }
-            
-            // Do we need to replace the message now?
-            transformedMessage =  transformer.transform(transformedMessage);
+
+            transformedMessage = transformer.transform(transformedMessage);
         }
         return transformedMessage;
     }

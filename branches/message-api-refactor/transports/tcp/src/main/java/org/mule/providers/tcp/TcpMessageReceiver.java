@@ -269,7 +269,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         public void release()
         {
-            waitForStreams();
+        	waitForStreams();
 
             releaseSocket();
         }
@@ -336,20 +336,15 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         protected Object getNextMessage(Object resource) throws Exception
         {
+        	Object readMsg = null;
             try
             {
-                Object readMsg = protocol.read(dataIn);
+                readMsg = protocol.read(dataIn);
 
                 if (dataIn.isStreaming())
                 {
                     moreMessages = false;
                 } 
-                else if (readMsg == null)
-                {
-                    // Protocols can return a null object, which means we're done
-                    // reading messages for now and can mark the stream for closing later.                        
-                    dataIn.close();
-                }
                 
                 return readMsg;
             }
@@ -357,12 +352,20 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             {
                 if (!socket.getKeepAlive())
                 {
-                    dataIn.close();
                     return null;
                 }
             }
+            finally
+            {
+            	if (readMsg == null)
+            	{
+            		// Protocols can return a null object, which means we're done
+                    // reading messages for now and can mark the stream for closing later.
+            		// Also, exceptions can be thrown, in which case we're done reading.
+                    dataIn.close();
+            	}
+            }
             
-            dataIn.close();
             return null;
         }
         

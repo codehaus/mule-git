@@ -11,7 +11,6 @@
 package org.mule.providers.http;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,18 +22,17 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.cookie.MalformedCookieException;
 import org.mule.RegistryContext;
-import org.mule.transformers.TransformerUtils;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
-import org.mule.impl.model.streaming.DelegatingInputStream;
 import org.mule.providers.ConnectException;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.tcp.TcpMessageReceiver;
+import org.mule.transformers.TransformerUtils;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -281,41 +279,20 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             final RequestLine requestLine = request.getRequestLine();
             
-            InputStream is = request.getBody();
-            Object body = null;
-            if (is != null) 
-            {
-                is = new DelegatingInputStream(is) 
-                {
-                    public void close() throws IOException
-                    {
-                        super.close();
-                        
-                        try
-                        {
-                            sendExpect100(headers, requestLine);
-                        }
-                        catch (TransformerException e)
-                        {
-                            IOException e2 = new IOException(HttpMessages.couldNotSendExpect100().toString());
-                            e2.initCause(e);
-                            throw e2;
-                        }
-                    }
-                };
-                body = is;
-            }
-            else
+            sendExpect100(headers, requestLine);
+            
+            Object body = request.getBody();
+            if (body == null)
             {
                 body = StringUtils.EMPTY;
             }
+            
             return connector.getMessageAdapter(new Object[]{body, headers});
         }
 
         private void sendExpect100(Map headers, RequestLine requestLine)
             throws TransformerException, IOException
         {
-            System.out.println("writing expect 100");
             // respond with status code 100, for Expect handshake
             // according to rfc 2616 and http 1.1
             // the processing will continue and the request will be fully

@@ -467,10 +467,9 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         {
             throw new TransformerException(CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
         }
-        System.out.println("Transforming " + getPayload() + " to " + outputType);
-        // Do we need to replace the message now?
-
-        return transformer.transform(getPayload());
+        
+        // Pass in the adapter itself, so we respect the encoding
+        return transformer.transform(this);
     }
 
     protected byte[] convertToBytes(Object object) 

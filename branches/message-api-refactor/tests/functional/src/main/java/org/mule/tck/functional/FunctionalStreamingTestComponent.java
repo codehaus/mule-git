@@ -72,7 +72,6 @@ public class FunctionalStreamingTestComponent implements Callable
 
     public Object onCall(UMOEventContext context) throws Exception
     {
-        System.out.println("Functional invoked");
         InputStream in = (InputStream) context.getMessage().getPayload(InputStream.class);
         try
         {
@@ -96,7 +95,7 @@ public class FunctionalStreamingTestComponent implements Callable
                     {
                         logger.debug("read " + bytesRead + " bytes");
                     }
-//                    System.out.println("read " + streamLength + " bytes");
+                    
                     streamLength += bytesRead;
                     int startOfEndBytes = 0;
                     for (int i = 0; startDataSize < STREAM_SAMPLE_SIZE && i < bytesRead; ++i)
@@ -119,7 +118,6 @@ public class FunctionalStreamingTestComponent implements Callable
                 }
             }
 
-            System.out.println("total: " + streamLength);
             in.close();
         }
         catch (Exception e)
@@ -133,7 +131,7 @@ public class FunctionalStreamingTestComponent implements Callable
             }
             throw e;
         }
-        System.out.println("Finished Fnctional Invoke");
+        
         return null;
     }
 
