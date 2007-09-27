@@ -853,12 +853,12 @@ public class CoreMessages extends MessageFactory
                              StringUtils.defaultString(config.getVendorName(), notset) + " " + StringUtils.defaultString(config.getVendorUrl(), notset));
     }
 
-    public static Message failedToGetXATransaction()
+    public static Message noJtaTransactionAvailable(final Thread callingThread)
     {
-        return createMessage(BUNDLE_PATH, 228);
+        return createMessage(BUNDLE_PATH, 228, StringUtils.defaultString(callingThread.toString()));
     }
 
-    public static Message cannotEnlistResource(Object tx)
+    public static Message notMuleXaTransaction(Object tx)
     {
         return createMessage(BUNDLE_PATH, 229, tx.getClass());
     }

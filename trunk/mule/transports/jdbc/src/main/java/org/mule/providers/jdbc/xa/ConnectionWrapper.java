@@ -27,6 +27,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 import javax.sql.XAConnection;
+import javax.transaction.xa.XAResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -461,11 +462,17 @@ public class ConnectionWrapper implements Connection
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
-            throw new IllegalStateException(CoreMessages.cannotEnlistResource(transaction).toString());
+            throw new IllegalStateException(CoreMessages.notMuleXaTransaction(transaction).toString());
         }
         if (transaction != null && !isEnlisted())
         {
-            enlisted = ((XaTransaction) transaction).enlistResource(xaConnection.getXAResource());
+            final XAResource xaResource = xaConnection.getXAResource();
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Enlisting resource " + xaResource + " in xa transaction " + transaction);
+            }
+            
+            enlisted = ((XaTransaction) transaction).enlistResource(xaResource);
         }
     }
 

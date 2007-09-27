@@ -33,8 +33,12 @@ import javax.jms.XASession;
 import javax.jms.XATopicSession;
 import javax.transaction.xa.XAResource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class SessionInvocationHandler implements InvocationHandler
 {
+    protected final transient Log logger = LogFactory.getLog(getClass());
 
     private XASession xaSession;
     private XAResource xaResource;
@@ -132,14 +136,14 @@ public class SessionInvocationHandler implements InvocationHandler
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
-            throw new IllegalStateException(CoreMessages.cannotEnlistResource(transaction).toString());
+            throw new IllegalStateException(CoreMessages.notMuleXaTransaction(transaction).toString());
         }
 
         if (transaction != null && !isEnlisted())
         {
-            if (ConnectionFactoryWrapper.logger.isDebugEnabled())
+            if (logger.isDebugEnabled())
             {
-                ConnectionFactoryWrapper.logger.debug("Enlisting resource in xa transaction: " + xaResource);
+                logger.debug("Enlisting resource " + xaResource + " in xa transaction " + transaction);
             }
 
             enlisted = ((XaTransaction) transaction).enlistResource(xaResource);
