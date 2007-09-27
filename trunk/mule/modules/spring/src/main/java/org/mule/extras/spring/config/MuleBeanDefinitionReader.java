@@ -10,9 +10,6 @@
 
 package org.mule.extras.spring.config;
 
-import org.mule.config.MuleDtdResolver;
-import org.mule.umo.transformer.UMOTransformer;
-
 import java.io.IOException;
 
 import javax.xml.transform.Source;
@@ -25,14 +22,18 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.io.DOMReader;
+import org.mule.config.MuleDtdResolver;
+import org.mule.umo.transformer.UMOTransformer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.xml.BeansDtdResolver;
+import org.springframework.beans.factory.xml.DelegatingEntityResolver;
+import org.springframework.beans.factory.xml.ResourceEntityResolver;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.xml.XmlValidationModeDetector;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
@@ -143,11 +144,35 @@ public class MuleBeanDefinitionReader extends XmlBeanDefinitionReader
         if (dtdResolver == null)
         {
             MuleDtdResolver muleSpringResolver = new MuleDtdResolver("mule-spring-configuration.dtd",
-                "mule-to-spring.xsl", new BeansDtdResolver());
+                "mule-to-spring.xsl", this.createSpringEntityResolver());
             dtdResolver = new MuleDtdResolver("mule-configuration.dtd", "mule-to-spring.xsl",
                 muleSpringResolver);
         }
         return dtdResolver;
+    }
+
+    /**
+	 * Creates an {@link EntityResolver} the same way Spring's
+	 * {@link XmlBeanDefinitionReader} would create it. It has to be created
+	 * here because the {@link EntityResolver} created by
+	 * {@link XmlBeanDefinitionReader} is not accessible from this class.
+	 * 
+	 * @return
+	 * @see XmlBeanDefinitionReader#XmlBeanDefinitionReader(BeanDefinitionRegistry)
+	 */
+    protected EntityResolver createSpringEntityResolver()
+    {
+        EntityResolver springEntityResolver = null;
+        // Determine EntityResolver to use.
+        if (getResourceLoader() != null) 
+        {
+            springEntityResolver = new ResourceEntityResolver(getResourceLoader());
+        }
+        else 
+        {
+            springEntityResolver = new DelegatingEntityResolver(ClassUtils.getDefaultClassLoader());
+        }
+        return springEntityResolver;
     }
 
     public boolean isFirstContext()
