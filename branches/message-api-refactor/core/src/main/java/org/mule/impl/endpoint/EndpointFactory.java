@@ -97,7 +97,13 @@ public class EndpointFactory implements UMOEndpointFactory
                                                String type,
                                                UMOManagementContext managementContext) throws UMOException
     {
-        UMOImmutableEndpoint endpoint = lookupEndpoint(uri.getEndpointName());
+        String endpointName = uri.getEndpointName();
+        UMOImmutableEndpoint endpoint = null;
+        if (endpointName != null)
+        {
+            endpoint = lookupEndpoint(endpointName);
+        }
+        
         if (endpoint == null)
         {
             endpoint = buidNewEndpoint(uri, type, managementContext);

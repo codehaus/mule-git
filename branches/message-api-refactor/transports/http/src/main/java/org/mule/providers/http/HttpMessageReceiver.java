@@ -10,17 +10,6 @@
 
 package org.mule.providers.http;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.resource.spi.work.Work;
-
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.cookie.MalformedCookieException;
 import org.mule.RegistryContext;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
@@ -48,7 +37,18 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
-import org.mule.util.StringUtils;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.resource.spi.work.Work;
+
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.cookie.MalformedCookieException;
 
 /**
  * <code>HttpMessageReceiver</code> is a simple http server that can be used to
@@ -284,7 +284,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             Object body = request.getBody();
             if (body == null)
             {
-                body = StringUtils.EMPTY;
+                body = requestLine.getUri();
             }
             
             return connector.getMessageAdapter(new Object[]{body, headers});

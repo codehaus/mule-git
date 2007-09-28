@@ -11,14 +11,18 @@
 package org.mule.providers.http.transformers;
 
 import org.mule.config.MuleProperties;
+import org.mule.impl.RequestContext;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
+import org.mule.providers.http.StreamPayloadRequestEntity;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.transformers.AbstractEventAwareTransformer;
 import org.mule.transformers.simple.SerializableToByteArray;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
 
@@ -262,6 +266,11 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
                 postMethod.setRequestEntity(new InputStreamRequestEntity((InputStream)src,
                     mimeType));
+            }
+            else if (src instanceof OutputHandler)
+            {
+                UMOEvent event = RequestContext.getEvent();
+                postMethod.setRequestEntity(new StreamPayloadRequestEntity((OutputHandler) src, event));
             }
             else
             {

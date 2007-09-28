@@ -10,9 +10,25 @@
 
 package org.mule.providers.http;
 
+import org.mule.impl.MuleMessage;
+import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.model.streaming.DelegatingInputStream;
+import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.http.i18n.HttpMessages;
+import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
+import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
+import org.mule.umo.UMOEvent;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.DispatchException;
+import org.mule.umo.provider.OutputHandler;
+import org.mule.umo.provider.ReceiveException;
+import org.mule.umo.transformer.TransformerException;
+import org.mule.umo.transformer.UMOTransformer;
+import org.mule.util.StringUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -34,26 +50,9 @@ import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.TraceMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.mule.impl.MuleMessage;
-import org.mule.impl.message.ExceptionPayload;
-import org.mule.impl.model.streaming.DelegatingInputStream;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.http.i18n.HttpMessages;
-import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
-import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.OutputHandler;
-import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.StringUtils;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
@@ -411,38 +410,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             {
                 method2.releaseConnection();
             }
-        }
-    }
-
-    private class StreamPayloadRequestEntity implements RequestEntity
-    {
-        private OutputHandler outputHandler;
-        private UMOEvent event;
-
-        public StreamPayloadRequestEntity(OutputHandler outputHandler, UMOEvent event)
-        {
-            this.outputHandler = outputHandler;
-            this.event = event;
-        }
-
-        public boolean isRepeatable()
-        {
-            return true;
-        }
-
-        public void writeRequest(OutputStream outputStream) throws IOException
-        {
-            outputHandler.write(event, outputStream);
-        }
-
-        public long getContentLength()
-        {
-            return -1L;
-        }
-
-        public String getContentType()
-        {
-            return event.getMessage().getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, null);
         }
     }
 

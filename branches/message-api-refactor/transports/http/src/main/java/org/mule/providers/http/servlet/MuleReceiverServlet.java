@@ -27,6 +27,7 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.PropertiesUtils;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -290,6 +291,29 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             {
 				receiver = HttpMessageReceiver.findReceiverByStem(connector.getReceivers(), uri);
 			}
+
+            // This is some bizarre piece of code so the XFire Servlet code works.
+            // We should remove this at some point (see XFireWsdlCallTestCase for a failure
+            // if this code is removed).
+            if (receiver == null)
+            {
+                Map receivers = getReceivers();
+                Iterator iter = receivers.keySet().iterator();
+                while (iter.hasNext())
+                {
+                    String key = iter.next().toString();
+                    i = key.lastIndexOf("/");
+                    if (i > -1)
+                    {
+                        String key2 = key.substring(i+1);
+                        if (key2.equals(uri))
+                        {
+                            receiver = (AbstractMessageReceiver)receivers.get(key);
+                            break;
+                        }
+                    }
+                }
+            }
             
             if (receiver == null)
             {
