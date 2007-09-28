@@ -86,12 +86,18 @@
             </description>
             <defvalue>r</defvalue>
         </variable>
-
     </variables>
+
     <templates>
         <template>
             <file>src/main/resources/META-INF/services/org/mule/providers/csd.vm</file>
             <output>src/main/resources/META-INF/services/org/mule/providers/${TransportName}</output>
+        </template>
+        <template>
+            <file>src/main/java/org/mule/providers/Messages.vm</file>
+            <output>
+                src/main/java/org/mule/providers/${TransportNameLower}/i18n/${TransportName}Messages.java
+            </output>
         </template>
         <template>
             <file>src/main/resources/META-INF/services/org/mule/i18n/messages.vm</file>
