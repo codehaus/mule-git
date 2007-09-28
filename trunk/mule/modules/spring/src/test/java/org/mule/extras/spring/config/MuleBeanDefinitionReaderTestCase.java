@@ -78,11 +78,9 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         assertTrue(conn instanceof TestConnector);
         assertEquals("dummyConnector", conn.getName());
         
-        // e = d.getInboundEndpoint();
-        // assertNotNull(e);
-        // assertEquals(e.getEndpointURI().toString(), MuleManager.getInstance()
-        // .getEndpointIdentifiers()
-        // .get("Test Queue"));
+        e = d.getInboundEndpoint();
+        assertNotNull(e);
+        assertEquals(e.getEndpointURI().toString(), MuleManager.getInstance().getEndpointIdentifiers().get("Test Queue"));
     }
 
     public void testPropertyBeansOnDescriptors()
@@ -91,8 +89,7 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         assertNotNull(d);
 
         assertTrue(d.getExceptionListener() instanceof DefaultExceptionStrategy);
-
-        // assertEquals("1.1", d.getVersion());
+        assertEquals("1.1", d.getVersion());
     }
 
     public void testPropertyBeansInMaps()
