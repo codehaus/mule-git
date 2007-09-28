@@ -421,6 +421,9 @@
                                     </constructor-arg>
                                 </bean>
                             </property>
+                            <property name="responseTransformer">
+                                <ref local="TestCompressionTransformer"/>
+                            </property>
                         </bean>
                     </list>
                 </property>
