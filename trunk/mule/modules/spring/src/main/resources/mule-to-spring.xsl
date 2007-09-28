@@ -633,8 +633,8 @@
         <property name="poolingProfile">
             <bean name="pooling-profile" class="org.mule.config.PoolingProfile">
                 <xsl:apply-templates select="@*[local-name() !='initialisationPolicy' and local-name() !='exhaustedAction' and local-name() !='factory']|*" mode="addProperties"/>
-                <xsl:if test="@exhaustedActionString">
-                    <property name="exhaustedAction">
+                <xsl:if test="@exhaustedAction">
+                    <property name="exhaustedActionString">
                         <value>
                             <xsl:value-of select="@exhaustedAction"/>
                         </value>

@@ -19,7 +19,6 @@
         model="main">
         <threading-profile id="default" maxBufferSize="0" maxThreadsActive="16"
             maxThreadsIdle="4" poolExhaustedAction="WAIT" threadTTL="60001"/>
-        <!-- TODO HH: MULE-2289 changes to exhaustedAction have no effect?? -->
         <pooling-profile exhaustedAction="WHEN_EXHAUSTED_WAIT" maxActive="10" maxIdle="5" maxWait="10001" initialisationPolicy="INITIALISE_ONE"/>
         <queue-profile maxOutstandingMessages="100" persistent="true"/>
         <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/>

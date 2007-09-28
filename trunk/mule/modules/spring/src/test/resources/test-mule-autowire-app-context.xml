@@ -639,7 +639,7 @@
                     <value>2</value>
                 </property>
                 <property name="exhaustedAction">
-                    <value>2</value>
+                    <value>0</value>
                 </property>
             </bean>
         </property>

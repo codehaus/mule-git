@@ -29,8 +29,7 @@
 
             <interceptor className="org.mule.interceptors.LoggingInterceptor"/>
             <threading-profile maxBufferSize="6" maxThreadsActive="12" maxThreadsIdle="6"/>
-            <!-- TODO HH: MULE-2289 changes to exhaustedAction have no effect?? -->
-            <pooling-profile maxActive="9" maxIdle="6" maxWait="4002" exhaustedAction="WAIT" initialisationPolicy="INITIALISE_ALL"/>
+            <pooling-profile maxActive="9" maxIdle="6" maxWait="4002" exhaustedAction="WHEN_EXHAUSTED_FAIL" initialisationPolicy="INITIALISE_ALL"/>
             <queue-profile maxOutstandingMessages="102"/>
         </mule-descriptor>
     </model>
