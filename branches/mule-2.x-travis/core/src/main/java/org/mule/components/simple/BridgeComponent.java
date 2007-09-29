@@ -11,9 +11,9 @@
 package org.mule.components.simple;
 
 import org.mule.config.ConfigurationException;
-import org.mule.impl.UMODescriptorAware;
+import org.mule.impl.UMOComponentAware;
 import org.mule.routing.inbound.ForwardingConsumer;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.routing.UMOInboundRouter;
@@ -28,17 +28,16 @@ import java.util.Iterator;
  * improvement. Note that because the component is never actually invoked any interceptors configured on the component
  * will not be invoked either.
  */
-public class BridgeComponent implements UMODescriptorAware, Callable
+public class BridgeComponent implements UMOComponentAware, Callable
 {
-
-    public void setDescriptor(UMODescriptor descriptor) throws ConfigurationException
+    public void setComponent(UMOComponent component) throws ConfigurationException
     {
         // Adding a forwarding consumer will cause the inbound routing to
         // directly invoke the outbound router, bypassing the component
 
         // first check there isn't one already registered
         boolean registered = false;
-        for (Iterator iterator = descriptor.getInboundRouter().getRouters().iterator(); iterator.hasNext();)
+        for (Iterator iterator = component.getInboundRouter().getRouters().iterator(); iterator.hasNext();)
         {
             UMOInboundRouter router = (UMOInboundRouter) iterator.next();
             if (router instanceof ForwardingConsumer)
@@ -49,16 +48,16 @@ public class BridgeComponent implements UMODescriptorAware, Callable
         }
         if (!registered)
         {
-            descriptor.getInboundRouter().addRouter(new ForwardingConsumer());
+            component.getInboundRouter().addRouter(new ForwardingConsumer());
         }
         // Make sure if other routers on the inbound router, they are honoured
-        descriptor.getInboundRouter().setMatchAll(true);
+        component.getInboundRouter().setMatchAll(true);
     }
 
     public Object onCall(UMOEventContext context) throws Exception
     {
         throw new UnsupportedOperationException(
             "A bridge should not ever receive an event, instead the event should be directly dispatched from the inbound endpoint to the outbound router. Component is: "
-                            + context.getComponentDescriptor().getName());
+                            + context.getComponent().getName());
     }
 }

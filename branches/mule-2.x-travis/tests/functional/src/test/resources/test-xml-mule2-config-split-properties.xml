@@ -13,7 +13,7 @@
         <mule:model name="main" inherit="true">
 
             <mule:service name="testPropertiesComponent">
-                <mule:component scope="singleton" instance-ref="prop-test-ref"/>
+                <mule:singleton-object instance-ref="prop-test-ref"/>
                 <mule:inbound-router>
                     <mule:inbound-endpoint address="test://blah?transformers=TestCompressionTransformer&amp;responseTransformers=TestCompressionTransformer"/>
                 </mule:inbound-router>

@@ -13,9 +13,10 @@ package org.mule.providers.soap.xfire;
 import org.mule.MuleRuntimeException;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.MuleDescriptor;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.MuleMessage;
-import org.mule.impl.UMODescriptorAware;
+import org.mule.impl.UMOComponentAware;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
@@ -24,7 +25,7 @@ import org.mule.providers.soap.xfire.transport.MuleLocalTransport;
 import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
 import org.mule.providers.streaming.OutStreamMessageAdapter;
 import org.mule.providers.streaming.StreamMessageAdapter;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -61,7 +62,7 @@ import org.codehaus.xfire.transport.http.HtmlServiceWriter;
  * marshalls requests and responses
  * 
  */
-public class XFireServiceComponent implements Callable, Initialisable, Lifecycle, UMODescriptorAware
+public class XFireServiceComponent implements Callable, Initialisable, Lifecycle, UMOComponentAware
 {
     /**
      * logger used by this class
@@ -74,57 +75,16 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
     protected Transport transport;
     protected Transport universalTransport;
     protected String transportClass;
+    
+    private UMOComponent component;
 
-    public void setDescriptor(UMODescriptor descriptor) throws ConfigurationException
+    public void setComponent(UMOComponent component) throws ConfigurationException
     {
-        UMOWorkManager wm = ((MuleDescriptor)descriptor).getThreadingProfile().createWorkManager(
-            "xfire-local-transport");
-        try
+        if ((component instanceof SedaComponent) == false)
         {
-            wm.start();
+            throw new ConfigurationException(MessageFactory.createStaticMessage("XFire Component must be SedaComponent"));
         }
-        catch (UMOException e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToStart("local channel work manager"), e);
-        }
-        if(transportClass == null)
-        {
-            transport = new MuleLocalTransport(wm);
-        }
-        else
-        {
-            try {
-                Class transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
-                try{
-                    Constructor constructor = transportClazz.getConstructor(new Class[]{UMOWorkManager.class});
-                    transport = (Transport)constructor.newInstance(new Object[]{wm});
-                }
-                catch(NoSuchMethodException ne)
-                {
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug(ne.getCause());
-                    }
-                }
-            if(transport == null)
-            {
-                Constructor constructor = transportClazz.getConstructor(null);
-                transport = (Transport)constructor.newInstance(null);
-            }
-        }
-        catch(Exception e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToLoad("xfire service transport"), e);
-        }
-    }
-        
-        universalTransport = new MuleUniversalTransport();
-        
-        if(xfire == null){
-            xfire = XFireFactory.newInstance().getXFire();
-        }
-        getTransportManager().register(transport);
-        getTransportManager().register(universalTransport);
+        this.component = component;
     }
    
     public Object onCall(UMOEventContext eventContext) throws Exception
@@ -183,10 +143,56 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
 
     public void initialise() throws InitialisationException
     {
-        if (xfire == null)
+        UMOWorkManager wm = ((SedaComponent) component).getThreadingProfile().createWorkManager("xfire-local-transport");
+        try
         {
-            throw new InitialisationException(CoreMessages.objectIsNull("xfire"), this);
+            wm.start();
         }
+        catch (UMOException e)
+        {
+            throw new MuleRuntimeException(CoreMessages.failedToStart("local channel work manager"), e);
+        }
+        if(transportClass == null)
+        {
+            transport = new MuleLocalTransport(wm);
+        }
+        else
+        {
+            try 
+            {
+                Class transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
+                try
+                {
+                    Constructor constructor = transportClazz.getConstructor(new Class[]{UMOWorkManager.class});
+                    transport = (Transport)constructor.newInstance(new Object[]{wm});
+                }
+                catch(NoSuchMethodException ne)
+                {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug(ne.getCause());
+                    }
+                }
+                if(transport == null)
+                {
+                    Constructor constructor = transportClazz.getConstructor(null);
+                    transport = (Transport)constructor.newInstance(null);
+                }
+            }
+            catch(Exception e)
+            {
+                throw new MuleRuntimeException(CoreMessages.failedToLoad("xfire service transport"), e);
+            }
+        }
+        
+        universalTransport = new MuleUniversalTransport();
+        
+        if(xfire == null)
+        {
+            xfire = XFireFactory.newInstance().getXFire();
+        }
+        getTransportManager().register(transport);
+        getTransportManager().register(universalTransport);
     }
 
     public void dispose()

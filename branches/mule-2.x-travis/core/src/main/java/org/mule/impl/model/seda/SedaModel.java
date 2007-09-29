@@ -78,11 +78,11 @@ public class SedaModel extends AbstractModel
         super.initialise();
     }
 
-    protected UMOComponent createComponent(UMODescriptor descriptor)
-    {
-        return new SedaComponent((MuleDescriptor) descriptor, this);
-    }
-
+//    protected UMOComponent createComponent(UMODescriptor descriptor)
+//    {
+//        return new SedaComponent((MuleDescriptor) descriptor, this);
+//    }
+//
     public int getQueueTimeout()
     {
         return queueTimeout;

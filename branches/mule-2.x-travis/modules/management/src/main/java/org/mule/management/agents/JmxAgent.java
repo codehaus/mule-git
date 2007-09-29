@@ -162,7 +162,7 @@ public class JmxAgent extends AbstractAgent
         {
             try
             {
-                mBeanServer = (MBeanServer) mBeanServerObjectFactory.create();
+                mBeanServer = (MBeanServer) mBeanServerObjectFactory.getOrCreate();
             }
             catch (Exception e)
             {
@@ -416,22 +416,23 @@ public class JmxAgent extends AbstractAgent
     protected void registerComponentServices() throws NotCompliantMBeanException, MBeanRegistrationException,
             InstanceAlreadyExistsException, MalformedObjectNameException
     {
-        for (Iterator iterator = managementContext.getRegistry().getModels().iterator(); iterator.hasNext();)
-        {
-            UMOModel model = (UMOModel) iterator.next();
-            Iterator iter = model.getComponentNames();
-
-            String rawName;
-            while (iter.hasNext()) {
-                rawName = iter.next().toString();
-                final String name = jmxSupport.escape(rawName);
-                ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(managementContext) + ":type=org.mule.Component,name=" + name);
-                ComponentServiceMBean serviceMBean = new ComponentService(rawName);
-                logger.debug("Registering component with name: " + on);
-                mBeanServer.registerMBean(serviceMBean, on);
-                registeredMBeans.add(on);
-            }
-        }
+        // TODO Fix this after MULE-2392 and MULE-2393
+//        for (Iterator iterator = managementContext.getRegistry().getModels().iterator(); iterator.hasNext();)
+//        {
+//            UMOModel model = (UMOModel) iterator.next();
+//            Iterator iter = model.getComponentNames();
+//
+//            String rawName;
+//            while (iter.hasNext()) {
+//                rawName = iter.next().toString();
+//                final String name = jmxSupport.escape(rawName);
+//                ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(managementContext) + ":type=org.mule.Component,name=" + name);
+//                ComponentServiceMBean serviceMBean = new ComponentService(rawName);
+//                logger.debug("Registering component with name: " + on);
+//                mBeanServer.registerMBean(serviceMBean, on);
+//                registeredMBeans.add(on);
+//            }
+//        }
 
     }
 

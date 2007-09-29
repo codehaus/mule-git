@@ -87,7 +87,7 @@
         <custom-entrypoint-resolver class="org.mule.tck.testmodels.mule.TestEntryPointResolverSet"/>
 
         <service name="orangeComponent">
-            <component scope="singleton" instance-ref="orange"/>
+            <singleton-object instance-ref="orange"/>
             <inbound-router>
 
                 <forwarding-catch-all-strategy>
@@ -156,7 +156,7 @@
         </service>
 
         <service name="appleComponent">
-            <component scope="singleton" instance-ref="apple"/>
+            <singleton-object instance-ref="apple"/>
             <inbound-router>
                 <custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
                 <inbound-endpoint ref="appleInEndpoint"/>

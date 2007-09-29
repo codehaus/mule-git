@@ -10,17 +10,14 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.MuleProperties;
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.model.ModelHelper;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.providers.soap.MethodFixInterceptor;
 import org.mule.providers.soap.xfire.i18n.XFireMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
@@ -66,7 +63,7 @@ public class XFireConnector extends AbstractConnector
     private static final String DEFAULT_BINDING_PROVIDER_CLASS = "org.codehaus.xfire.aegis.AegisBindingProvider";
     private static final String DEFAULT_TYPE_MAPPING_muleRegistry_CLASS = "org.codehaus.xfire.aegis.type.DefaultTypeMappingRegistry";
 
-    protected MuleDescriptor xfireDescriptor;
+    protected UMOComponent xfireComponent;
 
     private XFire xfire;
 
@@ -294,37 +291,34 @@ public class XFireConnector extends AbstractConnector
         // If this is the first receiver we need to create the Axis service
         // component
         // this will be registered with Mule when the Connector starts
-        if (xfireDescriptor == null)
+        if (xfireComponent == null)
         {
             // See if the xfire descriptor has already been added. This allows
             // developers to override the default configuration, say to increase
             // the threadpool
-            xfireDescriptor = (MuleDescriptor)managementContext.getRegistry().lookupService(
-                XFIRE_SERVICE_COMPONENT_NAME + getName());
-            if (xfireDescriptor == null)
+            if (xfireComponent == null)
             {
-                xfireDescriptor = createxfireDescriptor();
+                xfireComponent = getOrCreateXfireComponent();
             }
             else
             {
                 // Lets unregister the 'template' instance, configure it and
-                // then register
-                // again later
-                managementContext.getRegistry().lookupModel(ModelHelper.SYSTEM_MODEL).unregisterComponent(xfireDescriptor);
+                // then register again later
+                managementContext.getRegistry().unregisterComponent(xfireComponent.getName());
             }
             // if the axis server hasn't been set, set it now. The Axis server
             // may be set externally
-            if (xfireDescriptor.getProperties().get(XFIRE_PROPERTY) == null)
+            if (xfireComponent.getProperties().get(XFIRE_PROPERTY) == null)
             {
-                xfireDescriptor.getProperties().put(XFIRE_PROPERTY, xfire);
+                xfireComponent.getProperties().put(XFIRE_PROPERTY, xfire);
             }
             if (serviceTransport != null
-                && xfireDescriptor.getProperties().get(XFIRE_TRANSPORT) == null)
+                && xfireComponent.getProperties().get(XFIRE_TRANSPORT) == null)
             {
-                xfireDescriptor.getProperties().put(XFIRE_TRANSPORT, serviceTransport);
+                xfireComponent.getProperties().put(XFIRE_TRANSPORT, serviceTransport);
             }
         }
-        String serviceName = receiver.getComponent().getDescriptor().getName();
+        String serviceName = receiver.getComponent().getName();
 
         // No determine if the endpointUri requires a new connector to be
         // registed in the case of http we only need to register the new
@@ -380,18 +374,30 @@ public class XFireConnector extends AbstractConnector
         // Remove the Axis Receiver Security filter now
         // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
         ((MuleEndpoint) receiver.getEndpoint()).setSecurityFilter(null);
-        xfireDescriptor.getInboundRouter().addEndpoint(serviceEndpoint);
+        xfireComponent.getInboundRouter().addEndpoint(serviceEndpoint);
     }
 
-    protected MuleDescriptor createxfireDescriptor()
+    protected UMOComponent getOrCreateXfireComponent() throws UMOException
     {
-        MuleDescriptor xfireDescriptor = (MuleDescriptor)managementContext.getRegistry().lookupService(XFIRE_SERVICE_COMPONENT_NAME + getName());
-        if (xfireDescriptor == null)
+        UMOComponent c = managementContext.getRegistry().lookupComponent(XFIRE_SERVICE_COMPONENT_NAME + getName());
+
+        if (c == null)
         {
-            xfireDescriptor = new MuleDescriptor(XFIRE_SERVICE_COMPONENT_NAME + getName());
-            xfireDescriptor.setServiceFactory(new SingletonObjectFactory(new XFireServiceComponent()));
+            // TODO MULE-2228 Simplify this API
+            c = new SedaComponent();
+            c.setName(XFIRE_SERVICE_COMPONENT_NAME + getName());            
+            c.setModel(managementContext.getRegistry().lookupSystemModel());
+            c.setManagementContext(managementContext);
+            c.initialise();
+
+            SingletonObjectFactory of = new SingletonObjectFactory(XFireServiceComponent.class);
+            // Inject the UMOComponent because XFireServiceComponent is UMOComponentAware.
+            of.setComponent(c);
+            of.initialise();
+            c.setServiceFactory(of);
         }
-        return xfireDescriptor;
+
+        return c;
     }
 
     public ServiceFactory getServiceFactory()
@@ -416,12 +422,12 @@ public class XFireConnector extends AbstractConnector
     {
         if (endpoint.getEndpointURI().getPort() == -1)
         {
-            return component.getDescriptor().getName();
+            return component.getName();
         }
         else
         {
             return endpoint.getEndpointURI().getAddress() + "/"
-                   + component.getDescriptor().getName();
+                   + component.getName();
         }
     }
 
@@ -507,7 +513,7 @@ public class XFireConnector extends AbstractConnector
 
     public void onNotification(UMOServerNotification event)
     {
-        if (event.getAction() == ManagerNotification.MANAGER_STARTED_MODELS)
+        if (event.getAction() == ManagerNotification.MANAGER_STARTED)
         {
             // We need to register the xfire service component once the model
             // starts because
@@ -518,25 +524,25 @@ public class XFireConnector extends AbstractConnector
             // new service and a
             // different http port the model needs to be restarted before the
             // listener is available
-            if (!managementContext.getRegistry().lookupModel(ModelHelper.SYSTEM_MODEL).isComponentRegistered(
-                XFIRE_SERVICE_COMPONENT_NAME + getName()))
+            if (managementContext.getRegistry().lookupComponent(XFIRE_SERVICE_COMPONENT_NAME + getName()) == null)
             {
                 try
                 {
                     // Descriptor might be null if no inbound endpoints have
                     // been register for the xfire connector
-                    if (xfireDescriptor == null)
+                    if (xfireComponent == null)
                     {
-                        xfireDescriptor = createxfireDescriptor();
+                        xfireComponent = getOrCreateXfireComponent();
                     }
-                    xfireDescriptor.addInterceptor(new MethodFixInterceptor());
+                    // TODO Fix this for 2.x - no more interceptors
+                    //xfireDescriptor.addInterceptor(new MethodFixInterceptor());
 
-                    if (xfireDescriptor.getProperties().get("xfire") == null)
+                    if (xfireComponent.getProperties().get("xfire") == null)
                     {
-                        xfireDescriptor.getProperties().put("xfire", xfire);
+                        xfireComponent.getProperties().put("xfire", xfire);
                     }
-                    xfireDescriptor.setModelName(MuleProperties.OBJECT_SYSTEM_MODEL);
-                    managementContext.getRegistry().registerService(xfireDescriptor);
+                    managementContext.getRegistry().registerComponent(xfireComponent, managementContext);
+                    xfireComponent.start();
                 }
                 catch (UMOException e)
                 {

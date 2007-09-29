@@ -25,8 +25,8 @@ public class TestSedaModel extends SedaModel
         return "seda-test";
     }
     
-    protected UMOComponent createComponent(UMODescriptor descriptor)
-    {
-        return new TestSedaComponent((MuleDescriptor) descriptor, this);
-    }
+//    protected UMOComponent createComponent(UMODescriptor descriptor)
+//    {
+//        return new TestSedaComponent((MuleDescriptor) descriptor, this);
+//    }
 }

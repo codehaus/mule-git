@@ -15,7 +15,6 @@ import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.file.AbstractFileFunctionalTestCase;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.model.UMOModel;
 
 import java.io.File;
 
@@ -30,13 +29,11 @@ public class IndirectReceiveMule1842TestCase extends AbstractFileFunctionalTestC
         File target = initForReceive();
 
         // add a receiver endpoint that will poll the readFromDirectory
-        UMOModel model = (UMOModel) managementContext.getRegistry().lookupModel("receiveModel");
-        assertNotNull(model);
-        UMOComponent relay = model.getComponent("relay");
+        UMOComponent relay = managementContext.getRegistry().lookupComponent("relay");
         assertNotNull(relay);
         String url = fileToUrl(target) + "?connector=receiveConnector";
         logger.debug(url);
-        relay.getDescriptor().getInboundRouter().addEndpoint(new MuleEndpoint(url, true));
+        relay.getInboundRouter().addEndpoint(new MuleEndpoint(url, true));
 
         // then read from the queue that the polling receiver will write to
         MuleClient client = new MuleClient();

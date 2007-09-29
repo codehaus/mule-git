@@ -10,12 +10,12 @@
 
 package org.mule.providers.jms;
 
-import org.mule.impl.MuleDescriptor;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -31,7 +31,23 @@ public class JmsMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 
     protected void doSetUp() throws Exception
     {
-        managementContext.getRegistry().registerConnector(getConnector());
+        connector = new JmsConnector();
+        connector.setName("TestConnector");
+        connector.setSpecification("1.1");
+
+        Mock connectionFactory = new Mock(ConnectionFactory.class);
+        Mock connection = new Mock(Connection.class);
+        connectionFactory.expectAndReturn("createConnection", connection.proxy());
+        connection.expect("setExceptionListener", new AnyConstraintMatcher());
+        connection.expect("close");
+        connection.expect("start");
+        connection.expect("stop");
+        connector.setConnectionFactory(new SingletonObjectFactory(connectionFactory.proxy()));
+        
+        connector.setManagementContext(managementContext);
+        managementContext.applyLifecycle(connector);
+        managementContext.getRegistry().registerConnector(connector, managementContext);
+        
         super.doSetUp();
     }
 
@@ -52,28 +68,7 @@ public class JmsMessageReceiverTestCase extends AbstractMessageReceiverTestCase
      */
     public UMOMessageReceiver getMessageReceiver() throws Exception
     {
-        MuleDescriptor descriptor = getTestDescriptor("orange", Orange.class.getName());
-        return new JmsMessageReceiver(endpoint.getConnector(), getTestComponent(descriptor), endpoint);
-    }
-
-    public UMOConnector getConnector() throws Exception
-    {
-        if (connector == null)
-        {
-            connector = new JmsConnector();
-            connector.setName("TestConnector");
-            connector.setSpecification("1.1");
-
-            Mock connectionFactory = new Mock(ConnectionFactory.class);
-            Mock connection = new Mock(Connection.class);
-            connectionFactory.expectAndReturn("createConnection", connection.proxy());
-            connection.expect("setExceptionListener", new AnyConstraintMatcher());
-            connection.expect("close");
-            connection.expect("start");
-            connection.expect("stop");
-            connector.setConnectionFactory(new SingletonObjectFactory(connectionFactory.proxy()));
-        }
-        return connector;
+        return new JmsMessageReceiver(endpoint.getConnector(), getTestComponent("orange", Orange.class), endpoint);
     }
 
     public Object getValidMessage() throws Exception
@@ -84,7 +79,11 @@ public class JmsMessageReceiverTestCase extends AbstractMessageReceiverTestCase
     public UMOEndpoint getEndpoint() throws Exception
     {
         endpoint = new MuleEndpoint("jms://testcase", true);
-        endpoint.setConnector(getConnector());
+        if (connector == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Connector has not been initialized."), null);
+        }
+        endpoint.setConnector(connector);
         return endpoint;
     }
 

@@ -74,7 +74,7 @@ public class EventMetaDataPropagationTestCase extends FunctionalTestCase impleme
 
     public Object onCall(UMOEventContext context) throws Exception
     {
-        if ("component1".equals(context.getComponentDescriptor().getName()))
+        if ("component1".equals(context.getComponent().getName()))
         {
             Map props = new HashMap();
             props.put("stringParam", "param1");

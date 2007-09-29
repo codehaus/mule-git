@@ -24,7 +24,6 @@ import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.model.ModelHelper;
 import org.mule.impl.registry.TransientRegistry;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.providers.AbstractConnector;
@@ -34,6 +33,7 @@ import org.mule.registry.Registry;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.FutureMessageResult;
 import org.mule.umo.MessagingException;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -60,6 +60,7 @@ import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -393,14 +394,14 @@ public class MuleClient implements Disposable
      * @throws org.mule.umo.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
-    public UMOMessage sendDirect(String component, String transformers, UMOMessage message)
+    public UMOMessage sendDirect(String componentName, String transformers, UMOMessage message)
         throws UMOException
     {
-        boolean compregistered = ModelHelper.isComponentRegistered(component);
-        if (!compregistered)
+        UMOComponent component = managementContext.getRegistry().lookupComponent(componentName);
+        if (component == null)
         {
             throw new MessagingException(
-                CoreMessages.objectNotRegistered("Component", component),
+                CoreMessages.objectNotRegistered("Component", componentName),
                 message, null);
         }
         List trans = null;
@@ -413,14 +414,13 @@ public class MuleClient implements Disposable
         {
             logger.warn("The mule managementContext is running synchronously, a null message payload will be returned");
         }
-        UMOSession session = new MuleSession(ModelHelper.getComponent(component));
-        UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(session.getComponent().getDescriptor(),
-            message.getPayload());
+        UMOSession session = new MuleSession(component);
+        UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
         UMOEvent event = new MuleEvent(message, endpoint, session, true);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("MuleClient sending event direct to: " + component + ". Event is: " + event);
+            logger.debug("MuleClient sending event direct to: " + componentName + ". Event is: " + event);
         }
 
         UMOMessage result = event.getComponent().sendEvent(event);
@@ -464,23 +464,22 @@ public class MuleClient implements Disposable
      * @throws org.mule.umo.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
-    public void dispatchDirect(String component, UMOMessage message) throws UMOException
+    public void dispatchDirect(String componentName, UMOMessage message) throws UMOException
     {
-        boolean compregistered = ModelHelper.isComponentRegistered(component);
-        if (!compregistered)
+        UMOComponent component = managementContext.getRegistry().lookupComponent(componentName);
+        if (component == null)
         {
             throw new MessagingException(
-                CoreMessages.objectNotRegistered("Component", component), 
+                CoreMessages.objectNotRegistered("Component", componentName), 
                 message, null);
         }
-        UMOSession session = new MuleSession(ModelHelper.getComponent(component));
-        UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(session.getComponent().getDescriptor(),
-            message.getPayload());
+        UMOSession session = new MuleSession(component);
+        UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
         UMOEvent event = new MuleEvent(message, endpoint, session, true);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("MuleClient dispatching event direct to: " + component + ". Event is: " + event);
+            logger.debug("MuleClient dispatching event direct to: " + componentName + ". Event is: " + event);
         }
 
         event.getComponent().dispatchEvent(event);
@@ -863,11 +862,11 @@ public class MuleClient implements Disposable
         return managementContext.getRegistry().lookupOutboundEndpoint(uri, managementContext);
     }
 
-    protected UMOImmutableEndpoint getDefaultClientEndpoint(UMODescriptor descriptor, Object payload)
+    protected UMOImmutableEndpoint getDefaultClientEndpoint(UMOComponent component, Object payload)
         throws UMOException
     {
         // as we are bypassing the message transport layer we need to check that
-        UMOEndpoint endpoint = (UMOEndpoint)descriptor.getInboundRouter().getEndpoints().get(0);
+        UMOEndpoint endpoint = (UMOEndpoint)component.getInboundRouter().getEndpoints().get(0);
         if (endpoint != null)
         {
             if (endpoint.getTransformers() != null)
@@ -895,7 +894,9 @@ public class MuleClient implements Disposable
             UMOConnector connector = null;
             UMOEndpointURI defaultEndpointUri = new MuleEndpointURI("vm://mule.client");
             connector = TransportFactory.createConnector(defaultEndpointUri, managementContext);
-            managementContext.getRegistry().registerConnector(connector);
+            connector.setManagementContext(managementContext);
+            managementContext.applyLifecycle(connector);
+            managementContext.getRegistry().registerConnector(connector, managementContext);
             connector.start();
             endpoint = new MuleEndpoint("muleClientProvider", defaultEndpointUri, connector,
                     TransformerUtils.UNDEFINED, UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 0, null, null);

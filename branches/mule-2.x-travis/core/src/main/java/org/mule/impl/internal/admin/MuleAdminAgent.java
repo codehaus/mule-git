@@ -112,7 +112,7 @@ public class MuleAdminAgent extends AbstractAgent
             }
 
             // Check for override
-            if (ModelHelper.isComponentRegistered(MuleManagerComponent.MANAGER_COMPONENT_NAME))
+            if (managementContext.getRegistry().lookupComponent(MuleManagerComponent.MANAGER_COMPONENT_NAME) != null)
             {
                 logger.info("Mule manager component has already been initialised, ignoring server url");
             }
@@ -154,7 +154,8 @@ public class MuleAdminAgent extends AbstractAgent
                         RegistryContext.getConfiguration().getDefaultEncoding(),
                         RegistryContext.getConfiguration().getDefaultSynchronousEventTimeout());
 
-                ModelHelper.registerSystemComponent(descriptor);
+                // TODO Need to fix this, should create an UMOComponent and register it via Registry.
+                //ModelHelper.registerSystemComponent(descriptor);
             }
         }
         catch (UMOException e)

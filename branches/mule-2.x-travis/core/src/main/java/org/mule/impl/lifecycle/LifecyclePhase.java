@@ -12,9 +12,11 @@ package org.mule.impl.lifecycle;
 import org.mule.RegistryContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.registry.Registry;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.lifecycle.LifecycleException;
+import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.UMOLifecyclePhase;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
@@ -108,8 +110,18 @@ public class LifecyclePhase implements UMOLifecyclePhase
                         logger.debug("lifecycle phase: " + getName() + " for object: " + o);
                     }
 
-                    applyLifecycle(o);
-                    called.add(new Integer(o.hashCode()));
+                    // TODO This is a big, fat hack!
+//                    boolean skip = false;
+//                    if (/*Startable.PHASE_NAME.equals(currentPhase) &&*/ o instanceof UMOComponent)
+//                    {
+//                        skip = true;
+//                    }
+//                    
+//                    if (skip == false)
+//                    {
+                        applyLifecycle(o);
+                        called.add(new Integer(o.hashCode()));
+//                    }
                 }
 
                 lo.firePostNotification(managementContext);

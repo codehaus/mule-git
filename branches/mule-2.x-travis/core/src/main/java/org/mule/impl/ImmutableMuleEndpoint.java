@@ -298,7 +298,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
         if (source.getManagementContext() != null)
         {
-            initialise();
+            //initialise();
         }
     }
 

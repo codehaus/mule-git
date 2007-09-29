@@ -10,28 +10,21 @@
 
 package org.mule.test.integration.providers.vm;
 
-import org.mule.config.ConfigurationBuilder;
-import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.TooManySatisfiableMethodsException;
-import org.mule.tck.FunctionalTestCase;
+import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.MuleTestUtils;
 import org.mule.tck.services.MatchingMethodsComponent;
 import org.mule.umo.UMOMessage;
 
-public class MethodEntrypointsTestCase extends FunctionalTestCase
+public class MethodEntrypointsTestCase extends AbstractMuleTestCase
 {
-
-    protected String getConfigResources()
+    protected void doSetUp() throws Exception
     {
-        return null;
-    }
-
-    protected ConfigurationBuilder getBuilder() throws Exception
-    {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.registerComponent(MatchingMethodsComponent.class.getName(), "service", "vm://service", null,
-            null);
-        return builder;
+        super.doSetUp();
+        managementContext.getRegistry().registerService(
+            MuleTestUtils.createDescriptor(MatchingMethodsComponent.class.getName(), "service", "vm://service", null,
+            null, managementContext), managementContext);
     }
 
     public void testTooManySatifiableMethods() throws Exception

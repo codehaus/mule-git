@@ -11,11 +11,20 @@
 package org.mule.providers.email.connectors;
 
 import org.mule.config.MuleProperties;
+import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.model.seda.SedaComponent;
+import org.mule.impl.model.seda.SedaModel;
 import org.mule.providers.email.transformers.EmailMessageToString;
-import org.mule.tck.MuleTestUtils;
+import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.routing.UMOOutboundRouter;
+import org.mule.util.object.ObjectFactory;
+import org.mule.util.object.SimpleObjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,13 +78,42 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
             }
         });
 
-        managementContext.getRegistry().registerConnector(createConnector(false), managementContext);
-        managementContext.getRegistry().registerService(
-            MuleTestUtils.createDescriptor(FunctionalTestComponent.class.getName(), 
-                                           uniqueName("testComponent"), getTestEndpointURI(),
-                                           null, props, managementContext),
-            managementContext);
+//        managementContext.getRegistry().registerConnector(createConnector(true), managementContext);
+//        
+//        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
+//
+//        UMOComponent component = getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class, props);
+//        // TODO Simplify this API for adding an outbound endpoint.
+//        ((OutboundPassThroughRouter) component.getOutboundRouter().getRouters().get(0)).addEndpoint(endpoint);
+//        managementContext.getRegistry().registerComponent(component, managementContext);
 
+        SedaModel model = new SedaModel();
+        model.setManagementContext(managementContext);
+        managementContext.applyLifecycle(model);
+        
+        UMOComponent component = new SedaComponent();
+        component.setName(uniqueName("testComponent"));
+        component.setModel(model);
+        ObjectFactory of = new SimpleObjectFactory(FunctionalTestComponent.class, props);
+        of.initialise();
+        component.setServiceFactory(of);
+        component.setManagementContext(managementContext);
+
+        UMOConnector connector = createConnector(true);
+        connector.setManagementContext(managementContext);        
+       // managementContext.applyLifecycle(connector);
+        managementContext.getRegistry().registerConnector(connector, managementContext);
+
+        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
+        endpoint.setConnector(connector);
+        
+        managementContext.applyLifecycle(component);
+
+        UMOOutboundRouter router = new OutboundPassThroughRouter();
+        router.addEndpoint(endpoint);
+        component.getOutboundRouter().addRouter(router);        
+
+        
         logger.debug("waiting for count down");
         assertTrue(countDown.await(WAIT_PERIOD_MS, TimeUnit.MILLISECONDS));
     }

@@ -27,6 +27,6 @@ public class NullComponent implements Callable
     public Object onCall(UMOEventContext context) throws Exception
     {
         throw new UnsupportedOperationException("This component cannot receive messages. Component is: "
-                                                + context.getComponentDescriptor().getName());
+                                                + context.getComponent().getName());
     }
 }

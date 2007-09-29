@@ -10,7 +10,6 @@
 
 package org.mule.providers.http;
 
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.tcp.TcpConnector;
@@ -67,8 +66,7 @@ public class HttpsConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
-        UMOComponent component = getTestComponent(d);
+        UMOComponent component = getTestComponent("orange", Orange.class);
         UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), true);
 
         try

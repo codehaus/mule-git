@@ -22,7 +22,6 @@ import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.impl.model.ModelHelper;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
 import org.mule.transformers.wire.WireFormat;
@@ -39,7 +38,6 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.MapUtils;
-import org.mule.util.object.SimpleObjectFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -84,7 +82,6 @@ public class MuleManagerComponent implements Callable, Initialisable
             throw new InitialisationException(CoreMessages.objectIsNull("wireFormat"), this);
         }
     }
-
     public Object onCall(UMOEventContext context) throws Exception
     {
         Object result;
@@ -128,7 +125,7 @@ public class MuleManagerComponent implements Callable, Initialisable
 
         if (destComponent != null)
         {
-            UMOSession session = new MuleSession(ModelHelper.getComponent(destComponent));
+            UMOSession session = new MuleSession(MuleServer.getManagementContext().getRegistry().lookupComponent(destComponent));
             // Need to do this otherise when the event is invoked the
             // transformer associated with the Mule Admin queue will be invoked, but
             // the message will not be of expected type
@@ -253,7 +250,8 @@ public class MuleManagerComponent implements Callable, Initialisable
             props.put("wireFormat", wireFormat);
             props.put("encoding", encoding);
             props.put("synchronousEventTimeout", new Integer(eventTimeout));
-            descriptor.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
+            // TODO
+            //descriptor.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
             descriptor.setProperties(props);
             return descriptor;
         }

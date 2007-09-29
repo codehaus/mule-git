@@ -10,7 +10,8 @@
 package org.mule.management.stats;
 
 /**
- * TODO
+ * TODO Pooling functionality has been abstracted out of the SedaComponent (MULE-???). 
+ * This class should be updated accordingly.
  */
 public class SedaComponentStatistics extends ComponentStatistics
 {

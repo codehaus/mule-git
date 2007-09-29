@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 
 /**
  * Parser used for processing <code><mule:service></code> elements.
+ * @deprecated MULE-??? No longer used because UMODescriptor is no longer used.
  */
 public class ServiceDescriptorDefinitionParser extends AbstractMuleBeanDefinitionParser
 {
@@ -40,19 +41,19 @@ public class ServiceDescriptorDefinitionParser extends AbstractMuleBeanDefinitio
         builder.addDependsOn(modelName);
 
         // For backwards-compatibility only.
-        String implClass = element.getAttribute("implementation");
-        if (StringUtils.isNotBlank(implClass))
-        {
-            BeanDefinitionBuilder serviceFactory = BeanDefinitionBuilder.rootBeanDefinition(SimpleObjectFactory.class);
-            serviceFactory.addPropertyValue("objectClassName", implClass);
-            String serviceName = element.getAttribute("name") + "-factory";
-            // Reference this bean from the service descriptor.
-            builder.addPropertyReference("serviceFactory", serviceName);
-            // Register the new bean.
-            BeanDefinitionHolder holder = new BeanDefinitionHolder(serviceFactory.getBeanDefinition(), serviceName);
-            registerBeanDefinition(holder, parserContext.getRegistry());
-            element.removeAttribute("implementation");
-        }
+//        String implClass = element.getAttribute("implementation");
+//        if (StringUtils.isNotBlank(implClass))
+//        {
+//            BeanDefinitionBuilder serviceFactory = BeanDefinitionBuilder.rootBeanDefinition(SimpleObjectFactory.class);
+//            serviceFactory.addPropertyValue("objectClassName", implClass);
+//            String serviceName = element.getAttribute("name") + "-factory";
+//            // Reference this bean from the service descriptor.
+//            builder.addPropertyReference("serviceFactory", serviceName);
+//            // Register the new bean.
+//            BeanDefinitionHolder holder = new BeanDefinitionHolder(serviceFactory.getBeanDefinition(), serviceName);
+//            registerBeanDefinition(holder, parserContext.getRegistry());
+//            element.removeAttribute("implementation");
+//        }
         
         super.doParse(element, parserContext, builder);
     }

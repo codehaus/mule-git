@@ -133,11 +133,11 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
 
     public void initialiseComponent(EventCallback callback) throws Exception
     {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
         HashMap props = new HashMap();
         props.put("eventCallback", callback);
-        builder.registerComponent(JdbcFunctionalTestComponent.class.getName(), "testComponent", getInDest(),
-            getOutDest(), props);
+        managementContext.getRegistry().registerService(
+            MuleTestUtils.createDescriptor(JdbcFunctionalTestComponent.class.getName(), "testComponent", getInDest(),
+                                           getOutDest(), props, managementContext), managementContext);
     }
 
 }
