@@ -19,7 +19,7 @@ import org.mule.util.NumberUtils;
 /**
  * Tests the connector against jBPM with a simple process.
  */
-public class SimpleJbpmTestCase extends AbstractJbmpTestCase
+public class SimpleJbpmTestCase extends AbstractJbpmTestCase
 {
 
     protected String getConfigResources()
