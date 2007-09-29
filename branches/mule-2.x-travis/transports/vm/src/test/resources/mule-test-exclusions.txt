@@ -1,0 +1,11 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# MULE-2131
+org.mule.issues.EndpointTransformerMule2131TestCase
+org.mule.issues.TransformerChainMule2131TestCase
+org.mule.issues.ResponseTransformerMule2165TestCase
+
+# MULE-2136
+org.mule.issues.MulticastRouterMule2136TestCase
