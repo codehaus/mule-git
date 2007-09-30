@@ -197,6 +197,11 @@ public class MuleMessage implements UMOMessage, ThreadSafeAccess
         return adapter.getPayload();
     }
 
+    public void setPayload(Object payload)
+    {
+        adapter.setPayload(payload);
+    }
+
     public void addProperties(Map properties)
     {
         adapter.addProperties(properties);

@@ -161,6 +161,11 @@ public class TestConnector extends AbstractConnector
             return message.toString();
         }
 
+        public void setPayload(Object payload)
+        {
+            this.message = payload;
+        }
+
         public ThreadSafeAccess newThreadCopy()
         {
             return this;

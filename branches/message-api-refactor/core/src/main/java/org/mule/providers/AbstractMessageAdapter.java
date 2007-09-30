@@ -10,18 +10,6 @@
 
 package org.mule.providers;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.activation.DataHandler;
-
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
 import org.mule.config.MuleManifest;
@@ -37,10 +25,24 @@ import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
+import java.io.InputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.activation.DataHandler;
+
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractMessageAdapter</code> provides a base implementation for simple
@@ -469,9 +471,26 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         }
         
         // Pass in the adapter itself, so we respect the encoding
-        return transformer.transform(this);
+        Object result = transformer.transform(this);
+        
+        if (isPayloadConsumed(inputCls))
+        {
+            setPayload(result);
+        }
+        
+        return result;
     }
 
+    protected boolean isPayloadConsumed(Class inputCls)
+    {
+        return InputStream.class.isAssignableFrom(inputCls);
+    }
+
+    public void setPayload(Object payload)
+    {
+        throw new UnsupportedOperationException();
+    }
+    
     protected byte[] convertToBytes(Object object) 
         throws TransformerException, UnsupportedEncodingException
     {

@@ -100,7 +100,15 @@ public interface UMOMessageAdapter extends Serializable
     Object getPayload();
 
     Object getPayload(Class outputType) throws TransformerException;
-    
+
+    /**
+     * Update the message payload. This is typically only called if the 
+     * payload was originally an InputStream. In which case, if the InputStream
+     * is consumed, it needs to be replaced for future access.
+     * 
+     * @param payload
+     */
+    void setPayload(Object payload);
     /**
      * gets the unique identifier for the message. It's up to the implementation to
      * ensure a unique id

@@ -38,18 +38,18 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
         if (message instanceof Object[])
         {
             // This case comes from the HttpMessageReceiver...
-            
-            this.message = ((Object[])message)[0];
-            if (((Object[])message).length > 1)
+
+            this.message = ((Object[]) message)[0];
+            if (((Object[]) message).length > 1)
             {
-                Object second = ((Object[])message)[1];
+                Object second = ((Object[]) message)[1];
                 if (second instanceof Map)
                 {
                     Map props = (Map) second;
                     for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
                     {
-                        Map.Entry e = (Map.Entry)iterator.next();
-                        String key = (String)e.getKey();
+                        Map.Entry e = (Map.Entry) iterator.next();
+                        String key = (String) e.getKey();
                         Object value = e.getValue();
                         // skip incoming null values
                         if (value != null)
@@ -63,7 +63,7 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
                     Header[] headers = (Header[]) second;
                     for (int i = 0; i < headers.length; i++)
                     {
-                       setProperty(headers[i].getName(), headers[i].getValue());
+                        setProperty(headers[i].getName(), headers[i].getValue());
                     }
                 }
             }
@@ -73,11 +73,11 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
             this.message = message;
             return;
         }
-        else 
+        else
         {
             this.message = message;
         }
-        
+
         String temp = getStringProperty(HttpConnector.HTTP_VERSION_PROPERTY, null);
         if (HttpConstants.HTTP10.equalsIgnoreCase(temp))
         {

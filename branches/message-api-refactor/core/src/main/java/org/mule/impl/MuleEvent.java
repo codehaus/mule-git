@@ -335,8 +335,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             List transformers = endpoint.getTransformers();
             if (null != transformers)
             {
-                transformedMessage = TransformerUtils.applyAllTransformers(transformers, message).getPayload(
-                    outputType);
+                transformedMessage = TransformerUtils.applyAllTransformers(transformers, message).getPayload(outputType);
             }
             else
             {
@@ -348,7 +347,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             Class inputCls = transformedMessage.getClass();
             UMOTransformer transformer = RegistryContext.getRegistry()
                 .lookupTransformer(inputCls, outputType);
-
+            
             if (transformer == null)
             {
                 throw new TransformerException(

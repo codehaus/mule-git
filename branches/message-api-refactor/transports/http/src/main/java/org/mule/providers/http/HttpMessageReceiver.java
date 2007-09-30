@@ -199,7 +199,8 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected HttpResponse doRequest(HttpRequest request, RequestLine requestLine) throws IOException, UMOException
+        protected HttpResponse doRequest(HttpRequest request, 
+                                         RequestLine requestLine) throws IOException, UMOException
         {
             Map headers = parseHeaders(request);
 

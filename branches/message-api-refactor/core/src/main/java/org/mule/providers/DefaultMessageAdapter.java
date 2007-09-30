@@ -14,7 +14,6 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.transformer.TransformerException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -181,17 +180,15 @@ public class DefaultMessageAdapter extends AbstractMessageAdapter
         }
         else 
         {
-            // TODO-DBD: We should consider having more default transformers 
+            // TODO-DD: We should consider having more default transformers 
             // built into the class if transformer lookup takes too long
-            
             return (String) getPayload(String.class);
         }
     }
 
-    public Object getPayload(Class outputType) throws TransformerException
+    public void setPayload(Object payload)
     {
-        message = super.getPayload(outputType);
-        return message;
+        this.message = payload;
     }
     
     /**

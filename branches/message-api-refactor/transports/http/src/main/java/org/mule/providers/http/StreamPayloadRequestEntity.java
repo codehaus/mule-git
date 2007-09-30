@@ -10,7 +10,6 @@
 
 package org.mule.providers.http;
 
-import org.mule.impl.model.streaming.AbstractOutputStream;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.provider.OutputHandler;
 
@@ -37,15 +36,6 @@ public class StreamPayloadRequestEntity implements RequestEntity
 
     public void writeRequest(OutputStream outputStream) throws IOException
     {
-        new AbstractOutputStream(outputStream) {
-
-            protected void onFirstWrite()
-            {
-                // TODO Auto-generated method stub
-                super.onFirstWrite();
-            }
-            
-        };
         outputHandler.write(event, outputStream);
     }
 
@@ -56,8 +46,6 @@ public class StreamPayloadRequestEntity implements RequestEntity
 
     public String getContentType()
     {
-        System.out.println("getting content type " + event.getMessage().getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, 
-            HttpConstants.DEFAULT_CONTENT_TYPE));
         return event.getMessage().getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, 
             HttpConstants.DEFAULT_CONTENT_TYPE);
     }
