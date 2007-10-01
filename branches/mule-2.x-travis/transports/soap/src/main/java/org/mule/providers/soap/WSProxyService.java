@@ -161,6 +161,11 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
 
     public void initialise() throws InitialisationException
     {
+        if (component == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Component not set, this service has not been initialized properly."), this);
+        }
+        
         UMOOutboundRouter router = (UMOOutboundRouter)component.getOutboundRouter().getRouters().get(0);
         UMOEndpoint endpoint = (UMOEndpoint)router.getEndpoints().get(0);
         this.urlWebservice = endpoint.getEndpointURI().getAddress();

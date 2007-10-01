@@ -50,7 +50,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.xfire.XFire;
-import org.codehaus.xfire.XFireFactory;
 import org.codehaus.xfire.service.Service;
 import org.codehaus.xfire.service.ServiceRegistry;
 import org.codehaus.xfire.transport.Transport;
@@ -78,11 +77,17 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
     
     private UMOComponent component;
 
-	public XFireServiceComponent(XFire xfire) 
-	{
-		super();
-		this.xfire = xfire;
-	}
+    /** For IoC */
+    public XFireServiceComponent() 
+    {
+        super();
+    }
+
+    public XFireServiceComponent(XFire xfire) 
+    {
+        super();
+        this.xfire = xfire;
+    }
 
 	public void setComponent(UMOComponent component) throws ConfigurationException
     {
@@ -130,6 +135,10 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
         }
         else
         {
+            if (transport == null)
+            {
+                throw new InitialisationException(MessageFactory.createStaticMessage("transport is null, this service has not been initialized properly"), this);
+            }
             MuleLocalChannel channel = (MuleLocalChannel)transport.createChannel(eventContext.getEndpointURI()
                 .getFullScheme());
             return channel.onCall(eventContext);

@@ -32,8 +32,10 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.object.SingletonObjectFactory;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.xfire.DefaultXFire;
 import org.codehaus.xfire.XFire;
@@ -390,7 +392,9 @@ public class XFireConnector extends AbstractConnector
             c.setManagementContext(managementContext);
             c.initialise();
 
-            SingletonObjectFactory of = new SingletonObjectFactory(new XFireServiceComponent(xfire));
+            Map props = new HashMap();
+            props.put("xfire", xfire);
+            SingletonObjectFactory of = new SingletonObjectFactory(XFireServiceComponent.class, props);
             // Inject the UMOComponent because XFireServiceComponent is UMOComponentAware.
             of.setComponent(c);
             of.initialise();
