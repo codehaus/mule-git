@@ -17,7 +17,6 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -34,6 +33,12 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
     protected String objectClassName;
     protected Class objectClass = null;
     protected Map properties = null;
+    
+    /**
+     * This is not pretty but its the only way I could find to get the UMOComponent
+     * injected into each instance of a POJO service.
+     */
+    UMOComponent component;
     
     protected transient Log logger = LogFactory.getLog(getClass());
     
@@ -78,9 +83,16 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
 
         if (properties != null)
         {
-            BeanUtils.populate(object, properties);
+            BeanUtils.populate(object, properties);            
         }
         
+        // This is not pretty but its the only way I could find to get the UMOComponent
+        // properly injected into each instance of a POJO service.
+        if (component != null)
+        {
+            BeanUtils.setProperty(object, "component", component);
+        }
+
         if (object instanceof Initialisable)
         {
             ((Initialisable) object).initialise();
@@ -94,11 +106,7 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
      */
     public void setComponent(UMOComponent component) throws ConfigurationException
     {
-        if (properties == null)
-        {
-            properties = new HashMap();
-        }
-        properties.put("component", component);
+        this.component = component;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
