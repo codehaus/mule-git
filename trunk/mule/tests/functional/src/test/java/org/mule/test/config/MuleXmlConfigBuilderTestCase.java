@@ -10,14 +10,11 @@
 
 package org.mule.test.config;
 
-import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
-import org.mule.config.ThreadingProfile;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
 import org.mule.impl.MuleDescriptor;
-import org.mule.providers.AbstractConnector;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.response.AbstractResponseRouter;
 import org.mule.tck.AbstractConfigBuilderTestCase;
@@ -180,52 +177,6 @@ public class MuleXmlConfigBuilderTestCase extends AbstractConfigBuilderTestCase
         Map props = MuleManager.getInstance().getProperties();
         assertNotNull(props);
         assertEquals("default", props.get("system-prop2"));
-    }
-
-    /**
-     * The MuleXmlConfiguration builder provides special support for overloading
-     * config elements for threadingProfiles, queueProfiles and poolingProfiles, so
-     * that defaults can be declared in the main configuration but overiding elements
-     * can just replace certain values
-     * 
-     * @throws MuleException
-     */
-    // @Override
-    public void testThreadingConfig() throws MuleException
-    {
-        // test config
-        ThreadingProfile tp = MuleManager.getConfiguration().getDefaultThreadingProfile();
-        assertEquals(0, tp.getMaxBufferSize());
-        assertEquals(8, tp.getMaxThreadsActive());
-        assertEquals(4, tp.getMaxThreadsIdle());
-        assertEquals(0, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
-
-        // test defaults
-        tp = MuleManager.getConfiguration().getComponentThreadingProfile();
-        assertEquals(0, tp.getMaxBufferSize());
-        assertEquals(8, tp.getMaxThreadsActive());
-        assertEquals(4, tp.getMaxThreadsIdle());
-        assertEquals(0, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
-
-        // test that values not set retain a default value
-        AbstractConnector c = (AbstractConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
-        tp = c.getDispatcherThreadingProfile();
-        assertEquals(2, tp.getMaxBufferSize());
-        assertEquals(8, tp.getMaxThreadsActive());
-        assertEquals(4, tp.getMaxThreadsIdle());
-        assertEquals(0, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
-
-        MuleDescriptor descriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel("main").getDescriptor(
-            "appleComponent2");
-        tp = descriptor.getThreadingProfile();
-        assertEquals(6, tp.getMaxBufferSize());
-        assertEquals(12, tp.getMaxThreadsActive());
-        assertEquals(6, tp.getMaxThreadsIdle());
-        assertEquals(0, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
     }
 
     public void testGlobalEndpointOverrides()

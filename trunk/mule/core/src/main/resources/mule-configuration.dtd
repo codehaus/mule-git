@@ -233,7 +233,7 @@ This policy should, in general, not be used if the minimum number of threads is 
 The shorthand values WAIT, DISCARD, DISCARD_OLDEST, ABORT and RUN are deprecated; please use their canonical equivalents.
 -->
 
-<!ATTLIST threading-profile poolExhaustedAction     (WAIT | DISCARD | DISCARD_OLDEST | ABORT | RUN)       "RUN">
+<!ATTLIST threading-profile poolExhaustedAction     (WHEN_EXHAUSTED_WAIT | WAIT | WHEN_EXHAUSTED_DISCARD | DISCARD | WHEN_EXHAUSTED_DISCARD_OLDEST | DISCARD_OLDEST | WHEN_EXHAUSTED_ABORT | ABORT | WHEN_EXHAUSTED_RUN | RUN)       "RUN">
 
 <!--
 Allows configuration of a waiting timeout for threads that are blocked when WAIT

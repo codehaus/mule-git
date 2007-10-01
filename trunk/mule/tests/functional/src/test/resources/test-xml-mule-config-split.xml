@@ -33,7 +33,7 @@
             </outbound-router>
 
             <interceptor className="org.mule.interceptors.LoggingInterceptor"/>
-            <threading-profile maxBufferSize="6" maxThreadsActive="12" maxThreadsIdle="6"/>
+            <threading-profile maxBufferSize="6" maxThreadsActive="12" maxThreadsIdle="6" poolExhaustedAction="WHEN_EXHAUSTED_DISCARD"/>
             <pooling-profile maxIdle="6" maxActive="9" exhaustedAction="WHEN_EXHAUSTED_FAIL" maxWait="4002" initialisationPolicy="INITIALISE_ALL"/>
             <queue-profile maxOutstandingMessages="102"/>
         </mule-descriptor>

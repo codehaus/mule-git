@@ -29,13 +29,13 @@
     </bean>
     <bean id="defaultThreadingProfile" class="org.mule.config.ThreadingProfile">
         <property name="maxBufferSize">
-            <value>0</value>
+            <value>42</value>
         </property>
         <property name="maxThreadsActive">
             <value>16</value>
         </property>
         <property name="maxThreadsIdle">
-            <value>4</value>
+            <value>3</value>
         </property>
         <property name="threadTTL">
             <value>60001</value>
