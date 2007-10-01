@@ -45,6 +45,12 @@ import org.mule.umo.transformer.UMOTransformer;
 public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {
 
+    public AbstractConfigBuilderTestCase(boolean legacy)
+    {
+        super(legacy);
+    }
+
+
     // @Override
     public void testManagerConfig() throws Exception
     {
@@ -103,7 +109,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     {
         UMODescriptor descriptor = managementContext.getRegistry().lookupService("appleComponent");
         assertNotNull(descriptor.getExceptionListener());
-        assertEquals(DefaultExceptionStrategy.class, descriptor.getExceptionListener().getClass());
+        assertTrue(DefaultExceptionStrategy.class.isAssignableFrom(descriptor.getExceptionListener().getClass()));
     }
 
     // @Override

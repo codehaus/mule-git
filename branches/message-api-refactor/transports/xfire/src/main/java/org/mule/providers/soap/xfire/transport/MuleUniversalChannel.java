@@ -207,8 +207,6 @@ public class MuleUniversalChannel extends AbstractChannel
         {
             public void write(UMOEvent event, OutputStream out) throws IOException
             {
-                writeHeaders(message, event);
-                
                 try
                 {
                     Attachments atts = message.getAttachments();
@@ -241,11 +239,13 @@ public class MuleUniversalChannel extends AbstractChannel
 
         };
 
+        
         // We can create a generic StreamMessageAdapter here as the underlying
         // transport will create one specific to the transport
         DefaultMessageAdapter sp = new DefaultMessageAdapter(handler);
         sp.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, HttpConstants.METHOD_POST);
-
+        writeHeaders(message, sp);
+        
         // set all properties on the message adapter
         UMOMessage msg = RequestContext.getEvent().getMessage();
         for (Iterator i = msg.getPropertyNames().iterator(); i.hasNext();)
@@ -287,13 +287,11 @@ public class MuleUniversalChannel extends AbstractChannel
 
     }
 
-    public void writeHeaders(OutMessage message, UMOEvent event)
+    public void writeHeaders(OutMessage message, UMOMessageAdapter msg)
     {
-        UMOMessage umoMsg = event.getMessage();
-        umoMsg.setProperty(HttpConstants.HEADER_CONTENT_TYPE, getSoapMimeType(message));
-        umoMsg.setProperty(SoapConstants.SOAP_ACTION, message.getProperty(SoapConstants.SOAP_ACTION));
+        msg.setProperty(HttpConstants.HEADER_CONTENT_TYPE, getSoapMimeType(message));
+        msg.setProperty(SoapConstants.SOAP_ACTION, message.getProperty(SoapConstants.SOAP_ACTION));
         
-        UMOMessage msg = event.getMessage();
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
             String headerName = (String)iterator.next();
@@ -306,7 +304,7 @@ public class MuleUniversalChannel extends AbstractChannel
                 && (!HttpConstants.HEADER_CONTENT_TYPE.equalsIgnoreCase(headerName))
                 && (!HttpConstants.HEADER_CONTENT_LENGTH.equalsIgnoreCase(headerName)))
             {
-                umoMsg.setProperty(headerName, headerValue);
+                msg.setProperty(headerName, headerValue);
             }
         }
     }

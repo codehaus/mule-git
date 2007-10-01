@@ -119,14 +119,14 @@
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
+            <artifactId>mule-transport-jdbc</artifactId>
             <version>${version}</version>
             <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
-
         <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-1to2migration</artifactId>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
             <scope>test</scope>
         </dependency>

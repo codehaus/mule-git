@@ -149,6 +149,10 @@ public abstract class AbstractReceiverServlet extends HttpServlet
                 contentType = contentTypeHeader.getValue();
             }
 
+            if (!servletResponse.isCommitted())
+            {
+                servletResponse.setStatus(httpResponse.getStatusCode());
+            }
             if (!contentType.startsWith("text"))
             {
                 servletResponse.setContentType(contentType);
@@ -160,10 +164,6 @@ public abstract class AbstractReceiverServlet extends HttpServlet
                 servletResponse.setContentType(contentType);
                 // Encoding: this method will check the charset on the content type
                 servletResponse.getWriter().write(httpResponse.getBodyString());
-            }
-            if (!servletResponse.isCommitted())
-            {
-                servletResponse.setStatus(httpResponse.getStatusCode());
             }
         }
         servletResponse.flushBuffer();

@@ -27,4 +27,11 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
         LoanBrokerApp loanBrokerApp = new LoanBrokerApp("loan-broker-bpm-mule-config.xml");
         loanBrokerApp.run(false);
     }
+
+    protected void init() throws Exception
+    {
+        // before initialisation occurs, the database must be cleaned and a new one created
+        DbUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
+        super.init();
+    }
 }

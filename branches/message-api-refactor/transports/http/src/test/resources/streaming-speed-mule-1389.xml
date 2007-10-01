@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp/2.0"
+       xmlns:stream="http://www.mulesource.org/schema/mule/streaming/2.0"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/tcp/2.0 http://www.mulesource.org/schema/mule/tcp/2.0/mule-tcp.xsd
+               http://www.mulesource.org/schema/mule/streaming/2.0 http://www.mulesource.org/schema/mule/streaming/2.0/mule-streaming.xsd">
 
-<!DOCTYPE mule-configuration PUBLIC
-          "-//MuleSource //DTD mule-configuration XML V1.0//EN"
-          "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+    <tcp:connector name="default" validateConnections="true" tcpProtocolClassName="org.mule.providers.tcp.protocols.StreamingProtocol"/>
 
-<mule-configuration id="TcpStreaming" version="1.0">
+    <model name="echoModel" class="org.mule.tck.testmodels.mule.TestSedaModel">
 
-    <mule-environment-properties synchronous="false"/>
-
-    <connector name="default" className="org.mule.providers.tcp.TcpConnector">
-        <properties>
-            <property name="validateConnections" value="false"/>
-        </properties>
-    </connector>
-
-    <model name="echo-model" type="streaming">
-
-        <mule-descriptor name="echo" implementation="org.mule.components.simple.StreamingBridgeComponent">
+        <service name="echo">
+            <component class="org.mule.components.simple.BridgeComponent"/>
             <inbound-router>
-                <endpoint address="tcp://localhost:60209" streaming="true"/>
+                <inbound-endpoint address="tcp://localhost:60209"/>
             </inbound-router>
             <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="http://localhost:60210"/>
-                </router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="http://localhost:60210"/>
+                </outbound-pass-through-router>
             </outbound-router>
-        </mule-descriptor>
-        
-        <mule-descriptor name="testComponent" singleton="true"
-                         implementation="org.mule.tck.functional.FunctionalStreamingTestComponent">
+        </service>
+
+        <service name="testComponent">
+            <component class="org.mule.tck.functional.FunctionalStreamingTestComponent" scope="singleton"/>
             <inbound-router>
-                <endpoint address="tcp://localhost:60210"/>
+                <inbound-endpoint address="tcp://localhost:60210"/>
             </inbound-router>
-        </mule-descriptor>
+        </service>
 
     </model>
 
-</mule-configuration>
+</mule>

@@ -11,14 +11,14 @@
 package org.mule.tck;
 
 import org.mule.impl.AbstractExceptionListener;
-import org.mule.providers.SimpleRetryConnectionStrategy;
+import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.filters.xml.JXPathFilter;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.testmodels.fruit.FruitCleaner;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
-import org.mule.tck.testmodels.mule.TestEntryPointResolver;
+import org.mule.tck.testmodels.mule.TestEntryPointResolverSet;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
 import org.mule.tck.testmodels.mule.TestResponseAggregator;
 import org.mule.transformers.TransformerUtils;
@@ -42,8 +42,17 @@ import java.util.Map;
 public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTestCase
 {
 
+    // use legacy entry point resolver?
+    private boolean legacy;
+
     protected AbstractScriptConfigBuilderTestCase()
     {
+        this(false);
+    }
+
+    protected AbstractScriptConfigBuilderTestCase(boolean legacy)
+    {
+        this.legacy = legacy;
         setDisposeManagerPerSuite(true);
     }
 
@@ -86,6 +95,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         // test that endpoints have been resolved on endpoints
         UMOImmutableEndpoint endpoint = managementContext.getRegistry().lookupEndpoint("waterMelonEndpoint");
         assertNotNull(endpoint);
+        // aliases no longer possible
         assertEquals("test.queue", endpoint.getEndpointURI().getAddress());
 
         UMODescriptor descriptor = managementContext.getRegistry().lookupService("orangeComponent");
@@ -125,7 +135,14 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         UMOModel model = managementContext.getRegistry().lookupModel("main");
         assertNotNull(model);
         assertEquals("main", model.getName());
-        assertTrue(model.getEntryPointResolver() instanceof TestEntryPointResolver);
+        if (legacy)
+        {
+            assertTrue(model.getEntryPointResolverSet() instanceof LegacyEntryPointResolverSet);
+        }
+        else
+        {
+            assertTrue(model.getEntryPointResolverSet() instanceof TestEntryPointResolverSet);
+        }
         assertTrue(model.getExceptionListener() instanceof TestExceptionStrategy);
 
         assertTrue(((AbstractExceptionListener) model.getExceptionListener()).getEndpoints().size() > 0);

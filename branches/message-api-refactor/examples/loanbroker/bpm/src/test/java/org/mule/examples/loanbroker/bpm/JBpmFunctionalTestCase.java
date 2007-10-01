@@ -17,21 +17,20 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.examples.loanbroker.tests.AbstractAsynchronousLoanBrokerTestCase;
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.ProcessConnector;
-
-import java.io.File;
+import org.mule.util.MuleDerbyTestUtils;
 
 
 public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase
 {
     /** For unit tests, we assume a virgin database, therefore the process ID is assumed to be = 1 */
     public static final long PROCESS_ID = 1;
-    
+
     protected void suitePreSetUp() throws Exception
     {
         // set the derby.system.home system property to make sure that all derby databases are
         // created in maven's target directory
-        File derbySystemHome = new File(System.getProperty("user.dir"), "target");
-        System.setProperty("derby.system.home",  derbySystemHome.getAbsolutePath());
+        
+        MuleDerbyTestUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
 
         super.suitePreSetUp();
     }
@@ -63,5 +62,15 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         //   org.hibernate.LazyInitializationException: could not initialize proxy - the owning Session was closed
         // See http://forum.springframework.org/archive/index.php/t-24800.html
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));
+    }
+    
+    public void testLotsOfLoanRequests() throws Exception
+    {
+        super.testLotsOfLoanRequests();
+        
+        //without this sleep, the test still succeeds but throws a series of exceptions
+        //probably Spring would not have enough time to close db connections before
+        //database itself is shut down while jvm start disposing
+        Thread.sleep(100);
     }
 }

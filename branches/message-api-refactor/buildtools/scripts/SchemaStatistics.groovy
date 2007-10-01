@@ -30,6 +30,8 @@ class Package {
   int xmlTypeCountOldMule
   int xmlTypeCountNewMule
   int xmlTypeCountSpring
+  int endpointContextSpecific
+  int endpointTransportSpecific
 
   void scan() {
     AntBuilder ant = new AntBuilder()
@@ -54,6 +56,8 @@ class Package {
       } else if (name.equals("beans")) {
         addSpringConfig(file, doc)
       } else if (name.equals("{http://www.mulesource.org/schema/mule/core/2.0}mule")) {
+        addNewMuleConfig(file, doc)
+      } else if (name.equals("{http://www.mulesource.org/schema/mule/core/2.0}mule-unsafe")) {
         addNewMuleConfig(file, doc)
       } else if (name.equals("mule-configuration")) {
         addOldMuleConfig(file, doc)
@@ -87,7 +91,7 @@ class Package {
 
   void addErrorConfig(File file, Exception e) {
     xmlTypeCountError++
-    println "# failed to parse " + file.name
+    println "# *** failed to parse " + file.name
     println "# " + e.message
   }
 
@@ -104,9 +108,20 @@ class Package {
 
   void addNewMuleConfig(File file, Node doc) {
     xmlTypeCountNewMule++
+    def elements = doc.depthFirst()
+    def endpoints = elements.findAll{e -> e.name.localPart == "inbound-endpoint" || e.name.localPart == "outbound-endpoint"};
+    if (endpoints.size() > 0) {
+      endpointContextSpecific++
+    }
+    if (endpoints.findAll{e -> e.name.namespaceURI != "http://www.mulesource.org/schema/mule/core/2.0"}) {
+      endpointTransportSpecific++
+    }
   }
 
   void addOldMuleConfig(File file, Node doc) {
+    if (! file.name.contains("legacy")) {
+      println "# *** old config: " + file.name
+    }
     xmlTypeCountOldMule++
   }
 
@@ -118,8 +133,17 @@ class Package {
     return "# error: " + xmlTypeCountError + "; other: " + xmlTypeCountOther + "; spring: " + xmlTypeCountSpring + "; old mule: " + xmlTypeCountOldMule + "; new mule: " + xmlTypeCountNewMule
   }
 
+  String dropRoot(File dir) {
+    if (dir.name == base) {
+      return ""
+    } else {
+      File parent = new File(dir.parent)
+      return dropRoot(parent) + "/" + dir.name
+    }
+  }
+
   String csv() {
-    return "\"" + base + "\",\"" + dir + "\"," + xmlTypeCountError + "," + xmlTypeCountOther + "," + xmlTypeCountSpring + "," + xmlTypeCountOldMule + "," + xmlTypeCountNewMule
+    return "\"" + base + "\",\"" + dropRoot(new File(dir)) + "\"," + xmlTypeCountError + "," + xmlTypeCountOther + "," + xmlTypeCountSpring + "," + xmlTypeCountOldMule + "," + xmlTypeCountNewMule + "," + endpointContextSpecific + "," + endpointTransportSpecific
   }
 
 }
@@ -135,6 +159,7 @@ def checkCurrentDirectory = {
 
 // root directories to search
 def baseDirectories = ["core", "examples", "tests", "modules", "transports"]
+//def baseDirectories = ["transports"]
 
 // find directories with maven structure (pom.xml and (src or conf))
 def findPackages = {
@@ -171,10 +196,10 @@ def checkForDirectory(parent, child) {
 // driver
 checkCurrentDirectory()
 def packages = findPackages()
-println "group,package,error-type,other-type,spring-type,old-mule-type,new-mule-type"
+println "group,package,error-type,other-type,spring-type,old-mule-type,new-mule-type,context-endpoint,transport-endpoint"
 for (pkg in packages) {
-  pkg.scan()
   println "# ------------------"
+  pkg.scan()
   println pkg
   println pkg.types()
   println pkg.csv()

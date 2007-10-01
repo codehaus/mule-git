@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
@@ -307,7 +308,9 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         }
 
 
-        if (context.getMessage().getPayload() instanceof InputStream)
+        Set attNams = context.getMessage().getAttachmentNames();
+        if (context.getMessage().getPayload() instanceof InputStream
+                        && attNams != null && attNams.size() > 0)
         {
             // must set this for receiver to properly parse attachments
             httpMethod.addRequestHeader(HttpConstants.HEADER_CONTENT_TYPE, "multipart/related");

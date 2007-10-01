@@ -51,7 +51,6 @@ import org.mule.impl.container.RmiContainerContext;
 import org.mule.impl.endpoint.InboundEndpoint;
 import org.mule.impl.endpoint.OutboundEndpoint;
 import org.mule.impl.endpoint.ResponseEndpoint;
-import org.mule.impl.model.resolvers.CallableEntryPointResolver;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.impl.security.SecretKeyEncryptionStrategy;
@@ -92,6 +91,7 @@ import org.mule.routing.outbound.OutboundRouterCollection;
 import org.mule.routing.outbound.StaticRecipientList;
 import org.mule.routing.outbound.TemplateEndpointRouter;
 import org.mule.routing.response.ResponseRouterCollection;
+import org.mule.routing.response.SingleResponseRouter;
 import org.mule.transaction.lookup.GenericTransactionManagerLookupFactory;
 import org.mule.transaction.lookup.JBossTransactionManagerLookupFactory;
 import org.mule.transaction.lookup.JRunTransactionManagerLookupFactory;
@@ -217,8 +217,9 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
 //        registerBeanDefinitionParser("model-seda-optimised", new OrphanDefinitionParser(OptimisedSedaModel.class, true));
 //        registerBeanDefinitionParser("model-pipeline", new OrphanDefinitionParser(PipelineModel.class, true));
 
-        registerBeanDefinitionParser("callable-entrypoint-resolver", new ChildDefinitionParser("entryPointResolver", CallableEntryPointResolver.class));
-        registerBeanDefinitionParser("custom-entrypoint-resolver", new ChildDefinitionParser("entryPointResolver", null));
+        //TODO RM*
+        registerBeanDefinitionParser("custom-entrypoint-resolver", new ChildDefinitionParser("entryPointResolverSet", null));
+        //registerBeanDefinitionParser("callable-entrypoint-resolver", new ChildDefinitionParser("entryPointResolver", CallableEntryPointResolver.class));
         //registerBeanDefinitionParser("method-entrypoint-resolver", new ChildDefinitionParser("entrypointResolver", MethodEntryPointResolver.class));
         //registerBeanDefinitionParser("reflection-entrypoint-resolver", new ChildDefinitionParser("entrypointResolver", MethodEntryPointResolver.class));
         //registerBeanDefinitionParser("non-void-entrypoint-resolver", new ChildDefinitionParser("entrypointResolver", NonVoidEntryPointResolver.class));
@@ -272,11 +273,12 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
 
         //Response Routers
         registerBeanDefinitionParser("custom-response-router", new RouterDefinitionParser("router", null));
+        registerBeanDefinitionParser("single-response-router", new RouterDefinitionParser("router", SingleResponseRouter.class));
 
         //Property Extractors
         registerBeanDefinitionParser("bean-property-extractor", new ChildDefinitionParser("propertyExtractor", BeanPropertyExtractor.class));
         registerBeanDefinitionParser("correlation-property-extractor", new ChildDefinitionParser("propertyExtractor", CorrelationPropertiesExtractor.class));
-        registerBeanDefinitionParser("custom-property-extractor", new ObjectFactoryDefinitionParser("propertyExtractor"));
+        registerBeanDefinitionParser("custom-property-extractor", new ChildDefinitionParser("propertyExtractor"));
         registerBeanDefinitionParser("map-property-extractor", new ChildDefinitionParser("propertyExtractor", MapPropertyExtractor.class));
         registerBeanDefinitionParser("message-property-extractor", new ChildDefinitionParser("propertyExtractor", MessagePropertyExtractor.class));
         registerBeanDefinitionParser("payload-property-extractor", new ChildDefinitionParser("propertyExtractor", PayloadPropertyExtractor.class));

@@ -282,9 +282,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         return httpMethod;
     }
 
-    private HttpMethod createEntityMethod(UMOEvent event, 
-                                          Object body, 
-                                          EntityEnclosingMethod postMethod)
+    protected HttpMethod createEntityMethod(UMOEvent event, Object body, EntityEnclosingMethod postMethod)
         throws TransformerException
     {
         HttpMethod httpMethod;
@@ -412,5 +410,4 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             }
         }
     }
-
 }

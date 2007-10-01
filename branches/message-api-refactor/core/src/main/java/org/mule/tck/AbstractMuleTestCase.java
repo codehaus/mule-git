@@ -39,14 +39,14 @@ import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-
-import junit.framework.TestCase;
-import junit.framework.TestResult;
+import java.util.Set;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
+import junit.framework.TestCase;
+import junit.framework.TestResult;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -64,7 +64,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
      * test case recycle. This is required, e.g. to play nice with transaction manager
      * recovery service object store.
      */
-    public static final String[] IGNORED_DOT_MULE_DIRS = new String[] {"transaction-log"};
+    public static final String[] IGNORED_DOT_MULE_DIRS = new String[]{"transaction-log"};
 
     protected static UMOManagementContext managementContext;
 
@@ -97,7 +97,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         if (StringUtils.isNotBlank(muleOpts))
         {
             Map parsedOpts = SystemUtils.parsePropertyDefinitions(muleOpts);
-            String optVerbose = (String)parsedOpts.get("mule.verbose");
+            String optVerbose = (String) parsedOpts.get("mule.verbose");
             verbose = Boolean.valueOf(optVerbose).booleanValue();
         }
         else
@@ -110,7 +110,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         MuleUrlStreamHandlerFactory.installUrlStreamHandlerFactory();
     }
 
-    /** Convenient test message for unit testing. */
+    /**
+     * Convenient test message for unit testing.
+     */
     public static final String TEST_MESSAGE = "Test Message";
 
     /**
@@ -121,7 +123,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
      */
     public static final long LOCK_TIMEOUT = 30000;
 
-    /** Use this as a semaphore to the unit test to indicate when a callback has successfully been called. */
+    /**
+     * Use this as a semaphore to the unit test to indicate when a callback has successfully been called.
+     */
     protected Latch callbackCalled;
 
     public AbstractMuleTestCase()
@@ -134,8 +138,21 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             info = this.createTestInfo();
             testInfos.put(getClass().getName(), info);
         }
+        this.registerTestMethod();
+    }
 
-        info.incTestCount();
+    protected void registerTestMethod()
+    {
+        if (this.getName() != null)
+        {
+            this.getTestInfo().incTestCount(getName());
+        }
+    }
+
+    public void setName(String name)
+    {
+        super.setName(name);
+        registerTestMethod();
     }
 
     protected TestInfo createTestInfo()
@@ -155,7 +172,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public String getName()
     {
-        if (verbose)
+        if (verbose && super.getName() != null)
         {
             return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
         }
@@ -228,6 +245,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     /**
      * Should this test run?
+     *
      * @param testMethodName name of the test method
      * @return whether the test should execute in the current envionment
      */
@@ -241,7 +259,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         if (offline)
         {
             logger.warn(StringMessageUtils.getBoilerPlate(
-                "Working offline cannot run test: " + method, '=', 80));
+                    "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
     }
@@ -318,7 +336,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         // Should we set up the manager for every method?
         UMOManagementContext context;
-        if (getTestInfo().isDisposeManagerPerSuite() && managementContext!=null)
+        if (getTestInfo().isDisposeManagerPerSuite() && managementContext != null)
         {
             context = managementContext;
         }
@@ -459,7 +477,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     public static UMOEvent getTestEvent(Object data, MuleDescriptor descriptor, UMOImmutableEndpoint endpoint)
-        throws UMOException
+            throws UMOException
     {
         return MuleTestUtils.getTestEvent(data, descriptor, endpoint);
     }
@@ -488,7 +506,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         return MuleTestUtils.getTestDescriptor(name, implementation, managementContext);
     }
-   
+
     public static class TestInfo
     {
         /**
@@ -498,8 +516,10 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         private final String name;
         private boolean disposeManagerPerSuite = false;
         private boolean excluded = false;
-        private int testCount = 0;
-        private int runCount = 0;
+        private volatile int testCount = 0;
+        private volatile int runCount = 0;
+        // @GuardedBy(this)
+        private Set registeredTestMethod = new HashSet();
 
         // TODO HH: MULE-2414
         // this is a shorter version of the snippet from:
@@ -557,9 +577,13 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             return testCount;
         }
 
-        public void incTestCount()
+        public synchronized void incTestCount(String name)
         {
-            testCount++;
+            if (!registeredTestMethod.contains(name))
+            {
+                testCount++;
+                registeredTestMethod.add(name);
+            }
         }
 
         public int getRunCount()
@@ -592,11 +616,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             return excluded;
         }
 
-        public String toString()
+        public synchronized String toString()
         {
             StringBuffer buf = new StringBuffer();
             return buf.append(name).append(", (").append(runCount).append(" / ").append(testCount).append(
-                ") tests run, disposePerSuite=").append(disposeManagerPerSuite).toString();
+                    ") tests run, disposePerSuite=").append(disposeManagerPerSuite).toString();
         }
     }
 

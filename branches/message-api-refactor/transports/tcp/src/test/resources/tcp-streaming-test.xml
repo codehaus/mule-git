@@ -27,7 +27,7 @@
                 </outbound-pass-through-router>
             </outbound-router>
         </service>
-
+        
         <service name="testComponent">
             <component scope="singleton" class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
             <inbound-router>
