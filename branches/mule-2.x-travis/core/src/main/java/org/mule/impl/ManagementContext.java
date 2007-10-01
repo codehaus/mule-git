@@ -14,7 +14,6 @@ import org.mule.RegistryContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
-import org.mule.config.builders.DefaultConfigurationBuilder;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
@@ -123,12 +122,6 @@ public class ManagementContext implements UMOManagementContext
     protected Directories directories;
 
     protected String systemName;
-
-    /**
-     * Builder used to configure Mule (could be API-based, Spring-based, Script-based, etc.)
-     * TODO
-     */
-    protected DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
 
     public ManagementContext(UMOLifecycleManager lifecycleManager)
     {
