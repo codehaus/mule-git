@@ -46,15 +46,26 @@ public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuild
     protected InputStream loadResource(String resource) throws ConfigurationException
     {
         String resourcePath = resource;
+        InputStream is = null;
         if (webappClasspath != null)
         {
             resourcePath = new File(webappClasspath, resource).getPath();
+            is = context.getResourceAsStream(resourcePath);
         }
-        InputStream is = context.getResourceAsStream(resourcePath);
-        logger.debug("Resource " + resourcePath + " is found in Servlet Context.");
         if (is == null)
         {
-            logger.debug("Resource " + resourcePath + " is not found in Servlet Context, loading from classpath");
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+        }
+        if (logger.isDebugEnabled() && is != null)
+        {
+            logger.debug("Resource " + resourcePath + " is found in Servlet Context.");
+        }
+        if (is == null)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Resource " + resourcePath + " is not found in Servlet Context, loading from classpath");
+            }
             is = super.loadResource(resource);
         }
         return is;
