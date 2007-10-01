@@ -390,7 +390,7 @@ public class XFireConnector extends AbstractConnector
             c.setManagementContext(managementContext);
             c.initialise();
 
-            SingletonObjectFactory of = new SingletonObjectFactory(XFireServiceComponent.class);
+            SingletonObjectFactory of = new SingletonObjectFactory(new XFireServiceComponent(xfire));
             // Inject the UMOComponent because XFireServiceComponent is UMOComponentAware.
             of.setComponent(c);
             of.initialise();

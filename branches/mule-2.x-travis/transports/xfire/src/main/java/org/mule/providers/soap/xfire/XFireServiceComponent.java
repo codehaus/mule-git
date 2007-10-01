@@ -78,7 +78,13 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
     
     private UMOComponent component;
 
-    public void setComponent(UMOComponent component) throws ConfigurationException
+	public XFireServiceComponent(XFire xfire) 
+	{
+		super();
+		this.xfire = xfire;
+	}
+
+	public void setComponent(UMOComponent component) throws ConfigurationException
     {
         if ((component instanceof SedaComponent) == false)
         {
@@ -187,10 +193,6 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
         
         universalTransport = new MuleUniversalTransport();
         
-        if(xfire == null)
-        {
-            xfire = XFireFactory.newInstance().getXFire();
-        }
         getTransportManager().register(transport);
         getTransportManager().register(universalTransport);
     }
