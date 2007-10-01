@@ -95,8 +95,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testEndpointConfig()
     {
-        // TODO HH: MULE-2289 in progress
-        // super.testEndpointConfig();
+        super.testEndpointConfig();
 
         String endpointString = MuleManager.getInstance().lookupEndpointIdentifier("Test Queue", null);
         assertEquals(endpointString, "test://test.queue");
@@ -247,8 +246,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(ThreadingProfile.DEFAULT_MAX_THREAD_TTL, tp.getThreadTTL());
     }
 
-    // TODO HH: MULE-2289 in progress
-    public void _testPoolingConfig()
+    public void testPoolingConfig()
     {
         // test MuleManager config
         PoolingProfile pp = MuleManager.getConfiguration().getPoolingProfile();
@@ -267,7 +265,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(9, pp.getMaxActive());
         assertEquals(6, pp.getMaxIdle());
         assertEquals(4002, pp.getMaxWait());
-        assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
+        assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
         assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
     }
 

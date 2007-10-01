@@ -11,7 +11,6 @@
 package org.mule.providers.${TransportNameLower};
 
 import org.mule.config.i18n.Message;
-import org.mule.config.i18n.Messages;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.TransactionException;
@@ -25,7 +24,6 @@ import org.mule.umo.TransactionException;
  */
 public class ${TransportName}Transaction extends AbstractSingleResourceTransaction
 {
-
     /* For general guidelines on writing transports see
        http://mule.mulesource.org/display/MULE/Writing+Transports */
 
@@ -107,5 +105,4 @@ public class ${TransportName}Transaction extends AbstractSingleResourceTransacti
              }
         */
     }
-
 }

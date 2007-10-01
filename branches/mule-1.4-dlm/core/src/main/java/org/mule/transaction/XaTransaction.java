@@ -12,7 +12,6 @@ package org.mule.transaction;
 
 import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.umo.TransactionException;
 
 import java.util.HashMap;
@@ -291,12 +290,12 @@ public class XaTransaction extends AbstractTransaction
         TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
         try
         {
-            Transaction tx = txManager.getTransaction();
-            if (tx == null)
+            Transaction jtaTransaction = txManager.getTransaction();
+            if (jtaTransaction == null)
             {
-                throw new TransactionException(MessageFactory.createStaticMessage("XATransaction is null"));
+                throw new TransactionException(CoreMessages.noJtaTransactionAvailable(Thread.currentThread()));
             }
-            return tx.enlistResource(resource);
+            return jtaTransaction.enlistResource(resource);
         }
         catch (RollbackException e)
         {

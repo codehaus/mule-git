@@ -9,6 +9,7 @@
  */
 package org.mule.providers.jms.xa;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transaction.XaTransaction;
 import org.mule.umo.UMOTransaction;
@@ -32,8 +33,12 @@ import javax.jms.XASession;
 import javax.jms.XATopicSession;
 import javax.transaction.xa.XAResource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class SessionInvocationHandler implements InvocationHandler
 {
+    protected final transient Log logger = LogFactory.getLog(getClass());
 
     private XASession xaSession;
     private XAResource xaResource;
@@ -131,14 +136,14 @@ public class SessionInvocationHandler implements InvocationHandler
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
-            throw new IllegalStateException("Can't enlist resource, Mule transaction is not instance of XaTransaction " + transaction);
+            throw new IllegalStateException(CoreMessages.notMuleXaTransaction(transaction).toString());
         }
 
         if (transaction != null && !isEnlisted())
         {
-            if (ConnectionFactoryWrapper.logger.isDebugEnabled())
+            if (logger.isDebugEnabled())
             {
-                ConnectionFactoryWrapper.logger.debug("Enlisting resource in xa transaction: " + xaResource);
+                logger.debug("Enlisting resource " + xaResource + " in xa transaction " + transaction);
             }
 
             enlisted = ((XaTransaction) transaction).enlistResource(xaResource);

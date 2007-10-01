@@ -21,7 +21,7 @@ import org.mule.util.NumberUtils;
  * Tests the connector against jBPM with a process which generates a Mule message and processes its response. jBPM is
  * instantiated by Spring using the Spring jBPM module.
  */
-public class MessagingJbpmSpringTestCase extends AbstractJbmpTestCase
+public class MessagingJbpmSpringTestCase extends AbstractJbpmTestCase
 {
 
     protected ConfigurationBuilder getBuilder() throws Exception

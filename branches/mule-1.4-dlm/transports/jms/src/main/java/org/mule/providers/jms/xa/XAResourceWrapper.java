@@ -91,4 +91,9 @@ public class XAResourceWrapper implements XAResource
     {
         xaResource.commit(xid, b);
     }
+
+    public String toString()
+    {
+        return xaResource.toString();
+    }
 }

@@ -11,18 +11,13 @@
 package org.mule.providers.file;
 
 import org.mule.MuleManager;
-import org.mule.impl.ImmutableMuleEndpoint;
-import org.mule.tck.MuleTestUtils;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.FileUtils;
-
-import com.mockobjects.dynamic.Mock;
 
 import java.io.File;
 import java.util.Properties;
@@ -34,19 +29,24 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 
     private File validMessage;
 
+    // @Override
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
+
         // The working directory is deleted on tearDown
         File tempDir = FileUtils.newFile(MuleManager.getConfiguration().getWorkingDirectory(), "tmp");
         if (!tempDir.exists())
         {
             tempDir.mkdirs();
         }
+
         validMessage = File.createTempFile("simple", ".mule", tempDir);
         assertNotNull(validMessage);
+        FileUtils.writeStringToFile(validMessage, "validMessage");
     }
 
+    // @Override
     protected void doTearDown() throws Exception
     {
         // TestConnector dispatches events via the test: protocol to test://test
@@ -60,7 +60,6 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
-    // @Override
     public UMOConnector createConnector() throws Exception
     {
         UMOConnector connector = new FileConnector();
@@ -72,45 +71,6 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
     public String getTestEndpointURI()
     {
         return "file://" + MuleManager.getConfiguration().getWorkingDirectory();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.tck.providers.AbstractConnectorTestCase#testDispatch()
-     */
-    public void testDispatch() throws Exception
-    {
-        UMOConnector connector = getConnector();
-
-        Mock session = MuleTestUtils.getMockSession();
-        UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
-        UMOComponent component = getTestComponent(getDescriptor());
-        UMOEvent event = getTestEvent("TestData");
-
-        connector.registerListener(component, endpoint);
-        connector.startConnector();
-        connector.dispatch(new ImmutableMuleEndpoint("file:/foo", false), event);
-
-        session.verify();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.tck.providers.AbstractConnectorTestCase#testSend()
-     */
-    public void testSend() throws Exception
-    {
-        UMOConnector connector = getConnector();
-
-        UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
-        UMOEvent event = getTestEvent("TestData");
-        UMOComponent component = getTestComponent(getDescriptor());
-
-        connector.registerListener(component, endpoint);
-        connector.startConnector();
-        connector.send(new ImmutableMuleEndpoint("file:/foo", false), event);
     }
 
     public Object getValidMessage() throws Exception
@@ -154,4 +114,5 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
         assertEquals("Polling frequency endpoint override must not be ignored.", POLLING_FREQUENCY_OVERRIDE,
             ((FileMessageReceiver) receiver).getFrequency());
     }
+
 }
