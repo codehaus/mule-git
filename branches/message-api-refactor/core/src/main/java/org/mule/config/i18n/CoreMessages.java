@@ -896,6 +896,20 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 235, endpoint, exceptionListener);
     }
 
+    /**
+     * Returns a message that is a product informatin.
+     *
+     * @return message
+     */
+    public static Message productInformation()
+    {
+        String notset = CoreMessages.notSet().getMessage();
+        return createMessage(BUNDLE_PATH, 236, StringUtils.defaultString(MuleManifest.getProductDescription(), notset),
+                             StringUtils.defaultString(MuleManifest.getProductVersion(), notset),
+                             StringUtils.defaultString(MuleManifest.getVendorName(), notset) + " " +
+                             StringUtils.defaultString(MuleManifest.getVendorUrl(), notset));
+    }
+    
     public static Message noTransformerFoundForMessage(Class input, Class output)
     {
         return createMessage(BUNDLE_PATH, 237, input.getName(), output.getName());
@@ -951,18 +965,14 @@ public class CoreMessages extends MessageFactory
                 methodName, resolver);
     }
     
-    /**
-     * Returns a message that is a product informatin.
-     *
-     * @return message
-     */
-    public static Message productInformation()
+    public static Message noJtaTransactionAvailable(final Thread callingThread)
     {
-        MuleManifest config = new MuleManifest();
-        String notset = CoreMessages.notSet().getMessage();
-        return createMessage(BUNDLE_PATH, 236, StringUtils.defaultString(config.getProductDescription(), notset),
-                StringUtils.defaultString(config.getProductVersion(), notset),
-                StringUtils.defaultString(config.getVendorName(), notset) + " " + StringUtils.defaultString(config.getVendorUrl(), notset));
+        return createMessage(BUNDLE_PATH, 247, StringUtils.defaultString(callingThread.toString()));
+    }
+
+    public static Message notMuleXaTransaction(Object tx)
+    {
+        return createMessage(BUNDLE_PATH, 248, tx.getClass());
     }
 
 }

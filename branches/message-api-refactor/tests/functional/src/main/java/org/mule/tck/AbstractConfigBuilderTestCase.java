@@ -198,39 +198,62 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 
     public void testThreadingConfig() throws MuleException
     {
-        // test config
+        // expected default values from the configuration;
+        // these should differ from the programmatic values!
+        
+        // globals
+        int defaultMaxBufferSize = 42;
+        int defaultMaxThreadsActive = 16;
+        int defaultMaxThreadsIdle = 3;
+        int defaultThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_WAIT;
+        int defaultThreadTTL = 60001;
+        
+        // for the connector
+        int connectorMaxBufferSize = 2;
+        
+        // for the component
+        int componentMaxBufferSize = 6;
+        int componentMaxThreadsActive = 12;
+        int componentMaxThreadsIdle = 6;
+        int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
+
+        // test default config
         ThreadingProfile tp = RegistryContext.getConfiguration().getDefaultThreadingProfile();
-        assertEquals(ThreadingProfile.DEFAULT_MAX_BUFFER_SIZE, tp.getMaxBufferSize());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_ACTIVE, tp.getMaxThreadsActive());
-        assertEquals(4, tp.getMaxThreadsIdle());
-        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
+        assertEquals(defaultMaxBufferSize, tp.getMaxBufferSize());
+        assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
+        assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
+        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
-        // test defaults
+        // test component threading profile defaults
         tp = RegistryContext.getConfiguration().getDefaultComponentThreadingProfile();
-        assertEquals(ThreadingProfile.DEFAULT_MAX_BUFFER_SIZE, tp.getMaxBufferSize());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_ACTIVE, tp.getMaxThreadsActive());
-        assertEquals(4, tp.getMaxThreadsIdle());
-        assertEquals(ThreadingProfile.WHEN_EXHAUSTED_WAIT, tp.getPoolExhaustedAction());
-        assertEquals(60001, tp.getThreadTTL());
+        assertEquals(defaultMaxBufferSize, tp.getMaxBufferSize());
+        assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
+        assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
+        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
-        // test that values not set retain a default value
-        AbstractConnector c = (AbstractConnector) managementContext.getRegistry().lookupConnector("dummyConnector");
+        // test that unset values retain a default value
+        AbstractConnector c = (AbstractConnector) managementContext.getRegistry().lookupConnector(
+            "dummyConnector");
         tp = c.getDispatcherThreadingProfile();
-        assertEquals(2, tp.getMaxBufferSize());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_ACTIVE, tp.getMaxThreadsActive());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREADS_IDLE, tp.getMaxThreadsIdle());
-        assertEquals(ThreadingProfile.DEFAULT_POOL_EXHAUST_ACTION, tp.getPoolExhaustedAction());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREAD_TTL, tp.getThreadTTL());
+        assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
+        assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
+        assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
+        // MULE-2469
+//        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+//        assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
+        // test per-component values
         MuleDescriptor descriptor = (MuleDescriptor) managementContext.getRegistry().lookupService(
-                "appleComponent2");
+            "appleComponent2");
         tp = descriptor.getThreadingProfile();
-        assertEquals(6, tp.getMaxBufferSize());
-        assertEquals(12, tp.getMaxThreadsActive());
-        assertEquals(6, tp.getMaxThreadsIdle());
-        assertEquals(ThreadingProfile.DEFAULT_POOL_EXHAUST_ACTION, tp.getPoolExhaustedAction());
-        assertEquals(ThreadingProfile.DEFAULT_MAX_THREAD_TTL, tp.getThreadTTL());
+        assertEquals(componentMaxBufferSize, tp.getMaxBufferSize());
+        assertEquals(componentMaxThreadsActive, tp.getMaxThreadsActive());
+        assertEquals(componentMaxThreadsIdle, tp.getMaxThreadsIdle());
+        assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        // MULE-2469
+//         assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 
     public void testPoolingConfig()
@@ -241,7 +264,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 //        assertEquals(5, pp.getMaxIdle());
 //        assertEquals(10001, pp.getMaxWait());
 //        assertEquals(ObjectPool.WHEN_EXHAUSTED_WAIT, pp.getExhaustedAction());
-//        assertEquals(PoolingProfiler.INITIALISE_ONE, pp.getInitialisationPolicy());
+//        assertEquals(PoolingProfile.INITIALISE_ONE, pp.getInitialisationPolicy());
 //        assertTrue(pp.getPoolFactory() instanceof CommonsPoolFactory);
 
         // test per-descriptor overrides
@@ -252,7 +275,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 //        assertEquals(9, pp.getMaxActive());
 //        assertEquals(6, pp.getMaxIdle());
 //        assertEquals(4002, pp.getMaxWait());
-//        assertEquals(ObjectPool.WHEN_EXHAUSTED_GROW, pp.getExhaustedAction());
+//        assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
 //        assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
     }
 

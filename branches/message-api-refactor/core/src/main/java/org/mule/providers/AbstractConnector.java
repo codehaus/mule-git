@@ -168,14 +168,14 @@ public abstract class AbstractConnector
     /**
      * Defines the dispatcher threading profile
      */
-    private volatile ThreadingProfile dispatcherThreadingProfile = RegistryContext.getConfiguration()
-        .getDefaultMessageDispatcherThreadingProfile();
+    private volatile ThreadingProfile dispatcherThreadingProfile =
+            RegistryContext.getConfiguration().getDefaultMessageDispatcherThreadingProfile();
 
     /**
      * Defines the receiver threading profile
      */
-    private volatile ThreadingProfile receiverThreadingProfile = RegistryContext.getConfiguration()
-        .getDefaultMessageReceiverThreadingProfile();
+    private volatile ThreadingProfile receiverThreadingProfile = 
+            RegistryContext.getConfiguration().getDefaultMessageReceiverThreadingProfile();
 
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}

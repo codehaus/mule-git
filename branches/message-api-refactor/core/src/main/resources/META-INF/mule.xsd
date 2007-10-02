@@ -54,6 +54,7 @@
     <xsd:group name="rootElements">
         <xsd:choice>
             <xsd:element name="environment-property" type="environmentPropertyType"/>
+            <xsd:element name="admin-agent" type="muleAdminAgentType"/>
             <xsd:element name="configuration" type="muleManagementContextType"/>
             <xsd:element ref="description"/>
             <xsd:element ref="abstract-extension"/>
@@ -259,6 +260,7 @@
         <xsd:sequence>
             <xsd:element ref="abstract-response-endpoint" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-response-router" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
         <xsd:attribute name="timeout" type="xsd:string"/>
@@ -282,6 +284,13 @@
                 <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:extension>
         </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="muleAdminAgentType">
+        <xsd:sequence>
+            <xsd:element ref="spring:property" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="serverUri" type="xsd:string"/>
     </xsd:complexType>
 
     <xsd:complexType name="muleManagementContextType">
@@ -1158,6 +1167,9 @@
     <xsd:complexType name="selectiveConsumerRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
                 <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
                 <xsd:attribute name="transformerFirst" type="substitutableBoolean"/>
             </xsd:extension>
@@ -1256,6 +1268,7 @@
             <xsd:extension base="outboundRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-filter" minOccurs="0"/>
+                    <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
                 <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
             </xsd:extension>
