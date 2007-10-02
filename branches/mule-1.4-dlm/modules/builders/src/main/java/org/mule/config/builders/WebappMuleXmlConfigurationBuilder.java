@@ -11,8 +11,8 @@
 package org.mule.config.builders;
 
 import org.mule.config.ConfigurationException;
-import org.mule.util.FileUtils;
 
+import java.io.File;
 import java.io.InputStream;
 
 import javax.servlet.ServletContext;
@@ -25,15 +25,15 @@ import javax.servlet.ServletContext;
 public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuilder
 {
     private ServletContext context;
-    
+
     /**
-     * Classpath within the servlet context (e.g., "WEB-INF/classes").  Mule will attempt to load config 
+     * Classpath within the servlet context (e.g., "WEB-INF/classes").  Mule will attempt to load config
      * files from here first, and then from the remaining classpath.
      */
     private String webappClasspath;
 
-    public WebappMuleXmlConfigurationBuilder(ServletContext context, String webappClasspath) 
-        throws ConfigurationException
+    public WebappMuleXmlConfigurationBuilder(ServletContext context, String webappClasspath)
+            throws ConfigurationException
     {
         super();
         this.context = context;
@@ -45,12 +45,27 @@ public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuild
      */
     protected InputStream loadResource(String resource) throws ConfigurationException
     {
-        String resourcePath = FileUtils.newFile(webappClasspath, resource).getPath();
-        logger.debug("Searching for resource " + resourcePath + " in Servlet Context.");
-        InputStream is = context.getResourceAsStream(resourcePath);
+        String resourcePath = resource;
+        InputStream is = null;
+        if (webappClasspath != null)
+        {
+            resourcePath = new File(webappClasspath, resource).getPath();
+            is = context.getResourceAsStream(resourcePath);
+        }
         if (is == null)
         {
-            logger.debug("Resource " + resourcePath + " not found in Servlet Context, loading from classpath");
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+        }
+        if (logger.isDebugEnabled() && is != null)
+        {
+            logger.debug("Resource " + resourcePath + " is found in Servlet Context.");
+        }
+        if (is == null)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Resource " + resourcePath + " is not found in Servlet Context, loading from classpath");
+            }
             is = super.loadResource(resource);
         }
         return is;

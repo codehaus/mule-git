@@ -211,23 +211,25 @@ Detemines how long an inactive thread is kept in the pool before being discarded
 If the maximum pool size or queue size is bounded, then it is possible for incoming execute requests to block.
 There are five supported policies for handling this situation.
 
-<ol>
-<li>RUN (the default) - The thread making the execute request runs the task itself.
+<ul>
+<li>WHEN_EXHAUSTED_RUN (the default) - The thread making the execute request runs the task itself.
  This policy helps guard against lockup.
 </li>
-<li>WAIT - Wait until a thread becomes available (or until the configurable timeout expires).
-This policy should, in general, not be used if the minimum number of of threads is zero, in
+<li>WHEN_EXHAUSTED_WAIT - Wait until a thread becomes available (or until the configurable timeout expires).
+This policy should, in general, not be used if the minimum number of threads is zero, in
  which case a thread may never become available.
 </li>
-<li>ABORT - Throw a RuntimeException
+<li>WHEN_EXHAUSTED_ABORT - Throw a RuntimeException
 </li>
-<li>DISCARD  - Throw away the current request and return.
+<li>WHEN_EXHAUSTED_DISCARD  - Throw away the current request and return.
 </li>
-<li>DISCARD_OLDEST - Throw away the oldest request and return.
-</li></ol>
+<li>WHEN_EXHAUSTED_DISCARD_OLDEST - Throw away the oldest request and return.
+</li>
+</ul>
+The shorthand values WAIT, DISCARD, DISCARD_OLDEST, ABORT and RUN are deprecated; please use their canonical equivalents.
 -->
 
-<!ATTLIST threading-profile poolExhaustedAction     (WAIT | DISCARD | DISCARD_OLDEST | ABORT | RUN)       "RUN">
+<!ATTLIST threading-profile poolExhaustedAction     (WHEN_EXHAUSTED_WAIT | WAIT | WHEN_EXHAUSTED_DISCARD | DISCARD | WHEN_EXHAUSTED_DISCARD_OLDEST | DISCARD_OLDEST | WHEN_EXHAUSTED_ABORT | ABORT | WHEN_EXHAUSTED_RUN | RUN)       "RUN">
 
 <!--
 Allows configuration of a waiting timeout for threads that are blocked when WAIT
