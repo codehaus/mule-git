@@ -228,8 +228,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         int componentMaxBufferSize = 6;
         int componentMaxThreadsActive = 12;
         int componentMaxThreadsIdle = 6;
-        // TODO HH: MULE-2289 in progress
-        // int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
+        int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
 
         // test default config
         ThreadingProfile tp = MuleManager.getConfiguration().getDefaultThreadingProfile();
@@ -252,9 +251,10 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         tp = c.getDispatcherThreadingProfile();
         assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
-        // TODO HH: MULE-2289 in progress
+
+        // TODO MULE-2472
         // assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
-        // assertEquals(defaultPoolExhaustedAction, tp.getPoolExhaustedAction());
+        // assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
         // assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test per-component values
@@ -264,8 +264,16 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(componentMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(componentMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(componentMaxThreadsIdle, tp.getMaxThreadsIdle());
-        // TODO HH: MULE-2289 in progress
+
+        // TODO MULE-2289
+        // MuleXmlConfigBuilderTestCase:
+        // expected 1 but was 0; overriding does not work
+        // MuleBeanDefinitionReaderTestCase:
+        // expected 1 but was 4; overriding works, inheritance does not
+        // SpringAutoWireConfigBuilderTestCase: works 
         // assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+
+        // TODO MULE-2472
         // assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 

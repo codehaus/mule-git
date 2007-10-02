@@ -620,7 +620,7 @@
                     <value>6</value>
                 </property>
                 <property name="poolExhaustedAction">
-                    <value>4</value>
+                    <value>1</value>
                 </property>
             </bean>
         </property>
