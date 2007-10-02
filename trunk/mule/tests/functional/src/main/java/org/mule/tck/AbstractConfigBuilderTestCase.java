@@ -249,32 +249,25 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         // test that unset values retain a default value
         AbstractConnector c = (AbstractConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
         tp = c.getDispatcherThreadingProfile();
+        // this value is configured
         assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
+        // these values are inherited
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
-
-        // TODO MULE-2472
-        // assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
-        // assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
-        // assertEquals(defaultThreadTTL, tp.getThreadTTL());
+        assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
+        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test per-component values
         MuleDescriptor descriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel("main").getDescriptor(
             "appleComponent2");
         tp = descriptor.getThreadingProfile();
+        // these values are configured
         assertEquals(componentMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(componentMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(componentMaxThreadsIdle, tp.getMaxThreadsIdle());
-
-        // TODO MULE-2289
-        // MuleXmlConfigBuilderTestCase:
-        // expected 1 but was 0; overriding does not work
-        // MuleBeanDefinitionReaderTestCase:
-        // expected 1 but was 4; overriding works, inheritance does not
-        // SpringAutoWireConfigBuilderTestCase: works 
-        // assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
-
-        // TODO MULE-2472
-        // assertEquals(defaultThreadTTL, tp.getThreadTTL());
+        assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        // this value is inherited
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 
     public void testPoolingConfig()
