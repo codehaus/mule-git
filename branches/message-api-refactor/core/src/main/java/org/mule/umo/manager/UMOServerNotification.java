@@ -15,9 +15,10 @@ import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.util.ClassUtils;
 
 import java.util.EventObject;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <code>UMOServerNotification</code> is an event triggered by something happening
@@ -55,7 +56,7 @@ public abstract class UMOServerNotification extends EventObject
     protected long timestamp;
 
     protected int action = NULL_ACTION;
-    protected static Map actions = new HashMap();
+    protected static Map actions = new ConcurrentHashMap();
 
     /**
      * The resourceIdentifier is used when firing inbound server notifications such
