@@ -18,7 +18,7 @@
         <module>axis</module>
         <module>bpm</module>
         <module>ejb</module>
-        <!-- module>email</module -->
+        <module>email</module>
         <module>file</module>
         <module>ftp</module>
         <module>http</module>
@@ -63,16 +63,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- This is required if the Tests use Mule 1.x configuration format
-             over tie we may revome this dependency, but I think its a good idea
-             to maintain backward compatability until Mule 3.0
-         -->
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-1to2migration</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <profiles>
