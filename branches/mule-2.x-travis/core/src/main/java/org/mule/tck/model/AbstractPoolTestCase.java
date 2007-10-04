@@ -21,23 +21,25 @@ import org.mule.umo.UMODescriptor;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.ExceptionUtils;
 
+
+// TODO Update after MULE-2233
 public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 {
-//    public static final byte FAIL_WHEN_EXHAUSTED = 0;
-//    public static final byte GROW_WHEN_EXHAUSTED = 1;
-//    public static final byte BLOCK_WHEN_EXHAUSTED = 2;
-//
-//    public static final byte DEFAULT_POOL_SIZE = 3;
-//    public static final long DEFAULT_WAIT = 1500;
-//
-//    public AbstractPoolTestCase()
-//    {
-//        super();
-//
-//    }
-//
-//    public void testCreatePool() throws Exception
-//    {
+    public static final byte FAIL_WHEN_EXHAUSTED = 0;
+    public static final byte GROW_WHEN_EXHAUSTED = 1;
+    public static final byte BLOCK_WHEN_EXHAUSTED = 2;
+
+    public static final byte DEFAULT_POOL_SIZE = 3;
+    public static final long DEFAULT_WAIT = 1500;
+
+    public AbstractPoolTestCase()
+    {
+        super();
+
+    }
+
+    public void testCreatePool() throws Exception
+    {
 //        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
 //        ObjectPool pool = createPool(d, FAIL_WHEN_EXHAUSTED);
 //
@@ -55,8 +57,8 @@ public abstract class AbstractPoolTestCase extends AbstractMuleTestCase
 //        Object borrowed2 = pool.borrowObject();
 //        assertNotNull(borrowed2);
 //        assertEquals(2, pool.getSize());
-//    }
-//
+    }
+
 //    public void testFailOnExhaust() throws Exception
 //    {
 //

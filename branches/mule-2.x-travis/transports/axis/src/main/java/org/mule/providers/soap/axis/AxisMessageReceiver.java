@@ -84,7 +84,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         UMOEndpointURI uri = endpoint.getEndpointURI();
         String serviceName = component.getName();
 
-        SOAPService existing = this.connector.getAxisServer().getService(serviceName);
+        SOAPService existing = this.connector.getAxis().getService(serviceName);
         if (existing != null)
         {
             service = existing;
@@ -108,7 +108,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
                 service = new SOAPService(new MuleRPCProvider(connector));
             }
 
-            service.setEngine(connector.getAxisServer());
+            service.setEngine(connector.getAxis());
         }
 
         String servicePath = uri.getPath();

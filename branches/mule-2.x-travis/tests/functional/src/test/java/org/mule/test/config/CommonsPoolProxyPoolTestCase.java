@@ -17,11 +17,12 @@ import org.mule.impl.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.model.UMOModel;
 
+// Delete after MULE-2233
 public class CommonsPoolProxyPoolTestCase extends AbstractMuleTestCase
 {
 
-//    public void testOnRemoveCallsDispose() throws Exception
-//    {
+    public void testOnRemoveCallsDispose() throws Exception
+    {
 //        UMOModel model = new SedaModel();
 //        MuleDescriptor descriptor = getTestDescriptor("test", "java.lang.Object");
 //        CommonsPoolProxyFactory factory = new CommonsPoolProxyFactory(descriptor, model);
@@ -49,5 +50,5 @@ public class CommonsPoolProxyPoolTestCase extends AbstractMuleTestCase
 //        {
 //            fail("Expected exception has never been thrown. Was the component disposed before?");
 //        }
-//    }
+    }
 }

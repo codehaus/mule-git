@@ -123,7 +123,7 @@ public class UniversalSender extends BasicHandler
             if (requestEndpoint.getConnector() instanceof AxisConnector)
             {
                 msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector())
-                    .getAxisServer().getTypeMappingRegistry());
+                    .getAxis().getTypeMappingRegistry());
             }
             Object payload = null;
             int contentLength = 0;

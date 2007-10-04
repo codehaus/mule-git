@@ -17,19 +17,19 @@ import org.mule.umo.UMODescriptor;
 // TODO Get the PoolingProfile from the PoolingObjectFactory now.  Update the config to use scope="pooled"
 public class PoolingProfileTestCase  extends FunctionalTestCase
 {
-//    protected String getConfigResources()
-//    {
-//        return "pooling-profile-test.xml";
-//    }
-//
-//    public void testDefault()
-//    {
+    protected String getConfigResources()
+    {
+        return "pooling-profile-test.xml";
+    }
+
+    public void testDefault()
+    {
 //        doTest("default", PoolingProfile.DEFAULT_POOL_EXHAUSTED_ACTION,
 //                PoolingProfile.DEFAULT_POOL_INITIALISATION_POLICY,
 //                PoolingProfile.DEFAULT_MAX_POOL_ACTIVE,
 //                PoolingProfile.DEFAULT_MAX_POOL_IDLE,
 //                PoolingProfile.DEFAULT_MAX_POOL_WAIT);
-//    }
+    }
 //
 //    public void testFailAll()
 //    {

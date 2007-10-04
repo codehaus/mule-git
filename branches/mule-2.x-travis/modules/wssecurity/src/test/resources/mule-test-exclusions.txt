@@ -5,3 +5,6 @@ org.mule.extras.wssecurity.testcases.XfireWsSecurityOnOutboundUsingPropertiesTes
 
 # MULE-2118
 org.mule.extras.wssecurity.testcases.AxisWsSecurityOnOutboundTestCase
+
+# TODO TC
+org.mule.extras.wssecurity.testcases.AxisWsSecurityOnInboundTestCase

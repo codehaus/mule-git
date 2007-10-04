@@ -37,6 +37,7 @@ public class ComponentServiceTestCase extends AbstractMuleJmxTestCase
         mBeanServer.registerMBean(service, name);
         Set mbeans = mBeanServer.queryMBeans(ObjectName.getInstance(domainOriginal + ":*"), null);
 
+        // TODO Why 4?  Document the magic number!
         assertEquals("Unexpected number of components registered in the domain.", 4, mbeans.size());
 
         mBeanServer.unregisterMBean(name);

@@ -18,9 +18,9 @@ import java.util.Iterator;
 
 public class MuleModelTestCase extends AbstractMuleTestCase
 {
-    // TODO Rewrite this test using the Registry
-//    public void testDescriptorAlreadyDefinedThrowsException() throws Exception
-//    {
+    // TODO Rewrite this test using the Registry (MULE-1995)
+    public void testDescriptorAlreadyDefinedThrowsException() throws Exception
+    {
 //        final String descriptorName = "TEST_COMPONENT_1";
 //        MuleDescriptor descriptor = getTestDescriptor(descriptorName, "java.lang.Object");
 //        MuleDescriptor duplicateDescriptor = getTestDescriptor(descriptorName, "java.lang.Object");
@@ -50,5 +50,5 @@ public class MuleModelTestCase extends AbstractMuleTestCase
 //        }
 //
 //        assertEquals("Wrong number of components registered in the model.", 1, componentCount);
-//    }
+    }
 }

@@ -4,7 +4,9 @@
 # MULE-2441
 org.mule.providers.email.issues.ExceptionHandlingMule2167TestCase
 
-# TODO TC (only 1 of 8 tests is failing for these)
+# TODO TC 
+# only testReceiver (1 of 8 tests) is failing for these, apparently due to some 
+# kind of thread deadlock.
 org.mule.providers.email.connectors.ImapConnectorTestCase
 org.mule.providers.email.connectors.Pop3ConnectorTestCase
 org.mule.providers.email.connectors.SmtpConnectorTestCase

@@ -46,22 +46,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-         <plugins>
-             <plugin>
-                 <artifactId>maven-surefire-plugin</artifactId>
-                 <configuration>
-                     <excludes>
-                         <!-- This one started failing again for some reason -->                         
-                         <exclude>**/PropertyScribblingMule893TestCase.*</exclude>
-                         <!-- TODO TC -->
-                         <exclude>**/VMConnectorTestCase.*</exclude>
-                     </excludes>
-                 </configuration>
-             </plugin>
-         </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>osgi</id>

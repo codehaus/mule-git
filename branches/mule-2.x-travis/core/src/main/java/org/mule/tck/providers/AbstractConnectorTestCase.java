@@ -32,10 +32,7 @@ import java.beans.ExceptionListener;
  */
 public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 {
-    //TODO RM*: Remove these instnace variables and obtain everything from the registry
-    //Can do this once the code base stabilises a bit
-    private UMOConnector connector;
-    private String connectorName;
+    protected String connectorName;
 
     public AbstractConnectorTestCase()
     {
@@ -49,7 +46,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
      */
     protected void doSetUp() throws Exception
     {
-        connector = createConnector();
+        UMOConnector connector = createConnector();
         connectorName = connector.getName();
         if (connectorName == null)
         {
@@ -64,6 +61,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     protected void doTearDown() throws Exception
     {
+        UMOConnector connector = getConnector();
         if (connector.isDisposed())
         {
             fail("Connector has been disposed prematurely - lifecycle problem? Instance: " + connector);
@@ -72,8 +70,15 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         connector.dispose();
     }
 
+    /** Look up the connector from the Registry */
+    protected UMOConnector getConnector()
+    {
+        return managementContext.getRegistry().lookupConnector(connectorName);
+    }
+    
     public void testConnectorExceptionHandling() throws Exception
     {
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
 
         // Text exception handler
@@ -141,6 +146,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public void testConnectorListenerSupport() throws Exception
     {
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
 
         UMOComponent component = getTestComponent("anApple", Apple.class);
@@ -218,6 +224,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public void testConnectorBeanProps() throws Exception
     {
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
 
         try
@@ -239,7 +246,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public void testConnectorMessageAdapter() throws Exception
     {
-        UMOConnector connector = managementContext.getRegistry().lookupConnector(connectorName);
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
         UMOMessageAdapter adapter = connector.getMessageAdapter(getValidMessage());
         assertNotNull(adapter);
@@ -247,7 +254,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public void testConnectorMessageDispatcherFactory() throws Exception
     {
-        UMOConnector connector = managementContext.getRegistry().lookupConnector(connectorName);
+        UMOConnector connector = getConnector();
         assertNotNull(connector);
 
         UMOMessageDispatcherFactory factory = connector.getDispatcherFactory();
@@ -256,8 +263,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public void testConnectorInitialise() throws Exception
     {
-        UMOConnector connector = managementContext.getRegistry().lookupConnector(connectorName);
-
+        UMOConnector connector = getConnector();
         try
         {
             connector.initialise();
@@ -273,10 +279,5 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
     public abstract Object getValidMessage() throws Exception;
 
-    public abstract String getTestEndpointURI();
-
-    public UMOConnector getConnector()
-    {
-        return connector;
-    }
+    public abstract String getTestEndpointURI();    
 }

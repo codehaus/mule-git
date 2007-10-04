@@ -83,12 +83,8 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
         super();
     }
 
-    public XFireServiceComponent(XFire xfire) 
-    {
-        super();
-        this.xfire = xfire;
-    }
-
+    // TODO Is this really necessary?  The only thing the UMOComponent is needed for is to get the
+    // threading profile.
 	public void setComponent(UMOComponent component) throws ConfigurationException
     {
         if ((component instanceof SedaComponent) == false)
@@ -158,6 +154,11 @@ public class XFireServiceComponent implements Callable, Initialisable, Lifecycle
 
     public void initialise() throws InitialisationException
     {
+        if (xfire == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("No XFire instance, this component has not been initialized properly."), this);
+        }
+        
         UMOWorkManager wm = ((SedaComponent) component).getThreadingProfile().createWorkManager("xfire-local-transport");
         try
         {

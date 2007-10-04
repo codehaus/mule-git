@@ -35,7 +35,6 @@ import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
-import org.mule.util.object.ObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
 
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     public static final String WSDL_URL_PROPERTY = "wsdlUrl";
 
     private String serverConfig = DEFAULT_MULE_AXIS_SERVER_CONFIG;
-    private AxisServer axisServer = null;
+    private AxisServer axis = null;
     private SimpleProvider serverProvider = null;
     private String clientConfig = DEFAULT_MULE_AXIS_CLIENT_CONFIG;
     private SimpleProvider clientProvider = null;
@@ -100,7 +99,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     private UMOComponent axisComponent;
 
     //this will store the name of the descriptor of the current connector's AxisServiceComponent
-    private String specificAxisServiceComponentName;
+    //private String specificAxisServiceComponentName;
 
     /**
      * These protocols will be set on client invocations. By default Mule uses it's
@@ -162,7 +161,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     protected void doInitialise() throws InitialisationException
     {
         axisTransportProtocols = new HashMap();
-        specificAxisServiceComponentName = AXIS_SERVICE_COMPONENT_NAME + "_" + name;
+        //specificAxisServiceComponentName = AXIS_SERVICE_COMPONENT_NAME + "_" + name;
 
         axisTransportProtocols = new HashMap();
         try
@@ -193,7 +192,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             }
         }
 
-        if (axisServer == null)
+        if (axis == null)
         {
             if (serverProvider == null)
             {
@@ -208,9 +207,9 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             }
 
             // Create the AxisServer
-            axisServer = new AxisServer(serverProvider);
+            axis = new AxisServer(serverProvider);
             // principle of least surprise: doAutoTypes only has effect on our self-configured AxisServer
-            axisServer.setOption("axis.doAutoTypes", Boolean.valueOf(doAutoTypes));
+            axis.setOption("axis.doAutoTypes", Boolean.valueOf(doAutoTypes));
         }
 
         // Register the Mule service serverProvider
@@ -236,7 +235,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
 
         try
         {
-            registerTypes((TypeMappingRegistryImpl)axisServer.getTypeMappingRegistry(), beanTypes);
+            registerTypes((TypeMappingRegistryImpl)axis.getTypeMappingRegistry(), beanTypes);
         }
         catch (ClassNotFoundException e)
         {
@@ -375,21 +374,21 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
                 // Lets unregister the 'template' instance, configure it and
                 // then register
                 // again later
-                managementContext.getRegistry().unregisterComponent(specificAxisServiceComponentName);
+                managementContext.getRegistry().unregisterComponent(AXIS_SERVICE_PROPERTY + getName());
 
                 //if the descriptor still contains the original AXIS_SERVICE_COMPONENT_NAME name,
                 //we need to change it to the specific name which is AXIS_SERVICE_COMPONENT_NAME_<connector_name>
-                if (AXIS_SERVICE_COMPONENT_NAME.equals(axisComponent.getName()))
-                {
-                    axisComponent.setName(specificAxisServiceComponentName);
-                }
+//                if (AXIS_SERVICE_COMPONENT_NAME.equals(axisComponent.getName()))
+//                {
+//                    axisComponent.setName(specificAxisServiceComponentName);
+//                }
             }
             // if the axis server hasn't been set, set it now. The Axis server
             // may be set
             // externally
-            if (axisComponent.getProperties().get("axisServer") == null)
+            if (axisComponent.getProperties().get("axis") == null)
             {
-                axisComponent.getProperties().put("axisServer", axisServer);
+                axisComponent.getProperties().put("axis", axis);
             }
         }
         String serviceName = receiver.getComponent().getName();
@@ -484,24 +483,30 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         return endpointKey.toString();
     }
 
+    // This initialization could be performed in the initialize() method.  Putting it here essentially makes
+    // it a lazy-create/lazy-init
+    // Another option would be to put it in the default-axis-config.xml (MULE-2102) with lazy-init="true" 
+    // but that makes us depend on Spring.
+    // Another consideration is how/when this implicit component gets disposed.
     protected UMOComponent getOrCreateAxisComponent() throws UMOException
     {
-        UMOComponent c = managementContext.getRegistry().lookupComponent(specificAxisServiceComponentName);
+        UMOComponent c = managementContext.getRegistry().lookupComponent(AXIS_SERVICE_PROPERTY + getName());
 
         if (c == null)
         {
             // TODO MULE-2228 Simplify this API
             c = new SedaComponent();
-            c.setName(specificAxisServiceComponentName);
-            ObjectFactory of = new SingletonObjectFactory(AxisServiceComponent.class);
-            of.initialise();
-            c.setServiceFactory(of);
+            c.setName(AXIS_SERVICE_PROPERTY + getName());
             c.setModel(managementContext.getRegistry().lookupSystemModel());
             c.setManagementContext(managementContext);
-            // TODO MULE-2307 Don't initialize because it will later get initialized by registerComponent().
             c.initialise();
+            
+            Map props = new HashMap();
+            props.put("axis", axis);
+            SingletonObjectFactory of = new SingletonObjectFactory(AxisServiceComponent.class, props);
+            of.initialise();
+            c.setServiceFactory(of);
         }
-
         return c;
     }
 
@@ -512,7 +517,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
      */
     protected void doStart() throws UMOException
     {
-        axisServer.start();
+        axis.start();
     }
 
     /**
@@ -522,7 +527,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
      */
     protected void doStop() throws UMOException
     {
-        axisServer.stop();
+        axis.stop();
         // UMOModel model = managementContext.getRegistry().lookupModel();
         // model.unregisterComponent(model.getDescriptor(AXIS_SERVICE_COMPONENT_NAME));
     }
@@ -572,14 +577,14 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         this.clientConfig = clientConfig;
     }
 
-    public AxisServer getAxisServer()
+    public AxisServer getAxis()
     {
-        return axisServer;
+        return axis;
     }
 
-    public void setAxisServer(AxisServer axisServer)
+    public void setAxis(AxisServer axisServer)
     {
-        this.axisServer = axisServer;
+        this.axis = axisServer;
     }
 
     public SimpleProvider getServerProvider()
@@ -678,7 +683,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             // The implication of this is that to add a new service and a
             // different http port the
             // model needs to be restarted before the listener is available
-            if (managementContext.getRegistry().lookupComponent(specificAxisServiceComponentName) == null)
+            if (managementContext.getRegistry().lookupComponent(AXIS_SERVICE_PROPERTY + getName()) == null)
             {
                 try
                 {
@@ -689,10 +694,8 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
                         axisComponent = getOrCreateAxisComponent();
                     }
 
-                    // TODO Do this some other way, no more interceptors for 2.x
-                    //axisDescriptor.addInterceptor(new MethodFixInterceptor());
-                    
                     managementContext.getRegistry().registerComponent(axisComponent, managementContext);
+                    axisComponent.start();
                     
                     // We have to perform a small hack here to rewrite servlet://
                     // endpoints with the

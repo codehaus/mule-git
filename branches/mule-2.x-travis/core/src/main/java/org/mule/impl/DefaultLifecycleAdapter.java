@@ -239,7 +239,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
                     // and just routes away using a mule client
                     // ( using the high level Mule client is probably
                     // a bit agricultural but this is just POC stuff )
-                    proxy = nestedRouter.createProxy(component);
+                    proxy = nestedRouter.createProxy(pojoService);
                     bindings.put(nestedRouter.getInterface(), proxy);
 
                     //Now lets set the proxy on the Service object
@@ -247,7 +247,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
 
 
                     List methods =
-                            ClassUtils.getSatisfiableMethods(component.getClass(),
+                            ClassUtils.getSatisfiableMethods(pojoService.getClass(),
                                     new Class[]{nestedRouter.getInterface()}, true, false, null);
                     if (methods.size() == 1)
                     {
@@ -256,23 +256,23 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
                     else if (methods.size() > 1)
                     {
                         throw new TooManySatisfiableMethodsException(
-                                component.getClass(), new Class[]{nestedRouter.getInterface()});
+                            pojoService.getClass(), new Class[]{nestedRouter.getInterface()});
                     }
                     else
                     {
                         throw new NoSatisfiableMethodsException(
-                                component.getClass(), new Class[]{nestedRouter.getInterface()});
+                            pojoService.getClass(), new Class[]{nestedRouter.getInterface()});
                     }
 
                     try
                     {
-                        setterMethod.invoke(component, new Object[]{proxy});
+                        setterMethod.invoke(pojoService, new Object[]{proxy});
                     }
                     catch (Exception e)
                     {
                         throw new InitialisationException(
                                 CoreMessages.failedToSetProxyOnService(nestedRouter,
-                                        component.getClass()), e, this);
+                                    pojoService.getClass()), e, this);
                     }
                 }
                 else

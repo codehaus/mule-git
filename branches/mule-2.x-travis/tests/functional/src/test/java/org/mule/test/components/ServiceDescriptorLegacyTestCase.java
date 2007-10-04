@@ -22,21 +22,21 @@ import org.mule.umo.model.UMOModel;
 //TODO Update this test to use TestSedaModel so that we can have access to the underlying ServiceFactory.
 public class ServiceDescriptorLegacyTestCase extends FunctionalTestCase
 {
-//    protected String getConfigResources()
-//    {
-//        return "org/mule/test/components/service-factory-legacy-config.xml";
-//    }
-//
-//    public void testClassName() throws Exception
-//    {
+    protected String getConfigResources()
+    {
+        return "org/mule/test/components/service-factory-legacy-config.xml";
+    }
+
+    public void testClassName() throws Exception
+    {
 //        UMOModel model = managementContext.getRegistry().lookupModel("main");
 //        UMOComponent c = model.getComponent("orange1");
 //        Object service = ComponentFactory.createService(c.getDescriptor());
 //        assertTrue("Service should be an Orange", service instanceof Orange);
 //        // Default values
 //        assertEquals(new Integer(10), ((Orange) service).getSegments());
-//    }
-//
+    }
+
 //    public void testContainerReference() throws Exception
 //    {
 //        UMOModel model = managementContext.getRegistry().lookupModel("main");

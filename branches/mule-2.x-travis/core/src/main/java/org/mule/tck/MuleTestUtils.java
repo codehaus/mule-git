@@ -175,8 +175,13 @@ public final class MuleTestUtils
     {
         return getTestComponent(name, clazz, null, context);
     }
-    
+
     public static UMOComponent getTestComponent(String name, Class clazz, Map props, UMOManagementContext context) throws Exception
+    {
+        return getTestComponent(name, clazz, props, context, true);        
+    }
+    
+    public static UMOComponent getTestComponent(String name, Class clazz, Map props, UMOManagementContext context, boolean initialize) throws Exception
     {
         SedaModel model = new SedaModel();
         model.setManagementContext(context);
@@ -190,11 +195,15 @@ public final class MuleTestUtils
         c.setModel(model);
 
         c.setManagementContext(context);
-        context.applyLifecycle(c);
+        if (initialize)
+        {
+            context.applyLifecycle(c);
 
-        UMOOutboundRouter router = new OutboundPassThroughRouter();
-        router.addEndpoint(getTestEndpoint("test1", UMOEndpoint.ENDPOINT_TYPE_SENDER, context));
-        c.getOutboundRouter().addRouter(router);        
+            UMOOutboundRouter router = new OutboundPassThroughRouter();
+            router.addEndpoint(getTestEndpoint("test1", UMOEndpoint.ENDPOINT_TYPE_SENDER, context));
+            c.getOutboundRouter().addRouter(router);        
+        }
+
         return c;
     }
 

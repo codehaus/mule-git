@@ -20,15 +20,14 @@ import org.mule.providers.email.SmtpConnector;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOConnector;
-import org.mule.transformers.TransformerUtils;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import javax.mail.internet.MimeMessage;
 
@@ -36,28 +35,18 @@ import javax.mail.internet.MimeMessage;
  * Send a message via SMTP to a (greenmail) server.
  */
 public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
-{
-    
+{    
     public static final long DELIVERY_DELAY_MS = 5000;
     
     public SmtpConnectorTestCase() 
     {
-        this("SmtpConnector");
+        super(false);
     }
 
-    SmtpConnectorTestCase(String connectorName) 
-    {
-        super(false, connectorName);
-    }
-
-   public UMOConnector createConnector(boolean init) throws Exception
+   public UMOConnector createConnector() throws Exception
     {
         SmtpConnector c = new SmtpConnector();
-        c.setName(getConnectorName());
-        if (init)
-        {
-            c.initialise();
-        }
+        c.setName("SmtpConnector");
         return c;
     }
 
@@ -100,7 +89,7 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
 
     public void doTestSend() throws Exception
     {
-        managementContext.getRegistry().registerConnector(createConnector(false), managementContext);
+        //managementContext.getRegistry().registerConnector(createConnector(false), managementContext);
         UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
         
         UMOComponent component = getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class);

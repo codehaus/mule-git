@@ -12,20 +12,6 @@
     <name>Management Extensions</name>
     <description>Management Extensions for Mule</description>
 
-    <build>
-         <plugins>
-             <plugin>
-                 <artifactId>maven-surefire-plugin</artifactId>
-                 <configuration>
-                     <excludes>
-                         <!-- This module needs some work still -->
-                         <exclude>**</exclude>
-                     </excludes>
-                 </configuration>
-             </plugin>
-         </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.mule</groupId>

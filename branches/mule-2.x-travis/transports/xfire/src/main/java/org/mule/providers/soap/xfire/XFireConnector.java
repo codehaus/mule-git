@@ -379,6 +379,11 @@ public class XFireConnector extends AbstractConnector
         xfireComponent.getInboundRouter().addEndpoint(serviceEndpoint);
     }
 
+    // This initialization could be performed in the initialize() method.  Putting it here essentially makes
+    // it a lazy-create/lazy-init
+    // Another option would be to put it in the default-xfire-config.xml (MULE-2102) with lazy-init="true" 
+    // but that makes us depend on Spring.
+    // Another consideration is how/when this implicit component gets disposed.
     protected UMOComponent getOrCreateXfireComponent() throws UMOException
     {
         UMOComponent c = managementContext.getRegistry().lookupComponent(XFIRE_SERVICE_COMPONENT_NAME + getName());
@@ -396,6 +401,8 @@ public class XFireConnector extends AbstractConnector
             props.put("xfire", xfire);
             SingletonObjectFactory of = new SingletonObjectFactory(XFireServiceComponent.class, props);
             // Inject the UMOComponent because XFireServiceComponent is UMOComponentAware.
+            // TODO Is this really necessary?  The only thing the UMOComponent is needed for is to get the
+            // threading profile.
             of.setComponent(c);
             of.initialise();
             c.setServiceFactory(of);
@@ -538,8 +545,6 @@ public class XFireConnector extends AbstractConnector
                     {
                         xfireComponent = getOrCreateXfireComponent();
                     }
-                    // TODO Fix this for 2.x - no more interceptors
-                    //xfireDescriptor.addInterceptor(new MethodFixInterceptor());
 
                     if (xfireComponent.getProperties().get("xfire") == null)
                     {

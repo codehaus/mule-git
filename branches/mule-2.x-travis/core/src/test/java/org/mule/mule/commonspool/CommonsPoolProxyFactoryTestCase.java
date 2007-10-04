@@ -19,6 +19,7 @@ import org.mule.util.object.ObjectFactory;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 
+// TODO Update after MULE-2233
 public class CommonsPoolProxyFactoryTestCase extends AbstractProxyPoolFactoryTestCase
 {
 //    public ObjectFactory getProxyFactory(MuleDescriptor descriptor, ObjectPool pool)
@@ -27,9 +28,9 @@ public class CommonsPoolProxyFactoryTestCase extends AbstractProxyPoolFactoryTes
 //        factory.setPool(pool);
 //        return factory;
 //    }
-//
-//    public void testLifeCycleMethods() throws Exception
-//    {
+
+    public void testLifeCycleMethods() throws Exception
+    {
 //        Mock mockPool = new Mock(ObjectPool.class);
 //        mockPool.expect("onAdd", C.IS_NOT_NULL);
 //        mockPool.expect("onRemove", C.IS_NOT_NULL);
@@ -45,5 +46,5 @@ public class CommonsPoolProxyFactoryTestCase extends AbstractProxyPoolFactoryTes
 //        factory.activateObject(obj);
 //        factory.passivateObject(obj);
 //        factory.destroyObject(obj);
-//    }
+    }
 }

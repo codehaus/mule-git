@@ -13,33 +13,6 @@
     <name>Mule Core</name>
     <description>Mule server and core classes</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                         <!-- TODO MULE-??? delegateClass/delegateMethod properties are not getting picked up -->
-                         <exclude>**/NoArgsCallWrapperTestCase.*</exclude>
-                         <!-- Update for MULE-2233 -->
-                         <exclude>**/CommonsPoolTestCase.*</exclude>
-                         <!-- Delete -->
-                         <exclude>**/CommonsPoolProxyFactoryTestCase.*</exclude>
-                         <!-- Do we intend to support other containers for 2.0? -->
-                         <exclude>**/MuleContainerContextTestCase.*</exclude>
-                         <exclude>**/JndiContainerContextTestCase.*</exclude>
-                         <!-- This test needs some work -->
-                        <exclude>**/MuleComponentTestCase.*</exclude>
-                        <!-- Rewrite this test using the Registry -->
-                        <exclude>**/MuleModelTestCase.*</exclude>                        
-                         <!-- Clean this one up or just delete it -->
-                        <exclude>**/MuleDescriptorTestCase.*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <!-- Spring-based configuration is part of mule-core for 2.x -->
         <dependency>

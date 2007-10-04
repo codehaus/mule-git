@@ -17,6 +17,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 
 import org.apache.commons.pool.impl.GenericObjectPool;
 
+// TODO Update after MULE-2233
 public class CommonsPoolTestCase extends AbstractPoolTestCase
 {
 //    public ObjectPool createPool(MuleDescriptor descriptor, byte action) throws InitialisationException
