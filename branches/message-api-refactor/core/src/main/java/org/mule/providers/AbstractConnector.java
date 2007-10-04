@@ -11,6 +11,8 @@
 package org.mule.providers;
 
 import java.beans.ExceptionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +37,7 @@ import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ManagementContextAware;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
+import org.mule.impl.model.streaming.DelegatingInputStream;
 import org.mule.providers.service.TransportFactory;
 import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.providers.service.TransportServiceException;
@@ -1560,16 +1563,46 @@ public abstract class AbstractConnector
             .lookupInboundEndpoint(uri, getManagementContext()), timeout);
     }
 
-    public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    public UMOMessage receive(final UMOImmutableEndpoint endpoint, long timeout) throws Exception
     {
         UMOMessageDispatcher dispatcher = null;
-
+        UMOMessage result = null;
+        
         try
         {
             dispatcher = this.getDispatcher(endpoint);
-            return dispatcher.receive(timeout);
+            result = dispatcher.receive(timeout);
+            return result;
         }
         finally
+        {
+            setupDispatchReturn(endpoint, dispatcher, result);
+        }
+    }
+
+    private void setupDispatchReturn(final UMOImmutableEndpoint endpoint,
+                                     final UMOMessageDispatcher dispatcher,
+                                     UMOMessage result)
+    {
+        if (result != null && result.getPayload() instanceof InputStream)
+        {
+            DelegatingInputStream is = new DelegatingInputStream((InputStream)result.getPayload())
+            {
+                public void close() throws IOException
+                {
+                    try
+                    {
+                        super.close();
+                    }
+                    finally
+                    {
+                        returnDispatcher(endpoint, dispatcher);
+                    }
+                }
+            };
+            result.setPayload(is);
+        }
+        else 
         {
             this.returnDispatcher(endpoint, dispatcher);
         }
@@ -1578,11 +1611,12 @@ public abstract class AbstractConnector
     public UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
-
+        UMOMessage result = null;
         try
         {
             dispatcher = this.getDispatcher(endpoint);
-            return dispatcher.send(event);
+            result = dispatcher.send(event);
+            return result;
         }
         catch (DispatchException dex)
         {
@@ -1594,7 +1628,7 @@ public abstract class AbstractConnector
         }
         finally
         {
-            this.returnDispatcher(endpoint, dispatcher);
+            setupDispatchReturn(endpoint, dispatcher, result);
         }
     }
 
