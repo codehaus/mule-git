@@ -15,7 +15,7 @@ import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.RequestContext;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;
@@ -34,6 +34,7 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
@@ -62,7 +63,6 @@ public final class MuleTestUtils
         props.put("type", type);
         props.put("endpointURI", new MuleEndpointURI("test://test"));
         props.put("connector", "testConnector");
-        MuleEndpoint endpoint = new MuleEndpoint();
         // need to build endpoint this way to avoid depenency to any endpoint jars
         AbstractConnector connector = null;
         connector = (AbstractConnector)ClassUtils.loadClass("org.mule.tck.testmodels.mule.TestConnector",
@@ -72,19 +72,32 @@ public final class MuleTestUtils
         connector.setManagementContext(context);
         context.applyLifecycle(connector);
 
-        endpoint.setConnector(connector);
-        endpoint.setEndpointURI(new MuleEndpointURI("test://test"));
-        endpoint.setName(name);
-        endpoint.setType(type);
-        endpoint.setManagementContext(context);
-        context.applyLifecycle(endpoint);
-        return endpoint;
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(new MuleEndpointURI("test://test"),context);
+        endpointBuilder.setConnector(connector);
+        endpointBuilder.setName(name);
+        if (UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildInboundEndpoint();
+        }
+        else if (UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildOutboundEndpoint();
+
+        }
+        else if (UMOImmutableEndpoint.ENDPOINT_TYPE_RESPONSE.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildResponseEndpoint();
+        }
+        else
+        {
+            throw new IllegalArgumentException("The endpoint type: " + type + "is not recognized.");
+
+        }
     }
     
     public static UMOEndpoint getTestSchemeMetaInfoEndpoint(String name, String type, String protocol, UMOManagementContext context)
         throws Exception
     {
-        UMOEndpoint endpoint = new MuleEndpoint();
         // need to build endpoint this way to avoid depenency to any endpoint jars
         AbstractConnector connector = null;
         connector = (AbstractConnector) ClassUtils.loadClass("org.mule.tck.testmodels.mule.TestConnector",
@@ -94,12 +107,28 @@ public final class MuleTestUtils
         connector.setManagementContext(context);
         context.applyLifecycle(connector);
         connector.registerSupportedProtocol(protocol);
-        
-        endpoint.setConnector(connector);
-        endpoint.setEndpointURI(new MuleEndpointURI("test:" + protocol + "://test"));
-        endpoint.setName(name);
-        endpoint.setType(type);
-        return endpoint;
+
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(new MuleEndpointURI("test:" + protocol + "://test"),context);
+        endpointBuilder.setConnector(connector);
+        endpointBuilder.setName(name);
+        if (UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildInboundEndpoint();
+        }
+        else if (UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildOutboundEndpoint();
+
+        }
+        else if (UMOImmutableEndpoint.ENDPOINT_TYPE_RESPONSE.equals(type))
+        {
+            return (UMOEndpoint) endpointBuilder.buildResponseEndpoint();
+        }
+        else
+        {
+            throw new IllegalArgumentException("The endpoint type: " + type + "is not recognized.");
+
+        }
     }
 
     /** Supply no component, no endpoint */

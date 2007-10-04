@@ -2,6 +2,9 @@
 # Test cases listed in this file are not run.
 #
 
+# MULE-2474
+org.mule.issues.MessageChunkingMule2192TestCase
+
 # MULE-2131
 org.mule.issues.EndpointTransformerMule2131TestCase
 org.mule.issues.TransformerChainMule2131TestCase
@@ -10,8 +13,6 @@ org.mule.issues.ResponseTransformerMule2165TestCase
 # MULE-2136
 org.mule.issues.MulticastRouterMule2136TestCase
 
-# TODO TC This one started failing again for some reason 
+# TODO TC "Component has not been initialized properly, no serviceFactory"
 org.mule.issues.PropertyScribblingMule893TestCase
-# TODO TC
-org.mule.providers.vm.VMConnectorTestCase
 

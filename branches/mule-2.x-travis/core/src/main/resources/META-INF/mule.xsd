@@ -53,6 +53,7 @@
     <xsd:group name="rootElements">
         <xsd:choice>
             <xsd:element name="environment-property" type="environmentPropertyType"/>
+            <xsd:element name="admin-agent" type="muleAdminAgentType"/>
             <xsd:element name="configuration" type="muleManagementContextType"/>
             <xsd:element ref="description"/>
             <xsd:element ref="abstract-extension"/>
@@ -61,6 +62,7 @@
             <xsd:element ref="abstract-connector"/>
             <xsd:element ref="abstract-global-endpoint"/>
             <xsd:element ref="abstract-transformer"/>
+            <xsd:element ref="abstract-filter"/>
             <xsd:element ref="abstract-model"/>
         </xsd:choice>
     </xsd:group>
@@ -164,6 +166,7 @@
 
     <xsd:element name="abstract-filter" abstract="true" type="abstractFilterType"/>
     <xsd:complexType name="abstractFilterType">
+        <xsd:attribute name="name" type="xsd:string"/>
         <xsd:attribute name="not" type="substitutableBoolean"/>
     </xsd:complexType>
 
@@ -191,6 +194,7 @@
         <xsd:sequence>
             <xsd:element ref="abstract-response-endpoint" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-response-router" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
         <xsd:attribute name="timeout" type="xsd:string"/>
@@ -214,6 +218,13 @@
                 <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:extension>
         </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="muleAdminAgentType">
+        <xsd:sequence>
+            <xsd:element ref="spring:property" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="serverUri" type="xsd:string"/>
     </xsd:complexType>
 
     <xsd:complexType name="muleManagementContextType">
@@ -359,6 +370,14 @@
         </xsd:annotation>
     </xsd:element>
 
+    <xsd:element name="rest-service-component" type="restServiceWrapperType" substitutionGroup="abstract-object-factory">
+        <xsd:annotation>
+            <xsd:documentation>
+                Built-in RestServiceWrapper can used to proxy REST style services as local Mule Components.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
     <xsd:element name="no-args-call-component" type="noArgsCallWrapperType" substitutionGroup="abstract-object-factory">
         <xsd:annotation>
             <xsd:documentation>
@@ -387,6 +406,30 @@
     <xsd:complexType name="noArgsCallDelegateInstanceType">
         <xsd:attribute name="delegateInstance-ref" type="xsd:NMTOKEN" use="required"/>
         <xsd:attribute name="delegateMethod" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="restServiceWrapperType">
+        <xsd:complexContent>
+            <xsd:extension base="defaultServiceType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-filter" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="payloadParameterNames" type="listOrSetType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="requiredParams" type="spring:entryType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="optionalParams" type="spring:entryType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="httpMethod" default="GET" use="optional">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="GET"/>
+                            <xsd:enumeration value="POST"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="serviceUrl" use="required"/>
+                <xsd:attribute name="urlFromMessage" default="false" use="optional" type="xsd:boolean"/>
+                <xsd:attribute name="errorExpression" use="optional" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
     </xsd:complexType>
 
 
@@ -558,6 +601,15 @@
     <!--==============================================================-->
     <!--   Filter elements                                            -->
     <!--==============================================================-->
+
+    <xsd:element name="filter" type="filterRefType" substitutionGroup="abstract-filter"/>
+    <xsd:complexType name="filterRefType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractFilterType">
+                <xsd:attribute name="ref" type="xsd:NMTOKEN" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:element name="not-filter" type="unitaryFilterType" substitutionGroup="abstract-filter"/>
     <xsd:complexType name="unitaryFilterType">
@@ -1111,19 +1163,30 @@
     <xsd:complexType name="selectiveConsumerRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
                 <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
                 <xsd:attribute name="transformerFirst" type="substitutableBoolean"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="correlation-aggregator-router" type="correlationRouterType" substitutionGroup="abstract-inbound-router"/>
     <xsd:element name="message-chunking-aggregator-router" type="correlationRouterType" substitutionGroup="abstract-inbound-router"/>
     <xsd:element name="correlation-resequencer-router" type="correlationRouterType" substitutionGroup="abstract-inbound-router"/>
     <xsd:complexType name="correlationRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
                 <xsd:attribute name="correlationExpression" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="correlation-aggregator-router" type="correlationAggregatorRouterType" substitutionGroup="abstract-inbound-router"/>
+    <xsd:complexType name="correlationAggregatorRouterType">
+        <xsd:complexContent>
+            <xsd:extension base="correlationRouterType">
+                <xsd:attribute name="class" type="xsd:string" use="required"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -1209,6 +1272,7 @@
             <xsd:extension base="outboundRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-filter" minOccurs="0"/>
+                    <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
                 <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
             </xsd:extension>
@@ -1841,12 +1905,12 @@
     <!--==============================================================-->
     <!--   JNDI support                                               -->
     <!--==============================================================-->
-
+<!-- 
     <xsd:complexType name="jndiConnectorType">
          <xsd:complexContent>
              <xsd:extension base="connectorType">
                  <xsd:sequence>
-                     <xsd:element name="jndi-provider-properties" type="spring:mapType" minOccurs="0">
+                     <xsd:element name="jndi-provider-properties" type="mapType" minOccurs="0">
                          <xsd:annotation>
                              <xsd:documentation>
                                  Direct setting of JNDI properties.
@@ -1892,5 +1956,5 @@
              </xsd:extension>
          </xsd:complexContent>
      </xsd:complexType>
-
+ -->
 </xsd:schema>

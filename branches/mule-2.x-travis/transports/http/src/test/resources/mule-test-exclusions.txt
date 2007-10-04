@@ -11,5 +11,4 @@ org.mule.providers.http.issues.StreamingDownloadMule1389TestCase
 org.mule.providers.http.functional.HttpsFunctionalTestCase
 
 # TODO TC
-org.mule.providers.http.functional.PollingReceiversRestartTestCase
 org.mule.providers.http.issues.StreamingSpeedMule1389TestCase

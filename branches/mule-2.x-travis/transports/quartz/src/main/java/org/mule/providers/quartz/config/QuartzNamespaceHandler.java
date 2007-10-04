@@ -1,5 +1,5 @@
 /*
- * $Id: VmNamespaceHandler.java 6433 2007-05-09 14:26:35Z tcarlson $
+ * $Id: QuartzNamespaceHandler.java 8784 2007-10-02 15:52:29Z acooke $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,7 +10,7 @@
 package org.mule.providers.quartz.config;
 
 import org.mule.config.spring.parsers.collection.ChildMapDefinitionParser;
-import org.mule.config.spring.parsers.generic.MuleChildDefinitionParser;
+import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
 import org.mule.providers.quartz.QuartzConnector;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
@@ -25,7 +25,7 @@ public class QuartzNamespaceHandler extends NamespaceHandlerSupport
     }
 }
 
-class QuartzConnectorDefinitionParser extends MuleChildDefinitionParser
+class QuartzConnectorDefinitionParser extends MuleOrphanDefinitionParser
 {
     public QuartzConnectorDefinitionParser()
     {

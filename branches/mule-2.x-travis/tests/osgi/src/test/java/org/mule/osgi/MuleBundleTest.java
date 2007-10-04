@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MuleBundleTest.java 8726 2007-10-01 11:12:14Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *

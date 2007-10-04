@@ -13,6 +13,7 @@ package org.mule.providers.email.connectors;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.email.MailProperties;
@@ -20,14 +21,13 @@ import org.mule.providers.email.SmtpConnector;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
-
-import java.util.HashMap;
 
 import javax.mail.internet.MimeMessage;
 
@@ -68,9 +68,9 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
 
         UMOComponent component = getTestComponent("anApple", Apple.class);
         managementContext.getRegistry().registerComponent(component, managementContext);
-        UMOEndpoint endpoint = 
-            new MuleEndpoint("test", new MuleEndpointURI(getTestEndpointURI()), connector,
-                    TransformerUtils.UNDEFINED, UMOEndpoint.ENDPOINT_TYPE_SENDER, 0, null, new HashMap());
+        UMOEndpointBuilder builder=new EndpointURIEndpointBuilder(new MuleEndpointURI(getTestEndpointURI()), managementContext);
+        builder.setName("test");
+        UMOImmutableEndpoint endpoint = builder.buildOutboundEndpoint();
         try
         {
             connector.registerListener(component, endpoint);

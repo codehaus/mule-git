@@ -1,5 +1,5 @@
 /*
- * $Id: ChatStringToString.java 3167 2006-09-22 15:47:04 +0000 (Fri, 22 Sep 2006) holger $
+ * $Id: ChatStringToString.java 8726 2007-10-01 11:12:14Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -18,7 +18,7 @@ import org.mule.umo.transformer.TransformerException;
  * application to transform the ChatString object into a string
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 3167 $
+ * @version $Revision: 8726 $
  */
 public class ChatStringToString extends AbstractTransformer
 {

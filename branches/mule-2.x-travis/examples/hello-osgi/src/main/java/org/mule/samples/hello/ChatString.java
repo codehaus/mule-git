@@ -1,5 +1,5 @@
 /*
- * $Id: ChatString.java 3167 2006-09-22 15:47:04 +0000 (Fri, 22 Sep 2006) holger $
+ * $Id: ChatString.java 8726 2007-10-01 11:12:14Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -16,7 +16,7 @@ import java.io.Serializable;
  * <code>ChatString</code> TODO (document class)
  * 
  * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision: 3167 $
+ * @version $Revision: 8726 $
  */
 public class ChatString implements Serializable
 {

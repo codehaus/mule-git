@@ -95,7 +95,7 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected BeanAssemblerFactory beanAssemblerFactory = new DefaultBeanAssemblerFactory();
+    private BeanAssemblerFactory beanAssemblerFactory = new DefaultBeanAssemblerFactory();
     protected ReusablePropertyConfiguration beanPropertyConfiguration = new ReusablePropertyConfiguration();
     private ParserContext parserContext;
     private BeanDefinitionRegistry registry;
@@ -404,7 +404,7 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
      */
     protected BeanAssembler getBeanAssembler(Element element, BeanDefinitionBuilder bean)
     {
-        return beanAssemblerFactory.newBeanAssembler(
+        return getBeanAssemblerFactory().newBeanAssembler(
                 beanPropertyConfiguration, bean, beanPropertyConfiguration, null);
     }
 
@@ -463,4 +463,13 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
         postProcessors.add(postProcessor);
     }
 
+    public BeanAssemblerFactory getBeanAssemblerFactory()
+    {
+        return beanAssemblerFactory;
+    }
+
+    public void setBeanAssemblerFactory(BeanAssemblerFactory beanAssemblerFactory)
+    {
+        this.beanAssemblerFactory = beanAssemblerFactory;
+    }
 }

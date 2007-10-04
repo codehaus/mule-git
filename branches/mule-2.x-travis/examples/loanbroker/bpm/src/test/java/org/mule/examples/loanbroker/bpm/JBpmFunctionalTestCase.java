@@ -35,11 +35,6 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         super.suitePreSetUp();
     }
 
-    protected ConfigurationBuilder getBuilder() throws Exception 
-    {
-        return new MuleXmlConfigurationBuilder();
-    }
-    
     // @Override
     protected String getConfigResources()
     {
@@ -64,13 +59,14 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));
     }
     
-    public void testLotsOfLoanRequests() throws Exception
-    {
-        super.testLotsOfLoanRequests();
-        
-        //without this sleep, the test still succeeds but throws a series of exceptions
-        //probably Spring would not have enough time to close db connections before
-        //database itself is shut down while jvm start disposing
-        Thread.sleep(100);
-    }
+    // @Override
+//    public void testLotsOfLoanRequests() throws Exception
+//    {
+//        super.testLotsOfLoanRequests();
+//        
+//        //without this sleep, the test still succeeds but throws a series of exceptions
+//        //probably Spring would not have enough time to close db connections before
+//        //database itself is shut down while jvm start disposing
+//        Thread.sleep(100);
+//    }
 }

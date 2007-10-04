@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: Registry.java 8825 2007-10-04 14:09:21Z aperepel $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -14,7 +14,7 @@ import org.mule.config.MuleConfiguration;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
-import org.mule.umo.endpoint.EndpointException;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
@@ -64,22 +64,25 @@ public interface Registry extends Initialisable, Disposable
      * <b>NOTE: This method does not create new endpoint instances, but rather returns existing endpoint
      * instances that have been registered. This lookup method should be avoided and the intelligent, role
      * specific endpoint lookup methods should be used instead.<br/><br/>
-     * {@link #lookupInboundEndpoint(String)} {@link #lookupOutboundEndpoint(String)}
-     * {@link #lookupResponseEndpoint(String)}
-     * 
      * @param name the idendtifer/name used to register endpoint in registry
-     * @return
+     * @see #lookupInboundEndpoint(String, org.mule.umo.UMOManagementContext)
+     * @see #lookupResponseEndpoint(String, org.mule.umo.UMOManagementContext)
      */
     UMOImmutableEndpoint lookupEndpoint(String name, UMOManagementContext managementContext);
 
     /**
      * Deprecated. Use {@link #lookupEndpoint(String, UMOManagementContext)}
-     * @param name
-     * @param managementContext
-     * @return
      * @deprecated
      */
     UMOImmutableEndpoint lookupEndpoint(String name);
+    
+    /**
+     * Looks-up endpoint builders which can be used to repeatably create endpoints with the same configuration.
+     * These endpoint builder are either global endpoints or they are builders used to create named
+     * endpoints configured on routers and exception strategies.
+     * 
+     */
+    UMOEndpointBuilder lookupEndpointBuilder(String name);
     
     /**
      * Returns immutable endpoint instance with the "INBOUND" role. <br/><br/> The uri paramater can be one
@@ -91,8 +94,6 @@ public interface Registry extends Initialisable, Disposable
      * <br/><br/> The {@link UMOImmutableEndpoint} interface is currently used as the return type but this
      * will be replaces by and more specific interface. SEE MULE-2292
      * 
-     * @param uri
-     * @return
      */
     UMOImmutableEndpoint lookupInboundEndpoint(String uri, UMOManagementContext managementContext)
         throws UMOException;
@@ -107,8 +108,6 @@ public interface Registry extends Initialisable, Disposable
      * <br/><br/> The {@link UMOImmutableEndpoint} interface is currently used as the return type but this
      * will be replaces by and more specific interface. SEE MULE-2292
      * 
-     * @param uri
-     * @return
      */
     UMOImmutableEndpoint lookupOutboundEndpoint(String uri, UMOManagementContext managementContext)
         throws UMOException;
@@ -123,24 +122,16 @@ public interface Registry extends Initialisable, Disposable
      * <br/><br/> The {@link UMOImmutableEndpoint} interface is currently used as the return type but this
      * will be replaces by and more specific interface. SEE MULE-2292
      * 
-     * @param uri
-     * @return
      */
     UMOImmutableEndpoint lookupResponseEndpoint(String uri, UMOManagementContext managementContext)
         throws UMOException;
 
     /**
-     * @param endpointUri
-     * @param endpointType
-     * @param managementContext
-     * @return
-     * @throws EndpointException
-     * @throws UMOException
      */
     UMOImmutableEndpoint createEndpoint(UMOEndpointURI endpointUri,
                                         String endpointType,
                                         UMOManagementContext managementContext)
-        throws EndpointException, UMOException;
+        throws UMOException;
 
     UMOTransformer lookupTransformer(String name);
 

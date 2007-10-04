@@ -22,6 +22,7 @@ import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.registry.TransientRegistry;
@@ -41,6 +42,7 @@ import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
@@ -866,7 +868,7 @@ public class MuleClient implements Disposable
         throws UMOException
     {
         // as we are bypassing the message transport layer we need to check that
-        UMOEndpoint endpoint = (UMOEndpoint)component.getInboundRouter().getEndpoints().get(0);
+        UMOImmutableEndpoint endpoint = (UMOEndpoint)component.getInboundRouter().getEndpoints().get(0);
         if (endpoint != null)
         {
             if (endpoint.getTransformers() != null)
@@ -880,7 +882,8 @@ public class MuleClient implements Disposable
                 else
                 {
                     endpoint = new MuleEndpoint(endpoint);
-                    endpoint.setTransformers(new LinkedList());
+                    // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+                    ((UMOEndpoint) endpoint).setTransformers(new LinkedList());
                     return endpoint;
                 }
             }
@@ -898,8 +901,9 @@ public class MuleClient implements Disposable
             managementContext.applyLifecycle(connector);
             managementContext.getRegistry().registerConnector(connector, managementContext);
             connector.start();
-            endpoint = new MuleEndpoint("muleClientProvider", defaultEndpointUri, connector,
-                    TransformerUtils.UNDEFINED, UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 0, null, null);
+            UMOEndpointBuilder builder=new EndpointURIEndpointBuilder(defaultEndpointUri, managementContext);
+            builder.setName("muleClientProvider");
+            endpoint = builder.buildInboundEndpoint();
         }
 
        managementContext.getRegistry().registerEndpoint(endpoint);

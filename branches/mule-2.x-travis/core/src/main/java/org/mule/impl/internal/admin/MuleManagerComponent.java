@@ -14,7 +14,6 @@ import org.mule.MuleException;
 import org.mule.MuleServer;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -22,22 +21,25 @@ import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
-import org.mule.transformers.wire.WireFormat;
 import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMODescriptor;
+import org.mule.transformers.wire.WireFormat;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.MapUtils;
+import org.mule.util.object.SimpleObjectFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -231,29 +233,31 @@ public class MuleManagerComponent implements Callable, Initialisable
     }
 
 
-    public static final UMODescriptor getDescriptor(UMOEndpoint endpoint,
+    public static final UMOComponent getComponent(UMOEndpointBuilder endpointBuilder,
                                                     WireFormat wireFormat,
                                                     String encoding,
                                                     int eventTimeout) throws UMOException
     {
         try
         {
-            endpoint.setName(MANAGER_ENDPOINT_NAME);
-            endpoint.setType(UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
-    
-            MuleDescriptor descriptor = new MuleDescriptor();
-            descriptor.setName(MANAGER_COMPONENT_NAME);
-    
-            descriptor.getInboundRouter().addEndpoint(endpoint);
+            endpointBuilder.setName(MANAGER_ENDPOINT_NAME);
+
+            UMOComponent component = new SedaComponent();
+            component.setName(MANAGER_COMPONENT_NAME);
+            component.setModel(MuleServer.getManagementContext().getRegistry().lookupSystemModel());
 
             Map props = new HashMap();
             props.put("wireFormat", wireFormat);
             props.put("encoding", encoding);
             props.put("synchronousEventTimeout", new Integer(eventTimeout));
-            // TODO
-            //descriptor.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
-            descriptor.setProperties(props);
-            return descriptor;
+            component.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
+
+            component.setManagementContext(MuleServer.getManagementContext());
+            component.initialise();
+    
+            component.getInboundRouter().addEndpoint(endpointBuilder.buildInboundEndpoint());
+
+            return component;
         }
         catch (Exception e)
         {
@@ -303,7 +307,6 @@ public class MuleManagerComponent implements Callable, Initialisable
     {
         this.wireFormat = wireFormat;
     }
-
 
     public String getEncoding()
     {
