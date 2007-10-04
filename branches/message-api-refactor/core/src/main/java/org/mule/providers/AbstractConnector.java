@@ -1537,10 +1537,11 @@ public abstract class AbstractConnector
     public void dispatch(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
-
+        
         try
         {
             dispatcher = this.getDispatcher(endpoint);
+
             dispatcher.dispatch(event);
         }
         catch (DispatchException dex)
@@ -1596,6 +1597,7 @@ public abstract class AbstractConnector
                     }
                     finally
                     {
+                        System.out.println("Returning dispatcher");
                         returnDispatcher(endpoint, dispatcher);
                     }
                 }
