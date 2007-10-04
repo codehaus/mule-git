@@ -1541,7 +1541,6 @@ public abstract class AbstractConnector
         try
         {
             dispatcher = this.getDispatcher(endpoint);
-
             dispatcher.dispatch(event);
         }
         catch (DispatchException dex)
@@ -1597,7 +1596,6 @@ public abstract class AbstractConnector
                     }
                     finally
                     {
-                        System.out.println("Returning dispatcher");
                         returnDispatcher(endpoint, dispatcher);
                     }
                 }

@@ -41,7 +41,7 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
      */
     public boolean isCreateDispatcherPerRequest()
     {
-        return true;
+        return false;
     }
 
     public abstract UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException;

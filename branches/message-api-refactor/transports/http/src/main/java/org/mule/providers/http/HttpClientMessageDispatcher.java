@@ -73,7 +73,12 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (HttpConnector) endpoint.getConnector();
         this.receiveTransformer = new HttpClientMethodResponseToObject();
     }
-
+    
+    public boolean isCreateDispatcherPerRequest()
+    {
+        return true;
+    }
+    
     protected void doConnect() throws Exception
     {
         if (client == null)
