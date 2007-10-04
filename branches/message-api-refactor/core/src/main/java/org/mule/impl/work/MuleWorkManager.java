@@ -106,8 +106,6 @@ public class MuleWorkManager implements UMOWorkManager
 
     public synchronized void dispose()
     {
-        System.out.println("Disposing.");
-        new Exception().printStackTrace();
         if (workExecutorService != null)
         {
             try
