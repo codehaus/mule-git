@@ -1,0 +1,3 @@
+# TODO TC Seems to be a routing issue, messages arriving to the wrong components
+org.mule.examples.loanbroker.bpm.JBpmFunctionalTestCase
+
