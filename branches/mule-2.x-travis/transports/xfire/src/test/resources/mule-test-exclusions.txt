@@ -16,9 +16,3 @@ org.mule.providers.soap.xfire.XFireWsdlTestCase
 org.mule.providers.soap.xfire.XFireServiceUsingAxisEndpointTestCase
 org.mule.providers.soap.xfire.ComplexTypeMethodTestCase
 
-# TODO TC testNoLocalBinding is failing
-org.mule.providers.soap.xfire.XFireBasicTestCase
-
-# TODO TC testSendAndReceiveComplex is failing
-org.mule.providers.soap.xfire.XFireConnectorHttpFunctionalTestCase
-

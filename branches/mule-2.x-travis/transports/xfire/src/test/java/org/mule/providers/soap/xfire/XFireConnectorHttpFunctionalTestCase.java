@@ -36,6 +36,12 @@ public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoin
         return "xfire";
     }
     
+    public void testDispatchAsyncComplex() throws Throwable
+    {
+        // TODO Auto-generated method stub
+        super.testDispatchAsyncComplex();
+    }
+
     public void testBinding() throws Exception
     {
         String url = "http://localhost:62108/";
@@ -54,7 +60,6 @@ public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoin
         Document document = DocumentHelper.parseText(reply.getPayloadAsString());
         List nodes;
 
-        
         nodes = document.selectNodes("//wsdl:definitions/wsdl:service");
         
         Element element = (Element)nodes.get(0);

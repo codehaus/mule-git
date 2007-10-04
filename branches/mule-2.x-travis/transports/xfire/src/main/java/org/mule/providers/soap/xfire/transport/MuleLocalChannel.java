@@ -112,7 +112,7 @@ public class MuleLocalChannel extends AbstractChannel
         }
     }
 
-    protected Service getService(XFire xfire, String uri) throws XFireException
+	protected Service getService(XFire xfire, String uri) throws XFireException
     {
         if (null == xfire)
         {
