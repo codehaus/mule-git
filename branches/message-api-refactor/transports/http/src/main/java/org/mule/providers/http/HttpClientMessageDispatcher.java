@@ -74,11 +74,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         this.receiveTransformer = new HttpClientMethodResponseToObject();
     }
     
-    public boolean isCreateDispatcherPerRequest()
-    {
-        return true;
-    }
-    
     protected void doConnect() throws Exception
     {
         if (client == null)

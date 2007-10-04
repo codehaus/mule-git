@@ -68,11 +68,6 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (XFireConnector) endpoint.getConnector();
     }
     
-    public boolean isCreateDispatcherPerRequest()
-    {
-        return true;
-    }
-    
     protected void doConnect() throws Exception
     {
         if (client == null)
