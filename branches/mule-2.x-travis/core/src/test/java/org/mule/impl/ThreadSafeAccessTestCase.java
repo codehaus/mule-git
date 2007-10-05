@@ -70,7 +70,7 @@ public class ThreadSafeAccessTestCase extends TestCase
     {
         UMOMessage message = new MuleMessage(new Object(), (Map)null);
         return new MuleEvent(message, new MuleEndpoint(),
-                new MuleSession(new DirectComponent(new MuleDescriptor(""), null)), false);
+                new MuleSession(new DirectComponent()), false);
     }
 
     protected void resetAccessControl(ThreadSafeAccess target) throws InterruptedException
