@@ -1,0 +1,15 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# Skip these until the tests-external profile works
+org.mule.providers.soap.axis.AxisExternalServerTest
+org.mule.providers.soap.axis.VmToAxisProxyTestCase
+
+# MULE-1839
+org.mule.providers.soap.axis.AxisConnectorJmsFunctionalTestCase
+org.mule.providers.soap.axis.AxisConnectorJmsTopicsFunctionalTestCase
+org.mule.providers.soap.axis.AxisServletBindingTestCase
+
+# MULE-2164
+org.mule.providers.soap.axis.AxisEndpointMule2164TestCase

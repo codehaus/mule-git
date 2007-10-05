@@ -1,0 +1,9 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# MULE-2164
+org.mule.impl.endpoint.MuleCopiedEndpointURITestCase
+
+org.mule.impl.container.MuleContainerContextTestCase
+org.mule.impl.container.JndiContainerContextTestCase
