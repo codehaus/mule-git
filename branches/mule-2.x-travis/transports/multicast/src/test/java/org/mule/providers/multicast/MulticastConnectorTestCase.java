@@ -10,7 +10,6 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
@@ -44,8 +43,7 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
-        UMOComponent component = getTestComponent(d);
+        UMOComponent component = getTestComponent("orange", Orange.class);
         UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
         UMOConnector connector = getConnector();
 
