@@ -41,7 +41,7 @@ public class SoapActionTemplateTestCase extends AbstractMuleTestCase
 
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
         UMOEvent event = getTestEvent("test,", ep);
-        event.getComponent().getDescriptor().setName("myService");
+        event.getComponent().setName("myService");
         String result = dispatcher.parseSoapAction("[scheme]://[host]:[port]/[serviceName]/[method]",
             new QName("foo"), event);
 
