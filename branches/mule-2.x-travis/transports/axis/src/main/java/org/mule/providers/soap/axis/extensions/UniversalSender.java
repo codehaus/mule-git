@@ -20,7 +20,7 @@ import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.extras.AxisCleanAndAddProperties;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -123,7 +123,7 @@ public class UniversalSender extends BasicHandler
             if (requestEndpoint.getConnector() instanceof AxisConnector)
             {
                 msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector())
-                    .getAxisServer().getTypeMappingRegistry());
+                    .getAxis().getTypeMappingRegistry());
             }
             Object payload = null;
             int contentLength = 0;
@@ -250,10 +250,8 @@ public class UniversalSender extends BasicHandler
 
     protected UMOEndpoint lookupEndpoint(String uri) throws UMOException
     {
-        UMODescriptor axis = RegistryContext.getRegistry().lookupService(
-            AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
+        UMOComponent axis = RegistryContext.getRegistry().lookupComponent(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
         UMOEndpointURI endpoint = new MuleEndpointURI(uri);
-        //UMOManagementContext mgmtContext = MuleServer.getManagementContext();
         
         UMOEndpoint ep;
         if (axis != null)
@@ -270,7 +268,6 @@ public class UniversalSender extends BasicHandler
                         logger.debug("Dispatch Endpoint uri: " + uri
                                      + " not found on the cache. Creating the endpoint instead.");
                         ep = new MuleEndpoint(uri, false);
-                        //((MuleEndpoint)ep).setManagementContext(mgmtContext);
                     }
                     else
                     {
@@ -286,7 +283,6 @@ public class UniversalSender extends BasicHandler
         else
         {
             ep = new MuleEndpoint(uri, false);
-            //((MuleEndpoint)ep).setManagementContext(mgmtContext);
         }
         return ep;
     }
