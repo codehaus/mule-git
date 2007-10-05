@@ -12,3 +12,7 @@ org.mule.issues.ResponseTransformerMule2165TestCase
 
 # MULE-2136
 org.mule.issues.MulticastRouterMule2136TestCase
+
+# TODO Messages are arriving to the NullComponent which is implicitly created by the <forwarding-router>
+org.mule.issues.PropertyScribblingMule893TestCase
+
