@@ -9,8 +9,7 @@
  */
 package org.mule.config.spring.parsers.generic;
 
-import org.mule.util.StringUtils;
-
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -27,17 +26,31 @@ public class GrandchildDefinitionParser extends ChildDefinitionParser
 
     protected String getParentBeanName(Element element)
     {
-        Node node = element;
-        while (null != node && node instanceof Element)
+        Node parent = element.getParentNode();
+        if (parent == null)
         {
-            String name = super.getParentBeanName((Element) node);
-            if (!StringUtils.isBlank(name))
-            {
-                return name;
-            }
-            node = element.getParentNode();
+            logger.error("No parent node found for element " + element);
+            return null;
         }
-        throw new IllegalStateException("Bean: " + element.getNodeName() + " has no grandparent");
+        Node grandparent = parent.getParentNode();
+        if (grandparent == null)
+        {
+            logger.error("No parent node found for element " + element);
+            return null;
+        }
+        Node grandparentNameAttribute = grandparent.getAttributes().getNamedItem("name");
+        if (grandparentNameAttribute == null)
+        {
+            logger.error("Grandparent node has no 'name' attribute: " + grandparent);
+            return null;
+        }
+        return grandparentNameAttribute.getNodeValue();
+    }
+
+    public void forceParent(BeanDefinition parent)
+    {
+        // TODO Auto-generated method stub
+        super.forceParent(parent);
     }
 
 }
