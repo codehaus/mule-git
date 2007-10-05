@@ -124,6 +124,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
                 Long oldestKey = (Long) oldestEntry.getKey();
                 long oldestKeyValue = oldestKey.longValue();
 
+                // TODO HH: this is obviously wrong since the units get mixed up - need to normalize
                 if ((now - oldestKeyValue) > entryTTL)
                 {
                     store.remove(oldestKey);
