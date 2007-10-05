@@ -69,7 +69,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         {
             try
             {
-                checkComponentName(event.getComponent().getDescriptor().getName());
+                checkComponentName(event.getComponent().getName());
             }
             catch (IllegalArgumentException e)
             {
@@ -113,7 +113,7 @@ public class IdempotentReceiver extends SelectiveConsumer
 
     protected synchronized void load(UMOEvent event) throws RoutingException
     {
-        this.componentName = event.getComponent().getDescriptor().getName();
+        this.componentName = event.getComponent().getName();
         
         if (idStore == null)
         {
