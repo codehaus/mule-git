@@ -62,7 +62,7 @@ public class ObjectToString extends AbstractTransformer
                 }
                 catch (IOException e)
                 {
-                    logger.warn("Could not close stream: " + e.getMessage());
+                    logger.warn("Could not close stream", e);
                 }
             }
         }

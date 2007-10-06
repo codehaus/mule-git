@@ -365,6 +365,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (Exception e)
         {
+            if (httpMethod != null)
+            {
+                httpMethod.releaseConnection();
+            }
             throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
     }

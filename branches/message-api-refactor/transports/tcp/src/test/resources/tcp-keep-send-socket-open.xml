@@ -10,10 +10,13 @@
 
     <tcp:connector name="openConnector" keepSendSocketOpen="true"/>
 
-    <tcp:connector name="openConnectorLength" keepSendSocketOpen="true"
-                   tcpProtocolClassName="org.mule.providers.tcp.protocols.LengthProtocol"/>
+    <tcp:connector name="openConnectorLength" keepSendSocketOpen="true">
+        <tcp:length-protocol payloadOnly="true"/>
+    </tcp:connector>
 
-    <tcp:connector name="closeConnectorLength" tcpProtocolClassName="org.mule.providers.tcp.protocols.LengthProtocol"/>
+    <tcp:connector name="closeConnectorLength">
+        <tcp:length-protocol payloadOnly="true"/>
+    </tcp:connector>
 
     <endpoint address="tcp://localhost:60198?connector=openConnector" name="clientEndpoint" synchronous="true"/>
 

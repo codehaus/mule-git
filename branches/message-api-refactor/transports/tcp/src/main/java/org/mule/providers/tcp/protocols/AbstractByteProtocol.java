@@ -10,6 +10,11 @@
 
 package org.mule.providers.tcp.protocols;
 
+import org.mule.providers.tcp.TcpProtocol;
+import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.ClassUtils;
+import org.mule.util.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,10 +25,6 @@ import java.net.SocketTimeoutException;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.providers.tcp.TcpProtocol;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.util.ClassUtils;
-import org.mule.util.IOUtils;
 
 /**
  * This Abstract class has been introduced so as to have the byte protocols (i.e. the
@@ -37,9 +38,9 @@ import org.mule.util.IOUtils;
  * will, via {@link #write(java.io.OutputStream, Object)}, dispatch to
  * {@link #writeByteArray(java.io.OutputStream, byte[])}.</p>.
  */
-public abstract class ByteProtocol implements TcpProtocol
+public abstract class AbstractByteProtocol implements TcpProtocol
 {
-    private static final Log logger = LogFactory.getLog(DefaultProtocol.class);
+    private static final Log logger = LogFactory.getLog(DirectProtocol.class);
     private static final long PAUSE_PERIOD = 100;
     public static final int EOF = -1;
 
@@ -48,7 +49,7 @@ public abstract class ByteProtocol implements TcpProtocol
     public static final boolean NO_STREAM = false;
     private boolean streamOk;
 
-    public ByteProtocol(boolean streamOk)
+    public AbstractByteProtocol(boolean streamOk)
     {
         this.streamOk = streamOk;
     }
@@ -59,7 +60,9 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             if (streamOk)
             {
-                copyStream((InputStream)data, os);
+                IOUtils.copy((InputStream) data, os);
+                os.flush();
+                os.close();
             }
             else
             {
@@ -79,8 +82,7 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             // TODO SF: encoding is lost/ignored; it is probably a good idea to have
             // a separate "stringEncoding" property on the protocol
-            String s = (String) data;
-            writeByteArray(os, s.getBytes(getStringEncoding(s)));
+            writeByteArray(os, ((String) data).getBytes());
         }
         else if (data instanceof Serializable)
         {
@@ -90,20 +92,6 @@ public abstract class ByteProtocol implements TcpProtocol
         {
             throw new IllegalArgumentException("Cannot serialize data: " + data);
         }
-    }
-
-    protected void copyStream(InputStream is, OutputStream os) throws IOException
-    {
-        IOUtils.copy((InputStream) is, os);
-    }
-
-    /**
-     * Override this if you'd like to change the String encoding for a message.
-     * @return
-     */
-    protected String getStringEncoding(String s)
-    {
-        return "UTF-8";
     }
 
     protected void writeByteArray(OutputStream os, byte[] data) throws IOException

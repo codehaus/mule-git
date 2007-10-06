@@ -159,6 +159,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
             finally
             {
+                
                 conn.close();
                 conn = null;
             }
@@ -399,10 +400,16 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         public void release()
         {
+            waitForStreams();
+            
             conn.close();
             conn = null;
         }
 
+        private void waitForStreams()
+        {
+           
+        }
     }
 
     protected String getRequestPath(UMOMessage message)

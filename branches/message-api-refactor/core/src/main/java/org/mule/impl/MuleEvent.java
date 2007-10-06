@@ -691,16 +691,6 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     }
 
     /**
-     * Determines whether the event flow is being streamed
-     *
-     * @return true if the request should be streamed
-     */
-    public boolean isStreaming()
-    {
-        return endpoint.isStreaming();
-    }
-
-    /**
      * Gets the encoding for this message. First it looks to see if encoding has been
      * set on the endpoint, if not it will check the message itself and finally it
      * will fall back to the Mule global configuration for encoding which cannot be

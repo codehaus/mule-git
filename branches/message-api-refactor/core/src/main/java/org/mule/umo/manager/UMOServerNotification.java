@@ -15,15 +15,13 @@ import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.util.ClassUtils;
 
 import java.util.EventObject;
-import java.util.Iterator;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <code>UMOServerNotification</code> is an event triggered by something happening
- * in the Server itself such as the server starting or a component being registered
- *
+ * in the Server itself such as the server starting or a component being registered.
  */
 public abstract class UMOServerNotification extends EventObject
 {
@@ -56,7 +54,8 @@ public abstract class UMOServerNotification extends EventObject
     protected long timestamp;
 
     protected int action = NULL_ACTION;
-    protected static Map actions = new ConcurrentHashMap();
+    private static Map actionIdToName = new ConcurrentHashMap();
+    private static Map actionNameToId = new ConcurrentHashMap();
 
     /**
      * The resourceIdentifier is used when firing inbound server notifications such
@@ -86,13 +85,6 @@ public abstract class UMOServerNotification extends EventObject
         serverId = message.toString();
         timestamp = System.currentTimeMillis();
     }
-
-    protected static void registerAction(String name, int i)
-    {
-        actions.put(new Integer(i), name.toLowerCase());
-    }
-
-
 
     public int getAction()
     {
@@ -140,24 +132,47 @@ public abstract class UMOServerNotification extends EventObject
         return getActionName(action);
     }
 
+
+    protected static synchronized void registerAction(String name, int i)
+    {
+        String lowerCaseName = name.toLowerCase();
+        Integer id = new Integer(i);
+        if (actionNameToId.containsKey(lowerCaseName))
+        {
+            throw new IllegalStateException("Action " + name + " already registered");
+        }
+        if (actionIdToName.containsKey(id))
+        {
+            throw new IllegalStateException("Action id " + i + " already registered");
+        }
+        actionIdToName.put(id, lowerCaseName);
+        actionNameToId.put(lowerCaseName, id);
+    }
+
     public static String getActionName(int action)
     {
-        return (String) actions.get(new Integer(action));
+        Integer key = new Integer(action);
+        if (actionIdToName.containsKey(key))
+        {
+            return (String) actionIdToName.get(key);
+        }
+        else
+        {
+            throw new IllegalArgumentException("No action with id: " + action);
+        }
     }
 
     public static int getActionId(String action)
     {
-        int i = 0;
-        Map.Entry entry;
-        for (Iterator iterator = actions.entrySet().iterator(); iterator.hasNext();i++)
+        String lowerCaseName = action.toLowerCase();
+        if (actionNameToId.containsKey(lowerCaseName))
         {
-            entry = (Map.Entry) iterator.next();
-            if(entry.getValue().equals(action.toLowerCase()))
-            {
-                return ((Integer)entry.getKey()).intValue();
-            }
+            return ((Integer) actionNameToId.get(lowerCaseName)).intValue();
         }
-        throw new IllegalArgumentException("No Action called: " + action);
-
+        else
+        {
+            throw new IllegalArgumentException("No action called: " + action);
+        }
     }
+
 }

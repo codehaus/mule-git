@@ -10,15 +10,6 @@
 
 package org.mule.extras.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.config.ConfigurationBuilder;
@@ -31,13 +22,13 @@ import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.model.ModelHelper;
 import org.mule.impl.registry.TransientRegistry;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.service.TransportFactory;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.transformers.TransformerUtils;
@@ -50,17 +41,27 @@ import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleClient</code> is a simple interface for Mule clients to send and
@@ -788,7 +789,7 @@ public class MuleClient implements Disposable
         throws UMOException
     {
         // as we are bypassing the message transport layer we need to check that
-        UMOEndpoint endpoint = (UMOEndpoint)descriptor.getInboundRouter().getEndpoints().get(0);
+        UMOImmutableEndpoint endpoint = (UMOEndpoint)descriptor.getInboundRouter().getEndpoints().get(0);
         if (endpoint != null)
         {
             if (endpoint.getTransformers() != null)
@@ -802,7 +803,8 @@ public class MuleClient implements Disposable
                 else
                 {
                     endpoint = new MuleEndpoint(endpoint);
-                    endpoint.setTransformers(new LinkedList());
+                    // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+                    ((UMOEndpoint) endpoint).setTransformers(new LinkedList());
                     return endpoint;
                 }
             }
@@ -813,16 +815,11 @@ public class MuleClient implements Disposable
         }
         else
         {
-            UMOConnector connector = null;
-            UMOEndpointURI defaultEndpointUri = new MuleEndpointURI("vm://mule.client");
-            connector = TransportFactory.createConnector(defaultEndpointUri, managementContext);
-            managementContext.getRegistry().registerConnector(connector);
-            connector.start();
-            endpoint = new MuleEndpoint("muleClientProvider", defaultEndpointUri, connector,
-                    TransformerUtils.UNDEFINED, UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 0, null, null);
+            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("vm://mule.client", managementContext);
+            builder.setName("muleClientProvider");
+            endpoint = managementContext.getRegistry().lookupEndpointFactory().createInboundEndpoint(builder,
+                managementContext);
         }
-
-       managementContext.getRegistry().registerEndpoint(endpoint);
         return endpoint;
     }
 

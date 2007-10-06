@@ -12,15 +12,16 @@ package org.mule.tck.functional;
 
 import org.mule.RegistryContext;
 import org.mule.impl.MuleDescriptor;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.UMOException;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 
@@ -105,13 +106,19 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
      * outbound endpoint
      * 
      * @return
+     * @throws UMOException 
      */
-    protected UMOEndpoint createOutboundEndpoint()
+    protected UMOImmutableEndpoint createOutboundEndpoint() throws UMOException
     {
         if (getOutDest() != null)
         {
-            return new MuleEndpoint("testOut", getOutDest(), connector, null,
-                UMOEndpoint.ENDPOINT_TYPE_SENDER, 0, null, null);
+            UMOEndpointBuilder builder=new EndpointURIEndpointBuilder(getOutDest(), managementContext);
+            builder.setName("testOut");
+            builder.setConnector(connector);
+            builder.setSynchronous(true);
+            
+            return managementContext.getRegistry().lookupEndpointFactory().createOutboundEndpoint(builder,
+                managementContext);
         }
         else
         {
@@ -124,13 +131,19 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
      * inbound endpoint
      * 
      * @return
+     * @throws UMOException 
      */
-    protected UMOEndpoint createInboundEndpoint()
+    protected UMOImmutableEndpoint createInboundEndpoint() throws UMOException
     {
-        UMOEndpoint ep = new MuleEndpoint("testIn", getInDest(), connector, null,
-            UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 0, null, null);
-        ep.setSynchronous(true);
-        return ep;
+        UMOEndpointBuilder builder=new EndpointURIEndpointBuilder(getInDest(), managementContext);
+        builder.setName("testIn");
+        builder.setConnector(connector);
+        builder.setSynchronous(true);
+        
+
+        return managementContext.getRegistry()
+            .lookupEndpointFactory()
+            .createInboundEndpoint(builder, managementContext);
     }
 
     public void afterInitialise() throws Exception
@@ -166,9 +179,9 @@ public abstract class AbstractProviderFunctionalTestCase extends AbstractMuleTes
 
     protected abstract void receiveAndTestResults() throws Exception;
 
-    protected abstract UMOEndpointURI getInDest();
+    protected abstract String getInDest();
 
-    protected abstract UMOEndpointURI getOutDest();
+    protected abstract String getOutDest();
 
     protected abstract UMOConnector createConnector() throws Exception;
 

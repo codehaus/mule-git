@@ -27,14 +27,12 @@ public class EOFStreamingTestComponent extends FunctionalStreamingTestComponent
 {
     protected int read(InputStream is, byte[] buffer) throws IOException
     {
-//        System.out.println("Type " + is.getClass());
         int len;
         try
         {
             do
             {
                 len = is.read(buffer, 0, buffer.length);
-//                System.out.println("EOF length " + len);
                 if (0 == len)
                 {
                     // wait for non-blocking input stream

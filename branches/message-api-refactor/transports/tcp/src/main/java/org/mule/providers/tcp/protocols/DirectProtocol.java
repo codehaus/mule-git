@@ -12,7 +12,6 @@ package org.mule.providers.tcp.protocols;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -20,8 +19,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The DefaultProtocol class is an application level tcp protocol that does nothing.
- * The socket is read until no more bytes are (momentariy) available
+ * The DirectProtocol class is an application level tcp protocol that does nothing.
+ * The socket is read until no more bytes are (momentarily) available
  * (previously the transfer buffer also had to be full on the previous read, which made
  * stronger requirements on the underlying network).  On slow networks
  * {@link org.mule.providers.tcp.protocols.EOFProtocol} and
@@ -29,21 +28,22 @@ import org.apache.commons.logging.LogFactory;
  *
  * <p>Writing simply writes the data to the socket.</p>
  */
-public class DefaultProtocol extends ByteProtocol
+public class DirectProtocol extends AbstractByteProtocol
 {
-    public static final int UNLIMITED = -1;
 
-    private static final Log logger = LogFactory.getLog(DefaultProtocol.class);
+    protected static final int UNLIMITED = -1;
+
+    private static final Log logger = LogFactory.getLog(DirectProtocol.class);
     private static final int DEFAULT_BUFFER_SIZE = 8192;
-
+    
     protected int bufferSize;
 
-    public DefaultProtocol()
+    public DirectProtocol()
     {
         this(STREAM_OK, DEFAULT_BUFFER_SIZE);
     }
 
-    public DefaultProtocol(boolean streamOk, int bufferSize)
+    public DirectProtocol(boolean streamOk, int bufferSize)
     {
         super(streamOk);
         this.bufferSize = bufferSize;
@@ -61,7 +61,25 @@ public class DefaultProtocol extends ByteProtocol
         
         try
         {
-            copy(is, baos, limit);
+            byte[] buffer = new byte[bufferSize];
+            int len;
+            int remain = remaining(limit, limit, 0);
+            boolean repeat;
+            do
+            {
+
+                len = copy(is, buffer, baos, remain);
+                remain = remaining(limit, remain, len);
+                repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
+
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug(MessageFormat.format(
+                            "len/limit/repeat: {0}/{1}/{2}",
+                            new Object[] {new Integer(len), new Integer(limit), Boolean.valueOf(repeat)}));
+                }
+            }
+            while (repeat);
         }
         finally
         {
@@ -69,29 +87,6 @@ public class DefaultProtocol extends ByteProtocol
             baos.close();
         }
         return nullEmptyArray(baos.toByteArray());
-    }
-
-    protected void copy(InputStream is, OutputStream os, int limit) throws IOException
-    {
-        byte[] buffer = new byte[bufferSize];
-        int len;
-        int remain = remaining(limit, limit, 0);
-        boolean repeat;
-        do
-        {
-
-            len = copy(is, buffer, os, remain);
-            remain = remaining(limit, remain, len);
-            repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
-
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(MessageFormat.format(
-                        "len/limit/repeat: {0}/{1}/{2}",
-                        new Object[] {new Integer(len), new Integer(limit), Boolean.valueOf(repeat)}));
-            }
-        }
-        while (repeat);
     }
 
     protected int remaining(int limit, int remain, int len)

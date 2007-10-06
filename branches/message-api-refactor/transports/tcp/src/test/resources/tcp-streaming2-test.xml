@@ -14,8 +14,9 @@
 
     <configuration serverId="" defaultSynchronousEndpoints="true"/>
 
-    <tcp:connector name="default" validateConnections="false"
-            tcpProtocolClassName="org.mule.providers.tcp.protocols.StreamingProtocol"/>
+    <tcp:connector name="default" validateConnections="false">
+        <tcp:streaming-protocol/>
+    </tcp:connector>
 
     <model name="echoModel" class="org.mule.tck.testmodels.mule.TestSedaModel">
 

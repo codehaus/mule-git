@@ -12,27 +12,32 @@
 
     <vm:connector name="quedvm" queueEvents="true"/>
 
-    <tcp:connector name="tcpConnector" tcpProtocolClassName="org.mule.providers.tcp.protocols.MuleMessageEOFProtocol"
-                   keepSendSocketOpen="false"/>
+    <tcp:connector name="tcpConnector">
+        <tcp:custom-protocol class="org.mule.providers.tcp.integration.CustomSerializationProtocol"/>
+    </tcp:connector>
 
-    <model name="main">
+    <custom-transformer name="NoAction" class="org.mule.transformers.NoActionTransformer"/>
+
+    <model name="model">
+
         <service name="BridgeIn">
-            <pass-through-component/>
+            <component class="org.mule.components.simple.PassThroughComponent"/>
             <inbound-router>
                 <inbound-endpoint address="vm://in"/>
             </inbound-router>
             <outbound-router>
-                <message-chunking-router messageSize="1000">
-                    <outbound-endpoint address="tcp://localhost:63994"/>
-                </message-chunking-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="tcp://localhost:9994">
+                        <custom-transformer class="org.mule.transformers.NoActionTransformer"/>
+                    </outbound-endpoint>
+                </outbound-pass-through-router>
             </outbound-router>
         </service>
 
         <service name="BridgeOut">
-            <pass-through-component/>
+            <bridge-component/>
             <inbound-router>
-                <inbound-endpoint address="tcp://localhost:63994"/>
-                <message-chunking-aggregator-router/>
+                <inbound-endpoint address="tcp://localhost:9994" transformer-ref="NoAction"/>
             </inbound-router>
             <outbound-router>
                 <outbound-pass-through-router>

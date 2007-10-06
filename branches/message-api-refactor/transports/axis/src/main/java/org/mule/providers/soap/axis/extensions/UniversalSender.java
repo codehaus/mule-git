@@ -125,8 +125,11 @@ public class UniversalSender extends BasicHandler
                 msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector())
                     .getAxisServer().getTypeMappingRegistry());
             }
+            
+            Map props = new HashMap();
             Object payload = null;
             int contentLength = 0;
+            String contentType = null;
             if (msgContext.getRequestMessage().countAttachments() > 0)
             {
                 File temp = File.createTempFile("soap", ".tmp");
@@ -137,6 +140,7 @@ public class UniversalSender extends BasicHandler
                 fos.close();
                 contentLength = (int)temp.length();
                 payload = new FileInputStream(temp);
+                contentType = "multipart/related";
             }
             else
             {
@@ -144,10 +148,8 @@ public class UniversalSender extends BasicHandler
                 msgContext.getRequestMessage().writeTo(baos);
                 baos.close();
                 payload = baos.toByteArray();
-                System.out.println("Payload " + new String((byte[])payload));
             }
 
-            Map props = new HashMap();
             // props.putAll(event.getProperties());
             for (Iterator iterator = msgContext.getPropertyNames(); iterator.hasNext();)
             {
@@ -187,9 +189,15 @@ public class UniversalSender extends BasicHandler
                 // httpclient
             }
 
+            
             if (props.get(HttpConstants.HEADER_CONTENT_TYPE) == null)
             {
-                props.put(HttpConstants.HEADER_CONTENT_TYPE, "text/xml");
+                if (contentType == null)
+                {
+                    contentType = "text/xml";
+                }
+                
+                props.put(HttpConstants.HEADER_CONTENT_TYPE, contentType);
             }
             UMOMessage message = new MuleMessage(payload, props);
             UMOSession session = RequestContext.getEventContext().getSession();

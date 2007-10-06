@@ -254,13 +254,6 @@ public interface UMOEvent
     OutputStream getOutputStream();
 
     /**
-     * Determines whether the event flow is being streamed
-     * 
-     * @return true if the request should be streamed
-     */
-    boolean isStreaming();
-
-    /**
      * Gets the encoding for this message.
      * 
      * @return the encoding for the event. This must never return null.

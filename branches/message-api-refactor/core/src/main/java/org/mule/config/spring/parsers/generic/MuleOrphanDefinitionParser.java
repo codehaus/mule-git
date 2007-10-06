@@ -10,6 +10,7 @@
 package org.mule.config.spring.parsers.generic;
 
 import org.mule.util.CoreXMLUtils;
+import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -18,18 +19,22 @@ import org.w3c.dom.Element;
 /**
  * A parser for direct children of the <mule> element.
  */
-public class MuleChildDefinitionParser extends OrphanDefinitionParser
+public class MuleOrphanDefinitionParser extends OrphanDefinitionParser
 {
     
+    public static final String ROOT_ELEMENTS =
+            AbstractMuleBeanDefinitionParser.ROOT_ELEMENT + " "
+                    + AbstractMuleBeanDefinitionParser.ROOT_UNSAFE_ELEMENT;
+
     /**
      * This constructor assumes that the class name will be explicitly specified as an attribute on the element.
      */
-    public MuleChildDefinitionParser(boolean singleton)
+    public MuleOrphanDefinitionParser(boolean singleton)
     {
         super(singleton);
     }
 
-    public MuleChildDefinitionParser(Class beanClass, boolean singleton)
+    public MuleOrphanDefinitionParser(Class beanClass, boolean singleton)
     {
         super(beanClass, singleton);
     }

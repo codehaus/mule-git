@@ -12,6 +12,7 @@ package org.mule.providers.soap.xfire;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
@@ -36,9 +37,42 @@ public class XFireBasicTestCase extends FunctionalTestCase
 
     public void testEchoService() throws Exception
     {
-        MuleClient client = new MuleClient();
-        UMOMessage result = client.send("xfire:http://localhost:63081/services/echoService?method=echo", "Hello!", null);
-        assertEquals("Hello!", result.getPayload());
+        final MuleClient client = new MuleClient();
+        
+//        Runnable r = new Runnable() {
+//
+//            public void run()
+//            {
+//                for (int i = 0; i < 10; i++)
+//                {
+//                    try
+//                    {
+//                        UMOMessage result = client.send("xfire:http://localhost:63081/services/echoService?method=echo", "Hello!", null);
+//                        result.getPayloadAsString();
+//                        System.out.println("received ");
+//                    }
+//                    catch (UMOException e)
+//                    {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            
+//        };
+//        
+//        for (int i = 0; i < 50; i++)
+//        {
+//            new Thread(r).start();
+//        }
+//        
+//        Thread.sleep(100000);
+////        assertEquals("Hello!", result.getPayload());
     }
     public void testEchoServiceSynchronous() throws Exception
     {

@@ -209,13 +209,15 @@ public abstract class AbstractTransformer implements UMOTransformer
         String encoding = null;
 
         UMOMessageAdapter adapter = null;
-        if (src instanceof UMOMessageAdapter 
-                        && !isSourceTypeSupported(UMOMessageAdapter.class, true)
-                        && !isSourceTypeSupported(UMOMessage.class, true))
+        if (src instanceof UMOMessageAdapter)
         {
             encoding = ((UMOMessageAdapter) src).getEncoding();
             adapter = (UMOMessageAdapter) src;
-            src = ((UMOMessageAdapter) src).getPayload();
+            if (!isSourceTypeSupported(UMOMessageAdapter.class, true)
+                        && !isSourceTypeSupported(UMOMessage.class, true))
+            {
+                src = ((UMOMessageAdapter) src).getPayload();
+            }
         }
 
         if (encoding == null && endpoint != null)

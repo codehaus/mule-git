@@ -80,7 +80,6 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
         String location = "http://localhost:" + HTTP_PORT + "/services/mycomponent?wsdl";
         location = location.substring(0, location.length() - 5);
 
-        System.out.println("real content type " + result.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, ""));
         assertTrue(result.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, "").startsWith(
             "text/xml"));
 
@@ -105,7 +104,6 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
-
         Document document = DocumentHelper.parseText(reply.getPayloadAsString());
         List nodes;
         nodes = document.selectNodes("//wsdl:definitions/wsdl:service");
