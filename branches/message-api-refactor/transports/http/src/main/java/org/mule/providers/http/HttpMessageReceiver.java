@@ -49,6 +49,8 @@ import javax.resource.spi.work.Work;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.cookie.MalformedCookieException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>HttpMessageReceiver</code> is a simple http server that can be used to
@@ -56,6 +58,7 @@ import org.apache.commons.httpclient.cookie.MalformedCookieException;
  */
 public class HttpMessageReceiver extends TcpMessageReceiver
 {
+    protected final Log logger = LogFactory.getLog(getClass());
 
     public HttpMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
             throws CreateException
@@ -159,7 +162,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
             finally
             {
-                
+                logger.info("Closing HTTP connection.");
                 conn.close();
                 conn = null;
             }
@@ -400,15 +403,8 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         public void release()
         {
-            waitForStreams();
-            
             conn.close();
             conn = null;
-        }
-
-        private void waitForStreams()
-        {
-           
         }
     }
 

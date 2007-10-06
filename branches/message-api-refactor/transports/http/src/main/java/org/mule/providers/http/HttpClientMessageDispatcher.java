@@ -408,10 +408,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         {
             super.close();
             
-            if (method2 != null)
-            {
-                method2.releaseConnection();
-            }
+//            if (method2 != null)
+//            {
+//                method2.releaseConnection();
+//            }
         }
     }
 }
