@@ -222,6 +222,7 @@ public class MuleUniversalChannel extends AbstractChannel
                         try
                         {
                             writer.flush();
+                            writer.close();
                         }
                         catch (XMLStreamException e)
                         {
