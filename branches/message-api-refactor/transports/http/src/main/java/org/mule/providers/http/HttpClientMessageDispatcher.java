@@ -137,6 +137,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 endpoint.getEncoding()))));
             httpMethod.addRequestHeader(HttpConstants.HEADER_AUTHORIZATION, header.toString());
         }
+        
+        boolean exThrown = false;
         try
         {
             HttpClient client = new HttpClient();
@@ -155,15 +157,20 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (ReceiveException e)
         {
+            exThrown = true;
             throw e;
         }
         catch (Exception e)
-        {
+        {   
+            exThrown = true;
             throw new ReceiveException(endpoint, timeout, e);
         }
         finally
         {
-            httpMethod.releaseConnection();
+            if (exThrown)
+            {
+                httpMethod.releaseConnection();
+            }
         }
     }
 
