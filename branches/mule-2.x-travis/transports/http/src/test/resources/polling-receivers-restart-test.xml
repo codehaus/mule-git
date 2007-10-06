@@ -33,11 +33,11 @@
         </service>
 
         <service name="TestServer">
-            <component class="org.mule.components.simple.StaticComponent">
+            <singleton-object class="org.mule.components.simple.StaticComponent">
                 <properties>
                     <spring:entry key="data" value="Here's your content."/>
                 </properties>
-            </component>
+            </singleton-object>
             <inbound-router>
                 <inbound-endpoint address="http://localhost:60206" connector-ref="HttpConnector"/>
             </inbound-router>
