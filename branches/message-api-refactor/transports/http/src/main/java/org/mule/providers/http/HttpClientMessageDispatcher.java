@@ -102,7 +102,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     protected void doDispatch(UMOEvent event) throws Exception
     {
         HttpMethod httpMethod = getMethod(event);
-        execute(event, httpMethod, true);
+        execute(event, httpMethod);
         if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
         {
             logger.error(httpMethod.getResponseBodyAsString());
@@ -167,10 +167,11 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod execute(UMOEvent event, HttpMethod httpMethod, boolean closeConnection)
+    protected HttpMethod execute(UMOEvent event, HttpMethod httpMethod)
         throws Exception
     {
         // TODO set connection timeout buffer etc
+        boolean exThrown = false;
         try
         {
             URI uri = event.getEndpoint().getEndpointURI().getUri();
@@ -185,15 +186,17 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         catch (IOException e)
         {
             // TODO employ dispatcher reconnection strategy at this point
+            exThrown = true;
             throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
         catch (Exception e)
         {
+            exThrown = true;
             throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
         finally
         {
-            if (httpMethod != null && closeConnection)
+            if (httpMethod != null && exThrown)
             {
                 httpMethod.releaseConnection();
             }
@@ -322,7 +325,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         HttpMethod httpMethod = getMethod(event);
         httpMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new MuleHttpMethodRetryHandler());
 
-        httpMethod = execute(event, httpMethod, false);
+        httpMethod = execute(event, httpMethod);
 
         try
         {
@@ -408,10 +411,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         {
             super.close();
             
-//            if (method2 != null)
-//            {
-//                method2.releaseConnection();
-//            }
+            if (method2 != null)
+            {
+                method2.releaseConnection();
+            }
         }
     }
 }
