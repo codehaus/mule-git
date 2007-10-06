@@ -262,27 +262,42 @@ public class MuleUniversalChannel extends AbstractChannel
             InMessage inMessage;
             String contentType = sp.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, "text/xml");
             InputStream in = (InputStream) result.getPayload(InputStream.class);
-            if (contentType.toLowerCase().indexOf("multipart/related") != -1)
+            try
+            {
+                if (contentType.toLowerCase().indexOf("multipart/related") != -1)
+                {
+                    try
+                    {
+                        Attachments atts = new JavaMailAttachments(in, contentType);
+                        InputStream msgIs = atts.getSoapMessage().getDataHandler().getInputStream();
+                        inMessage = new InMessage(STAXUtils.createXMLStreamReader(msgIs,
+                            message.getEncoding(), context), getUri());
+                        inMessage.setAttachments(atts);
+                    }
+                    catch (MessagingException e)
+                    {
+                        throw new IOException(e.getMessage());
+                    }
+                }
+                else
+                {
+                    inMessage = new InMessage(STAXUtils.createXMLStreamReader(in, message.getEncoding(),
+                        context), getUri());
+                }
+                getEndpoint().onReceive(context, inMessage);
+            }
+            finally
             {
                 try
                 {
-                    Attachments atts = new JavaMailAttachments(in, contentType);
-                    InputStream msgIs = atts.getSoapMessage().getDataHandler().getInputStream();
-                    inMessage = new InMessage(STAXUtils.createXMLStreamReader(msgIs,
-                        message.getEncoding(), context), getUri());
-                    inMessage.setAttachments(atts);
+                    in.close();
                 }
-                catch (MessagingException e)
+                catch (IOException e)
                 {
-                    throw new IOException(e.getMessage());
+                    logger.warn("Could not close stream.", e);
                 }
             }
-            else
-            {
-                inMessage = new InMessage(STAXUtils.createXMLStreamReader(in, message.getEncoding(),
-                    context), getUri());
-            }
-            getEndpoint().onReceive(context, inMessage);
+            
         }
 
     }
