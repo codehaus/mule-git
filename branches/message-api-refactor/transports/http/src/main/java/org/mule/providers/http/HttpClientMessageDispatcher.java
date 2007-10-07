@@ -104,18 +104,18 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         try
         {
             execute(event, httpMethod);
+            
+            if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
+            {
+                logger.error(httpMethod.getResponseBodyAsString());
+                throw new DispatchException(event.getMessage(), event.getEndpoint(), new Exception(
+                    "Http call returned a status of: " + httpMethod.getStatusCode() + " "
+                                    + httpMethod.getStatusText()));
+            }
         }
         finally
         {
             httpMethod.releaseConnection();
-        }
-        
-        if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
-        {
-            logger.error(httpMethod.getResponseBodyAsString());
-            throw new DispatchException(event.getMessage(), event.getEndpoint(), new Exception(
-                "Http call returned a status of: " + httpMethod.getStatusCode() + " "
-                                + httpMethod.getStatusText()));
         }
     }
 
