@@ -102,7 +102,15 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     protected void doDispatch(UMOEvent event) throws Exception
     {
         HttpMethod httpMethod = getMethod(event);
-        execute(event, httpMethod);
+        try
+        {
+            execute(event, httpMethod);
+        }
+        finally
+        {
+            httpMethod.releaseConnection();
+        }
+        
         if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
         {
             logger.error(httpMethod.getResponseBodyAsString());
@@ -411,6 +419,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         private ReleasingInputStream(InputStream is, HttpMethod method2)
         {
             super(is);
+            
             this.method2 = method2;
         }
 
