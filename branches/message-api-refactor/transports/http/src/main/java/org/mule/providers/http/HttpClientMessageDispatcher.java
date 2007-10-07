@@ -145,7 +145,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             httpMethod.addRequestHeader(HttpConstants.HEADER_AUTHORIZATION, header.toString());
         }
         
-        boolean exThrown = false;
+        boolean releaseConn = false;
         try
         {
             HttpClient client = new HttpClient();
@@ -153,10 +153,16 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             if (httpMethod.getStatusCode() == HttpStatus.SC_OK)
             {
-                return (UMOMessage) receiveTransformer.transform(httpMethod);
+                UMOMessage res = (UMOMessage) receiveTransformer.transform(httpMethod);
+                if (StringUtils.EMPTY.equals(res.getPayload()))
+                {
+                    releaseConn = true;
+                }
+                return res;
             }
             else
             {
+                releaseConn = true;
                 throw new ReceiveException(
                     HttpMessages.requestFailedWithStatus(httpMethod.getStatusLine().toString()),
                     endpoint, timeout);
@@ -164,17 +170,17 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (ReceiveException e)
         {
-            exThrown = true;
+            releaseConn = true;
             throw e;
         }
         catch (Exception e)
         {   
-            exThrown = true;
+            releaseConn = true;
             throw new ReceiveException(endpoint, timeout, e);
         }
         finally
         {
-            if (exThrown)
+            if (releaseConn)
             {
                 httpMethod.releaseConnection();
             }
@@ -185,7 +191,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         throws Exception
     {
         // TODO set connection timeout buffer etc
-        boolean exThrown = false;
         try
         {
             URI uri = event.getEndpoint().getEndpointURI().getUri();
@@ -200,21 +205,13 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         catch (IOException e)
         {
             // TODO employ dispatcher reconnection strategy at this point
-            exThrown = true;
             throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
         catch (Exception e)
         {
-            exThrown = true;
             throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
-        finally
-        {
-            if (httpMethod != null && exThrown)
-            {
-                httpMethod.releaseConnection();
-            }
-        }
+        
     }
 
     protected void processCookies(UMOEvent event)
@@ -339,10 +336,12 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         HttpMethod httpMethod = getMethod(event);
         httpMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new MuleHttpMethodRetryHandler());
 
-        httpMethod = execute(event, httpMethod);
-
+        Object body = null;
+        boolean releaseConn = false;
         try
         {
+            httpMethod = execute(event, httpMethod);
+
             ExceptionPayload ep = null;
             if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
             {
@@ -353,10 +352,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             
             
             InputStream is = httpMethod.getResponseBodyAsStream();
-            Object body = null;
             if (is == null)
             {
                 body = StringUtils.EMPTY;
+                releaseConn = true;
             }            
             else
             {
@@ -382,11 +381,20 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (Exception e)
         {
-            if (httpMethod != null)
+            releaseConn = true;
+            if (e instanceof DispatchException)
+            {
+                throw (DispatchException) e;
+            }
+            
+            throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
+        }
+        finally
+        {
+            if (releaseConn) 
             {
                 httpMethod.releaseConnection();
             }
-            throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
         }
     }
 
