@@ -1580,9 +1580,18 @@ public abstract class AbstractConnector
         }
     }
 
-    private void setupDispatchReturn(final UMOImmutableEndpoint endpoint,
-                                     final UMOMessageDispatcher dispatcher,
-                                     UMOMessage result)
+    /**
+     * This method will return the dispatcher to the pool or, if the payload is an inputstream, 
+     * replace the payload with a new DelegatingInputStream which returns the dispatcher to
+     * the pool when the stream is closed.
+     * 
+     * @param endpoint
+     * @param dispatcher
+     * @param result
+     */
+    protected void setupDispatchReturn(final UMOImmutableEndpoint endpoint,
+                                       final UMOMessageDispatcher dispatcher,
+                                       UMOMessage result)
     {
         if (result != null && result.getPayload() instanceof InputStream)
         {

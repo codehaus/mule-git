@@ -12,7 +12,6 @@ package org.mule.providers.http;
 
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.impl.model.streaming.DelegatingInputStream;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
@@ -410,27 +409,5 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     protected void doDispose()
     {
         // template method
-    }
-
-    private final class ReleasingInputStream extends DelegatingInputStream
-    {
-        private final HttpMethod method2;
-
-        private ReleasingInputStream(InputStream is, HttpMethod method2)
-        {
-            super(is);
-            
-            this.method2 = method2;
-        }
-
-        public void close() throws IOException 
-        {
-            super.close();
-            
-            if (method2 != null)
-            {
-                method2.releaseConnection();
-            }
-        }
     }
 }
