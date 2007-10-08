@@ -49,26 +49,26 @@ public class PoolingProfile
     public static final int POOL_INITIALISE_ALL_COMPONENTS = INITIALISE_ALL;
 
     /**
-     * Controls the maximum number of Mule UMOs that can be borrowed from a component
-     * pool at one time. When non-positive, there is no limit to the number of
-     * components that may be active at one time. When maxActive is exceeded, the
-     * pool is said to be exhausted. You can specify this value on the descriptor
-     * declaration. If none is set this value will be used.
+     * Controls the maximum number of Mule UMOs that can be borrowed from a component pool
+     * at one time. When non-positive, there is no limit to the number of components that
+     * may be active at one time. When maxActive is exceeded, the pool is said to be
+     * exhausted. You can specify this value on the descriptor declaration. If none is set
+     * this value will be used.
      */
     public static final int DEFAULT_MAX_POOL_ACTIVE = ObjectPool.DEFAULT_MAX_SIZE;
 
     /**
-     * Controls the maximum number of Mule UMOs that can sit idle in the pool at any
-     * time. When non-positive, there is no limit to the number of Mule UMOs that may
-     * be idle at one time. You can specify this value on the descriptor declaration.
-     * If none is set this value will be used. If this value is not set then a system
-     * default of '5' will be used.
+     * Controls the maximum number of Mule UMOs that can sit idle in the pool at any time.
+     * When non-positive, there is no limit to the number of Mule UMOs that may be idle at
+     * one time. You can specify this value on the descriptor declaration. If none is set
+     * this value will be used. If this value is not set then a system default of '5' will
+     * be used.
      */
     public static final int DEFAULT_MAX_POOL_IDLE = ObjectPool.DEFAULT_MAX_SIZE;
 
     /**
-     * When the threadPoolExhaustedAction is set to WHEN_EXHAUSTED_WAIT this can
-     * specify the maximum milliseconds the pool should block before throwing a
+     * When the threadPoolExhaustedAction is set to WHEN_EXHAUSTED_WAIT this can specify
+     * the maximum milliseconds the pool should block before throwing a
      * NoSuchElementException
      */
     public static final long DEFAULT_MAX_POOL_WAIT = ObjectPool.DEFAULT_MAX_WAIT;
@@ -77,24 +77,22 @@ public class PoolingProfile
      * Specifies the behaviour of the Mule UMO pool when the pool is exhausted:
      * <ul>
      * <li>WHEN_EXHAUSTED_FAIL : will throw a NoSuchElementException</li>
-     * <li>WHEN_EXHAUSTED_WAIT : will block (invoke Object.wait(long) until a new or
-     * idle object is available.</li>
-     * <li>WHEN_EXHAUSTED_GROW : will create a new Mule and return it (essentially
-     * making maxActive meaningless).</li>
+     * <li>WHEN_EXHAUSTED_WAIT : will block (invoke Object.wait(long) until a new or idle
+     * object is available.</li>
+     * <li>WHEN_EXHAUSTED_GROW : will create a new Mule and return it (essentially making
+     * maxActive meaningless).</li>
      * </ul>
      * If a positive maxWait value is supplied, it will block for at most that many
-     * milliseconds, after which a NoSuchElementException will be thrown. If maxWait
-     * is non-positive, it will block indefinitely.
+     * milliseconds, after which a NoSuchElementException will be thrown. If maxWait is
+     * non-positive, it will block indefinitely.
      */
     public static final int DEFAULT_POOL_EXHAUSTED_ACTION = ObjectPool.WHEN_EXHAUSTED_GROW;
 
     /**
-     * Determines how components in a pool should be initialised. The possible values
-     * are:
+     * Determines how components in a pool should be initialised. The possible values are:
      * <ul>
      * <li>INITIALISE_NONE : Will not load any components in the pool on startup</li>
-     * <li>INITIALISE_ONE : Will load only the first component in the pool on
-     * startup</li>
+     * <li>INITIALISE_ONE : Will load only the first component in the pool on startup</li>
      * <li>INITIALISE_ALL : Will load all components in the pool on startup</li>
      * </ul>
      */
@@ -113,7 +111,7 @@ public class PoolingProfile
             Integer value = new Integer(ObjectPool.WHEN_EXHAUSTED_WAIT);
             this.put("WHEN_EXHAUSTED_WAIT", value);
             this.put("WAIT", value);
-            // TODO HH: remove for 2.0 (only keep WAIT)
+            // remove for 2.0 (only keep WAIT)
             this.put("BLOCK", value);
 
             value = new Integer(ObjectPool.WHEN_EXHAUSTED_FAIL);
@@ -138,7 +136,7 @@ public class PoolingProfile
 
             value = new Integer(INITIALISE_ONE);
             this.put("INITIALISE_ONE", value);
-            // TODO HH: remove for 2.0 (only keep INITIALISE_ONE)
+            // remove for 2.0 (only keep INITIALISE_ONE)
             this.put("INITIALISE_FIRST", value);
 
             value = new Integer(INITIALISE_ALL);
@@ -206,9 +204,9 @@ public class PoolingProfile
     }
 
     /**
-     * @return time in miilisconds to wait for a Mule UMO to be available in a
-     *         component when the pool of Mule UMOs is exhausted and the
-     *         PoolExhaustedAction is set to WHEN_EXHAUSTED_BLOCK
+     * @return time in miilisconds to wait for a Mule UMO to be available in a component
+     *         when the pool of Mule UMOs is exhausted and the PoolExhaustedAction is set
+     *         to WHEN_EXHAUSTED_BLOCK
      */
     public long getMaxWait()
     {
