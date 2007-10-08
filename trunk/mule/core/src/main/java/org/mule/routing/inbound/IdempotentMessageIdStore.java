@@ -10,7 +10,12 @@
 
 package org.mule.routing.inbound;
 
-// TODO MULE-1300 add javadoc
+/**
+ * <code>IdempotentMessageIdStore</code> is the main interface used by
+ * {@link IdempotentReceiver} for storing received message IDs.
+ * 
+ * @see {@link IdempotentInMemoryMessageIdStore}
+ */
 public interface IdempotentMessageIdStore
 {
     /**
