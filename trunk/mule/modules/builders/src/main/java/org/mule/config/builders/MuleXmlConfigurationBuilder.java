@@ -1083,8 +1083,11 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         addSetPropertiesRule(path + "/transaction", digester, new String[]{"action"},
             new String[]{"actionAsString"});
 
-        digester.addObjectCreate(path + "/transaction/constraint", TRANSACTION_CONSTRAINT_INTERFACE,
-            "className");
+        digester.addObjectCreate(path + "/transaction/factory", TRANSACTION_FACTORY_INTERFACE, "className");
+        addMulePropertiesRule(path + "/transaction/factory", digester);
+        digester.addSetNext(path + "/transaction/factory", "setFactory");
+
+        digester.addObjectCreate(path + "/transaction/constraint", TRANSACTION_CONSTRAINT_INTERFACE, "className");
         addSetPropertiesRule(path + "/transaction/constraint", digester);
 
         digester.addSetNext(path + "/transaction/constraint", "setConstraint");

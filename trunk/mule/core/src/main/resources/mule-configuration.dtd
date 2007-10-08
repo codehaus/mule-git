@@ -714,9 +714,18 @@ A fully qualified classname of the security filter to use on this endpoint
     Defines transactional behaviour for this endpoint
 -->
 
-<!ELEMENT transaction (constraint?)>
+<!ELEMENT transaction (constraint?, factory?)>
+
+<!ELEMENT factory (properties?)>
 
 <!--
+    className
+    A fully qualified class name of the transaction factory to use.  Implementations should always
+    implement <i>org.mule.umo.UMOTransactionFactory</i>.
+-->
+<!ATTLIST factory className         NMTOKEN            #IMPLIED>
+
+<!-- TODO: Deprecated. Use <factory> tag instead.
     The factory attribute defines the <i>UMOTransactionFactory</i> to use when creating new
     transactions. This is only require when the transaction config is declared on an inbound
     provider.
