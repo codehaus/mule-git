@@ -14,7 +14,6 @@ import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.email.MailProperties;
 import org.mule.providers.email.SmtpConnector;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
@@ -23,7 +22,6 @@ import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
@@ -90,7 +88,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     public void doTestSend() throws Exception
     {
         //managementContext.getRegistry().registerConnector(createConnector(false), managementContext);
-        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
+        UMOImmutableEndpoint endpoint = managementContext.getRegistry().lookupEndpointFactory().createOutboundEndpoint(
+            getTestEndpointURI(), managementContext);
         
         UMOComponent component = getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class);
         // TODO Simplify this API for adding an outbound endpoint.

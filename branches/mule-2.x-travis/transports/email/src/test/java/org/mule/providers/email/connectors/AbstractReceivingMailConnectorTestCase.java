@@ -11,7 +11,6 @@
 package org.mule.providers.email.connectors;
 
 import org.mule.config.MuleProperties;
-import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.providers.email.transformers.EmailMessageToString;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.tck.MuleTestUtils;
@@ -19,7 +18,7 @@ import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.UMOInboundRouterCollection;
 
 import java.util.HashMap;
@@ -75,7 +74,9 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         });
 
         UMOComponent component = MuleTestUtils.getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class, props, managementContext, /*initialize*/false);
-        UMOEndpoint ep = new MuleEndpoint(getTestEndpointURI(), true);
+        UMOImmutableEndpoint ep = 
+            managementContext.getRegistry().lookupEndpointFactory()
+                .createInboundEndpoint(getTestEndpointURI(), managementContext);
         ep.initialise();
         UMOInboundRouterCollection inboundRouter = new InboundRouterCollection();
         inboundRouter.addEndpoint(ep);

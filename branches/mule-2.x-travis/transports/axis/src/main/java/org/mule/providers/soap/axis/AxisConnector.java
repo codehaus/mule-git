@@ -12,6 +12,7 @@ package org.mule.providers.soap.axis;
 
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
@@ -27,13 +28,13 @@ import org.mule.providers.soap.axis.i18n.AxisMessages;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
-import org.mule.util.CollectionUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -432,38 +433,39 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             sync = receiverEndpoint.isSynchronous();
         }
 
-        UMOEndpoint serviceEndpoint = new MuleEndpoint(endpoint, true);
-        ((MuleEndpoint)serviceEndpoint).setManagementContext(managementContext);
-        serviceEndpoint.setSynchronous(sync);
-        serviceEndpoint.setName(ep.getScheme() + ":" + serviceName);
-        // set the filter on the axis endpoint on the real receiver endpoint
-        serviceEndpoint.setFilter(receiver.getEndpoint().getFilter());
-        // Remove the Axis filter now
-
+        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, managementContext);
+        builder.setSynchronous(sync);
+        builder.setName(ep.getScheme() + ":" + serviceName);
         
-        receiverEndpoint.setFilter(null);
+        // Set the transformers on the endpoint too
+        builder.setTransformers(receiver.getEndpoint().getTransformers());
+        // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+        ((MuleEndpoint) receiver.getEndpoint()).setTransformers(new LinkedList());
 
-        // set the Security filter on the axis endpoint on the real receiver endpoint
-        serviceEndpoint.setSecurityFilter(receiverEndpoint.getSecurityFilter());
+        builder.setResponseTransformers(receiver.getEndpoint().getResponseTransformers());
+        // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+        ((MuleEndpoint) receiver.getEndpoint()).setResponseTransformers(new LinkedList());
+
+        // set the filter on the axis endpoint on the real receiver endpoint
+        builder.setFilter(receiver.getEndpoint().getFilter());
+        // Remove the Axis filter now
+        // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+        ((MuleEndpoint) receiver.getEndpoint()).setFilter(null);
+
+        // set the Security filter on the axis endpoint on the real receiver
+        // endpoint
+        builder.setSecurityFilter(receiver.getEndpoint().getSecurityFilter());
         // Remove the Axis Receiver Security filter now
-        receiverEndpoint.setSecurityFilter(null);
-
-        if (!CollectionUtils.isEmpty(receiverEndpoint.getTransformers()))
-        {
-            serviceEndpoint.setTransformers(receiverEndpoint.getTransformers());
-            receiverEndpoint.setTransformers(new LinkedList());
-        }
-
-        //set transaction properties
-        if(receiverEndpoint.getTransactionConfig()!= null)
-        {
-            serviceEndpoint.setTransactionConfig(receiverEndpoint.getTransactionConfig());
-            receiverEndpoint.setTransactionConfig(null);
-        }
+        // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
+        ((MuleEndpoint) receiver.getEndpoint()).setSecurityFilter(null);
 
         // propagate properties to the service endpoint
-        serviceEndpoint.getProperties().putAll(receiverEndpoint.getProperties());
-
+        builder.setProperties(receiverEndpoint.getProperties());
+        
+        UMOImmutableEndpoint serviceEndpoint = managementContext.getRegistry()
+            .lookupEndpointFactory()
+            .createInboundEndpoint(builder, managementContext);
+        
         axisComponent.getInboundRouter().addEndpoint(serviceEndpoint);
 
     }

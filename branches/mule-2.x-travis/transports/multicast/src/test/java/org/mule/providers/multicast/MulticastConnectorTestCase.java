@@ -10,12 +10,11 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 
 import java.net.DatagramPacket;
@@ -44,7 +43,7 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
     public void testValidListener() throws Exception
     {
         UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+        UMOEndpoint endpoint = getTestEndpoint("Test", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
         UMOConnector connector = getConnector();
 
         try
@@ -70,12 +69,14 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
             // expected
         }
 
-        endpoint = new MuleEndpoint();
-        endpoint.setEndpointURI(new MuleEndpointURI("multicast://228.2.3.4:10100"));
-        connector.registerListener(component, endpoint);
+        UMOImmutableEndpoint endpoint2 = managementContext.getRegistry()
+            .lookupEndpointFactory()
+            .createOutboundEndpoint("multicast://228.2.3.4:10100", managementContext);
+
+        connector.registerListener(component, endpoint2);
         try
         {
-            connector.registerListener(component, endpoint);
+            connector.registerListener(component, endpoint2);
             fail("cannot register on the same endpointUri");
         }
         catch (Exception e)

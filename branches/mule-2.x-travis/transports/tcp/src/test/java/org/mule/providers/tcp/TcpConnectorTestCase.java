@@ -10,7 +10,6 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
@@ -42,7 +41,11 @@ public class TcpConnectorTestCase extends AbstractConnectorTestCase
     public void testValidListener() throws Exception
     {
         UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), true);
+        
+        UMOEndpoint endpoint = (UMOEndpoint) managementContext.getRegistry()
+            .lookupEndpointFactory()
+            .createInboundEndpoint(getTestEndpointURI(), managementContext);
+
         UMOConnector connector = getConnector();
 
         try

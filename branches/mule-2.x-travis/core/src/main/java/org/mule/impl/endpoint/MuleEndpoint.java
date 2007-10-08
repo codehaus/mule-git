@@ -16,14 +16,12 @@ import org.mule.impl.ManagementContextAware;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.service.TransportFactory;
 import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
@@ -39,40 +37,14 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
  */
 public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, ManagementContextAware
 {
+    private static final long serialVersionUID = 3883445445846168147L;
+    
     public static final String ALWAYS_CREATE_STRING = "ALWAYS_CREATE";
     public static final String NEVER_CREATE_STRING = "NEVER_CREATE";
 
-    /**
-     * Default constructor This is required right now for the Mule digester to set
-     * the properties through the classes mutators
-     */
-    public MuleEndpoint()
+    protected MuleEndpoint()
     {
-        super(null, null, null, TransformerUtils.UNDEFINED, ENDPOINT_TYPE_SENDER_AND_RECEIVER, 0, null, null);
-    }
-
-    /**
-     * 
-     * @param endpoint
-     * @throws UMOException
-     * @deprecated MULE-2270
-     */
-    public MuleEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
-    {
-        super(endpoint);
-        this.setManagementContext(endpoint.getManagementContext());
-    }
-
-    /**
-     * 
-     * @param uri
-     * @param receiver
-     * @throws UMOException
-     * @deprecated MULE-2270
-     */
-    public MuleEndpoint(String uri, boolean receiver) throws UMOException
-    {
-        super(uri, receiver);
+        super();
     }
 
     public void setEndpointURI(UMOEndpointURI endpointUri) throws EndpointException
