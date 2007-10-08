@@ -53,7 +53,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
      *            chosen carefully according to the expected message rate to prevent
      *            OutOfMemory conditions.
      * @see IdempotentReceiver#createMessageIdStore()
-     * @throws {@link IllegalArgumentException} if negative values are specified for
+     * @throws {@link IllegalArgumentException} if non-positive values are specified for
      *             <code>entryTTL</code> or <code>expirationInterval</code>
      */
     public IdempotentInMemoryMessageIdStore(String name, int maxEntries, int entryTTL, int expirationInterval)
@@ -62,18 +62,18 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
         this.store = new ConcurrentSkipListMap();
         this.maxEntries = (maxEntries > 0 ? maxEntries : Integer.MAX_VALUE);
 
-        if (entryTTL < 0)
+        if (entryTTL <= 0)
         {
             throw new IllegalArgumentException(CoreMessages.propertyHasInvalidValue("entryTTL",
-                new Integer(-1)).toString());
+                new Integer(entryTTL)).toString());
         }
 
         this.entryTTL = entryTTL;
 
-        if (expirationInterval < 0)
+        if (expirationInterval <= 0)
         {
             throw new IllegalArgumentException(CoreMessages.propertyHasInvalidValue("expirationInterval",
-                new Integer(-1)).toString());
+                new Integer(expirationInterval)).toString());
         }
 
         this.expirationInterval = expirationInterval;
