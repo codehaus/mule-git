@@ -7,6 +7,3 @@ org.mule.examples.loanbroker.esn.AxisLoanBrokerSynchronousFunctionalTestCase
 org.mule.examples.loanbroker.esn.XFireLoanBrokerAsynchronousFunctionalTestCase
 org.mule.examples.loanbroker.esn.XFireLoanBrokerSynchronousFunctionalTestCase
 
-# They all started failing now :-(
-org.mule.examples.loanbroker.esn.AxisLoanBrokerAsynchronousFunctionalTestCase
-org.mule.examples.loanbroker.esn.VMLoanBrokerAsynchronousFunctionalTestCase

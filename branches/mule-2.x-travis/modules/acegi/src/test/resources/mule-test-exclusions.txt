@@ -1,4 +1,3 @@
-# TODO TC Something seems to have gotten out-of-synch in the BDPs
-org.mule.extras.acegi.AcegiAuthenticationNamespaceHandlerTestCase 
-org.mule.extras.acegi.SecureHttpPollingFunctionalTestCase
-org.mule.extras.acegi.HttpFilterFunctionalTestCase
+#
+# Test cases listed in this file are not run.
+#
