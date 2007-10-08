@@ -16,6 +16,7 @@ import org.mule.config.MuleConfiguration;
 import org.mule.config.QueueProfile;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.FailedToQueueEventException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.model.AbstractComponent;
@@ -30,7 +31,7 @@ import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;
 import org.mule.umo.manager.UMOWorkManager;
-import org.mule.util.queue.QueueManager;
+import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 
 import java.util.NoSuchElementException;
@@ -48,10 +49,6 @@ import javax.resource.spi.work.WorkManager;
  */
 public class SedaComponent extends AbstractComponent implements Work, WorkListener
 {
-    // Use setPoolingProfile(), setQueueProfile() instead.
-//    public static final String QUEUE_PROFILE_PROPERTY = "queueProfile";
-//    public static final String POOLING_PROFILE_PROPERTY = "poolingProfile";
-
     /**
      * Serial version/
      */
@@ -59,14 +56,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
     protected UMOWorkManager workManager;
 
-    protected String descriptorQueueName;
-
     /**
      * The time out used for taking from the Seda Queue.
      */
     protected int queueTimeout = 0;
-
-    protected QueueManager queueManager;
 
     /**
      * The threading profile to use for this component. If this is not set a default
@@ -112,11 +105,13 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             queueProfile = ((SedaModel) model).getQueueProfile();
         }
 
-        queueManager = managementContext.getQueueManager();
-
         try
         {
-            // Setup event Queue (used for VM execution)
+            if (name == null)
+            {
+                throw new InitialisationException(MessageFactory.createStaticMessage("Component has no name to identify it"), this);
+            }
+            // Setup event Queue (used for VM execution).  The queue has the same name as the component.
             queueProfile.configureQueue(name, managementContext.getQueueManager());
         }
         catch (InitialisationException e)
@@ -253,8 +248,14 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
     public int getQueueSize()
     {
-        QueueSession queueSession = managementContext.getQueueManager().getQueueSession();
-        return queueSession.getQueue(name).size();
+        QueueSession session = managementContext.getQueueManager().getQueueSession();
+        Queue queue = session.getQueue(name);
+        if (queue == null)
+        {
+            logger.warn(new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for component " + name), this));
+            return -1;
+        }
+        return queue.size();
     }
 
     /**
@@ -279,7 +280,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                 // before stopping
                 if (stopping.get())
                 {
-                    if (queueSession == null || queueSession.getQueue(descriptorQueueName).size() == 0)
+                    if (queueSession == null || getQueueSize() <= 0)
                     {
                         stopping.set(false);
                         break;
@@ -370,13 +371,31 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
     protected void enqueue(UMOEvent event) throws Exception
     {
         QueueSession session = managementContext.getQueueManager().getQueueSession();
-        session.getQueue(descriptorQueueName).put(event);
+        Queue queue = session.getQueue(name);
+        if (queue == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for component " + name), this);
+        }
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Component " + name + " putting event on queue " + name + ": " + event);
+        }
+        queue.put(event);
     }
 
     protected UMOEvent dequeue() throws Exception
     {
-        QueueSession queueSession = queueManager.getQueueSession();
-        return (UMOEvent) queueSession.getQueue(descriptorQueueName).poll(queueTimeout);
+        QueueSession session = managementContext.getQueueManager().getQueueSession();
+        Queue queue = session.getQueue(name);
+        if (queue == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for component " + name), this);
+        }
+        if (logger.isDebugEnabled())
+        {
+            //logger.debug("Component " + name + " polling queue " + name + ", timeout = " + queueTimeout);
+        }
+        return (UMOEvent) queue.poll(queueTimeout);
     }
 
     public void workAccepted(WorkEvent event)
@@ -449,26 +468,6 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
     public void setQueueProfile(QueueProfile queueProfile)
     {
         this.queueProfile = queueProfile;
-    }
-
-    public String getDescriptorQueueName()
-    {
-        return descriptorQueueName;
-    }
-
-    public void setDescriptorQueueName(String descriptorQueueName)
-    {
-        this.descriptorQueueName = descriptorQueueName;
-    }
-
-    public QueueManager getQueueManager()
-    {
-        return queueManager;
-    }
-
-    public void setQueueManager(QueueManager queueManager)
-    {
-        this.queueManager = queueManager;
     }
 
     public int getQueueTimeout()
