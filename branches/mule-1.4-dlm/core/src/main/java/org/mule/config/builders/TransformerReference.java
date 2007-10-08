@@ -82,8 +82,9 @@ public class TransformerReference
         catch (Exception e)
         {
             throw new InitialisationException(
-                CoreMessages.cannotSetPropertyOnObjectWithParamType(propertyName, 
-                    object.getClass(), trans.getClass()), e);
+                CoreMessages.cannotSetPropertyOnObjectWithParamType(propertyName,
+                    object.getClass(),
+                    trans == null ? null : trans.getClass()), e);
         }
     }
 }

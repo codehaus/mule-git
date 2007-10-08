@@ -35,6 +35,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.Remote;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.naming.NamingException;
 
@@ -241,31 +244,16 @@ public class RmiConnector extends AbstractJndiConnector
         Class[] argTypes;
 
         // Parse method args
-
         Object args = event.getMessage().getProperty(RmiConnector.PROPERTY_SERVICE_METHOD_PARAM_TYPES);
-
-        String argumentString = null;
-
         if (args instanceof List)
         {
-            List arguments = (List) args;
-            argumentString = (String) arguments.get(0);
+            // MULE-1794 this used to take the first list entry as a string, splitting it
+            // as for String below.
+            argTypes = stringsToClasses((List) args);
         }
-        else if(args instanceof String)
+        else if (args instanceof String)
         {
-            argumentString = (String)args;
-        }
-
-        if (null != argumentString)
-        {
-            String[] split = argumentString.split(",");
-
-            argTypes = new Class[split.length];
-            for (int i = 0; i < split.length; i++)
-            {
-                argTypes[i] = ClassUtils.loadClass(split[i].trim(), getClass());
-
-            }
+            argTypes = stringsToClasses(Arrays.asList(((String) args).split(",")));
         }
         else
         {
@@ -286,6 +274,18 @@ public class RmiConnector extends AbstractJndiConnector
         {
             throw e;
         }
+    }
+
+    protected Class[] stringsToClasses(Collection strings) throws ClassNotFoundException
+    {
+        Class[] classes = new Class[strings.size()];
+        int index = 0;
+        Iterator string = strings.iterator();
+        while (string.hasNext())
+        {
+            classes[index++] = ClassUtils.loadClass((String) string.next(), getClass());
+        }
+        return classes;
     }
 
     protected Object getRemoteRef(UMOImmutableEndpoint endpoint)

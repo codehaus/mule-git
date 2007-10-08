@@ -426,8 +426,10 @@ public class JmxAgent implements UMOAgent
                     final String rawName = mBean.getName();
                     final String name = jmxSupport.escape(rawName);
                     if (logger.isInfoEnabled()) {
-                        logger.info("Attempting to register service with name: " + jmxSupport.getDomainName()
-                                + ":type=org.mule.umo.UMOEndpoint,name=" + name);
+                        logger.info("Attempting to register service with name: " + jmxSupport.getDomainName() +
+                                                    ":type=org.mule.Endpoint,component=" +
+                                                    jmxSupport.escape(mBean.getComponentName()) +
+                                                    ",name=" + name);
                     }
                     ObjectName on = jmxSupport.getObjectName(
                                                     jmxSupport.getDomainName() +

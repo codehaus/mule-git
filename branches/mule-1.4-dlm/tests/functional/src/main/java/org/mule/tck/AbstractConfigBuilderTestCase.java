@@ -228,8 +228,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         int componentMaxBufferSize = 6;
         int componentMaxThreadsActive = 12;
         int componentMaxThreadsIdle = 6;
-        // TODO HH: MULE-2289 in progress
-        // int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
+        int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
 
         // test default config
         ThreadingProfile tp = MuleManager.getConfiguration().getDefaultThreadingProfile();
@@ -250,23 +249,25 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         // test that unset values retain a default value
         AbstractConnector c = (AbstractConnector)MuleManager.getInstance().lookupConnector("dummyConnector");
         tp = c.getDispatcherThreadingProfile();
+        // this value is configured
         assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
+        // these values are inherited
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
-        // TODO HH: MULE-2289 in progress
-        // assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
-        // assertEquals(defaultPoolExhaustedAction, tp.getPoolExhaustedAction());
-        // assertEquals(defaultThreadTTL, tp.getThreadTTL());
+        assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
+        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test per-component values
         MuleDescriptor descriptor = (MuleDescriptor)MuleManager.getInstance().lookupModel("main").getDescriptor(
             "appleComponent2");
         tp = descriptor.getThreadingProfile();
+        // these values are configured
         assertEquals(componentMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(componentMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(componentMaxThreadsIdle, tp.getMaxThreadsIdle());
-        // TODO HH: MULE-2289 in progress
-        // assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
-        // assertEquals(defaultThreadTTL, tp.getThreadTTL());
+        assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
+        // this value is inherited
+        assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 
     public void testPoolingConfig()
