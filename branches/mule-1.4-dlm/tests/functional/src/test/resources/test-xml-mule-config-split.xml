@@ -15,7 +15,9 @@
                 <endpoint name="nonTransactedInboundEndpoint" address="test://endpoint.in3"/>
                 <endpoint name="transactedInboundEndpoint" createConnector="NEVER_CREATE" type="receiver"
                           address="test://endpoint.in2">
-                    <transaction factory="org.mule.tck.testmodels.mule.TestTransactionFactory" action="ALWAYS_BEGIN"/>
+                    <transaction action="ALWAYS_BEGIN">
+                        <factory className="org.mule.tck.testmodels.mule.TestTransactionFactory"/>
+                    </transaction>
                     <properties>
                         <property name="testEndpointProperty" value="Prop1"/>
                     </properties>

@@ -70,7 +70,7 @@ public class TransformerCloningTestCase extends AbstractTransformerTestCase
         assertNotSame("sourceTypes", t1.sourceTypes, t2.sourceTypes);
         assertEquals("sourceTypes", t1.sourceTypes, t2.sourceTypes);
 
-        // TODO HH: is this correct? for now AbstractTransformer.clone() keeps the reference
+        // TODO is this correct? for now AbstractTransformer.clone() keeps the reference
         assertSame("endpoint", t1.endpoint, t2.endpoint);
 
         // nextTransformer must be a copy of the entire chain!

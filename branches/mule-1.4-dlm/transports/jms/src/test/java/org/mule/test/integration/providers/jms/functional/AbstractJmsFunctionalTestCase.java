@@ -35,7 +35,7 @@ import org.apache.activemq.command.ActiveMQQueue;
 public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 {
 
-    public static final String DEFAULT_BROKER_URL = "vm://localhost";
+    public static final String DEFAULT_BROKER_URL = "vm://localhost?broker.persistent=false&broker.useJmx=false";
     public static final String DEFAULT_INPUT_MESSAGE = "INPUT MESSAGE";
     public static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
     public static final String DEFAULT_INPUT_MQ_QUEUE_NAME = "in";

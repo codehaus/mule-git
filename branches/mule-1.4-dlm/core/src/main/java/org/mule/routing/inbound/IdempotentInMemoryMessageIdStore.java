@@ -23,7 +23,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.helpers.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-// TODO MULE-1300 add javadoc
+/**
+ * <code>IdempotentInMemoryMessageIdStore</code> implements an optionally bounded
+ * in-memory store for message IDs with periodic expiry of old entries. The bounded size
+ * is a <i>soft</i> limit and only enforced periodically by the expiry process; this
+ * means that the store may temporarily exceed its maximum size between expiry runs, but
+ * will eventually shrink to its configured size.
+ */
 public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStore
 {
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -31,25 +37,46 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
     protected final ScheduledThreadPoolExecutor scheduler;
     protected final int maxEntries;
     protected final int entryTTL;
+    protected final int expirationInterval;
 
+    /**
+     * Default constructor for IdempotentInMemoryMessageIdStore.
+     * 
+     * @param name a name for this store, can be used for logging and identification
+     *            purposes
+     * @param maxEntries the maximum number of entries that this store keeps around.
+     *            Specify <em>-1</em> if the store is supposed to be "unbounded".
+     * @param entryTTL the time-to-live for each message ID, specified in seconds, or
+     *            <em>-1</em> for entries that should never expire. <b>DO NOT</b>
+     *            combine this with an unbounded store!
+     * @param expirationInterval the interval for periodic bounded size enforcement and
+     *            entry expiration, specified in seconds. Arbitrary positive values
+     *            between 1 second and several hours or days are possible, but should be
+     *            chosen carefully according to the expected message rate to prevent
+     *            OutOfMemory conditions.
+     * @see IdempotentReceiver#createMessageIdStore()
+     * @throws {@link IllegalArgumentException} if non-positive values are specified for
+     *             <code>expirationInterval</code>
+     */
     public IdempotentInMemoryMessageIdStore(String name, int maxEntries, int entryTTL, int expirationInterval)
     {
         super();
         this.store = new ConcurrentSkipListMap();
-        this.maxEntries = (maxEntries <= 0 ? Integer.MAX_VALUE : maxEntries);
+        this.maxEntries = (maxEntries >= 0 ? maxEntries : Integer.MAX_VALUE);
         this.entryTTL = entryTTL;
 
-        if (expirationInterval > 0)
+        if (expirationInterval <= 0)
         {
-            this.scheduler = new ScheduledThreadPoolExecutor(1);
-            scheduler.setThreadFactory(new DaemonThreadFactory(name + "-IdempotentMessageIdStore"));
-            scheduler.scheduleWithFixedDelay(new Expirer(), expirationInterval, expirationInterval,
-                TimeUnit.SECONDS);
+            throw new IllegalArgumentException(CoreMessages.propertyHasInvalidValue("expirationInterval",
+                new Integer(expirationInterval)).toString());
         }
-        else
-        {
-            scheduler = null;
-        }
+
+        this.expirationInterval = expirationInterval;
+
+        this.scheduler = new ScheduledThreadPoolExecutor(1);
+        scheduler.setThreadFactory(new DaemonThreadFactory(name + "-IdempotentMessageIdStore"));
+        scheduler.scheduleWithFixedDelay(new Expirer(), this.expirationInterval, this.expirationInterval,
+            TimeUnit.SECONDS);
     }
 
     public boolean containsId(Object id) throws IllegalArgumentException, Exception
@@ -71,7 +98,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
         }
 
         // this block is unfortunately necessary to counter a possible race condition
-        // between the nonatomic calls to containsId and multiple storeId calls, which are
+        // between multiple nonatomic calls to containsId/storeId, which are
         // only necessary because of the nonatomic calls to isMatch/process by
         // InboundRouterCollection.route().
         synchronized (store)
@@ -115,7 +142,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
         // expire further if entry TTLs are enabled
         if (entryTTL > 0 && currentSize != 0)
         {
-            long now = Utils.nanoTime();
+            final long now = Utils.nanoTime();
             int expiredEntries = 0;
             Map.Entry oldestEntry;
 
@@ -124,8 +151,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
                 Long oldestKey = (Long) oldestEntry.getKey();
                 long oldestKeyValue = oldestKey.longValue();
 
-                // TODO HH: this is obviously wrong since the units get mixed up - need to normalize
-                if ((now - oldestKeyValue) > entryTTL)
+                if (TimeUnit.NANOSECONDS.toSeconds(now - oldestKeyValue) >= entryTTL)
                 {
                     store.remove(oldestKey);
                     expiredEntries++;

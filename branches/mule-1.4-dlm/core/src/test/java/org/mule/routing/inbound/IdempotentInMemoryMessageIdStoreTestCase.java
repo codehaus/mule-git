@@ -17,6 +17,7 @@ public class IdempotentInMemoryMessageIdStoreTestCase extends AbstractMuleTestCa
 
     public void testTimedExpiry() throws Exception
     {
+        // entryTTL=3 and expiryInterval=1 will cause background expiry
         IdempotentInMemoryMessageIdStore store = new IdempotentInMemoryMessageIdStore("timed", 2, 3, 1);
 
         // store entries in quick succession
@@ -40,12 +41,20 @@ public class IdempotentInMemoryMessageIdStoreTestCase extends AbstractMuleTestCa
 
     public void testMaxSize() throws Exception
     {
-        IdempotentInMemoryMessageIdStore store = new IdempotentInMemoryMessageIdStore("non-timed", 3, -1, -1);
+        // entryTTL=-1 means we will have to expire manually
+        IdempotentInMemoryMessageIdStore store = new IdempotentInMemoryMessageIdStore("bounded", 3, -1, 1);
 
         assertTrue(store.storeId("1"));
         assertTrue(store.storeId("2"));
         assertTrue(store.storeId("3"));
 
+        assertTrue(store.containsId("1"));
+        assertTrue(store.containsId("2"));
+        assertTrue(store.containsId("3"));
+
+        // sleep a bit to make sure that entries are not expired, even though the expiry
+        // thread is running every second
+        Thread.sleep(3000);
         assertTrue(store.containsId("1"));
         assertTrue(store.containsId("2"));
         assertTrue(store.containsId("3"));
