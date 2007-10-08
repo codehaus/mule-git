@@ -45,8 +45,10 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
      * @param name a name for this store, can be used for logging and identification
      *            purposes
      * @param maxEntries the maximum number of entries that this store keeps around.
-     *            Specify <em>-1</em> if the store is supposed to be unbounded.
-     * @param entryTTL the time-to-live for each message ID, specified in seconds
+     *            Specify <em>-1</em> if the store is supposed to be "unbounded".
+     * @param entryTTL the time-to-live for each message ID, specified in seconds, or
+     *            <em>-1</em> for entries that should never expire. <b>DO NOT</b>
+     *            combine this with an unbounded store!
      * @param expirationInterval the interval for periodic bounded size enforcement and
      *            entry expiration, specified in seconds. Arbitrary positive values
      *            between 1 second and several hours or days are possible, but should be
@@ -54,20 +56,13 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
      *            OutOfMemory conditions.
      * @see IdempotentReceiver#createMessageIdStore()
      * @throws {@link IllegalArgumentException} if non-positive values are specified for
-     *             <code>entryTTL</code> or <code>expirationInterval</code>
+     *             <code>expirationInterval</code>
      */
     public IdempotentInMemoryMessageIdStore(String name, int maxEntries, int entryTTL, int expirationInterval)
     {
         super();
         this.store = new ConcurrentSkipListMap();
-        this.maxEntries = (maxEntries > 0 ? maxEntries : Integer.MAX_VALUE);
-
-        if (entryTTL <= 0)
-        {
-            throw new IllegalArgumentException(CoreMessages.propertyHasInvalidValue("entryTTL",
-                new Integer(entryTTL)).toString());
-        }
-
+        this.maxEntries = (maxEntries >= 0 ? maxEntries : Integer.MAX_VALUE);
         this.entryTTL = entryTTL;
 
         if (expirationInterval <= 0)
