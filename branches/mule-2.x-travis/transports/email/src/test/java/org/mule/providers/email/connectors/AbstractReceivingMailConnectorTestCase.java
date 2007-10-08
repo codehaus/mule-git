@@ -83,8 +83,11 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         component.setInboundRouter(inboundRouter);
         managementContext.getRegistry().registerComponent(component, managementContext);
         managementContext.applyLifecycle(component);
-        managementContext.start();
-        
+        if (managementContext.isStarted() == false)
+        {
+            managementContext.start();
+        }
+            
         logger.debug("waiting for count down");
         assertTrue(countDown.await(WAIT_PERIOD_MS, TimeUnit.MILLISECONDS));
     }
