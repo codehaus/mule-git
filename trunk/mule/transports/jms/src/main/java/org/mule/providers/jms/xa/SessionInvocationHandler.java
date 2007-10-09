@@ -130,9 +130,10 @@ public class SessionInvocationHandler implements InvocationHandler
         }
 
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
-        if (transaction == null && logger.isDebugEnabled())
+        if (transaction == null)
         {
-            logger.debug("Mule transaction is null, but enlist method is called");
+            // TODO AP: This could really be a foul, throw exception?
+            logger.warn("Mule transaction is null, but enlist method is called");
         }
         if (transaction != null && !(transaction instanceof XaTransaction))
         {
