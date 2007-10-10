@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+	   xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+	   xmlns:wssecurity="http://www.mulesource.org/schema/mule/wssecurity/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
+	   http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd
+	   http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd
+  	   http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd">
+
+    <configuration serverId="someId" defaultSynchronousEndpoints="false"/>
+
+    <spring:bean id="passwords" class="org.mule.extras.wssecurity.callbackhandlers.PasswordContainer">
+        <spring:constructor-arg>
+            <spring:props>
+                <spring:prop key="mulealias">mulepassword</spring:prop>
+                <spring:prop key="gooduser">goodUserPassword</spring:prop>
+            </spring:props>
+        </spring:constructor-arg>
+    </spring:bean>
+
+    <xfire:connector name="SecuredConnector">
+        <xfire:client-out-handler>org.codehaus.xfire.util.dom.DOMOutHandler</xfire:client-out-handler>
+        <xfire:client-out-handler>org.codehaus.xfire.security.wss4j.WSS4JOutHandler</xfire:client-out-handler>
+    </xfire:connector>
+
+    <xfire:connector name="UnsecuredConnector"/>
+
+    <model name="test">
+
+        <service name="SecureBridge">
+            <inbound-router>
+                <inbound-endpoint address="vm://secured"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint name="secured" address="xfire:http://localhost:64282/SecuredWs?method=echo"
+                                       connector-ref="SecuredConnector"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="SecuredWS">
+            <echo-component/>
+            <inbound-router>
+                <inbound-endpoint address="xfire:http://localhost:64282" connector-ref="SecuredConnector">
+                    <wssecurity:security-filter decryptionFile="in-encrypted-security.properties"
+                                                signatureFile="in-signed-security.properties"/>
+                </inbound-endpoint>
+            </inbound-router>
+        </service>
+
+        <service name="UnSecureBridge">
+            <inbound-router>
+                <inbound-endpoint address="vm://unsecured"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="xfire:http://localhost:64284/UnSecuredWs?method=echo"
+                                       connector-ref="UnsecuredConnector"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="UnsecuredWS">
+            <echo-component/>
+            <inbound-router>
+                <inbound-endpoint address="xfire:http://localhost:64284" connector-ref="UnsecuredConnector"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+</mule>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
+               http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+
+    <description>
+    The hello sample application has two components -
+    1. The Greeter component that adds a greeting to the event it receives
+    2. The ChitChater component that adds some additional conversation to the event it receives
+    An event is triggered by input through the system console and the outbound event is
+    aslo written out through the system console.
+    This configuration also demonstrates user and system error handling. User error handling returns
+    an error message to the end user. System error handling logs errors.
+    </description>
+
+    <!--
+        The system stream connector is used to send and receive information via the
+        System.in and System.out. Note this connector is only really useful for testing
+        purposes.
+        promptMessage - is what is written to the console
+        messageDelayTime - is the time in milliseconds before the user is prompted again.
+        These properties are set as bean properties on the connector.
+    -->
+    <stdio:connector name="SystemStreamConnector"
+        promptMessageCode="3"
+        resourceBundle="messages.hello-example-messages"
+        messageDelayTime="1000"/>
+
+    <!--
+        All transformers must be defined here.  For this example we have two transformers
+        used to transform the inbound events for the Greeter and Chatter components into
+        objects they understand.  The entryPointResolver configured on the Model below will
+        determine which method to call on our components based on the return types of these
+        transformers.
+    -->
+    <custom-transformer name="StdinToNameString" class="org.mule.samples.hello.StdinToNameString"/>
+    <custom-transformer name="NameStringToChatString" class="org.mule.samples.hello.NameStringToChatString"/>
+    <custom-transformer name="ChatStringToString" class="org.mule.samples.hello.ChatStringToString"/>
+    <custom-transformer name="ExceptionToString" class="org.mule.samples.hello.ExceptionToString"/>
+
+    <!--
+        An interceptor is a piece of code that can be configued to execute
+        before and/or after an event is received for a component.
+        You can define a stack of interceptors that will be executed in sequence.
+        You can then configure the stack on your components.
+    -->
+    <!-- TODO: MULE-2285 - How does this work in 2.0?
+    <interceptor-stack name="default">
+        <interceptor className="org.mule.interceptors.LoggingInterceptor"/>
+        <interceptor className="org.mule.interceptors.TimerInterceptor"/>
+    </interceptor-stack>
+    -->
+    <!--
+        The Mule model initialises and manages your UMO components
+    -->
+    <model name="helloSample">
+        <!--
+            A Mule descriptor defines all the necessary information about how your components will
+            interact with the framework, other components in the system and external sources.
+            Please refer to the Configuration Guide for a full description of all the parameters.
+        -->
+        <service name="GreeterUMO">
+            <component class="org.mule.samples.hello.Greeter"/>
+            
+            <inbound-router>
+                <inbound-endpoint address="stdio://System.in" transformer-ref="StdinToNameString"/>
+            </inbound-router>
+            
+            <outbound-router>
+                <filtering-router>
+                    <outbound-endpoint address="vm://chitchatter"/>
+                    <payload-type-filter expectedType="org.mule.samples.hello.NameString"/>
+                </filtering-router>
+                
+                <filtering-router>
+                    <outbound-endpoint address="vm://userErrorHandler"/>
+                    <payload-type-filter expectedType="java.lang.Exception"/>
+                </filtering-router>
+            </outbound-router>
+
+            <!--
+            Here we tell this component to use the interceptor stack defined above
+            -->
+            <!-- TODO: MULE-2285 - How does this work in 2.0?
+            <interceptor name="default"/>
+            -->
+            
+            <!-- Route unexpected errors to separate error handler -->
+            <default-component-exception-strategy>
+                <outbound-endpoint address="vm://systemErrorHandler"/>
+            </default-component-exception-strategy>
+        </service>
+
+        <service name="ChitChatUMO">
+            <component class="org.mule.samples.hello.ChitChatter"/>
+
+            <inbound-router>
+                <inbound-endpoint address="vm://chitchatter" transformer-ref="NameStringToChatString"/>
+            </inbound-router>
+                
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="stdio://System.out" transformer-ref="ChatStringToString" />
+                </outbound-pass-through-router>
+            </outbound-router>
+
+            <!-- TODO: MULE-2285 - How does this work in 2.0?                
+            <interceptor name="default"/>
+            -->
+        </service>
+        
+        <!-- This error handler returns user error messages to caller. Errors could also be routed elsewhere,
+            e.g. into an error file, send via email to a list, stored in a database, etc. -->
+        <service name="UserErrorHandler">
+            <inbound-router>
+                <inbound-endpoint address="vm://userErrorHandler" transformer-ref="ExceptionToString"/>
+                <forwarding-router/>
+            </inbound-router>
+            
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="stdio://System.out"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+                
+        <!-- Handle any unexpected errors. Errors could also be routed elsewhere,
+            e.g. into an error file, send via email to a list, stored in a database, etc. -->
+        <service name="SystemErrorHandler">
+            <inbound-router>
+                <inbound-endpoint address="vm://systemErrorHandler"/>
+                <forwarding-router/>
+            </inbound-router>
+                
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="stdio://System.err"/>
+                </outbound-pass-through-router>
+            </outbound-router>            
+        </service>        
+    </model>
+
+</mule>
