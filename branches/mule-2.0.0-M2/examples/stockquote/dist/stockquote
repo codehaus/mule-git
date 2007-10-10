@@ -24,10 +24,9 @@ export MULE_LIB
 
 echo "(make sure you have configured your HTTP proxy if behind a firewall - see README.txt)"
 echo
-echo "The Stock Quote example is available in three variations:"
+echo "The Stock Quote example is available in two variations:"
 echo "  1. REST"
-echo "  2. WSDL"
-echo "  3. SOAP"
+echo "  2. SOAP"
 echo "Select the one you wish to execute and press Enter..."
 read i
 
@@ -40,9 +39,6 @@ if [ 1 = $i ]
 then
     exec "$MULE_BASE/bin/mule" -config "stdio-config.xml,stockquote-rest-config.xml"
 elif [ 2 = $i ]
-then
-    exec "$MULE_BASE/bin/mule" -config "stdio-config.xml,stockquote-wsdl-config.xml"
-elif [ 3 = $i ]
 then
     exec "$MULE_BASE/bin/mule" -config "stdio-config.xml,stockquote-soap-config.xml"
 fi
