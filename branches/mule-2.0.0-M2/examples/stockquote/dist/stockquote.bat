@@ -16,10 +16,5 @@ ECHO   1. REST
 ECHO   2. SOAP
 SET /P Choice=Select the one you wish to execute and press Enter...
 
-REM Use the SpringConfigurationBuilder because the MuleXmlConfigurationBuilder (Commons Digester) has issues 
-REM when merging config files.
-REM Note: We can't use it for stockquote-soap-config.xml, because Spring chokes on the line:
-REM   <property name="soapAction" value="${methodNamespace}${method}"/>
-
 IF '%Choice%'=='1' call "%MULE_BASE%\bin\mule.bat" -config "stdio-config.xml,stockquote-rest-config.xml"
 IF '%Choice%'=='2' call "%MULE_BASE%\bin\mule.bat" -config "stdio-config.xml,stockquote-soap-config.xml"
