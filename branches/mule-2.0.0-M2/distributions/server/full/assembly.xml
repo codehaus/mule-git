@@ -96,6 +96,8 @@ Assembly descriptor for the full Mule distribution.
             <exclude>**/*.iml</exclude>
             <exclude>**/*.ipr</exclude>
             <exclude>**/*.iws</exclude>
+            <exclude>voipservice/**</exclude>
+            <exclude>webapp/**</exclude>
         </excludes>
     </fileSet>
 
