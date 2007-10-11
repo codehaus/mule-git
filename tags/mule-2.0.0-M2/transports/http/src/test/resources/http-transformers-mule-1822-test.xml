@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd">
+
+    <endpoint name="base" address="http://localhost:60198" synchronous="true"/>
+    <endpoint name="response" address="http://localhost:60199" synchronous="true"/>
+    <endpoint name="both" address="http://localhost:60200" synchronous="true"/>
+
+    <custom-transformer name="appendString" class="org.mule.tck.functional.StringAppendTestTransformer"/>
+
+    <custom-transformer name="appendString2" class="org.mule.tck.functional.StringAppendTestTransformer">
+        <spring:property name="message" value=" transformed 2"/>
+    </custom-transformer>
+
+    <custom-transformer name="appendResponse" class="org.mule.tck.functional.StringAppendTestTransformer">
+        <spring:property name="message" value=" response"/>
+    </custom-transformer>
+
+    <custom-transformer name="appendResponse2" class="org.mule.tck.functional.StringAppendTestTransformer">
+        <spring:property name="message" value=" response 2"/>
+    </custom-transformer>
+
+
+    <!-- first, the simple two service model we use in all cases, with no additional
+         transformers -->
+
+    <model name="baseModel">
+
+        <service name="baseService1">
+            <inbound-router>
+                <inbound-endpoint ref="base"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo1" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="baseService2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo1" synchronous="true"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+
+    <!-- add reponse transformers to the base model should make a difference -->
+
+    <model name="responseModel">
+
+        <service name="responseService1">
+            <inbound-router>
+                <inbound-endpoint ref="response" responseTransformer-ref="appendResponse"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo2" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="responseService2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo2" synchronous="true" responseTransformer-ref="appendResponse2"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+
+    <!-- grand finale - innies and outies together! -->
+
+    <model name="bothModel">
+
+        <service name="bothService1">
+            <inbound-router>
+                <inbound-endpoint ref="both" transformer-ref="appendString" responseTransformer-ref="appendResponse"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo3" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="bothService2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo3" synchronous="true" transformer-ref="appendString2"
+                                  responseTransformer-ref="appendResponse2"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+</mule>
