@@ -36,6 +36,14 @@ public class ConnectorServiceTestCase extends AbstractMuleJmxTestCase
 
         final String query = JmxSupport.DEFAULT_JMX_DOMAIN_PREFIX + "." + configId + ":*";
         Set mbeans = mBeanServer.queryMBeans(ObjectName.getInstance(query), null);
+
+        // Expecting following mbeans to be registered:
+        // 1) org.mule.management.mbeans.StatisticsService@Mule.ConnectorServiceTest:type=org.mule.Statistics,name=AllStatistics
+        // 2) org.mule.management.mbeans.MuleConfigurationService@Mule.ConnectorServiceTest:type=org.mule.Configuration,name=GlobalConfiguration
+        // 3) org.mule.management.mbeans.ModelService@Mule.ConnectorServiceTest:type=org.mule.Model,name="_system(seda)"
+        // 4) org.mule.management.mbeans.ModelService@Mule.ConnectorServiceTest:type=org.mule.Model,name="main(seda)"
+        // 5) org.mule.management.mbeans.MuleService@Mule.ConnectorServiceTest:type=org.mule.ManagementContext,name=MuleServerInfo
+        // 6) org.mule.management.mbeans.ConnectorService@Mule.ConnectorServiceTest:type=org.mule.Connector,name="TEST.CONNECTOR"
         assertEquals("Unexpected number of components registered in the domain.", 6, mbeans.size());
 
         manager.dispose();
