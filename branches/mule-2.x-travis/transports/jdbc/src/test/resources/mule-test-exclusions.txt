@@ -1,2 +1,0 @@
-# MULE-2415
-#org.mule.providers.jdbc.JdbcSelectOnOutboundFunctionalTestCase
