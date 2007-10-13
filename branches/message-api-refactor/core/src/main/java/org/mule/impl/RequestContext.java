@@ -70,26 +70,14 @@ public final class RequestContext
      */
     public static UMOEvent setEvent(UMOEvent event)
     {
-        return internalSetEvent(newEvent(event, SAFE, false));
+        //return internalSetEvent(newEvent(event, SAFE, false));
+        return internalSetEvent(event);
     }
 
     protected static UMOEvent internalSetEvent(UMOEvent event)
     {
         currentEvent.set(event);
         return event;
-    }
-
-    /**
-     * Sets a new message payload in the RequestContext but maintains all other
-     * properties (session, endpoint, synchronous, etc.) from the previous event.
-     * Safe: use by default
-     *
-     * @param message - the new message payload
-     * @return A new copy of the message set
-     */
-    public static UMOMessage rewriteEvent(UMOMessage message)
-    {
-        return internalRewriteEvent(message, SAFE, false);
     }
 
     protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe, boolean required)
@@ -112,7 +100,7 @@ public final class RequestContext
         return message;
     }
 
-    public static UMOMessage writeResponse(UMOMessage message)
+    private static UMOMessage writeResponse(UMOMessage message)
     {
         return internalWriteResponse(message, SAFE, false);
     }
@@ -138,7 +126,7 @@ public final class RequestContext
         return message;
     }
 
-    protected static void combineProperties(UMOEvent event, UMOMessage message)
+    private static void combineProperties(UMOEvent event, UMOMessage message)
     {
         for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();)
         {
