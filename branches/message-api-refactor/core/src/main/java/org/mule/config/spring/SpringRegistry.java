@@ -10,6 +10,7 @@
 package org.mule.config.spring;
 
 import org.mule.config.MuleConfiguration;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.container.MultiContainerContext;
@@ -138,7 +139,7 @@ public class SpringRegistry extends AbstractRegistry implements ApplicationConte
         {
             throw new ServiceException(CoreMessages.failedToLoad(type + " " + name));
         }
-        return ServiceDescriptorFactory.create(type, name, props, overrides, applicationContext);
+        return ServiceDescriptorFactory.create(type, name, props, overrides, this);
     }
 
     /**
@@ -147,12 +148,7 @@ public class SpringRegistry extends AbstractRegistry implements ApplicationConte
      */
     protected synchronized MuleConfiguration getLocalConfiguration()
     {
-        Map temp = applicationContext.getBeansOfType(MuleConfiguration.class, true, false);
-        if (temp.size() > 0)
-        {
-            return (MuleConfiguration) temp.values().toArray()[temp.size() - 1];
-        }
-        return null;
+        return (MuleConfiguration)applicationContext.getBean(MuleProperties.OBJECT_MULE_CONFIGURATION);        
     }
 
 
