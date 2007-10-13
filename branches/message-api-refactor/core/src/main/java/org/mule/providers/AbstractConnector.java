@@ -10,24 +10,6 @@
 
 package org.mule.providers;
 
-import java.beans.ExceptionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.resource.spi.work.WorkEvent;
-import javax.resource.spi.work.WorkListener;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
 import org.mule.config.ThreadingProfile;
@@ -84,6 +66,25 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
+import java.beans.ExceptionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.resource.spi.work.WorkEvent;
+import javax.resource.spi.work.WorkListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
 /**
  * <code>AbstractConnector</code> provides base functionality for all connectors
@@ -177,7 +178,7 @@ public abstract class AbstractConnector
     /**
      * Defines the receiver threading profile
      */
-    private volatile ThreadingProfile receiverThreadingProfile = 
+    private volatile ThreadingProfile receiverThreadingProfile =
             RegistryContext.getConfiguration().getDefaultMessageReceiverThreadingProfile();
 
     /**
@@ -478,7 +479,7 @@ public abstract class AbstractConnector
 
         // we do not need to stop the work managers because they do no harm (will just be idle)
         // and will be reused on restart without problems.
-        
+
         this.initialised.set(false);
         // started=false already issued above right after doStop()
         if (logger.isInfoEnabled())
@@ -515,7 +516,7 @@ public abstract class AbstractConnector
         this.disposeDispatchers();
         this.disposeWorkManagers();
 
-        this.doDispose();        
+        this.doDispose();
         disposed.set(true);
 
         if (logger.isInfoEnabled())
@@ -1537,7 +1538,7 @@ public abstract class AbstractConnector
     public void dispatch(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
-        
+
         try
         {
             dispatcher = this.getDispatcher(endpoint);
@@ -1563,11 +1564,10 @@ public abstract class AbstractConnector
             .lookupInboundEndpoint(uri, getManagementContext()), timeout);
     }
 
-    public UMOMessage receive(final UMOImmutableEndpoint endpoint, long timeout) throws Exception
+    public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
     {
         UMOMessageDispatcher dispatcher = null;
         UMOMessage result = null;
-        
         try
         {
             dispatcher = this.getDispatcher(endpoint);
@@ -1613,6 +1613,7 @@ public abstract class AbstractConnector
         }
         else 
         {
+
             this.returnDispatcher(endpoint, dispatcher);
         }
     }
@@ -1620,12 +1621,11 @@ public abstract class AbstractConnector
     public UMOMessage send(UMOImmutableEndpoint endpoint, UMOEvent event) throws DispatchException
     {
         UMOMessageDispatcher dispatcher = null;
-        UMOMessage result = null;
+
         try
         {
             dispatcher = this.getDispatcher(endpoint);
-            result = dispatcher.send(event);
-            return result;
+            return dispatcher.send(event);
         }
         catch (DispatchException dex)
         {
@@ -1637,7 +1637,7 @@ public abstract class AbstractConnector
         }
         finally
         {
-            setupDispatchReturn(endpoint, dispatcher, result);
+            this.returnDispatcher(endpoint, dispatcher);
         }
     }
 
