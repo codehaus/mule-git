@@ -10,13 +10,6 @@
 
 package org.mule.transformers;
 
-import java.io.InputStream;
-import java.util.List;
-
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.NullPayload;
 import org.mule.umo.UMOMessage;
@@ -28,8 +21,17 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
+import org.mule.util.StringUtils;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
+import java.io.InputStream;
+import java.util.List;
+
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractTransformer</code> is a base class for all transformers.
@@ -81,7 +83,7 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public AbstractTransformer()
     {
-        name = this.generateTransformerName();
+
     }
 
     protected Object checkReturnClass(Object object) throws TransformerException
@@ -128,6 +130,10 @@ public abstract class AbstractTransformer implements UMOTransformer
      */
     public String getName()
     {
+        if(name==null)
+        {
+            name = this.generateTransformerName();
+        }
         return name;
     }
 
@@ -147,7 +153,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.transformers.Transformer#getReturnClass()
      */
     public Class getReturnClass()
@@ -157,7 +163,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.transformers.Transformer#setReturnClass(java.lang.String)
      */
     public void setReturnClass(Class newClass)
@@ -200,7 +206,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     /**
      * Transforms the object.
-     * 
+     *
      * @param src The source object to transform.
      * @return The transformed object
      */
@@ -208,15 +214,19 @@ public abstract class AbstractTransformer implements UMOTransformer
     {
         String encoding = null;
 
+        Object payload = src;
         UMOMessageAdapter adapter = null;
         if (src instanceof UMOMessageAdapter)
         {
             encoding = ((UMOMessageAdapter) src).getEncoding();
             adapter = (UMOMessageAdapter) src;
-            if (!isSourceTypeSupported(UMOMessageAdapter.class, true)
-                        && !isSourceTypeSupported(UMOMessage.class, true))
+            if ((!isSourceTypeSupported(UMOMessageAdapter.class, true)
+                        && !isSourceTypeSupported(UMOMessage.class, true)
+                    && !(this instanceof AbstractMessageAwareTransformer))
+                  )
             {
                 src = ((UMOMessageAdapter) src).getPayload();
+                payload = adapter.getPayload();
             }
         }
 
@@ -235,13 +245,13 @@ public abstract class AbstractTransformer implements UMOTransformer
             if (ignoreBadInput)
             {
                 logger.debug("Source type is incompatible with this transformer and property 'ignoreBadInput' is set to true, so the transformer chain will continue.");
-                return src;
+                return payload;
             }
             else
             {
                 throw new TransformerException(
-                    CoreMessages.transformOnObjectUnsupportedTypeOfEndpoint(this.getName(), 
-                        src.getClass(), endpoint), this);
+                    CoreMessages.transformOnObjectUnsupportedTypeOfEndpoint(this.getName(),
+                        payload.getClass(), endpoint), this);
             }
         }
 
@@ -249,10 +259,18 @@ public abstract class AbstractTransformer implements UMOTransformer
         {
             logger.debug("Applying transformer " + getName() + " (" + getClass().getName() + ")");
             logger.debug("Object before transform: "
-                            + StringMessageUtils.truncate(StringMessageUtils.toString(src), DEFAULT_TRUNCATE_LENGTH, false));
+                            + StringMessageUtils.truncate(StringMessageUtils.toString(payload), DEFAULT_TRUNCATE_LENGTH, false));
         }
 
-        Object result = doTransform(src, encoding);
+        Object result;
+        if(src instanceof UMOMessage && this instanceof AbstractMessageAwareTransformer)
+        {
+            result = ((AbstractMessageAwareTransformer)this).transform((UMOMessage)src, encoding);
+        }
+        else
+        {
+            result = doTransform(payload, encoding);
+        }
         if (result == null)
         {
             result = NullPayload.getInstance();
@@ -266,11 +284,11 @@ public abstract class AbstractTransformer implements UMOTransformer
 
         result = checkReturnClass(result);
 
-        if (adapter != null && isConsumed(srcCls))
-        {
-            adapter.setPayload(result);
-        }
-        
+//        if (adapter != null /** TODO DD: what is this checking for && isConsumed(srcCls)*/)
+//        {
+//            adapter.setPayload(result);
+//        }
+
         return result;
     }
 
@@ -286,7 +304,7 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.umo.transformer.UMOTransformer#setConnector(org.mule.umo.provider.UMOConnector)
      */
     public void setEndpoint(UMOImmutableEndpoint endpoint)
@@ -299,7 +317,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     /**
      * Template method were deriving classes can do any initialisation after the
      * properties have been set on this transformer
-     * 
+     *
      * @throws InitialisationException
      */
     public void initialise() throws InitialisationException
@@ -309,7 +327,15 @@ public abstract class AbstractTransformer implements UMOTransformer
 
     protected String generateTransformerName()
     {
-        return ClassUtils.getSimpleName(this.getClass());
+        String name = ClassUtils.getSimpleName(this.getClass());
+        int i = name.indexOf("To");
+        if(i > 0 && returnClass!=null)
+        {
+            String target = ClassUtils.getSimpleName(returnClass);
+            if(target.equals("byte[]")) target = "byteArray";
+            name = name.substring(0, i +2) + StringUtils.capitalize(target);
+        }
+        return name;
     }
 
     public List getSourceTypes()
