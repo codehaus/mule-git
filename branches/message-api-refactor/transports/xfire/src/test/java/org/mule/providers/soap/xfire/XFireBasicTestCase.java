@@ -12,7 +12,6 @@ package org.mule.providers.soap.xfire;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
@@ -98,7 +97,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         UMOMessage result = client.receive("http://localhost:63081/services/echoService?wsdl", 5000);
         assertNotNull(result.getPayload());
-        XMLUnit.compareXML(echoWsdl, result.getPayload().toString());
+        XMLUnit.compareXML(echoWsdl, result.getPayloadAsString());
     }
 
     protected String getConfigResources()
