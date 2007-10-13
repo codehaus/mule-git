@@ -24,6 +24,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.provider.PropertyScope;
 import org.mule.umo.security.UMOCredentials;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
@@ -235,7 +236,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
                 // don't overwrite property on the message
                 if (!ignoreProperty(prop))
                 {
-                    message.setProperty(prop, value);
+                    message.setProperty(prop, value, PropertyScope.INVOCATION);
                 }
 
                 if (logger.isDebugEnabled())
@@ -330,33 +331,15 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
 
     public Object getTransformedMessage(Class outputType) throws TransformerException
     {
-        if (transformedMessage == null)
+        message.applyTransformers(endpoint.getTransformers());
+        if(outputType==null)
         {
-            List transformers = endpoint.getTransformers();
-            if (null != transformers)
-            {
-                transformedMessage = TransformerUtils.applyAllTransformers(transformers, message).getPayload(outputType);
-            }
-            else
-            {
-                transformedMessage = message.getPayload(outputType);
-            }
+            return message.getPayload();
         }
-        else if (outputType != null && !transformedMessage.getClass().isAssignableFrom(outputType))
+        else
         {
-            Class inputCls = transformedMessage.getClass();
-            UMOTransformer transformer = RegistryContext.getRegistry()
-                .lookupTransformer(inputCls, outputType);
-            
-            if (transformer == null)
-            {
-                throw new TransformerException(
-                    CoreMessages.noTransformerFoundForMessage(inputCls, outputType));
-            }
-
-            transformedMessage = transformer.transform(transformedMessage);
+            return message.getPayload(outputType);
         }
-        return transformedMessage;
     }
     /**
      * This method will attempt to convert the transformed message into an array of
@@ -371,7 +354,8 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      */
     public byte[] getTransformedMessageAsBytes() throws TransformerException
     {
-        return (byte[]) getTransformedMessage(byte[].class);
+        Object obj =  getTransformedMessage(byte[].class);
+        return (byte[])obj;
     }
 
     /**

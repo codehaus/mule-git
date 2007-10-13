@@ -45,7 +45,6 @@ import org.mule.util.queue.QueueSession;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -249,7 +248,7 @@ public class DefaultMuleProxy implements MuleProxy
                     stat.addExecutionTime(System.currentTimeMillis() - startTime);
                 }
                 // this is the request event
-                event = RequestContext.getEvent();
+               // event = RequestContext.getEvent();
                 if (event.isStopFurtherProcessing())
                 {
                     logger.debug("Event stop further processing has been set, no outbound routing will be performed.");
@@ -321,9 +320,9 @@ public class DefaultMuleProxy implements MuleProxy
 
             if (returnMessage == null)
             {
-                returnMessage = new MuleMessage(NullPayload.getInstance(), (Map) null);
+                returnMessage = new MuleMessage(NullPayload.getInstance(), event.getMessage());
             }
-            UMOExceptionPayload exceptionPayload = RequestContext.getExceptionPayload();
+            UMOExceptionPayload exceptionPayload = returnMessage.getExceptionPayload();
             if (exceptionPayload == null)
             {
                 exceptionPayload = new ExceptionPayload(e);
@@ -457,7 +456,10 @@ public class DefaultMuleProxy implements MuleProxy
                 event = RequestContext.getEvent();
                 if (result != null && !event.isStopFurtherProcessing())
                 {
-                    descriptor.getOutboundRouter().route(result, event.getSession(), event.isSynchronous());
+                    if (descriptor.getOutboundRouter().hasEndpoints())
+                    {
+                        descriptor.getOutboundRouter().route(result, event.getSession(), event.isSynchronous());
+                    }
                 }
 
                 // process replyTo if there is one
