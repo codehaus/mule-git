@@ -25,7 +25,6 @@ import org.mule.impl.message.ExceptionPayload;
 import org.mule.impl.model.ModelHelper;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
-import org.mule.transformers.TransformerUtils;
 import org.mule.transformers.wire.WireFormat;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEvent;
@@ -217,7 +216,7 @@ public class MuleManagerComponent implements Callable, Initialisable
                 List transformers = ((AbstractConnector) endpoint.getConnector()).getDefaultInboundTransformers();
                 if (transformers != null)
                 {
-                    result = TransformerUtils.applyAllTransformers(transformers, result);
+                    result.applyTransformers(transformers);
                 }
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 wireFormat.write(out, result, getEncoding());

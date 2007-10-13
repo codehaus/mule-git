@@ -17,11 +17,11 @@ import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Given an endpoint ({@link #getTestEndpointURI()}) this waits for up to 10 seconds,
@@ -58,7 +58,7 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
                     logger.debug("woot - event received");
                     logger.debug("context: " + context);
                     logger.debug("component: " + component);
-                    assertMessageOk(context.getMessage().getPayload());
+                    assertMessageOk(context.getMessage().getOrginalPayload());
                     countDown.countDown();
                 } 
                 catch (Exception e) 

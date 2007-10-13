@@ -41,6 +41,10 @@ import org.mule.util.ClassUtils;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,9 +53,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -468,6 +469,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     protected void setTransformersIfUndefined(AtomicReference reference, List transformers)
     {
         TransformerUtils.discourageNullTransformers(transformers);
+        if(transformers.size()==0) transformers = TransformerUtils.UNDEFINED;
         reference.compareAndSet(TransformerUtils.UNDEFINED, transformers);
         updateTransformerEndpoints(reference);
     }

@@ -128,7 +128,7 @@ public abstract class AbstractReceiverServlet extends HttpServlet
             else
             {
                 httpResponse = new HttpResponse();
-                httpResponse.setBody(new ByteArrayInputStream(message.getAdapter().getPayloadAsBytes()));
+                httpResponse.setBody(new ByteArrayInputStream(message.getPayloadAsBytes()));
                 String ct = message.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE, null);
                 if(ct!=null)
                 {

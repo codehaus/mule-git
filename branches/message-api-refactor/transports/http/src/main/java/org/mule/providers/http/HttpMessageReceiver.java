@@ -21,7 +21,6 @@ import org.mule.providers.ConnectException;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.tcp.TcpMessageReceiver;
-import org.mule.transformers.TransformerUtils;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
@@ -246,7 +245,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 }
                 else
                 {
-                    response = transformResponse(tempResponse);
+                    response = transformResponse(returnMessage);
                 }
                 response.disableKeepAlive(!((HttpConnector)connector).isKeepAlive());
             }
@@ -489,8 +488,19 @@ public class HttpMessageReceiver extends TcpMessageReceiver
     
     protected HttpResponse transformResponse(Object response) throws TransformerException
     {
-        return (HttpResponse) TransformerUtils.applyAllTransformersToObject(
-                connector.getDefaultResponseTransformers(), response);
+        UMOMessage message = null;
+        if(response instanceof UMOMessage)
+        {
+            message = (UMOMessage)response;
+        }
+        else
+        {
+            message = new MuleMessage(response);
+        }
+        //TODO RM*: Maybe we can have a generic Transformer wrapper rather that using MuleMessage (or another static utility 
+        //class
+        message.applyTransformers(connector.getDefaultResponseTransformers(), HttpResponse.class);
+        return (HttpResponse) message.getPayload();
     }
     
     public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
