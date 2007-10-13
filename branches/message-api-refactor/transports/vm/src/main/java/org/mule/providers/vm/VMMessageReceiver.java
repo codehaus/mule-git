@@ -14,19 +14,21 @@ import org.mule.MuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.TransactedPollingMessageReceiver;
+import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.CreateException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 
-import java.util.List;
-
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
+import java.util.List;
 
 /**
  * <code>VMMessageReceiver</code> is a listener for events from a Mule component
@@ -108,9 +110,15 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
 
     public Object onCall(UMOEvent event) throws UMOException
     {
-        return routeMessage(
-                new MuleMessage(event.getTransformedMessage(), event.getMessage()), 
-                event.isSynchronous());
+        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        if(tx==null)
+        {
+            return routeMessage(event.getMessage(), event.isSynchronous());
+        }
+        else
+        {
+            return routeMessage(event.getMessage(), tx, true);
+        }
     }
 
     protected List getMessages() throws Exception
