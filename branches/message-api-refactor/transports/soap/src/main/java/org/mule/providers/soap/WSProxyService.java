@@ -14,7 +14,6 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.UMODescriptorAware;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.providers.NullPayload;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
@@ -26,7 +25,6 @@ import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
@@ -125,7 +123,7 @@ public class WSProxyService implements Callable, UMODescriptorAware, Initialisab
             }
 
             UMOEndpoint webServiceEndpoint = new MuleEndpoint(this.wsdlEndpoint, false);
-            UMOMessage replyWSDL = eventContext.sendEvent(new MuleMessage(NullPayload.getInstance()), webServiceEndpoint);
+            UMOMessage replyWSDL = eventContext.receiveEvent(webServiceEndpoint, eventContext.getTimeout());
 
             wsdlString = replyWSDL.getPayloadAsString();
 
