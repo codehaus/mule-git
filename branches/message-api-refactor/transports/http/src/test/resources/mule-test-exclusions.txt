@@ -7,5 +7,3 @@ org.mule.components.rest.RESTTestCase
 
 # MULE-1389
 org.mule.providers.http.issues.StreamingDownloadMule1389TestCase
-
-org.mule.providers.http.functional.HttpsFunctionalTestCase
