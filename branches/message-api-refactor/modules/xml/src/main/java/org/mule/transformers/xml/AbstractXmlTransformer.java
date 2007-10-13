@@ -51,6 +51,7 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         registerSourceType(org.w3c.dom.Document.class);
         registerSourceType(org.w3c.dom.Element.class);
         registerSourceType(InputStream.class);
+        setReturnClass(byte[].class);
     }
 
     public Source getXmlSource(Object src)

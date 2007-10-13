@@ -10,17 +10,16 @@
 
 package org.mule.transformers.simple;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.util.IOUtils;
+import org.mule.util.StringMessageUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * <code>ObjectToString</code> transformer is useful for debugging. It will return
@@ -66,46 +65,20 @@ public class ObjectToString extends AbstractTransformer
                 }
             }
         }
-        else if (src instanceof Map)
+        else if (src instanceof byte[])
         {
-            Iterator iter = ((Map) src).entrySet().iterator();
-            if (iter.hasNext())
+            try
             {
-                StringBuffer b = new StringBuffer(DEFAULT_BUFFER_SIZE);
-                while (iter.hasNext())
-                {
-                    Map.Entry e = (Map.Entry) iter.next();
-                    Object key = e.getKey();
-                    Object value = e.getValue();
-                    b.append(key.toString()).append(':').append(value.toString());
-                    if (iter.hasNext())
-                    {
-                        b.append('|');
-                    }
-                }
-                output = b.toString();
+                output = new String((byte[])src, encoding);
             }
-        }
-        else if (src instanceof Collection)
-        {
-            Iterator iter = ((Collection) src).iterator();
-            if (iter.hasNext())
+            catch (UnsupportedEncodingException e)
             {
-                StringBuffer b = new StringBuffer(DEFAULT_BUFFER_SIZE);
-                while (iter.hasNext())
-                {
-                    b.append(iter.next().toString());
-                    if (iter.hasNext())
-                    {
-                        b.append('|');
-                    }
-                }
-                output = b.toString();
+                throw new TransformerException(this, e);
             }
         }
         else
         {
-            output = src.toString();
+            output = StringMessageUtils.toString(src);
         }
 
         return output;
