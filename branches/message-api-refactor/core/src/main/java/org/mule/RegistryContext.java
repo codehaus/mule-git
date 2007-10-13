@@ -26,7 +26,7 @@ public class RegistryContext
         return registry;
     }
 
-    public static void setRegistry(Registry registry)
+    public static synchronized void setRegistry(Registry registry)
     {
         RegistryContext.registry = registry;
     }
