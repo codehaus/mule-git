@@ -23,7 +23,6 @@ import org.mule.umo.lifecycle.CreateException;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.transformers.TransformerUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -263,7 +262,8 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
                     byte[] data;
                     if (responseTransformers != null)
                     {
-                        Object response = TransformerUtils.applyAllTransformers(responseTransformers, returnMessage);
+                        returnMessage.applyTransformers(responseTransformers);
+                        Object response = returnMessage.getPayload();
                         if (response instanceof byte[])
                         {
                             data = (byte[]) response;

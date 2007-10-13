@@ -11,7 +11,7 @@
 package org.mule.providers.http;
 
 import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.providers.AbstractMessageAdapter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.apache.commons.httpclient.NameValuePair;
  * <code>HttpMessageAdapter</code> Wraps an incoming Http Request making the
  * payload and headers available as standard message adapter.
  */
-public class HttpMessageAdapter extends DefaultMessageAdapter
+public class HttpMessageAdapter extends AbstractMessageAdapter
 {
     /**
      * Serial version
@@ -32,6 +32,8 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
     private static final long serialVersionUID = -1544495479333000422L;
 
     private boolean http11 = true;
+
+    private Object message;
 
     public HttpMessageAdapter(Object message)
     {
@@ -107,11 +109,17 @@ public class HttpMessageAdapter extends DefaultMessageAdapter
         http11 = template.http11;
     }
 
+    /** @return the current message */
+    public Object getPayload()
+    {
+        return message;
+    }
+
     /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.providers.UMOMessageAdapter#getProperty(java.lang.Object)
-     */
+    * (non-Javadoc)
+    *
+    * @see org.mule.providers.UMOMessageAdapter#getProperty(java.lang.Object)
+    */
     public Object getProperty(String key)
     {
         if (HttpConstants.HEADER_KEEP_ALIVE.equals(key) || HttpConstants.HEADER_CONNECTION.equals(key))

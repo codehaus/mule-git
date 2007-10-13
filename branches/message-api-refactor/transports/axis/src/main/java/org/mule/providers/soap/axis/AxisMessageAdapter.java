@@ -11,7 +11,7 @@
 package org.mule.providers.soap.axis;
 
 import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
 import org.mule.providers.soap.i18n.SoapMessages;
 import org.mule.transformers.simple.SerializableToByteArray;
@@ -33,19 +33,20 @@ import org.apache.axis.attachments.AttachmentPart;
  * is the raw message received from the transport, but you also have access to the
  * SOAPMessage object by using <code>adapter.getSOAPMessage()</code>
  */
-public class AxisMessageAdapter extends DefaultMessageAdapter
+public class AxisMessageAdapter extends AbstractMessageAdapter
 {
     /**
      * Serial version
      */
     private static final long serialVersionUID = -923205879581370143L;
 
+    private final Object payload;
     private final SOAPMessage soapMessage;
     private UMOTransformer trans = new SerializableToByteArray();
 
     public AxisMessageAdapter(Object message) throws MessagingException
     {
-        super(message);
+        this.payload = message;
         try
         {
             MessageContext ctx = MessageContext.getCurrentContext();
@@ -102,9 +103,16 @@ public class AxisMessageAdapter extends DefaultMessageAdapter
 
     public AxisMessageAdapter(AxisMessageAdapter template)
     {
-        super(template, template);
+        super(template);
         soapMessage = template.soapMessage;
+        payload = template.payload;
         trans = template.trans;
+    }
+
+    /** @return the current message */
+    public Object getPayload()
+    {
+        return payload;
     }
 
     public SOAPMessage getSoapMessage()

@@ -13,16 +13,12 @@ package org.mule.providers.http.servlet;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.providers.AbstractMessageAdapter;
 import org.mule.providers.http.HttpConstants;
-import org.mule.providers.http.i18n.ServletMessages;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.umo.provider.UniqueIdNotSupportedException;
-import org.mule.util.SystemUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,15 +26,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-
 /**
  * <code>HttpRequestMessageAdapter</code> is a Mule message adapter for
  * javax.servletHttpServletRequest objects.
  */
 
-public class HttpRequestMessageAdapter extends DefaultMessageAdapter
+public class HttpRequestMessageAdapter extends AbstractMessageAdapter
 {
     /**
      * Serial version
@@ -77,7 +70,7 @@ public class HttpRequestMessageAdapter extends DefaultMessageAdapter
             for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
             {
                 key = (String)e.nextElement();
-                properties.put(key, request.getAttribute(key));
+                properties.setProperty(key, request.getAttribute(key));
             }
             String realKey;
             for (Enumeration e = request.getHeaderNames(); e.hasMoreElements();)
@@ -100,7 +93,6 @@ public class HttpRequestMessageAdapter extends DefaultMessageAdapter
     protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
     {
         super(template);
-        message = template.message;
         request = template.request;
     }
 
@@ -111,49 +103,12 @@ public class HttpRequestMessageAdapter extends DefaultMessageAdapter
      */
     public Object getPayload()
     {
-        return message;
+        return request;
     }
 
     public boolean isBinary()
     {
-        return message instanceof byte[];
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.umo.providers.UMOMessageAdapter#getMessageAsBytes()
-     */
-    public byte[] getPayloadAsBytes() throws Exception
-    {
-        if (isBinary())
-        {
-            return (byte[])message;
-        }
-        else
-        {
-            return ((String)message).getBytes();
-        }
-    }
-
-    /**
-     * Converts the message implementation into a String representation
-     * 
-     * @param encoding The encoding to use when transforming the message (if
-     *            necessary). The parameter is used when converting from a byte array
-     * @return String representation of the message payload
-     * @throws Exception Implementation may throw an endpoint specific exception
-     */
-    public String getPayloadAsString(String encoding) throws Exception
-    {
-        if (isBinary())
-        {
-            return new String((byte[])message, encoding);
-        }
-        else
-        {
-            return (String)message;
-        }
+        return !request.getContentType().startsWith("text");
     }
 
     /*
@@ -163,8 +118,8 @@ public class HttpRequestMessageAdapter extends DefaultMessageAdapter
      */
     private void setPayload(HttpServletRequest message) throws MessagingException
     {
-        try
-        {
+//        try
+//        {
 
             request = message;
             // String httpRequest = null;
@@ -179,46 +134,47 @@ public class HttpRequestMessageAdapter extends DefaultMessageAdapter
 
             // Check if a payload parameter has been set, if so use it
             // otherwise we'll use the request payload
-            String payloadParam = (String)request
-                .getAttribute(AbstractReceiverServlet.PAYLOAD_PARAMETER_NAME);
-
-            if (payloadParam == null)
-            {
-                payloadParam = AbstractReceiverServlet.DEFAULT_PAYLOAD_PARAMETER_NAME;
-            }
-            String payload = request.getParameter(payloadParam);
-            if (payload == null)
-            {
-                if (isText(request.getContentType()))
-                {
-                    BufferedReader reader = request.getReader();
-                    StringBuffer buffer = new StringBuffer(8192);
-                    String line = reader.readLine();
-                    while (line != null)
-                    {
-                        buffer.append(line);
-                        line = reader.readLine();
-                        if (line != null) buffer.append(SystemUtils.LINE_SEPARATOR);
-                    }
-                    this.message = buffer.toString();
-                }
-                else
-                {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
-                    IOUtils.copy(request.getInputStream(), baos);
-                    this.message = baos.toByteArray();
-                }
-            }
-            else
-            {
-                this.message = payload;
-            }
-        }
-        catch (IOException e)
-        {
-            throw new MessagingException(
-                ServletMessages.failedToReadPayload(request.getRequestURL().toString()), e);
-        }
+//            String payloadParam = (String)request
+//                .getAttribute(AbstractReceiverServlet.PAYLOAD_PARAMETER_NAME);
+//
+//            if (payloadParam == null)
+//            {
+//                payloadParam = AbstractReceiverServlet.DEFAULT_PAYLOAD_PARAMETER_NAME;
+//            }
+//
+//            String payload = request.getParameter(payloadParam);
+//            if (payload == null)
+//            {
+//                if (isText(request.getContentType()))
+//                {
+//                    BufferedReader reader = request.getReader();
+//                    StringBuffer buffer = new StringBuffer(8192);
+//                    String line = reader.readLine();
+//                    while (line != null)
+//                    {
+//                        buffer.append(line);
+//                        line = reader.readLine();
+//                        if (line != null) buffer.append(SystemUtils.LINE_SEPARATOR);
+//                    }
+//                    this.message = buffer.toString();
+//                }
+//                else
+//                {
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+//                    IOUtils.copy(request.getInputStream(), baos);
+//                    this.message = baos.toByteArray();
+//                }
+//            }
+//            else
+//            {
+//                this.message = payload;
+//            }
+//        }
+//        catch (IOException e)
+//        {
+//            throw new MessagingException(
+//                ServletMessages.failedToReadPayload(request.getRequestURL().toString()), e);
+//        }
     }
 
     public HttpServletRequest getRequest()
