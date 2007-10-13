@@ -39,7 +39,7 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
         UMOEventContext ctx = getTestEventContext(msg);
         // context clones message
         msg = ctx.getMessage();
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null, ctx);
+        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());
@@ -60,7 +60,7 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
         MuleMessage msg = new MuleMessage("message");
         msg.setProperty("addedProperty", "originalValue");
         UMOEventContext ctx = getTestEventContext(msg);
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null, ctx);
+        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());
@@ -77,7 +77,7 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
         MuleMessage msg = new MuleMessage("message");
         msg.setProperty("badProperty", "badValue");
         UMOEventContext ctx = getTestEventContext(msg);
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null, ctx);
+        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());

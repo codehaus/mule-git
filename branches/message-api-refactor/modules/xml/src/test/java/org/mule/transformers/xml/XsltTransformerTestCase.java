@@ -30,6 +30,7 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
     public UMOTransformer getTransformer() throws Exception
     {
         XsltTransformer transformer = new XsltTransformer();
+        transformer.setReturnClass(String.class);
         transformer.setXslFile("cdcatalog.xsl");
         transformer.setMaxActiveTransformers(42);
         transformer.initialise();
