@@ -138,9 +138,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
             }
         }
-        // the security filter may update the payload so we need to get the
-        // latest event again
-        event = RequestContext.getEvent();
 
         try
         {
@@ -225,9 +222,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
             }
         }
-        // the security filter may update the payload so we need to get the
-        // latest event again
-        event = RequestContext.getEvent();
 
         try
         {
@@ -579,7 +573,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             try
             {
-                event = OptimizedRequestContext.criticalSetEvent(event);
+                RequestContext.setEvent(event);
                 // Make sure we are connected
                 connectionStrategy.connect(AbstractMessageDispatcher.this);
                 AbstractMessageDispatcher.this.doDispatch(event);

@@ -40,11 +40,11 @@ import org.mule.umo.security.SecurityException;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.concurrent.WaitableBoolean;
-import org.mule.transformers.TransformerUtils;
+
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.io.OutputStream;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -560,10 +560,6 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
             if (authorised)
             {
-                // the security filter may update the payload so we need to get the
-                // latest event again
-                muleEvent = RequestContext.getEvent();
-
                 // This is a replyTo event for a current request
                 if (UMOEndpoint.ENDPOINT_TYPE_RESPONSE.equals(endpoint.getType()))
                 {
@@ -581,9 +577,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 {
                     setExceptionDetails(resultMessage, resultMessage.getExceptionPayload().getException());
                 }
-                OptimizedRequestContext.unsafeRewriteEvent(resultMessage);
+                resultMessage.applyTransformers(endpoint.getResponseTransformers());
             }
-            return TransformerUtils.applyAllTransformers(endpoint.getResponseTransformers(), resultMessage);
+            return resultMessage;
         }
     }
 

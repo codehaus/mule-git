@@ -163,9 +163,7 @@ public final class MuleSession implements UMOSession
 
         dispatchEvent(event);
 
-        // need a new copy here because we are going to mutate it (checked necessary)
-        UMOMessage response = OptimizedRequestContext.criticalWriteResponse(event.getMessage());
-        processResponse(response);
+        processResponse(event.getMessage());
     }
 
     public UMOMessage sendEvent(UMOMessage message, String endpointName) throws UMOException
@@ -189,7 +187,6 @@ public final class MuleSession implements UMOSession
         UMOMessage result = router.route(message, this, true);
         if (result != null)
         {
-            RequestContext.writeResponse(result);
             processResponse(result);
         }
 
@@ -216,12 +213,11 @@ public final class MuleSession implements UMOSession
         // ReplyTo channel.
         if (endpoint.isRemoteSync() && TransformerUtils.isDefined(endpoint.getResponseTransformers()) && result != null)
         {
-            result = TransformerUtils.applyAllTransformers(endpoint.getResponseTransformers(), result);
+            result.applyTransformers(endpoint.getResponseTransformers());
         }
 
         if (result != null)
         {
-            OptimizedRequestContext.unsafeWriteResponse(result);
             processResponse(result);
         }
 
@@ -273,8 +269,7 @@ public final class MuleSession implements UMOSession
                              + ", event is: " + event);
             }
             component.dispatchEvent(event);
-            UMOMessage response = OptimizedRequestContext.criticalWriteResponse(event.getMessage());
-            processResponse(response);
+            processResponse(event.getMessage());
         }
         else
         {
@@ -327,7 +322,6 @@ public final class MuleSession implements UMOSession
                 }
 
                 UMOMessage response = event.getEndpoint().send(event);
-                OptimizedRequestContext.unsafeWriteResponse(response);
                 processResponse(response);
                 return response;
             }
@@ -370,8 +364,6 @@ public final class MuleSession implements UMOSession
         {
             return;
         }
-        response.removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
-        response.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
     }
 
     /*
