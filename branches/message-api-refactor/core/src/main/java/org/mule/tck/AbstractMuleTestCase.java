@@ -33,6 +33,8 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.concurrent.Latch;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -44,13 +46,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import junit.framework.TestCase;
-import junit.framework.TestResult;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import junit.framework.TestCase;
+import junit.framework.TestResult;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -205,7 +207,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     /**
      * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can extend
      * this class from ConditionalTestCase.
-     * <p/>
+     * 
      * Subclasses can override <code>isDisabledInThisEnvironment</code> to skip a single test.
      */
     public void runBare() throws Throwable
@@ -433,6 +435,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         finally
         {
             managementContext = null;
+            RegistryContext.setRegistry(null);
         }
     }
 
