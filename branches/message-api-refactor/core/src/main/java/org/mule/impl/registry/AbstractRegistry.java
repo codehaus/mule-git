@@ -33,28 +33,29 @@ import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.transformer.UMOHeaderOnlyTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * TODO
- */
+/** TODO */
 public abstract class AbstractRegistry implements Registry
 
 {
 
     private Registry parent;
-    /**
-     * the unique id for this Registry
-     */
+    /** the unique id for this Registry */
     private String id;
 
     private int defaultScope = DEFAULT_SCOPE;
@@ -62,10 +63,9 @@ public abstract class AbstractRegistry implements Registry
     protected transient Log logger = LogFactory.getLog(getClass());
 
     protected UMOLifecycleManager lifecycleManager;
+    protected Map transformerCache = new ConcurrentHashMap(8);
 
-    /**
-     * Default Constructor
-     */
+    /** Default Constructor */
     protected AbstractRegistry(String id)
     {
         if (id == null)
@@ -192,54 +192,7 @@ public abstract class AbstractRegistry implements Registry
 
     }
 
-    /**
-     * Start the <code>MuleManager</code>. This will start the connectors and sessions.
-     * 
-     * @throws org.mule.umo.UMOException if the the connectors or components fail to start
-     */
-    // public final synchronized void start() throws UMOException
-    // {
-    // if (getParent() != null)
-    // {
-    // parent.start();
-    // }
-    //
-    //
-    // if (!started.get())
-    // {
-    // starting.set(true);
-    // fireSystemEvent(new RegistryNotification(getManagementContext(),
-    // RegistryNotification.MANAGER_STARTING));
-    // startObjects();
-    // started.set(true);
-    // starting.set(false);
-    //
-    // fireSystemEvent(new RegistryNotification(getManagementContext(),
-    // RegistryNotification.MANAGER_STARTED));
-    // }
-    // }
-    /**
-     * Stops the <code>MuleManager</code> which stops all sessions and connectors
-     * 
-     * @throws org.mule.umo.UMOException if either any of the sessions or connectors fail to stop
-     */
-    // public final synchronized void stop() throws UMOException
-    // {
-    // if (getParent() != null)
-    // {
-    // parent.stop();
-    // }
-    //
-    // started.set(false);
-    // stopping.set(true);
-    // fireSystemEvent(new RegistryNotification(getManagementContext(),
-    // RegistryNotification.MANAGER_STOPPING));
-    //
-    // stopObjects();
-    // stopping.set(false);
-    // fireSystemEvent(new RegistryNotification(getManagementContext(),
-    // RegistryNotification.MANAGER_STOPPED));
-    // }
+
     public UMOConnector lookupConnector(String name)
     {
         return (UMOConnector) lookupObject(name);
@@ -300,7 +253,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public UMOImmutableEndpoint lookupInboundEndpoint(String uri, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         // For now create new instance with factory, existing instances in registry don't serve us as
         // endpoints are not yet truely immutable
@@ -308,7 +261,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public UMOImmutableEndpoint lookupOutboundEndpoint(String uri, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         // For now create new instance with factory, existing instances in registry don't serve us as
         // endpoints are not yet truely immutable
@@ -316,20 +269,18 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public UMOImmutableEndpoint lookupResponseEndpoint(String uri, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         // For now create new instance with factory, existing instances in registry don't serve us as
         // endpoints are not yet truely immutable
         return lookupEndpointFactory().createResponseEndpoint(uri, managementContext);
     }
 
-    /**
-     * @deprecated
-     */
+    /** @deprecated  */
     public UMOImmutableEndpoint createEndpoint(UMOEndpointURI endpointUri,
                                                String endpointType,
                                                UMOManagementContext managementContext)
-        throws EndpointException, UMOException
+            throws EndpointException, UMOException
     {
         return lookupEndpointFactory().createEndpoint(endpointUri, endpointType, managementContext);
     }
@@ -339,26 +290,42 @@ public abstract class AbstractRegistry implements Registry
         return (UMOTransformer) lookupObject(name);
     }
 
-    public UMOTransformer lookupTransformer(Class input, Class output)
+    public List lookupTransformers(Class input, Class output)
     {
         // TODO: Optimize & Cache
+
+        List results = (List)transformerCache.get(input.getName() + output.getName());
+        if(results!=null)
+        {
+            return results;
+        }
+
+        results = new ArrayList(2);
         Collection transformers = getTransformers();
-        for (Iterator itr = transformers.iterator(); itr.hasNext();) 
+        for (Iterator itr = transformers.iterator(); itr.hasNext();)
         {
             UMOTransformer t = (UMOTransformer) itr.next();
+            if (t instanceof UMOHeaderOnlyTransformer)
+            {
+                continue;
+            }
             Class c = t.getReturnClass();
-            if (c == null) {
+            //TODO RM* this sohuld be an exception
+            if (c == null)
+            {
                 c = Object.class;
             }
             if (output.isAssignableFrom(c)
-                && t.isSourceTypeSupported(input))
+                    && t.isSourceTypeSupported(input))
             {
-                return t;
+                results.add(t);
             }
         }
-        return null;
+
+        transformerCache.put(input.getName() + output.getName(), results);
+        return results;
     }
-    
+
     public UMOModel lookupModel(String name)
     {
         return (UMOModel) lookupObject(name);
@@ -481,7 +448,7 @@ public abstract class AbstractRegistry implements Registry
 
     /**
      * Initialises all registered agents
-     * 
+     *
      * @throws org.mule.umo.lifecycle.InitialisationException
      */
     // TODO: Spring is now taking care of the initialisation lifecycle, need to check that we still get this
@@ -569,22 +536,20 @@ public abstract class AbstractRegistry implements Registry
     protected void unsupportedOperation(String operation, Object o) throws UnsupportedOperationException
     {
         throw new UnsupportedOperationException(
-            "Registry: "
-                            + getRegistryId()
-                            + " is read-only so objects cannot be registered or unregistered. Failed to execute operation "
-                            + operation + " on object: " + o);
+                "Registry: "
+                        + getRegistryId()
+                        + " is read-only so objects cannot be registered or unregistered. Failed to execute operation "
+                        + operation + " on object: " + o);
     }
 
-    /**
-     * @deprecated
-     */
+    /** @deprecated  */
     public void registerConnector(UMOConnector connector) throws UMOException
     {
         registerConnector(connector, MuleServer.getManagementContext());
     }
 
     public void registerConnector(UMOConnector connector, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         unsupportedOperation("registerConnector", connector);
     }
@@ -602,7 +567,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public void registerEndpoint(UMOImmutableEndpoint endpoint, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         unsupportedOperation("registerEndpoint", endpoint);
     }
@@ -620,7 +585,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public void registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         unsupportedOperation("registerTransformer", transformer);
     }
@@ -638,7 +603,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public void registerService(UMODescriptor service, UMOManagementContext managementContext)
-        throws UMOException
+            throws UMOException
     {
         unsupportedOperation("registerService", service);
     }
@@ -694,7 +659,7 @@ public abstract class AbstractRegistry implements Registry
     }
 
     public final void registerObject(String key, Object value, UMOManagementContext managementContext)
-        throws RegistrationException
+            throws RegistrationException
     {
         registerObject(key, value, null, managementContext);
     }
@@ -705,13 +670,13 @@ public abstract class AbstractRegistry implements Registry
                                      UMOManagementContext managementContext) throws RegistrationException
     {
         logger.debug("registerObject: key=" + key + " value=" + value + " metadata=" + metadata
-                     + " managementContext=" + managementContext);
+                + " managementContext=" + managementContext);
         if (value instanceof ManagementContextAware)
         {
             if (managementContext == null)
             {
                 throw new RegistrationException(
-                    "Attempting to register a ManagementContextAware object without providing a ManagementContext.");
+                        "Attempting to register a ManagementContextAware object without providing a ManagementContext.");
             }
             ((ManagementContextAware) value).setManagementContext(managementContext);
         }
