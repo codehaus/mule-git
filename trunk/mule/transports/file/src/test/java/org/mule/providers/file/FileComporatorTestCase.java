@@ -16,7 +16,7 @@ import org.mule.util.FileUtils;
 
 import java.io.File;
 
-public class FileFunctionalTestCase extends FunctionalTestCase
+public class FileComporatorTestCase extends FunctionalTestCase
 {
 
     public static final String PATH = "./.mule/in/";
