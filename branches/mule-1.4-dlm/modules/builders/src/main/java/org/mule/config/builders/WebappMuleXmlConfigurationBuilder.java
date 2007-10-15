@@ -11,6 +11,7 @@
 package org.mule.config.builders;
 
 import org.mule.config.ConfigurationException;
+import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -54,19 +55,35 @@ public class WebappMuleXmlConfigurationBuilder extends MuleXmlConfigurationBuild
         }
         if (is == null)
         {
-            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
         }
-        if (logger.isDebugEnabled() && is != null)
+        if (logger.isDebugEnabled())
         {
-            logger.debug("Resource " + resourcePath + " is found in Servlet Context.");
+            if (is != null)
+            {
+                logger.debug("Resource " + resource + " is found in Servlet Context.");
+            }
+            else
+            {
+                logger.debug("Resource " + resourcePath + " is not found in Servlet Context, loading from classpath or as external file");
+            }
+        }
+        if (is == null && webappClasspath != null)
+        {
+            resourcePath = FileUtils.newFile(webappClasspath, resource).getPath();
+            try
+            {
+                is = super.loadResource(resourcePath);
+            }
+            catch (ConfigurationException ex)
+            {
+                logger.debug("Resource " + resourcePath + " is not found in filesystem");
+            }
         }
         if (is == null)
         {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Resource " + resourcePath + " is not found in Servlet Context, loading from classpath");
-            }
             is = super.loadResource(resource);
+
         }
         return is;
     }

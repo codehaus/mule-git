@@ -24,6 +24,12 @@ public class VMLoanBrokerAsynchronousFunctionalTestCase extends AbstractAsynchro
     // @Override
     protected int getNumberOfRequests()
     {
-        return 10;
+        return 1000;
+    }
+
+    //@java.lang.Override
+    protected int getWarmUpMessages()
+    {
+        return 100;
     }
 }

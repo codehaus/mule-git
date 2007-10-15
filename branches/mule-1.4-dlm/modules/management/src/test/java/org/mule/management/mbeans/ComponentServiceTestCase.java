@@ -35,6 +35,11 @@ public class ComponentServiceTestCase extends AbstractMuleJmxTestCase
         mBeanServer.registerMBean(service, name);
         Set mbeans = mBeanServer.queryMBeans(ObjectName.getInstance(domainOriginal + ":*"), null);
 
+        // Expecting following mbeans to be registered:
+        // 1) org.mule.management.mbeans.ComponentService@TEST_DOMAIN_1:type=TEST_SERVICE
+        // 2) org.mule.management.mbeans.ComponentStats@TEST_DOMAIN_1:type=org.mule.Statistics,component=TEST_SERVICE
+        // 3) org.mule.management.mbeans.RouterStats@TEST_DOMAIN_1:type=org.mule.Statistics,component=TEST_SERVICE,router=inbound
+        // 4) org.mule.management.mbeans.RouterStats@TEST_DOMAIN_1:type=org.mule.Statistics,component=TEST_SERVICE,router=outbound
         assertEquals("Unexpected number of components registered in the domain.", 4, mbeans.size());
 
         mBeanServer.unregisterMBean(name);
