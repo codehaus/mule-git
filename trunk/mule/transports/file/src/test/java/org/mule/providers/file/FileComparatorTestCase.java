@@ -9,6 +9,7 @@
  */
 package org.mule.providers.file;
 
+import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
@@ -23,22 +24,19 @@ public class FileComparatorTestCase extends FunctionalTestCase
     public static final String FILE1_NAME = "first";
     public static final String FILE2_NAME = "second";
     public static final String OUT_QUEUE = "vm://out";
+    public static final String FILE_CONNECTOR_NAME = "fileConnector";
     public static final int TIMEOUT = 5000;
 
-
-    protected void suitePostSetUp() throws Exception
+    public void testComparator() throws Exception
     {
+        MuleManager.getInstance().lookupConnector(FILE_CONNECTOR_NAME).stopConnector();
         File f1 = FileUtils.newFile(PATH + FILE1_NAME);
         f1.createNewFile();
         Thread.sleep(1);
         File f2 = FileUtils.newFile(PATH + FILE2_NAME);
         f2.createNewFile();
-
-    }
-
-    public void testComparator() throws Exception
-    {
-
+        Thread.sleep(10);
+        MuleManager.getInstance().lookupConnector(FILE_CONNECTOR_NAME).startConnector();
         MuleClient client = new MuleClient();
         UMOMessage message = client.receive(OUT_QUEUE, TIMEOUT);
         assertNotNull(message);
