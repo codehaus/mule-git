@@ -11,6 +11,7 @@
         <properties>
             <property name="queueEvents" value="true"/>
         </properties>
+        <threading-profile maxThreadsActive="1"/>
     </connector>
 
     <model name="ESTest">
