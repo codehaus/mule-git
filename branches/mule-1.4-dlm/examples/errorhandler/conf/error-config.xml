@@ -21,15 +21,6 @@
         </properties>
     </container-context>
 
-    <connector name="EmailConnector" className="org.mule.providers.email.SmtpConnector">
-        <properties>
-            <property name="host" value="${smtp.host}" />
-            <property name="port" value="{smtp.port}" />
-            <property name="username" value="{smtp.username}" />
-            <property name="password" value="{smtp.password}" />
-        </properties>
-    </connector>
-
     <connector name="JMSConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
         <properties>
             <property name="specification" value="1.1"/>
@@ -103,7 +94,7 @@
                 <router className="org.mule.routing.outbound.FilteringOutboundRouter"
                         transformer="ErrorMessageToException">
 
-                    <endpoint address="smtp://?address=${email.toAddress}"
+                    <endpoint address="smtp://${smtp.username}:${smtp.password}@${smtp.host}:${smtp.port}?address=${email.toAddress}"
                               transformers="ErrorMessageToExceptionBean ExceptionBeanToXML StringToEmailMessage">
                         <properties>
                             <property name="fromAddress" value="${email.fromAddress}" />

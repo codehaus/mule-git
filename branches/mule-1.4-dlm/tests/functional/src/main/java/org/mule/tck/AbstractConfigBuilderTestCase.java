@@ -223,7 +223,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         
         // for the connector
         int connectorMaxBufferSize = 2;
-        
+        int connectorThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD_OLDEST;
+
         // for the component
         int componentMaxBufferSize = 6;
         int componentMaxThreadsActive = 12;
@@ -251,10 +252,10 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         tp = c.getDispatcherThreadingProfile();
         // this value is configured
         assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
+        assertEquals(connectorThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
         // these values are inherited
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
-        assertEquals(defaultThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test per-component values
