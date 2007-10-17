@@ -615,7 +615,7 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         });
 
         SetPropertiesRule threadingRule = new SetPropertiesRule();
-        threadingRule.addAlias("setPoolExhaustedAction", "setPoolExhaustedActionString");
+        threadingRule.addAlias("poolExhaustedAction", "poolExhaustedActionString");
         digester.addRule(path + "/threading-profile", threadingRule);
 
         // Connection strategy
