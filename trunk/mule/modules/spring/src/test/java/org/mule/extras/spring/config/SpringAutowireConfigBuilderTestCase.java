@@ -10,7 +10,6 @@
 
 package org.mule.extras.spring.config;
 
-import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.impl.container.ContainerKeyPair;
@@ -35,13 +34,6 @@ public class SpringAutowireConfigBuilderTestCase extends AbstractConfigBuilderTe
         return new SpringConfigurationBuilder();
     }
 
-    // @Override
-    public void testThreadingConfig() throws MuleException
-    {
-        // TODO MULE-2472
-        // super.testThreadingConfig();
-    }
-
     public void testComponentResolverConfig() throws Exception
     {
         // test container init
@@ -52,7 +44,7 @@ public class SpringAutowireConfigBuilderTestCase extends AbstractConfigBuilderTe
             new ContainerKeyPair("spring", "fruitBowl"));
         assertNotNull(object);
         assertTrue(object instanceof FruitBowl);
-        FruitBowl bowl = (FruitBowl)object;
+        FruitBowl bowl = (FruitBowl) object;
         assertTrue(bowl.hasBanana());
         assertTrue(bowl.hasApple());
     }

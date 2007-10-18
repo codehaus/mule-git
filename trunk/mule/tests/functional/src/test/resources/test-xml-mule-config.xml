@@ -18,7 +18,7 @@
         model="main"
         serverUrl="">
         
-        <threading-profile id="default" maxBufferSize="42" maxThreadsActive="16"
+        <threading-profile id="default" maxBufferSize="42" maxThreadsActive="17"
             maxThreadsIdle="3" poolExhaustedAction="WHEN_EXHAUSTED_WAIT" threadTTL="60001"/>
         <pooling-profile exhaustedAction="WHEN_EXHAUSTED_WAIT" maxActive="10" maxIdle="5" maxWait="10001" initialisationPolicy="INITIALISE_ONE"/>
         <queue-profile maxOutstandingMessages="100" persistent="true"/>

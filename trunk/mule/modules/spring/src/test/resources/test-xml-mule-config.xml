@@ -17,8 +17,12 @@
     <mule-environment-properties
         synchronous="false"
         model="main">
-        <threading-profile id="default" maxBufferSize="42" maxThreadsActive="16"
-            maxThreadsIdle="3" poolExhaustedAction="WHEN_EXHAUSTED_WAIT" threadTTL="60001"/>
+        <threading-profile id="default"
+            maxBufferSize="42"
+            maxThreadsActive="17"
+            maxThreadsIdle="3"
+            poolExhaustedAction="WHEN_EXHAUSTED_WAIT"
+            threadTTL="60001"/>
         <pooling-profile exhaustedAction="WHEN_EXHAUSTED_WAIT" maxActive="10" maxIdle="5" maxWait="10001" initialisationPolicy="INITIALISE_ONE"/>
         <queue-profile maxOutstandingMessages="100" persistent="true"/>
         <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/>
@@ -31,7 +35,16 @@
     </agents>
 
     <connector name="dummyConnector" className="org.mule.tck.testmodels.mule.TestConnector">
-        <threading-profile id="dispatcher" maxBufferSize="2" poolExhaustedAction="WHEN_EXHAUSTED_DISCARD_OLDEST"/>
+        <!--
+            MULE-2472: note that ALL values must be specified since inheritance of global values
+            does not work with the SpringConfigurationBuilder
+        -->
+        <threading-profile id="dispatcher"
+            maxBufferSize="2"
+            maxThreadsActive="17"
+            maxThreadsIdle="3"
+            poolExhaustedAction="WHEN_EXHAUSTED_DISCARD_OLDEST"
+            threadTTL="60001"/>
         <exception-strategy className="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
         <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
             <properties>

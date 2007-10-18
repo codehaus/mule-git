@@ -10,7 +10,6 @@
 
 package org.mule.extras.spring.config;
 
-import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.impl.DefaultExceptionStrategy;
@@ -50,7 +49,7 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
 
     public void testConnectorBean()
     {
-        VMConnector c = (VMConnector)MuleManager.getInstance().lookupConnector("beanConnector");
+        VMConnector c = (VMConnector) MuleManager.getInstance().lookupConnector("beanConnector");
         assertNotNull(c);
         assertTrue(c.isQueueEvents());
     }
@@ -58,8 +57,8 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
     public void testManagerIdIsSet()
     {
         // The id is the the mule-configuration id from the first config
-        assertEquals("Manager ID has not been properly transformed.",
-                     "Test_Mule_Properties_with_beans", MuleManager.getInstance().getId());
+        assertEquals("Manager ID has not been properly transformed.", "Test_Mule_Properties_with_beans",
+            MuleManager.getInstance().getId());
     }
 
     public void testEndpointPropertyBean()
@@ -67,7 +66,7 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         UMODescriptor d = MuleManager.getInstance().lookupModel("main").getDescriptor("appleComponent3");
         assertNotNull(d);
         assertNotNull(d.getInboundRouter());
-        UMOEndpoint e = (UMOEndpoint)d.getInboundRouter().getEndpoints().get(0);
+        UMOEndpoint e = (UMOEndpoint) d.getInboundRouter().getEndpoints().get(0);
         assertNotNull(e);
         assertEquals("Prop2", e.getProperties().get("testEndpointBeanProperty"));
 
@@ -78,10 +77,11 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
         UMOConnector conn = strategy.getEndpoint().getConnector();
         assertTrue(conn instanceof TestConnector);
         assertEquals("dummyConnector", conn.getName());
-        
+
         e = d.getInboundEndpoint();
         assertNotNull(e);
-        assertEquals(e.getEndpointURI().toString(), MuleManager.getInstance().getEndpointIdentifiers().get("Test Queue"));
+        assertEquals(e.getEndpointURI().toString(), MuleManager.getInstance().getEndpointIdentifiers().get(
+            "Test Queue"));
     }
 
     public void testPropertyBeansOnDescriptors()
@@ -97,13 +97,13 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
     {
         UMODescriptor d = MuleManager.getInstance().lookupModel("main").getDescriptor("appleComponent3");
         assertNotNull(d);
-        Map map = (Map)d.getProperties().get("springMap");
+        Map map = (Map) d.getProperties().get("springMap");
         assertNotNull(map);
         assertEquals(2, map.size());
-        List list = (List)d.getProperties().get("springList");
+        List list = (List) d.getProperties().get("springList");
         assertNotNull(list);
         assertEquals(2, list.size());
-        Set set = (Set)d.getProperties().get("springSet");
+        Set set = (Set) d.getProperties().get("springSet");
         assertNotNull(set);
         assertEquals(2, set.size());
         assertNotNull(d.getProperties().get("springBean"));
@@ -112,14 +112,6 @@ public class MuleBeanDefinitionReaderTestCase extends AbstractConfigBuilderTestC
     public void testConvertedSpringBeans() throws UMOException
     {
         assertNotNull(MuleManager.getInstance().getContainerContext().getComponent("TestComponent"));
-    }
-    
-    // @Override
-    public void testThreadingConfig() throws MuleException
-    {
-        // TODO MULE-2289 / MULE-2472
-        // expected 1 but was 4; overriding works, inheritance does not
-        // super.testThreadingConfig();
     }
 
 }
