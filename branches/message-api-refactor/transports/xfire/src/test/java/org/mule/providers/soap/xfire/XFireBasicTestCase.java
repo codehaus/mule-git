@@ -34,9 +34,9 @@ public class XFireBasicTestCase extends FunctionalTestCase
         XMLUnit.setIgnoreWhitespace(true);
     }
 
-    public void testEchoService() throws Exception
-    {
-        final MuleClient client = new MuleClient();
+//    public void testEchoService() throws Exception
+//    {
+//        final MuleClient client = new MuleClient();
         
 //        Runnable r = new Runnable() {
 //
@@ -62,9 +62,9 @@ public class XFireBasicTestCase extends FunctionalTestCase
 //                    }
 //                }
 //            }
-//            
+//
 //        };
-//        
+//
 //        for (int i = 0; i < 50; i++)
 //        {
 //            new Thread(r).start();
@@ -72,7 +72,8 @@ public class XFireBasicTestCase extends FunctionalTestCase
 //        
 //        Thread.sleep(100000);
 ////        assertEquals("Hello!", result.getPayload());
-    }
+//    }
+
     public void testEchoServiceSynchronous() throws Exception
     {
         MuleClient client = new MuleClient();
