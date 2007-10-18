@@ -33,8 +33,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class RequestContext
 {
-    // setting this to false gives old semantics in non-critical cases
-    private static boolean SAFE = true;
+    // to clarify "safe" in constructors
+    public static boolean SAFE = true;
+    public static boolean UNSAFE = true;
+
+    // setting this to false gives old (mutable) semantics in non-critical cases
+    private static boolean DEFAULT_ACTION = SAFE;
+
     private static final Log logger = LogFactory.getLog(RequestContext.class);
     private static final ThreadLocal currentEvent = new ThreadLocal();
 
@@ -72,6 +77,7 @@ public final class RequestContext
     {
         //return internalSetEvent(newEvent(event, SAFE, false));
         return internalSetEvent(event);
+        //return internalSetEvent(newEvent(event, DEFAULT_ACTION));
     }
 
     protected static UMOEvent internalSetEvent(UMOEvent event)
@@ -80,14 +86,14 @@ public final class RequestContext
         return event;
     }
 
-    protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe, boolean required)
+    protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe)
     {
         if (message != null)
         {
             UMOEvent event = getEvent();
             if (event != null)
             {
-                UMOMessage copy = newMessage(message, safe, required);
+                UMOMessage copy = newMessage(message, safe);
                 UMOEvent newEvent = new MuleEvent(copy, event);
                 if (safe)
                 {
@@ -102,17 +108,17 @@ public final class RequestContext
 
     private static UMOMessage writeResponse(UMOMessage message)
     {
-        return internalWriteResponse(message, SAFE, false);
+        return internalWriteResponse(message, DEFAULT_ACTION);
     }
 
-    protected static UMOMessage internalWriteResponse(UMOMessage message, boolean safe, boolean required)
+    protected static UMOMessage internalWriteResponse(UMOMessage message, boolean safe)
     {
         if (message != null)
         {
             UMOEvent event = getEvent();
             if (event != null)
             {
-                UMOMessage copy = newMessage(message, safe, required);
+                UMOMessage copy = newMessage(message, safe);
                 combineProperties(event, copy);
                 MuleEvent newEvent = new MuleEvent(copy, event.getEndpoint(), event.getSession(), event.isSynchronous());
                 if (safe)
@@ -175,24 +181,10 @@ public final class RequestContext
     }
 
 
-    // utility methods for thread safe access
-
-    protected static void noteUse(String type)
-    {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("copying " + type);//, new Exception());
-        }
-    }
-
-    protected static UMOEvent newEvent(UMOEvent event, boolean safe, boolean required)
+    protected static UMOEvent newEvent(UMOEvent event, boolean safe)
     {
         if (safe && event instanceof ThreadSafeAccess)
         {
-            if (! required)
-            {
-                noteUse("event");
-            }
             return (UMOEvent) ((ThreadSafeAccess)event).newThreadCopy();
         }
         else
@@ -201,14 +193,10 @@ public final class RequestContext
         }
     }
 
-    protected static UMOMessage newMessage(UMOMessage message, boolean safe, boolean required)
+    protected static UMOMessage newMessage(UMOMessage message, boolean safe)
     {
         if (safe && message instanceof ThreadSafeAccess)
         {
-            if (! required)
-            {
-                noteUse("message");
-            }
             return (UMOMessage) ((ThreadSafeAccess)message).newThreadCopy();
         }
         else

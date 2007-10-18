@@ -77,7 +77,6 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
                         break;
                     }
                 }
-
             }
             returnMessage.applyTransformers(getTransformers());
             Object payload = returnMessage.getPayload();

@@ -135,7 +135,7 @@ public class MuleManagerComponent implements Callable, Initialisable
             UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(RequestContext.getEvent().getEndpoint(), managementContext);
             // TODO - is this correct?  it stops any other transformer from being set
             builder.setTransformers(new LinkedList());
-            UMOImmutableEndpoint ep = managementContext.getRegistry().lookupEndpointFactory().createInboundEndpoint(builder,
+            UMOImmutableEndpoint ep = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder,
                 managementContext);
             UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(),
                 context.isSynchronous());
@@ -168,7 +168,8 @@ public class MuleManagerComponent implements Callable, Initialisable
         {
             UMOImmutableEndpoint endpoint = context.getManagementContext()
                 .getRegistry()
-                .lookupOutboundEndpoint(action.getResourceIdentifier(), MuleServer.getManagementContext());
+                .lookupEndpointFactory()
+                .getOutboundEndpoint(action.getResourceIdentifier(), MuleServer.getManagementContext());
 
             if (AdminNotification.ACTION_DISPATCH == action.getAction())
             {
@@ -205,7 +206,8 @@ public class MuleManagerComponent implements Callable, Initialisable
         {
             UMOImmutableEndpoint endpoint = context.getManagementContext()
                 .getRegistry()
-                .lookupOutboundEndpoint(action.getResourceIdentifier(), MuleServer.getManagementContext());
+                .lookupEndpointFactory()
+                .getOutboundEndpoint(action.getResourceIdentifier(), MuleServer.getManagementContext());
 
             long timeout = MapUtils.getLongValue(action.getProperties(),
                 MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY, getSynchronousEventTimeout());
@@ -260,7 +262,7 @@ public class MuleManagerComponent implements Callable, Initialisable
             endpointBuilder.setName(MANAGER_ENDPOINT_NAME);
             UMOImmutableEndpoint endpoint = managementContext.getRegistry()
                 .lookupEndpointFactory()
-                .createInboundEndpoint(endpointBuilder, managementContext);
+                .getInboundEndpoint(endpointBuilder, managementContext);
             component.getInboundRouter().addEndpoint(endpoint);
 
             return component;

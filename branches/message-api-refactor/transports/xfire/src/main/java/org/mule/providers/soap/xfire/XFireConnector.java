@@ -447,7 +447,7 @@ public class XFireConnector extends AbstractConnector
 
         UMOImmutableEndpoint serviceEndpoint = managementContext.getRegistry()
             .lookupEndpointFactory()
-            .createInboundEndpoint(builder, managementContext);
+            .getInboundEndpoint(builder, managementContext);
 
         c.setInboundRouter(new InboundRouterCollection());
         c.getInboundRouter().addEndpoint(serviceEndpoint);
