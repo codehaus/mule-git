@@ -421,7 +421,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 ObjectFactory factory = (ObjectFactory) ClassUtils.loadClass(connectorFactory,
                         TransportFactory.class).newInstance();
-                newConnector = (UMOConnector) factory.create();
+                newConnector = (UMOConnector) factory.getOrCreate();
             }
             else
             {

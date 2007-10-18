@@ -9,14 +9,12 @@
  */
 package org.mule.impl.registry;
 
-import org.mule.MuleRuntimeException;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.ManagementContext;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
@@ -56,7 +54,7 @@ import org.mule.registry.Registry;
 import org.mule.registry.ServiceDescriptor;
 import org.mule.registry.ServiceDescriptorFactory;
 import org.mule.registry.ServiceException;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
@@ -125,6 +123,16 @@ public class TransientRegistry extends AbstractRegistry
         //getObjectTypeMap(ObjectProcessor.class).put("_muleSeriveProcessor",
         //        new RegisteredServiceProcessor());
 
+        RegistryContext.setRegistry(this);
+        try
+        {
+            initialise();
+        }
+        catch (InitialisationException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     protected UMOLifecycleManager createLifecycleManager()
@@ -154,7 +162,7 @@ public class TransientRegistry extends AbstractRegistry
             applyProcessors(getServices());
             applyProcessors(lookupObjects(Object.class));
 
-            MuleServer.getManagementContext().fireNotification(new RegistryNotification(this, RegistryNotification.REGISTRY_INITIALISED));
+            //MuleServer.getManagementContext().fireNotification(new RegistryNotification(this, RegistryNotification.REGISTRY_INITIALISED));
         }
         finally
         {
@@ -225,9 +233,7 @@ public class TransientRegistry extends AbstractRegistry
     }
 
 
-    /**
-     * Looks up the service descriptor from a singleton cache and creates a new one if not found.
-     * */
+    /** Looks up the service descriptor from a singleton cache and creates a new one if not found. */
     public ServiceDescriptor lookupServiceDescriptor(String type, String name, Properties overrides) throws ServiceException
     {
         AbstractServiceDescriptor.Key key = new AbstractServiceDescriptor.Key(name, overrides);
@@ -304,23 +310,6 @@ public class TransientRegistry extends AbstractRegistry
         return theObject;
     }
 
-    protected void applyLifecycle(Object object, UMOManagementContext managementContext)
-    {
-        if (managementContext == null)
-        {
-            throw new MuleRuntimeException(MessageFactory.createStaticMessage("Attempt to apply lifecycle to object " + object + " without providing a ManagementContext."));
-        }
-        UMOLifecycleManager lm = managementContext.getLifecycleManager();
-        try
-        {
-            lm.applyLifecycle(managementContext, object);
-        }
-        catch (UMOException e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToInvokeLifecycle(lm.getCurrentPhase(), object), e);
-        }
-    }
-
     /**
      * Allows for arbitary registration of transient objects
      *
@@ -342,16 +331,23 @@ public class TransientRegistry extends AbstractRegistry
     {
         if (isInitialised() || isInitialising())
         {
-            value = applyProcessors(value);
+         //   value = applyProcessors(value);
         }
+
         Map objectMap = getObjectTypeMap(metadata);
         if (objectMap != null)
         {
             objectMap.put(key, value);
             if (managementContext != null) // need this check to call doRegisterObject(String, Object) successfully
             {
-                // TODO Why should registering an object affect its lifecycle?
-                applyLifecycle(value, managementContext);
+                try
+                {
+                    managementContext.applyLifecycle(value);
+                }
+                catch (UMOException e)
+                {
+                    throw new RegistrationException(e);
+                }
             }
         }
         else
@@ -401,33 +397,34 @@ public class TransientRegistry extends AbstractRegistry
     }
 
     //@java.lang.Override
-    public void registerService(UMODescriptor service, UMOManagementContext managementContext) throws UMOException
+    public void registerComponent(UMOComponent component, UMOManagementContext managementContext) throws UMOException
     {
-        String modelName = service.getModelName();
-        UMOModel model;
-        if (modelName != null)
-        {
-            model = lookupModel(modelName);
-        }
-        else
-        {
-            logger.warn("Model name not set on service, using system model");
-            model = lookupSystemModel();
-            service.setModelName(model.getName());
-        }
-        if (model == null)
-        {
-            //TODO
-            throw new IllegalStateException("Service must be associated with an existing model. Not found: " + modelName);
-        }
-        registerObject(service.getName(), service, UMODescriptor.class, managementContext);
-        model.registerComponent(service);
+//        String modelName = service.getModelName();
+//        UMOModel model;
+//        if (modelName != null)
+//        {
+//            model = lookupModel(modelName);
+//        }
+//        else
+//        {
+//            logger.warn("Model name not set on service, using system model");
+//            model = lookupSystemModel();
+//            service.setModelName(model.getName());
+//        }
+//        if (model == null)
+//        {
+//            //TODO
+//            throw new IllegalStateException("Service must be associated with an existing model. Not found: " + modelName);
+//        }
+//        registerObject(service.getName(), service, UMODescriptor.class, managementContext);
+//        model.registerComponent(service);
+        registerObject(component.getName(), component, UMOComponent.class, managementContext);
     }
 
     //@java.lang.Override
-    public UMODescriptor unregisterService(String serviceName)
+    public UMOComponent unregisterComponent(String componentName)
     {
-        return (UMODescriptor) getObjectTypeMap(UMODescriptor.class).remove(serviceName);
+        return (UMOComponent) getObjectTypeMap(UMOComponent.class).remove(componentName);
     }
 
 

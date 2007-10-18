@@ -13,6 +13,8 @@ package org.mule.providers.email.connectors;
 import org.mule.providers.email.ImapConnector;
 import org.mule.umo.provider.UMOConnector;
 
+import com.icegreen.greenmail.util.ServerSetup;
+
 /**
  * Simple tests for pulling from an IMAP server.
  */
@@ -21,26 +23,22 @@ public class ImapConnectorTestCase extends AbstractReceivingMailConnectorTestCas
 
     public ImapConnectorTestCase()
     {
-        super("ImapConnector");
-    }
-    
-    // @Override
-    public UMOConnector createConnector(boolean init) throws Exception
-    {
-        ImapConnector connector = new ImapConnector();
-        connector.setName(getConnectorName());
-        connector.setCheckFrequency(POLL_PERIOD_MS);
-        connector.setServiceOverrides(newEmailToStringServiceOverrides());
-        if (init)
-        {
-            connector.initialise();
-        }
-        return connector;
+        this(50012);
     }
 
-    public String getTestEndpointURI()
+    public ImapConnectorTestCase(int port)
     {
-        return getImapTestEndpointURI();
+        super(ServerSetup.PROTOCOL_IMAP, port);
+    }
+
+    // @Override
+    public UMOConnector createConnector() throws Exception
+    {
+        ImapConnector connector = new ImapConnector();
+        connector.setName("ImapConnector");
+        connector.setCheckFrequency(POLL_PERIOD_MS);
+        connector.setServiceOverrides(newEmailToStringServiceOverrides());
+        return connector;
     }
 
 }

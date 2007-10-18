@@ -64,7 +64,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
     protected List transformers = TransformerUtils.UNDEFINED;
     protected List responseTransformers = TransformerUtils.UNDEFINED;
     protected String name;
-    protected Map properties;
+    protected Map properties = new HashMap();
     protected UMOTransactionConfig transactionConfig;
     protected UMOFilter filter;
     protected Boolean deleteUnacceptedMessages;
@@ -478,6 +478,9 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
             if (getCreateConnector() == ALWAYS_CREATE_CONNECTOR)
             {
                 connector = TransportFactory.createConnector(endpointURI, managementContext);
+                connector.setManagementContext(managementContext);
+                //managementContext.applyLifecycle(connector);
+                managementContext.getRegistry().registerConnector(connector, managementContext);
             }
             else if (getCreateConnector() == NEVER_CREATE_CONNECTOR)
             {
@@ -498,6 +501,9 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
                 if (connector == null)
                 {
                     connector = TransportFactory.createConnector(endpointURI, managementContext);
+                    //TODO RM* URGENT connector.setManagementContext(managementContext);
+                    //managementContext.applyLifecycle(connector);
+                    managementContext.getRegistry().registerConnector(connector, managementContext);
                 }
             }
         }
@@ -546,6 +552,17 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
     {
         this.properties = properties;
 
+    }
+
+    /**
+     * Sets a property on the endpoint
+     *
+     * @param key the property key
+     * @param value the value of the property
+     */
+    public void setProperty(String key, Object value)
+    {
+        properties.put(key, value);
     }
 
     public void setTransactionConfig(UMOTransactionConfig transactionConfig)

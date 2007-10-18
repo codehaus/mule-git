@@ -13,35 +13,28 @@ package org.mule.providers.email.connectors;
 import org.mule.providers.email.ImapsConnector;
 import org.mule.umo.provider.UMOConnector;
 
+import com.icegreen.greenmail.util.ServerSetup;
+
 /**
  * Simple tests for pulling from an IMAP server.
  */
 public class ImapsConnectorTestCase extends AbstractReceivingMailConnectorTestCase
 {
-    
+
     public ImapsConnectorTestCase()
     {
-        super("ImapsConnector");
+        super(ServerSetup.PROTOCOL_IMAPS, 50011);
     }
 
-    public UMOConnector createConnector(boolean init) throws Exception
+    public UMOConnector createConnector() throws Exception
     {
         ImapsConnector connector = new ImapsConnector();
-        connector.setName(getConnectorName());
+        connector.setName("ImapsConnector");
         connector.setCheckFrequency(POLL_PERIOD_MS);
         connector.setServiceOverrides(newEmailToStringServiceOverrides());
         connector.setTrustStorePassword("password");
         connector.setTrustStore("greenmail-truststore");
-        if (init) 
-        {
-            connector.initialise();
-        }
         return connector;
-    }
-
-    public String getTestEndpointURI()
-    {
-        return getImapsTestEndpointURI();
     }
 
 }

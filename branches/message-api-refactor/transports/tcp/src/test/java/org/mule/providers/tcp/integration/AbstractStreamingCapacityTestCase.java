@@ -12,17 +12,11 @@ package org.mule.providers.tcp.integration;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
-import org.mule.impl.model.MuleProxy;
 import org.mule.providers.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
-import org.mule.tck.testmodels.mule.TestMuleProxy;
-import org.mule.tck.testmodels.mule.TestSedaComponent;
-import org.mule.tck.testmodels.mule.TestSedaModel;
-import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.UMOModel;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -79,14 +73,11 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
 
         MuleClient client = new MuleClient();
 
-        UMOModel model = managementContext.getRegistry().lookupModel("echoModel");
-        assertTrue(model instanceof TestSedaModel);
-        
-        UMOComponent component = model.getComponent("testComponent");
-        MuleProxy proxy = ((TestSedaComponent) component).getProxy();
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)  ((TestMuleProxy) proxy).getComponent();
+
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)lookupComponent("", "testComponent");
+
         assertNotNull(ftc);
-//        assertEquals(1, ftc.getNumber());
+        //assertEquals(1, ftc.getNumber());
 
         ftc.setEventCallback(callback, size);
 

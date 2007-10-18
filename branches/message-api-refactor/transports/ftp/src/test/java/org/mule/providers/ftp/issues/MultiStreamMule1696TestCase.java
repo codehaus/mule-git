@@ -17,11 +17,11 @@ import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
 
-import java.util.HashMap;
-
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
+import java.util.HashMap;
 
 public class MultiStreamMule1696TestCase extends AbstractFtpServerTestCase
 {
@@ -66,6 +66,7 @@ public class MultiStreamMule1696TestCase extends AbstractFtpServerTestCase
 
         FunctionalStreamingTestComponent ftc =
                 (FunctionalStreamingTestComponent) lookupComponent("main", "testComponent");
+
         assertNotNull(ftc);
 //        assertEquals(1, ftc.getNumber());
 

@@ -30,12 +30,6 @@
         </spring:property>
     </spring:bean>
 
-    <stdio:connector name="SystemStreamConnector"
-                     promptMessageCode="2"
-                     resourceBundle="messages.stockquote-example-messages"
-                     messageDelayTime="1000"/>
-
-    <!-- proxyPort cannot be substituted here - see MULE-1887 -->
     <http:connector name="HttpConnector"
                     proxyHostname="${proxyHostname}"
                     proxyPassword="${proxyPassword}"
@@ -52,31 +46,14 @@
         The Mule model initialises and manages your UMO components
     -->
     <model name="Sample-SOAP">
-        <service name="Console I/O">
-            <component class="org.mule.components.simple.BridgeComponent"/>
-            <inbound-router>
-                <inbound-endpoint address="stdio://System.in"/>
-            </inbound-router>
-            <outbound-router>
-                <!--
-                    We use a chaining router to send the results of one endpoint execution as the
-                    input for the next endpoint. In this case it writes it out to System.out
-                -->
-                <chaining-router>
-                    <outbound-endpoint address="vm://stockquote"/>
-                    <outbound-endpoint address="stdio://System.out"/>
-                </chaining-router>
-            </outbound-router>
-        </service>
-
         <!--
             This component can proxy external web service calls over Jms, tcp, ssl or any other transport.
             For this example we use Vm.
         -->
         <service name="serviceProxy">
-            <component class="org.mule.components.simple.BridgeComponent"/>
             <inbound-router>
                 <inbound-endpoint address="vm://stockquote"/>
+                <forwarding-router/>
             </inbound-router>
             <outbound-router>
                 <outbound-pass-through-router>

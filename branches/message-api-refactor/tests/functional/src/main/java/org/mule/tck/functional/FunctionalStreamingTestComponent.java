@@ -15,10 +15,10 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -169,7 +169,7 @@ public class FunctionalStreamingTestComponent implements Callable
         summary = result.toString();
 
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
-                + context.getComponentDescriptor().getName() + ". " + summary
+                + context.getComponent().getName() + ". " + summary
                 + "\n callback: " + eventCallback,
                 '*', 80);
 

@@ -14,10 +14,10 @@
         <tcp:streaming-protocol/>
     </tcp:connector>
 
-    <model name="echoModel" class="org.mule.tck.testmodels.mule.TestSedaModel">
+    <model name="echoModel">
 
         <service name="echo">
-            <component class="org.mule.components.simple.BridgeComponent"/>
+            <singleton-object class="org.mule.components.simple.PassThroughComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65432" synchronous="true"/>
             </inbound-router>
@@ -30,13 +30,12 @@
         </service>
         
         <service name="testComponent">
-            <component scope="singleton" class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
+            <singleton-object class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65433" synchronous="true"/>
             </inbound-router>
         </service>
 
     </model>
-
 </mule>
         

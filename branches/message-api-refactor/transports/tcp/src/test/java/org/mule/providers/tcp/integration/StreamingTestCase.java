@@ -16,12 +16,12 @@ import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.umo.UMOEventContext;
 
-import java.util.HashMap;
-
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
+import java.util.HashMap;
 
 /**
  * This test is more about testing the streaming model than the TCP provider, really.
@@ -76,10 +76,10 @@ public class StreamingTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
         // this works only if singleton set in descriptor
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) 
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)
             lookupComponent("echoModel", "testComponent");
         assertNotNull(ftc);
-        
+
         ftc.setEventCallback(callback, TEST_MESSAGE.length());
 
         client.dispatch("tcp://localhost:65432", TEST_MESSAGE, new HashMap());

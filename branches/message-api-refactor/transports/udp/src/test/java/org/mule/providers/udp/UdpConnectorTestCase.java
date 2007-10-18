@@ -10,13 +10,11 @@
 
 package org.mule.providers.udp;
 
-import org.mule.impl.MuleDescriptor;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 
 import java.net.DatagramPacket;
@@ -44,8 +42,7 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        MuleDescriptor d = getTestDescriptor("orange", Orange.class.getName());
-        UMOComponent component = getTestComponent(d);
+        UMOComponent component = getTestComponent("orange", Orange.class);
         UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
         UMOConnector connector = getConnector();
 
@@ -73,12 +70,14 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
             // expected
         }
 
-        endpoint = new MuleEndpoint();
-        endpoint.setEndpointURI(new MuleEndpointURI("udp://localhost:3456"));
-        connector.registerListener(component, endpoint);
+        UMOImmutableEndpoint endpoint2 = managementContext.getRegistry()
+            .lookupEndpointFactory()
+            .createOutboundEndpoint("udp://localhost:3456", managementContext);
+
+        connector.registerListener(component, endpoint2);
         try
         {
-            connector.registerListener(component, endpoint);
+            connector.registerListener(component, endpoint2);
             fail("cannot register on the same endpointUri");
         }
         catch (Exception e)

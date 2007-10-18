@@ -22,25 +22,26 @@ public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTe
 
     private boolean backupEnabled;
 
-    public AbstractBaseBackupMule2050TestCase(boolean backupEnabled)
+    public AbstractBaseBackupMule2050TestCase(int port, boolean backupEnabled)
     {
+        super(port);
         this.backupEnabled = backupEnabled;
     }
 
     // @Override
-    public UMOConnector createConnector(boolean init) throws Exception
+    public UMOConnector createConnector() throws Exception
     {
-        UMOConnector connector = super.createConnector(init);
+        UMOConnector connector = super.createConnector();
         ((AbstractRetrieveMailConnector) connector).setBackupEnabled(backupEnabled);
         return connector;
     }
 
-    public void doTestReceiver() throws Exception
+    public void testReceiver() throws Exception
     {
         File dir = FileUtils.newFile(managementContext.getRegistry().getConfiguration().getWorkingDirectory() + "/mail/INBOX");
         assertFalse("Mail backup file already exists: " + dir.getAbsolutePath(), dir.exists());
         debug(dir);
-        super.doTestReceiver();
+        super.testReceiver();
         debug(dir);
         assertTrue(dir.getAbsolutePath(), dir.exists() == backupEnabled);
     }

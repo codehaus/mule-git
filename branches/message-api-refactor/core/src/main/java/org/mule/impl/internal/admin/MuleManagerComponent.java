@@ -14,19 +14,18 @@ import org.mule.MuleException;
 import org.mule.MuleServer;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.RequestContext;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.impl.model.ModelHelper;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
 import org.mule.transformers.wire.WireFormat;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
@@ -85,7 +84,6 @@ public class MuleManagerComponent implements Callable, Initialisable
             throw new InitialisationException(CoreMessages.objectIsNull("wireFormat"), this);
         }
     }
-
     public Object onCall(UMOEventContext context) throws Exception
     {
         Object result;
@@ -129,13 +127,16 @@ public class MuleManagerComponent implements Callable, Initialisable
 
         if (destComponent != null)
         {
-            UMOSession session = new MuleSession(ModelHelper.getComponent(destComponent));
+            UMOSession session = new MuleSession(MuleServer.getManagementContext().getRegistry().lookupComponent(destComponent));
             // Need to do this otherise when the event is invoked the
             // transformer associated with the Mule Admin queue will be invoked, but
             // the message will not be of expected type
-            UMOEndpoint ep = new MuleEndpoint(RequestContext.getEvent().getEndpoint());
+            UMOManagementContext managementContext = MuleServer.getManagementContext();
+            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(RequestContext.getEvent().getEndpoint(), managementContext);
             // TODO - is this correct?  it stops any other transformer from being set
-            ep.setTransformers(new LinkedList());
+            builder.setTransformers(new LinkedList());
+            UMOImmutableEndpoint ep = managementContext.getRegistry().lookupEndpointFactory().createInboundEndpoint(builder,
+                managementContext);
             UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(),
                 context.isSynchronous());
             event = RequestContext.setEvent(event);
@@ -235,31 +236,34 @@ public class MuleManagerComponent implements Callable, Initialisable
     }
 
 
-    public static final UMODescriptor getDescriptor(UMOEndpointBuilder endpointBuilder,
+    public static final UMOComponent getComponent(UMOEndpointBuilder endpointBuilder,
                                                     WireFormat wireFormat,
                                                     String encoding,
-                                                    int eventTimeout) throws UMOException
+                                                    int eventTimeout,
+                                                    UMOManagementContext managementContext) throws UMOException
     {
         try
         {
-            endpointBuilder.setName(MANAGER_ENDPOINT_NAME);
-    
-            MuleDescriptor descriptor = new MuleDescriptor();
-            descriptor.setName(MANAGER_COMPONENT_NAME);
-    
-            UMOManagementContext managementContext = MuleServer.getManagementContext();
-            UMOImmutableEndpoint endpoint = managementContext.getRegistry()
-                .lookupEndpointFactory()
-                .createInboundEndpoint(endpointBuilder, managementContext);
-            descriptor.getInboundRouter().addEndpoint(endpoint);
+            UMOComponent component = new SedaComponent();
+            component.setName(MANAGER_COMPONENT_NAME);
+            component.setModel(managementContext.getRegistry().lookupSystemModel());
 
             Map props = new HashMap();
             props.put("wireFormat", wireFormat);
             props.put("encoding", encoding);
             props.put("synchronousEventTimeout", new Integer(eventTimeout));
-            descriptor.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
-            descriptor.setProperties(props);
-            return descriptor;
+            component.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
+
+            component.setManagementContext(managementContext);
+            //component.initialise();
+    
+            endpointBuilder.setName(MANAGER_ENDPOINT_NAME);
+            UMOImmutableEndpoint endpoint = managementContext.getRegistry()
+                .lookupEndpointFactory()
+                .createInboundEndpoint(endpointBuilder, managementContext);
+            component.getInboundRouter().addEndpoint(endpoint);
+
+            return component;
         }
         catch (Exception e)
         {

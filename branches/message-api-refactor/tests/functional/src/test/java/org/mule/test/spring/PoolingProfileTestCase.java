@@ -12,12 +12,12 @@ package org.mule.test.spring;
 
 import org.mule.config.PoolingProfile;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMODescriptor;
-import org.mule.util.object.ObjectPool;
+import org.mule.umo.UMOComponent;
+import org.mule.util.object.ObjectFactory;
+import org.mule.util.object.PooledObjectFactory;
 
 public class PoolingProfileTestCase  extends FunctionalTestCase
 {
-
     protected String getConfigResources()
     {
         return "pooling-profile-test.xml";
@@ -34,28 +34,30 @@ public class PoolingProfileTestCase  extends FunctionalTestCase
 
     public void testFailAll()
     {
-        doTest("fail_all", ObjectPool.WHEN_EXHAUSTED_FAIL,
+        doTest("fail_all", PoolingProfile.WHEN_EXHAUSTED_FAIL,
                 PoolingProfile.INITIALISE_ALL, 1, 2, 3);
     }
 
     public void testGrowOne()
     {
-        doTest("grow_one", ObjectPool.WHEN_EXHAUSTED_GROW,
+        doTest("grow_one", PoolingProfile.WHEN_EXHAUSTED_GROW,
                 PoolingProfile.INITIALISE_ONE, 2, 3, 4);
     }
 
     public void testWaitNone()
     {
-        doTest("wait_none", ObjectPool.WHEN_EXHAUSTED_WAIT,
+        doTest("wait_none", PoolingProfile.WHEN_EXHAUSTED_WAIT,
                 PoolingProfile.INITIALISE_NONE, 3, 4, 5);
     }
 
     protected void doTest(String service, int exhausted, int initialisation,
                           int active, int idle, long wait)
     {
-        UMODescriptor descriptor = managementContext.getRegistry().lookupService(service);
-        assertNotNull(service, descriptor);
-        PoolingProfile profile = descriptor.getPoolingProfile();
+        UMOComponent c = managementContext.getRegistry().lookupComponent(service);
+        assertNotNull(service, c);
+        ObjectFactory of = c.getServiceFactory();
+        assertTrue(of instanceof PooledObjectFactory);
+        PoolingProfile profile = ((PooledObjectFactory) of).getPoolingProfile();
         assertNotNull(profile);
         assertEquals("exhausted:", exhausted, profile.getExhaustedAction());
         assertEquals("initialisation:", initialisation, profile.getInitialisationPolicy());
@@ -63,5 +65,4 @@ public class PoolingProfileTestCase  extends FunctionalTestCase
         assertEquals("idle:", idle, profile.getMaxIdle());
         assertEquals("wait:", wait, profile.getMaxWait());
     }
-
 }

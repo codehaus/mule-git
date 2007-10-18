@@ -10,26 +10,30 @@
 
 package org.mule.providers.soap.axis.extensions;
 
+import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.extras.AxisCleanAndAddProperties;
-import org.mule.umo.UMODescriptor;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
+import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
+import org.mule.util.StringMessageUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -123,7 +127,7 @@ public class UniversalSender extends BasicHandler
             if (requestEndpoint.getConnector() instanceof AxisConnector)
             {
                 msgContext.setTypeMappingRegistry(((AxisConnector)requestEndpoint.getConnector())
-                    .getAxisServer().getTypeMappingRegistry());
+                    .getAxis().getTypeMappingRegistry());
             }
             
             Map props = new HashMap();
@@ -205,7 +209,7 @@ public class UniversalSender extends BasicHandler
             logger.info("Making Axis soap request on: " + uri);
             if (logger.isDebugEnabled())
             {
-                logger.debug("Soap request is:\n" + payload.toString());
+                logger.debug("Soap request is:\n" + new String((payload instanceof byte[] ? (byte[])payload : payload.toString().getBytes())));
             }
 
             if (sync)
@@ -218,7 +222,10 @@ public class UniversalSender extends BasicHandler
 //                dispatchEvent = new MuleEvent(dispatchEvent.getMessage(), syncEndpoint,
 //                    dispatchEvent.getSession(), dispatchEvent.isSynchronous());
 //                UMOMessage result = session.sendEvent(dispatchEvent);
-                endpoint = new MuleEndpoint(endpoint);
+                UMOManagementContext managementContext = MuleServer.getManagementContext();
+                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(uri, managementContext);
+                endpoint = managementContext.getRegistry().lookupEndpointFactory().createOutboundEndpoint(builder,
+                    managementContext);
                 UMOEvent dispatchEvent = new MuleEvent(message, endpoint, session, sync);
                 UMOMessage result = endpoint.send(dispatchEvent);
 
@@ -257,29 +264,28 @@ public class UniversalSender extends BasicHandler
 
     }
 
-    protected UMOEndpoint lookupEndpoint(String uri) throws UMOException
+    protected UMOImmutableEndpoint lookupEndpoint(String uri) throws UMOException
     {
-        UMODescriptor axis = RegistryContext.getRegistry().lookupService(
-            AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
+        UMOComponent axis = RegistryContext.getRegistry().lookupComponent(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
         UMOEndpointURI endpoint = new MuleEndpointURI(uri);
-        //UMOManagementContext mgmtContext = MuleServer.getManagementContext();
-        
-        UMOEndpoint ep;
+        UMOManagementContext managementContext = MuleServer.getManagementContext(); 
+        UMOImmutableEndpoint ep;
+
         if (axis != null)
         {
             synchronized (endpointsCache)
             {
-                ep = (UMOEndpoint)endpointsCache.get(endpoint.getAddress());
+                ep = (UMOImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
                 if (ep == null)
                 {
                     updateEndpointCache(axis.getOutboundRouter());
-                    ep = (UMOEndpoint)endpointsCache.get(endpoint.getAddress());
+                    ep = (UMOImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
                     if (ep == null)
                     {
                         logger.debug("Dispatch Endpoint uri: " + uri
                                      + " not found on the cache. Creating the endpoint instead.");
-                        ep = new MuleEndpoint(uri, false);
-                        //((MuleEndpoint)ep).setManagementContext(mgmtContext);
+                        ep = managementContext.getRegistry().lookupEndpointFactory()
+                                .createOutboundEndpoint(uri, managementContext);
                     }
                     else
                     {
@@ -294,8 +300,8 @@ public class UniversalSender extends BasicHandler
         }
         else
         {
-            ep = new MuleEndpoint(uri, false);
-            //((MuleEndpoint)ep).setManagementContext(mgmtContext);
+            ep = managementContext.getRegistry().lookupEndpointFactory()
+                    .createOutboundEndpoint(uri, managementContext);
         }
         return ep;
     }

@@ -14,6 +14,7 @@ import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
 
 import java.util.HashMap;
@@ -77,6 +78,7 @@ public class MultiStreamMule1692TestCase extends FunctionalTestCase
                 (FunctionalStreamingTestComponent) lookupComponent("echoModel", "testComponent");
 //        assertNotNull(ftc);
 //        assertEquals(1, ftc.getNumber());
+
 
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference message = new AtomicReference();

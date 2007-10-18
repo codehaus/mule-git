@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Factory used to create a new service descriptor.
+ * @deprecated TODO MULE-2102
  */
 public class ServiceDescriptorFactory 
 {

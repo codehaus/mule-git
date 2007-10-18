@@ -7,7 +7,6 @@
        xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/streaming/2.0 http://www.mulesource.org/schema/mule/streaming/2.0/mule-streaming.xsd
                http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd
                http://www.mulesource.org/schema/mule/tcp/2.0 http://www.mulesource.org/schema/mule/tcp/2.0/mule-tcp.xsd">
 
@@ -19,10 +18,10 @@
         <tcp:direct-protocol payloadOnly="true"/>
     </tcp:connector>
 
-    <model name="main" class="org.mule.tck.testmodels.mule.TestSedaModel">
+    <model name="main">
 
         <service name="bridge">
-            <component class="org.mule.components.simple.BridgeComponent"/>
+            <singleton-object class="org.mule.components.simple.PassThroughComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:60196">
                     <retry-connection-strategy retryCount="3" retryFrequency="2000"/>
@@ -38,7 +37,7 @@
         </service>
 
         <service name="testComponent">
-            <component scope="singleton" class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
+            <singleton-object class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="ftp://anonymous:email@localhost:60197">
                     <retry-connection-strategy retryCount="3" retryFrequency="2000"/>

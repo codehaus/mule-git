@@ -23,6 +23,7 @@ import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
+import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -44,6 +45,7 @@ import org.mule.util.concurrent.WaitableBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.io.OutputStream;
+
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -268,8 +270,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
 
         if (connector.isEnableMessageEvents())
         {
-            connector.fireNotification(new MessageNotification(message, endpoint, component.getDescriptor()
-                    .getName(), MessageNotification.MESSAGE_RECEIVED));
+            connector.fireNotification(
+                new MessageNotification(message, endpoint, component.getName(), MessageNotification.MESSAGE_RECEIVED));
         }
         
         if (endpoint.isRemoteSync())
@@ -563,12 +565,12 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 // This is a replyTo event for a current request
                 if (UMOEndpoint.ENDPOINT_TYPE_RESPONSE.equals(endpoint.getType()))
                 {
-                    component.getDescriptor().getResponseRouter().route(muleEvent);
+                    component.getResponseRouter().route(muleEvent);
                     return null;
                 }
                 else
                 {
-                    resultMessage = component.getDescriptor().getInboundRouter().route(muleEvent);
+                    resultMessage = component.getInboundRouter().route(muleEvent);
                 }
             }
             if (resultMessage != null)

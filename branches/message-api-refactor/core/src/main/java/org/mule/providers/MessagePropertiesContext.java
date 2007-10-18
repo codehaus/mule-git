@@ -259,7 +259,12 @@ public class MessagePropertiesContext implements Serializable
 
     public String getStringProperty(String name, String defaultValue)
     {
-        return MapUtils.getString(getScopedProperties(defaultScope), name, defaultValue);
+        Object value = getProperty(name);
+        if(value==null)
+        {
+            return defaultValue;
+        }
+        return value.toString();
     }
 
     public String toString()

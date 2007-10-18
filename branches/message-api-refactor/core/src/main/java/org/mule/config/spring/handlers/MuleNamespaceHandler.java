@@ -9,8 +9,6 @@
  */
 package org.mule.config.spring.handlers;
 
-import org.mule.components.rest.RestServiceWrapper;
-import org.mule.components.simple.BridgeComponent;
 import org.mule.components.simple.EchoComponent;
 import org.mule.components.simple.LogComponent;
 import org.mule.components.simple.NoArgsCallWrapper;
@@ -24,27 +22,27 @@ import org.mule.config.spring.factories.ResponseEndpointFactoryBean;
 import org.mule.config.spring.parsers.collection.AttributeMapDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildListDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapDefinitionParser;
-import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
 import org.mule.config.spring.parsers.delegate.InheritDefinitionParser;
-import org.mule.config.spring.parsers.delegate.SingleParentFamilyDefinitionParser;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
 import org.mule.config.spring.parsers.generic.NameTransferDefinitionParser;
 import org.mule.config.spring.parsers.generic.NamedDefinitionParser;
 import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
 import org.mule.config.spring.parsers.generic.ParentDefinitionParser;
+import org.mule.config.spring.parsers.specific.BridgeServiceDefinitionParser;
 import org.mule.config.spring.parsers.specific.ComponentDefinitionParser;
 import org.mule.config.spring.parsers.specific.ConfigurationDefinitionParser;
 import org.mule.config.spring.parsers.specific.ConnectionStrategyDefinitionParser;
 import org.mule.config.spring.parsers.specific.EnvironmentPropertyDefinitionParser;
 import org.mule.config.spring.parsers.specific.FilterDefinitionParser;
+import org.mule.config.spring.parsers.specific.ForwardingRouterDefinitionParser;
 import org.mule.config.spring.parsers.specific.MuleAdminAgentDefinitionParser;
 import org.mule.config.spring.parsers.specific.ObjectFactoryDefinitionParser;
+import org.mule.config.spring.parsers.specific.PojoServiceDefinitionParser;
 import org.mule.config.spring.parsers.specific.PoolingProfileDefinitionParser;
 import org.mule.config.spring.parsers.specific.RouterDefinitionParser;
-import org.mule.config.spring.parsers.specific.ServiceDescriptorDefinitionParser;
 import org.mule.config.spring.parsers.specific.ServiceOverridesDefinitionParser;
-import org.mule.config.spring.parsers.specific.SimpleComponentDefinitionParser;
+import org.mule.config.spring.parsers.specific.SimplePojoServiceDefinitionParser;
 import org.mule.config.spring.parsers.specific.ThreadingProfileDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransactionConfigDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
@@ -56,6 +54,7 @@ import org.mule.impl.container.JndiContainerContext;
 import org.mule.impl.container.PropertiesContainerContext;
 import org.mule.impl.container.RmiContainerContext;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.impl.security.SecretKeyEncryptionStrategy;
@@ -121,10 +120,15 @@ import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.transformers.simple.StringAppendTransformer;
 import org.mule.transformers.simple.StringToByteArray;
+import org.mule.util.object.PooledObjectFactory;
+import org.mule.util.object.PrototypeObjectFactory;
+import org.mule.util.object.SingletonObjectFactory;
 import org.mule.util.properties.BeanPropertyExtractor;
 import org.mule.util.properties.MapPropertyExtractor;
 import org.mule.util.properties.MessagePropertyExtractor;
 import org.mule.util.properties.PayloadPropertyExtractor;
+
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
@@ -216,8 +220,9 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
         registerBeanDefinitionParser("jndi-container", new MuleOrphanDefinitionParser(JndiContainerContext.class, true));
         registerBeanDefinitionParser("properties-container", new MuleOrphanDefinitionParser(PropertiesContainerContext.class, true));
 
-        //Model Elements
+        // Models
         registerBeanDefinitionParser("model", new InheritDefinitionParser(new OrphanDefinitionParser(SedaModel.class, true), new NamedDefinitionParser()));
+        registerBeanDefinitionParser("seda-model", new InheritDefinitionParser(new OrphanDefinitionParser(SedaModel.class, true), new NamedDefinitionParser()));
 //        registerBeanDefinitionParser("model-seda-optimised", new OrphanDefinitionParser(OptimisedSedaModel.class, true));
 //        registerBeanDefinitionParser("model-pipeline", new OrphanDefinitionParser(PipelineModel.class, true));
 
@@ -228,40 +233,38 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
         //registerBeanDefinitionParser("reflection-entrypoint-resolver", new ChildDefinitionParser("entrypointResolver", MethodEntryPointResolver.class));
         //registerBeanDefinitionParser("non-void-entrypoint-resolver", new ChildDefinitionParser("entrypointResolver", NonVoidEntryPointResolver.class));
 
-        //Service Elements
-        registerBeanDefinitionParser("service", new ServiceDescriptorDefinitionParser());
-        registerBeanDefinitionParser("component", new ComponentDefinitionParser("serviceFactory"));
-        registerBeanDefinitionParser("bridge-component", new SimpleComponentDefinitionParser("serviceFactory", BridgeComponent.class));
-        registerBeanDefinitionParser("pass-through-component", new SimpleComponentDefinitionParser("serviceFactory", PassThroughComponent.class));
-        registerBeanDefinitionParser("log-component", new SimpleComponentDefinitionParser("serviceFactory", LogComponent.class));
-        registerBeanDefinitionParser("echo-component", new SimpleComponentDefinitionParser("serviceFactory", EchoComponent.class));
-        registerBeanDefinitionParser("null-component", new SimpleComponentDefinitionParser("serviceFactory", NullComponent.class));
-        registerBeanDefinitionParser("rest-service-component",
-                                     new SingleParentFamilyDefinitionParser(new SimpleComponentDefinitionParser("serviceFactory", RestServiceWrapper.class,RestServiceWrapper.RestSingletonObjectFactory.class))
-                                             .addChildDelegate("httpMethod", new AttributeMapDefinitionParser("properties"))
-                                             .addChildDelegate("serviceUrl", new AttributeMapDefinitionParser("properties"))
-                                             .addChildDelegate("urlFromMessage", new AttributeMapDefinitionParser("properties"))
-                                             .addChildDelegate("errorExpression", new AttributeMapDefinitionParser("properties"))
-        );
+        // Components
+        BeanDefinitionParser bdpSedaComponent = new ComponentDefinitionParser(SedaComponent.class);
+        registerBeanDefinitionParser("seda-component", bdpSedaComponent);
+        registerBeanDefinitionParser("service", bdpSedaComponent);
+        registerBeanDefinitionParser("bridge-service", new BridgeServiceDefinitionParser());
 
+        // Common POJO Services
+        registerBeanDefinitionParser("pass-through-component", new SimplePojoServiceDefinitionParser(PassThroughComponent.class));
+        registerBeanDefinitionParser("log-component", new SimplePojoServiceDefinitionParser(LogComponent.class));
+        registerBeanDefinitionParser("echo-component", new SimplePojoServiceDefinitionParser(EchoComponent.class));
+        registerBeanDefinitionParser("null-component", new SimplePojoServiceDefinitionParser(NullComponent.class));
+        registerBeanDefinitionParser("no-args-call-component", new SimplePojoServiceDefinitionParser(NoArgsCallWrapper.class));
 
-        registerBeanDefinitionParser("no-args-call-component", new SimpleComponentDefinitionParser("serviceFactory", NoArgsCallWrapper.class));
+        //Object Factories
+        registerBeanDefinitionParser("singleton-object", new PojoServiceDefinitionParser(SingletonObjectFactory.class));
+        registerBeanDefinitionParser("prototype-object", new PojoServiceDefinitionParser(PrototypeObjectFactory.class));
+        BeanDefinitionParser bpdPooledObject = new PojoServiceDefinitionParser(PooledObjectFactory.class);
+        registerBeanDefinitionParser("pooled-object", bpdPooledObject);
+        registerBeanDefinitionParser("component", bpdPooledObject);
 
+        //Routers
         registerBeanDefinitionParser("inbound-router", new ChildDefinitionParser("inboundRouter", InboundRouterCollection.class));
         registerBeanDefinitionParser("outbound-router", new ChildDefinitionParser("outboundRouter", OutboundRouterCollection.class));
         registerBeanDefinitionParser("nested-router", new ChildDefinitionParser("nestedRouter", NestedRouterCollection.class));
         registerBeanDefinitionParser("response-router", new ChildDefinitionParser("responseRouter", ResponseRouterCollection.class));
-
-        //rest-service-component
-        registerBeanDefinitionParser("payloadParameterNames", new ChildListDefinitionParser("payloadParameterNames"));
-        registerBeanDefinitionParser("requiredParams", new ChildMapEntryDefinitionParser("requiredParams","key","value"));
-        registerBeanDefinitionParser("optionalParams", new ChildMapEntryDefinitionParser("optionalParams","key","value"));
 
         //NoArgsCallWrapper
         registerBeanDefinitionParser("delegateClass", new AttributeMapDefinitionParser("properties"));
         registerBeanDefinitionParser("delegateInstance", new AttributeMapDefinitionParser("properties"));
 
         //Inbound Routers
+        registerBeanDefinitionParser("forwarding-router", new ForwardingRouterDefinitionParser());
         registerBeanDefinitionParser("inbound-pass-through-router", new RouterDefinitionParser("router", InboundPassThroughRouter.class));
         registerBeanDefinitionParser("idempotent-receiver-router", new RouterDefinitionParser("router", IdempotentReceiver.class));
         registerBeanDefinitionParser("idempotent-secure-hash-receiver-router", new RouterDefinitionParser("router", IdempotentSecureHashReceiver.class));
@@ -330,7 +333,7 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
         registerBeanDefinitionParser("environment", new ChildMapDefinitionParser("environment"));
 
         //Security
-        registerMuleDefinitionParser("security-manager", new NamedDefinitionParser(MuleProperties.OBJECT_SECURITY_MANAGER)).addIgnored("type");
+        registerMuleDefinitionParser("security-manager", new NamedDefinitionParser(MuleProperties.OBJECT_SECURITY_MANAGER)).addIgnored("type").addIgnored("name");
         registerBeanDefinitionParser("custom-security-provider", new NameTransferDefinitionParser("providers"));
         registerMuleDefinitionParser("custom-encryption-strategy", new NameTransferDefinitionParser("encryptionStrategies")).addAlias("strategy", "encryptionStrategy");
         registerBeanDefinitionParser("password-encryption-strategy", new ChildDefinitionParser("encryptionStrategy", PasswordBasedEncryptionStrategy.class));

@@ -11,9 +11,9 @@
     <model name="synchTestModel">
 
         <service name="bridge">
-            <bridge-component/>
             <inbound-router>
                 <inbound-endpoint address="vm://bridge" synchronous="true"/>
+                <forwarding-router/>
             </inbound-router>
             <outbound-router>
                 <outbound-pass-through-router>
@@ -21,6 +21,11 @@
                 </outbound-pass-through-router>
             </outbound-router>
         </service>
+
+        <!-- bridge-service name="bridge">
+            <inbound-endpoint address="vm://bridge" synchronous="true"/>
+            <outbound-endpoint address="vm://responder" synchronous="true"/>
+        </bridge-service -->
 
         <service name="responder">
             <component class="org.mule.tck.functional.FunctionalTestComponent"/>

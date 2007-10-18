@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
 {
-    protected String getConfigResources()
+    protected String getConfigurationResources()
     {
         return "message-properties-transformer-config.xml";
     }
@@ -88,6 +88,7 @@ public class MessagePropertiesTransformerTestCase extends AbstractMuleTestCase
     public void testTransformerConfig() throws Exception
     {
         MessagePropertiesTransformer transformer = (MessagePropertiesTransformer) RegistryContext.getRegistry().lookupTransformer("testTransformer");
+        assertNotNull(transformer);
         assertNotNull(transformer.getAddProperties());
         assertNotNull(transformer.getDeleteProperties());
         assertEquals(transformer.getAddProperties().size(), 1);

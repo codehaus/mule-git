@@ -47,7 +47,7 @@
 
     <xsd:group name="jmsConnectorElements">
         <xsd:sequence>
-            <xsd:element name="redelivery-handler" type="mule:objectFactoryType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="redelivery-handler" type="mule:genericObjectFactoryType" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:group>
 
@@ -71,11 +71,20 @@
         <xsd:attribute name="eagerConsumer" type="mule:substitutableBoolean"/>
         <xsd:attribute name="jndiDestinations" type="mule:substitutableBoolean"/>
         <xsd:attribute name="forceJndiDestinations" type="mule:substitutableBoolean"/>
+        <!-- Defaults to org.mule.providers.jms.JmsConstants.JMS_SPECIFICATION_102B  -->
+        <xsd:attribute name="specification" default="1.0.2b">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="1.0.2b"/>
+                    <xsd:enumeration value="1.1"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
     <xsd:complexType name="connectionFactoryType">
         <xsd:complexContent>
-            <xsd:extension base="mule:objectFactoryType">
+            <xsd:extension base="mule:genericObjectFactoryType">
                 <xsd:attribute name="username" type="xsd:string"/>
                 <xsd:attribute name="password" type="xsd:string"/>
             </xsd:extension>

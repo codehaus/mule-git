@@ -10,9 +10,9 @@
 
 package org.mule.config.spring.parsers.assembly;
 
+import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
-import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.util.ClassUtils;
 import org.mule.util.CoreXMLUtils;
 
@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +36,7 @@ import org.w3c.dom.Attr;
 public class DefaultBeanAssembler implements BeanAssembler
 {
 
-    private Log logger = LogFactory.getLog(getClass());
+    private static Log logger = LogFactory.getLog(DefaultBeanAssembler.class);
     private PropertyConfiguration beanConfig;
     private BeanDefinitionBuilder bean;
     private PropertyConfiguration targetConfig;
@@ -86,10 +87,12 @@ public class DefaultBeanAssembler implements BeanAssembler
         String oldName = CoreXMLUtils.attributeName(attribute);
         if (!beanConfig.isIgnored(oldName))
         {
+            logger.debug(attribute + " for " + bean.getBeanDefinition().getBeanClassName());
             String oldValue = attribute.getNodeValue();
             String newName = bestGuessName(beanConfig, oldName, bean.getBeanDefinition().getBeanClassName());
             String newValue = beanConfig.translateValue(oldName, oldValue);
-            extendBean(newName, newValue, beanConfig.isBeanReference(oldName));
+            addPropertyWithReference(bean.getBeanDefinition().getPropertyValues(),
+                    beanConfig.getSingleProperty(oldName), newName, newValue);
         }
     }
 
@@ -102,21 +105,8 @@ public class DefaultBeanAssembler implements BeanAssembler
      */
     public void extendBean(String newName, Object newValue, boolean isReference)
     {
-        if (isReference)
-        {
-            if (newValue instanceof String)
-            {
-                bean.addPropertyReference(newName, (String) newValue);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Bean reference must be a String: " + newName + "/" + newValue);
-            }
-        }
-        else
-        {
-            bean.addPropertyValue(newName, newValue);
-        }
+        addPropertyWithReference(bean.getBeanDefinition().getPropertyValues(),
+                new SinglePropertyLiteral(isReference), newName, newValue);
     }
 
     /**
@@ -131,10 +121,8 @@ public class DefaultBeanAssembler implements BeanAssembler
         String oldValue = attribute.getNodeValue();
         String newName = bestGuessName(targetConfig, oldName, bean.getBeanDefinition().getBeanClassName());
         String newValue = targetConfig.translateValue(oldName, oldValue);
-        if (!targetConfig.isIgnored(oldName))
-        {
-            extendTarget(newName, newValue, targetConfig.isBeanReference(oldName));
-        }
+        addPropertyWithReference(target.getPropertyValues(),
+                targetConfig.getSingleProperty(oldName), newName, newValue);
     }
 
     /**
@@ -147,23 +135,10 @@ public class DefaultBeanAssembler implements BeanAssembler
     public void extendTarget(String newName, Object newValue, boolean isReference)
     {
         assertTargetPresent();
-        if (isReference)
-        {
-            if (newValue instanceof String)
-            {
-                target.getPropertyValues().addPropertyValue(newName, new RuntimeBeanReference((String) newValue));
-            }
-            else
-            {
-                throw new IllegalArgumentException("Bean reference must be a String: " + newName + "/" + newValue);
-            }
-        }
-        else
-        {
-            target.getPropertyValues().addPropertyValue(newName, newValue);
-        }
+        addPropertyWithReference(target.getPropertyValues(),
+                new SinglePropertyLiteral(isReference), newName, newValue);
     }
-
+    
     /**
      * Insert the bean we have built into the target (typically the parent bean).
      *
@@ -172,6 +147,7 @@ public class DefaultBeanAssembler implements BeanAssembler
      */
     public void insertBeanInTarget(String oldName)
     {
+        logger.debug("insert " + bean.getBeanDefinition().getBeanClassName() + " -> " + target.getBeanClassName());
         assertTargetPresent();
         String newName = bestGuessName(targetConfig, oldName, target.getBeanClassName());
         Object source = bean.getBeanDefinition().getSource();
@@ -187,7 +163,7 @@ public class DefaultBeanAssembler implements BeanAssembler
                 ChildMapEntryDefinitionParser.KeyValuePair pair = (ChildMapEntryDefinitionParser.KeyValuePair) source;
                 ((Map) pv.getValue()).put(pair.getKey(), pair.getValue());
             }
-            else if (targetConfig.isCollection(newName) ||
+            else if (targetConfig.isCollection(oldName) ||
                     source instanceof ChildListEntryDefinitionParser.ListEntry)
             {
                 if (pv == null)
@@ -224,26 +200,79 @@ public class DefaultBeanAssembler implements BeanAssembler
      */
     public void copyBeanToTarget()
     {
+        logger.debug("copy " + bean.getBeanDefinition().getBeanClassName() + " -> " + target.getBeanClassName());
         assertTargetPresent();
         MutablePropertyValues targetProperties = target.getPropertyValues();
         MutablePropertyValues beanProperties = bean.getBeanDefinition().getPropertyValues();
         for (int i=0;i < beanProperties.size(); i++)
         {
             PropertyValue propertyValue = beanProperties.getPropertyValues()[i];
-            String name = propertyValue.getName();
-            Object value = propertyValue.getValue();
-            Object oldValue = null;
-            if (targetProperties.contains(name))
+            addPropertyWithoutReference(targetProperties, new SinglePropertyLiteral(),
+                    propertyValue.getName(), propertyValue.getValue());
+        }
+    }
+
+    public void setBeanFlag(String flag)
+    {
+        MuleHierarchicalBeanDefinitionParserDelegate.setFlag(bean.getRawBeanDefinition(), flag);
+    }
+
+    protected void assertTargetPresent()
+    {
+        if (null == target)
+        {
+            throw new IllegalStateException("Bean assembler does not have a target");
+        }
+    }
+
+    protected void addPropertyWithReference(MutablePropertyValues properties, SingleProperty config,
+                                            String name, Object value)
+    {
+        if (!config.isIgnored())
+        {
+            if (config.isReference())
             {
-                oldValue = targetProperties.getPropertyValue(name).getValue();
+                if (value instanceof String)
+                {
+                    if (((String) value).trim().indexOf(" ") > -1)
+                    {
+                        config.setCollection();
+                    }
+                    for (StringTokenizer ref = new StringTokenizer((String) value); ref.hasMoreTokens();)
+                    {
+                        addPropertyWithoutReference(properties, config, name, new RuntimeBeanReference(ref.nextToken()));
+                    }
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Bean reference must be a String: " + name + "/" + value);
+                }
+            }
+            else
+            {
+                addPropertyWithoutReference(properties, config, name, value);
+            }
+        }
+    }
+
+    protected void addPropertyWithoutReference(MutablePropertyValues properties, SingleProperty config,
+                                               String name, Object value)
+    {
+        if (!config.isIgnored())
+        {
+            logger.debug(name + ": " + value);
+            Object oldValue = null;
+            if (properties.contains(name))
+            {
+                oldValue = properties.getPropertyValue(name).getValue();
             }
             // merge collections
-            if (targetConfig.isCollection(name) || oldValue instanceof Collection || value instanceof Collection)
+            if (config.isCollection() || oldValue instanceof Collection || value instanceof Collection)
             {
                 Collection values = new ManagedList();
                 if (null != oldValue)
                 {
-                    targetProperties.removePropertyValue(name);
+                    properties.removePropertyValue(name);
                     if (oldValue instanceof Collection)
                     {
                         values.addAll((Collection) oldValue);
@@ -261,29 +290,16 @@ public class DefaultBeanAssembler implements BeanAssembler
                 {
                     values.add(value);
                 }
-                targetProperties.addPropertyValue(name, values);
+                properties.addPropertyValue(name, values);
             }
             else
             {
-                targetProperties.addPropertyValue(name, value);
+                properties.addPropertyValue(name, value);
             }
         }
     }
 
-    public void setBeanFlag(String flag)
-    {
-        MuleHierarchicalBeanDefinitionParserDelegate.setFlag(bean.getRawBeanDefinition(), flag);
-    }
-
-    protected void assertTargetPresent()
-    {
-        if (null == target)
-        {
-            throw new IllegalStateException("Bean assembler does not have a target");
-        }
-    }
-
-    protected String bestGuessName(PropertyConfiguration config, String oldName, String className)
+    protected static String bestGuessName(PropertyConfiguration config, String oldName, String className)
     {
         String newName = config.translateName(oldName);
         if (! methodExists(className, newName))
@@ -292,7 +308,7 @@ public class DefaultBeanAssembler implements BeanAssembler
             if (methodExists(className, plural))
             {
                 // this lets us avoid setting addCollection in the majority of cases
-                config.addCollection(plural);
+                config.addCollection(oldName);
                 return plural;
             }
             if (newName.endsWith("y"))
@@ -301,7 +317,7 @@ public class DefaultBeanAssembler implements BeanAssembler
                 if (methodExists(className, pluraly))
                 {
                     // this lets us avoid setting addCollection in the majority of cases
-                    config.addCollection(pluraly);
+                    config.addCollection(oldName);
                     return pluraly;
                 }
             }
@@ -309,7 +325,7 @@ public class DefaultBeanAssembler implements BeanAssembler
         return newName;
     }
 
-    protected boolean methodExists(String className, String newName)
+    protected static boolean methodExists(String className, String newName)
     {
         try
         {

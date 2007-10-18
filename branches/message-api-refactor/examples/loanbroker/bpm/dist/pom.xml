@@ -45,11 +45,13 @@
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jdbc</artifactId>
             <version>${muleVersion}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
     </dependencies>
 

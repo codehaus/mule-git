@@ -17,7 +17,7 @@
     <model name="main">
 
         <service name="echo">
-            <component class="org.mule.components.simple.BridgeComponent"/>
+            <singleton-object class="org.mule.components.simple.PassThroughComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65432?endpointName=myEndpoint"/>
             </inbound-router>

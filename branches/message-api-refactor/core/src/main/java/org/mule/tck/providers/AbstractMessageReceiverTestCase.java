@@ -13,24 +13,23 @@ package org.mule.tck.providers;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageReceiver;
 
 public abstract class AbstractMessageReceiverTestCase extends AbstractMuleTestCase
 {
     protected UMOComponent component;
-    protected UMOEndpoint endpoint;
+    protected UMOImmutableEndpoint endpoint;
 
     protected void doSetUp() throws Exception
     {
-        component = getTestComponent(getTestDescriptor("orange", Orange.class.getName()));
+        component = getTestComponent("orange", Orange.class);
         endpoint = getEndpoint();
     }
 
     public void testCreate() throws Exception
     {
-        UMOComponent component = getTestComponent(getTestDescriptor("orange", Orange.class.getName()));
+        UMOComponent component = getTestComponent("orange", Orange.class);
         UMOImmutableEndpoint endpoint = getTestEndpoint("Test", UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER);
         UMOMessageReceiver receiver = getMessageReceiver();
 
@@ -74,5 +73,5 @@ public abstract class AbstractMessageReceiverTestCase extends AbstractMuleTestCa
      * @return
      * @throws Exception
      */
-    public abstract UMOEndpoint getEndpoint() throws Exception;
+    public abstract UMOImmutableEndpoint getEndpoint() throws Exception;
 }

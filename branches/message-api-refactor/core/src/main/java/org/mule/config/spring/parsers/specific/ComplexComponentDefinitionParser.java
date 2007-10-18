@@ -41,6 +41,12 @@ public class ComplexComponentDefinitionParser extends AbstractDelegatingDefiniti
     private int state = START;
     private Element currentElement;
 
+    public ComplexComponentDefinitionParser(Class componentClass)
+    {
+        this(new SimplePojoServiceDefinitionParser(componentClass),
+                new ChildDefinitionParser("placeholder", componentClass));
+    }
+
     public ComplexComponentDefinitionParser(MuleChildDefinitionParser objectFactoryParser,
                                             ChildDefinitionParser componentParser)
     {

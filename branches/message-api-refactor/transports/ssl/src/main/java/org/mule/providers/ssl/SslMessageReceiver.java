@@ -14,7 +14,7 @@ import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.tcp.TcpMessageReceiver;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.CreateException;
 import org.mule.umo.provider.UMOConnector;
 
@@ -32,9 +32,9 @@ import javax.resource.spi.work.Work;
 public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeCompletedListener
 {
     private Certificate[] peerCertificateChain;
-    private Certificate[] localCertificateChain;
+    private Certificate[] localCertificateChain; 
 
-    public SslMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public SslMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);

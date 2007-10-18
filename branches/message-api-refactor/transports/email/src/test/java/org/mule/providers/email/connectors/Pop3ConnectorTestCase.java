@@ -13,6 +13,8 @@ package org.mule.providers.email.connectors;
 import org.mule.providers.email.Pop3Connector;
 import org.mule.umo.provider.UMOConnector;
 
+import com.icegreen.greenmail.util.ServerSetup;
+
 /**
  * Simple tests for pulling from a POP3 server.
  */
@@ -21,25 +23,16 @@ public class Pop3ConnectorTestCase extends AbstractReceivingMailConnectorTestCas
 
     public Pop3ConnectorTestCase()
     {
-        super("Pop3Connector");
-    }
-    
-    public UMOConnector createConnector(boolean init) throws Exception
-    {
-        Pop3Connector connector = new Pop3Connector();
-        connector.setName(getConnectorName());
-        connector.setCheckFrequency(POLL_PERIOD_MS);
-        connector.setServiceOverrides(newEmailToStringServiceOverrides());
-        if (init)
-        {
-            connector.initialise();
-        }
-        return connector;
+        super(ServerSetup.PROTOCOL_POP3, 50010);
     }
 
-    public String getTestEndpointURI()
+    public UMOConnector createConnector() throws Exception
     {
-        return getPop3TestEndpointURI();
+        Pop3Connector connector = new Pop3Connector();
+        connector.setName("Pop3Connector");
+        connector.setCheckFrequency(POLL_PERIOD_MS);
+        connector.setServiceOverrides(newEmailToStringServiceOverrides());
+        return connector;
     }
 
 }

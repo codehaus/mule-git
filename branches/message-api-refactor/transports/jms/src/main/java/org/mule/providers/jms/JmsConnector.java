@@ -252,7 +252,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
         try
         {
-            cf = (ConnectionFactory) connectionFactory.create();
+            cf = (ConnectionFactory) connectionFactory.getOrCreate();
             if (cf instanceof XAConnectionFactory && managementContext.getTransactionManager() != null)
             {
                 cf = new ConnectionFactoryWrapper(cf);
@@ -388,7 +388,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
     {
-        return component.getDescriptor().getName() + "~" + endpoint.getEndpointURI().getAddress();
+        return component.getName() + "~" + endpoint.getEndpointURI().getAddress();
     }
 
     public Session getSessionFromTransaction()
@@ -403,7 +403,14 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     logger.debug("Retrieving jms session from current transaction " + tx);
                 }
 
-                return (Session) tx.getResource(connection);
+                Session session = (Session) tx.getResource(connection);
+
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Using " + session + " bound to transaction " + tx);
+                }
+
+                return session;
             }
         }
         return null;
@@ -443,7 +450,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
         if (tx != null)
         {
-            logger.debug("Binding session to current transaction");
+            logger.debug("Binding session " + session + " to current transaction " + tx);
             try
             {
                 tx.bindResource(connection, session);

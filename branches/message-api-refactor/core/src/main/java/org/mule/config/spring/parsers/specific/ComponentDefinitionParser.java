@@ -10,15 +10,27 @@
 
 package org.mule.config.spring.parsers.specific;
 
-public class ComponentDefinitionParser extends ObjectFactoryDefinitionParser
+import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
+
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.w3c.dom.Element;
+
+public class ComponentDefinitionParser extends OrphanDefinitionParser
 {
-    
-    public ComponentDefinitionParser(String setterMethod)
+
+    public ComponentDefinitionParser(Class clazz)
     {
-        super(setterMethod);
-        addAlias("factory", "serviceFactory");
+        super(clazz, true);
+    }
+
+    //@java.lang.Override
+    protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
+    {
+        Element parent = (Element) element.getParentNode();
+        String modelName = parent.getAttribute(ATTRIBUTE_NAME);
+        builder.addPropertyReference("model", modelName);
+        super.doParse(element, parserContext, builder);
     }
 
 }
-
-

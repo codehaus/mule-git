@@ -6,7 +6,6 @@
        xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/streaming/2.0 http://www.mulesource.org/schema/mule/streaming/2.0/mule-streaming.xsd
                http://www.mulesource.org/schema/mule/tcp/2.0 http://www.mulesource.org/schema/mule/tcp/2.0/mule-tcp.xsd">
 
     <!-- as tcp-streaming-test.xml but with synchronous set to true in
@@ -18,10 +17,10 @@
         <tcp:streaming-protocol/>
     </tcp:connector>
 
-    <model name="echoModel" class="org.mule.tck.testmodels.mule.TestSedaModel">
+    <model name="echoModel">
 
         <service name="echo">
-            <component class="org.mule.components.simple.BridgeComponent"/>
+            <singleton-object class="org.mule.components.simple.PassThroughComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65432" synchronous="false"/>
             </inbound-router>
@@ -34,12 +33,11 @@
 
         <service name="testComponent">
             <!-- This component knows how to look for EOF -->
-            <component scope="singleton" class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
+            <singleton-object class="org.mule.providers.tcp.integration.EOFStreamingTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:65433" synchronous="false"/>
             </inbound-router>
         </service>
-
     </model>
 
 </mule>

@@ -156,7 +156,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     String component = null;
                     if (event.getComponent() != null)
                     {
-                        component = event.getComponent().getDescriptor().getName();
+                        component = event.getComponent().getName();
                     }
                     connector.fireNotification(new MessageNotification(event.getMessage(), event
                         .getEndpoint(), component, MessageNotification.MESSAGE_DISPATCHED));
@@ -234,7 +234,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 String component = null;
                 if (event.getComponent() != null)
                 {
-                    component = event.getComponent().getDescriptor().getName();
+                    component = event.getComponent().getName();
                 }
                 connector.fireNotification(new MessageNotification(event.getMessage(), event.getEndpoint(),
                     component, MessageNotification.MESSAGE_SENT));
@@ -403,7 +403,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 // component will be null for client calls
                 if (event.getComponent() != null)
                 {
-                    UMOResponseRouterCollection responseRouters = event.getComponent().getDescriptor().getResponseRouter();
+                    UMOResponseRouterCollection responseRouters = event.getComponent().getResponseRouter();
                     if (responseRouters != null && responseRouters.hasEndpoints())
                     {
                         remoteSync = false;
@@ -583,7 +583,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                     String component = null;
                     if (event.getComponent() != null)
                     {
-                        component = event.getComponent().getDescriptor().getName();
+                        component = event.getComponent().getName();
                     }
 
                     connector.fireNotification(new MessageNotification(event.getMessage(), event
