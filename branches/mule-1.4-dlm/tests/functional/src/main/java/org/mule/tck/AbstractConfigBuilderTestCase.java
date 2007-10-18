@@ -216,7 +216,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         
         // globals
         int defaultMaxBufferSize = 42;
-        int defaultMaxThreadsActive = 16;
+        int defaultMaxThreadsActive = 17;
         int defaultMaxThreadsIdle = 3;
         int defaultThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_WAIT;
         int defaultThreadTTL = 60001;
@@ -253,7 +253,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         // this value is configured
         assertEquals(connectorMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(connectorThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
-        // these values are inherited
+        // these values should be inherited if the current ConfigBuilder supports inheritance
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
@@ -267,7 +267,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(componentMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(componentMaxThreadsIdle, tp.getMaxThreadsIdle());
         assertEquals(componentThreadPoolExhaustedAction, tp.getPoolExhaustedAction());
-        // this value is inherited
+        // this value should be inherited when if current ConfigBuilder supports inheritance
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 

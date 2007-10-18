@@ -28,8 +28,22 @@
             </outbound-router>
 
             <interceptor className="org.mule.interceptors.LoggingInterceptor"/>
-            <threading-profile maxBufferSize="6" maxThreadsActive="12" maxThreadsIdle="6"/>
-            <pooling-profile maxActive="9" maxIdle="6" maxWait="4002" exhaustedAction="WHEN_EXHAUSTED_FAIL" initialisationPolicy="INITIALISE_ALL"/>
+            <!--
+                MULE-2472: note that ALL values must be specified since inheritance of global values
+                does not work with the SpringConfigurationBuilder
+            -->
+            <threading-profile
+                maxBufferSize="6"
+                maxThreadsActive="12"
+                maxThreadsIdle="6"
+                poolExhaustedAction="WHEN_EXHAUSTED_DISCARD"
+                threadTTL="60001"/>
+            <pooling-profile
+                maxActive="9"
+                maxIdle="6"
+                maxWait="4002"
+                exhaustedAction="WHEN_EXHAUSTED_FAIL"
+                initialisationPolicy="INITIALISE_ALL"/>
             <queue-profile maxOutstandingMessages="102"/>
         </mule-descriptor>
     </model>
