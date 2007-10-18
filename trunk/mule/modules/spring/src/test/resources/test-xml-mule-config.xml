@@ -31,7 +31,7 @@
     </agents>
 
     <connector name="dummyConnector" className="org.mule.tck.testmodels.mule.TestConnector">
-        <threading-profile id="dispatcher" maxBufferSize="2"/>
+        <threading-profile id="dispatcher" maxBufferSize="2" poolExhaustedAction="WHEN_EXHAUSTED_DISCARD_OLDEST"/>
         <exception-strategy className="org.mule.tck.testmodels.mule.TestExceptionStrategy"/>
         <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
             <properties>
