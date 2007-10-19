@@ -393,6 +393,15 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
         -->
+        <!-- this is needed to download dependencies of plugins from our custom repo -->
+        <pluginRepository>
+            <id>mule-plugins-deps</id>
+            <name>Mule Plugin Dependencies</name>
+            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>
