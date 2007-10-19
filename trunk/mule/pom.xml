@@ -790,6 +790,15 @@
         </profile>
 
         <profile>
+            <id>bamboo</id>
+            <distributionManagement>
+                <site>
+                    <url>file:///var/www/html/docs/site/${version}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+
+        <profile>
             <id>buildnumber-plugin</id>
             <activation>
                 <property>
