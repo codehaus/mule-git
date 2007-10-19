@@ -157,6 +157,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             catch (Exception e)
             {
                 handleException(e);
+                e.printStackTrace();
             }
             finally
             {
