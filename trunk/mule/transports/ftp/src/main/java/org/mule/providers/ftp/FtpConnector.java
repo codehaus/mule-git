@@ -540,7 +540,8 @@ public class FtpConnector extends AbstractConnector
         if (filename == null)
         {
             String outPattern = (String) endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
-            if (outPattern == null){
+            if (outPattern == null)
+            {
                 outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
                         getOutputPattern());
             }
