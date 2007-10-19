@@ -22,8 +22,9 @@ import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
+import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.OutputHandler;
 import org.mule.umo.provider.UMOMessageAdapter;
 
@@ -70,10 +71,14 @@ public class MuleUniversalChannel extends AbstractChannel
     /** logger used by this class */
     protected final transient Log logger = LogFactory.getLog(getClass());
 
+    private UMOManagementContext managementContext;
+
     public MuleUniversalChannel(String uri, Transport transport)
     {
         setTransport(transport);
         setUri(uri);
+        //TODO not keen on this static Access
+        this.managementContext = MuleServer.getManagementContext();
     }
 
     public void open()
@@ -251,9 +256,7 @@ public class MuleUniversalChannel extends AbstractChannel
             sp.setProperty(propertyName, msg.getProperty(propertyName));
         }
 
-        UMOMessage result = null;
-
-        result = sendStream(getUri(), sp);
+        UMOMessage result = send(getUri(), sp);
         if (result != null)
         {
             InMessage inMessage;
@@ -331,16 +334,12 @@ public class MuleUniversalChannel extends AbstractChannel
         return false;
     }
 
-    protected UMOMessage sendStream(String uri, UMOMessageAdapter adapter) throws UMOException
+    protected UMOMessage send(String uri, UMOMessageAdapter adapter) throws UMOException
     {
-        // TODO DF: MULE-2291 Resolve pending endpoint mutability issues
-        UMOEndpoint ep = (UMOEndpoint) RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri,
-            MuleServer.getManagementContext());
-        ep.setStreaming(true);
+        UMOImmutableEndpoint ep = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri, managementContext);
         UMOMessage message = new MuleMessage(adapter);
         UMOEvent event = new MuleEvent(message, ep, RequestContext.getEventContext().getSession(), true);
-        UMOMessage result = ep.send(event);
-        return result;
+        return ep.send(event);
     }
 
 }
