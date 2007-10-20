@@ -13,6 +13,7 @@ package org.mule.providers.http;
 import org.mule.impl.ThreadSafeAccess;
 import org.mule.providers.AbstractMessageAdapter;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
         if (message instanceof Object[])
         {
             // This case comes from the HttpMessageReceiver...
-
+            Map headers = new HashMap();
             this.message = ((Object[]) message)[0];
             if (((Object[]) message).length > 1)
             {
@@ -56,18 +57,19 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
                         // skip incoming null values
                         if (value != null)
                         {
-                            setProperty(key, value);
+                            headers.put(key, value);
                         }
                     }
                 }
                 else if (second instanceof Header[])
                 {
-                    Header[] headers = (Header[]) second;
-                    for (int i = 0; i < headers.length; i++)
+                    Header[] inboundHeaders = (Header[]) second;
+                    for (int i = 0; i < inboundHeaders.length; i++)
                     {
-                        setProperty(headers[i].getName(), headers[i].getValue());
+                        headers.put(inboundHeaders[i].getName(), inboundHeaders[i].getValue());
                     }
                 }
+                addInboundProperties(headers);
             }
         }
         else if (message instanceof HttpResponse)
