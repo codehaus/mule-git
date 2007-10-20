@@ -144,7 +144,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             {
                 do
                 {
-                    conn.setKeepAlive(true);
+                    conn.setKeepAlive(false);
                     HttpRequest request = conn.readRequest();
                     if (request == null)
                     {
@@ -152,11 +152,12 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     }
                     conn.writeResponse(processRequest(request));
                 }
-                while (conn.isKeepAlive());
+                while (true /*conn.isKeepAlive()*/);
             }
             catch (Exception e)
             {
                 handleException(e);
+                System.out.println("##Exception!!");
                 e.printStackTrace();
             }
             finally
