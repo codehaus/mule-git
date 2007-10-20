@@ -288,15 +288,14 @@ public class MuleUniversalChannel extends AbstractChannel
             }
             finally
             {
-                //TODO UNCOMMENT
-//                try
-//                {
-//                    //in.close();
-//                }
-//                catch (IOException e)
-//                {
-//                    logger.warn("Could not close stream.", e);
-//                }
+                try
+                {
+                    in.close();
+                }
+                catch (IOException e)
+                {
+                    logger.warn("Could not close stream.", e);
+                }
             }
 
         }
