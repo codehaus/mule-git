@@ -13,7 +13,6 @@ package org.mule.providers.tcp;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.providers.AbstractConnector;
-import org.mule.providers.tcp.i18n.TcpMessages;
 import org.mule.providers.tcp.protocols.SafeProtocol;
 import org.mule.umo.MessagingException;
 import org.mule.umo.UMOException;
@@ -62,7 +61,7 @@ public class TcpConnector extends AbstractConnector
     private int socketSoLinger = INT_VALUE_NOT_SET;
     private TcpProtocol tcpProtocol;
     private boolean keepSendSocketOpen = false;
-    private boolean keepAlive = false;
+    private boolean keepAlive = true;
     private PooledSocketFactory socketFactory;
     private SimpleServerSocketFactory serverSocketFactory;
     private GenericKeyedObjectPool dispatcherSocketsPool = new GenericKeyedObjectPool();
