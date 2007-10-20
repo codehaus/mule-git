@@ -152,7 +152,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     }
                     conn.writeResponse(processRequest(request));
                 }
-                while (true /*conn.isKeepAlive()*/);
+                while (conn.isKeepAlive());
             }
             catch (Exception e)
             {

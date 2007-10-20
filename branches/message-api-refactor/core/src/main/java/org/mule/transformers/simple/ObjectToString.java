@@ -55,14 +55,14 @@ public class ObjectToString extends AbstractTransformer
             }
             finally
             {
-                try
-                {
-                    is.close();
-                }
-                catch (IOException e)
-                {
-                    logger.warn("Could not close stream", e);
-                }
+//                try
+//                {
+//                    //TODO UNCOMMENT is.close();
+//                }
+//                catch (IOException e)
+//                {
+//                    logger.warn("Could not close stream", e);
+//                }
             }
         }
         else if (src instanceof byte[])

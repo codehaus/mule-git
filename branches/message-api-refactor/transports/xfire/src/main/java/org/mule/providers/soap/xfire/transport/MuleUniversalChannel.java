@@ -288,6 +288,7 @@ public class MuleUniversalChannel extends AbstractChannel
             }
             finally
             {
+                //TODO UNCOMMENT
 //                try
 //                {
 //                    //in.close();
