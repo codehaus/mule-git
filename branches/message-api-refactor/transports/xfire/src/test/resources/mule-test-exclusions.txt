@@ -8,6 +8,7 @@ org.mule.providers.soap.xfire.testmodels.TestXFireComponent
 
 # MULE-1134
 org.mule.providers.soap.xfire.XFireConnectorVMFunctionalTestCase
+org.mule.providers.soap.xfire.XFireConnectorHttpFunctionalTestCase
 org.mule.providers.soap.xfire.XFireBasicTestCase
 
 # tests with external dependencies
