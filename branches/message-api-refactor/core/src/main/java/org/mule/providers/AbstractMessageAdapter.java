@@ -10,7 +10,6 @@
 
 package org.mule.providers;
 
-import org.mule.util.DebugOptions;
 import org.mule.MuleRuntimeException;
 import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
@@ -19,6 +18,7 @@ import org.mule.impl.ThreadSafeAccess;
 import org.mule.umo.UMOExceptionPayload;
 import org.mule.umo.provider.PropertyScope;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.util.DebugOptions;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
@@ -170,9 +170,9 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
      * @param props the properties to set
      * @see org.mule.umo.provider.PropertyScope
      */
-    protected void registerInboundProperties(Map props)
+    protected void addInboundProperties(Map props)
     {
-        properties.registerInboundProperties(props);
+        properties.addInboundProperties(props);
     }
 
     /** {@inheritDoc} */

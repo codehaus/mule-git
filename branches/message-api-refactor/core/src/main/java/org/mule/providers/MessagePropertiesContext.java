@@ -80,7 +80,7 @@ public class MessagePropertiesContext implements Serializable
         }
     }
 
-    void registerInboundProperties(Map properties)
+    void addInboundProperties(Map properties)
     {
         if (properties != null)
         {

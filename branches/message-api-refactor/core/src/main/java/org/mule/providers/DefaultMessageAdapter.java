@@ -146,7 +146,7 @@ public final class DefaultMessageAdapter extends AbstractMessageAdapter implemen
         this(message);
         if (properties != null)
         {
-            this.properties.registerInboundProperties(properties);
+            this.properties.addInboundProperties(properties);
         }
         if (attachments != null)
         {
