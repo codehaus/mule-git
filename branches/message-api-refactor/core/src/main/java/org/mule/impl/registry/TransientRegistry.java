@@ -14,6 +14,7 @@ import org.mule.RegistryContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
+import org.mule.config.bootstrap.SimpleRegistryBootstrap;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ManagementContext;
 import org.mule.impl.internal.notifications.AdminNotification;
@@ -550,6 +551,7 @@ public class TransientRegistry extends AbstractRegistry
         registry.registerObject(MuleProperties.OBJECT_WORK_MANAGER, workManager, context);
         registry.registerObject(MuleProperties.OBJECT_NOTIFICATION_MANAGER, notificationManager, context);
         registry.registerObject(MuleProperties.OBJECT_QUEUE_MANAGER, queueManager, context);
+        registry.registerObject(MuleProperties.OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP, new SimpleRegistryBootstrap(), context);
 
         //Set the object explicitly on the ManagementContext
         context.setWorkManager(workManager);

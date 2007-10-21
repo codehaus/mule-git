@@ -34,7 +34,6 @@ import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.object.ObjectFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -47,7 +46,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String dispatcherFactory;
     private String transactionFactory;
     private String messageAdapter;
-    private String streamMessageAdapter;
     private String messageReceiver;
     private String transactedMessageReceiver;
     private String endpointBuilder;
@@ -74,7 +72,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         messageReceiver = removeProperty(MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS, props);
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         messageAdapter = removeProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, props);
-        //streamMessageAdapter = removeProperty(MuleProperties.CONNECTOR_STREAM_MESSAGE_ADAPTER, props);
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER, props);
         defaultOutboundTransformer = removeProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER, props);
         defaultResponseTransformer = removeProperty(MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER, props);
@@ -82,60 +79,18 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         sessionHandler = removeProperty(MuleProperties.CONNECTOR_SESSION_HANDLER, props);
 
 
-        try
-        {
-            if (props.keySet().contains(MuleProperties.CONNECTOR_TRANSFORMER_PREFIX + "1"))
-            {
-                registerListedTransformers(props, registry);
-            }
-            else
-            {
-                registerDefaultTransformers(registry);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//                registerDefaultTransformers(registry);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 
 
-    private void registerListedTransformers(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
-    {
-        int i = 1;
-        String transString = props.getProperty(MuleProperties.CONNECTOR_TRANSFORMER_PREFIX + i);
-        while (transString != null)
-        {
-            Class returnClass = null;
-            
-            int pos = transString.indexOf('(');
-            if (pos == -1)
-            {
-                pos = transString.length();
-            }
-            String clazz = transString.substring(0, pos);
-            if (pos != transString.length())
-            {
-                String returnClassString = transString.substring(pos + 1, transString.length() - 1);
-                if (returnClassString.equals("byte[]"))
-                {
-                    returnClass = byte[].class;
-                }
-                else
-                {
-                    returnClass = ClassUtils.loadClass(returnClassString, getClass());
-                }
-            }
-            UMOTransformer trans = (UMOTransformer) ClassUtils.instanciateClass(clazz, ClassUtils.NO_ARGS);
-            if(returnClass!=null)
-            {
-                trans.setReturnClass(returnClass);
-            }
-            registry.registerTransformer(trans);
-            props.remove(MuleProperties.CONNECTOR_TRANSFORMER_PREFIX + i++);
-            transString = props.getProperty(MuleProperties.CONNECTOR_TRANSFORMER_PREFIX + i);
-        }
-    }
+   
 
     private void registerDefaultTransformers(Registry registry) throws UMOException
     {

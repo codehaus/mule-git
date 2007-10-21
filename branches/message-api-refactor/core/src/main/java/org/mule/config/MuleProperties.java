@@ -115,7 +115,6 @@ public interface MuleProperties
     String CONNECTOR_SERVICE_FINDER = "service.finder";
     String CONNECTOR_SERVICE_ERROR = "service.error";
     String CONNECTOR_SESSION_HANDLER = "session.handler";
-    String CONNECTOR_TRANSFORMER_PREFIX = "transformer.";
     // End Connector Service descriptor properties
 
     String MULE_WORKING_DIRECTORY_PROPERTY = "mule.working.dir";
@@ -138,6 +137,7 @@ public interface MuleProperties
     String OBJECT_MULE_APPLICATION_PROPERTIES = "_muleProperties";
     String OBJECT_MULE_CONFIGURATION = "_muleConfiguration";
     String OBJECT_MULE_ENDPOINT_FACTORY = "_muleEndpointFactory";
+    String OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP = "_muleSimpleRegistryBootstrap";
 
     //Debug Options
     String DEBUG_CACHE_MESSAGE_AS_BYTES = SYSTEM_PROPERTY_PREFIX + "message.cacheBytes";

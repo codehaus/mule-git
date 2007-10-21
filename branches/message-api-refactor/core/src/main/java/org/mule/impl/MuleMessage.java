@@ -221,7 +221,7 @@ public class MuleMessage implements UMOMessage, ThreadSafeAccess
                     transformer = umoTransformer;
                     //Do we have an exact type match? If so, we can stop going through the list
                     //TODO not sure this check is required
-                    if (umoTransformer.getReturnClass().equals(outputType))
+                    if (outputType.equals(umoTransformer.getReturnClass()))
                     {
                         //If this is an exact match then break
                         break;

@@ -10,20 +10,12 @@
 
 package org.mule.providers.jms;
 
-import org.mule.registry.ServiceDescriptorFactory;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.umo.MessagingException;
 import org.mule.umo.provider.UMOMessageAdapter;
 
 public class JmsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
-{
-
-    protected void doSetUp() throws Exception
-    {
-        //wee need to load the transport descriptor in order to tes tthe message Adapter
-        managementContext.getRegistry().lookupServiceDescriptor(ServiceDescriptorFactory.PROVIDER_SERVICE_TYPE, "jms", null);
-    }
-    
+{  
     /*
      * (non-Javadoc)
      * 
