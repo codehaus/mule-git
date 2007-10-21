@@ -176,11 +176,8 @@
 
 <!--    <bean name="_muleDefaultEndpointBuilder" class="org.mule.impl.endpoint.EndpointBuilder"/>-->
 
-    <!--<mule:properties-container includeSystemProperties="true" name="_muleSystemModelProperties"/>-->
 
-    <!-- Default Transformers -->
-    <bean name="_muleObjectToString" class="org.mule.transformers.simple.ObjectToString"/>
-    <bean name="_muleObjectToByteArray" class="org.mule.transformers.simple.ObjectToByteArray"/>
-    <bean name="_muleObjectToOutputHandler" class="org.mule.transformers.simple.ObjectToOutputHandler"/>
+    <!-- Default Transformers are now loaded from META-INF/services/org/mule/config/registry-bootstrap.properties so that
+    the transformers will be available even when using the the TransientRegistry only -->
     
 </beans>
