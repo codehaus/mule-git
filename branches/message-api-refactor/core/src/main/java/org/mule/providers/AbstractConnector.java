@@ -81,7 +81,6 @@ import java.util.Properties;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkListener;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -258,10 +257,7 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        //TODO RM* URGENT
         connectionStrategy = new SingleAttemptConnectionStrategy();
-
-
 
         // TODO HH: dispatcher pool configuration needs to be extracted, maybe even
         // moved into the factory?

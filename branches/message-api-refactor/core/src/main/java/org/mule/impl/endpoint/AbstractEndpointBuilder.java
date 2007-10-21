@@ -501,8 +501,6 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
                 if (connector == null)
                 {
                     connector = TransportFactory.createConnector(endpointURI, managementContext);
-                    //TODO RM* URGENT connector.setManagementContext(managementContext);
-                    //managementContext.applyLifecycle(connector);
                     managementContext.getRegistry().registerConnector(connector, managementContext);
                 }
             }
