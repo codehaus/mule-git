@@ -31,12 +31,20 @@ public class SchemaValidationMule2225TestCase extends AbstractMuleTestCase
 
     public void testValidation() throws SAXException, IOException
     {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XML_SCHEMA);
-        schemaFactory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
-        Source muleXsd = new StreamSource(load("META-INF/mule.xsd"));
-        Schema schema = schemaFactory.newSchema(muleXsd);
-        Source muleRootTestXml = new StreamSource(load("org/mule/test/spring/mule-root-test.xml"));
-        schema.newValidator().validate(muleRootTestXml);
+
+        if (System.getProperty("java.version").startsWith("1.4"))
+        {
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XML_SCHEMA);
+            schemaFactory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
+            Source muleXsd = new StreamSource(load("META-INF/mule.xsd"));
+            Schema schema = schemaFactory.newSchema(muleXsd);
+            Source muleRootTestXml = new StreamSource(load("org/mule/test/spring/mule-root-test.xml"));
+            schema.newValidator().validate(muleRootTestXml);
+        }
+        else
+        {
+            //TODO JDK 1.5 options
+        }
     }
 
     protected InputStream load(String name) throws IOException
