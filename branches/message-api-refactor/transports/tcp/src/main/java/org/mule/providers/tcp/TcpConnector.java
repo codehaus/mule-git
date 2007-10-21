@@ -61,7 +61,7 @@ public class TcpConnector extends AbstractConnector
     private int socketSoLinger = INT_VALUE_NOT_SET;
     private TcpProtocol tcpProtocol;
     private boolean keepSendSocketOpen = false;
-    private boolean keepAlive = true;
+    private boolean keepAlive = false;
     private PooledSocketFactory socketFactory;
     private SimpleServerSocketFactory serverSocketFactory;
     private GenericKeyedObjectPool dispatcherSocketsPool = new GenericKeyedObjectPool();
