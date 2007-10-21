@@ -89,7 +89,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         assertNotNull(event.getEndpoint());
         assertNotNull(event.getOutputStream());
         assertNotNull(event.getMessage());
-        assertEquals(data, event.getMessageAsString(null));
+        assertEquals(data, event.getMessageAsString());
 
         UMOEvent event2 = new MuleEvent(new MuleMessage("New Data"), event);
         assertNotNull(event2.getId());
