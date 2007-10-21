@@ -107,8 +107,8 @@
         <service name="inboundService1">
             <inbound-router>
                 <inbound-endpoint ref="inbound">
-                  <transformer ref="_muleObjectToString" />
-                  <transformer ref="appendString" />
+                    <transformer-object-to-string/>
+                    <transformer ref="appendString"/>
                 </inbound-endpoint>
                 <forwarding-router/>
             </inbound-router>
@@ -123,7 +123,7 @@
             <component class="org.mule.tck.functional.FunctionalTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="vm://echo4" synchronous="true">
-                  <transformer ref="_muleObjectToString" />
+                  <transformer-object-to-string/>
                   <transformer ref="appendString2" />
                 </inbound-endpoint>
             </inbound-router>
