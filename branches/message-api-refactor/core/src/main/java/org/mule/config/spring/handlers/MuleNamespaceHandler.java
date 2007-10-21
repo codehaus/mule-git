@@ -119,6 +119,7 @@ import org.mule.transformers.simple.ByteArrayToString;
 import org.mule.transformers.simple.HexStringToByteArray;
 import org.mule.transformers.simple.MessagePropertiesTransformer;
 import org.mule.transformers.simple.ObjectToByteArray;
+import org.mule.transformers.simple.ObjectToString;
 import org.mule.transformers.simple.SerializableToByteArray;
 import org.mule.transformers.simple.StringAppendTransformer;
 import org.mule.transformers.simple.StringToByteArray;
@@ -191,6 +192,7 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
 
         registerBeanDefinitionParser("transformer-byte-array-to-object", new TransformerDefinitionParser(ByteArrayToObject.class));
         registerBeanDefinitionParser("transformer-object-to-byte-array", new TransformerDefinitionParser(ObjectToByteArray.class));
+        registerBeanDefinitionParser("transformer-object-to-string", new TransformerDefinitionParser(ObjectToString.class));
         registerBeanDefinitionParser("transformer-byte-array-to-serializable", new TransformerDefinitionParser(ByteArrayToSerializable.class));
         registerBeanDefinitionParser("transformer-serializable-to-byte-array", new TransformerDefinitionParser(SerializableToByteArray.class));
         registerBeanDefinitionParser("transformer-byte-array-to-string", new TransformerDefinitionParser(ByteArrayToString.class));

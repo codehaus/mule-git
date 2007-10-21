@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -49,7 +50,14 @@ public class SpringRegistryBootstrap implements Initialisable, ApplicationContex
             try
             {
                 URL url = (URL)e.nextElement();
-                new ClassPathXmlApplicationContext(new String[]{url.toExternalForm()}, applicationContext);
+                AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{url.toExternalForm()});
+                ApplicationContext parent = applicationContext;
+                
+                while(parent.getParent()!=null)
+                {
+                    parent = parent.getParent();
+                }
+                ((AbstractApplicationContext)parent).setParent(ctx);
             }
             catch (Exception e1)
             {

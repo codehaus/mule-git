@@ -727,6 +727,7 @@
     <xsd:element name="transformer-hex-sting-to-byte-array" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
     <xsd:element name="transformer-byte-array-to-object" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
     <xsd:element name="transformer-object-to-byte-array" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
+    <xsd:element name="transformer-object-to-string" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
     <xsd:element name="transformer-byte-array-to-serializable" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
     <xsd:element name="transformer-serializable-to-byte-array" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
     <xsd:element name="transformer-byte-array-to-string" type="abstractTransformerType" substitutionGroup="abstract-transformer"/>
