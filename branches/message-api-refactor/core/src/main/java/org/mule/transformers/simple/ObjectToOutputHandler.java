@@ -24,7 +24,7 @@ import java.io.Serializable;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
- * <code>ByteArrayToString</code> converts a byte array into a String.
+ * <code>ObjectToOutputHandler</code> converts a byte array into a String.
  */
 public class ObjectToOutputHandler extends AbstractTransformer
 {
