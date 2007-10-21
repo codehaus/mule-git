@@ -39,7 +39,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         RequestContext.setEvent(event);
         
         assertEquals("Event data should equal " + data, data, event.getMessage().getPayload());
-        assertEquals("Event data should equal " + data, data, event.getMessageAsString(null));
+        assertEquals("Event data should equal " + data, data, event.getMessageAsString());
         assertEquals("Event data should equal " + data, data, event.getTransformedMessage());
         assertEquals("Event data should be a byte array 9 bytes in length", 9, event
             .getTransformedMessageAsBytes().length);
@@ -68,7 +68,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         RequestContext.setEvent(event);
         
         assertEquals("Event data should equal " + data, data, event.getMessage().getPayload());
-        assertEquals("Event data should equal " + data, data, event.getMessageAsString(null));
+        assertEquals("Event data should equal " + data, data, event.getMessageAsString());
         assertEquals("Event data should equal 'Transformed Test Data'", "Transformed Test Data", event
             .getTransformedMessage());
         assertEquals("Event data should be a byte array 28 bytes in length", 21, event
@@ -98,7 +98,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         assertNotNull(event2.getEndpoint());
         assertNotNull(event2.getOutputStream());
         assertNotNull(event2.getMessage());
-        assertEquals("New Data", event2.getMessageAsString(null));
+        assertEquals("New Data", event2.getMessageAsString());
 
     }
 
