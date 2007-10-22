@@ -689,13 +689,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
-                    <!--
-                        Downloading the checkstyle files from SVN is kind of
-                        hackish but works even on the bamboo machine where 
-                        other approaches fail for unknown reasons.
-                    -->
-<!--                    <configLocation>http://svn.codehaus.org/mule/trunk/mule/buildtools/src/main/resources/codecheck/checkstyle.xml</configLocation>
-                    <headerLocation>http://svn.codehaus.org/mule/trunk/mule/buildtools/src/main/resources/codecheck/LicenseHeader.txt</headerLocation>-->
                     <configLocation>codecheck/checkstyle.xml</configLocation>
                     <headerLocation>codecheck/LicenseHeader.txt</headerLocation>
                     <!-- do not link to JXR output as that is aggregated and the checkstyle
