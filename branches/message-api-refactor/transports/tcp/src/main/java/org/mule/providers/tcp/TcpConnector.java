@@ -42,8 +42,8 @@ public class TcpConnector extends AbstractConnector
 {
     /** Property can be set on the endpoint to configure how the socket is managed */
     public static final String KEEP_SEND_SOCKET_OPEN_PROPERTY = "keepSendSocketOpen";
-    public static final int DEFAULT_SOCKET_TIMEOUT = 1000;
-    public static final int DEFAULT_SO_LINGER = 1000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = INT_VALUE_NOT_SET;
+    public static final int DEFAULT_SO_LINGER = INT_VALUE_NOT_SET;
     public static final int DEFAULT_BUFFER_SIZE = INT_VALUE_NOT_SET;
     public static final int DEFAULT_BACKLOG = INT_VALUE_NOT_SET;
 
