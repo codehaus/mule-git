@@ -19,7 +19,7 @@
     </description>
 
     <properties>
-        <muleVersion>2.0.0-M3-SNAPSHOT</muleVersion>
+        <muleVersion>2.0.0-M3-API-REFACTOR-SNAPSHOT</muleVersion>
         <groovyMojoVersion>1.0-beta-1</groovyMojoVersion>
     </properties>
 
