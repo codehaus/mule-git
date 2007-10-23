@@ -5,7 +5,13 @@
 
 <mule-configuration id="ExceptionStrategyTest" version="1.0">
 
-    <connector name="fileConnector" className="org.mule.providers.file.FileConnector "/>
+    <connector name="fileConnector" className=" org.mule.providers.file.FileConnector ">
+        <properties>
+            <property name="autoDelete" value="true"/>
+            <property name="fileAge" value="1000"/>
+        </properties>
+        <threading-profile maxThreadsActive="1"/>
+    </connector>
 
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
         <properties>
@@ -28,8 +34,7 @@
             </inbound-router>
 
             <outbound-router>
-                <router className="org.mule.routing.outbound.ChainingRouter">
-
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="vm://out"/>
                 </router>
             </outbound-router>

@@ -150,7 +150,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         try
         {
             // Setup event Queue (used for VM execution)
-            queueProfile.configureQueue(descriptor.getName());
+            queueProfile.configureQueue(descriptorQueueName);
         }
         catch (InitialisationException e)
         {
