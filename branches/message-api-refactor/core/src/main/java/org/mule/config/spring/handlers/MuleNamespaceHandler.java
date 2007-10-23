@@ -126,10 +126,9 @@ import org.mule.transformers.simple.StringToByteArray;
 import org.mule.util.object.PooledObjectFactory;
 import org.mule.util.object.PrototypeObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
-import org.mule.util.properties.BeanPropertyExtractor;
-import org.mule.util.properties.MapPropertyExtractor;
-import org.mule.util.properties.MessagePropertyExtractor;
-import org.mule.util.properties.PayloadPropertyExtractor;
+import org.mule.util.properties.FunctionPropertyExtractor;
+import org.mule.util.properties.MapPayloadPropertyExtractor;
+import org.mule.util.properties.MessageHeaderPropertyExtractor;
 
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
@@ -301,12 +300,12 @@ public class MuleNamespaceHandler extends AbstractIgnorableNamespaceHandler
         registerBeanDefinitionParser("single-response-router", new RouterDefinitionParser("router", SingleResponseRouter.class));
 
         //Property Extractors
-        registerBeanDefinitionParser("bean-property-extractor", new ChildDefinitionParser("propertyExtractor", BeanPropertyExtractor.class));
+        registerBeanDefinitionParser("function-property-extractor", new ChildDefinitionParser("propertyExtractor", FunctionPropertyExtractor.class));
         registerBeanDefinitionParser("correlation-property-extractor", new ChildDefinitionParser("propertyExtractor", CorrelationPropertiesExtractor.class));
         registerBeanDefinitionParser("custom-property-extractor", new ChildDefinitionParser("propertyExtractor"));
-        registerBeanDefinitionParser("map-property-extractor", new ChildDefinitionParser("propertyExtractor", MapPropertyExtractor.class));
-        registerBeanDefinitionParser("message-property-extractor", new ChildDefinitionParser("propertyExtractor", MessagePropertyExtractor.class));
-        registerBeanDefinitionParser("payload-property-extractor", new ChildDefinitionParser("propertyExtractor", PayloadPropertyExtractor.class));
+        registerBeanDefinitionParser("map-property-extractor", new ChildDefinitionParser("propertyExtractor", MapPayloadPropertyExtractor.class));
+        registerBeanDefinitionParser("message-property-extractor", new ChildDefinitionParser("propertyExtractor", MessageHeaderPropertyExtractor.class));
+        //registerBeanDefinitionParser("payload-property-extractor", new ChildDefinitionParser("propertyExtractor", PayloadPropertyExtractor.class));
 
         //Catch all Strategies
         registerBeanDefinitionParser("forwarding-catch-all-strategy", new ChildDefinitionParser("catchAllStrategy", ForwardingCatchAllStrategy.class));

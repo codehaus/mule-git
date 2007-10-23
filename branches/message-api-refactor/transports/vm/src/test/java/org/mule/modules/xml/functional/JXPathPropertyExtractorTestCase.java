@@ -21,12 +21,12 @@ public class JXPathPropertyExtractorTestCase extends AbstractXmlPropertyExtracto
 
     protected Object getMatchMessage()
     {
-        return "<endpoint>name</endpoint>";
+        return "<endpoint>matchingEndpoint</endpoint>";
     }
 
     protected Object getErrorMessage()
     {
-        return "<endpoint>missing</endpoint>";
+        return "<endpoint>missingEndpoint</endpoint>";
     }
 
 }

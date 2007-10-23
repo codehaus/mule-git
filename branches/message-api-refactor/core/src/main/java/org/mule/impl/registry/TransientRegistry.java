@@ -101,28 +101,28 @@ public class TransientRegistry extends AbstractRegistry
     //TODO MULE-2162 how do we handle Muleconfig across Registries
     private MuleConfiguration config; // = new MuleConfiguration();
 
-    public TransientRegistry()
+    public TransientRegistry(UMOManagementContext context)
     {
         super(REGISTRY_ID);
-        init();
+        init(context);
     }
 
-    public TransientRegistry(Registry parent)
+    public TransientRegistry(Registry parent, UMOManagementContext context)
     {
         super(REGISTRY_ID, parent);
-        init();
+        init(context);
     }
 
-    private void init()
+    private void init(UMOManagementContext context)
     {
         registry = new HashMap(8);
 
         //Register ManagementContext Injector for locally registered objects
         getObjectTypeMap(ObjectProcessor.class).put(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR,
-                new ManagementContextDependencyProcessor());
+                new ManagementContextDependencyProcessor(context));
 
-        //getObjectTypeMap(ObjectProcessor.class).put("_muleSeriveProcessor",
-        //        new RegisteredServiceProcessor());
+        getObjectTypeMap(ObjectProcessor.class).put("_mulePropertyExtractorProcessor",
+                new PropertyExtractorProcessor());
 
         RegistryContext.setRegistry(this);
         try
@@ -332,7 +332,7 @@ public class TransientRegistry extends AbstractRegistry
     {
         if (isInitialised() || isInitialising())
         {
-         //   value = applyProcessors(value);
+            value = applyProcessors(value);
         }
 
         Map objectMap = getObjectTypeMap(metadata);
@@ -507,14 +507,7 @@ public class TransientRegistry extends AbstractRegistry
         lifecycleManager.registerLifecycle(new ManagementContextStopPhase());
         lifecycleManager.registerLifecycle(new ContainerManagedLifecyclePhase(Disposable.PHASE_NAME, Disposable.class, Initialisable.PHASE_NAME));
 
-        //Create the registry
-        TransientRegistry registry = new TransientRegistry();
-
-        RegistryContext.setRegistry(registry);
-
         MuleConfiguration config = new MuleConfiguration();
-
-        registry.setConfiguration(config);
 
         QueueManager queueManager = new TransactionalQueueManager();
         queueManager.setPersistenceStrategy(new CachingPersistenceStrategy(new MemoryPersistenceStrategy()));
@@ -538,6 +531,13 @@ public class TransientRegistry extends AbstractRegistry
         UMOSecurityManager securityManager = new MuleSecurityManager();
 
         UMOManagementContext context = new ManagementContext(lifecycleManager);
+
+        //Create the registry
+        TransientRegistry registry = new TransientRegistry(context);
+        registry.setConfiguration(config);
+
+        RegistryContext.setRegistry(registry);
+
         context.setId(UUID.getUUID());
 
 //      // TODO MULE-2161

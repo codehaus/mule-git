@@ -981,4 +981,19 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 249, component);
     }
 
+    public static Message failedToProcessExtractorFunction(String name)
+    {
+        return createMessage(BUNDLE_PATH, 250, name);
+    }
+
+    public static Message noExtractorRegisteredWithKey(String key)
+    {
+        return createMessage(BUNDLE_PATH, 251, key);
+    }
+
+    public static Message objectAlreadyExists(String key)
+    {
+        return createMessage(BUNDLE_PATH, 252, key);
+    }
+
 }

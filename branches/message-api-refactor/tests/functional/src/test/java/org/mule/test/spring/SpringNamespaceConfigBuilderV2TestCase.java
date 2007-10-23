@@ -10,13 +10,8 @@
 
 package org.mule.test.spring;
 
-import org.mule.MuleException;
-import org.mule.RegistryContext;
 import org.mule.config.ConfigurationBuilder;
-import org.mule.config.ThreadingProfile;
 import org.mule.config.builders.MuleXmlConfigurationBuilder;
-import org.mule.impl.model.seda.SedaComponent;
-import org.mule.providers.AbstractConnector;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.response.AbstractResponseRouter;
 import org.mule.tck.AbstractConfigBuilderTestCase;
@@ -28,8 +23,8 @@ import org.mule.umo.routing.UMOInboundRouterCollection;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOResponseRouterCollection;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.properties.JXPathPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
+import org.mule.xml.util.properties.JXPathPropertyExtractor;
 
 import java.util.List;
 

@@ -12,7 +12,7 @@
 
     <configuration serverId="server id" defaultSynchronousEndpoints="true"/>
 
-    <http:connector name="default" socketSoLinger="1000" clientSoTimeout="1000"/>
+    <!--<http:connector name="default" socketSoLinger="1000" clientSoTimeout="1000"/>-->
     
     <model name="Proxy_Test">
 

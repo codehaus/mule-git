@@ -18,9 +18,10 @@ import java.util.Map;
  * If the message payload is a map this extractor will look up the property value in
  * the map
  */
-public class MapPropertyExtractor implements PropertyExtractor
+public class MapPayloadPropertyExtractor implements PropertyExtractor
 {
-
+    public static final String NAME = "map";
+    
     public Object getProperty(String name, Object message)
     {
         Object payload = message;
@@ -34,4 +35,17 @@ public class MapPropertyExtractor implements PropertyExtractor
         }
         return null;
     }
+
+    /** {@inheritDoc} */
+    public String getName()
+    {
+        return NAME;
+    }
+
+    /** {@inheritDoc} */
+    public void setName(String name)
+    {
+        throw new UnsupportedOperationException("setName");
+    }
+
 }

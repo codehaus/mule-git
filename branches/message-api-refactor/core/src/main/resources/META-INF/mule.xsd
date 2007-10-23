@@ -1270,7 +1270,6 @@
         <xsd:complexContent>
             <xsd:extension base="filteringOutboundRouterType">
                 <xsd:attribute name="selectorProperty" type="xsd:string" use="required"/>
-                <xsd:attribute name="extractorEnabled" type="substitutableBoolean" default="false"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

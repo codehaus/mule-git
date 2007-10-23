@@ -32,6 +32,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  * This file just defines a single spring application context for a module or transport. This bootstrap only gets
  * loaded if spring is being used.
+ * NOTE: Th
  */
 public class SpringRegistryBootstrap implements Initialisable, ApplicationContextAware
 {

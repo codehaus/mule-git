@@ -103,6 +103,8 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
     protected void process(Properties props) throws NoSuchMethodException, IllegalAccessException, UMOException, InvocationTargetException, ClassNotFoundException, InstantiationException
     {
         registerTransformers(props, context.getRegistry());
+        registerUnnamedObjects(props, context.getRegistry());
+        //this must be called last as it clears the properties map
         registerObjects(props, context.getRegistry());
 
     }
@@ -152,12 +154,22 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
             Map.Entry entry = (Map.Entry) iterator.next();
             Object object = ClassUtils.instanciateClass(entry.getValue().toString(), ClassUtils.NO_ARGS);
             String key = entry.getKey().toString();
-            if(key.startsWith(OBJECT_PREFIX))
-            {
-                key += object.hashCode();
-            }
             registry.registerObject(key, object);
-            props.remove(entry.getKey());
+        }
+        props.clear();
+    }
+
+    private void registerUnnamedObjects(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
+    {
+        int i = 1;
+        String objectString = props.getProperty(OBJECT_PREFIX + i);
+        while (objectString != null)
+        {
+
+            Object o = ClassUtils.instanciateClass(objectString, ClassUtils.NO_ARGS);
+            registry.registerObject(OBJECT_PREFIX + i + "#" + o.hashCode(), o);
+            props.remove(OBJECT_PREFIX + i++);
+            objectString = props.getProperty(OBJECT_PREFIX + i);
         }
     }
 }

@@ -8,7 +8,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util;
+package org.mule.xml.util;
+
+import org.mule.util.CoreXMLUtils;
 
 import org.dom4j.io.DOMReader;
 import org.w3c.dom.Document;

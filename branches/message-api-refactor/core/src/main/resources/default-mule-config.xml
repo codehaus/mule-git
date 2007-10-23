@@ -5,12 +5,11 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"
-       default-init-method="initialise"
-       default-destroy-method="dispose">
+       default-init-method="initialise">
 
-    <bean name="_muleManagementContext" class="org.mule.config.spring.ManagementContextFactoryBean"
-          depends-on="_muleRegistry">
+    <bean name="_muleManagementContext" class="org.mule.config.spring.ManagementContextFactoryBean">
         <constructor-arg ref="_muleLifecycleManager"/>
+        <property name="workManager" ref="_muleWorkManager"/>
     </bean>
 
     <bean id="customEditorConfigurer" class="org.springframework.beans.factory.config.CustomEditorConfigurer">
@@ -140,7 +139,7 @@
         </property>
     </bean>
 
-    <bean name="_muleWorkManager" class="org.mule.impl.work.MuleWorkManager">
+    <bean name="_muleWorkManager" class="org.mule.impl.work.MuleWorkManager" depends-on="defaultThreadingProfile">
         <constructor-arg ref="defaultThreadingProfile"/>
         <constructor-arg value="MuleServer"/>
     </bean>

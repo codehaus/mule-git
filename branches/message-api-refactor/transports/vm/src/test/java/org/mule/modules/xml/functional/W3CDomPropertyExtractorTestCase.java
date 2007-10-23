@@ -17,22 +17,22 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class JDomPropertyExtractorTestCase extends AbstractXmlPropertyExtractorTestCase
+public class W3CDomPropertyExtractorTestCase extends AbstractXmlPropertyExtractorTestCase
 {
 
     protected String getConfigResources()
     {
-        return "xml/jdom-property-extractor-test.xml";
+        return "xml/w3c-dom-property-extractor-test.xml";
     }
 
     protected Object getMatchMessage() throws ParserConfigurationException
     {
-        return documentFor("name");
+        return documentFor("matchingEndpoint");
     }
 
     protected Object getErrorMessage() throws ParserConfigurationException
     {
-        return documentFor("missing");
+        return documentFor("missingEndpoint");
     }
 
     protected Document documentFor(String name) throws ParserConfigurationException

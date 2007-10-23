@@ -29,22 +29,20 @@ public class SchemaValidationMule2225TestCase extends AbstractMuleTestCase
     // not available in 1.4 constants?
     public static final String XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 
+    /**
+     * If this fails for you, check if you are using JDK 1.5. if so make sure you build from maven with the
+     * -Pjava14 profile flag
+     * @throws SAXException
+     * @throws IOException
+     */
     public void testValidation() throws SAXException, IOException
     {
-
-        if (System.getProperty("java.version").startsWith("1.4"))
-        {
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XML_SCHEMA);
-            schemaFactory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
-            Source muleXsd = new StreamSource(load("META-INF/mule.xsd"));
-            Schema schema = schemaFactory.newSchema(muleXsd);
-            Source muleRootTestXml = new StreamSource(load("org/mule/test/spring/mule-root-test.xml"));
-            schema.newValidator().validate(muleRootTestXml);
-        }
-        else
-        {
-            //TODO JDK 1.5 options
-        }
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XML_SCHEMA);
+        schemaFactory.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
+        Source muleXsd = new StreamSource(load("META-INF/mule.xsd"));
+        Schema schema = schemaFactory.newSchema(muleXsd);
+        Source muleRootTestXml = new StreamSource(load("org/mule/test/spring/mule-root-test.xml"));
+        schema.newValidator().validate(muleRootTestXml);
     }
 
     protected InputStream load(String name) throws IOException

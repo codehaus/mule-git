@@ -15,8 +15,10 @@ import org.mule.umo.UMOMessage;
 /**
  * Looks up the property on the message using the name given.
  */
-public class MessagePropertyExtractor implements PropertyExtractor
+public class MessageHeaderPropertyExtractor implements PropertyExtractor
 {
+    public static final String NAME = "header";
+
     public Object getProperty(String name, Object message)
     {
         if (message instanceof UMOMessage)
@@ -24,5 +26,17 @@ public class MessagePropertyExtractor implements PropertyExtractor
             return ((UMOMessage) message).getProperty(name);
         }
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public String getName()
+    {
+        return NAME;
+    }
+
+    /** {@inheritDoc} */
+    public void setName(String name)
+    {
+        throw new UnsupportedOperationException("setName");
     }
 }

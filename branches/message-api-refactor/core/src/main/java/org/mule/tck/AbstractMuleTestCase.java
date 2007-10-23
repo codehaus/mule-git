@@ -421,13 +421,17 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         {
             if (managementContext != null && !(managementContext.isDisposed() || managementContext.isDisposing()))
             {
+                managementContext.dispose();
+
                 if (RegistryContext.getRegistry() != null)
                 {
                     final String workingDir = RegistryContext.getConfiguration().getWorkingDirectory();
                     // do not delete TM recovery object store, everything else is good to go
                     FileUtils.deleteTree(FileUtils.newFile(workingDir), IGNORED_DOT_MULE_DIRS);
+
+                    RegistryContext.getRegistry().dispose();
+                    
                 }
-                managementContext.dispose();
             }
             FileUtils.deleteTree(FileUtils.newFile("./ActiveMQ"));
         }

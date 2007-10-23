@@ -38,6 +38,7 @@ import org.mule.umo.transformer.UMOHeaderOnlyTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
+import org.mule.util.properties.PropertyExtractorManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
@@ -46,8 +47,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,6 +117,7 @@ public abstract class AbstractRegistry implements Registry
             {
                 // remove this reference once there is no one else left to dispose
                 RegistryContext.setRegistry(null);
+                PropertyExtractorManager.clear();
             }
         }
         catch (UMOException e)

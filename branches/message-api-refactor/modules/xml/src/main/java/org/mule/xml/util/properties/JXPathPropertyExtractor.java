@@ -8,9 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.properties;
+package org.mule.xml.util.properties;
 
 import org.mule.umo.UMOMessage;
+import org.mule.util.properties.PropertyExtractor;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.logging.Log;
@@ -24,7 +25,7 @@ import org.dom4j.DocumentHelper;
  */
 public class JXPathPropertyExtractor implements PropertyExtractor
 {
-
+    public static final String NAME = "jxpath";
     /**
      * logger used by this class
      */
@@ -67,5 +68,17 @@ public class JXPathPropertyExtractor implements PropertyExtractor
             }
         }
         return result;
+    }
+
+    /** {@inheritDoc} */
+    public String getName()
+    {
+        return NAME;
+    }
+
+    /** {@inheritDoc} */
+    public void setName(String name)
+    {
+        throw new UnsupportedOperationException("setName");
     }
 }

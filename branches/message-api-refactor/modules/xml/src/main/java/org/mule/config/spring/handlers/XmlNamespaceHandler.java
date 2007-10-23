@@ -25,9 +25,9 @@ import org.mule.transformers.xml.JXPathExtractor;
 import org.mule.transformers.xml.ObjectToXml;
 import org.mule.transformers.xml.XmlToDomDocument;
 import org.mule.transformers.xml.XmlToObject;
-import org.mule.util.properties.Dom4jPropertyExtractor;
-import org.mule.util.properties.JDomPropertyExtractor;
-import org.mule.util.properties.JXPathPropertyExtractor;
+import org.mule.xml.util.properties.BeanPayloadPropertyExtractor;
+import org.mule.xml.util.properties.JXPathPropertyExtractor;
+import org.mule.xml.util.properties.XPathPayloadPropertyExtractor;
 
 public class XmlNamespaceHandler extends AbstractIgnorableNamespaceHandler
 {
@@ -46,8 +46,8 @@ public class XmlNamespaceHandler extends AbstractIgnorableNamespaceHandler
         registerBeanDefinitionParser("xml-to-object", new MuleOrphanDefinitionParser(XmlToObject.class, false));
         registerBeanDefinitionParser("xslt-transformer", new XsltTransformerDefinitionParser());
         registerBeanDefinitionParser("jxpath-property-extractor", new ChildDefinitionParser("propertyExtractor", JXPathPropertyExtractor.class));
-        registerBeanDefinitionParser("dom4j-property-extractor", new ChildDefinitionParser("propertyExtractor", Dom4jPropertyExtractor.class));
-        registerBeanDefinitionParser("jdom-property-extractor", new ChildDefinitionParser("propertyExtractor", JDomPropertyExtractor.class));
+        registerBeanDefinitionParser("xpath-property-extractor", new ChildDefinitionParser("propertyExtractor", XPathPayloadPropertyExtractor.class));
+        registerBeanDefinitionParser("bean-property-extractor", new ChildDefinitionParser("propertyExtractor", BeanPayloadPropertyExtractor.class));
         registerBeanDefinitionParser("namespace", new ChildMapEntryDefinitionParser("namespaces", "prefix", "uri"));
         registerBeanDefinitionParser("context-property", new ChildMapEntryDefinitionParser("contextProperties", "key", "value"));
     }

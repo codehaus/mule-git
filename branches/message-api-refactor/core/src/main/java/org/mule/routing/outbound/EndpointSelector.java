@@ -11,12 +11,14 @@
 package org.mule.routing.outbound;
 
 import org.mule.config.i18n.MessageFactory;
+import org.mule.impl.ManagementContextAware;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutingException;
+import org.mule.util.properties.PropertyExtractorManager;
 
 import java.util.Iterator;
 
@@ -39,39 +41,32 @@ import java.util.Iterator;
  *
  * </pre>
  */
-public class EndpointSelector extends FilteringOutboundRouter
+public class EndpointSelector extends FilteringOutboundRouter implements ManagementContextAware
 {
-    private String selectorProperty = "endpoint";
-    private boolean extractorEnabled = false;
+    public static final String DEFAULT_SELECTOR_PROPERTY = "endpoint";
+
+    private String selectorProperty = DEFAULT_SELECTOR_PROPERTY;
+
+
 
     public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
         throws RoutingException
     {
         String endpointName;
-        if (extractorEnabled)
+        
+        Object property =  PropertyExtractorManager.processExpression(getSelectorProperty(), message);
+        if (!(property instanceof String))
         {
-            if (null == getPropertyExtractor())
-            {
-                throw new IllegalArgumentException("No property extractor specified");
-            }
-            Object property = getPropertyExtractor().getProperty(getSelectorProperty(), message);
-            if (!(property instanceof String))
-            {
-                throw new IllegalArgumentException("No property for " + getSelectorProperty());
-            }
-            endpointName = (String) property;
+            throw new IllegalArgumentException("No property for " + getSelectorProperty());
         }
-        else
-        {
-            endpointName = message.getStringProperty(getSelectorProperty(), null);
-        }
+        endpointName = (String) property;
         if (endpointName == null)
         {
             throw new IllegalArgumentException("selectorProperty '" + getSelectorProperty()
                                                + "' must be set on message in order to route it.");
         }
 
-        UMOEndpoint ep = lookupEndpoint(endpointName);
+        UMOImmutableEndpoint ep = lookupEndpoint(endpointName);
         if (ep == null)
         {
             throw new CouldNotRouteOutboundMessageException(
@@ -96,13 +91,13 @@ public class EndpointSelector extends FilteringOutboundRouter
         }
     }
 
-    protected UMOEndpoint lookupEndpoint(String endpointName)
+    protected UMOImmutableEndpoint lookupEndpoint(String endpointName)
     {
-        UMOEndpoint ep;
+        UMOImmutableEndpoint ep;
         Iterator iterator = endpoints.iterator();
         while (iterator.hasNext())
         {
-            ep = (UMOEndpoint) iterator.next();
+            ep = (UMOImmutableEndpoint) iterator.next();
             // Endpoint identifier (deprecated)
             if (endpointName.equals(ep.getEndpointURI().getEndpointName()))
             {
@@ -118,7 +113,7 @@ public class EndpointSelector extends FilteringOutboundRouter
                 return ep;
             }
         }
-        return null;
+        return getManagementContext().getRegistry().lookupEndpoint(endpointName, getManagementContext());
     }
 
     public String getSelectorProperty()
@@ -130,15 +125,4 @@ public class EndpointSelector extends FilteringOutboundRouter
     {
         this.selectorProperty = selectorProperty;
     }
-
-    public boolean isExtractorEnabled()
-    {
-        return extractorEnabled;
-    }
-
-    public void setExtractorEnabled(boolean extractorEnabled)
-    {
-        this.extractorEnabled = extractorEnabled;
-    }
-
 }

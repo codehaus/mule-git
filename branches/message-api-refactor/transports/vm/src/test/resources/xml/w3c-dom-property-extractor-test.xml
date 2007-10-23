@@ -15,7 +15,7 @@
 
     <endpoint name="in" address="vm://in" connector-ref="default"/>
 
-    <model name="jxpath property extractor test">
+    <model name="w3c dom xpath property extractor test">
 
         <service name="test">
             <inbound-router>
@@ -36,9 +36,9 @@
                 <forwarding-router/>
             </inbound-router>
             <outbound-router>
-                <endpoint-selector-router selectorProperty="/endpoint" extractorEnabled="true">
-                    <outbound-endpoint name="name" address="vm://match" connector-ref="queue"/>
-                    <mxml:jdom-property-extractor/>
+                <endpoint-selector-router selectorProperty="${xpath:/endpoint}">
+                    <!-- this could be a global endpoint too once MULE-2595  is fixed -->
+                    <outbound-endpoint name="matchingEndpoint" address="vm://match" connector-ref="queue"/>                    
                 </endpoint-selector-router>
             </outbound-router>
         </service>
