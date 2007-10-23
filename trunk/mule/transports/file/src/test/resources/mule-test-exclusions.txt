@@ -3,5 +3,5 @@
 #
 
 # MULE-2562
-#org.mule.providers.file.FileComparatorTestCase
+org.mule.providers.file.FileComparatorTestCase
 
