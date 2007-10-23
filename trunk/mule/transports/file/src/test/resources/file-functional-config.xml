@@ -10,6 +10,7 @@
             <property name="autoDelete" value="true"/>
             <property name="fileAge" value="1000"/>
         </properties>
+        <threading-profile maxThreadsActive="1"/>
     </connector>
 
     <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
