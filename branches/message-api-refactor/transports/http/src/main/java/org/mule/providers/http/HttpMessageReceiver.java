@@ -157,13 +157,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             catch (Exception e)
             {
                 handleException(e);
-                System.out.println("##Exception!!");
-                e.printStackTrace();
             }
             finally
             {
                 logger.info("Closing HTTP connection.");
-                System.out.println("## Closing HttpConnection!! thread is: " + Thread.currentThread().getName());
 
                 conn.close();
                 conn = null;

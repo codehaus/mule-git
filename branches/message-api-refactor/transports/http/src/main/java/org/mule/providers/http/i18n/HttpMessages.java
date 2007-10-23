@@ -83,6 +83,11 @@ public class HttpMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 17);
     }
+
+    public static Message requestLineIsMalformed(String line)
+    {
+        return createMessage(BUNDLE_PATH, 18, line);
+    }
 }
 
 
