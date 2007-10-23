@@ -37,6 +37,7 @@ import java.nio.channels.FileLock;
 import java.util.Comparator;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+import org.apache.commons.collections.comparators.ReverseComparator;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -71,16 +72,16 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 
         if (endpoint.getFilter() instanceof FilenameFilter)
         {
-            filenameFilter = (FilenameFilter)endpoint.getFilter();
+            filenameFilter = (FilenameFilter) endpoint.getFilter();
         }
         else if (endpoint.getFilter() instanceof FileFilter)
         {
-            fileFilter = (FileFilter)endpoint.getFilter();
+            fileFilter = (FileFilter) endpoint.getFilter();
         }
-        else if(endpoint.getFilter()!=null)
+        else if (endpoint.getFilter() != null)
         {
             throw new InitialisationException(
-                FileMessages.invalidFileFilter(endpoint.getEndpointURI()), this);
+                    FileMessages.invalidFileFilter(endpoint.getEndpointURI()), this);
         }
     }
 
@@ -92,7 +93,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             if (!(readDirectory.canRead()))
             {
                 throw new ConnectException(
-                    FileMessages.fileDoesNotExist(readDirectory.getAbsolutePath()), this);
+                        FileMessages.fileDoesNotExist(readDirectory.getAbsolutePath()), this);
             }
             else
             {
@@ -106,7 +107,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             if (!(moveDirectory.canRead()) || !moveDirectory.canWrite())
             {
                 throw new ConnectException(
-                    FileMessages.moveToDirectoryNotWritable(), this);
+                        FileMessages.moveToDirectoryNotWritable(), this);
             }
         }
     }
@@ -156,7 +157,8 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             long thisFileAge = now - lastMod;
             if (thisFileAge < fileAge)
             {
-                if (logger.isDebugEnabled()) {
+                if (logger.isDebugEnabled())
+                {
                     logger.debug("The file has not aged enough yet, will return nothing for: " + sourceFile);
                 }
                 return;
@@ -173,7 +175,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         String sourceFileOriginalName = sourceFile.getName();
         //Create a message adapter here to pass to the fileName parser
         UMOMessageAdapter msgAdapter;
-        if(endpoint.isStreaming())
+        if (endpoint.isStreaming())
         {
             try
             {
@@ -200,7 +202,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             if (moveToPattern != null)
             {
                 destinationFileName = ((FileConnector) connector).getFilenameParser().getFilename(msgAdapter,
-                    moveToPattern);
+                                                                                                  moveToPattern);
             }
 
             // don't use new File() directly, see MULE-1112
@@ -228,12 +230,12 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 if (!fileWasMoved)
                 {
                     throw new MuleException(
-                        FileMessages.failedToMoveFile(
-                            sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath()));
+                            FileMessages.failedToMoveFile(
+                                    sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath()));
                 }
 
                 // create new MessageAdapter for destinationFile
-                if(endpoint.isStreaming())
+                if (endpoint.isStreaming())
                 {
                     msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(destinationFile), null);
                 }
@@ -247,7 +249,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 
             // finally deliver the file message
             this.routeMessage(new MuleMessage(msgAdapter), endpoint.isSynchronous());
-            
+
             // at this point msgAdapter either points to the old sourceFile
             // or the new destinationFile.
             if (((FileConnector) connector).isAutoDelete())
@@ -259,7 +261,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                     if (!sourceFile.delete())
                     {
                         throw new MuleException(
-                            FileMessages.failedToDeleteFile(sourceFile.getAbsolutePath()));
+                                FileMessages.failedToDeleteFile(sourceFile.getAbsolutePath()));
                     }
                 }
                 else
@@ -281,9 +283,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 
             // wrap exception & handle it
             Exception ex = new RoutingException(
-                FileMessages.exceptionWhileProcessing(sourceFile.getName(),
-                (fileWasRolledBack ? "successful" : "unsuccessful")), new MuleMessage(msgAdapter), endpoint,
-                e);
+                    FileMessages.exceptionWhileProcessing(sourceFile.getName(),
+                                                          (fileWasRolledBack ? "successful" : "unsuccessful")), new MuleMessage(msgAdapter), endpoint,
+                                                                                                                e);
             this.handleException(ex);
         }
     }
@@ -292,6 +294,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
      * Try to acquire a lock on a file and release it immediately. Usually used as a quick check to
      * see if another process is still holding onto the file, e.g. a large file (more than 100MB) is
      * still being written to.
+     *
      * @param sourceFile file to check
      * @return <code>true</code> if the file can be locked
      */
@@ -313,7 +316,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
         catch (FileNotFoundException fnfe)
         {
-           logger.warn("Unable to open " + sourceFile.getAbsolutePath(), fnfe);
+            logger.warn("Unable to open " + sourceFile.getAbsolutePath(), fnfe);
         }
         catch (IOException e)
         {
@@ -321,7 +324,8 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // the file is already locked. No sense in repeating the message over
             // and over.
         }
-        finally {
+        finally
+        {
             if (lock != null)
             {
                 // if lock is null the file is locked by another process
@@ -412,7 +416,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 
     /**
      * Get a list of files to be processed.
-     * 
+     *
      * @return an array of files to be processed.
      * @throws org.mule.MuleException which will wrap any other exceptions or errors.
      */
@@ -421,7 +425,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         try
         {
             File[] todoFiles;
-            if(fileFilter!=null)
+            if (fileFilter != null)
             {
                 todoFiles = readDirectory.listFiles(fileFilter);
             }
@@ -441,12 +445,19 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 
     protected Comparator getComparator() throws Exception
     {
+
         Object o = this.getEndpoint().getProperty("comparator");
+        Object reverseProperty = this.getEndpoint().getProperty("reverse-comparator");
+        boolean reverse = false;
         if (o != null)
         {
+            if (reverseProperty != null)
+            {
+                reverse = Boolean.valueOf((String) reverseProperty).booleanValue();
+            }
             Class clazz = Class.forName(o.toString());
             o = clazz.newInstance();
-            return (Comparator) o;
+            return reverse ? new ReverseComparator((Comparator) o) : (Comparator) o;
         }
         return null;
     }
