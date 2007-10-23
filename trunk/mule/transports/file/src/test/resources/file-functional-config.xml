@@ -13,18 +13,10 @@
         <threading-profile maxThreadsActive="1"/>
     </connector>
 
-    <connector name="vmQueue" className="org.mule.providers.vm.VMConnector">
-        <properties>
-            <property name="queueEvents" value="true"/>
-        </properties>
-        <threading-profile maxThreadsActive="1"/>
-    </connector>
-
     <model name="ESTest">
 
-        <mule-descriptor name="FolderToVM"
-                         implementation="org.mule.components.simple.BridgeComponent">
-
+        <mule-descriptor name="FolderTO"
+                         implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
             <inbound-router>
                 <endpoint address="file://./.mule/in">
                     <properties>
@@ -32,14 +24,9 @@
                     </properties>
                 </endpoint>
             </inbound-router>
-
-            <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out"/>
-                </router>
-            </outbound-router>
-
+            <threading-profile maxThreadsActive="1"/>
         </mule-descriptor>
+
     </model>
 
 </mule-configuration>

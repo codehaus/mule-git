@@ -2,6 +2,3 @@
 # Test cases listed in this file are not run.
 #
 
-# MULE-2562
-org.mule.providers.file.FileComparatorTestCase
-
