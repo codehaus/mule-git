@@ -14,6 +14,10 @@ import org.mule.util.FileUtils;
 import java.util.Comparator;
 import java.io.File;
 
+/**
+ * <p><code>OlderComparatorComparator</code> is a {@link Comparator} of File
+ * which is capable of comparing files for equality based on their modification dates.</p>
+ */
 public class OlderComparator implements Comparator
 {
     public int compare(Object o1, Object o2)

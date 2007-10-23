@@ -21,7 +21,7 @@
                 <endpoint address="file://./.mule/in">
                     <properties>
                         <property name="comparator" value="org.mule.providers.file.comparator.OlderComparator"/>
-                        <property name="reverse-comparator" value="true"/>
+                        <property name="reverse-order" value="true"/>
                     </properties>
                 </endpoint>
             </inbound-router>

@@ -47,6 +47,10 @@ import org.apache.commons.io.IOUtils;
 
 public class FileMessageReceiver extends AbstractPollingMessageReceiver
 {
+
+    public static final String COMPARATOR_CLASS_NAME_PROPERTY = "comparator";
+    public static final String COMPARATOR_REVERSE_ORDER_PROPERTY = "reverse-order";
+
     private String readDir = null;
     private String moveDir = null;
     private File readDirectory = null;
@@ -446,8 +450,8 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
     protected Comparator getComparator() throws Exception
     {
 
-        Object o = this.getEndpoint().getProperty("comparator");
-        Object reverseProperty = this.getEndpoint().getProperty("reverse-comparator");
+        Object o = this.getEndpoint().getProperty(COMPARATOR_CLASS_NAME_PROPERTY);
+        Object reverseProperty = this.getEndpoint().getProperty(COMPARATOR_REVERSE_ORDER_PROPERTY);
         boolean reverse = false;
         if (o != null)
         {
