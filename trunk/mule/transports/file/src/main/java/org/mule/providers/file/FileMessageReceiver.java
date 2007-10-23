@@ -49,7 +49,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 {
 
     public static final String COMPARATOR_CLASS_NAME_PROPERTY = "comparator";
-    public static final String COMPARATOR_REVERSE_ORDER_PROPERTY = "reverse-order";
+    public static final String COMPARATOR_REVERSE_ORDER_PROPERTY = "reverseOrder";
 
     private String readDir = null;
     private String moveDir = null;
