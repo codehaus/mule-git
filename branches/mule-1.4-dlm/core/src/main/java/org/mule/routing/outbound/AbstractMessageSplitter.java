@@ -87,11 +87,13 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
                         message.setCorrelationGroupSize(groupSize);
                         message.setCorrelationSequence(correlationSequence++);
                     }
+
                     if (honorSynchronicity)
                     {
                         message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY,
                             endpoint.isRemoteSync());
                     }
+
                     if (synchronous)
                     {
                         result = send(session, message, endpoint);
@@ -105,25 +107,45 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
                 {
                     throw new CouldNotRouteOutboundMessageException(message, endpoint, e);
                 }
+
                 if (!multimatch)
                 {
                     break;
                 }
-                message = getMessagePart(message, endpoint);
+
+                message = this.getMessagePart(message, endpoint);
             }
         }
+
+        // we are done with splitting & routing
+        this.cleanup();
+
         return result;
     }
 
     /**
-     * Template method that can be used to split the message up before the
-     * getMessagePart method is called .
+     * This method can be implemented to split the message up before
+     * {@link #getMessagePart(UMOMessage, UMOEndpoint)} method is called.
      * 
      * @param message the message being routed
      */
     protected void initialise(UMOMessage message)
     {
-        // nothing to do
+        // nothing to do; subclasses need to implement this
+    }
+
+    /**
+     * This method is called after all parts of the original message have been processed;
+     * typically this is the case after {@link #getMessagePart(UMOMessage, UMOEndpoint)}
+     * returned <code>null</code>.
+     */
+    protected void cleanup()
+    {
+        // nothing to do; subclasses need to implement this
+
+        // MULE-2600 note: this method (as well as initialise()) should be abstract to force
+        // proper implementation by the subclass, but doing so would break compatibility with
+        // exisiting custom splitters..
     }
 
     public boolean isHonorSynchronicity()
