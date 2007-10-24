@@ -64,11 +64,9 @@ public class HttpClientMethodResponseToObject extends AbstractTransformer
             msg = new ReleasingInputStream(is, httpMethod);
         }
         
-        Header contentType = httpMethod.getResponseHeader(HttpConstants.HEADER_CONTENT_TYPE);
-        
         // Standard headers
         Map headerProps = new HashMap();
-        Header[] headers = httpMethod.getRequestHeaders();
+        Header[] headers = httpMethod.getResponseHeaders();
         String name;
         for (int i = 0; i < headers.length; i++)
         {
