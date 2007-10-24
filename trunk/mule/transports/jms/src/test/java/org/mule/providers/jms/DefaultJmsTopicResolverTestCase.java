@@ -36,30 +36,78 @@ public class DefaultJmsTopicResolverTestCase extends AbstractMuleTestCase
         assertSame(connector, resolver.getConnector());
     }
 
-    public void testEndpointNotTopicNoFallback() throws Exception
+    public void testEndpointNotTopicWithFallback() throws Exception
     {
         UMOEndpoint endpoint = new MuleEndpoint("jms://queue.NotATopic", true);
         assertFalse(resolver.isTopic(endpoint));
     }
 
-    public void testEndpointTopicNoFallback() throws Exception
+    public void testEndpointNotTopicWithFallback2() throws Exception
     {
-        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic", true);
+        UMOEndpoint endpoint = new MuleEndpoint("jms://queue.NotATopic", true);
+        assertFalse(resolver.isTopic(endpoint,true));
+    }
+
+    public void testEndpointNotTopicNoFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://queue.NotATopic", true);
+        assertFalse(resolver.isTopic(endpoint,false));
+    }
+
+    public void testEndpointTopicPropertyWithFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://context.aTopic?topic=true", true);
         assertTrue(resolver.isTopic(endpoint));
     }
 
-    public void testEndpointNotTopicWithFallback() throws Exception
+    public void testEndpointTopicPropertyWithFallback2() throws Exception
     {
         UMOEndpoint endpoint = new MuleEndpoint("jms://context.aTopic?topic=true", true);
         assertTrue(resolver.isTopic(endpoint, true));
     }
 
-    public void testEndpointTopicFallbackNotUsed() throws Exception
+    public void testEndpointTopicPropertyNoFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://context.aTopic?topic=true", true);
+        assertFalse(resolver.isTopic(endpoint, false));
+    }
+
+    public void testEndpointTopicPrefixWithFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic", true);
+        assertTrue(resolver.isTopic(endpoint));
+    }
+
+    public void testEndpointTopicPrefixWithFallback2() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic", true);
+        assertTrue(resolver.isTopic(endpoint, true));
+    }
+
+    public void testEndpointTopicPrefixNoFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic", true);
+        assertTrue(resolver.isTopic(endpoint, false));
+    }
+
+    public void testEndpointTopicPrefixAndPropertyWithFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic?topic=false", true);
+        assertTrue(resolver.isTopic(endpoint));
+    }
+    
+    public void testEndpointTopicPrefixAndPropertyWithFallback2() throws Exception
     {
         UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic?topic=false", true);
         assertTrue(resolver.isTopic(endpoint, true));
     }
 
+    public void testEndpointTopicPrefixAndPropertyNoFallback() throws Exception
+    {
+        UMOEndpoint endpoint = new MuleEndpoint("jms://topic:context.ThisIsATopic?topic=false", true);
+        assertTrue(resolver.isTopic(endpoint, false));
+    }
+    
     public void testDestinationNotTopic() throws Exception
     {
         // prepare the mock
