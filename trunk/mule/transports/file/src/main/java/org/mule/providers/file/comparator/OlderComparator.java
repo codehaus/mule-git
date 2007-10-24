@@ -9,10 +9,12 @@
  */
 package org.mule.providers.file.comparator;
 
+import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 
-import java.util.Comparator;
 import java.io.File;
+import java.text.MessageFormat;
+import java.util.Comparator;
 
 /**
  * <p><code>OlderComparatorComparator</code> is a {@link Comparator} of File
@@ -42,6 +44,9 @@ public class OlderComparator implements Comparator
             }
 
         }
-        throw new IllegalArgumentException("Impossible to compare not file instance");
+        throw new IllegalArgumentException(MessageFormat.format(
+                "Expected java.io.File instance, but was {0} and {1}",
+                new Object[] {ClassUtils.getShortClassName(o1, "<null>"),
+                              ClassUtils.getShortClassName(o2, "<null")}));
     }
 }
