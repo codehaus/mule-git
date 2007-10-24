@@ -112,8 +112,11 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
      * 
      * @param message the message being routed
      */
+    // @Override
     protected void initialise(UMOMessage message)
     {
+        super.initialise(message);
+
         if (logger.isDebugEnabled())
         {
             if (splitExpression.length() == 0)
@@ -214,6 +217,14 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
         propertiesContext.set(theProperties);
     }
 
+    // @Override
+    protected void cleanup()
+    {
+        nodesContext.set(null);
+        propertiesContext.set(null);
+        super.cleanup();
+    }
+    
     /**
      * Retrieves a specific message part for the given endpoint. the message will
      * then be routed via the provider.
@@ -280,8 +291,9 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
          * By default we're not validating against an XSD. If this is the case,
          * there's no need to continue here, so we bail.
          */
-        if (!validate) {
-         return;
+        if (!validate)
+        {
+            return;
         }
 
         InputStream xsdAsStream = IOUtils.getResourceAsStream(getExternalSchemaLocation(), getClass());
