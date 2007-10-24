@@ -106,7 +106,6 @@ public class XFireBasicTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient(managementContext);
         WSDLReader wsdlReader = new WSDLReaderImpl();
         Definition wsdlDefinition = wsdlReader.readWSDL("http://localhost:63084/services/echoService4?wsdl");
-        System.out.println(client.receive("http://localhost:63084/services/echoService4?wsdl", 5000).getPayloadAsString());
 
         assertEquals(1, wsdlDefinition.getAllBindings().size());
         Binding binding = wsdlDefinition.getBinding(new QName("http://www.muleumo.org", "echoService4HttpBinding"));
@@ -124,6 +123,17 @@ public class XFireBasicTestCase extends FunctionalTestCase
         UMOMessage result = client.receive("http://localhost:63081/services/echoService?wsdl", 5000);
         assertNotNull(result.getPayload());
         XMLUnit.compareXML(echoWsdl, result.getPayloadAsString());
+    }
+
+    public void testListServices() throws Exception
+    {
+        MuleClient client = new MuleClient(managementContext);
+        UMOMessage result = client.receive("http://localhost:63081/services/echoService?list", 5000);
+        assertNotNull(result.getPayload());
+        System.out.println(result.getPayloadAsString());
+        //Note that Xfire wraps the HTML in Xml...
+        assertTrue(result.getPayloadAsString().indexOf("<html><head>") > -1);
+        assertTrue(result.getPayloadAsString().indexOf("<title>echoService") > -1);
     }
 
     protected String getConfigResources()
