@@ -115,10 +115,10 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
 
                 message = this.getMessagePart(message, endpoint);
             }
-
-            // we are done with splitting
-            this.cleanup();
         }
+
+        // we are done with splitting & routing
+        this.cleanup();
 
         return result;
     }
