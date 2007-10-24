@@ -16,7 +16,6 @@ import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.ManagementContextAware;
 import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.model.streaming.DelegatingInputStream;
@@ -36,7 +35,6 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.DisposeException;
-import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOWorkManager;
@@ -248,8 +246,6 @@ public abstract class AbstractConnector
 
     public AbstractConnector()
     {
-        // make sure we always have an exception strategy
-        exceptionListener = new DefaultExceptionStrategy();
         //Todo RM*
         //enableMessageEvents = RegistryContext.getConfiguration().isEnableMessageEvents();
 
@@ -321,26 +317,27 @@ public abstract class AbstractConnector
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
 
-        // we clearErrors out any registered dispatchers and receivers without resetting
-        // the actual containers since this it might actually be a re-initialise
-        // (e.g. as in JmsConnector)
-        // TODO this should definitely not call dispose from this method. If anything,
-        // extract the common parts, otherwise intialise() logs dispose messages (?!)
-        this.disposeDispatchers();
-        this.disposeReceivers();
-
         this.doInitialise();
 
-        // TODO this doesn't feel right, should be injected?
-        if (exceptionListener instanceof ManagementContextAware)
+        // We do the management context injection here just in case we're using a default ExceptionStrategy
+        //We always create a default just in case anything goes wrong before
+        if(exceptionListener==null)
         {
-            ((ManagementContextAware) exceptionListener).setManagementContext(managementContext);
-        }
-        if (exceptionListener instanceof Initialisable)
-        {
-            ((Initialisable) exceptionListener).initialise();
+            exceptionListener = new DefaultExceptionStrategy();
+            ((DefaultExceptionStrategy)exceptionListener).setManagementContext(managementContext);
+            ((DefaultExceptionStrategy)exceptionListener).initialise();
         }
 
+        try
+        {
+            initWorkManagers();
+        }
+        catch (UMOException e)
+        {
+            throw new InitialisationException(e, this);
+        }
+
+        
         initialised.set(true);
     }
 
@@ -480,7 +477,7 @@ public abstract class AbstractConnector
         // we do not need to stop the work managers because they do no harm (will just be idle)
         // and will be reused on restart without problems.
 
-        this.initialised.set(false);
+        //TODO RM* THis shouldn't be here this.initialised.set(false);
         // started=false already issued above right after doStop()
         if (logger.isInfoEnabled())
         {
@@ -518,6 +515,7 @@ public abstract class AbstractConnector
 
         this.doDispose();
         disposed.set(true);
+        initialised.set(false);
 
         if (logger.isInfoEnabled())
         {
@@ -525,6 +523,30 @@ public abstract class AbstractConnector
         }
     }
 
+    protected void initWorkManagers() throws UMOException
+    {
+        if (receiverWorkManager.get() == null)
+        {
+            UMOWorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
+                getName() + ".receiver");
+
+            if (receiverWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
+        }
+
+        if (dispatcherWorkManager.get() == null)
+        {
+            UMOWorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
+                getName() + ".dispatcher");
+
+            if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
+            {
+                newWorkManager.start();
+            }
+        }
+    }
     protected void disposeWorkManagers()
     {
         logger.debug("Disposing dispatcher work manager");
@@ -845,6 +867,8 @@ public abstract class AbstractConnector
             receiver = this.createReceiver(component, endpoint);
             Object receiverKey = getReceiverKey(component, endpoint);
             receiver.setReceiverKey(receiverKey.toString());
+            //Since we're managing the creation we also need to initialise
+            receiver.initialise();
             receivers.put(receiverKey, receiver);
             // receivers.put(getReceiverKey(component, endpoint), receiver);
         }
@@ -1425,16 +1449,16 @@ public abstract class AbstractConnector
     protected UMOWorkManager getReceiverWorkManager(String receiverName) throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (receiverWorkManager.get() == null)
-        {
-            UMOWorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
-                this.getName() + '.' + receiverName);
-
-            if (receiverWorkManager.compareAndSet(null, newWorkManager))
-            {
-                newWorkManager.start();
-            }
-        }
+//        if (receiverWorkManager.get() == null)
+//        {
+//            UMOWorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
+//                this.getName() + '.' + receiverName);
+//
+//            if (receiverWorkManager.compareAndSet(null, newWorkManager))
+//            {
+//                newWorkManager.start();
+//            }
+//        }
 
         return (UMOWorkManager) receiverWorkManager.get();
     }
@@ -1447,16 +1471,16 @@ public abstract class AbstractConnector
     protected UMOWorkManager getDispatcherWorkManager() throws UMOException
     {
         // lazily created because ThreadingProfile was not yet set in Constructor
-        if (dispatcherWorkManager.get() == null)
-        {
-            UMOWorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
-                getName() + ".dispatcher");
-
-            if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
-            {
-                newWorkManager.start();
-            }
-        }
+//        if (dispatcherWorkManager.get() == null)
+//        {
+//            UMOWorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
+//                getName() + ".dispatcher");
+//
+//            if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
+//            {
+//                newWorkManager.start();
+//            }
+//        }
 
         return (UMOWorkManager) dispatcherWorkManager.get();
     }

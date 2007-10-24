@@ -98,6 +98,12 @@ public class TestConnector extends AbstractConnector
     {
         UMOMessageReceiver receiver = new AbstractMessageReceiver(this, component, endpoint)
         {
+
+            protected void doInitialise() throws InitialisationException
+            {
+                //nothing to do
+            }
+
             protected void doConnect() throws Exception
             {
                 // nothing to do

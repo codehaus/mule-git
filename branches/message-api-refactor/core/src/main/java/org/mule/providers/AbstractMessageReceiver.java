@@ -23,7 +23,6 @@ import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
-import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -34,6 +33,7 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.CreateException;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
@@ -45,7 +45,6 @@ import org.mule.util.concurrent.WaitableBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import java.io.OutputStream;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,7 +117,24 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         setConnector(connector);
         setComponent(component);
         setEndpoint(endpoint);
+    }
 
+    /**
+     * Method used to perform any initialisation work. If a fatal error occurs during
+     * initialisation an <code>InitialisationException</code> should be thrown,
+     * causing the Mule instance to shutdown. If the error is recoverable, say by
+     * retrying to connect, a <code>RecoverableException</code> should be thrown.
+     * There is no guarantee that by throwing a Recoverable exception that the Mule
+     * instance will not shut down.
+     *
+     * @throws org.mule.umo.lifecycle.InitialisationException
+     *          if a fatal error occurs causing the Mule
+     *          instance to shutdown
+     * @throws org.mule.umo.lifecycle.RecoverableException
+     *          if an error occurs that can be recovered from
+     */
+    public void initialise() throws InitialisationException
+    {
         listener = new DefaultInternalMessageListener();
         endpointUri = endpoint.getEndpointURI();
 
@@ -128,12 +144,12 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
         catch (UMOException e)
         {
-            throw new CreateException(e, this);
+            throw new InitialisationException(e, this);
         }
 
         connectionStrategy = this.endpoint.getConnectionStrategy();
+        doInitialise();
     }
-
     /*
      * (non-Javadoc)
      * 
@@ -611,6 +627,14 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         return sb.toString();
     }
 
+    protected void doInitialise() throws InitialisationException
+    {
+        //nothing to do
+        //TODO this was addd to complete the lifecycle phases on the message receivers however, we ened to
+        //review each receiver to move logic from the contstructor to the init method. The Connector will
+        //call this method when the receiver is created. see MULE-2113 for more information about lifecycle clean up
+    }
+    
     protected abstract void doStart() throws UMOException;
 
     protected abstract void doStop() throws UMOException;
