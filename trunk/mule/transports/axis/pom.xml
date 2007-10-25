@@ -71,7 +71,7 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>                
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- In Axis 1.4, this is a runtime dependency so we need to pull
@@ -222,6 +222,11 @@
                   <artifactId>mx4j-impl</artifactId>
                 </exclusion>
            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

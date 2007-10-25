@@ -8,12 +8,8 @@ org.mule.providers.soap.axis.VmToAxisProxyTestCase
 
 
 # MULE-1553 This test passes in eclipse but fails as part of maven build
-Error: java.lang.IllegalArgumentException: The KeyStore location cannot be null
+# Error: java.lang.IllegalArgumentException: The KeyStore location cannot be null
 org.mule.providers.soap.axis.AxisConnectorHttpsTestCase
-
-# MULE-1553 This test passes in eclipse but fails as part of maven build
-Error: java.lang.NoClassDefFoundError: org/apache/derby/jdbc/EmbeddedDataSource
-org.mule.providers.soap.axis.AxisConnectorJmsTopicsFunctionalTestCase
 
 # MULE-1553 This test fails in both eclipse and as part of the maven build.
 org.mule.providers.soap.axis.AxisServletBindingTestCase
