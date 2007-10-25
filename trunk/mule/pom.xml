@@ -399,7 +399,7 @@
             <name>Mule Plugin Dependencies</name>
             <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
@@ -443,6 +443,12 @@
                          fixed with v2.4 of the javadoc plugin which is not yet released.
                     -->
                     <version>2.2</version>
+                </plugin>
+                <!-- The build will fail with any other version of the g-m-p -->
+                <plugin>
+                    <groupId>org.codehaus.mojo.groovy</groupId>
+                    <artifactId>groovy-maven-plugin</artifactId>
+                    <version>1.0-beta-2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
