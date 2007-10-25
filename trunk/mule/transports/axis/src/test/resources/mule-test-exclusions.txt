@@ -11,7 +11,7 @@ org.mule.providers.soap.axis.VmToAxisProxyTestCase
 # Error: java.lang.IllegalArgumentException: The KeyStore location cannot be null
 org.mule.providers.soap.axis.AxisConnectorHttpsTestCase
 
-# MULE-1553 This test fails in both eclipse and as part of the maven build.
+# MULE-2607
 org.mule.providers.soap.axis.AxisServletBindingTestCase
 
 # MULE-2164
