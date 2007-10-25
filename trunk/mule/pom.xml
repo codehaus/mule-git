@@ -399,7 +399,7 @@
             <name>Mule Plugin Dependencies</name>
             <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
