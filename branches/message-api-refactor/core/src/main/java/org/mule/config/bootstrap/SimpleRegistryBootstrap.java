@@ -44,20 +44,25 @@ import java.util.Properties;
  * object.2=org.bar.MyObject
  * </code>
  *
- * Loading transformers has a slightly different notation since you can define the 'returnClass' of the transformer.
- * To define a transformer with a return type simply add the return type class in brackets at the end of the transformer class i.e.
+ * or
+ * <code>
+ * myFoo=org.foo.MyObject
+ * myBar=org.bar.MyObject
+ * </code>
+ *
+ *
+ * Loading transformers has a slightly different notation since you can define the 'returnClass' and 'name'of
+ * the transformer as parameters i.e.
  *
  * <code>
- * transformer.1=org.mule.providers.jms.transformers.JMSMessageToObject(byte[])
- * transformer.2=org.mule.providers.jms.transformers.JMSMessageToObject(java.lang.String)
- * transformer.3=org.mule.providers.jms.transformers.JMSMessageToObject(java.util.Hashtable)
- * transformer.4=org.mule.providers.jms.transformers.JMSMessageToObject(java.util.Vector)
- * transformer.5=org.mule.providers.jms.transformers.JMSMessageToObject(java.lang.Object)
- * ransformer.6=org.mule.providers.jms.transformers.ObjectToJMSMessage(javax.jms.Message)
+ * transformer.1=org.mule.providers.jms.transformers.JMSMessageToObject,returnClass=byte[]
+ * transformer.2=org.mule.providers.jms.transformers.JMSMessageToObject,returnClass=java.lang.String, name=JMSMessageToString
+ * transformer.3=org.mule.providers.jms.transformers.JMSMessageToObject,returnClass=java.util.Hashtable)
  * </code>
  *
  * Note that the key used for transformers must be 'transformer.x' where 'x' is a sequential number.  The transformer name will be
- * automatically generated as JMSMessageToXXX where XXX is the return class name i.e. JMSMessageToString
+ * automatically generated as JMSMessageToXXX where XXX is the return class name i.e. JMSMessageToString unless a 'name'
+ * parameter is specified. If no 'returnClass' is specified the defualt in the transformer will be used.
  *
  * Note that all objects defined have to have a default constructor. They can implement injection interfaces such as
  * {@link org.mule.impl.ManagementContextAware} and lifecylce interfaces such as {@link org.mule.umo.lifecycle.Initialisable}.
