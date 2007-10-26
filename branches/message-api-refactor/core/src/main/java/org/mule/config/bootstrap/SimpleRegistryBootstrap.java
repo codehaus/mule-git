@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config.bootstrap;
+    package org.mule.config.bootstrap;
 
 import org.mule.impl.ManagementContextAware;
 import org.mule.registry.Registry;
