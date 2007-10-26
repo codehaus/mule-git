@@ -37,6 +37,7 @@ import java.nio.channels.FileLock;
 import java.util.Comparator;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+
 import org.apache.commons.collections.comparators.ReverseComparator;
 import org.apache.commons.io.IOUtils;
 
@@ -179,15 +180,17 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         String sourceFileOriginalName = sourceFile.getName();
         //Create a message adapter here to pass to the fileName parser
         UMOMessageAdapter msgAdapter;
+        FileInputStream fileIn = null;
         if (endpoint.isStreaming())
         {
             try
             {
-                msgAdapter = connector.getStreamMessageAdapter(new FileInputStream(sourceFile), null);
+                fileIn = new FileInputStream(sourceFile);
+                msgAdapter = connector.getStreamMessageAdapter(fileIn, null);
             }
             catch (FileNotFoundException e)
             {
-                //we can ignore since we did manage to acquire a lock, but just in case
+                // we can ignore since we did manage to acquire a lock, but just in case
                 logger.error("File being read disappeared!", e);
                 return;
             }
@@ -227,6 +230,11 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             //File in its moved location
             if (destinationFile != null)
             {
+                if (fileIn != null)
+                {
+                    fileIn.close();
+                }
+                
                 // move sourceFile to new destination
                 fileWasMoved = this.moveFile(sourceFile, destinationFile);
 
