@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.collections.IteratorUtils;
@@ -344,7 +345,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         else
         {
             ConfigurationBuilder builder = getBuilder();
-            context = builder.configure(getConfigurationResources());
+            context = builder.configure(getConfigurationResources(), getStartUpProperties());
         }
         return context;
     }
@@ -360,6 +361,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     protected String getConfigurationResources()
     {
         return "";
+    }
+
+    protected Properties getStartUpProperties()
+    {
+        return null;
     }
 
     /**
