@@ -46,7 +46,7 @@
             <groupId>javax.script</groupId>
             <artifactId>js-engine</artifactId>
             <version>1.1</version>
-            <!-- we use our own retrotranslated version --_>
+            we use our own retrotranslated version
             <classifier>jdk14</classifier>
         </dependency>
         -->
