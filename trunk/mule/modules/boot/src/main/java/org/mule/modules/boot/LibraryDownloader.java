@@ -40,8 +40,15 @@ public class LibraryDownloader
 {
     private static final int HTTP_CONNECTION_TIMEOUT = 10000;
     private static final String REPO_CENTRAL = "http://repo1.maven.org/maven2";
-    private static final String BOOTSTRAP_LIBRARY_DOWNLOAD_DESCRIPTION_PREFIX = "org.mule.bootstrap.library.download.description.";
+    private static final String BOOTSTRAP_LIBRARY_DOWNLOAD_DESCRIPTION_PREFIX = "mule.bootstrap.library.download.description.";
 
+    private static final String PROXY_ERROR_MESSAGE = "Unable to reach remote repository. This is most likely because you are behind a firewall and missing proxy settings in Mule."
+        + "Proxy options can be passed during startup as follows:\n"
+        + " -M-Dhttp.proxyHost=YOUR_HOST\n"
+        + " -M-Dhttp.proxyPort=YOUR_PORT\n"
+        + " -M-Dhttp.proxyUsername=YOUR_USERNAME\n"
+        + " -M-Dhttp.proxyPassword=YOUR_PASSWORD\n";
+    
     private MuleBootstrapUtils.ProxyInfo proxyInfo;
     private HostConfiguration hostConfig;
     private HttpState httpState;
@@ -107,7 +114,7 @@ public class LibraryDownloader
             if (proxyException != null)
             {
                 System.err.println();
-                IOException ex = new IOException("Unable to reach a remote repository, this is most likely because you are behind a firewall and have not configured your HTTP proxy settings in $MULE_HOME/conf/wrapper.conf.");
+                IOException ex = new IOException(PROXY_ERROR_MESSAGE);
                 ex.initCause(proxyException);
                 throw ex;
             }
