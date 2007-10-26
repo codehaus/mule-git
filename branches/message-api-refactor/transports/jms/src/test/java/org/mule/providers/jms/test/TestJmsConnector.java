@@ -12,24 +12,17 @@ package org.mule.providers.jms.test;
 
 import org.mule.providers.jms.JmsConnector;
 import org.mule.util.object.SimpleObjectFactory;
+import org.mule.util.object.ObjectFactory;
+import org.mule.umo.lifecycle.InitialisationException;
 
 public class TestJmsConnector extends JmsConnector
 {
-    private String providerProperty = "NOT_SET";
-    
-    public TestJmsConnector()
+
+    public TestJmsConnector() throws InitialisationException
     {
-        super();
-        setConnectionFactory(new SimpleObjectFactory(TestConnectionFactory.class));
+        ObjectFactory factory = new SimpleObjectFactory(TestConnectionFactory.class);
+        factory.initialise();
+        setConnectionFactory(factory);
     }
 
-    public String getProviderProperty()
-    {
-        return providerProperty;
-    }
-
-    public void setProviderProperty(String providerProperty)
-    {
-        this.providerProperty = providerProperty;
-    }
 }

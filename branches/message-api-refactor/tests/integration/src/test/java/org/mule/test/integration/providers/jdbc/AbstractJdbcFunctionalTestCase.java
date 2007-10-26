@@ -12,20 +12,16 @@ package org.mule.test.integration.providers.jdbc;
 
 import org.mule.RegistryContext;
 import org.mule.config.PoolingProfile;
-import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.util.MuleDerbyTestUtils;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -183,30 +179,14 @@ public abstract class AbstractJdbcFunctionalTestCase extends AbstractMuleTestCas
         return connector;
     }
 
-    protected UMOEndpointURI getInDest()
+    protected String getInDest()
     {
-        try
-        {
-            return new MuleEndpointURI(DEFAULT_IN_URI);
-        }
-        catch (EndpointException e)
-        {
-            fail(e.getMessage());
-            return null;
-        }
+        return DEFAULT_IN_URI;
     }
 
-    protected UMOEndpointURI getOutDest()
+    protected String getOutDest()
     {
-        try
-        {
-            return new MuleEndpointURI(DEFAULT_OUT_URI);
-        }
-        catch (Exception e)
-        {
-            fail(e.getMessage());
-            return null;
-        }
+        return DEFAULT_OUT_URI;
     }
     
     //by default use the embedded datasource

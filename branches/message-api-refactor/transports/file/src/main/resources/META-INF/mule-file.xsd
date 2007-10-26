@@ -99,8 +99,24 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
+                <xsd:attribute name="comparator" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Comparator class name
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="reverseOrder" type="mule:substitutableBoolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Should reverse comparator?
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:element name="transformer-file-to-byte-array" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="transformer-file-to-string" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
 </xsd:schema>

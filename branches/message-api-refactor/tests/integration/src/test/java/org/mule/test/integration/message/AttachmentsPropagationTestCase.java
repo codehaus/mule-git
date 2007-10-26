@@ -10,54 +10,58 @@
 
 package org.mule.test.integration.message;
 
-import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.providers.email.transformers.PlainTextDataSource;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import javax.activation.DataHandler;
 
 public class AttachmentsPropagationTestCase extends AbstractMuleTestCase implements EventCallback
 {
-
-    QuickConfigurationBuilder builder;
+    public void testSanity()
+    {
+        fail("Convert this test to an XML-based configuration");
+    }    
 
     // @Override
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
 
-        builder = new QuickConfigurationBuilder();
-
-        UMOEndpoint vmSingle = builder.createEndpoint("vm://Single", "SingleEndpoint", true);
-        UMOEndpoint vmChained = builder.createEndpoint("vm://Chained", "ChainedEndpoint", true);
-
-        FunctionalTestComponent single = new FunctionalTestComponent();
-        single.setEventCallback(this);
-        FunctionalTestComponent chained = new FunctionalTestComponent();
-        chained.setEventCallback(this);
-        builder.registerComponentInstance(single, "SINGLE", vmSingle.getEndpointURI());
-        builder.registerComponentInstance(chained, "CHAINED", vmChained.getEndpointURI(), vmSingle
-            .getEndpointURI());
-    }
-
-    // @Override
-    protected void doTearDown() throws Exception
-    {
-        builder.getManagementContext().dispose();
-        super.doTearDown();
+        // TODO Convert this to an XML config
+//        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("vm://Single", managementContext);
+//        endpointBuilder.setName("SingleEndpoint");
+//        UMOImmutableEndpoint vmSingle = managementContext.getRegistry()
+//            .lookupEndpointFactory()
+//            .getOutboundEndpoint(endpointBuilder, managementContext);
+//        
+//        UMOEndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder("vm://Single", managementContext);
+//        endpointBuilder2.setName("ChainedEndpoint");
+//        UMOImmutableEndpoint vmChained = managementContext.getRegistry()
+//            .lookupEndpointFactory()
+//            .getOutboundEndpoint(endpointBuilder2, managementContext);
+//        
+//        FunctionalTestComponent single = new FunctionalTestComponent();
+//        single.setEventCallback(this);
+//        FunctionalTestComponent chained = new FunctionalTestComponent();
+//        chained.setEventCallback(this);
+//        builder.registerComponentInstance(single, "SINGLE", vmSingle.getEndpointURI());
+//        builder.registerComponentInstance(chained, "CHAINED", vmChained.getEndpointURI(), vmSingle
+//            .getEndpointURI());
     }
 
     public void eventReceived(UMOEventContext context, Object component) throws Exception
     {
         UMOMessage message = context.getMessage();
         // add an attachment, named after the componentname...
-        message.addAttachment(context.getComponentDescriptor().getName(), new DataHandler(
+        message.addAttachment(context.getComponent().getName(), new DataHandler(
             new PlainTextDataSource("text/plain", "<content>")));
 
         // return the list of attachment names

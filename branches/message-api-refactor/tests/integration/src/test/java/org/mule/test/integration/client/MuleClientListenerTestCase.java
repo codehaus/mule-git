@@ -11,16 +11,16 @@
 package org.mule.test.integration.client;
 
 
-import org.mule.config.ConfigurationBuilder;
-import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleDescriptor;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.integration.service.TestReceiver;
 import org.mule.transformers.simple.ByteArrayToString;
 import org.mule.umo.UMOMessage;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.NoReceiverForEndpointException;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -29,14 +29,7 @@ public class MuleClientListenerTestCase extends FunctionalTestCase
 {
     protected String getConfigResources()
     {
-        return null;
-    }
-
-    protected ConfigurationBuilder getBuilder() throws Exception
-    {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.registerModel("seda", "main");
-        return builder;
+        return "org/mule/test/integration/client/mule-client-listener-config.xml";
     }
 
     public void doTestRegisterListener(String urlString, boolean canSendWithoutReceiver) throws Exception
@@ -62,25 +55,28 @@ public class MuleClientListenerTestCase extends FunctionalTestCase
         // we need to code the component creation here, which isn't ideal, see
         // MULE-1060
         String name = "myComponent";
-        MuleDescriptor descriptor = new MuleDescriptor();
+        SedaComponent descriptor = new SedaComponent();
         descriptor.setName(name);
         descriptor.setServiceFactory(new SingletonObjectFactory(receiver));
+        managementContext.getRegistry().registerComponent(descriptor, managementContext);
 
-        MuleEndpoint endpoint = new MuleEndpoint(urlString, true);
-        // We get a byte[] from a tcp endpoint so we need to convert it
-        endpoint.setTransformer(new ByteArrayToString());
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(urlString, managementContext);
+        endpointBuilder.addTransformer(new ByteArrayToString());
+        UMOImmutableEndpoint endpoint = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+            endpointBuilder, managementContext);
         descriptor.setInboundRouter(new InboundRouterCollection());
         descriptor.getInboundRouter().addEndpoint(endpoint);
-        client.registerComponent(descriptor);
 
-        assertTrue(managementContext.getRegistry().lookupModel("main").isComponentRegistered(name));
+        // No longer a valid assetion
+        //assertTrue(managementContext.getRegistry().lookupModel("main").isComponentRegistered(name));
 
         UMOMessage message = client.send(urlString, "Test Client Send message", null);
         assertNotNull(message);
         assertEquals("Received: Test Client Send message", message.getPayloadAsString());
         client.unregisterComponent(name);
 
-        assertTrue(!managementContext.getRegistry().lookupModel("main").isComponentRegistered(name));
+        // No longer a valid assetion
+        // assertTrue(!managementContext.getRegistry().lookupModel("main").isComponentRegistered(name));
 
         if (!canSendWithoutReceiver)
         {

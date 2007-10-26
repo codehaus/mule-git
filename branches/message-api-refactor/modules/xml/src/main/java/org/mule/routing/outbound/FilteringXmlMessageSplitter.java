@@ -58,8 +58,8 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
     public static final String JAXP_PROPERTIES_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     public static final String JAXP_PROPERTIES_SCHEMA_LANGUAGE_VALUE = "http://www.w3.org/2001/XMLSchema";
 
-    protected static final ThreadLocal propertiesContext = new ThreadLocal();
-    protected static final ThreadLocal nodesContext = new ThreadLocal();
+    protected final ThreadLocal propertiesContext = new ThreadLocal();
+    protected final ThreadLocal nodesContext = new ThreadLocal();
 
     protected volatile String splitExpression = "";
     protected volatile Map namespaces = null;
@@ -118,6 +118,7 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
      * 
      * @param message the message being routed
      */
+    // @Override
     protected void initialise(UMOMessage message)
     {
         if (logger.isDebugEnabled())
@@ -220,6 +221,13 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
         propertiesContext.set(theProperties);
     }
 
+    // @Override
+    protected void cleanup()
+    {
+        nodesContext.set(null);
+        propertiesContext.set(null);
+    }
+    
     /**
      * Retrieves a specific message part for the given endpoint. the message will
      * then be routed via the provider.
@@ -286,8 +294,9 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
          * By default we're not validating against an XSD. If this is the case,
          * there's no need to continue here, so we bail.
          */
-        if (!validate) {
-         return;
+        if (!validate)
+        {
+            return;
         }
 
         InputStream xsdAsStream = IOUtils.getResourceAsStream(getExternalSchemaLocation(), getClass());

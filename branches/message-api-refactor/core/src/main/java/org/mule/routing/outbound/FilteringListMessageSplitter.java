@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public class FilteringListMessageSplitter extends AbstractMessageSplitter
 {
-    private static final ThreadLocal payloadContext = new ThreadLocal();
-    private static final ThreadLocal propertiesContext = new ThreadLocal();
+    private final ThreadLocal payloadContext = new ThreadLocal();
+    private final ThreadLocal propertiesContext = new ThreadLocal();
 
     /**
      * Template method can be used to split the message up before the getMessagePart
@@ -72,7 +72,15 @@ public class FilteringListMessageSplitter extends AbstractMessageSplitter
             String propertyKey = (String) iterator.next();
             props.put(propertyKey, message.getProperty(propertyKey));
         }
+
         propertiesContext.set(props);
+    }
+
+    // @Override
+    protected void cleanup()
+    {
+        payloadContext.set(null);
+        propertiesContext.set(null);
     }
 
     /**

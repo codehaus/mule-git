@@ -38,6 +38,7 @@ import java.util.Comparator;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.collections.comparators.ReverseComparator;
 
 /**
  * <code>FileMessageReceiver</code> is a polling listener that reads files from a
@@ -46,6 +47,8 @@ import org.apache.commons.io.IOUtils;
 
 public class FileMessageReceiver extends AbstractPollingMessageReceiver
 {
+    public static final String COMPARATOR_CLASS_NAME_PROPERTY = "comparator";
+    public static final String COMPARATOR_REVERSE_ORDER_PROPERTY = "reverseOrder";
 
     private String readDir = null;
     private String moveDir = null;
@@ -181,9 +184,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         UMOMessageAdapter msgAdapter = null;
         try 
         {
-            Object payload = getPayload(sourceFile, false);
+            Object payload = new ReceiverFileInputStream(sourceFile, moveDir != null);
             
-            connector.getMessageAdapter(payload);
+            msgAdapter = connector.getMessageAdapter(payload);
         }
         catch (FileNotFoundException e)
         {
@@ -453,7 +456,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
     /**
      * Deletes the file when close() is called.
      */
-    private final class ReceiverFileInputStream extends FileInputStream
+    final class ReceiverFileInputStream extends FileInputStream
     {
         private boolean movedTo;
         private File currentFile;
@@ -482,18 +485,30 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             }
         }
 
+        public File getCurrentFile()
+        {
+            return currentFile;
+        }
     }
 
     protected Comparator getComparator() throws Exception
     {
-        Object o = this.getEndpoint().getProperty("comparator");
+
+        Object o = this.getEndpoint().getProperty(COMPARATOR_CLASS_NAME_PROPERTY);
+        Object reverseProperty = this.getEndpoint().getProperty(COMPARATOR_REVERSE_ORDER_PROPERTY);
+        boolean reverse = false;
         if (o != null)
         {
+            if (reverseProperty != null)
+            {
+                reverse = Boolean.valueOf((String) reverseProperty).booleanValue();
+            }
             Class clazz = Class.forName(o.toString());
             o = clazz.newInstance();
-            return (Comparator) o;
+            return reverse ? new ReverseComparator((Comparator) o) : (Comparator) o;
         }
         return null;
     }
+
 
 }

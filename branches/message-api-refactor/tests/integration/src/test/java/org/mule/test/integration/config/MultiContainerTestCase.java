@@ -10,17 +10,18 @@
 
 package org.mule.test.integration.config;
 
-import org.mule.config.builders.QuickConfigurationBuilder;
 import org.mule.impl.container.ContainerKeyPair;
+import org.mule.registry.Registry;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMODescriptor;
-import org.mule.umo.registry.RegistryFacade;
 
 /**
  * Tests Deploying and referencing components from two different spring container
  * contexts
+ * 
+ * TODO MULE-1789
  */
 public class MultiContainerTestCase extends FunctionalTestCase
 {
@@ -29,58 +30,63 @@ public class MultiContainerTestCase extends FunctionalTestCase
         return "org/mule/test/integration/config/multi-container-test.xml";
     }
 
+    public void testSanity()
+    {
+        fail("TODO MULE-1789");
+    }
+    
     public void testContainer() throws Exception
     {
-        RegistryFacade registryFacade = managementContext.getRegistry();
-        assertNotNull(registryFacade);
-        assertNotNull(registryFacade.lookupObject("spring2-Apple"));
-        assertNotNull(registryFacade.lookupObject("spring-Apple"));
-        assertNotNull(registryFacade.lookupObject("spring2-Banana"));
-        assertNotNull(registryFacade.lookupObject("spring-Banana"));
-
-        assertNull(registryFacade.lookupObject("WaterMelon"));
+//        Registry registry = managementContext.getRegistry();
+//        assertNotNull(registry);
+//        assertNotNull(registry.lookupObject("spring2-Apple"));
+//        assertNotNull(registry.lookupObject("spring-Apple"));
+//        assertNotNull(registry.lookupObject("spring2-Banana"));
+//        assertNotNull(registry.lookupObject("spring-Banana"));
+//
+//        assertNull(registry.lookupObject("WaterMelon"));
     }
 
-    public void testSpecificContainerAddressing() throws Exception
-    {
-        RegistryFacade registry = managementContext.getRegistry();
-        assertNotNull(registry);
-        Orange o = (Orange)registry.lookupObject(new ContainerKeyPair("spring1", "Orange"));
-        assertNotNull(o);
-        assertEquals(new Integer(8), o.getSegments());
-
-        o = (Orange)registry.lookupObject(new ContainerKeyPair("spring2", "Orange"));
-        assertNotNull(o);
-        assertEquals(new Integer(10), o.getSegments());
-
-        // gets the component from the first container
-        o = (Orange)registry.lookupObject("Orange");
-        assertNotNull(o);
-        assertEquals(new Integer(8), o.getSegments());
-    }
-
-    public void testSpecificContainerAddressingForComponents() throws Exception
-    {
-        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        UMODescriptor d = builder.createDescriptor("Orange", "myOrange", "test://foo", null, null);
-        //d.setContainer("spring2");
-        builder.registerComponent(d);
-        UMOComponent c = builder.getManagementContext().getRegistry().lookupModel("main").getComponent("myOrange");
-        assertNotNull(c);
-        Object o = c.getInstance();
-        assertTrue(o instanceof Orange);
-        Orange orange = (Orange)o;
-        assertEquals(10, orange.getSegments().intValue());
-
-        d = builder.createDescriptor("Orange", "myOrange2", "test://bar", null, null);
-        //d.setContainer("spring1");
-        builder.registerComponent(d);
-        c = builder.getManagementContext().getRegistry().lookupModel("main").getComponent("myOrange2");
-        assertNotNull(c);
-        o = c.getInstance();
-        assertTrue(o instanceof Orange);
-        orange = (Orange)o;
-        assertEquals(8, orange.getSegments().intValue());
-
-    }
+//    public void testSpecificContainerAddressing() throws Exception
+//    {
+//        Registry registry = managementContext.getRegistry();
+//        assertNotNull(registry);
+//        Orange o = (Orange)registry.lookupObject(new ContainerKeyPair("spring1", "Orange"));
+//        assertNotNull(o);
+//        assertEquals(new Integer(8), o.getSegments());
+//
+//        o = (Orange)registry.lookupObject(new ContainerKeyPair("spring2", "Orange"));
+//        assertNotNull(o);
+//        assertEquals(new Integer(10), o.getSegments());
+//
+//        // gets the component from the first container
+//        o = (Orange)registry.lookupObject("Orange");
+//        assertNotNull(o);
+//        assertEquals(new Integer(8), o.getSegments());
+//    }
+//
+//    public void testSpecificContainerAddressingForComponents() throws Exception
+//    {
+//        QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
+//        UMODescriptor d = builder.createDescriptor("Orange", "myOrange", "test://foo", null, null);
+//        //d.setContainer("spring2");
+//        builder.registerComponent(d);
+//        UMOComponent c = builder.getManagementContext().getRegistry().lookupModel("main").getComponent("myOrange");
+//        assertNotNull(c);
+//        Object o = c.getInstance();
+//        assertTrue(o instanceof Orange);
+//        Orange orange = (Orange)o;
+//        assertEquals(10, orange.getSegments().intValue());
+//
+//        d = builder.createDescriptor("Orange", "myOrange2", "test://bar", null, null);
+//        //d.setContainer("spring1");
+//        builder.registerComponent(d);
+//        c = builder.getManagementContext().getRegistry().lookupModel("main").getComponent("myOrange2");
+//        assertNotNull(c);
+//        o = c.getInstance();
+//        assertTrue(o instanceof Orange);
+//        orange = (Orange)o;
+//        assertEquals(8, orange.getSegments().intValue());
+//
+//    }
 }

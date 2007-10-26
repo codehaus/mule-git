@@ -149,7 +149,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
                     }
                 }
 
-                MuleMessage message = new MuleMessage(connector.getMessageAdapter(result));
+                MuleMessage message;
                 File destinationFile = null;
                 if (connector.getMoveToDirectory() != null)
                 {
@@ -159,7 +159,17 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
                     {
                         logger.error("Failed to move file: " + result.getAbsolutePath()
                                      + " to " + destinationFile.getAbsolutePath());
+                        message = new MuleMessage(connector.getMessageAdapter(result));
                     }
+                    else
+                    {
+                        message = new MuleMessage(connector.getMessageAdapter(destinationFile));                                            
+                    }
+
+                }
+                else
+                {
+                    message = new MuleMessage(connector.getMessageAdapter(result));
                 }
                 
                 if (connector.isAutoDelete())

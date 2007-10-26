@@ -12,22 +12,22 @@ package org.mule.test.integration.providers.jdbc;
 
 
 import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.MuleDescriptor;
 import org.mule.impl.MuleTransactionConfig;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
+import org.mule.impl.model.seda.SedaComponent;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.routing.outbound.OutboundRouterCollection;
 import org.mule.tck.functional.EventCallback;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.UMOTransactionFactory;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOEndpointBuilder;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.object.SimpleObjectFactory;
 
@@ -104,37 +104,41 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
     public UMOComponent initialiseComponent(byte txBeginAction, EventCallback callback) throws Exception
     {
 
-        UMODescriptor descriptor = new MuleDescriptor();
-        descriptor.setExceptionListener(new DefaultExceptionStrategy());
-        descriptor.setName("testComponent");
-        descriptor.setServiceFactory(new SimpleObjectFactory(JdbcFunctionalTestComponent.class));
-
-        UMOEndpoint endpoint = new MuleEndpoint("testIn", getInDest(), connector, null,
-            UMOEndpoint.ENDPOINT_TYPE_RECEIVER, 0, null, null);
+        UMOComponent component = new SedaComponent();
+        component.setExceptionListener(new DefaultExceptionStrategy());
+        component.setName("testComponent");
+        component.setServiceFactory(new SimpleObjectFactory(JdbcFunctionalTestComponent.class));
 
         UMOTransactionFactory tf = getTransactionFactory();
         UMOTransactionConfig txConfig = new MuleTransactionConfig();
         txConfig.setFactory(tf);
         txConfig.setAction(txBeginAction);
+        
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(getInDest(), managementContext);
+        endpointBuilder.setName("testIn");
+        endpointBuilder.setConnector(connector);
+        endpointBuilder.setTransactionConfig(txConfig);
+        UMOImmutableEndpoint endpoint = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+            endpointBuilder, managementContext);
 
-        UMOEndpoint outProvider = new MuleEndpoint("testOut", getOutDest(), connector, null,
-            UMOEndpoint.ENDPOINT_TYPE_SENDER, 0, null, null);
-
-        endpoint.setTransactionConfig(txConfig);
-
-        descriptor.setOutboundRouter(new OutboundRouterCollection());
+        UMOEndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder(getOutDest(), managementContext);
+        endpointBuilder2.setName("testOut");
+        endpointBuilder2.setConnector(connector);
+        UMOImmutableEndpoint outProvider = managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+            endpointBuilder2, managementContext);
+        
+        component.setOutboundRouter(new OutboundRouterCollection());
         OutboundPassThroughRouter router = new OutboundPassThroughRouter();
         router.addEndpoint(outProvider);
-        descriptor.getOutboundRouter().addRouter(router);
-        descriptor.setInboundRouter(new InboundRouterCollection());
-        descriptor.getInboundRouter().addEndpoint(endpoint);
+        component.getOutboundRouter().addRouter(router);
+        component.setInboundRouter(new InboundRouterCollection());
+        component.getInboundRouter().addEndpoint(endpoint);
 
         HashMap props = new HashMap();
         props.put("eventCallback", callback);
-        descriptor.setProperties(props);
-        descriptor.setModelName(model.getName());
-        managementContext.getRegistry().registerService(descriptor);
-        UMOComponent component = model.getComponent(descriptor.getName());
+        component.setProperties(props);
+        component.setModel(model);
+        managementContext.getRegistry().registerComponent(component, managementContext);
         return component;
     }
 

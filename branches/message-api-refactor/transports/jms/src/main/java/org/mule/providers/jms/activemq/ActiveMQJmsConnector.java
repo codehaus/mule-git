@@ -12,7 +12,6 @@ package org.mule.providers.jms.activemq;
 
 import org.mule.providers.ConnectException;
 import org.mule.providers.jms.JmsConnector;
-import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.xa.ConnectionInvocationHandler;
 import org.mule.util.object.ObjectFactory;
 import org.mule.util.object.SimpleObjectFactory;
@@ -27,17 +26,16 @@ import javax.jms.Connection;
 /**
  * ActiveMQ 4.x-specific JMS connector.
  */
-public class ActiveMqJmsConnector extends JmsConnector
+public class ActiveMQJmsConnector extends JmsConnector
 {
     public static final String ACTIVEMQ_CONNECTION_FACTORY = "org.apache.activemq.ActiveMQConnectionFactory";
     public static final String BROKER_URL = "vm://localhost?broker.persistent=false&broker.useJmx=false";
 
     /**
-     * Constructs a new ActiveMqJmsConnector.
+     * Constructs a new ActiveMQJmsConnector.
      */
-    public ActiveMqJmsConnector()
+    public ActiveMQJmsConnector()
     {
-        setSpecification(JmsConstants.JMS_SPECIFICATION_11);
         setEagerConsumer(false);
         // TODO MULE-1409 better support for ActiveMQ 4.x temp destinations
     }

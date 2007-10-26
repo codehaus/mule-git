@@ -34,10 +34,12 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.security.UMOEndpointSecurityFilter;
+import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -274,7 +276,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     protected boolean getDefaultDeleteUnacceptedMessages(UMOConnector connector)
     {
-        return connector.isRemoteSyncEnabled();
+        return false;
     }
 
     protected String getEndpointEncoding(UMOConnector connector)
@@ -324,7 +326,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     protected int getDefaultRemoteSyncTimeout(UMOConnector connector)
     {
-        return 0;
+        return managementContext.getRegistry().getConfiguration().getDefaultSynchronousEventTimeout();
     }
 
     protected List getInboundTransformers(UMOConnector connector, UMOEndpointURI endpointURI)
@@ -527,11 +529,19 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         this.connector = connector;
 
     }
+    
+    public void addTransformer(UMOTransformer transformer)
+    {
+        if (transformers == TransformerUtils.UNDEFINED)
+        {
+            transformers = new ArrayList();
+        }
+        transformers.add(transformer);
+    }
 
     public void setTransformers(List transformers)
     {
         this.transformers = transformers;
-
     }
 
     public void setResponseTransformers(List responseTransformers)
