@@ -10,6 +10,8 @@
 
 package org.mule.modules.xml.functional;
 
+import java.util.Properties;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,14 +22,21 @@ import org.w3c.dom.Element;
 public class W3CDomPropertyExtractorTestCase extends AbstractXmlPropertyExtractorTestCase
 {
 
-    protected String getConfigResources()
+    public W3CDomPropertyExtractorTestCase()
     {
-        return "xml/w3c-dom-property-extractor-test.xml";
+        super(true);
+    }
+
+    protected Properties getStartUpProperties()
+    {
+        Properties p = new Properties();
+        p.setProperty("selector.property", "${xpath:/endpoint}");
+        return p;
     }
 
     protected Object getMatchMessage() throws ParserConfigurationException
     {
-        return documentFor("matchingEndpoint");
+        return documentFor("matchingEndpoint1");
     }
 
     protected Object getErrorMessage() throws ParserConfigurationException

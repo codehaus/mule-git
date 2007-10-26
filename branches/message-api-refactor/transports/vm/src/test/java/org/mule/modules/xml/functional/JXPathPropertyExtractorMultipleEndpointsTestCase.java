@@ -13,10 +13,10 @@ package org.mule.modules.xml.functional;
 import java.util.Properties;
 
 
-public class JXPathPropertyExtractorTestCase extends AbstractXmlPropertyExtractorTestCase
+public class JXPathPropertyExtractorMultipleEndpointsTestCase extends AbstractXmlPropertyExtractorTestCase
 {
 
-    public JXPathPropertyExtractorTestCase()
+    public JXPathPropertyExtractorMultipleEndpointsTestCase()
     {
         super(true);
     }
@@ -24,13 +24,13 @@ public class JXPathPropertyExtractorTestCase extends AbstractXmlPropertyExtracto
     protected Properties getStartUpProperties()
     {
         Properties p = new Properties();
-        p.setProperty("selector.property", "${jxpath:/endpoint}");
+        p.setProperty("selector.property", "${jxpath:/endpoints/endpoint}");
         return p;
     }
 
     protected Object getMatchMessage()
     {
-        return "<endpoint>matchingEndpoint1</endpoint>";
+        return "<endpoints><endpoint>matchingEndpoint1</endpoint><endpoint>matchingEndpoint2</endpoint></endpoints>";
     }
 
     protected Object getErrorMessage()

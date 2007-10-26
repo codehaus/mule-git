@@ -14,26 +14,29 @@ import java.util.Properties;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
-public class Dom4jPropertyExtractorTestCase extends AbstractXmlPropertyExtractorTestCase
+public class Dom4jPropertyExtractorMultipleEndpointsTestCase extends AbstractXmlPropertyExtractorTestCase
 {
 
-    public Dom4jPropertyExtractorTestCase()
+    public Dom4jPropertyExtractorMultipleEndpointsTestCase()
     {
-        super(true);
+        super(false);
     }
 
     protected Properties getStartUpProperties()
     {
         Properties p = new Properties();
-        p.setProperty("selector.property", "${xpath:/endpoint}");
+        p.setProperty("selector.property", "${xpath:/endpoints/endpoint}");
         return p;
     }
 
     protected Object getMatchMessage()
     {
         Document document = DocumentHelper.createDocument();
-        document.addElement("endpoint").addText("matchingEndpoint1");
+        Element e = document.addElement("endpoints");
+        e.addElement("endpoint").addText("matchingEndpoint1");
+        e.addElement("endpoint").addText("matchingEndpoint2");
         return document;
     }
 
