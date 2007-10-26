@@ -14,6 +14,9 @@ import org.mule.umo.UMOMessage;
 import org.mule.util.properties.PropertyExtractor;
 import org.mule.xml.i18n.XmlMessages;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -39,9 +42,20 @@ public abstract class AbstractXPathPropertyExtractor implements PropertyExtracto
             }
             XPath xpath = getXPath(expression, message);
 
-            Object result = xpath.selectSingleNode(message);
-            result = extractResultFromNode(result);
-            return result;
+            List result = xpath.selectNodes(message);
+            result = extractResultsFromNodes(result);
+            if(result.size()==1)
+            {
+                return result.get(0);
+            }
+            else if(result.size()==0)
+            {
+                return null;
+            }
+            else
+            {
+                return result;
+            }
         }
         catch (JaxenException e)
         {
@@ -57,16 +71,31 @@ public abstract class AbstractXPathPropertyExtractor implements PropertyExtracto
 
     protected XPath getXPath(String expression, Object object) throws JaxenException
     {
-        XPath xpath = (XPath)cache.get(expression);
+        XPath xpath = (XPath)cache.get(expression + getClass().getName());
         if(xpath==null)
         {
             xpath = createXPath(expression, object);
-            cache.put(expression, xpath);
+            cache.put(expression + getClass().getName(), xpath);
         }
         return xpath;
     }
 
     protected abstract XPath createXPath(String expression, Object object) throws JaxenException;
 
+    protected List extractResultsFromNodes(List results)
+    {
+        if(results==null)
+        {
+            return null;
+        }
+        List newResults = new ArrayList(results.size());
+        for (Iterator iterator = results.iterator(); iterator.hasNext();)
+        {
+            Object o = iterator.next();
+            newResults.add(extractResultFromNode(o));
+        }
+        return newResults;
+    }
+    
     protected abstract Object extractResultFromNode(Object result);
 }
