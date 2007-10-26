@@ -26,7 +26,7 @@ public class BeanPayloadPropertyExtractor extends AbstractXPathPropertyExtractor
 
     protected Object extractResultFromNode(Object result)
     {
-        return result; 
+        return ((org.jaxen.javabean.Element)result).getObject();
     }
 
     /** {@inheritDoc} */
