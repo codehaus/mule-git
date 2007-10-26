@@ -40,13 +40,16 @@
             <!-- we use our own retrotranslated version -->
             <classifier>jdk14</classifier>
         </dependency>
+        <!-- temporarily disabled -->
+        <!--
         <dependency>
             <groupId>javax.script</groupId>
             <artifactId>js-engine</artifactId>
             <version>1.1</version>
-            <!-- we use our own retrotranslated version -->
+            <!-- we use our own retrotranslated version --_>
             <classifier>jdk14</classifier>
         </dependency>
+        -->
         <dependency>
             <groupId>javax.script</groupId>
             <artifactId>jython-engine</artifactId>
