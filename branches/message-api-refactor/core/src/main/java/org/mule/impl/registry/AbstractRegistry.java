@@ -704,6 +704,11 @@ public abstract class AbstractRegistry implements Registry
         unsupportedOperation("unregisterObject", key);
     }
 
+    public void registerObjects(Map objects) throws RegistrationException
+    {
+        unsupportedOperation("registryObjects", objects);
+    }
+
     public final MuleConfiguration getConfiguration()
     {
         MuleConfiguration config = getLocalConfiguration();

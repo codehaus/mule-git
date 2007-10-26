@@ -101,25 +101,26 @@ public class TransientRegistry extends AbstractRegistry
     //TODO MULE-2162 how do we handle Muleconfig across Registries
     private MuleConfiguration config; // = new MuleConfiguration();
 
-    public TransientRegistry(UMOManagementContext context)
+    public TransientRegistry()
     {
         super(REGISTRY_ID);
-        init(context);
+        init();
     }
 
-    public TransientRegistry(Registry parent, UMOManagementContext context)
+    public TransientRegistry(Registry parent)
     {
         super(REGISTRY_ID, parent);
-        init(context);
+        init();
     }
 
-    private void init(UMOManagementContext context)
+    private void init()
     {
         registry = new HashMap(8);
 
         //Register ManagementContext Injector for locally registered objects
-        getObjectTypeMap(ObjectProcessor.class).put(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR,
-                new ManagementContextDependencyProcessor(context));
+        //TODO this has to be registered once the managementContext is created
+//        getObjectTypeMap(ObjectProcessor.class).put(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR,
+//                new ManagementContextDependencyProcessor(context));
 
         getObjectTypeMap(ObjectProcessor.class).put("_mulePropertyExtractorProcessor",
                 new PropertyExtractorProcessor());
@@ -190,6 +191,17 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
+
+    public void registerObjects(Map objects) throws RegistrationException
+    {
+        if(objects==null) return;
+
+        for (Iterator iterator = objects.entrySet().iterator(); iterator.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            registerObject(entry.getKey().toString(), entry.getValue());
+        }
+    }
 
     protected Object doLookupObject(String key)
     {
@@ -533,10 +545,13 @@ public class TransientRegistry extends AbstractRegistry
         UMOManagementContext context = new ManagementContext(lifecycleManager);
 
         //Create the registry
-        TransientRegistry registry = new TransientRegistry(context);
+        TransientRegistry registry = new TransientRegistry();
         registry.setConfiguration(config);
 
         RegistryContext.setRegistry(registry);
+
+        registry.getObjectTypeMap(ObjectProcessor.class).put(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR,
+                  new ManagementContextDependencyProcessor(context));
 
         context.setId(UUID.getUUID());
 

@@ -26,6 +26,7 @@ import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public interface Registry extends Initialisable, Disposable
@@ -180,6 +181,8 @@ public interface Registry extends Initialisable, Disposable
 
     void registerObject(String key, Object value, Object metadata, UMOManagementContext managementContext)
         throws RegistrationException;
+
+    void registerObjects(Map objects) throws RegistrationException;
 
     void unregisterObject(String key);
 
