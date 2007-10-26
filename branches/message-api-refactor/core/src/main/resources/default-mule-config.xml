@@ -51,9 +51,6 @@
      <bean name="_muleSimpleRegistryBootstrap" class="org.mule.config.bootstrap.SimpleRegistryBootstrap"
           depends-on="_muleRegistry"/>
 
-    <bean name="_muleSpringRegistryBootstrap" class="org.mule.config.bootstrap.SpringRegistryBootstrap"
-          depends-on="_muleRegistry"/>
-
     <mule:mule name="_muleSystemModel">
 
         <mule:configuration
