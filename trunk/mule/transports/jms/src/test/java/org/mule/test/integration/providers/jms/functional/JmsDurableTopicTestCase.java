@@ -22,7 +22,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 
 /**
- * Created by IntelliJ IDEA.
+ * Testing durable topic with external subscriber
  */
 public class JmsDurableTopicTestCase extends AbstractJmsFunctionalTestCase
 {
