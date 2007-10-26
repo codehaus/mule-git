@@ -12,6 +12,7 @@ package org.mule.config.spring.factories;
 import org.mule.RegistryContext;
 import org.mule.config.spring.SpringRegistry;
 import org.mule.impl.registry.TransientRegistry;
+import org.mule.registry.Registry;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
@@ -25,7 +26,7 @@ public class SpringRegistryFactoryBean extends AbstractFactoryBean implements Ap
 {
 
     private ApplicationContext context;
-    private TransientRegistry registry;
+    private Registry registry;
 
     public Class getObjectType()
     {
@@ -34,8 +35,20 @@ public class SpringRegistryFactoryBean extends AbstractFactoryBean implements Ap
 
     protected Object createInstance() throws Exception
     {
-        //TODO the transinet registr needs a reference to the ManagementContext
-        registry = new TransientRegistry(new SpringRegistry(context), null);
+        Registry current = RegistryContext.getRegistry();
+        if(current==null || current.isDisposed())
+        {
+            registry = new TransientRegistry(new SpringRegistry(context));
+        }
+        else if(current instanceof TransientRegistry)
+        {
+            registry = current;
+            registry.setParent(new SpringRegistry(context));
+        }
+        else
+        {
+            throw new IllegalStateException("There is currently a registry available: " + current.getRegistryId());
+        }
         RegistryContext.setRegistry(registry);
         return registry;
     }
