@@ -28,7 +28,8 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="Topic-1" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Topic-1" implementation="org.mule.tck.functional.FunctionalTestComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://topic:broadcast" connector="jmsConnector"/>
             </inbound-router>
@@ -43,7 +44,8 @@
             </properties>
         </mule-descriptor>
 
-        <mule-descriptor name="Topic-2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
+        <mule-descriptor name="Topic-2" implementation="org.mule.tck.functional.FunctionalTestComponent"
+                         singleton="true">
             <inbound-router>
                 <endpoint address="jms://topic:broadcast" connector="jmsConnector"/>
             </inbound-router>

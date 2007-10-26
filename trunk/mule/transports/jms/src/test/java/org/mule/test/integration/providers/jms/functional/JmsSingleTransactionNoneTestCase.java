@@ -7,13 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
- package org.mule.test.integration.providers.jms.functional;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
+package org.mule.test.integration.providers.jms.functional;
 
 /**
  * Send and recieve JmsMessage without any tx

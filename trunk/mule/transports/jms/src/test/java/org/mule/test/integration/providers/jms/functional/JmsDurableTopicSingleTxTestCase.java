@@ -14,12 +14,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicSession;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTopic;
 
 /**
  * Testing durable topic with external subscriber
@@ -35,7 +29,6 @@ public class JmsDurableTopicSingleTxTestCase extends JmsDurableTopicTestCase
     }
 
     /**
-     *
      * @throws Exception
      */
     public void testProviderDurableSubscriber() throws Exception

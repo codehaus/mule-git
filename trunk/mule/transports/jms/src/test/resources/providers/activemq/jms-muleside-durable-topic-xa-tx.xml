@@ -74,6 +74,10 @@
             <inbound-router>
                 <endpoint address="jms://topic:durable.broadcast" connector="jmsConnectorC1" name="SubscriberOne">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.transaction.XaTransactionFactory"/>
+                    <properties>
+                        <property name="reuseConsumer" value="false"/>
+                        <property name="reuseSession" value="false"/>
+                    </properties>
                 </endpoint>
             </inbound-router>
             <outbound-router>
@@ -91,6 +95,11 @@
             <inbound-router>
                 <endpoint address="jms://topic:durable.broadcast" connector="jmsConnectorC2">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.transaction.XaTransactionFactory"/>
+                    <properties>
+                        <property name="reuseConsumer" value="false"/>
+                        <property name="reuseSession" value="false"/>
+                    </properties>
+
                 </endpoint>
             </inbound-router>
             <outbound-router>
