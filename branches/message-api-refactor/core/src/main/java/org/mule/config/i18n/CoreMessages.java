@@ -323,6 +323,11 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 76, object);
     }
 
+    public static Message objectNotFound(String type, String object)
+    {
+        return createMessage(BUNDLE_PATH, 76, type + ": " + object);
+    }
+
     public static Message transactionMarkedForRollback()
     {
         return createMessage(BUNDLE_PATH, 77);
@@ -612,6 +617,13 @@ public class CoreMessages extends MessageFactory
                 StringMessageUtils.toString(actual));
     }
 
+    public static Message propertyIsNotSupportedType(String property, Class[] expected,
+                                                     Class actual)
+    {
+        return createMessage(BUNDLE_PATH, 157, property, StringMessageUtils.toString(expected),
+                StringMessageUtils.toString(actual));
+    }
+
     public static Message containerAlreadyRegistered(String name)
     {
         return createMessage(BUNDLE_PATH, 155, name);
@@ -652,7 +664,7 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 167, name);
     }
 
-    public static Object propertyIsNotSetOnEvent(String property)
+    public static Message propertyIsNotSetOnEvent(String property)
     {
         return createMessage(BUNDLE_PATH, 168, property);
     }
