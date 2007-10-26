@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.ManagementContextAware;
 import org.mule.umo.UMOException;
@@ -18,9 +19,12 @@ import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutingException;
+import org.mule.util.StringUtils;
 import org.mule.util.properties.PropertyExtractorManager;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * <code>EndpointSelector</code> selects the outgoing endpoint based on a
@@ -52,43 +56,67 @@ public class EndpointSelector extends FilteringOutboundRouter implements Managem
     public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
         throws RoutingException
     {
+        List endpoints;
         String endpointName;
         
-        Object property =  PropertyExtractorManager.processExpression(getSelectorProperty(), message);
-        if (!(property instanceof String))
-        {
-            throw new IllegalArgumentException("No property for " + getSelectorProperty());
-        }
-        endpointName = (String) property;
-        if (endpointName == null)
-        {
-            throw new IllegalArgumentException("selectorProperty '" + getSelectorProperty()
-                                               + "' must be set on message in order to route it.");
-        }
-
-        UMOImmutableEndpoint ep = lookupEndpoint(endpointName);
-        if (ep == null)
+        Object property = PropertyExtractorManager.processExpression(getSelectorProperty(), message);
+        if(property ==null)
         {
             throw new CouldNotRouteOutboundMessageException(
-                MessageFactory.createStaticMessage("No endpoint found with the name " + endpointName), message, ep);
+                    CoreMessages.propertyIsNotSetOnEvent(getSelectorProperty()), message, null);
         }
 
-        try
+        if (property instanceof String)
         {
-            if (synchronous)
+            endpoints = new ArrayList(1);
+            endpoints.add(property);
+        }
+        else if(property instanceof List)
+        {
+            endpoints = (List)property;
+        }
+        else
+        {
+            throw new CouldNotRouteOutboundMessageException(CoreMessages.propertyIsNotSupportedType(
+                    getSelectorProperty(), new Class[]{String.class, List.class}, property.getClass()), message, null);
+
+        }
+
+        UMOMessage result = null;
+        for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
+        {
+            endpointName =  iterator.next().toString();
+
+            if(StringUtils.isEmpty(endpointName))
             {
-                return send(session, message, ep);
+                throw new CouldNotRouteOutboundMessageException(
+                        CoreMessages.objectIsNull("Endpoint Name: " + getSelectorProperty()), message, null);
             }
-            else
+            UMOImmutableEndpoint ep = lookupEndpoint(endpointName);
+            if (ep == null)
             {
-                dispatch(session, message, ep);
-                return null;
+                throw new CouldNotRouteOutboundMessageException(
+                    CoreMessages.objectNotFound("Endpoint", endpointName), message, ep);
+            }
+
+            try
+            {
+                if (synchronous)
+                {
+                    //TODO See MULE-2613, we only return the last message here
+                    result = send(session, message, ep);
+                }
+                else
+                {
+                    dispatch(session, message, ep);
+                }
+            }
+            catch (UMOException e)
+            {
+                throw new CouldNotRouteOutboundMessageException(message, ep, e);
             }
         }
-        catch (UMOException e)
-        {
-            throw new CouldNotRouteOutboundMessageException(message, ep, e);
-        }
+        return result;
     }
 
     protected UMOImmutableEndpoint lookupEndpoint(String endpointName)

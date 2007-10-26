@@ -17,6 +17,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
+import org.mule.umo.routing.RoutingException;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -128,7 +129,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
             router.route(message, (UMOSession) session.proxy(), false);
             fail("Router should have thrown an exception if no selector property was set on the message.");
         }
-        catch (IllegalArgumentException e)
+        catch (RoutingException e)
         {
             // expected
         }
