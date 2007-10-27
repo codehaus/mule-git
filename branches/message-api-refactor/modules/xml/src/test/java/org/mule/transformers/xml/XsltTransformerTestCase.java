@@ -122,6 +122,7 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
 
         XsltTransformer transformer = new XsltTransformer();
 
+        transformer.setReturnClass(String.class);
         // set stylesheet
         transformer.setXslt(xsl);
 
@@ -180,6 +181,8 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
 
         XsltTransformer transformer = new XsltTransformer();
 
+        transformer.setReturnClass(String.class);
+        
         // set stylesheet
         transformer.setXslt(xsl);
 
