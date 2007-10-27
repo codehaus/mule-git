@@ -31,7 +31,7 @@ public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
     public void testAxisOverJmsWithQueueNameDifferentFromComponentName() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("soapActionDefined", new MuleMessage("test"));
+        UMOMessage result = client.send("soapActionDefined", new MuleMessage("test2"));
         assertNotNull(result.getPayload());
         assertEquals("test2", result.getPayloadAsString());
     }

@@ -23,12 +23,12 @@
             <inbound-router>
                 <inbound-endpoint address="xfire:vm://mycomponent2">
                     <properties>
-                    <spring:entry key="serviceInterfaces">
-                        <spring:list>
-                            <spring:value>org.mule.components.simple.EchoService</spring:value>
-                            <spring:value>org.mule.tck.testmodels.services.DateService</spring:value>
-                        </spring:list>
-                    </spring:entry>
+                        <spring:entry key="serviceInterfaces">
+                            <spring:list>
+                                <spring:value>org.mule.components.simple.EchoService</spring:value>
+                                <spring:value>org.mule.tck.testmodels.services.DateService</spring:value>
+                            </spring:list>
+                        </spring:entry>
                     </properties>
                 </inbound-endpoint>
             </inbound-router>
