@@ -27,14 +27,13 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 
 /**
- * Created by IntelliJ IDEA.
+ * Testing durable topic when Mule is durable subscriber
  */
 public class JmsMuleSideDurableTopicTestCase extends AbstractJmsFunctionalTestCase
 {
 
     public static final String TOPIC_QUEUE_NAME = "durable.broadcast";
     public static final String CONNECTOR1_NAME = "jmsConnectorC1";
-//    public static final String CONNECTOR2_NAME = "jmsConnectorC2";
 
     protected String getConfigResources()
     {

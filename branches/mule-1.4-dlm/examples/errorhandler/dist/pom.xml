@@ -32,6 +32,11 @@
             <version>${muleVersion}</version>
         </dependency>
         <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-file</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.mail</groupId>
             <!-- this is the dist pom that does not have a parent set. Make sure
                  that the version declared here matches the version in mule's

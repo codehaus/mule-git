@@ -10,9 +10,16 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.impl.RequestContext;
+import org.mule.tck.MuleTestUtils;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
 {
@@ -89,8 +96,124 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         // The transformerPool must be a new instance
         assertNotSame("transformerPool", t1.transformerPool, t2.transformerPool);
         // ..but it must have the same config value
-        assertEquals("transformerPool.maxActive", t1.getMaxActiveTransformers(), t2
-            .getMaxActiveTransformers());
+        assertEquals("transformerPool.maxActive", t1.getMaxActiveTransformers(),
+            t2.getMaxActiveTransformers());
+    }
+
+    public void testTransformWithStaticParam() throws TransformerException, InitialisationException
+    {
+
+        String xml =
+                "<node1>" +
+                     "<subnode1>sub node 1 original value</subnode1>" +
+                     "<subnode2>sub node 2 original value</subnode2>" +
+                 "</node1>";
+
+        String param = "sub node 2 cool new value";
+
+        String expectedTransformedxml =
+                "<node1>" +
+                    "<subnode1>sub node 1 original value</subnode1>" +
+                    "<subnode2>" + param + "</subnode2>" +
+                "</node1>";
+
+        String xsl =
+                "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" +
+                     " xmlns:wsdlsoap=\"http://schemas.xmlsoap.org/wsdl/soap/\"" +
+                     " xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
+                     "<xsl:param name=\"param1\"/>" +
+                     "<xsl:template match=\"@*|node()\">" +
+                         "<xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy>" +
+                     "</xsl:template>" +
+                     "<xsl:template match=\"@*|node()\">" +
+                         "<xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy>" +
+                     "</xsl:template>" +
+                         "<xsl:template match=\"/node1/subnode2/text()\">" +
+                         "<xsl:value-of select=\"$param1\"/>" +
+                     "</xsl:template>" +
+                 "</xsl:stylesheet>";
+
+        XsltTransformer transformer = new XsltTransformer();
+
+        // set stylesheet
+        transformer.setXslt(xsl);
+
+        // set parameter
+        Map params = new HashMap();
+        params.put("param1", param);
+        transformer.setTransformParameters(params);
+
+        // init transformer
+        transformer.initialise();
+
+        // do transformation
+        String transformerResult = (String) transformer.transform(xml);
+
+        // remove doc type and CRLFs
+        transformerResult = transformerResult.substring(transformerResult.indexOf("?>") + 2);
+
+        assertTrue(transformerResult.indexOf(expectedTransformedxml) > -1);
+
+    }
+
+    public void testTransformWithDynamicParam() throws Exception
+    {
+
+        String xml =
+                "<node1>" +
+                     "<subnode1>sub node 1 original value</subnode1>" +
+                     "<subnode2>sub node 2 original value</subnode2>" +
+                 "</node1>";
+
+        String param = "sub node 2 cool new value";
+
+        String expectedTransformedxml =
+                "<node1>" +
+                    "<subnode1>sub node 1 original value</subnode1>" +
+                    "<subnode2>" + param + "</subnode2>" +
+                "</node1>";
+
+        String xsl =
+                "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" +
+                    " xmlns:wsdlsoap=\"http://schemas.xmlsoap.org/wsdl/soap/\"" +
+                    " xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
+                    "<xsl:param name=\"param1\"/>" +
+                    "<xsl:template match=\"@*|node()\">" +
+                        "<xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy>" +
+                    "</xsl:template>" +
+                    "<xsl:template match=\"@*|node()\">" +
+                        "<xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy>" +
+                    "</xsl:template>" +
+                    "<xsl:template match=\"/node1/subnode2/text()\">" +
+                        "<xsl:value-of select=\"$param1\"/>" +
+                    "</xsl:template>" +
+                "</xsl:stylesheet>";
+
+        XsltTransformer transformer = new XsltTransformer();
+
+        // set stylesheet
+        transformer.setXslt(xsl);
+
+        // set parameter
+        Map params = new HashMap();
+        params.put("param1", "#getProperty(message,'myproperty')");
+        transformer.setTransformParameters(params);
+
+        // init transformer
+        transformer.initialise();
+
+        // set up UMOEventContext
+        UMOEvent event = MuleTestUtils.getTestEvent("test message data");
+        event.getMessage().setProperty("myproperty", param);
+        RequestContext.setEvent(event);
+
+        // do transformation
+        String transformerResult = (String) transformer.transform(xml);
+
+        // remove doc type and CRLFs
+        transformerResult = transformerResult.substring(transformerResult.indexOf("?>") + 2);
+
+        assertTrue(transformerResult.indexOf(expectedTransformedxml) > -1);
     }
 
 }

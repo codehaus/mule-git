@@ -40,7 +40,8 @@ import org.apache.commons.logging.LogFactory;
 public class SpringConfigurationBuilder implements ConfigurationBuilder
 {
     protected transient final Log logger = LogFactory.getLog(getClass());
-    
+    private MuleApplicationContext muleApplicationContext;
+
     /**
      * Will configure a UMOManager based on the configurations made available through
      * Readers.
@@ -101,7 +102,8 @@ public class SpringConfigurationBuilder implements ConfigurationBuilder
         }
         MuleManager.getConfiguration().setConfigResources(resources);
 
-        new MuleApplicationContext(resources);
+        muleApplicationContext = new MuleApplicationContext(resources);
+
         try
         {
             if (System.getProperty(MuleProperties.MULE_START_AFTER_CONFIG_SYSTEM_PROPERTY, "true")
@@ -126,4 +128,10 @@ public class SpringConfigurationBuilder implements ConfigurationBuilder
     {
         return MuleManager.isInstanciated();
     }
+
+    public MuleApplicationContext getMuleApplicationContext()
+    {
+        return muleApplicationContext;
+    }
+
 }

@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
- package org.mule.test.integration.providers.jms.functional;
+package org.mule.test.integration.providers.jms.functional;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -316,7 +316,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
         public Message receive(Session session, MessageConsumer consumer) throws JMSException
         {
-            Message message = consumer.receive(TIMEOUT);
+            Message message = consumer.receive(SMALL_TIMEOUT);
             assertNull(message);
             return message;
         }
@@ -327,5 +327,23 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         }
 
     };
+
+    Scenario scenarioNoTx = new AbstractScenario()
+    {
+        public void send(Session session, MessageProducer producer) throws JMSException
+        {
+            producer.send(session.createTextMessage(DEFAULT_INPUT_MESSAGE));
+        }
+
+        public Message receive(Session session, MessageConsumer consumer) throws JMSException
+        {
+            Message message = consumer.receive(TIMEOUT);
+            assertNotNull(message);
+            assertTrue(TextMessage.class.isAssignableFrom(message.getClass()));
+            assertEquals(((TextMessage) message).getText(), DEFAULT_OUTPUT_MESSAGE);
+            return message;
+        }
+    };
+
 
 }

@@ -40,5 +40,10 @@
             <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-stream</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
 </project>

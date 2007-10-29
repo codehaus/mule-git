@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
- package org.mule.test.integration.providers.jms.functional;
+package org.mule.test.integration.providers.jms.functional;
 
 /**
  * BEGIN_OR_JOIN is same action as ALWAYS_BEGIN for current impl JmsTransaction

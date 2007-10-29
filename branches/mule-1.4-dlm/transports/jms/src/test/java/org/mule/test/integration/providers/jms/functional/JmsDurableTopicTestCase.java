@@ -22,12 +22,12 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 
 /**
- * Created by IntelliJ IDEA.
+ * Testing durable topic with external subscriber
  */
 public class JmsDurableTopicTestCase extends AbstractJmsFunctionalTestCase
 {
 
-    public static final String TOPIC_QUEUE_NAME="durable.broadcast";
+    public static final String TOPIC_QUEUE_NAME = "durable.broadcast";
     private String clientId;
 
     protected String getConfigResources()
@@ -110,7 +110,7 @@ public class JmsDurableTopicTestCase extends AbstractJmsFunctionalTestCase
                 MessageConsumer consumer = null;
                 try
                 {
-                    consumer = session.createDurableSubscriber(destination,getClientId());
+                    consumer = session.createDurableSubscriber(destination, getClientId());
                     return scenario.receive(session, consumer);
                 }
                 catch (Exception e)

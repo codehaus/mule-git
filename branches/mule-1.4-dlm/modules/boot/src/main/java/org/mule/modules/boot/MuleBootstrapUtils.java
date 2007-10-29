@@ -10,8 +10,6 @@
 
 package org.mule.modules.boot;
 
-import org.mule.util.ClassUtils;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,19 +53,16 @@ public final class MuleBootstrapUtils
     
     public static void addExternalJarFilesToClasspath(File muleHome, ProxyInfo proxyInfo) throws Exception
     {
-        if (! ClassUtils.isClassOnPath("javax.activation.DataSource", MuleBootstrapUtils.class))
+        LibraryDownloader downloader = null;
+        if (proxyInfo != null)
         {
-            LibraryDownloader downloader = null;
-            if (proxyInfo != null)
-            {
-                downloader = new LibraryDownloader(muleHome, proxyInfo.host, proxyInfo.port, proxyInfo.username, proxyInfo.password);
-            }
-            else 
-            {
-                downloader = new LibraryDownloader(muleHome);
-            }
-            addLibrariesToClasspath(downloader.downloadLibraries());
+            downloader = new LibraryDownloader(muleHome, proxyInfo.host, proxyInfo.port, proxyInfo.username, proxyInfo.password);
         }
+        else 
+        {
+            downloader = new LibraryDownloader(muleHome);
+        }
+        addLibrariesToClasspath(downloader.downloadLibraries());
     }
     
     public static void addLibrariesToClasspath(List urls) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
@@ -118,5 +113,18 @@ public final class MuleBootstrapUtils
         String port;
         String username;
         String password;
+        
+        public ProxyInfo(String host, String port)
+        {
+            this(host, port, null, null);
+        }
+        
+        public ProxyInfo(String host, String port, String username, String password)
+        {
+            this.host = host;
+            this.port = port;
+            this.username = username;
+            this.password = password;
+        }
     }
 }
