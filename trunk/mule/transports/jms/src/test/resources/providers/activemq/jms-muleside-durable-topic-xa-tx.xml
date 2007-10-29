@@ -75,8 +75,12 @@
                 <endpoint address="jms://topic:durable.broadcast" connector="jmsConnectorC1" name="SubscriberOne">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.transaction.XaTransactionFactory"/>
                     <properties>
-                        <property name="reuseConsumer" value="false"/>
-                        <property name="reuseSession" value="false"/>
+                        <!--
+                            These are commented out to demonstrate a WARN and force them off.
+                            Otherwise a stale consumer is reused and fails. See MULE-2622.
+                         -->
+                        <!--<property name="reuseConsumer" value="false"/>-->
+                        <!--<property name="reuseSession" value="false"/>-->
                     </properties>
                 </endpoint>
             </inbound-router>
