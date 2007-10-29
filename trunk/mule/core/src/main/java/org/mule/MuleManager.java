@@ -12,6 +12,7 @@ package org.mule;
 
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
+import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
@@ -83,7 +84,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.Manifest;
 
 import javax.transaction.TransactionManager;
 
@@ -1105,21 +1105,12 @@ public class MuleManager implements UMOManager
 
         // Mule Version, Timestamp, and Server ID
         List message = new ArrayList();
-        Manifest mf = config.getManifest();
-        Map att = mf.getMainAttributes();
-        if (att.values().size() > 0)
-        {
-            message.add(StringUtils.defaultString(config.getProductDescription(), notset) + " "
-                        + CoreMessages.version().getMessage() + " "
-                        + StringUtils.defaultString(config.getProductVersion(), notset));
-
-            message.add(StringUtils.defaultString(config.getVendorName(), notset));
-            message.add(StringUtils.defaultString(config.getProductMoreInfo(), notset));
-        }
-        else
-        {
-            message.add(CoreMessages.versionNotSet().getMessage());
-        }
+        message.add(StringUtils.defaultString(MuleManifest.getProductDescription(), notset));
+        message.add(CoreMessages.version().getMessage() + " "
+                    + StringUtils.defaultString(MuleManifest.getProductVersion(), notset)
+                    + " Build: " + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
+        message.add(StringUtils.defaultString(MuleManifest.getVendorName(), notset));
+        message.add(StringUtils.defaultString(MuleManifest.getProductMoreInfo(), notset));
         message.add(" ");
         message.add(CoreMessages.serverStartedAt(this.getStartDate()));
         message.add("Server ID: " + id);

@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.MuleManager;
+import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
 import org.mule.providers.NullPayload;
 import org.mule.providers.http.HttpConnector;
@@ -59,14 +59,14 @@ public class UMOMessageToHttpResponse extends AbstractEventAwareTransformer
 
         // When running with the source code, Meta information is not set
         // so product name and version are not available, hence we hard code
-        if (MuleManager.getConfiguration().getProductName() == null)
+        String productName = MuleManifest.getProductName();
+        if (productName == null)
         {
             server = "Mule/SNAPSHOT";
         }
         else
         {
-            server = MuleManager.getConfiguration().getProductName() + "/"
-                     + MuleManager.getConfiguration().getProductVersion();
+            server = productName + "/" + MuleManifest.getProductVersion();
         }
 
         serializableToByteArray = new SerializableToByteArray();

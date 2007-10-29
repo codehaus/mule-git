@@ -10,7 +10,7 @@
 
 package org.mule.management.agents;
 
-import org.mule.MuleManager;
+import org.mule.config.MuleManifest;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
@@ -42,6 +42,7 @@ import mx4j.tools.adaptor.http.HttpAdaptor;
 import mx4j.tools.adaptor.http.XSLTProcessor;
 import mx4j.tools.adaptor.ssl.SSLAdaptorServerSocketFactory;
 import mx4j.tools.adaptor.ssl.SSLAdaptorServerSocketFactoryMBean;
+
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -83,7 +84,7 @@ public class Mx4jAgent implements UMOAgent
 
     // TODO AH check how an embedded scenario can be handled (no mule home) 
     private String xslFilePath = System.getProperty("mule.home") + "/lib/mule/mule-module-management-" +
-            MuleManager.getConfiguration().getProductVersion() + ".jar";
+        MuleManifest.getProductVersion() + ".jar";
 
     private String pathInJar = DEFAULT_PATH_IN_JAR;
 
