@@ -54,7 +54,7 @@ public class PayloadPropertyExtractor implements PropertyExtractor
         }
         catch (InvocationTargetException e)
         {
-            logger.warn("Failed to read property: " + name, e);
+            logger.warn("Failed to read property: " + name, e.getCause());
         }
         catch (NoSuchMethodException e)
         {
