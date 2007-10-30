@@ -428,56 +428,89 @@ public class MuleConfiguration
         }
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductVersion()
     {
         return getManifestProperty("Implementation-Version");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getVendorName()
     {
         return getManifestProperty("Specification-Vendor");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getVendorUrl()
     {
         return getManifestProperty("Vendor-Url");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductUrl()
     {
         return getManifestProperty("Product-Url");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductName()
     {
         return getManifestProperty("Implementation-Title");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductMoreInfo()
     {
         return getManifestProperty("More-Info");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductSupport()
     {
         return getManifestProperty("Support");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductLicenseInfo()
     {
         return getManifestProperty("License");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public String getProductDescription()
     {
         return getManifestProperty("Description");
     }
 
+    /**
+     * @deprecated use MuleManifest.getBuildNumber() instead
+     */
     public String getBuildDate()
     {
         return getManifestProperty("Build-Date");
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     public Manifest getManifest()
     {
         if (manifest == null)
@@ -537,6 +570,9 @@ public class MuleConfiguration
         return manifest;
     }
 
+    /**
+     * @deprecated use MuleManifest instead
+     */
     protected String getManifestProperty(String name)
     {
         return getManifest().getMainAttributes().getValue(new Attributes.Name(name));
@@ -687,7 +723,6 @@ public class MuleConfiguration
             MuleManager.getInstance().setProperty(name, value);
         }
     }
-
 
     public String getSystemModelType()
     {

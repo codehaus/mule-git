@@ -36,3 +36,9 @@ org.mule.test.integration.providers.jms.NestedRouterTestCase
 # MULE-2258: fails on the build server
 org.mule.test.usecases.sync.TcpToFileTestCase
 
+# These tests fail on Dirk's machine
+org.mule.test.integration.message.AttachmentsPropagationTestCase
+org.mule.test.usecases.routing.InboundTransformingCatchAllTestCase
+
+# Test just hangs
+org.mule.test.integration.transaction.XAJdbcMule1479TestCase

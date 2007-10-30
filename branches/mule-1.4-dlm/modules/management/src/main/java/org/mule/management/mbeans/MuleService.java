@@ -11,6 +11,7 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleManager;
+import org.mule.config.MuleManifest;
 import org.mule.umo.UMOException;
 import org.mule.util.IOUtils;
 import org.mule.util.StringMessageUtils;
@@ -39,7 +40,7 @@ public class MuleService implements MuleServiceMBean
     private String host;
     private String ip;
     private String os;
-    private String buildDate;
+    private String buildNumber;
     // TODO
     private String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com";
     private String license;
@@ -55,7 +56,7 @@ public class MuleService implements MuleServiceMBean
         }
         os += " (" + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")";
 
-        buildDate = MuleManager.getConfiguration().getBuildDate();
+        buildNumber = MuleManifest.getBuildNumber();
         try
         {
             InetAddress iad = InetAddress.getLocalHost();
@@ -99,7 +100,7 @@ public class MuleService implements MuleServiceMBean
     {
         if (version == null)
         {
-            version = MuleManager.getConfiguration().getProductVersion();
+            version = MuleManifest.getProductVersion();
             if (version == null)
             {
                 version = "Mule Version Info Not Set";
@@ -112,7 +113,7 @@ public class MuleService implements MuleServiceMBean
     {
         if (vendor == null)
         {
-            vendor = MuleManager.getConfiguration().getVendorName();
+            vendor = MuleManifest.getVendorName();
             if (vendor == null)
             {
                 vendor = "Mule Vendor Info Not Set";
@@ -202,9 +203,17 @@ public class MuleService implements MuleServiceMBean
         return license;
     }
 
+    /**
+     * @deprecated use getBuildNumber() instead
+     */
     public String getBuildDate()
     {
-        return buildDate;
+        return buildNumber;
+    }
+    
+    public String getBuildNumber()
+    {
+        return buildNumber;
     }
 
     public String getInstanceId()

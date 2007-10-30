@@ -10,7 +10,7 @@
 
 package org.mule.config.i18n;
 
-import org.mule.config.MuleConfiguration;
+import org.mule.config.MuleManifest;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -846,11 +846,10 @@ public class CoreMessages extends MessageFactory
      */
     public static Message productInformation()
     {
-        MuleConfiguration config = new MuleConfiguration();
         String notset = CoreMessages.notSet().getMessage();
-        return createMessage(BUNDLE_PATH, 227, StringUtils.defaultString(config.getProductDescription(), notset),
-                             StringUtils.defaultString(config.getProductVersion(), notset),
-                             StringUtils.defaultString(config.getVendorName(), notset) + " " + StringUtils.defaultString(config.getVendorUrl(), notset));
+        return createMessage(BUNDLE_PATH, 227, StringUtils.defaultString(MuleManifest.getProductDescription(), notset),
+                             StringUtils.defaultString(MuleManifest.getProductVersion(), notset),
+                             StringUtils.defaultString(MuleManifest.getVendorName(), notset) + " " + StringUtils.defaultString(MuleManifest.getVendorUrl(), notset));
     }
 
     public static Message noJtaTransactionAvailable(final Thread callingThread)
