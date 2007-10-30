@@ -28,6 +28,15 @@ public class QNameConverterTestCase extends AbstractMuleTestCase
         assertEquals("http://muleumo.org/echo", name.getNamespaceURI());
     }
 
+    public void testFullQNameStringWithColonsInNamespace()
+    {
+        QName name = (QName)converter.convert(QName.class, "qname{e:echo:urn:muleumo:echo}");
+        assertNotNull(name);
+        assertEquals("e", name.getPrefix());
+        assertEquals("echo", name.getLocalPart());
+        assertEquals("urn:muleumo:echo", name.getNamespaceURI());
+    }
+
     public void testNameAndNamespace()
     {
         QName name = (QName)converter.convert(QName.class, "qname{echo:http://muleumo.org/echo}");
