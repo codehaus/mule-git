@@ -1,4 +1,4 @@
-jsr223-1.0
-jruby-complete-1.0
-js-1.6R5
-jython-2.1
+jruby-engine-1.1-jdk14
+js-engine-1.1-jdk14
+jython-engine-1.1-jdk14
+script-api-1.0-jdk14

@@ -10,27 +10,6 @@ Assembly descriptor for the YourKit Profiler distribution.
 
     <includeBaseDirectory>false</includeBaseDirectory>
 
-    <fileSets>
-        <!--<fileSet>-->
-        <!--<directory>src/main/resources</directory>-->
-        <!--<outputDirectory></outputDirectory>-->
-        <!--</fileSet>-->
-
-        <!-- Make binary directories executable. -->
-        <!--<fileSet>-->
-        <!--<directory>src/main/resources/bin</directory>-->
-        <!--<outputDirectory>bin</outputDirectory>-->
-        <!--<fileMode>755</fileMode>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-        <!--<directory>src/main/resources/sbin</directory>-->
-        <!--<outputDirectory>sbin</outputDirectory>-->
-        <!--<fileMode>755</fileMode>-->
-        <!--</fileSet>-->
-
-    </fileSets>
-
-
     <!--
     ============================
         Libraries
@@ -43,13 +22,9 @@ Assembly descriptor for the YourKit Profiler distribution.
         <dependencySet>
             <outputDirectory>lib/user</outputDirectory>
             <scope>runtime</scope>
-            <!--<outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>-->
-            <!--<includes>-->
-            <!--<include>script:jsr223</include>-->
-            <!--<include>jython:jython</include>-->
-            <!--<include>rhino:js</include>-->
-            <!--<include>org.jruby:jruby-complete</include>-->
-            <!--</includes>-->
+            <excludes>
+                <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
 
