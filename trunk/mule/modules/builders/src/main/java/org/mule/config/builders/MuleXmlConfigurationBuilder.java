@@ -215,7 +215,9 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
                 return configure(readers, PropertiesUtils.loadProperties(startupPropertiesFile, getClass()));
             }
             else
+            {
                 return configure(readers, null);
+            }
 
         }
         catch (Exception e)
