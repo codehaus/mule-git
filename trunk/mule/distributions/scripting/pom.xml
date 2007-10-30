@@ -86,11 +86,6 @@
             <classifier>jdk14</classifier>
         </dependency>
         <dependency>
-            <groupId>script</groupId>
-            <artifactId>jsr223</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.jruby</groupId>
             <artifactId>jruby-complete</artifactId>
             <version>1.0</version>
