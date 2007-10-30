@@ -75,12 +75,12 @@
             <!--<artifactId>retrotranslator-runtime</artifactId>-->
             <!--<version>1.2.1</version>-->
         <!--</dependency>-->
-        <dependency>
+        <!--<dependency>
             <groupId>javax.script</groupId>
             <artifactId>script-api</artifactId>
             <version>1.0</version>
             <classifier>jdk14</classifier>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>javax.script</groupId>
             <artifactId>jruby-engine</artifactId>
