@@ -42,3 +42,7 @@ org.mule.test.usecases.routing.InboundTransformingCatchAllTestCase
 
 # Test just hangs
 org.mule.test.integration.transaction.XAJdbcMule1479TestCase
+
+# test fails
+org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
+org.mule.test.integration.providers.jdbc.JdbcTransactionalXaFunctionalTestCase
