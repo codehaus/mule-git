@@ -132,7 +132,7 @@ public class SessionInvocationHandler implements InvocationHandler
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null)
         {
-            throw new IllegalStateException(CoreMessages.notMuleTransactionAvailable().toString());
+            throw new IllegalStateException(CoreMessages.noMuleTransactionAvailable().toString());
         }
         if (!(transaction instanceof XaTransaction))
         {

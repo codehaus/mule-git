@@ -458,7 +458,7 @@ public class ConnectionWrapper implements Connection
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null)
         {
-            throw new IllegalStateException(CoreMessages.notMuleTransactionAvailable().toString());
+            throw new IllegalStateException(CoreMessages.noMuleTransactionAvailable().toString());
         }
         if (!(transaction instanceof XaTransaction))
         {
