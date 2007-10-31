@@ -862,4 +862,9 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 229, tx.getClass());
     }
 
+    public static Message noMuleTransactionAvailable()
+    {
+        return createMessage(BUNDLE_PATH, 230);
+    }
+
 }
