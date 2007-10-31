@@ -11,6 +11,7 @@
 package org.mule.providers.jdbc.xa;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transaction.XaTransaction;
 import org.mule.umo.UMOTransaction;
@@ -458,11 +459,11 @@ public class ConnectionWrapper implements Connection
         UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null)
         {
-            throw new IllegalStateException(CoreMessages.noMuleTransactionAvailable().toString());
+            throw new IllegalTransactionStateException(CoreMessages.noMuleTransactionAvailable());
         }
         if (!(transaction instanceof XaTransaction))
         {
-            throw new IllegalStateException(CoreMessages.notMuleXaTransaction(transaction).toString());
+            throw new IllegalTransactionStateException(CoreMessages.notMuleXaTransaction(transaction));
         }
         if (!isEnlisted())
         {
