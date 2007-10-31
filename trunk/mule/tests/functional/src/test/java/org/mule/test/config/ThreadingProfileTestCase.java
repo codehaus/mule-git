@@ -12,8 +12,11 @@ package org.mule.test.config;
 
 import org.mule.config.ThreadingProfile;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.util.concurrent.NamedThreadFactory;
 
+import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
+import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 
 public class ThreadingProfileTestCase extends AbstractMuleTestCase
@@ -69,6 +72,40 @@ public class ThreadingProfileTestCase extends AbstractMuleTestCase
         assertEquals(ThreadingProfile.WHEN_EXHAUSTED_RUN, tp.getPoolExhaustedAction());
         tp.setPoolExhaustedActionString("RUN");
         assertEquals(ThreadingProfile.WHEN_EXHAUSTED_RUN, tp.getPoolExhaustedAction());
+    }
+
+    public void testDefaultThreadFactory()
+    {
+        ThreadingProfile profile = new ThreadingProfile();
+        ThreadPoolExecutor pool = profile.createPool();
+        ThreadFactory returnedFactory = pool.getThreadFactory();
+        assertTrue(returnedFactory.getClass().isInstance(Executors.defaultThreadFactory()));
+    }
+
+    public void testDefaultNamedThreadFactory()
+    {
+        ThreadingProfile profile = new ThreadingProfile();
+        ThreadPoolExecutor pool = profile.createPool("myThreadPool");
+        ThreadFactory returnedFactory = pool.getThreadFactory();
+        assertTrue(returnedFactory instanceof NamedThreadFactory);
+    }
+
+    public void testCustomThreadFactory()
+    {
+        ThreadingProfile profile = new ThreadingProfile();
+
+        ThreadFactory configuredFactory = new ThreadFactory()
+        {
+            public Thread newThread(Runnable r)
+            {
+                return null;
+            }
+        };
+
+        profile.setThreadFactory(configuredFactory);
+        ThreadPoolExecutor pool = profile.createPool();
+        ThreadFactory returnedFactory = pool.getThreadFactory();
+        assertSame(configuredFactory, returnedFactory);
     }
 
 }

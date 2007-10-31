@@ -25,6 +25,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.SynchronousQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 /**
@@ -284,15 +285,23 @@ public class ThreadingProfile
         ThreadPoolExecutor pool = new ThreadPoolExecutor(maxThreadsIdle, maxThreadsActive, threadTTL,
             TimeUnit.MILLISECONDS, buffer);
 
-        ThreadFactory tf = threadFactory;
-        if (name != null)
+        // use a custom ThreadFactory if one has been configured
+        if (threadFactory != null)
         {
-            tf = new NamedThreadFactory(name); 
+            pool.setThreadFactory(threadFactory);
         }
-
-        if (tf != null)
+        else
         {
-            pool.setThreadFactory(tf);
+            // ..else create a "NamedThreadFactory" if a proper name was passed in
+            if (name != null)
+            {
+                pool.setThreadFactory(new NamedThreadFactory(name)); 
+            }
+            else
+            {
+                // let ThreadPoolExecutor create a default ThreadFactory;
+                // see Executors.defaultThreadFactory()
+            }
         }
 
         if (rejectedExecutionHandler != null)
