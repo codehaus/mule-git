@@ -14,9 +14,9 @@ import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.NullPayload;
+import org.mule.providers.jdbc.util.MuleDerbyUtils;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
-import org.mule.util.MuleDerbyTestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +66,7 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 
     protected void suitePreSetUp() throws Exception
     {
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
+        MuleDerbyUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
         super.suitePreSetUp();
     }
     

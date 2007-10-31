@@ -13,6 +13,7 @@ package org.mule.examples.loanbroker.bpm;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
+import org.mule.providers.jdbc.util.MuleDerbyUtils;
 import org.mule.umo.UMOException;
 
 /**
@@ -34,7 +35,7 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
     protected void init() throws Exception
     {
         // before initialisation occurs, the database must be cleaned and a new one created
-        DbUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
+        MuleDerbyUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
         super.init();
     }
 
@@ -42,5 +43,4 @@ public class LoanBrokerApp extends AbstractLoanBrokerApp
     {
         return new SpringConfigurationBuilder();
     }
-    
 }

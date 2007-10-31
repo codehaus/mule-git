@@ -18,7 +18,7 @@ import org.mule.examples.loanbroker.tests.AbstractAsynchronousLoanBrokerTestCase
 import org.mule.extras.spring.config.SpringConfigurationBuilder;
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.ProcessConnector;
-import org.mule.util.MuleDerbyTestUtils;
+import org.mule.providers.jdbc.util.MuleDerbyUtils;
 
 
 public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase
@@ -31,7 +31,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         // set the derby.system.home system property to make sure that all derby databases are
         // created in maven's target directory
         
-        MuleDerbyTestUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
+        MuleDerbyUtils.defaultDerbyCleanAndInit("derby.properties", "database.name");
 
         super.suitePreSetUp();
     }
