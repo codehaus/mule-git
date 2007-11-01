@@ -350,15 +350,15 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
             {
                 if (ep.getConnector() == null)
                 {
-                   UMOConnector connector=TransportFactory.getOrCreateConnectorByProtocol(ep);
-                    if (connector==null){
+                    UMOConnector connector = TransportFactory.getOrCreateConnectorByProtocol(ep);
+                    if (connector == null)
+                    {
                         throw new InitialisationException(
-                                CoreMessages.failedToCreateConnectorFromUri(ep.getEndpointURI()),  this);
+                                CoreMessages.failedToCreateConnectorFromUri(ep.getEndpointURI()), this);
 
                     }
                     ep.setConnector(connector);
                 }
-
             }
             catch (TransportFactoryException e)
             {
