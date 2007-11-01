@@ -74,42 +74,7 @@ public final class TransportFactory
 
     public static UMOEndpoint createEndpoint(UMOEndpointURI uri, String type) throws EndpointException
     {
-        String scheme = uri.getFullScheme();
-        UMOConnector connector;
-        try
-        {
-            if (uri.getCreateConnector() == ALWAYS_CREATE_CONNECTOR)
-            {
-                connector = createConnector(uri);
-                MuleManager.getInstance().registerConnector(connector);
-            }
-            else if (uri.getCreateConnector() == NEVER_CREATE_CONNECTOR)
-            {
-                connector = getConnectorByProtocol(scheme);
-            }
-            else if (uri.getConnectorName() != null)
-            {
-                connector = MuleManager.getInstance().lookupConnector(uri.getConnectorName());
-                if (connector == null)
-                {
-                    throw new TransportFactoryException(
-                        CoreMessages.objectNotRegisteredWithManager("Connector: " + uri.getConnectorName()));
-                }
-            }
-            else
-            {
-                connector = getConnectorByProtocol(scheme);
-                if (connector == null)
-                {
-                    connector = createConnector(uri);
-                    MuleManager.getInstance().registerConnector(connector);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new TransportFactoryException(e);
-        }
+        UMOConnector connector = getOrCreateConnectorByProtocol(uri);
 
         if (connector == null)
         {

@@ -672,6 +672,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             logger.debug("Already initialised: " + toString());
             return;
         }
+        logger.debug("initialised: " + this.getName());
         if (connector == null)
         {
             if (endpointUri.getConnectorName() != null)
