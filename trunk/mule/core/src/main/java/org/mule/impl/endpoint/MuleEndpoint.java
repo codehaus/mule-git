@@ -120,6 +120,11 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint
                 logger.error(e.getMessage(), e);
             }
         }
+        
+        if (streaming)
+        {
+            clone.setStreaming(streaming);
+        }
 
         return clone;
     }
