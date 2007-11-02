@@ -20,11 +20,14 @@ import org.mule.umo.UMOMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.Serializable;
 
 import org.apache.commons.dbutils.QueryRunner;
 
 public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 {
+
+    public static final String[] TEST_VALUES={"Test","The Moon","Terra"};
 
     protected String getConfigResources()
     {
@@ -50,8 +53,13 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
             logger.debug("Table created");
         }
         
-        updated = qr.update(jdbcConnector.getConnection(), "INSERT INTO TEST(TYPE, DATA) VALUES (1, 'Test')");
+        updated = qr.update(jdbcConnector.getConnection(), "INSERT INTO TEST(TYPE, DATA) VALUES (1, '"+TEST_VALUES[0]+"')");
         logger.debug(updated + " rows updated");
+        updated = qr.update(jdbcConnector.getConnection(), "INSERT INTO TEST(TYPE, DATA) VALUES (2, '"+TEST_VALUES[1]+"')");
+        logger.debug(updated + " rows updated");
+        updated = qr.update(jdbcConnector.getConnection(), "INSERT INTO TEST(TYPE, DATA) VALUES (3, '"+TEST_VALUES[2]+"')");
+        logger.debug(updated + " rows updated");
+
     }
     
     protected void doFunctionalTearDown() throws Exception
@@ -73,7 +81,6 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
     public void testSelectOnOutbound() throws Exception
     {
         MuleClient client = new MuleClient();
-        
         UMOMessage reply = client.send("vm://jdbc.test", new MuleMessage(NullPayload.getInstance()));
         assertNotNull(reply.getPayload());
         assertTrue(reply.getPayload() instanceof ArrayList);
@@ -82,7 +89,43 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         assertTrue(resultList.get(0) instanceof HashMap);
         HashMap resultMap = (HashMap) resultList.get(0);
         assertEquals(new Integer(1), resultMap.get("TYPE"));
-        assertEquals("Test", resultMap.get("DATA"));
+        assertEquals(TEST_VALUES[0], resultMap.get("DATA"));
+    }
+
+    public void testSelectOnOutboundByPropertyExtractor() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MyMessage payload=new MyMessage(2);
+        UMOMessage reply = client.send("vm://terra", new MuleMessage(payload));
+        assertNotNull(reply.getPayload());
+        assertTrue(reply.getPayload() instanceof ArrayList);
+        ArrayList resultList = (ArrayList) reply.getPayload();
+        logger.debug("resultList.size() "+resultList.size());
+        assertTrue(resultList.size() == 1);
+        assertTrue(resultList.get(0) instanceof HashMap);
+        HashMap resultMap = (HashMap) resultList.get(0);
+        assertEquals(new Integer(2), resultMap.get("TYPE"));
+        assertEquals(TEST_VALUES[1], resultMap.get("DATA"));
+    }
+
+    public static class MyMessage implements Serializable{
+
+        public MyMessage(int type)
+        {
+            this.type = type;
+        }
+
+        private int type;
+
+        public int getType()
+        {
+            return type;
+        }
+
+        public void setType(int type)
+        {
+            this.type = type;
+        }
     }
 
 }
