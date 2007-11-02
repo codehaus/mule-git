@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:mgmt="http://www.mulesource.org/schema/mule/management/2.0"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/management/2.0 http://www.mulesource.org/schema/mule/management/2.0/mule-management.xsd">
+
+
+    <!-- model-inherited name="main" -->
+    <model name="main" inherit="true">
+        <service name="appleComponent2">
+
+            <component class="org.mule.tck.testmodels.fruit.Apple"/>
+
+            <inbound-router>
+                <inbound-endpoint name="nonTransactedInboundEndpoint" address="test://endpoint.in3"/>
+                <inbound-endpoint name="transactedInboundEndpoint" createConnector="NEVER_CREATE"
+                                  address="test://endpoint.in2">
+                    <!-- Transactions not quite working yet  
+                    <transaction action="ALWAYS_BEGIN">
+                        <transaction-factory class="org.mule.tck.testmodels.mule.TestTransactionFactory"/>
+                    </transaction>
+                    -->
+                    <properties>
+                        <spring:entry key="testEndpointProperty" value="Prop1"/>
+                    </properties>
+                </inbound-endpoint>
+            </inbound-router>
+
+            <outbound-router>
+                <filtering-router>
+                    <outbound-endpoint name="transactedOutboundEndpoint" address="test://endpoint.out"/>
+                </filtering-router>
+            </outbound-router>
+
+            <threading-profile maxBufferSize="6" maxThreadsActive="12" maxThreadsIdle="6" poolExhaustedAction="DISCARD"/>
+            <!--<pooling-profile exhaustedAction="WAIT" initialisationPolicy="INITIALISE_ALL"/>-->
+            <!--<queue-profile maxOutstandingMessages="102"/>-->
+        </service>
+    </model>
+</mule>

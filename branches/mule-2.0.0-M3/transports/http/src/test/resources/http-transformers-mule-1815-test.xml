@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd">
+
+    <endpoint name="base" address="http://localhost:60198" synchronous="true"/>
+    <endpoint name="adapted" address="http://localhost:60199" synchronous="true"/>
+    <endpoint name="ignored" address="http://localhost:60200" synchronous="true"/>
+    <endpoint name="inbound" address="http://localhost:60201" synchronous="true"/>
+
+    <custom-transformer name="appendString" class="org.mule.tck.functional.StringAppendTestTransformer"/>
+
+    <custom-transformer name="appendString2" class="org.mule.tck.functional.StringAppendTestTransformer">
+        <spring:property name="message" value=" transformed 2"/>
+    </custom-transformer>
+
+    <!-- first, the simple two service model we use in all cases, with no additional
+         transformers -->
+
+    <model name="baseModel">
+
+        <service name="baseService1">
+            <inbound-router>
+                <inbound-endpoint ref="base"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo1" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="baseService2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo1" synchronous="true"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+
+    <!-- next, the same model but with adapted components that call
+         getMessage() rather than getTransformedMessage() -->
+
+    <model name="adaptedModel">
+
+        <service name="adaptedService1">
+            <component class="org.mule.providers.http.issues.NoTransformPassThroughComponent"/>
+            <inbound-router>
+                <inbound-endpoint ref="adapted"/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo2" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="adaptedService2">
+            <component class="org.mule.providers.http.issues.NoTransformFunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo2" synchronous="true"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+
+    <!-- now we add transformers to the adapted model - they should have no effect -->
+
+    <model name="ignoredModel">
+
+        <service name="ignoredService1">
+            <component class="org.mule.providers.http.issues.NoTransformPassThroughComponent"/>
+            <inbound-router>
+                <inbound-endpoint ref="ignored" transformer-ref="appendString"/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo3" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="ignoredService2">
+            <component class="org.mule.providers.http.issues.NoTransformFunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo3" synchronous="true" transformer-ref="appendString2"/>
+            </inbound-router>
+        </service>
+
+    </model>
+
+    <!-- adding transformers to the base model will have an effect -->
+
+    <model name="inboundModel">
+
+        <service name="inboundService1">
+            <inbound-router>
+                <inbound-endpoint ref="inbound">
+                    <transformer-object-to-string/>
+                    <transformer ref="appendString"/>
+                </inbound-endpoint>
+                <forwarding-router/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://echo4" synchronous="true"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="inboundService2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="vm://echo4" synchronous="true">
+                  <transformer-object-to-string/>
+                  <transformer ref="appendString2" />
+                </inbound-endpoint>
+            </inbound-router>
+        </service>
+
+    </model>
+
+</mule>

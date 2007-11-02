@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
+
+    <stdio:connector name="SystemStreamConnector"
+                     promptMessageCode="2"
+                     resourceBundle="messages.stockquote-example-messages"
+                     messageDelayTime="1000"/>
+
+    <model name="Sample">
+        <service name="Console I/O">
+            <inbound-router>
+                <inbound-endpoint address="stdio://System.in"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <!--
+                    We use a chaining router to send the results of one endpoint execution as the
+                    input for the next endpoint. In this case it writes it out to System.out
+                -->
+                <chaining-router>
+                    <outbound-endpoint address="vm://stockquote"/>
+                    <outbound-endpoint address="stdio://System.out" transformer-ref="XmlDecoder Xslt XmlToObject"/>
+                </chaining-router>
+            </outbound-router>
+        </service>
+    </model>
+</mule>

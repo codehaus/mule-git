@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:ftp="http://www.mulesource.org/schema/mule/ftp/2.0"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp/2.0"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd
+               http://www.mulesource.org/schema/mule/tcp/2.0 http://www.mulesource.org/schema/mule/tcp/2.0/mule-tcp.xsd">
+
+    <ftp:connector name="ftp" pollingFrequency="2000">
+        <custom-exception-strategy class="org.mule.tck.functional.QuietExceptionStrategy"/>
+    </ftp:connector>
+
+    <tcp:connector name="tcp">
+        <tcp:direct-protocol payloadOnly="true"/>
+    </tcp:connector>
+
+    <model name="main">
+
+        <service name="bridge">
+            <singleton-object class="org.mule.components.simple.PassThroughComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="tcp://localhost:60196">
+                    <retry-connection-strategy retryCount="3" retryFrequency="2000"/>
+                </inbound-endpoint>
+            </inbound-router>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="ftp://anonymous:email@localhost:60197">
+                        <retry-connection-strategy retryCount="3" retryFrequency="2000"/>
+                    </outbound-endpoint>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="testComponent">
+            <singleton-object class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
+            <inbound-router>
+                <inbound-endpoint address="ftp://anonymous:email@localhost:60197">
+                    <retry-connection-strategy retryCount="3" retryFrequency="2000"/>
+                </inbound-endpoint>
+            </inbound-router>
+        </service>
+
+    </model>
+
+</mule>

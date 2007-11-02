@@ -1,0 +1,133 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# These tests hang if you're behind a firewall.
+# Figure out how to use proxy settings here.
+org.mule.test.integration.client.MuleClientAxisExternalTestCase
+org.mule.test.integration.client.MuleClientWsdlSoapExternalTestCase
+org.mule.test.integration.providers.xmpp.XmppFunctionalTestCase
+
+org.mule.test.integration.routing.replyto.ReplytoChainIntegration2TestCase
+org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
+
+# MULE-2257
+org.mule.test.usecases.sync.TcpJmsResponseTestCase
+
+# More testing on these: not recorded in Jira yet
+org.mule.test.usecases.axis.AxisClientWithComplexTypesTestCase
+#org.mule.test.integration.EventMetaDataPropagationTestCase
+org.mule.test.integration.VisualizerServiceTestCase
+
+org.mule.test.integration.spring.events.async.SpringEventsJmsAsyncExampleTestCase
+
+#org.mule.test.integration.client.RemoteExceptionTestCase
+org.mule.test.integration.client.MuleClientRemotingHttpTestCase
+org.mule.test.integration.client.MuleClientRemotingJmsTestCase
+org.mule.test.integration.transaction.OutboundTransactionsTestCase
+
+# These tests work when run from the IDE (IntelliJ)
+org.mule.test.integration.routing.replyto.ReplytoChainIntegration3TestCase
+org.mule.test.usecases.dlq.DLQExceptionHandlerTestCase
+
+org.mule.test.integration.routing.nested.NestedRouterTestCase
+org.mule.test.integration.providers.jms.NestedRouterTestCase
+
+# MULE-2258: fails on the build server
+org.mule.test.usecases.sync.TcpToFileTestCase
+
+##########################################################################
+# Mule 2.x-specific failures
+##########################################################################
+
+# Only testClientSendDirect() (1 of 6) is failing.
+# I'm not sure that RegistryContext.getConfiguration().setDefaultSynchronousEndpoints(true)
+# actually has any effect.
+org.mule.test.integration.client.MuleClientTestCase
+
+# Need to finish implementation of <static-recipient-list-router>
+org.mule.test.integration.routing.AggregatorIntegrationTestCase
+
+# Need to finish implementation of <wire-tap-router>
+org.mule.test.integration.routing.WireTapTestCase
+
+# How to configure <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/> ?
+org.mule.test.integration.persistence.FilePersistenceTestCase
+
+# Tests the transport "wsdl:http://"  Is that working yet for 2.x?
+org.mule.test.integration.client.MuleClientWSDLExternalTestCase
+
+# Remoting does not seem to be working yet in 2.x?
+org.mule.test.integration.client.MuleClientRemotingTestCase
+org.mule.test.integration.client.MuleClientRemotingAxisTestCase
+
+# Message chunking router not working?
+org.mule.test.integration.routing.MessageChunkingTestCase
+
+# Note: this test does not appear to be in very good shape, half the config is commented-out
+#
+# ObjectToString [getLaszloW10.2]: Could not close stream
+# java.net.SocketException: Socket closed
+# 	at org.apache.commons.httpclient.ContentLengthInputStream.close(ContentLengthInputStream.java:118)
+# 	at org.mule.transformers.simple.ObjectToString.doTransform(ObjectToString.java:60)
+org.mule.test.usecases.routing.response.ResponseAggregatorTestCase
+
+# JmsMessageAdapter [main]: Message access violation
+# java.lang.IllegalStateException: Only owner thread can write to message: Thread[jmsConnector.receiver
+org.mule.test.integration.routing.replyto.ReplytoChainIntegrationTestCase
+
+# These tests can't find their config file: Where, oh where has this little file gone?
+org.mule.routing.outbound.ChainingRouterPropertyPropagationTestCase
+org.mule.test.integration.client.MuleClientListenerTestCase
+org.mule.test.integration.client.RemoteExceptionTestCase
+org.mule.test.integration.EventMetaDataPropagationTestCase
+
+# Convert to XML config-based test
+org.mule.test.integration.message.AttachmentsPropagationTestCase
+org.mule.test.integration.providers.xmpp.XmppFunctionalTestCase
+
+# Convert transacted endpoint to XML config
+org.mule.test.integration.client.MuleClientTransactionTestCase
+
+# Not sure what to do about the "test:" namespace in 2.x
+org.mule.test.integration.MuleEndpointConfigurationTestCase
+
+# Hangs for a long, long time
+org.mule.test.integration.transaction.XAJdbcMule1479TestCase
+
+# These need <model-direct>, <model-pipeline>, etc. (or <direct:model>, <pipeline:model>?) elements configured.  
+# BTW, Is anyone actually using these?
+org.mule.test.integration.models.ConfigureModelTestCase
+org.mule.test.integration.models.DirectPipelineTestCase
+org.mule.test.integration.models.OptimisedSedaPipelineTestCase
+org.mule.test.integration.models.SedaPipelineComponentPerRequestTestCase
+org.mule.test.integration.models.SedaPipelineNoPoolingTestCase
+org.mule.test.integration.models.SedaPipelineTestCase
+
+# TODO MULE-1789
+org.mule.test.integration.config.MultiContainerTestCase
+
+# Not yet reviewed
+org.mule.test.integration.providers.axis.AxisOverJMSWithTransactionsTestCase
+org.mule.test.integration.providers.file.FileAppendConnectorTestCase
+org.mule.test.integration.providers.file.FileAppendEndpointTestCase
+org.mule.test.integration.providers.file.FileExceptionStrategyFunctionalTestCase
+org.mule.test.integration.providers.file.FileFunctionalTestCase
+org.mule.test.integration.providers.file.FileRuntimeExceptionStrategyFunctionalTestCase
+org.mule.test.integration.providers.file.OutputPatternFromEndpointTestCase
+org.mule.test.integration.providers.jdbc.JdbcConnectionTestCase
+org.mule.test.integration.providers.jdbc.JdbcNonTransactionalFunctionalTestCase
+org.mule.test.integration.providers.jdbc.JdbcNullParamsTestCase
+org.mule.test.integration.providers.jdbc.JdbcTransactionalJdbcFunctionalTestCase
+org.mule.test.integration.providers.jdbc.JdbcTransactionalXaFunctionalTestCase
+org.mule.test.integration.providers.jms.QosHeadersTestCase
+org.mule.test.integration.providers.quartz.QuartzFunctionalTestCase
+org.mule.test.integration.providers.vm.MethodEntrypointsTestCase
+org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
+org.mule.test.integration.spring.MuleAdminTestCase
+org.mule.test.integration.streaming.FileToTcpStreamingTestCase
+org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
+org.mule.test.integration.util.ObjectNameHelperTestCase
+org.mule.test.usecases.axis.clientbridge.ClientBridgeTestCase
+org.mule.test.usecases.sync.HttpTransformTestCase
+org.mule.test.usecases.sync.TcpJmsResponseBridgeTestCase

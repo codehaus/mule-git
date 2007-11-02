@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:mxml="http://www.mulesource.org/schema/mule/xml/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+
+    <vm:connector name="default">
+        <custom-exception-strategy class="org.mule.tck.functional.QuietExceptionStrategy"/>
+    </vm:connector>
+
+    <vm:connector name="queue" queueEvents="true">
+        <custom-exception-strategy class="org.mule.tck.functional.QuietExceptionStrategy"/>
+    </vm:connector>
+
+    <mxml:dom-to-xml name="domToXml"/>
+    <mxml:xml-to-dom name="xmlToDom" returnClass="org.w3c.dom.Document"/>
+
+    <mxml:jxpath-extractor name="jxpath" expression="count(//parent)"/>
+
+    <mxml:object-to-xml name="objectToXml"/>
+    <mxml:xml-to-object name="xmlToObject"/>
+
+    <mxml:xslt-transformer name="xslt" returnClass="org.dom4j.Document">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+            <!-- test for this string in test -->
+            <!-- Whenever you match any node or any attribute -->
+            <xsl:template match="node()|@*">
+                <!-- Copy the current node -->
+                <xsl:copy>
+                    <!-- don't copy inner contents -->
+                </xsl:copy>
+            </xsl:template>
+        </xsl:stylesheet>
+    </mxml:xslt-transformer>
+
+    <mxml:xslt-transformer name="xslt-string" returnClass="java.lang.String">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+            <!-- test for this string in test -->
+            <!-- Whenever you match any node or any attribute -->
+            <xsl:template match="node()|@*">
+                <!-- Copy the current node -->
+                <xsl:copy>
+                    <!-- don't copy inner contents -->
+                </xsl:copy>
+            </xsl:template>
+        </xsl:stylesheet>
+    </mxml:xslt-transformer>
+
+    <endpoint name="xml-in" address="vm://xml-in" connector-ref="default"/>
+    <endpoint name="object-in" address="vm://object-in" connector-ref="default"/>
+    <endpoint name="object-in-2" address="vm://object-in-2" connector-ref="default"/>
+    <endpoint name="dom-in" address="vm://dom-in" connector-ref="default" transformer-ref="xmlToDom"/>
+
+    <model name="xml transformer tests">
+
+        <service name="xml to ...">
+            <inbound-router>
+                <inbound-endpoint ref="xml-in"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <multicasting-router>
+                    <outbound-endpoint name="xml-out" address="vm://xml-out" connector-ref="queue"/>
+                    <outbound-endpoint name="xml-xslt-out" address="vm://xml-xslt-out" connector-ref="queue"
+                                       transformer-ref="xslt"/>
+                    <outbound-endpoint name="xml-xslt-out-string" address="vm://xml-xslt-out" connector-ref="queue"
+                                       transformer-ref="xslt-string"/>
+                    <outbound-endpoint name="xml-jxpath-out" address="vm://xml-jxpath-out" connector-ref="queue"
+                                       transformer-ref="jxpath"/>
+                    <outbound-endpoint name="xml-dom-out" address="vm://xml-dom-out" connector-ref="queue"
+                                       transformer-ref="xmlToDom"/>
+                    <outbound-endpoint name="xml-object-out" address="vm://xml-object-out" connector-ref="queue"
+                                       transformer-ref="xmlToObject"/>
+                    <outbound-endpoint ref="dom-in"/>
+                </multicasting-router>
+            </outbound-router>
+        </service>
+
+        <service name="object to xml">
+            <inbound-router>
+                <inbound-endpoint ref="object-in"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <multicasting-router>
+                    <outbound-endpoint name="object-out" address="vm://object-out" connector-ref="queue"/>
+                    <outbound-endpoint name="object-xml-out" address="vm://object-xml-out" connector-ref="queue"
+                                       transformer-ref="objectToXml"/>
+                    <!-- MULE-2136 -->
+                    <!-- mule:endpoint ref="xml-in" transformers="objectToXml"/ -->
+                </multicasting-router>
+            </outbound-router>
+        </service>
+
+        <!-- Need to split this across two service to avoid MULE-2136 -->
+        <service name="object to xml 2">
+            <inbound-router>
+                <inbound-endpoint ref="object-in-2"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <multicasting-router>
+                    <!-- MULE-2136 -->
+                    <!-- mule:endpoint name="object-out" address="vm://object-out" connector-ref="queue"/ -->
+                    <!-- mule:endpoint name="object-xml-out" address="vm://object-xml-out" connector-ref="queue" transformers="objectToXml"/ -->
+                    <outbound-endpoint ref="xml-in" transformer-ref="objectToXml"/>
+                </multicasting-router>
+            </outbound-router>
+        </service>
+
+        <service name="dom to xml">
+            <inbound-router>
+                <inbound-endpoint ref="dom-in"/>
+                <forwarding-router/>
+            </inbound-router>
+            <outbound-router>
+                <multicasting-router>
+                    <outbound-endpoint name="dom-xml-out" address="vm://dom-xml-out" connector-ref="queue"
+                                       transformer-ref="domToXml"/>
+                </multicasting-router>
+            </outbound-router>
+        </service>
+
+    </model>
+
+</mule>
