@@ -817,18 +817,18 @@
             </activation>
             <pluginRepositories>
                 <!-- for buildnumber plugin -->
-                <!--<pluginRepository>-->
-                    <!--<id>tlc</id>-->
-                    <!--<name>TLC Repository</name>-->
-                    <!--<url>http://commons.ucalgary.ca/pub/m2</url>-->
-                <!--</pluginRepository>-->
+               <pluginRepository>
+                    <id>codehaus-snapshots</id>
+                    <name>Codehaus Snapshot Repository</name>
+                    <url>http://snapshots.repository.codehaus.org/</url>
+                </pluginRepository>
             </pluginRepositories>
             <build>
                 <plugins>
                     <!-- add repository revision to manifests -->
-                    <!--<plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>maven-buildnumber-plugin</artifactId>
+                        <artifactId>buildnumber-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <phase>validate</phase>
@@ -837,19 +837,18 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>-->
+                        <configuration>
                             <!-- never touch svn -->
-                            <!--<doCheck>false</doCheck>-->
-                            <!--<doUpdate>false</doUpdate>-->
-                            <!-- Keep the format and items commented out -->
+                            <doCheck>false</doCheck>
+                            <doUpdate>false</doUpdate>
                             <!--
-                                <format>{0,date,yyyy-MMM-dd-HH:mm:ss}</format>
-                                <items>
-                                    <item>timestamp</item>
-                                </items>
+                            <format>{0,date,yyyy-MMM-dd HH:mm:ss}</format>
+                            <items>
+                                <item>timestamp</item>
+                            </items>
                             -->
-                        <!--</configuration>-->
-                     <!--</plugin>-->
+                        </configuration>
+                     </plugin>
                 </plugins>
             </build>
         </profile>
