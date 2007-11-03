@@ -96,6 +96,8 @@ Assembly descriptor for the full Mule distribution.
             <exclude>**/*.iml</exclude>
             <exclude>**/*.ipr</exclude>
             <exclude>**/*.iws</exclude>
+            <exclude>voipservice/**</exclude>
+            <exclude>webapp/**</exclude>
         </excludes>
     </fileSet>
 
@@ -257,65 +259,6 @@ Assembly descriptor for the full Mule distribution.
         <includes>
             <include>stockquote</include>
             <include>stockquote.bat</include>
-        </includes>
-    </fileSet>
-
-    <!--
-    ================================
-        Mule Examples: VoIP Service
-    ================================
-    -->
-    <fileSet>
-        <directory>../../../examples/voipservice/dist</directory>
-        <outputDirectory>examples/voipservice</outputDirectory>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/voipservice/dist</directory>
-        <outputDirectory>examples/voipservice</outputDirectory>
-        <fileMode>755</fileMode>
-        <includes>
-            <include>voip</include>
-            <include>voip.bat</include>
-        </includes>
-    </fileSet>
-
-    <!--
-    ============================
-        Mule Examples: Webapp
-    ============================
-    -->
-    <fileSet>
-        <directory>../../../examples/webapp/dist</directory>
-        <outputDirectory>examples/webapp</outputDirectory>
-    </fileSet>
-    <!-- Copy configs from other examples -->
-    <fileSet>
-        <directory>../../../examples/echo/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>echo-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/hello/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>hello-http-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/loanbroker/esn/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>loan-broker-sync-config.xml</include>
-            <include>loan-broker-vm-endpoints-config.xml</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>../../../examples/stockquote/conf</directory>
-        <outputDirectory>examples/webapp/conf</outputDirectory>
-        <includes>
-            <include>stockquote-rest-config.xml</include>
         </includes>
     </fileSet>
 
