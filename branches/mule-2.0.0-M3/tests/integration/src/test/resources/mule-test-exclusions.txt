@@ -76,6 +76,11 @@ org.mule.test.usecases.routing.response.ResponseAggregatorTestCase
 # java.lang.IllegalStateException: Only owner thread can write to message: Thread[jmsConnector.receiver
 org.mule.test.integration.routing.replyto.ReplytoChainIntegrationTestCase
 
+# When sending to http://localhost:18081/RemoteService, throws:
+# org.mule.umo.transformer.TransformerException: Could not find a transformer to transform "java.util.Arrays$ArrayList" to "org.mule.umo.provider.OutputHandler".
+# OutputHandler has to do with StreamMessageAdapter, could this be a streaming issue?
+org.mule.test.usecases.sync.HttpTransformTestCase
+
 # These tests can't find their config file: Where, oh where has this little file gone?
 org.mule.routing.outbound.ChainingRouterPropertyPropagationTestCase
 org.mule.test.integration.client.MuleClientListenerTestCase
@@ -104,17 +109,15 @@ org.mule.test.integration.models.SedaPipelineComponentPerRequestTestCase
 org.mule.test.integration.models.SedaPipelineNoPoolingTestCase
 org.mule.test.integration.models.SedaPipelineTestCase
 
+# Config uses an internal class "FileFunctionalTestCase$FileTestComponent" and the schema
+# rejects it because it is not a valid NMTOKEN.
+org.mule.test.integration.providers.file.FileFunctionalTestCase
+
 # TODO MULE-1789
 org.mule.test.integration.config.MultiContainerTestCase
 
 # Not yet reviewed
 org.mule.test.integration.providers.axis.AxisOverJMSWithTransactionsTestCase
-org.mule.test.integration.providers.file.FileAppendConnectorTestCase
-org.mule.test.integration.providers.file.FileAppendEndpointTestCase
-org.mule.test.integration.providers.file.FileExceptionStrategyFunctionalTestCase
-org.mule.test.integration.providers.file.FileFunctionalTestCase
-org.mule.test.integration.providers.file.FileRuntimeExceptionStrategyFunctionalTestCase
-org.mule.test.integration.providers.file.OutputPatternFromEndpointTestCase
 org.mule.test.integration.providers.jdbc.JdbcConnectionTestCase
 org.mule.test.integration.providers.jdbc.JdbcNonTransactionalFunctionalTestCase
 org.mule.test.integration.providers.jdbc.JdbcNullParamsTestCase
@@ -128,6 +131,4 @@ org.mule.test.integration.spring.MuleAdminTestCase
 org.mule.test.integration.streaming.FileToTcpStreamingTestCase
 org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
 org.mule.test.integration.util.ObjectNameHelperTestCase
-org.mule.test.usecases.axis.clientbridge.ClientBridgeTestCase
-org.mule.test.usecases.sync.HttpTransformTestCase
 org.mule.test.usecases.sync.TcpJmsResponseBridgeTestCase
