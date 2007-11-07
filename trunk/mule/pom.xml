@@ -815,14 +815,6 @@
                     <name>!skipBuildnumber</name>
                 </property>
             </activation>
-            <pluginRepositories>
-                <!-- for buildnumber plugin -->
-               <pluginRepository>
-                    <id>codehaus-snapshots</id>
-                    <name>Codehaus Snapshot Repository</name>
-                    <url>http://snapshots.repository.codehaus.org/</url>
-                </pluginRepository>
-            </pluginRepositories>
             <build>
                 <plugins>
                     <!-- add repository revision to manifests -->
