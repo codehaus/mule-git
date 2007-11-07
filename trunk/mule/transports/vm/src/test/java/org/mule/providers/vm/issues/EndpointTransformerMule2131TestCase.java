@@ -10,9 +10,8 @@
 
 package org.mule.providers.vm.issues;
 
-import org.mule.tck.FunctionalTestCase;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOException;
+import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
 public class EndpointTransformerMule2131TestCase extends FunctionalTestCase
@@ -26,32 +25,18 @@ public class EndpointTransformerMule2131TestCase extends FunctionalTestCase
         return "endpoint-transformer-mule-2131-test.xml";
     }
 
-    protected MuleClient send() throws UMOException
+    public void testAllCases() throws Exception
     {
         MuleClient client = new MuleClient();
         client.dispatch("in", MESSAGE, null);
-        return client;
-    }
+        for (int i = 0; i < 3; i++)
+        {
+            receive(client, "vm://outT?connector=queue", MESSAGE + StringAppendTransformer.DEFAULT_TEXT);
+        }
+        receive(client, "vm://outD?connector=queue", MESSAGE);
 
-    public void testDirect() throws Exception
-    {
-        String response = receive(send(), "direct");
-        assertEquals(MESSAGE, response);
-    }
+        client.dispose();
 
-    public void testGlobalNameGlobalTransformer() throws Exception
-    {
-        doTestTransformed("global-name-global-transformer");
-    }
-
-    public void testGlobalNameLocalTransformer() throws Exception
-    {
-        doTestTransformed("global-name-local-transformer");
-    }
-
-    public void testNoNameLocalTransformer() throws Exception
-    {
-        doTestTransformed("vm://no-name-local-transformer?connector=queue");
     }
 
     // not possible before 2.0?
@@ -60,17 +45,14 @@ public class EndpointTransformerMule2131TestCase extends FunctionalTestCase
 //        doTestTransformed("local-name-local-transformer");
 //    }
 
-    protected void doTestTransformed(String endpoint) throws Exception
-    {
-        String response = receive(send(), endpoint);
-        assertEquals(MESSAGE + StringAppendTransformer.DEFAULT_TEXT, response);
-    }
 
-    protected String receive(MuleClient client, String endpoint) throws Exception
+    protected String receive(MuleClient client, String endpoint, String src) throws Exception
     {
         UMOMessage message = client.receive(endpoint, TIMEOUT);
         assertNotNull(message);
         assertNotNull(message.getPayloadAsString());
+        logger.debug("Receive " + message.getPayloadAsString());
+        assertEquals(src, message.getPayloadAsString());
         return message.getPayloadAsString();
     }
 
