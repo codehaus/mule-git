@@ -86,6 +86,7 @@
         <xsd:attribute name="durable" type="mule:substitutableBoolean"/>
         <xsd:attribute name="noLocal" type="mule:substitutableBoolean"/>
         <xsd:attribute name="persistentDelivery" type="mule:substitutableBoolean"/>
+        <xsd:attribute name="honorQosHeaders" type="mule:substitutableBoolean"/>
         <xsd:attribute name="maxRedelivery" type="mule:substitutableInt"/>
         <xsd:attribute name="cacheJmsSessions" type="mule:substitutableBoolean"/>
         <xsd:attribute name="recoverJmsConnections" type="mule:substitutableBoolean"/>
@@ -143,4 +144,13 @@
     <xsd:element name="weblogic-connector" type="vendorJmsConnectorType" substitutionGroup="mule:abstract-connector"/>
     <xsd:element name="websphere-connector" type="vendorJmsConnectorType" substitutionGroup="mule:abstract-connector"/>
  
+    <xsd:element name="transaction-factory" type="jmsTransactionFactoryType" substitutionGroup="mule:abstract-transaction-factory"/>
+    <xsd:complexType name="jmsTransactionFactoryType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractTransactionFactoryType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="transformer-jmsmessage-to-object" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="transformer-object-to-jmsmessage" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
 </xsd:schema>
