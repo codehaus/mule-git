@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="test" version="1.0">
+    <description>JMS Test</description>
+
+    <connector name="jmsConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
+        <properties>
+            <property name="connectionFactoryClass" value="org.apache.activemq.ActiveMQConnectionFactory"/>
+            <map name="connectionFactoryProperties">
+                <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+            </map>
+            <property name="specification" value="1.1"/>
+        </properties>
+    </connector>
+
+    <global-endpoints>
+        <endpoint name="echo2" address="jms://echo2" synchronous="true"/>
+    </global-endpoints>
+
+    <model name="jmstest" type="seda">
+        <mule-descriptor name="echo2" implementation="org.mule.providers.jms.issues.ActiveMQJmsTransformersMule2629TestCase$JMSTest">
+            <inbound-router>
+                <global-endpoint name="echo2"/>
+                <!--<endpoint address="jms://echo2" synchronous="true"/>-->
+            </inbound-router>
+            <!--<outbound-router>-->
+                <!--<router className="org.mule.routing.outbound.OutboundPassThroughRouter">-->
+                    <!--<endpoint address="jms://out"/>-->
+                <!--</router>-->
+            <!--</outbound-router>-->
+        </mule-descriptor>
+    </model>
+</mule-configuration>

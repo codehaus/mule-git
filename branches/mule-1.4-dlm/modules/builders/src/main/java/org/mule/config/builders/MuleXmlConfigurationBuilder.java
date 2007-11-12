@@ -37,6 +37,8 @@ import org.mule.impl.security.MuleSecurityManager;
 import org.mule.interceptors.InterceptorStack;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.ConnectionStrategy;
+import org.mule.providers.service.TransportFactory;
+import org.mule.providers.service.TransportFactoryException;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.routing.nested.NestedRouter;
@@ -344,7 +346,26 @@ public class MuleXmlConfigurationBuilder extends AbstractDigesterConfiguration
         for (Iterator iterator = endpoints.values().iterator(); iterator.hasNext();)
         {
             UMOEndpoint ep = (UMOEndpoint)iterator.next();
-            ep.initialise();
+            try
+            {
+                if (ep.getConnector() == null)
+                {
+                    UMOConnector connector = TransportFactory.getOrCreateConnectorByProtocol(ep);
+                    if (connector == null)
+                    {
+                        throw new InitialisationException(
+                                CoreMessages.failedToCreateConnectorFromUri(ep.getEndpointURI()), this);
+
+                    }
+                    ep.setConnector(connector);
+                }
+            }
+            catch (TransportFactoryException e)
+            {
+                throw new InitialisationException(
+                        CoreMessages.failedToCreateConnectorFromUri(ep.getEndpointURI()), e, this);
+            }
+
             manager.unregisterEndpoint(ep.getName());
             manager.registerEndpoint(ep);
         }
