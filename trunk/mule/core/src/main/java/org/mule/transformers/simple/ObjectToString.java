@@ -25,6 +25,7 @@ import java.util.Map;
 public class ObjectToString extends AbstractTransformer
 {
     protected static final int DEFAULT_BUFFER_SIZE = 80;
+    protected static final String NULL_DESCRIPTION = "null";
 
     public ObjectToString()
     {
@@ -47,7 +48,15 @@ public class ObjectToString extends AbstractTransformer
                     Map.Entry e = (Map.Entry) iter.next();
                     Object key = e.getKey();
                     Object value = e.getValue();
-                    b.append(key.toString()).append(':').append(value.toString());
+                    b.append(key.toString()).append(':');
+                    if (value != null)
+                    {
+                        b.append(value.toString());
+                    }
+                    else
+                    {
+                        b.append(NULL_DESCRIPTION);
+                    }
                     if (iter.hasNext())
                     {
                         b.append('|');
@@ -64,7 +73,16 @@ public class ObjectToString extends AbstractTransformer
                 StringBuffer b = new StringBuffer(DEFAULT_BUFFER_SIZE);
                 while (iter.hasNext())
                 {
-                    b.append(iter.next().toString());
+                    Object value = iter.next();
+                    if (value != null)
+                    {
+                        b.append(value.toString());   
+                    }
+                    else
+                    {
+                        b.append(NULL_DESCRIPTION);
+                    }
+                    
                     if (iter.hasNext())
                     {
                         b.append('|');
