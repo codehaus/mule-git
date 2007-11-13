@@ -17,7 +17,7 @@ import org.mule.umo.UMOMessage;
 public class EndpointTransformerMule2131TestCase extends FunctionalTestCase
 {
 
-    public static final long TIMEOUT = 1000L;
+    public static final long TIMEOUT = 5000L;
     public static final String MESSAGE = "a message";
 
     protected String getConfigResources()
