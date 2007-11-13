@@ -121,9 +121,9 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
                     }
                     connector.closeQuietly(session);
                 }
-                // aggressively killing any session refs
-                session = null;
             }
+            // aggressively killing any session refs
+            session = null;
         }
     }
 
