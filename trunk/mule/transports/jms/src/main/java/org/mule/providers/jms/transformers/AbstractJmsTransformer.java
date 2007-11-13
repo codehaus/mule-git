@@ -214,23 +214,4 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
         }
     }
 
-    /**
-     * Closes the Session without throwing an exception (an error message is logged
-     * instead). TODO: this is a copy from JmsConnector, but we can't always dereference
-     * the connector from the endpoint, as the endpoint can be null during transform.
-     */
-    protected void closeQuietly(Session session)
-    {
-        try
-        {
-            if (session != null)
-            {
-                session.close();
-            }
-        }
-        catch (JMSException e)
-        {
-            logger.error("Failed to close jms session", e);
-        }
-    }
 }
