@@ -176,7 +176,7 @@ public class YourKitProfilerService implements YourKitProfilerServiceMBean
      */
     public long getStatus() throws java.lang.Exception
     {
-        return controller.getStatus() | SNAPSHOT_CAPTURING;
+        return (this.capturing.get()) ? (controller.getStatus() | SNAPSHOT_CAPTURING) : controller.getStatus();
     }
 
 }
