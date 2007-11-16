@@ -11,7 +11,7 @@
 package org.mule.config.spring.parsers;
 
 import org.mule.config.spring.factories.InboundEndpointFactoryBean;
-import org.mule.config.spring.handlers.AbstractIgnorableNamespaceHandler;
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.collection.AttributeListEntryDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
@@ -32,7 +32,6 @@ import org.mule.config.spring.parsers.specific.endpoint.support.ChildAddressDefi
 import org.mule.config.spring.parsers.specific.endpoint.support.ChildEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.ComplexComponentDefinitionParser;
-import org.mule.config.spring.parsers.specific.SimpleComponentDefinitionParser;
 import org.mule.config.spring.parsers.specific.SimplePojoServiceDefinitionParser;
 import org.mule.config.spring.parsers.beans.ChildBean;
 import org.mule.config.spring.parsers.beans.OrphanBean;
@@ -42,7 +41,7 @@ import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
  * Registers a Bean Definition Parser for handling <code><parsers-test:...></code> elements.
  *
  */
-public class ParsersTestNamespaceHandler extends AbstractIgnorableNamespaceHandler
+public class ParsersTestNamespaceHandler extends AbstractMuleNamespaceHandler
 {
 
     public void init()
@@ -63,13 +62,13 @@ public class ParsersTestNamespaceHandler extends AbstractIgnorableNamespaceHandl
 
         registerBeanDefinitionParser("string-endpoint", new StringAddressEndpointDefinitionParser(EndpointURIEndpointBuilder.class));
         registerBeanDefinitionParser("unaddressed-endpoint", new UnaddressedEndpointDefinitionParser(EndpointURIEndpointBuilder.class));
-        registerMuleDefinitionParser("address", new ChildAddressDefinitionParser("test")).addAlias("address", "hostname");
-        registerBeanDefinitionParser("addressed-endpoint", new AddressedEndpointDefinitionParser("test", new UnaddressedEndpointDefinitionParser(EndpointURIEndpointBuilder.class)));
+        registerMuleDefinitionParser("address", new ChildAddressDefinitionParser("test")).addAlias("address", "host");
+        registerBeanDefinitionParser("addressed-endpoint", new AddressedEndpointDefinitionParser("test", AddressedEndpointDefinitionParser.PROTOCOL, new UnaddressedEndpointDefinitionParser(EndpointURIEndpointBuilder.class), new String[]{}, new String[]{"path"}));
         registerBeanDefinitionParser("orphan-endpoint", new OrphanEndpointDefinitionParser(EndpointURIEndpointBuilder.class));
         registerBeanDefinitionParser("child-endpoint", new ChildEndpointDefinitionParser(InboundEndpointFactoryBean.class));
         registerBeanDefinitionParser("unaddressed-orphan-endpoint", new OrphanEndpointDefinitionParser(EndpointURIEndpointBuilder.class));
-        registerBeanDefinitionParser("addressed-orphan-endpoint", new AddressedEndpointDefinitionParser("test", new OrphanEndpointDefinitionParser(EndpointURIEndpointBuilder.class)));
-        registerBeanDefinitionParser("addressed-child-endpoint", new TransportEndpointDefinitionParser("test", InboundEndpointFactoryBean.class));
+        registerBeanDefinitionParser("addressed-orphan-endpoint", new AddressedEndpointDefinitionParser("test", AddressedEndpointDefinitionParser.PROTOCOL, new OrphanEndpointDefinitionParser(EndpointURIEndpointBuilder.class), new String[]{}, new String[]{"path"}));
+        registerBeanDefinitionParser("addressed-child-endpoint", new TransportEndpointDefinitionParser("test", InboundEndpointFactoryBean.class, new String[]{}));
 
         registerBeanDefinitionParser("list-element-test-1", new AttributeListEntryDefinitionParser("kids", "listAttribute"));
         registerBeanDefinitionParser("list-element-test-2",
@@ -87,7 +86,7 @@ public class ParsersTestNamespaceHandler extends AbstractIgnorableNamespaceHandl
         registerDelegateDefinitionParser("complex-endpoint",
                 new TransportGlobalEndpointDefinitionParser(
                         "test", TransportGlobalEndpointDefinitionParser.PROTOCOL,
-                        new String[]{"string", "bar"})).addAlias("bar", "foo");
+                        new String[]{"string", "bar"}, new String[]{"path"})).addAlias("bar", "foo");
     }
 
 }

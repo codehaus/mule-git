@@ -18,8 +18,11 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ManagementContextAware;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
+import org.mule.transformers.TransformerCollection;
+import org.mule.transformers.TransformerWeighting;
+import org.mule.transformers.simple.ObjectToByteArray;
+import org.mule.transformers.simple.ObjectToString;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
@@ -32,11 +35,14 @@ import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.UMOHeaderOnlyTransformer;
+import org.mule.umo.transformer.DiscoverableTransformer;
+import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
 import org.mule.util.properties.PropertyExtractorManager;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,15 +50,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** TODO */
 public abstract class AbstractRegistry implements Registry
-
 {
+    private static final ObjectToString objectToString = new ObjectToString();
+    private static final ObjectToByteArray objectToByteArray = new ObjectToByteArray();
 
     private Registry parent;
     /** the unique id for this Registry */
@@ -208,10 +213,10 @@ public abstract class AbstractRegistry implements Registry
         else
         {
             logger.debug("No endpoint with the name: "
-                         + name
-                         + "found.  If "
-                         + name
-                         + " is a global endpoint you should use the EndpointFactory to create endpoint instances from global endpoints.");
+                    + name
+                    + "found.  If "
+                    + name
+                    + " is a global endpoint you should use the EndpointFactory to create endpoint instances from global endpoints.");
             return null;
         }
     }
@@ -220,7 +225,7 @@ public abstract class AbstractRegistry implements Registry
     {
         return (UMOImmutableEndpoint) lookupEndpoint(name, MuleServer.getManagementContext());
     }
-    
+
     public UMOEndpointBuilder lookupEndpointBuilder(String name)
     {
         // TODO DF: This is spring specific because if uses "&" to lookup FactoryBean and thus builder.
@@ -233,7 +238,7 @@ public abstract class AbstractRegistry implements Registry
         else
         {
             logger.debug("Global endpoint EndpointBuilder not found, attempting to lookup named concrete endpoint builder with name: "
-                         + name);
+                    + name);
             UMOEndpointBuilder endpointBuilder = (UMOEndpointBuilder) lookupObject("&" + name);
             if (endpointBuilder != null)
             {
@@ -257,12 +262,94 @@ public abstract class AbstractRegistry implements Registry
         return (UMOTransformer) lookupObject(name);
     }
 
+    public UMOTransformer lookupTransformer(Class inputType, Class outputType) throws RegistrationException, TransformerException
+    {
+        List trans = lookupTransformers(inputType, outputType);
+
+        UMOTransformer result = getNearestTransformerMatch(trans, inputType, outputType);
+        //If an exact mach is not found, we have a 'second pass' transformer that can be used to converting to String or
+        //byte[]
+        UMOTransformer secondPass = null;
+
+        if (result == null)
+        {
+            //If no transformers were found but the outputType type is String or byte[] we can perform a more general search
+            // using Object.class and then convert to String or byte[] using the second pass transformer
+            if (outputType.equals(String.class))
+            {
+                secondPass = objectToString;
+            }
+            else if (outputType.equals(byte[].class))
+            {
+                secondPass = objectToByteArray;
+            }
+            else
+            {
+                throw new TransformerException(CoreMessages.noTransformerFoundForMessage(inputType, outputType));
+            }
+            //Perform a more general search
+            trans = lookupTransformers(inputType, Object.class);
+
+            result = getNearestTransformerMatch(trans, inputType, outputType);
+            if (result != null)
+            {
+                result = new TransformerCollection(new UMOTransformer[]{result, secondPass});
+            }
+        }
+        return result;
+    }
+
+    protected UMOTransformer getNearestTransformerMatch(List trans, Class input, Class output) throws RegistrationException
+    {
+        if (trans.size() > 1)
+        {
+            TransformerWeighting weighting = null;
+            for (Iterator iterator = trans.iterator(); iterator.hasNext();)
+            {
+                UMOTransformer transformer = (UMOTransformer) iterator.next();
+                TransformerWeighting current = new TransformerWeighting(input, output, transformer);
+                if (weighting == null)
+                {
+                    weighting = current;
+                }
+                else
+                {
+                    int compare = current.compareTo(weighting);
+                    if (compare == 1)
+                    {
+                        weighting = current;
+                    }
+                    else if (compare == 0)
+                    {
+                        //We may have two transformers that are exactly the same, in which case we can use either i.e. use the current
+                        if (!weighting.getTransformer().getClass().equals(current.getTransformer().getClass()))
+                        {
+                            throw new RegistrationException("There is more than one transformer that is an exact match for input: "
+                                    + input + ", output: " + output + ". Transformers are: " + current.getTransformer().getName() +
+                                    "(" + current.getTransformer().getClass() + "), " +
+                                    weighting.getTransformer().getName() + "(" + weighting.getTransformer().getClass() + ")");
+                        }
+                    }
+                }
+            }
+            return weighting.getTransformer();
+        }
+        else if (trans.size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return (UMOTransformer) trans.get(0);
+        }
+    }
+
     public List lookupTransformers(Class input, Class output)
     {
         // TODO: Optimize & Cache
 
-        List results = (List)transformerCache.get(input.getName() + output.getName());
-        if(results!=null)
+        List results = (List) transformerCache.get(input.getName() + output.getName());
+        if (results != null)
         {
             return results;
         }
@@ -272,7 +359,9 @@ public abstract class AbstractRegistry implements Registry
         for (Iterator itr = transformers.iterator(); itr.hasNext();)
         {
             UMOTransformer t = (UMOTransformer) itr.next();
-            if (t instanceof UMOHeaderOnlyTransformer)
+            //The transformer must have the DiscoveryTransformer interface if we are going to
+            //find it here
+            if (!(t instanceof DiscoverableTransformer))
             {
                 continue;
             }
@@ -321,11 +410,6 @@ public abstract class AbstractRegistry implements Registry
     public Collection getEndpoints()
     {
         return lookupObjects(UMOImmutableEndpoint.class);
-    }
-
-    public Collection getServices()
-    {
-        return lookupObjects(UMODescriptor.class);
     }
 
     public Collection getTransformers()
@@ -538,34 +622,10 @@ public abstract class AbstractRegistry implements Registry
         registerConnector(connector, MuleServer.getManagementContext());
     }
 
-    public void registerConnector(UMOConnector connector, UMOManagementContext managementContext)
-            throws UMOException
-    {
-        unsupportedOperation("registerConnector", connector);
-    }
-
-    public UMOConnector unregisterConnector(String connectorName) throws UMOException
-    {
-        unsupportedOperation("unregisterConnector", connectorName);
-        return null;
-    }
-
     /** {@inheritDoc} */
     public void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
     {
         registerEndpoint(endpoint, MuleServer.getManagementContext());
-    }
-
-    public void registerEndpoint(UMOImmutableEndpoint endpoint, UMOManagementContext managementContext)
-            throws UMOException
-    {
-        unsupportedOperation("registerEndpoint", endpoint);
-    }
-
-    public UMOImmutableEndpoint unregisterEndpoint(String endpointName)
-    {
-        unsupportedOperation("unregisterEndpoint", endpointName);
-        return null;
     }
 
     /** {@inheritDoc} */
@@ -574,62 +634,16 @@ public abstract class AbstractRegistry implements Registry
         registerTransformer(transformer, MuleServer.getManagementContext());
     }
 
-    public void registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext)
-            throws UMOException
-    {
-        unsupportedOperation("registerTransformer", transformer);
-    }
-
-    public UMOTransformer unregisterTransformer(String transformerName)
-    {
-        unsupportedOperation("unregistertransformer", transformerName);
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    public void registerComponent(UMOComponent component, UMOManagementContext managementContext) throws UMOException
-    {
-        unsupportedOperation("registerComponent", component);
-    }
-
-    public UMOComponent unregisterComponent(String componentName)
-    {
-        unsupportedOperation("unregisterComponent", componentName);
-        return null;
-    }
-
     /** {@inheritDoc} */
     public void registerModel(UMOModel model) throws UMOException
     {
         registerModel(model, MuleServer.getManagementContext());
     }
 
-    public void registerModel(UMOModel model, UMOManagementContext managementContext) throws UMOException
-    {
-        unsupportedOperation("registerModel", model);
-    }
-
-    public UMOModel unregisterModel(String modelName)
-    {
-        unsupportedOperation("unregisterModel", modelName);
-        return null;
-    }
-
     /** {@inheritDoc} */
     public void registerAgent(UMOAgent agent) throws UMOException
     {
         registerAgent(agent, MuleServer.getManagementContext());
-    }
-
-    public void registerAgent(UMOAgent agent, UMOManagementContext managementContext) throws UMOException
-    {
-        unsupportedOperation("registerAgent", agent);
-    }
-
-    public UMOAgent unregisterAgent(String agentName) throws UMOException
-    {
-        unsupportedOperation("unregisterAgent", agentName);
-        return null;
     }
 
     public final void registerObject(String key, Object value) throws RegistrationException
@@ -667,23 +681,10 @@ public abstract class AbstractRegistry implements Registry
         doRegisterObject(key, value, metadata, managementContext);
     }
 
-    protected void doRegisterObject(String key,
-                                    Object value,
-                                    Object metadata,
-                                    UMOManagementContext managementContext) throws RegistrationException
-    {
-        unsupportedOperation("doRegisterObject", key);
-    }
-
-    public void unregisterObject(String key)
-    {
-        unsupportedOperation("unregisterObject", key);
-    }
-
-    public void registerObjects(Map objects) throws RegistrationException
-    {
-        unsupportedOperation("registryObjects", objects);
-    }
+    protected abstract void doRegisterObject(String key,
+                                             Object value,
+                                             Object metadata,
+                                             UMOManagementContext managementContext) throws RegistrationException;
 
     public final MuleConfiguration getConfiguration()
     {
@@ -698,11 +699,6 @@ public abstract class AbstractRegistry implements Registry
             setConfiguration(config);
         }
         return config;
-    }
-
-    public void setConfiguration(MuleConfiguration config)
-    {
-        unsupportedOperation("setConfiguration", config);
     }
 
     public int getDefaultScope()
@@ -721,6 +717,7 @@ public abstract class AbstractRegistry implements Registry
 
     /**
      * TODO MULE-2162
+     *
      * @return the MuleConfiguration for this MuleManager. This object is immutable
      *         once the manager has initialised.
      */
@@ -750,11 +747,4 @@ public abstract class AbstractRegistry implements Registry
 //        }
 //        return null;
 //    }
-
-
-    public void registerEndpointBuilder(String name, UMOEndpointBuilder builder, UMOManagementContext managementContext) throws UMOException
-    {
-        unsupportedOperation("registerEndpointBuilder", builder);
-    }
-
 }

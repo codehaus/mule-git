@@ -10,31 +10,24 @@
 package org.mule.providers.vm.config;
 
 import org.mule.config.QueueProfile;
-import org.mule.config.spring.factories.InboundEndpointFactoryBean;
-import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
-import org.mule.config.spring.handlers.AbstractIgnorableNamespaceHandler;
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
-import org.mule.impl.endpoint.InboundEndpoint;
-import org.mule.impl.endpoint.OutboundEndpoint;
+import org.mule.config.spring.parsers.specific.LazyEndpointURI;
 import org.mule.providers.vm.VMConnector;
 
 /**
  * Reigsters a Bean Definition Parser for handling <code><vm:connector></code> elements.
  *
  */
-public class VmNamespaceHandler extends AbstractIgnorableNamespaceHandler
+public class VmNamespaceHandler extends AbstractMuleNamespaceHandler
 {
 
     public void init()
     {
+        registerStandardTransportEndpoints(VMConnector.VM, LazyEndpointURI.PATH_ATTRIBUTES);
         registerBeanDefinitionParser("connector", new MuleOrphanDefinitionParser(VMConnector.class, true));
         registerBeanDefinitionParser("queueProfile", new ChildDefinitionParser("queueProfile", QueueProfile.class));
-        registerBeanDefinitionParser("endpoint", new TransportGlobalEndpointDefinitionParser("vm"));
-        registerBeanDefinitionParser("inbound-endpoint", new TransportEndpointDefinitionParser("vm", InboundEndpointFactoryBean.class));
-        registerBeanDefinitionParser("outbound-endpoint", new TransportEndpointDefinitionParser("vm", OutboundEndpointFactoryBean.class));
     }
 
 }

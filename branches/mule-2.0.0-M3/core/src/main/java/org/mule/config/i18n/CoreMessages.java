@@ -13,7 +13,6 @@ package org.mule.config.i18n;
 import org.mule.config.MuleManifest;
 import org.mule.impl.AbstractExceptionListener;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOImmutableDescriptor;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.model.UMOEntryPointResolver;
@@ -883,10 +882,10 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 230, name);
     }
 
-    public static Message modelNameDoesNotMatchModel(UMOImmutableDescriptor descriptor, String modelName)
-    {
-        return createMessage(BUNDLE_PATH, 231, descriptor.getName(), descriptor.getModelName(), modelName);
-    }
+//    public static Message modelNameDoesNotMatchModel(UMOImmutableDescriptor descriptor, String modelName)
+//    {
+//        return createMessage(BUNDLE_PATH, 231, descriptor.getName(), descriptor.getModelName(), modelName);
+//    }
 
     //These endpoint errors should go away once we make setting endpoints on routers typesafe
 
@@ -919,9 +918,9 @@ public class CoreMessages extends MessageFactory
     {
         String notset = CoreMessages.notSet().getMessage();
         return createMessage(BUNDLE_PATH, 236, StringUtils.defaultString(MuleManifest.getProductDescription(), notset),
-                             StringUtils.defaultString(MuleManifest.getProductVersion(), notset),
-                             StringUtils.defaultString(MuleManifest.getVendorName(), notset) + " " +
-                             StringUtils.defaultString(MuleManifest.getVendorUrl(), notset));
+                StringUtils.defaultString(MuleManifest.getProductVersion(), notset),
+                StringUtils.defaultString(MuleManifest.getVendorName(), notset) + " " +
+                        StringUtils.defaultString(MuleManifest.getVendorUrl(), notset));
     }
 
     public static Message noTransformerFoundForMessage(Class input, Class output)
@@ -1014,4 +1013,13 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 253);
     }
 
+    public static Message objectAlreadyRegistered(String name, Object origObject, Object newObject)
+    {
+        return createMessage(BUNDLE_PATH, 254, name, origObject + "." + origObject.getClass(), newObject + "." + newObject.getClass());
+    }
+
+    public static Message transformerNotImplementDiscoverable(Object transformer)
+    {
+        return createMessage(BUNDLE_PATH, 255, transformer);
+    }
 }

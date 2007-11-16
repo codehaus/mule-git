@@ -63,6 +63,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.lifecycle.Stoppable;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.lifecycle.UMOLifecyclePhase;
 import org.mule.umo.manager.UMOAgent;
@@ -161,10 +162,8 @@ public class TransientRegistry extends AbstractRegistry
             applyProcessors(getEndpoints());
             applyProcessors(getAgents());
             applyProcessors(getModels());
-            applyProcessors(getServices());
+            applyProcessors(lookupComponents());
             applyProcessors(lookupObjects(Object.class));
-
-            //MuleServer.getManagementContext().fireNotification(new RegistryNotification(this, RegistryNotification.REGISTRY_INITIALISED));
         }
         finally
         {
@@ -194,7 +193,10 @@ public class TransientRegistry extends AbstractRegistry
 
     public void registerObjects(Map objects) throws RegistrationException
     {
-        if(objects==null) return;
+        if (objects == null)
+        {
+            return;
+        }
 
         for (Iterator iterator = objects.entrySet().iterator(); iterator.hasNext();)
         {
@@ -336,7 +338,7 @@ public class TransientRegistry extends AbstractRegistry
 
     /**
      * Allows for arbitary registration of transient objects
-     * 
+     *
      * @param key
      * @param value
      */
@@ -376,11 +378,6 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
-    public void unregisterObject(String key)
-    {
-        getObjectTypeMap(Object.class).remove(key);
-    }
-
     //@java.lang.Override
     public void registerAgent(UMOAgent agent, UMOManagementContext managementContext) throws UMOException
     {
@@ -413,6 +410,12 @@ public class TransientRegistry extends AbstractRegistry
     //@java.lang.Override
     public void registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext) throws UMOException
     {
+        //TODO should we always throw an exception if an object already exists
+        if (lookupTransformer(transformer.getName()) != null)
+        {
+            throw new RegistrationException(CoreMessages.objectAlreadyRegistered("transformer: " +
+                    transformer.getName(), lookupTransformer(transformer.getName()), transformer).getMessage());
+        }
         registerObject(transformer.getName(), transformer, UMOTransformer.class, managementContext);
     }
 
@@ -422,41 +425,55 @@ public class TransientRegistry extends AbstractRegistry
         registerObject(component.getName(), component, UMOComponent.class, managementContext);
     }
 
-    //@java.lang.Override
-    public UMOComponent unregisterComponent(String componentName)
+    protected void unregisterObject(String key, Object metadata) throws UMOException
     {
-        return (UMOComponent) getObjectTypeMap(UMOComponent.class).remove(componentName);
+        Object obj = getObjectTypeMap(metadata).remove(key);
+        if (obj instanceof Stoppable)
+        {
+            ((Stoppable) obj).stop();
+        }
+    }
+
+    public void unregisterObject(String key) throws UMOException
+    {
+        unregisterObject(key, Object.class);
+    }
+
+    //@java.lang.Override
+    public void unregisterComponent(String componentName) throws UMOException
+    {
+        unregisterObject(componentName, UMOComponent.class);
     }
 
 
     //@java.lang.Override
-    public UMOAgent unregisterAgent(String agentName) throws UMOException
+    public void unregisterAgent(String agentName) throws UMOException
     {
-        return (UMOAgent) getObjectTypeMap(UMOAgent.class).remove(agentName);
+        unregisterObject(agentName, UMOAgent.class);
     }
 
     //@java.lang.Override
-    public UMOConnector unregisterConnector(String connectorName) throws UMOException
+    public void unregisterConnector(String connectorName) throws UMOException
     {
-        return (UMOConnector) getObjectTypeMap(UMOConnector.class).remove(connectorName);
+        unregisterObject(connectorName, UMOConnector.class);
     }
 
     //@java.lang.Override
-    public UMOImmutableEndpoint unregisterEndpoint(String endpointName)
+    public void unregisterEndpoint(String endpointName) throws UMOException
     {
-        return (UMOImmutableEndpoint) getObjectTypeMap(UMOImmutableEndpoint.class).remove(endpointName);
+        unregisterObject(endpointName, UMOImmutableEndpoint.class);
     }
 
     //@java.lang.Override
-    public UMOModel unregisterModel(String modelName)
+    public void unregisterModel(String modelName) throws UMOException
     {
-        return (UMOModel) getObjectTypeMap(UMOModel.class).remove(modelName);
+        unregisterObject(modelName, UMOModel.class);
     }
 
     //@java.lang.Override
-    public UMOTransformer unregisterTransformer(String transformerName)
+    public void unregisterTransformer(String transformerName) throws UMOException
     {
-        return (UMOTransformer) getObjectTypeMap(UMOTransformer.class).remove(transformerName);
+        unregisterObject(transformerName, UMOTransformer.class);
     }
 
     //@java.lang.Override
@@ -539,7 +556,7 @@ public class TransientRegistry extends AbstractRegistry
         RegistryContext.setRegistry(registry);
 
         registry.getObjectTypeMap(ObjectProcessor.class).put(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR,
-                  new ManagementContextDependencyProcessor(context));
+                new ManagementContextDependencyProcessor(context));
 
         context.setId(UUID.getUUID());
 

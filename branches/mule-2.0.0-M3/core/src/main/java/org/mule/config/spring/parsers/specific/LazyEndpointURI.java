@@ -10,13 +10,16 @@
 
 package org.mule.config.spring.parsers.specific;
 
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.umo.endpoint.EndpointException;
+import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.lifecycle.InitialisationException;
 
-import java.util.Properties;
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TreeSet;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
@@ -33,29 +36,43 @@ public class LazyEndpointURI implements UMOEndpointURI
 
     private static final String DOTS = ":";
     private static final String DOTS_SLASHES = DOTS + "//";
+    private static final String QUERY = "?";
+    private static final String AND = "&";
+    private static final String EQUALS = "=";
 
-    public static final String ADDRESS = "address";
-    public static final String PROTOCOL = "protocol";
     public static final String META = "meta";
-    // TODO - pull out other strings as needed
-    public static final String[] ATTRIBUTES =
-            new String[]{META, PROTOCOL, "username", "password", "hostname", ADDRESS, "port", "path"};
+    public static final String PROTOCOL = "protocol";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+    public static final String HOST = "host";
+    public static final String ADDRESS = "address";
+    public static final String PORT = "port";
+    public static final String PATH = "path";
+
+    public static final String[] ALL_ATTRIBUTES =
+            new String[]{META, PROTOCOL, USER, PASSWORD, HOST, ADDRESS, PORT, PATH};
+    // combinations used in various endpoint parsers to validate required attributes
+    public static final String[] PATH_ATTRIBUTES = new String[]{PATH};
+    public static final String[] HOST_ATTRIBUTES = new String[]{HOST};
+    public static final String[] SOCKET_ATTRIBUTES = new String[]{HOST, PORT};
+    public static final String[] USERHOST_ATTRIBUTES = new String[]{USER, HOST};
 
     private String address;
     private String meta;
     private String protocol;
-    private String username;
+    private String user;
     private String password;
-    private String hostname;
+    private String host;
     private Integer port;
     private String path;
+    private Map queries;
 
     private AtomicReference delegate = new AtomicReference();
 
-    public void setUsername(String username)
+    public void setUser(String user)
     {
         assertNotYetInjected();
-        this.username = username;
+        this.user = user;
     }
 
     public void setPassword(String password)
@@ -64,16 +81,17 @@ public class LazyEndpointURI implements UMOEndpointURI
         this.password = password;
     }
 
-    public void setHostname(String hostname)
+    public void setHost(String host)
     {
         assertNotYetInjected();
-        this.hostname = hostname;
+        this.host = host;
     }
 
     public void setAddress(String address)
     {
         assertNotYetInjected();
         this.address = address;
+        assertAddressConsistent();
     }
 
     public void setPort(int port)
@@ -86,6 +104,7 @@ public class LazyEndpointURI implements UMOEndpointURI
     {
         assertNotYetInjected();
         this.protocol = protocol;
+        assertAddressConsistent();
     }
 
     public void setMeta(String meta)
@@ -97,61 +116,112 @@ public class LazyEndpointURI implements UMOEndpointURI
     public void setPath(String path)
     {
         assertNotYetInjected();
+        if (null != path && path.indexOf(DOTS_SLASHES) > -1)
+        {
+            throw new IllegalArgumentException("Unusual syntax in path: '" + path + "' contains " + DOTS_SLASHES);
+        }
         this.path = path;
     }
 
-    public String toString()
+    public void setQueries(Map queries)
+    {
+        assertNotYetInjected();
+        this.queries = queries;
+    }
+
+    /**
+     * @return The String supplied to the delegate constructor
+     */
+    protected String toConstructor()
+    {
+        StringBuffer buffer = new StringBuffer();
+        appendMeta(buffer);
+        appendAddress(buffer);
+        appendQueries(buffer);
+        return buffer.toString();
+    }
+
+    private void appendMeta(StringBuffer buffer)
+    {
+        if (null != meta)
+        {
+            buffer.append(meta);
+            buffer.append(DOTS);
+        }
+    }
+
+    private void appendAddress(StringBuffer buffer)
     {
         if (null != address)
         {
-            if (null != meta)
-            {
-                return meta + DOTS + address;
-            }
-            else
-            {
-                return address;
-            }
+            buffer.append(address);
         }
         else
         {
-            StringBuffer buffer = new StringBuffer();
-            if (null != meta)
+            constructAddress(buffer);
+        }
+    }
+
+    private void constructAddress(StringBuffer buffer)
+    {
+        buffer.append(protocol);
+        buffer.append(DOTS_SLASHES);
+        boolean atStart = true;
+        if (null != user)
+        {
+            buffer.append(user);
+            if (null != password)
             {
-                buffer.append(meta);
-                buffer.append(DOTS);
+                buffer.append(":");
+                buffer.append(password);
             }
-            buffer.append(protocol);
-            buffer.append(DOTS_SLASHES);
-            if (null != username)
+            buffer.append("@");
+            atStart = false;
+        }
+        if (null != host)
+        {
+            buffer.append(host);
+            if (null != port)
             {
-                buffer.append(username);
-                if (null != password)
+                buffer.append(":");
+                buffer.append(port);
+            }
+            atStart = false;
+        }
+        if (null != path)
+        {
+            if (! atStart)
+            {
+                buffer.append("/");
+            }
+            buffer.append(path);
+        }
+    }
+
+    private void appendQueries(StringBuffer buffer)
+    {
+        if (null != queries)
+        {
+            // crude, but probably sufficient to allow literal values in path
+            boolean first = buffer.indexOf(QUERY) == -1;
+            // order so that testing is simpler
+            Iterator keys = new TreeSet(queries.keySet()).iterator();
+            while (keys.hasNext())
+            {
+                if (first)
                 {
-                    buffer.append(":");
-                    buffer.append(password);
+                    buffer.append(QUERY);
+                    first = false;
                 }
-                buffer.append("@");
-            }
-            if (null != hostname)
-            {
-                buffer.append(hostname);
-                if (null != port)
+                else
                 {
-                    buffer.append(":");
-                    buffer.append(port);
+                    buffer.append(AND);
                 }
+                String key = (String)keys.next();
+                buffer.append(key);
+                buffer.append(EQUALS);
+                buffer.append((String)queries.get(key));
             }
-            if (null != path)
-            {
-                // this allows us to use path for vm://foo, for example
-                if (buffer.length() > DOTS_SLASHES.length())
-                {
-                    buffer.append("/");
-                }
-                buffer.append(path);
-            }
-            return buffer.toString();
         }
     }
 
@@ -174,7 +244,7 @@ public class LazyEndpointURI implements UMOEndpointURI
         {
             try
             {
-                delegate.compareAndSet(null, new MuleEndpointURI(toString()));
+                delegate.compareAndSet(null, new MuleEndpointURI(toConstructor()));
             }
             catch (EndpointException e)
             {
@@ -203,7 +273,7 @@ public class LazyEndpointURI implements UMOEndpointURI
 
     public void setEndpointName(String name)
     {
-        throw new UnsupportedOperationException("EndpointAddress.setEdpointName");
+        throw new UnsupportedOperationException("LazyEndpointURI.setEdpointName");
     }
 
     public Properties getParams()
@@ -291,9 +361,9 @@ public class LazyEndpointURI implements UMOEndpointURI
         return lazyDelegate().getResourceInfo();
     }
 
-    public String getUsername()
+    public String getUser()
     {
-        return lazyDelegate().getUsername();
+        return lazyDelegate().getUser();
     }
 
     public String getPassword()
@@ -304,6 +374,77 @@ public class LazyEndpointURI implements UMOEndpointURI
     public void initialise() throws InitialisationException
     {
         lazyDelegate().initialise();
+    }
+
+    protected void assertAddressConsistent()
+    {
+        if (null != meta)
+        {
+            if (null != address)
+            {
+                if (address.startsWith(meta + DOTS))
+                {
+                    throw new IllegalArgumentException("Meta-protocol '" + meta +
+                            "' should not be specified in the address '" + address +
+                            "' - it is implicit in the element namespace.");
+                }
+                if (null != protocol)
+                {
+                    assertProtocolConsistent();
+                }
+                else
+                {
+                    if (address.indexOf(DOTS_SLASHES) == -1)
+                    {
+                        throw new IllegalArgumentException("Address '" + address +
+                                "' does not have a transport protocol prefix " +
+                                "(omit the meta protocol prefix, '" + meta + DOTS + 
+                                "' - it is implicit in the element namespace).");
+                    }
+                }
+            }
+        }
+        else
+        {
+            assertProtocolConsistent();
+        }
+    }
+
+    protected void assertProtocolConsistent()
+    {
+        if (null != protocol && null != address && !address.startsWith(protocol + DOTS_SLASHES))
+        {
+            throw new IllegalArgumentException("Address '" + address + "' for protocol '" + protocol +
+                    "' should start with " + protocol + DOTS_SLASHES);
+        }
+    }
+
+    public int hashCode()
+    {
+        return lazyDelegate().hashCode();
+    }
+
+    public boolean equals(Object obj)
+    {
+        return lazyDelegate().equals(obj);
+    }
+    
+    /**
+     * This doesn't perfectly mirror the delegate behaviour because toString() on the delegate does
+     * not return the consructor argument when meta-info is present.  However, it is close enough
+     * in practice, since this is only used for debugging before the delegate is created.
+     */
+    public String toString()
+    {
+        UMOEndpointURI exists = (UMOEndpointURI) delegate.get();
+        if (null != exists)
+        {
+            return exists.toString();
+        }
+        else
+        {
+            return toConstructor();
+        }
     }
 
 }

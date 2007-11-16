@@ -17,26 +17,34 @@ import org.mule.util.StringUtils;
 
 public abstract class AbstractStockQuoteFunctionalTestCase extends FunctionalTestCase
 {
+
     public void testStockQuoteExample() throws Exception
     {
         MuleClient client = new MuleClient();
         UMOMessage response = client.send("vm://stockquote", "HRB", null);
     
-        if(response != null) 
+        if (null == response)
         { 
-            if (response.getExceptionPayload() == null) 
-            {            
-                assertTrue("Stock quote should contain \"BLOCK\": " + response.getPayload(), 
-                            StringUtils.contains(response.getPayloadAsString(), "BLOCK"));
+            fail("No response message.");
+        }
+        else
+        {
+            if (null == response.getExceptionPayload())
+            {
+                String text = response.getPayloadAsString();
+                assertNotNull("Null response", text);
+                assertTrue("Stock quote should contain \"BLOCK\": " + text, StringUtils.contains(text, "BLOCK"));
+                assertTrue("Stock quote should start with \"StockQuote[\":" + text, text.startsWith("StockQuote["));
+                logger.debug("**********");
+                logger.debug(response.getPayload());
+                logger.debug(response.getPayloadAsString());
+                logger.debug("**********");
             }
             else
             {
                 fail("Exception occurred: " + response.getExceptionPayload());
             }
         }
-        else
-        {
-            fail("No response message.");
-        }
-     }
+    }
+
 }

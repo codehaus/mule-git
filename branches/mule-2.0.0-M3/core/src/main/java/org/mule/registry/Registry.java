@@ -22,6 +22,7 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Collection;
@@ -66,6 +67,7 @@ public interface Registry extends Initialisable, Disposable
      * <b>NOTE: This method does not create new endpoint instances, but rather returns existing endpoint
      * instances that have been registered. This lookup method should be avoided and the intelligent, role
      * specific endpoint lookup methods should be used instead.<br/><br/>
+     *
      * @param name the idendtifer/name used to register endpoint in registry
      * @see #lookupInboundEndpoint(String, org.mule.umo.UMOManagementContext)
      * @see #lookupResponseEndpoint(String, org.mule.umo.UMOManagementContext)
@@ -74,18 +76,18 @@ public interface Registry extends Initialisable, Disposable
 
     /**
      * Deprecated. Use {@link #lookupEndpoint(String, UMOManagementContext)}
+     *
      * @deprecated
      */
     UMOImmutableEndpoint lookupEndpoint(String name);
-    
+
     /**
      * Looks-up endpoint builders which can be used to repeatably create endpoints with the same configuration.
      * These endpoint builder are either global endpoints or they are builders used to create named
      * endpoints configured on routers and exception strategies.
-     * 
      */
     UMOEndpointBuilder lookupEndpointBuilder(String name);
-    
+
     UMOEndpointFactory lookupEndpointFactory();
 
     UMOTransformer lookupTransformer(String name);
@@ -93,6 +95,8 @@ public interface Registry extends Initialisable, Disposable
     UMOComponent lookupComponent(String component);
 
     List lookupTransformers(Class input, Class output);
+
+    UMOTransformer lookupTransformer(Class input, Class output) throws RegistrationException, TransformerException;
 
     Collection/*<UMOComponent>*/ lookupComponents(String model);
 
@@ -119,9 +123,6 @@ public interface Registry extends Initialisable, Disposable
     /** @deprecated Use lookupAgent() instead */
     Collection getAgents();
 
-    /** @deprecated Use lookupService() instead */
-    Collection getServices();
-
     /** @deprecated Use lookupTransformer() instead */
     Collection getTransformers();
 
@@ -134,14 +135,14 @@ public interface Registry extends Initialisable, Disposable
     void registerObject(String key, Object value, Object metadata) throws RegistrationException;
 
     void registerObject(String key, Object value, UMOManagementContext managementContext)
-        throws RegistrationException;
+            throws RegistrationException;
 
     void registerObject(String key, Object value, Object metadata, UMOManagementContext managementContext)
-        throws RegistrationException;
+            throws RegistrationException;
 
     void registerObjects(Map objects) throws RegistrationException;
 
-    void unregisterObject(String key);
+    void unregisterObject(String key) throws UMOException;
 
     // TODO MULE-2139 The following methods are Mule-specific and should be split out into a separate class;
     // leave this one as a "pure" registry interface.
@@ -151,7 +152,7 @@ public interface Registry extends Initialisable, Disposable
     // receives the managementContext as a parameter.
 
     void registerConnector(UMOConnector connector, UMOManagementContext managementContext)
-        throws UMOException;
+            throws UMOException;
 
     /**
      * @deprecated Use registerConnector(UMOConnector connector, UMOManagementContext managementContext)
@@ -159,25 +160,25 @@ public interface Registry extends Initialisable, Disposable
      */
     void registerConnector(UMOConnector connector) throws UMOException;
 
-    UMOConnector unregisterConnector(String connectorName) throws UMOException;
+    void unregisterConnector(String connectorName) throws UMOException;
 
     //TODO MULE-2494
     void registerEndpoint(UMOImmutableEndpoint endpoint, UMOManagementContext managementContext)
-        throws UMOException;
+            throws UMOException;
 
     //TODO MULE-2494
     /** @deprecated Use registerEndpoint(UMOEndpoint endpoint, UMOManagementContext managementContext) instead. */
     void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException;
 
     //TODO MULE-2494
-    UMOImmutableEndpoint unregisterEndpoint(String endpointName);
+    void unregisterEndpoint(String endpointName) throws UMOException;
 
-    
+
     public void registerEndpointBuilder(String name, UMOEndpointBuilder builder, UMOManagementContext managementContext) throws UMOException;
-    
+
 
     void registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext)
-        throws UMOException;
+            throws UMOException;
 
     /**
      * @deprecated Use registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext)
@@ -185,24 +186,25 @@ public interface Registry extends Initialisable, Disposable
      */
     void registerTransformer(UMOTransformer transformer) throws UMOException;
 
-    UMOTransformer unregisterTransformer(String transformerName);
+    void unregisterTransformer(String transformerName) throws UMOException;
 
     void registerComponent(UMOComponent component, UMOManagementContext managementContext) throws UMOException;
-    UMOComponent unregisterComponent(String componentName);
+
+    void unregisterComponent(String componentName) throws UMOException;
 
     void registerModel(UMOModel model, UMOManagementContext managementContext) throws UMOException;
 
     /** @deprecated Use registerModel(UMOModel model, UMOManagementContext managementContext) instead. */
     void registerModel(UMOModel model) throws UMOException;
 
-    UMOModel unregisterModel(String modelName);
+    void unregisterModel(String modelName) throws UMOException;
 
     void registerAgent(UMOAgent agent, UMOManagementContext managementContext) throws UMOException;
 
     /** @deprecated Use registerAgent(UMOAgent agent, UMOManagementContext managementContext) instead. */
     void registerAgent(UMOAgent agent) throws UMOException;
 
-    UMOAgent unregisterAgent(String agentName) throws UMOException;
+    void unregisterAgent(String agentName) throws UMOException;
 
     // TODO MULE-2162 MuleConfiguration belongs in the ManagementContext rather than the Registry
     void setConfiguration(MuleConfiguration config);

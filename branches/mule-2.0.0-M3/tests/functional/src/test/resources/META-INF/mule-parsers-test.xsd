@@ -7,8 +7,6 @@
             attributeFormDefault="unqualified">
 
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:import namespace="http://www.springframework.org/schema/beans"
-                schemaLocation="http://www.springframework.org/schema/beans"/>
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
@@ -125,7 +123,6 @@
         <xsd:complexContent>
             <xsd:extension base="mule:abstractInboundEndpointType">
                 <xsd:group ref="mule:defaultEndpointElements"/>
-                <xsd:attribute name="name" type="xsd:NMTOKEN"/>
                 <xsd:attributeGroup ref="mule:defaultEndpointAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
@@ -148,7 +145,6 @@
         <xsd:complexContent>
             <xsd:extension base="mule:abstractInboundEndpointType">
                 <xsd:group ref="mule:defaultEndpointElements"/>
-                <xsd:attribute name="name" type="xsd:NMTOKEN" use="required"/>
                 <xsd:attribute name="address" type="xsd:string"/>
                 <xsd:attribute name="ref" type="xsd:string"/>
                 <xsd:attributeGroup ref="mule:restrictedEndpointAttributes"/>

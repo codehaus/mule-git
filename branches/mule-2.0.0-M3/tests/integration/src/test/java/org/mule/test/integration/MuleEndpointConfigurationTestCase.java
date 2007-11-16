@@ -12,6 +12,8 @@ package org.mule.test.integration;
 
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
+import org.mule.providers.vm.VMConnector;
+import org.mule.providers.tcp.TcpConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.transformers.TransformerUtils;
@@ -22,6 +24,8 @@ import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.umo.routing.UMOOutboundRouterCollection;
+
+import sun.rmi.transport.tcp.TCPConnection;
 
 /**
  * Test the creation of various endpoints from the service descriptor
@@ -82,7 +86,7 @@ public class MuleEndpointConfigurationTestCase extends FunctionalTestCase
         assertEquals(1, component.getInboundRouter().getEndpoints().size());
         UMOEndpoint endpoint = (UMOEndpoint)component.getInboundRouter().getEndpoints().get(0);
         assertNotNull(endpoint);
-        assertEquals("vm", endpoint.getConnector().getProtocol().toLowerCase());
+        assertEquals(VMConnector.VM, endpoint.getConnector().getProtocol().toLowerCase());
         assertEquals("testEndpoint", endpoint.getName());
         assertEquals("queue4", endpoint.getEndpointURI().getAddress());
         assertTrue(TransformerUtils.isDefined(endpoint.getTransformers()));
@@ -108,7 +112,7 @@ public class MuleEndpointConfigurationTestCase extends FunctionalTestCase
         assertEquals(UMOEndpoint.ENDPOINT_TYPE_SENDER, endpoint.getType());
 
         endpoint = (UMOEndpoint)router.getEndpoints().get(1);
-        assertEquals("vm", endpoint.getConnector().getProtocol().toLowerCase());
+        assertEquals(VMConnector.VM, endpoint.getConnector().getProtocol().toLowerCase());
         assertEquals("yet.another.queue", endpoint.getEndpointURI().getAddress());
         assertTrue(TransformerUtils.isDefined(endpoint.getTransformers()));
         assertTrue(endpoint.getTransformers().get(0) instanceof ObjectToXml);
@@ -127,13 +131,13 @@ public class MuleEndpointConfigurationTestCase extends FunctionalTestCase
         UMOOutboundRouter router = (UMOOutboundRouter)outboundRouter.getRouters().get(0);
         assertEquals(2, router.getEndpoints().size());
         UMOEndpoint endpoint = (UMOEndpoint)router.getEndpoints().get(0);
-        assertEquals("tcp", endpoint.getConnector().getProtocol().toLowerCase());
+        assertEquals(TcpConnector.TCP, endpoint.getConnector().getProtocol().toLowerCase());
         assertEquals("tcp://localhost:45431", endpoint.getEndpointURI().getAddress());
         assertTrue(TransformerUtils.isDefined(endpoint.getTransformers())); 
         assertEquals(UMOEndpoint.ENDPOINT_TYPE_SENDER, endpoint.getType());
 
         endpoint = (UMOEndpoint)router.getEndpoints().get(1);
-        assertEquals("tcp", endpoint.getConnector().getProtocol().toLowerCase());
+        assertEquals(TcpConnector.TCP, endpoint.getConnector().getProtocol().toLowerCase());
         assertEquals("tcp://localhost:45432", endpoint.getEndpointURI().getAddress());
         assertTrue(TransformerUtils.isDefined(endpoint.getTransformers())); 
         assertEquals(UMOEndpoint.ENDPOINT_TYPE_SENDER, endpoint.getType());
