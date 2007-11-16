@@ -151,10 +151,12 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
         {
             UMOEndpoint ep = (UMOEndpoint) endpoints.get(index);
             String uri = ep.getEndpointURI().toString();
+
             if (logger.isDebugEnabled())
             {
                 logger.debug("Uri before parsing is: " + uri);
             }
+
             Map props = new HashMap();
             // Also add the endpoint propertie so that users can set fallback values
             // when the property is not set on the event
@@ -164,21 +166,25 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
                 String propertyKey = (String) iterator.next();
                 props.put(propertyKey, message.getProperty(propertyKey));
             }
+
             String newUriString = parser.parse(props, uri);
             if (logger.isDebugEnabled())
             {
                 logger.debug("Uri after parsing is: " + uri);
             }
+
             try
             {
                 UMOEndpointURI newUri = new MuleEndpointURI(newUriString);
                 if (!newUri.getScheme().equalsIgnoreCase(ep.getEndpointURI().getScheme()))
                 {
-                    throw new CouldNotRouteOutboundMessageException(
-                        CoreMessages.schemeCannotChangeForRouter(ep.getEndpointURI().getScheme(),
-                        newUri.getScheme()), message, ep);
+                    throw new CouldNotRouteOutboundMessageException(CoreMessages.schemeCannotChangeForRouter(
+                        ep.getEndpointURI().getScheme(), newUri.getScheme()), message, ep);
                 }
-                ep.setEndpointURI(newUri);
+                // dispatch to a clone of the endpoint, don't modify the original
+                UMOEndpoint resolvedEndpoint = (UMOEndpoint) ep.clone();
+                resolvedEndpoint.setEndpointURI(newUri);
+                return resolvedEndpoint;
             }
             catch (EndpointException e)
             {
@@ -186,8 +192,6 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
                     CoreMessages.templateCausedMalformedEndpoint(uri, newUriString), 
                     message, ep, e);
             }
-
-            return ep;
         }
     }
 
