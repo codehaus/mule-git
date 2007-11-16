@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+    <model name="main">
+        <service name="orange1">
+            <component class="org.mule.tck.testmodels.fruit.Orange"/>
+        </service>
+
+        <service name="orange2">
+            <component class="org.mule.tck.testmodels.fruit.Orange">
+                <properties>
+                    <spring:entry key="brand" value="Florida Sunny"/>
+                    <spring:entry key="segments" value="8"/>
+                    <spring:entry key="radius" value="15"/>
+                </properties>
+            </component>
+        </service>
+
+        <service name="orange3">
+            <singleton-object instance-ref="myOnlyOrange"/>
+        </service>
+
+        <!-- TODO MULE-2060  
+        <service name="orange4">
+            <component factory-ref="myCustomFactory"/>
+        </service>
+        -->
+    </model>
+
+    <!-- Singleton instance -->
+    <spring:bean name="myOnlyOrange" class="org.mule.tck.testmodels.fruit.Orange"/>
+
+    <!-- Custom factory -->
+    <spring:bean name="myCustomFactory" class="org.mule.tck.testmodels.fruit.FloridaSunnyOrangeFactory">
+        <spring:property name="segments" value="8"/>
+        <spring:property name="radius" value="15"/>
+    </spring:bean>
+</mule>

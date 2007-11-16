@@ -1,0 +1,20 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# This class matches surefire's include pattern by accident.
+# Don't execute it as it's not a unit test.
+org.mule.providers.cxf.testmodels.TestXFireComponent
+
+# tests with external dependencies
+org.mule.providers.cxf.CxfWsdlTestCase
+
+# Cyclic dependency with axis ... hold for now
+org.mule.providers.cxf.ServiceUsingAxisEndpointTestCase
+
+# Not working yet...
+org.mule.providers.cxf.client.GeneratedClientTestCase
+org.mule.providers.cxf.bridge.BridgeTest
+
+# Only works for Dan D
+org.mule.providers.cxf.WsdlCallTestCase
