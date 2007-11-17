@@ -9,7 +9,9 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.RegistryContext;
 import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 import org.mule.registry.Registry;
@@ -35,22 +37,29 @@ import java.util.Set;
  */
 public class ManagementContextStartPhase extends LifecyclePhase
 {
+    // TODO This method should not be necessary, it's a workaround because passing the NotificationManager in
+    // as a parameter creates a circular reference in default-mule-config.xml
     public ManagementContextStartPhase()
     {
-        this(new Class[]{Registry.class, UMOManagementContext.class});
+        this(RegistryContext.getRegistry().getNotificationManager());
     }
 
-    public ManagementContextStartPhase(Class[] ignorredObjects)
+    public ManagementContextStartPhase(ServerNotificationManager notificationManager)
+    {
+        this(new Class[]{Registry.class, UMOManagementContext.class}, notificationManager);
+    }
+
+    public ManagementContextStartPhase(Class[] ignorredObjects, ServerNotificationManager notificationManager)
     {
         super(Startable.PHASE_NAME, Startable.class, Stoppable.PHASE_NAME);
 
         Set startOrderedObjects = new LinkedHashSet();
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
+        startOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class, notificationManager));
+        startOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class, notificationManager));
         startOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, ManagerNotification.class,
                 ManagerNotification.getActionName(ManagerNotification.MANAGER_STARTING_MODELS),
-                ManagerNotification.getActionName(ManagerNotification.MANAGER_STARTED_MODELS)));
-        startOrderedObjects.add(new NotificationLifecycleObject(Startable.class));
+                ManagerNotification.getActionName(ManagerNotification.MANAGER_STARTED_MODELS), notificationManager));
+        startOrderedObjects.add(new NotificationLifecycleObject(Startable.class, notificationManager));
 
 
         setIgnorredObjectTypes(ignorredObjects);

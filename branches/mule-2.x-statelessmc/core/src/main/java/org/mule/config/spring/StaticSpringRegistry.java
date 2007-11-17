@@ -12,7 +12,6 @@ package org.mule.config.spring;
 import org.mule.MuleException;
 import org.mule.registry.RegistrationException;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
@@ -32,9 +31,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.StaticApplicationContext;
 
-/**
- * This class is not yet in use.  It is still a work-in-progress.
- */
+/** This class is not yet in use.  It is still a work-in-progress. */
 public class StaticSpringRegistry extends SpringRegistry
 {
     public static final String REGISTRY_ID = "org.mule.Registry.StaticSpring";
@@ -42,7 +39,7 @@ public class StaticSpringRegistry extends SpringRegistry
     public static final Integer OBJECT_SCOPE_SINGLETON = new Integer(1);
     public static final Integer OBJECT_SCOPE_PROTOTYPE = new Integer(2);
     public static final Integer OBJECT_SCOPE_POOLED = new Integer(3);
-    
+
     protected StaticApplicationContext registryContext;
 
     public StaticSpringRegistry()
@@ -64,7 +61,7 @@ public class StaticSpringRegistry extends SpringRegistry
     {
         super(id);
 
-        if(applicationContext==null)
+        if (applicationContext == null)
         {
             registryContext = new StaticApplicationContext();
         }
@@ -75,22 +72,22 @@ public class StaticSpringRegistry extends SpringRegistry
         }
 
         registryContext.getBeanFactory().addBeanPostProcessor(new BeanPostProcessor()
-                {
+        {
 
             public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException
-                    {
+            {
                 return bean;
             }
 
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
-                    {
+            {
                 if (isInitialised() || isInitialising())
                 {
-                    if(bean instanceof Initialisable)
+                    if (bean instanceof Initialisable)
                     {
                         try
                         {
-                            ((Initialisable)bean).initialise();
+                            ((Initialisable) bean).initialise();
                         }
                         catch (InitialisationException e)
                         {
@@ -99,7 +96,7 @@ public class StaticSpringRegistry extends SpringRegistry
 
                     }
                 }
-               
+
                 return bean;
             }
         });
@@ -115,7 +112,7 @@ public class StaticSpringRegistry extends SpringRegistry
         {
             Map m = BeanUtils.describe(o);
             MutablePropertyValues mpvs = new MutablePropertyValues(m);
-            registryContext.registerSingleton((String)m.get("name"), o.getClass(), mpvs);
+            registryContext.registerSingleton((String) m.get("name"), o.getClass(), mpvs);
         }
         catch (Exception e)
         {
@@ -129,7 +126,7 @@ public class StaticSpringRegistry extends SpringRegistry
         {
             Map m = BeanUtils.describe(o);
             MutablePropertyValues mpvs = new MutablePropertyValues(m);
-            registryContext.registerPrototype((String)m.get("name"), o.getClass(), mpvs);
+            registryContext.registerPrototype((String) m.get("name"), o.getClass(), mpvs);
         }
         catch (Exception e)
         {
@@ -137,11 +134,11 @@ public class StaticSpringRegistry extends SpringRegistry
         }
     }
 
-    protected void doRegisterObject(String key, Object value, Object metadata, UMOManagementContext managementContext) throws RegistrationException
+    protected void doRegisterObject(String key, Object value, Object metadata) throws RegistrationException
     {
         if (metadata instanceof Integer)
         {
-            try 
+            try
             {
                 if (metadata.equals(OBJECT_SCOPE_SINGLETON))
                 {
@@ -155,7 +152,7 @@ public class StaticSpringRegistry extends SpringRegistry
                 {
                     throw new RegistrationException("Object scope not recognized: " + metadata);
                 }
-            } 
+            }
             catch (UMOException e)
             {
                 throw new RegistrationException(e);
@@ -166,18 +163,14 @@ public class StaticSpringRegistry extends SpringRegistry
             throw new RegistrationException("Object scope not recognized");
         }
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void registerConnector(UMOConnector connector, UMOManagementContext managementContext) throws UMOException
+
+    /** {@inheritDoc} */
+    public void registerConnector(UMOConnector connector) throws UMOException
     {
-        registerObject(connector.getName(), connector, OBJECT_SCOPE_SINGLETON, managementContext);
+        registerObject(connector.getName(), connector, OBJECT_SCOPE_SINGLETON);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void unregisterConnector(String connectorName) throws UMOException
     {
         UMOConnector c = lookupConnector(connectorName);
@@ -188,17 +181,13 @@ public class StaticSpringRegistry extends SpringRegistry
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    public void registerEndpoint(UMOImmutableEndpoint endpoint, UMOManagementContext managementContext) throws UMOException
+    /** {@inheritDoc} */
+    public void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        registerObject(endpoint.getName(), endpoint, OBJECT_SCOPE_PROTOTYPE, managementContext);
+        registerObject(endpoint.getName(), endpoint, OBJECT_SCOPE_PROTOTYPE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void unregisterEndpoint(String endpointName)
     {
         UMOImmutableEndpoint ep = lookupEndpoint(endpointName);
@@ -208,36 +197,29 @@ public class StaticSpringRegistry extends SpringRegistry
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void registerTransformer(UMOTransformer transformer, UMOManagementContext managementContext) throws UMOException
+    /** {@inheritDoc} */
+    protected void doRegisterTransformer(UMOTransformer transformer) throws UMOException
     {
-        registerObject(transformer.getName(), transformer, OBJECT_SCOPE_PROTOTYPE, managementContext);
+        registerObject(transformer.getName(), transformer, OBJECT_SCOPE_PROTOTYPE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void unregisterTransformer(String transformerName)
     {
         UMOTransformer t = lookupTransformer(transformerName);
-        if(t!=null && t instanceof Disposable) {
-            ((Disposable)t).dispose();
+        if (t != null && t instanceof Disposable)
+        {
+            ((Disposable) t).dispose();
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void registerModel(UMOModel model, UMOManagementContext managementContext) throws UMOException
+    /** {@inheritDoc} */
+    public void registerModel(UMOModel model) throws UMOException
     {
-        registerObject(model.getName(), model, OBJECT_SCOPE_SINGLETON, managementContext);
+        registerObject(model.getName(), model, OBJECT_SCOPE_SINGLETON);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void unregisterModel(String name)
     {
         UMOModel model = lookupModel(name);
@@ -247,17 +229,13 @@ public class StaticSpringRegistry extends SpringRegistry
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void registerAgent(UMOAgent agent, UMOManagementContext managementContext) throws UMOException
+    /** {@inheritDoc} */
+    public void registerAgent(UMOAgent agent) throws UMOException
     {
-        registerObject(agent.getName(), agent, OBJECT_SCOPE_SINGLETON, managementContext);
+        registerObject(agent.getName(), agent, OBJECT_SCOPE_SINGLETON);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void unregisterAgent(String name) throws UMOException
     {
         UMOAgent agent = (UMOAgent) lookupObject(name);

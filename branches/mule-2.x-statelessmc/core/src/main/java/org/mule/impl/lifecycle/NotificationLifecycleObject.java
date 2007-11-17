@@ -11,7 +11,7 @@ package org.mule.impl.lifecycle;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOManagementContext;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.ClassUtils;
 
@@ -26,14 +26,14 @@ public class NotificationLifecycleObject extends LifecycleObject
     private String postNotificationName;
     private Constructor ctor;
 
-    public NotificationLifecycleObject(Class type)
+    public NotificationLifecycleObject(Class type, ServerNotificationManager notificationManager)
     {
-        super(type);
+        super(type, notificationManager);
     }
 
-    public NotificationLifecycleObject(Class type, Class notificationClass)
+    public NotificationLifecycleObject(Class type, Class notificationClass, ServerNotificationManager notificationManager)
     {
-        super(type);
+        super(type, notificationManager);
         if(notificationClass==null)
         {
             throw new NullPointerException("notificationClass");
@@ -49,9 +49,9 @@ public class NotificationLifecycleObject extends LifecycleObject
         }
     }
 
-    public NotificationLifecycleObject(Class type, Class notificationClass, String preNotificationName, String postNotificationName)
+    public NotificationLifecycleObject(Class type, Class notificationClass, String preNotificationName, String postNotificationName, ServerNotificationManager notificationManager)
     {
-        this(type, notificationClass);
+        this(type, notificationClass, notificationManager);
         setPreNotificationName(preNotificationName);
         setPostNotificationName(postNotificationName);
     }
@@ -77,31 +77,31 @@ public class NotificationLifecycleObject extends LifecycleObject
     }
 
     //@java.lang.Override
-    public void firePreNotification(UMOManagementContext context)
+    public void firePreNotification()
     {
         if(getPreNotificationName()!=null)
         {
-            setPreNotification(createNotification(context, getPreNotificationName()));
+            setPreNotification(createNotification(getPreNotificationName()));
         }
-        super.firePreNotification(context);
+        super.firePreNotification();
 
     }
 
     //@java.lang.Override
-    public void firePostNotification(UMOManagementContext context)
+    public void firePostNotification()
     {
         if(getPostNotificationName()!=null)
         {
-            setPostNotification(createNotification(context, getPostNotificationName()));
+            setPostNotification(createNotification(getPostNotificationName()));
         }
-        super.firePostNotification(context);
+        super.firePostNotification();
     }
 
-    protected UMOServerNotification createNotification(UMOManagementContext context, String action)
+    protected UMOServerNotification createNotification(String action)
     {
         try
         {
-            return (UMOServerNotification)ctor.newInstance(new Object[]{context, action});
+            return (UMOServerNotification)ctor.newInstance(new Object[]{action});
         }
         catch (Exception e)
         {

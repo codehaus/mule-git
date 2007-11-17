@@ -41,7 +41,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateInboundEndpointFromGlobalEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "myGlobalEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -60,7 +60,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateInboundEndpointFromNamedConcreteEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "&myNamedConcreateEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -96,7 +96,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateoutboundEndpointFromGlobalEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "myGlobalEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -115,7 +115,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateoutboundEndpointFromNamedConcreteEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "&myNamedConcreateEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -151,7 +151,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateResponseEndpointFromGlobalEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "myGlobalEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -170,7 +170,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
     public void testCreateResponseEndpointFromNamedConcreteEndpoint() throws UMOException
     {
         managementContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
-            new EndpointURIEndpointBuilder("test://address", managementContext), managementContext);
+            new EndpointURIEndpointBuilder("test://address", managementContext));
         String uri = "&myNamedConcreateEndpoint";
         UMOEndpointFactory endpointFactory = new EndpointFactory();
         try
@@ -297,8 +297,8 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         testConnector1.setName("testConnector1");
         TestConnector testConnector2 = new TestConnector();
         testConnector2.setName("testConnector2");
-        r.registerConnector(testConnector1, managementContext);
-        r.registerConnector(testConnector2, managementContext);
+        r.registerConnector(testConnector1);
+        r.registerConnector(testConnector2);
         
         String globalEndpointName = "concreteEndpoint";
         

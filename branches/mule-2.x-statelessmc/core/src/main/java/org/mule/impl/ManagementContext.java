@@ -11,7 +11,6 @@ package org.mule.impl;
 
 import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
-import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
@@ -19,7 +18,6 @@ import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
-import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
@@ -35,7 +33,6 @@ import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.store.UMOStore;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
@@ -68,11 +65,6 @@ public class ManagementContext implements UMOManagementContext
     private static transient Log logger = LogFactory.getLog(ManagementContext.class);
 
     /**
-     * Default configuration
-     */
-    private MuleConfiguration config;
-
-    /**
      * the unique id for this manager
      */
     private String id = null;
@@ -97,88 +89,67 @@ public class ManagementContext implements UMOManagementContext
      */
     private AllStatistics stats = new AllStatistics();
 
-    /**
-     * Manages all Server event notificationManager
-     */
-    private ServerNotificationManager notificationManager = null;
-
-    private UMOSecurityManager securityManager;
-
-    private UMOWorkManager workManager;
-
-    /**
-     * The queue manager to use for component queues and vm queues
-     */
-    private QueueManager queueManager;
-
-    /**
-     * The transaction manager to use for this instance.
-     */
-    protected TransactionManager transactionManager;
-
-    protected UMOLifecycleManager lifecycleManager;
-
     protected Directories directories;
 
     protected String systemName;
 
     public ManagementContext(UMOLifecycleManager lifecycleManager)
     {
-        if (lifecycleManager == null)
-        {
-            throw new NullPointerException(CoreMessages.objectIsNull("lifecycleManager").getMessage());
-        }
-        this.lifecycleManager = lifecycleManager;
+//        if (lifecycleManager == null)
+//        {
+//            throw new NullPointerException(CoreMessages.objectIsNull("lifecycleManager").getMessage());
+//        }
+//        this.lifecycleManager = lifecycleManager;
         
         startDate = System.currentTimeMillis();
     }
 
     public void initialise() throws InitialisationException
     {
-        lifecycleManager.checkPhase(Initialisable.PHASE_NAME);
-        if (securityManager == null)
-        {
-            throw new NullPointerException(CoreMessages.objectIsNull("securityManager").getMessage());
-        }
-
-        if (notificationManager == null)
-        {
-            throw new NullPointerException(CoreMessages.objectIsNull("notificationManager").getMessage());
-        }
-
-        if (queueManager == null)
-        {
-            throw new NullPointerException(CoreMessages.objectIsNull("queueManager").getMessage());
-        }
-
-        if (workManager == null)
-        {
-            throw new NullPointerException(CoreMessages.objectIsNull("workManager").getMessage());
-        }
-
-        // TODO MULE-2162 MuleConfiguration belongs in the ManagementContext rather than the Registry
-        config = RegistryContext.getConfiguration();
-        if (config == null)
-        {
-            logger.info("A mule configuration object was not registered. Using default configuration");
-            config = new MuleConfiguration();
-        }
+        getRegistry().getLifecycleManager().checkPhase(Initialisable.PHASE_NAME);
+//        if (securityManager == null)
+//        {
+//            throw new NullPointerException(CoreMessages.objectIsNull("securityManager").getMessage());
+//        }
+//
+//        if (notificationManager == null)
+//        {
+//            throw new NullPointerException(CoreMessages.objectIsNull("notificationManager").getMessage());
+//        }
+//
+//        if (queueManager == null)
+//        {
+//            throw new NullPointerException(CoreMessages.objectIsNull("queueManager").getMessage());
+//        }
+//
+//        if (workManager == null)
+//        {
+//            throw new NullPointerException(CoreMessages.objectIsNull("workManager").getMessage());
+//        }
+//
+//        // TODO MULE-2162 MuleConfiguration belongs in the ManagementContext rather than the Registry
+//        config = RegistryContext.getConfiguration();
+//        if (config == null)
+//        {
+//            logger.info("A mule configuration object was not registered. Using default configuration");
+//            config = new MuleConfiguration();
+//        }
 
         try
         {
             setupIds();
             validateEncoding();
             validateOSEncoding();
-            directories = new Directories(FileUtils.newFile(config.getWorkingDirectory()));
+            directories = new Directories(FileUtils.newFile(getRegistry().getConfiguration().getWorkingDirectory()));
 
             //We need to start the work manager straight away since we need it to fire notifications
-            workManager.start();
-            notificationManager.start(workManager);
+            getRegistry().getWorkManager().start();
+            getRegistry().getNotificationManager().start(getRegistry().getWorkManager());
 
             fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_INITIALISING));
 
             directories.createDirectories();
-            lifecycleManager.firePhase(this, Initialisable.PHASE_NAME);
+            getRegistry().getLifecycleManager().firePhase(Initialisable.PHASE_NAME);
 
             fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_INITIALISED));
         }
@@ -191,9 +162,9 @@ public class ManagementContext implements UMOManagementContext
 
     protected void setupIds() throws InitialisationException
     {
-        id = config.getId();
-        clusterId = config.getClusterId();
-        domain = config.getDomainId();
+        id = getRegistry().getConfiguration().getId();
+        clusterId = getRegistry().getConfiguration().getClusterId();
+        domain = getRegistry().getConfiguration().getDomainId();
 
         if (id == null)
         {
@@ -219,14 +190,14 @@ public class ManagementContext implements UMOManagementContext
 
     public synchronized void start() throws UMOException
     {
-        lifecycleManager.checkPhase(Startable.PHASE_NAME);
+        //getRegistry().getLifecycleManager().checkPhase(Startable.PHASE_NAME);
         if (!isStarted())
         {
             fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STARTING));
 
             directories.deleteMarkedDirectories();
 
-            lifecycleManager.firePhase(this, Startable.PHASE_NAME);
+            getRegistry().getLifecycleManager().firePhase(Startable.PHASE_NAME);
 
             if (logger.isInfoEnabled())
             {
@@ -245,17 +216,17 @@ public class ManagementContext implements UMOManagementContext
      */
     public synchronized void stop() throws UMOException
     {
-        lifecycleManager.checkPhase(Stoppable.PHASE_NAME);
+        getRegistry().getLifecycleManager().checkPhase(Stoppable.PHASE_NAME);
 
         fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPING));
-        lifecycleManager.firePhase(this, Stoppable.PHASE_NAME);
+        getRegistry().getLifecycleManager().firePhase(Stoppable.PHASE_NAME);
 
         fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED));
     }
 
     public void dispose()
     {
-       //TODO lifecycleManager.checkPhase(Disposable.PHASE_NAME);
+       //TODO getRegistry().getLifecycleManager().checkPhase(Disposable.PHASE_NAME);
 
         fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSING));
 
@@ -278,7 +249,7 @@ public class ManagementContext implements UMOManagementContext
 
         try
         {
-            lifecycleManager.firePhase(this, Disposable.PHASE_NAME);
+            getRegistry().getLifecycleManager().firePhase(Disposable.PHASE_NAME);
         }
         catch (UMOException e)
         {
@@ -291,7 +262,7 @@ public class ManagementContext implements UMOManagementContext
         {
             logger.info(getEndSplash());
         }
-        //lifecycleManager.reset();
+        //getRegistry().getLifecycleManager().reset();
     }
 
 
@@ -302,7 +273,7 @@ public class ManagementContext implements UMOManagementContext
      */
     public boolean isInitialised()
     {
-        return lifecycleManager.isPhaseComplete(Initialisable.PHASE_NAME);
+        return getRegistry().getLifecycleManager().isPhaseComplete(Initialisable.PHASE_NAME);
     }
 
     /**
@@ -312,17 +283,17 @@ public class ManagementContext implements UMOManagementContext
      */
     public boolean isInitialising()
     {
-        return Disposable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Disposable.PHASE_NAME.equals(getRegistry().getLifecycleManager().getExecutingPhase());
     }
 
     protected boolean isStopped()
     {
-        return lifecycleManager.isPhaseComplete(Stoppable.PHASE_NAME);
+        return getRegistry().getLifecycleManager().isPhaseComplete(Stoppable.PHASE_NAME);
     }
 
     protected boolean isStopping()
     {
-        return Stoppable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Stoppable.PHASE_NAME.equals(getRegistry().getLifecycleManager().getExecutingPhase());
     }
 
     /**
@@ -332,22 +303,22 @@ public class ManagementContext implements UMOManagementContext
      */
     public boolean isStarted()
     {
-        return lifecycleManager.isPhaseComplete(Startable.PHASE_NAME);
+        return getRegistry().getLifecycleManager().isPhaseComplete(Startable.PHASE_NAME);
     }
 
     protected boolean isStarting()
     {
-        return Startable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Startable.PHASE_NAME.equals(getRegistry().getLifecycleManager().getExecutingPhase());
     }
 
     public boolean isDisposed()
     {
-        return lifecycleManager.isPhaseComplete(Disposable.PHASE_NAME);
+        return getRegistry().getLifecycleManager().isPhaseComplete(Disposable.PHASE_NAME);
     }
 
     public boolean isDisposing()
     {
-        return Disposable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Disposable.PHASE_NAME.equals(getRegistry().getLifecycleManager().getExecutingPhase());
     }
 
     protected void validateEncoding() throws FatalException
@@ -355,17 +326,17 @@ public class ManagementContext implements UMOManagementContext
         String encoding = System.getProperty(MuleProperties.MULE_ENCODING_SYSTEM_PROPERTY);
         if (encoding == null)
         {
-            encoding = config.getDefaultEncoding();
+            encoding = getRegistry().getConfiguration().getDefaultEncoding();
             System.setProperty(MuleProperties.MULE_ENCODING_SYSTEM_PROPERTY, encoding);
         }
         else
         {
-            config.setDefaultEncoding(encoding);
+            getRegistry().getConfiguration().setDefaultEncoding(encoding);
         }
         //Check we have a valid and supported encoding
-        if (!Charset.isSupported(config.getDefaultEncoding()))
+        if (!Charset.isSupported(getRegistry().getConfiguration().getDefaultEncoding()))
         {
-            throw new FatalException(CoreMessages.propertyHasInvalidValue("encoding", config.getDefaultEncoding()), this);
+            throw new FatalException(CoreMessages.propertyHasInvalidValue("encoding", getRegistry().getConfiguration().getDefaultEncoding()), this);
         }
     }
 
@@ -374,26 +345,21 @@ public class ManagementContext implements UMOManagementContext
         String encoding = System.getProperty(MuleProperties.MULE_OS_ENCODING_SYSTEM_PROPERTY);
         if (encoding == null)
         {
-            encoding = config.getDefaultOSEncoding();
+            encoding = getRegistry().getConfiguration().getDefaultOSEncoding();
             System.setProperty(MuleProperties.MULE_OS_ENCODING_SYSTEM_PROPERTY, encoding);
         }
         else
         {
-            config.setDefaultOSEncoding(encoding);
+            getRegistry().getConfiguration().setDefaultOSEncoding(encoding);
         }
         // Check we have a valid and supported encoding
-        if (!Charset.isSupported(config.getDefaultOSEncoding()))
+        if (!Charset.isSupported(getRegistry().getConfiguration().getDefaultOSEncoding()))
         {
             throw new FatalException(CoreMessages.propertyHasInvalidValue("osEncoding",
-                    config.getDefaultOSEncoding()), this);
+                    getRegistry().getConfiguration().getDefaultOSEncoding()), this);
         }
     }
 
-
-    public UMOLifecycleManager getLifecycleManager()
-    {
-        return lifecycleManager;
-    }
 
     public String getSystemName()
     {
@@ -403,24 +369,6 @@ public class ManagementContext implements UMOManagementContext
     public void setSystemName(String systemName)
     {
         this.systemName = systemName;
-    }
-
-    public UMOStore getStore(String name) throws UMOException
-    {
-        //TODO LM: get store from registry
-        return null;
-    }
-
-    public UMOStore createStore(String name) throws UMOException
-    {
-        //TODO LM: backed by registry
-        return null;
-    }
-
-    public void removeStore(UMOStore store)
-    {
-        //TODO LM: get store from registry
-        store.dispose();
     }
 
     /**
@@ -464,18 +412,18 @@ public class ManagementContext implements UMOManagementContext
 
     public void registerListener(UMOServerNotificationListener l, String resourceIdentifier) throws NotificationException
     {
-        if (notificationManager == null)
+        if (getRegistry().getNotificationManager() == null)
         {
             throw new MuleRuntimeException(CoreMessages.serverNotificationManagerNotEnabled());
         }
-        notificationManager.registerListener(l, resourceIdentifier);
+        getRegistry().getNotificationManager().registerListener(l, resourceIdentifier);
     }
 
     public void unregisterListener(UMOServerNotificationListener l)
     {
-        if (notificationManager != null)
+        if (getRegistry().getNotificationManager() != null)
         {
-            notificationManager.unregisterListener(l);
+            getRegistry().getNotificationManager().unregisterListener(l);
         }
     }
 
@@ -492,9 +440,9 @@ public class ManagementContext implements UMOManagementContext
     public void fireNotification(UMOServerNotification notification)
     {
         // if(notification instanceof CustomNotification) {
-        if (notificationManager != null)
+        if (getRegistry().getNotificationManager() != null)
         {
-            notificationManager.fireEvent(notification);
+            getRegistry().getNotificationManager().fireEvent(notification);
         }
         else if (logger.isDebugEnabled())
         {
@@ -512,7 +460,7 @@ public class ManagementContext implements UMOManagementContext
         {
             throw new IllegalArgumentException("Management Context ID can't be null or empty");
         }
-        checkLifecycleForPropertySet("id", Startable.PHASE_NAME);
+//        checkLifecycleForPropertySet("id", Startable.PHASE_NAME);
         this.id = id;
     }
 
@@ -529,7 +477,7 @@ public class ManagementContext implements UMOManagementContext
 
     public void setDomain(String domain)
     {
-        checkLifecycleForPropertySet("domain", Initialisable.PHASE_NAME);
+//        checkLifecycleForPropertySet("domain", Initialisable.PHASE_NAME);
         this.domain = domain;
     }
 
@@ -540,129 +488,8 @@ public class ManagementContext implements UMOManagementContext
 
     public void setClusterId(String clusterId)
     {
-        checkLifecycleForPropertySet("clusterId", Initialisable.PHASE_NAME);
+//        checkLifecycleForPropertySet("clusterId", Initialisable.PHASE_NAME);
         this.clusterId = clusterId;
-    }
-
-    /**
-     * Sets the security manager used by this Mule instance to authenticate and
-     * authorise incoming and outgoing event traffic and service invocations
-     *
-     * @param securityManager the security manager used by this Mule instance to
-     *                        authenticate and authorise incoming and outgoing event traffic
-     *                        and service invocations
-     */
-    public void setSecurityManager(UMOSecurityManager securityManager) throws InitialisationException
-    {
-        checkLifecycleForPropertySet("securityManager", Initialisable.PHASE_NAME);
-        this.securityManager = securityManager;
-    }
-
-    /**
-     * Gets the security manager used by this Mule instance to authenticate and
-     * authorise incoming and outgoing event traffic and service invocations
-     *
-     * @return he security manager used by this Mule instance to authenticate
-     *         and authorise incoming and outgoing event traffic and service
-     *         invocations
-     */
-    public UMOSecurityManager getSecurityManager()
-    {
-        return securityManager;
-    }
-
-    /**
-     * Obtains a workManager instance that can be used to schedule work in a
-     * thread pool. This will be used primarially by UMOAgents wanting to
-     * schedule work. This work Manager must <b>never</b> be used by provider
-     * implementations as they have their own workManager accible on the
-     * connector.
-     * <p/>
-     * If a workManager has not been set by the time the
-     * <code>initialise()</code> method has been called a default
-     * <code>MuleWorkManager</code> will be created using the
-     * <i>DefaultThreadingProfile</i> on the <code>MuleConfiguration</code>
-     * object.
-     *
-     * @return a workManager instance used by the current MuleManager
-     * @see org.mule.config.ThreadingProfile
-     * @see MuleConfiguration
-     */
-    public UMOWorkManager getWorkManager()
-    {
-        return workManager;
-    }
-
-    /**
-     * Obtains a workManager instance that can be used to schedule work in a
-     * thread pool. This will be used primarially by UMOAgents wanting to
-     * schedule work. This work Manager must <b>never</b> be used by provider
-     * implementations as they have their own workManager accible on the
-     * connector.
-     * <p/>
-     * If a workManager has not been set by the time the
-     * <code>initialise()</code> method has been called a default
-     * <code>MuleWorkManager</code> will be created using the
-     * <i>DefaultThreadingProfile</i> on the <code>MuleConfiguration</code>
-     * object.
-     *
-     * @param workManager the workManager instance used by the current
-     *                    MuleManager
-     * @throws IllegalStateException if the workManager has already been set.
-     * @see org.mule.config.ThreadingProfile
-     * @see MuleConfiguration
-     * @see org.mule.impl.work.MuleWorkManager
-     */
-    public void setWorkManager(UMOWorkManager workManager)
-    {
-        checkLifecycleForPropertySet("workManager", Initialisable.PHASE_NAME);
-        this.workManager = workManager;
-    }
-
-    public QueueManager getQueueManager()
-    {
-        return queueManager;
-    }
-
-    public void setQueueManager(QueueManager queueManager)
-    {
-        checkLifecycleForPropertySet("queueManager", Initialisable.PHASE_NAME);
-        this.queueManager = queueManager;
-    }
-
-    public ServerNotificationManager getNotificationManager()
-    {
-        return notificationManager;
-    }
-
-    public void setNotificationManager(ServerNotificationManager notificationManager)
-    {
-        checkLifecycleForPropertySet("notificationManager", Initialisable.PHASE_NAME);
-        this.notificationManager = notificationManager;
-    }
-
-    /**
-     * Sets the Jta Transaction Manager to use with this Mule server instance
-     *
-     * @param manager the manager to use
-     * @throws Exception
-     */
-    public void setTransactionManager(TransactionManager manager) throws Exception
-    {
-        //checkLifecycleForPropertySet("transactionManager");
-        transactionManager = manager;
-    }
-
-    /**
-     * Returns the Jta transaction manager used by this Mule server instance. or
-     * null if a transaction manager has not been set
-     *
-     * @return the Jta transaction manager used by this Mule server instance. or
-     *         null if a transaction manager has not been set
-     */
-    public TransactionManager getTransactionManager()
-    {
-        return transactionManager;
     }
 
 
@@ -752,36 +579,6 @@ public class ManagementContext implements UMOManagementContext
         return StringMessageUtils.getBoilerPlate(message, '*', 78);
     }
 
-
-    public void register() throws RegistrationException
-    {
-        throw new UnsupportedOperationException("register");
-    }
-
-    public void deregister() throws RegistrationException
-    {
-        throw new UnsupportedOperationException("deregister");
-    }
-
-    public String getRegistryId()
-    {
-        throw new UnsupportedOperationException("registryId");
-    }
-
-
-    protected void checkLifecycleForPropertySet(String propertyName, String phase) throws IllegalStateException
-    {
-        if (lifecycleManager.isPhaseComplete(phase))
-        {
-            throw new IllegalStateException("Cannot set property: '" + propertyName + "' once the server has been gone through the " + phase + " phase.");
-        }
-    }
-
-    public void setLifecycleManager(UMOLifecycleManager lifecycleManager)
-    {
-        this.lifecycleManager = lifecycleManager;
-    }
-    
     /**
      * Resolve and return a handle to the registry.
      * This should eventually be more intelligent (handle remote registries, clusters of Mule instances, etc.)  
@@ -794,6 +591,40 @@ public class ManagementContext implements UMOManagementContext
     
     public void applyLifecycle(Object object) throws UMOException
     {
-        lifecycleManager.applyLifecycle(this, object);
+        getRegistry().getLifecycleManager().applyLifecycle(object);
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // Registry Facade
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    public UMOLifecycleManager getLifecycleManager()
+    {
+        return getRegistry().getLifecycleManager();
+    }
+    
+    public UMOSecurityManager getSecurityManager()
+    {
+        return getRegistry().getSecurityManager();
+    }
+
+    public UMOWorkManager getWorkManager()
+    {
+        return getRegistry().getWorkManager();
+    }
+
+    public QueueManager getQueueManager()
+    {
+        return getRegistry().getQueueManager();
+    }
+
+    public ServerNotificationManager getNotificationManager()
+    {
+        return getRegistry().getNotificationManager();
+    }
+
+    public TransactionManager getTransactionManager()
+    {
+        return getRegistry().getTransactionManager();
     }
 }

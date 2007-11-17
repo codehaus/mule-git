@@ -221,7 +221,7 @@ public final class MuleTestUtils
         c.setModel(model);
         if (initialize)
         {
-            context.getRegistry().registerComponent(c, context);
+            context.getRegistry().registerComponent(c);
             //TODO Why is this necessary
             UMOOutboundRouter router = new OutboundPassThroughRouter();
             c.getOutboundRouter().addRouter(router);

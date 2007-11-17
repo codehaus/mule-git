@@ -10,6 +10,7 @@
 package org.mule.impl.lifecycle.phases;
 
 import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 import org.mule.registry.Registry;
@@ -36,12 +37,12 @@ import java.util.Set;
  */
 public class TransientRegistryDisposePhase extends LifecyclePhase
 {
-    public TransientRegistryDisposePhase()
+    public TransientRegistryDisposePhase(ServerNotificationManager notificationManager)
     {
-        this(new Class[]{Registry.class});
+        this(new Class[]{Registry.class}, notificationManager);
     }
 
-    public TransientRegistryDisposePhase(Class[] ignorredObjects)
+    public TransientRegistryDisposePhase(Class[] ignorredObjects, ServerNotificationManager notificationManager)
     {
         super(Disposable.PHASE_NAME, Disposable.class, Initialisable.PHASE_NAME);
 
@@ -49,13 +50,13 @@ public class TransientRegistryDisposePhase extends LifecyclePhase
 //        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOManagementContext.class, ManagerNotification.class,
 //                ManagerNotification.getActionName(ManagerNotification.MANAGER_DISPOSING),
 //                ManagerNotification.getActionName(ManagerNotification.MANAGER_DISPOSED)));
-        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOManagementContext.class));
+        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOManagementContext.class, notificationManager));
         disposeOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class, ManagerNotification.class,
                 ManagerNotification.getActionName(ManagerNotification.MANAGER_DISPOSING_CONNECTORS),
-                ManagerNotification.getActionName(ManagerNotification.MANAGER_DISPOSED_CONNECTORS)));
-        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
-        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class));
-        disposeOrderedObjects.add(new NotificationLifecycleObject(Disposable.class));
+                ManagerNotification.getActionName(ManagerNotification.MANAGER_DISPOSED_CONNECTORS), notificationManager));
+        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class, notificationManager));
+        disposeOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, notificationManager));
+        disposeOrderedObjects.add(new NotificationLifecycleObject(Disposable.class, notificationManager));
 
         setIgnorredObjectTypes(ignorredObjects);
         setOrderedLifecycleObjects(disposeOrderedObjects);

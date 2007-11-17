@@ -16,6 +16,7 @@ import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ManagementContextAware;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.transformers.TransformerCollection;
@@ -24,7 +25,6 @@ import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.transformers.simple.ObjectToString;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointFactory;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -33,22 +33,27 @@ import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOAgent;
+import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
+import org.mule.umo.security.UMOSecurityManager;
 import org.mule.umo.transformer.DiscoverableTransformer;
 import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
 import org.mule.util.properties.PropertyExtractorManager;
-
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import org.mule.util.queue.QueueManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.transaction.TransactionManager;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,8 +72,8 @@ public abstract class AbstractRegistry implements Registry
 
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected UMOLifecycleManager lifecycleManager;
-    protected Map transformerCache = new ConcurrentHashMap(8);
+    protected Map transformerListCache = new ConcurrentHashMap(8);
+    protected Map exactTransformerCache = new ConcurrentHashMap(8);
 
     /** Default Constructor */
     protected AbstractRegistry(String id)
@@ -78,25 +83,12 @@ public abstract class AbstractRegistry implements Registry
             throw new NullPointerException(CoreMessages.objectIsNull("RegistryID").getMessage());
         }
         this.id = id;
-        lifecycleManager = createLifecycleManager();
     }
 
     protected AbstractRegistry(String id, Registry parent)
     {
         this(id);
         setParent(parent);
-    }
-
-    protected abstract UMOLifecycleManager createLifecycleManager();
-
-    protected UMOLifecycleManager getLifecycleManager()
-    {
-        return lifecycleManager;
-    }
-
-    public final String getRegistryId()
-    {
-        return id;
     }
 
     public final synchronized void dispose()
@@ -110,8 +102,11 @@ public abstract class AbstractRegistry implements Registry
 
         try
         {
+            exactTransformerCache.clear();
+            transformerListCache.clear();
+
             doDispose();
-            lifecycleManager.firePhase(MuleServer.getManagementContext(), Disposable.PHASE_NAME);
+            getLifecycleManager().firePhase(Disposable.PHASE_NAME);
             if (getParent() != null)
             {
                 parent.dispose();
@@ -137,27 +132,34 @@ public abstract class AbstractRegistry implements Registry
 
     public boolean isDisposed()
     {
-        return lifecycleManager.isPhaseComplete(Disposable.PHASE_NAME);
+        if (getLifecycleManager() != null)
+        {
+            return getLifecycleManager().isPhaseComplete(Disposable.PHASE_NAME);
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public boolean isDisposing()
     {
-        return Disposable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Disposable.PHASE_NAME.equals(getLifecycleManager().getExecutingPhase());
     }
 
     public boolean isInitialised()
     {
-        return lifecycleManager.isPhaseComplete(Initialisable.PHASE_NAME);
+        return getLifecycleManager().isPhaseComplete(Initialisable.PHASE_NAME);
     }
 
     public boolean isInitialising()
     {
-        return Initialisable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
+        return Initialisable.PHASE_NAME.equals(getLifecycleManager().getExecutingPhase());
     }
 
     public final void initialise() throws InitialisationException
     {
-        lifecycleManager.checkPhase(Initialisable.PHASE_NAME);
+//        getLifecycleManager().checkPhase(Initialisable.PHASE_NAME);
 
 //        if (getParent() != null)
 //        {
@@ -179,7 +181,7 @@ public abstract class AbstractRegistry implements Registry
         try
         {
             doInitialise();
-            lifecycleManager.firePhase(MuleServer.getManagementContext(), Initialisable.PHASE_NAME);
+//            getLifecycleManager().firePhase(MuleServer.getManagementContext(), Initialisable.PHASE_NAME);
         }
         catch (InitialisationException e)
         {
@@ -203,7 +205,7 @@ public abstract class AbstractRegistry implements Registry
         return (UMOConnector) lookupObject(name);
     }
 
-    public UMOImmutableEndpoint lookupEndpoint(String name, UMOManagementContext managementContext)
+    public UMOImmutableEndpoint lookupEndpoint(String name)
     {
         Object obj = lookupObject(name);
         if (obj instanceof UMOImmutableEndpoint)
@@ -219,11 +221,6 @@ public abstract class AbstractRegistry implements Registry
                     + " is a global endpoint you should use the EndpointFactory to create endpoint instances from global endpoints.");
             return null;
         }
-    }
-
-    public UMOImmutableEndpoint lookupEndpoint(String name)
-    {
-        return (UMOImmutableEndpoint) lookupEndpoint(name, MuleServer.getManagementContext());
     }
 
     public UMOEndpointBuilder lookupEndpointBuilder(String name)
@@ -262,11 +259,17 @@ public abstract class AbstractRegistry implements Registry
         return (UMOTransformer) lookupObject(name);
     }
 
-    public UMOTransformer lookupTransformer(Class inputType, Class outputType) throws RegistrationException, TransformerException
+    /** {@inheritDoc} */
+    public UMOTransformer lookupTransformer(Class inputType, Class outputType) throws TransformerException
     {
+        UMOTransformer result = (UMOTransformer) exactTransformerCache.get(inputType.getName() + outputType.getName());
+        if (result != null)
+        {
+            return result;
+        }
         List trans = lookupTransformers(inputType, outputType);
 
-        UMOTransformer result = getNearestTransformerMatch(trans, inputType, outputType);
+        result = getNearestTransformerMatch(trans, inputType, outputType);
         //If an exact mach is not found, we have a 'second pass' transformer that can be used to converting to String or
         //byte[]
         UMOTransformer secondPass = null;
@@ -296,10 +299,15 @@ public abstract class AbstractRegistry implements Registry
                 result = new TransformerCollection(new UMOTransformer[]{result, secondPass});
             }
         }
+
+        if (result != null)
+        {
+            exactTransformerCache.put(inputType.getName() + outputType.getName(), result);
+        }
         return result;
     }
 
-    protected UMOTransformer getNearestTransformerMatch(List trans, Class input, Class output) throws RegistrationException
+    protected UMOTransformer getNearestTransformerMatch(List trans, Class input, Class output) throws TransformerException
     {
         if (trans.size() > 1)
         {
@@ -324,10 +332,8 @@ public abstract class AbstractRegistry implements Registry
                         //We may have two transformers that are exactly the same, in which case we can use either i.e. use the current
                         if (!weighting.getTransformer().getClass().equals(current.getTransformer().getClass()))
                         {
-                            throw new RegistrationException("There is more than one transformer that is an exact match for input: "
-                                    + input + ", output: " + output + ". Transformers are: " + current.getTransformer().getName() +
-                                    "(" + current.getTransformer().getClass() + "), " +
-                                    weighting.getTransformer().getName() + "(" + weighting.getTransformer().getClass() + ")");
+                            throw new TransformerException(CoreMessages.transformHasMultipleMatches(input, output,
+                                    current.getTransformer(), weighting.getTransformer()));
                         }
                     }
                 }
@@ -344,11 +350,10 @@ public abstract class AbstractRegistry implements Registry
         }
     }
 
+    /** {@inheritDoc} */
     public List lookupTransformers(Class input, Class output)
     {
-        // TODO: Optimize & Cache
-
-        List results = (List) transformerCache.get(input.getName() + output.getName());
+        List results = (List) transformerListCache.get(input.getName() + output.getName());
         if (results != null)
         {
             return results;
@@ -378,7 +383,7 @@ public abstract class AbstractRegistry implements Registry
             }
         }
 
-        transformerCache.put(input.getName() + output.getName(), results);
+        transformerListCache.put(input.getName() + output.getName(), results);
         return results;
     }
 
@@ -474,6 +479,33 @@ public abstract class AbstractRegistry implements Registry
             }
         }
         return o;
+    }
+
+    public final Object lookupObject(Class type) throws RegistrationException
+    {
+        return lookupObject(type, getDefaultScope());
+    }
+
+    /** 
+     * Look up a single object by type.  
+     * @return null if no object is found
+     * @throws RegistrationException if more than one object is found
+     */
+    public final Object lookupObject(Class type, int scope) throws RegistrationException
+    {
+        Collection collection = lookupObjects(type, scope);
+        if (collection == null || collection.size() < 1)
+        {
+            return null;
+        }
+        else if (collection.size() > 1)
+        {
+            throw new RegistrationException("More than one object of type " + type + " was found in registry, but only 1 was expected.");
+        }
+        else
+        {
+            return collection.iterator().next();
+        }
     }
 
     public final Collection lookupObjects(Class type)
@@ -597,16 +629,6 @@ public abstract class AbstractRegistry implements Registry
     /** @return null if object not found */
     protected abstract Object doLookupObject(String key);
 
-    public Registry getParent()
-    {
-        return parent;
-    }
-
-    public void setParent(Registry registry)
-    {
-        this.parent = registry;
-    }
-
     protected void unsupportedOperation(String operation, Object o) throws UnsupportedOperationException
     {
         throw new UnsupportedOperationException(
@@ -616,89 +638,157 @@ public abstract class AbstractRegistry implements Registry
                         + operation + " on object: " + o);
     }
 
-    /** @deprecated  */
-    public void registerConnector(UMOConnector connector) throws UMOException
-    {
-        registerConnector(connector, MuleServer.getManagementContext());
-    }
-
-    /** {@inheritDoc} */
-    public void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
-    {
-        registerEndpoint(endpoint, MuleServer.getManagementContext());
-    }
-
-    /** {@inheritDoc} */
-    public void registerTransformer(UMOTransformer transformer) throws UMOException
-    {
-        registerTransformer(transformer, MuleServer.getManagementContext());
-    }
-
-    /** {@inheritDoc} */
-    public void registerModel(UMOModel model) throws UMOException
-    {
-        registerModel(model, MuleServer.getManagementContext());
-    }
-
-    /** {@inheritDoc} */
-    public void registerAgent(UMOAgent agent) throws UMOException
-    {
-        registerAgent(agent, MuleServer.getManagementContext());
-    }
-
     public final void registerObject(String key, Object value) throws RegistrationException
     {
-        registerObject(key, value, null, null);
-    }
-
-    public final void registerObject(String key, Object value, Object metadata) throws RegistrationException
-    {
-        registerObject(key, value, metadata, null);
-    }
-
-    public final void registerObject(String key, Object value, UMOManagementContext managementContext)
-            throws RegistrationException
-    {
-        registerObject(key, value, null, managementContext);
+        registerObject(key, value, null);
     }
 
     public final void registerObject(String key,
                                      Object value,
-                                     Object metadata,
-                                     UMOManagementContext managementContext) throws RegistrationException
+                                     Object metadata) throws RegistrationException
     {
-        logger.debug("registerObject: key=" + key + " value=" + value + " metadata=" + metadata
-                + " managementContext=" + managementContext);
+        
+        logger.debug("registerObject: key=" + key + " value=" + value + " metadata=" + metadata);
         if (value instanceof ManagementContextAware)
         {
-            if (managementContext == null)
-            {
-                throw new RegistrationException(
-                        "Attempting to register a ManagementContextAware object without providing a ManagementContext.");
-            }
-            ((ManagementContextAware) value).setManagementContext(managementContext);
+            ((ManagementContextAware) value).setManagementContext(MuleServer.getManagementContext());
         }
-        doRegisterObject(key, value, metadata, managementContext);
+        doRegisterObject(key, value, metadata);
     }
 
     protected abstract void doRegisterObject(String key,
-                                             Object value,
-                                             Object metadata,
-                                             UMOManagementContext managementContext) throws RegistrationException;
-
-    public final MuleConfiguration getConfiguration()
+                                            Object value,
+                                            Object metadata) throws RegistrationException;
+    
+    public final void registerTransformer(UMOTransformer transformer) throws UMOException
     {
-        MuleConfiguration config = getLocalConfiguration();
-        if (config == null && getParent() != null)
+        if (transformer instanceof DiscoverableTransformer)
         {
-            config = getParent().getConfiguration();
+            exactTransformerCache.clear();
+            transformerListCache.clear();
         }
-        if (config == null)
+        doRegisterTransformer(transformer);
+
+    }
+
+    protected abstract void doRegisterTransformer(UMOTransformer transformer) throws UMOException;
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Management entities
+    // /////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @return the MuleConfiguration for this MuleManager. This object is immutable
+     *         once the manager has initialised.
+     */
+    public MuleConfiguration getConfiguration()
+    {
+        try
         {
-            config = new MuleConfiguration();
-            setConfiguration(config);
+            return (MuleConfiguration) lookupObject(MuleConfiguration.class);
         }
-        return config;
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+
+    public UMOLifecycleManager getLifecycleManager()
+    {
+        try
+        {
+            return (UMOLifecycleManager) lookupObject(UMOLifecycleManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+    
+    public UMOSecurityManager getSecurityManager()
+    {
+        try
+        {
+            return (UMOSecurityManager) lookupObject(UMOSecurityManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+
+    public UMOWorkManager getWorkManager()
+    {
+        try
+        {
+            return (UMOWorkManager) lookupObject(UMOWorkManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+
+    public QueueManager getQueueManager()
+    {
+        try
+        {
+            return (QueueManager) lookupObject(QueueManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+
+    public ServerNotificationManager getNotificationManager()
+    {
+        try
+        {
+            return (ServerNotificationManager) lookupObject(ServerNotificationManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+
+    public TransactionManager getTransactionManager()
+    {
+        try
+        {
+            return (TransactionManager) lookupObject(TransactionManager.class);
+        }
+        catch (RegistrationException e)
+        {
+            logger.warn(e);
+            return null;
+        }
+    }
+    
+    // /////////////////////////////////////////////////////////////////////////
+    // Registry Metadata
+    // /////////////////////////////////////////////////////////////////////////
+
+    public final String getRegistryId()
+    {
+        return id;
+    }
+
+    public Registry getParent()
+    {
+        return parent;
+    }
+
+    public void setParent(Registry registry)
+    {
+        this.parent = registry;
     }
 
     public int getDefaultScope()
@@ -714,37 +804,4 @@ public abstract class AbstractRegistry implements Registry
         }
         defaultScope = scope;
     }
-
-    /**
-     * TODO MULE-2162
-     *
-     * @return the MuleConfiguration for this MuleManager. This object is immutable
-     *         once the manager has initialised.
-     */
-    protected MuleConfiguration getLocalConfiguration()
-    {
-        Collection collection = lookupObjects(MuleConfiguration.class);
-        if (collection == null)
-        {
-            logger.warn("No MuleConfiguration was found in registry");
-            return null;
-        }
-
-        if (collection.size() > 1)
-        {
-            logger.warn("More than one MuleConfiguration was found in registry");
-        }
-        return (MuleConfiguration) collection.iterator().next();
-    }
-
-    /** {@inheritDoc} */
-//    public TransactionManager getTransactionManager()
-//    {
-//        Map m = applicationContext.getBeansOfType(TransactionManager.class);
-//        if (m.size() > 0)
-//        {
-//            return (TransactionManager) m.values().iterator().next();
-//        }
-//        return null;
-//    }
 }

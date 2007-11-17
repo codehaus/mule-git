@@ -14,14 +14,12 @@ import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.registry.Registry;
-import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.store.UMOStore;
 import org.mule.util.queue.QueueManager;
 
 import javax.transaction.TransactionManager;
@@ -33,36 +31,8 @@ public interface UMOManagementContext extends Lifecycle
 {
     String getSystemName();
 
-    UMOStore getStore(String name) throws UMOException;
-
-    UMOStore createStore(String name) throws UMOException;
-
-    void removeStore(UMOStore store);
-
     Directories getDirectories();
 
-    /**
-     * Sets the Jta Transaction Manager to use with this Mule server instance
-     *
-     * @param manager the manager to use
-     * @throws Exception
-     */
-    void setTransactionManager(TransactionManager manager) throws Exception;
-
-    /**
-     * Returns the Jta transaction manager used by this Mule server instance. or
-     * null if a transaction manager has not been set
-     *
-     * @return the Jta transaction manager used by this Mule server instance. or
-     *         null if a transaction manager has not been set
-     */
-    TransactionManager getTransactionManager();
-
-
-    ServerNotificationManager getNotificationManager();
-
-    void setNotificationManager(ServerNotificationManager notificationManager);
-    
     /**
      * Determines if the server has been started
      *
@@ -167,76 +137,27 @@ public interface UMOManagementContext extends Lifecycle
 
     void setClusterId(String clusterId);
 
-    /**
-     * Sets the security manager used by this Mule instance to authenticate and
-     * authorise incoming and outgoing event traffic and service invocations
-     *
-     * @param securityManager the security manager used by this Mule instance to
-     *                        authenticate and authorise incoming and outgoing event traffic
-     *                        and service invocations
-     */
-    void setSecurityManager(UMOSecurityManager securityManager) throws InitialisationException;
-
-    /**
-     * Gets the security manager used by this Mule instance to authenticate and
-     * authorise incoming and outgoing event traffic and service invocations
-     *
-     * @return he security manager used by this Mule instance to authenticate
-     *         and authorise incoming and outgoing event traffic and service
-     *         invocations
-     */
-    UMOSecurityManager getSecurityManager();
-
-    /**
-     * Obtains a workManager instance that can be used to schedule work in a
-     * thread pool. This will be used primarially by UMOAgents wanting to
-     * schedule work. This work Manager must <b>never</b> be used by provider
-     * implementations as they have their own workManager accible on the
-     * connector.
-     *
-     * @return a workManager instance used by the current MuleManager
-     */
-    UMOWorkManager getWorkManager();
-
-    /**
-     * Sets a workManager instance that can be used to schedule work in a thread
-     * pool. This will be used primarially by UMOAgents wanting to schedule
-     * work. This work Manager must <b>never</b> be used by provider
-     * implementations as they have their own workManager accible on the
-     * connector.
-     *
-     * @param workManager the workManager instance used by the current
-     *                    MuleManager
-     */
-    void setWorkManager(UMOWorkManager workManager);
-
-    /**
-     * Sets the queue manager used by mule for queuing events. This is used by
-     * both components and vm provider.
-     *
-     * @param queueManager
-     * 
-     */
-    void setQueueManager(QueueManager queueManager);
-
-    /**
-     * Gets the queue manager used by mule for queuing events. This is used by
-     * both components and vm provider.
-     *
-     * @return
-     *
-     */
-    QueueManager getQueueManager();
-
     public AllStatistics getStatistics();
 
     public void setStatistics(AllStatistics stats);
 
-    UMOLifecycleManager getLifecycleManager();
-
-    void setLifecycleManager(UMOLifecycleManager lifecycleManager);
-    
     Registry getRegistry();
     
     void applyLifecycle(Object object) throws UMOException;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // Registry Facade
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    UMOLifecycleManager getLifecycleManager();
+    
+    UMOSecurityManager getSecurityManager();
+
+    UMOWorkManager getWorkManager();
+
+    QueueManager getQueueManager();
+
+    ServerNotificationManager getNotificationManager();
+
+    TransactionManager getTransactionManager();
 }

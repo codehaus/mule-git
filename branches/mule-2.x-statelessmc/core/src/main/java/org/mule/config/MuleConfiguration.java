@@ -32,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
  * <code>MuleConfiguration</code> holds the runtime configuration specific to the
  * <code>MuleManager</code>. Once the <code>MuleManager</code> has been
  * initialised this class is immutable.
+ * 
+ * TODO MULE-2162 MuleConfiguration should be a stateless "view" of info. in the Registry
  */
 public class MuleConfiguration
 {

@@ -9,7 +9,7 @@
  */
 package org.mule.impl.lifecycle;
 
-import org.mule.umo.UMOManagementContext;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.umo.manager.UMOServerNotification;
 
 /**
@@ -20,10 +20,12 @@ public class LifecycleObject
     private Class type;
     private UMOServerNotification preNotification;
     private UMOServerNotification postNotification;
+    private ServerNotificationManager notificationManager;
 
-    public LifecycleObject(Class type)
+    public LifecycleObject(Class type, ServerNotificationManager notificationManager)
     {
         this.type = type;
+        this.notificationManager = notificationManager;
     }
 
     public UMOServerNotification getPostNotification()
@@ -56,19 +58,19 @@ public class LifecycleObject
         this.type = type;
     }
 
-    public void firePreNotification(UMOManagementContext context)
+    public void firePreNotification()
     {
         if(preNotification!=null)
         {
-            context.fireNotification(preNotification);
+            notificationManager.fireEvent(preNotification);
         }
     }
 
-    public void firePostNotification(UMOManagementContext context)
+    public void firePostNotification()
     {
         if(postNotification!=null)
         {
-            context.fireNotification(postNotification);
+            notificationManager.fireEvent(postNotification);
         }
     }
 }

@@ -10,6 +10,7 @@
 
 package org.mule.tck;
 
+import org.mule.config.MuleProperties;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.transaction.TransactionCallback;
@@ -112,7 +113,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
      */
     public void testXaTransactionTermination() throws Exception
     {
-        managementContext.setTransactionManager(tm);
+        managementContext.getRegistry().registerObject(MuleProperties.OBJECT_TRANSACTION_MANAGER, tm, managementContext);
         assertNull("There sould be no current transaction associated.", tm.getTransaction());
         
         // don't wait for ages, has to be set before TX is begun
@@ -139,7 +140,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
      */
     public void testNoNestedTxStarted() throws Exception
     {
-        managementContext.setTransactionManager(tm);
+        managementContext.getRegistry().registerObject(MuleProperties.OBJECT_TRANSACTION_MANAGER, tm, managementContext);
         assertNull("There sould be no current transaction associated.", tm.getTransaction());
 
         // don't wait for ages, has to be set before TX is begun

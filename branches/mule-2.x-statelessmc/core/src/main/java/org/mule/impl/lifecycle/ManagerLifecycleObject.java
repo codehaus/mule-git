@@ -10,6 +10,7 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.manager.UMOServerNotification;
 
@@ -20,9 +21,9 @@ public class ManagerLifecycleObject extends NotificationLifecycleObject
 {
     private Class notificationClass;
 
-    public ManagerLifecycleObject(Class type, Class notificationClass)
+    public ManagerLifecycleObject(Class type, Class notificationClass, ServerNotificationManager notificationManager)
     {
-        super(type);
+        super(type, notificationManager);
         this.notificationClass = notificationClass;
     }
 

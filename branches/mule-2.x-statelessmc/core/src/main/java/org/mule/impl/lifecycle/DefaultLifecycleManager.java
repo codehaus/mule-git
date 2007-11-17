@@ -9,6 +9,7 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.lifecycle.phases.ManagementContextStartPhase;
 import org.mule.impl.lifecycle.phases.ManagementContextStopPhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryDisposePhase;
@@ -30,14 +31,14 @@ import org.mule.umo.lifecycle.Stoppable;
  */
 public class DefaultLifecycleManager extends GenericLifecycleManager
 {
-    public DefaultLifecycleManager()
+    public DefaultLifecycleManager(ServerNotificationManager notificationManager)
     {
         //Create Lifecycle phases
         Class[] ignorredObjects = new Class[]{Registry.class, UMOManagementContext.class};
 
-        registerLifecycle(new TransientRegistryInitialisePhase(ignorredObjects));
-        registerLifecycle(new ManagementContextStartPhase(ignorredObjects));
-        registerLifecycle(new ManagementContextStopPhase(ignorredObjects));
-        registerLifecycle(new TransientRegistryDisposePhase(ignorredObjects));
+        registerLifecycle(new TransientRegistryInitialisePhase(ignorredObjects, notificationManager));
+        registerLifecycle(new ManagementContextStartPhase(ignorredObjects, notificationManager));
+        registerLifecycle(new ManagementContextStopPhase(ignorredObjects, notificationManager));
+        registerLifecycle(new TransientRegistryDisposePhase(ignorredObjects, notificationManager));
     }
 }

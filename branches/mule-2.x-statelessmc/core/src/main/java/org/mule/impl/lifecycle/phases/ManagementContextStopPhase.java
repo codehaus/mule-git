@@ -9,7 +9,9 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.RegistryContext;
 import org.mule.impl.internal.notifications.ManagerNotification;
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 import org.mule.registry.Registry;
@@ -35,22 +37,29 @@ import java.util.Set;
  */
 public class ManagementContextStopPhase extends LifecyclePhase
 {
+    // TODO This method should not be necessary, it's a workaround because passing the NotificationManager in
+    // as a parameter creates a circular reference in default-mule-config.xml
     public ManagementContextStopPhase()
     {
-        this(new Class[]{Registry.class, UMOManagementContext.class});
+        this(RegistryContext.getRegistry().getNotificationManager());
+    }
+    
+    public ManagementContextStopPhase(ServerNotificationManager notificationManager)
+    {
+        this(new Class[]{Registry.class, UMOManagementContext.class}, notificationManager);
     }
 
-    public ManagementContextStopPhase(Class[] ignorredObjects)
+    public ManagementContextStopPhase(Class[] ignorredObjects, ServerNotificationManager notificationManager)
     {
         super(Stoppable.PHASE_NAME, Stoppable.class, Startable.PHASE_NAME);
 
         Set stopOrderedObjects = new LinkedHashSet();
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
+        stopOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class, notificationManager));
+        stopOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class, notificationManager));
         stopOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, ManagerNotification.class,
                 ManagerNotification.getActionName(ManagerNotification.MANAGER_STOPPING_MODELS),
-                ManagerNotification.getActionName(ManagerNotification.MANAGER_STOPPED_MODELS)));
-        stopOrderedObjects.add(new NotificationLifecycleObject(Stoppable.class));
+                ManagerNotification.getActionName(ManagerNotification.MANAGER_STOPPED_MODELS), notificationManager));
+        stopOrderedObjects.add(new NotificationLifecycleObject(Stoppable.class, notificationManager));
 
         setIgnorredObjectTypes(ignorredObjects);
         setOrderedLifecycleObjects(stopOrderedObjects);

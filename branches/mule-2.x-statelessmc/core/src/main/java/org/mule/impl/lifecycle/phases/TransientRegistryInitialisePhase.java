@@ -9,6 +9,7 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 import org.mule.registry.Registry;
@@ -37,26 +38,26 @@ import java.util.Set;
  */
 public class TransientRegistryInitialisePhase extends LifecyclePhase
 {
-    public TransientRegistryInitialisePhase()
+    public TransientRegistryInitialisePhase(ServerNotificationManager notificationManager)
     {
-        this(new Class[]{Registry.class});
+        this(new Class[]{Registry.class}, notificationManager);
     }
 
-    public TransientRegistryInitialisePhase(Class[] ignorredObjects)
+    public TransientRegistryInitialisePhase(Class[] ignorredObjects, ServerNotificationManager notificationManager)
     {
         super(Initialisable.PHASE_NAME, Initialisable.class, Disposable.PHASE_NAME);
 
         setIgnorredObjectTypes(ignorredObjects);
         Set initOrderedObjects = new LinkedHashSet();
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOManagementContext.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOTransformer.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOImmutableEndpoint.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOManagementContext.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOTransformer.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOImmutableEndpoint.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class, notificationManager));
+        initOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, notificationManager));
 
-        initOrderedObjects.add(new NotificationLifecycleObject(Initialisable.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Initialisable.class, notificationManager));
 
         setOrderedLifecycleObjects(initOrderedObjects);
         registerSupportedPhase(NotInLifecyclePhase.PHASE_NAME);
