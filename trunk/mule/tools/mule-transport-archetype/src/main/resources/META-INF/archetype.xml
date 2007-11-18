@@ -91,7 +91,7 @@
     <templates>
         <template>
             <file>src/main/resources/META-INF/services/org/mule/providers/csd.vm</file>
-            <output>src/main/resources/META-INF/services/org/mule/providers/${TransportName}</output>
+            <output>src/main/resources/META-INF/services/org/mule/providers/${TransportName}.properties</output>
         </template>
         <template>
             <file>src/main/java/org/mule/providers/Messages.vm</file>
