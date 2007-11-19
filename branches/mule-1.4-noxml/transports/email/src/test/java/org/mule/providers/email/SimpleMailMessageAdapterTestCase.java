@@ -15,8 +15,10 @@ import org.mule.tck.AbstractMuleTestCase;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SimpleMailMessageAdapterTestCase extends AbstractMuleTestCase
@@ -48,4 +50,23 @@ public class SimpleMailMessageAdapterTestCase extends AbstractMuleTestCase
         assertEquals(1, list2.size());
     }
 
+    
+    public void testInvalidFrom() throws Exception
+    {
+        Message message = new MimeMessage(Session.getDefaultInstance(new Properties()));
+
+        // do not use the ctor taking a string here as it tries to parse the string and we're
+        // trying to use an invalid address here.
+        InternetAddress fromAddress = new InternetAddress();
+        fromAddress.setAddress("foo@bar@baz");
+        message.setFrom(fromAddress);
+        
+        InternetAddress replyToAddrress = new InternetAddress();
+        replyToAddrress.setAddress("baz@bletch@buzz");
+        message.setReplyTo(new Address[] { replyToAddrress });
+        
+        SimpleMailMessageAdapter adapter = new SimpleMailMessageAdapter(message);
+        assertEquals(null, adapter.getProperty(MailProperties.INBOUND_FROM_ADDRESS_PROPERTY));
+        assertEquals(null, adapter.getProperty(MailProperties.INBOUND_REPLY_TO_ADDRESSES_PROPERTY));
+    }
 }
