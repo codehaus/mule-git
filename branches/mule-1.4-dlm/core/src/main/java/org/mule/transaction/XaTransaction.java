@@ -309,6 +309,6 @@ public class XaTransaction extends AbstractTransaction
 
     public String toString()
     {
-        return transaction == null ? " <null>" : transaction.toString();
+        return transaction == null ? " <n/a>" : transaction.toString();
     }
 }
