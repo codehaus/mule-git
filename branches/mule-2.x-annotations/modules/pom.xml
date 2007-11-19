@@ -31,6 +31,7 @@
         <module>spring</module>
         <module>wssecurity</module>
         <module>xml</module>
+        <module>annotations</module>
         <!-- Mule 3.x
         <module>persistence</module>
         <module>registry</module>
