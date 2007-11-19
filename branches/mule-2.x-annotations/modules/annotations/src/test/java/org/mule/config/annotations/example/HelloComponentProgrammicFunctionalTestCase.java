@@ -10,15 +10,11 @@
 package org.mule.config.annotations.example;
 
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.model.AnnotatedServiceObjectFactory;
-import org.mule.impl.registry.ObjectProcessor;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
 import java.util.Properties;
-import java.util.Iterator;
-import java.util.Map;
 import java.io.IOException;
 
 /**
@@ -49,6 +45,10 @@ public class HelloComponentProgrammicFunctionalTestCase extends AbstractMuleTest
     {
         managementContext.getRegistry().registerObject("helloService", new AnnotatedHelloComponent());
         managementContext.getRegistry().registerObject("greeter", new GreetingComponent());
+
+        //TODO we need object that are added at runtime to assume the same lifecycle as the ManagementContext
+        managementContext.getRegistry().lookupComponent("helloService").start();
+        managementContext.getRegistry().lookupComponent("greeter").start();
 
         MuleClient client = new MuleClient();
 

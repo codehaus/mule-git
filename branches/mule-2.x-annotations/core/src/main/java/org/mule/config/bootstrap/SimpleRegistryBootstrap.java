@@ -11,6 +11,7 @@ package org.mule.config.bootstrap;
 
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ManagementContextAware;
+import org.mule.impl.registry.ObjectProcessor;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
@@ -114,7 +115,7 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
         registerTransformers(props, context.getRegistry());
         registerUnnamedObjects(props, context.getRegistry());
         //this must be called last as it clears the properties map
-        registerObjects(props, context.getRegistry());
+        registerObjects(props, context);
 
     }
 
@@ -177,7 +178,7 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
         }
     }
 
-    private void registerObjects(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
+    private void registerObjects(Properties props, UMOManagementContext context) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
     {
         //Note that caling the other register methods first will have removed any processed entries
         for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
@@ -185,7 +186,17 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
             Map.Entry entry = (Map.Entry) iterator.next();
             Object object = ClassUtils.instanciateClass(entry.getValue().toString(), ClassUtils.NO_ARGS);
             String key = entry.getKey().toString();
-            registry.registerObject(key, object);
+
+            //Check for known object types
+            if(object instanceof ObjectProcessor)
+            {
+                context.getRegistry().registerObject(key, object, ObjectProcessor.class, context);
+            }
+            else
+            {
+                context.getRegistry().registerObject(key, object, context);
+
+            }
         }
         props.clear();
     }
@@ -197,8 +208,17 @@ public class SimpleRegistryBootstrap implements Initialisable, ManagementContext
         while (objectString != null)
         {
 
-            Object o = ClassUtils.instanciateClass(objectString, ClassUtils.NO_ARGS);
-            registry.registerObject(OBJECT_PREFIX + i + "#" + o.hashCode(), o);
+            Object object = ClassUtils.instanciateClass(objectString, ClassUtils.NO_ARGS);
+
+            //Check for known object types
+            if(object instanceof ObjectProcessor)
+            {
+                registry.registerObject(OBJECT_PREFIX + i + "#" + object.hashCode(), object, ObjectProcessor.class);
+            }
+            else
+            {
+                registry.registerObject(OBJECT_PREFIX + i + "#" + object.hashCode(), object);
+            }
             props.remove(OBJECT_PREFIX + i++);
             objectString = props.getProperty(OBJECT_PREFIX + i);
         }

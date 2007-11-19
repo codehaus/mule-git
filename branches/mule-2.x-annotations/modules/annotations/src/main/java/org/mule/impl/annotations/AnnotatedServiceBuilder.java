@@ -124,13 +124,13 @@ public class AnnotatedServiceBuilder
         {
             factory.setProperties(getProperties());
         }
-
+        factory.initialise();
         component.setServiceFactory(factory);
 
-//        if (getModelName() != null)
-//        {
-//            component.(getModelName());
-//        }
+        if (getModelName() != null)
+        {
+            component.setModel(context.getRegistry().lookupModel(getModelName()));
+        }
 
     }
 
@@ -241,7 +241,7 @@ public class AnnotatedServiceBuilder
 
                 if(epData.getEncoding() != null)
                 {
-                    endpointBuilder.setEndpointEncoding(getValue(epData.getEncoding()));
+                    endpointBuilder.setEncoding(getValue(epData.getEncoding()));
                 }
 
                 if(epData.getConnectorName() != null)

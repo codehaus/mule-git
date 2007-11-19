@@ -26,10 +26,10 @@ public class AnnotatedServiceDefinitionParser extends AbstractMuleBeanDefinition
 
     //@java.lang.Override
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
-    {
+    {   
         Element parent = (Element) element.getParentNode();
         String modelName = parent.getAttribute(ATTRIBUTE_NAME);
-        builder.addPropertyValue("modelName", modelName);
+        builder.addPropertyReference("model", modelName);
         builder.setSingleton(true);
         builder.addDependsOn(modelName);
         builder.setLazyInit(false);

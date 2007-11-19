@@ -19,7 +19,6 @@ public class AnnotationsNamespaceHandler extends AbstractIgnorableNamespaceHandl
 
     public void init()
     {
-        registerBeanDefinitionParser("model", new OrphanDefinitionParser(AnnotationsModel.class, true));
         registerBeanDefinitionParser("service", new AnnotatedServiceDefinitionParser());
         //registerBeanDefinitionParser("annotated-entrypoint-resolver", new ChildDefinitionParser("filter", IsXmlFilter.class));
     }
