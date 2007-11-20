@@ -39,20 +39,7 @@ public class PojoServiceDefinitionParser extends ObjectFactoryDefinitionParser
         try
         {
             // Get the POJO's class.
-            MutablePropertyValues beanProperties = builder.getBeanDefinition().getPropertyValues();
-            Class objectClass = null;
-            if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS) != null)
-            {
-                objectClass = (Class) beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS).getValue();
-            }
-            if (objectClass == null)
-            {
-                if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME) != null)
-                {
-                    String objectClassName = (String) beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME).getValue();
-                    objectClass = ClassUtils.getClass(objectClassName);
-                }
-            }
+            Class objectClass = getPojoClass(builder);
 
             // Inject the UMOComponent into the POJO if the POJO needs it.
             if (UMOComponentAware.class.isAssignableFrom(objectClass))
@@ -68,5 +55,24 @@ public class PojoServiceDefinitionParser extends ObjectFactoryDefinitionParser
         {
             logger.warn(e);
         }
+    }
+
+    protected Class getPojoClass(BeanDefinitionBuilder builder) throws ClassNotFoundException
+    {
+        MutablePropertyValues beanProperties = builder.getBeanDefinition().getPropertyValues();
+        Class objectClass = null;
+        if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS) != null)
+        {
+            objectClass = (Class) beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS).getValue();
+        }
+        if (objectClass == null)
+        {
+            if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME) != null)
+            {
+                String objectClassName = (String) beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME).getValue();
+                objectClass = ClassUtils.getClass(objectClassName);
+            }
+        }
+        return objectClass;
     }
 }

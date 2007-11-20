@@ -10,6 +10,10 @@
 
 package org.mule.util;
 
+import java.beans.BeanDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -41,7 +45,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
         {
             try
             {
-                BeanUtils.setProperty(object, "properties", props);
+                org.apache.commons.beanutils.BeanUtils.setProperty(object, "properties", props);
             }
             catch (Exception e)
             {
@@ -62,7 +66,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
 
                 try
                 {
-                    BeanUtils.setProperty(object, entry.getKey().toString(), entry.getValue());
+                    org.apache.commons.beanutils.BeanUtils.setProperty(object, entry.getKey().toString(), entry.getValue());
                 }
                 catch (Exception e)
                 {
@@ -74,6 +78,31 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
                 }
             }
         }
+    }
+
+    /**
+     * The Apache BeanUtils version of this converts all values to String, which is pretty useless, it also includes
+     * stuff not defined by the user
+     * @param object the object to Describe
+     * @return a map of the properties on the object
+     */
+    public static Map describe(Object object)
+    {
+        Map props = new HashMap(object.getClass().getDeclaredFields().length);
+        for (int i = 0; i < object.getClass().getDeclaredFields().length; i++)
+        {
+            Field field = object.getClass().getDeclaredFields()[i];
+            field.setAccessible(true);
+            try
+            {
+                props.put(field.getName(), field.get(object));
+            }
+            catch (IllegalAccessException e)
+            {
+                logger.debug("Unable to read field: " + field.getName() + " on object: " + object);
+            }
+        }
+        return props;
     }
 
 }
