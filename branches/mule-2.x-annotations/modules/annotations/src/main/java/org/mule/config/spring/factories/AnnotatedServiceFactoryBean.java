@@ -11,10 +11,11 @@ package org.mule.config.spring.factories;
 
 import org.mule.impl.ManagementContextAware;
 import org.mule.impl.annotations.AnnotatedServiceBuilder;
+import org.mule.impl.annotations.ScopedObjectFactory;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOManagementContext;
-
-import java.util.Map;
+import org.mule.umo.model.UMOModel;
+import org.mule.util.object.ObjectFactory;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
@@ -23,9 +24,9 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
  */
 public class AnnotatedServiceFactoryBean extends AbstractFactoryBean implements ManagementContextAware
 {
-    private Class componentClass;
-    private String modelName;
-    private Map properties;
+    private ScopedObjectFactory serviceFactory;
+    private UMOModel model;
+    private String name;
     private UMOManagementContext managementContext;
     private UMOComponent component;
 
@@ -34,41 +35,31 @@ public class AnnotatedServiceFactoryBean extends AbstractFactoryBean implements 
         managementContext = context;
      }
 
-    public String getModelName()
+    public UMOModel getModel()
     {
-        return modelName;
+        return model;
     }
 
-    public void setModelName(String modelName)
+    public void setModel(UMOModel model)
     {
-        this.modelName = modelName;
+        this.model = model;
     }
 
-    public Class getComponentClass()
+    public ScopedObjectFactory getServiceFactory()
     {
-        return componentClass;
+        return serviceFactory;
     }
 
-    public void setComponentClass(Class componentClass)
+    public void setServiceFactory(ScopedObjectFactory serviceFactory)
     {
-        this.componentClass = componentClass;
+        this.serviceFactory = serviceFactory;
     }
 
-    public Map getProperties()
-    {
-        return properties;
-    }
-
-    public void setProperties(Map properties)
-    {
-        this.properties = properties;
-    }
 
     protected Object createInstance() throws Exception
     {
-        AnnotatedServiceBuilder builder = new AnnotatedServiceBuilder(getComponentClass(), managementContext);
-        builder.setModelName(getModelName());
-        builder.setProperties(getProperties());
+        AnnotatedServiceBuilder builder = new AnnotatedServiceBuilder(getServiceFactory(), managementContext);
+        builder.setModel(getModel());
         component = builder.createService();
         return component;
     }
@@ -87,7 +78,17 @@ public class AnnotatedServiceFactoryBean extends AbstractFactoryBean implements 
     public void afterPropertiesSet() throws Exception
     {
         super.afterPropertiesSet();
+        component.setManagementContext(managementContext);
         component.initialise();
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 }

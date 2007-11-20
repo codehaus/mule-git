@@ -14,24 +14,21 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"/>
 
     <xsd:element name="service" type="annotatedServiceType" substitutionGroup="mule:abstract-service"/>
-
-    <!--<xsd:element name="model" type="annotatedModelType" substitutionGroup="mule:abstract-model"/>-->
-
-    <!--<xsd:complexType name="annotatedModelType">-->
-        <!--<xsd:complexContent>-->
-            <!--<xsd:extension base="mule:abstractModelType">-->
-                <!--<xsd:sequence>-->
-                    <!--<xsd:element name="service" type="annotatedServiceType" minOccurs="0" maxOccurs="unbounded"/>-->
-                <!--</xsd:sequence>-->
-            <!--</xsd:extension>-->
-        <!--</xsd:complexContent>-->
-    <!--</xsd:complexType>-->
     
     <xsd:complexType name="annotatedServiceType">
         <xsd:complexContent>
             <xsd:extension base="mule:abstractServiceType">
-                <xsd:attribute name="class" type="mule:substitutableClass" use="required"/>
+                <xsd:sequence>
+                    <xsd:element name="component" type="mule:singletonObjectFactoryType" minOccurs="1" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>Factory to create the user's POJO service</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+
 </xsd:schema>

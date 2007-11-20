@@ -50,6 +50,6 @@ public class HelloComponentFunctionalTestCase extends FunctionalTestCase
         UMOMessage message = client.send("vm://hello.service", "Ross", null);
 
         assertNotNull(message);
-        assertEquals("Hello Ross", message.getPayloadAsString());
+        assertEquals("Good day to you Ross", message.getPayloadAsString());
     }
 }

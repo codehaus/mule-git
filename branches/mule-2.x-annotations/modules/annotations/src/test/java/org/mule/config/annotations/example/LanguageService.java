@@ -10,10 +10,12 @@
 package org.mule.config.annotations.example;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 
-/** TODO */
-
+/**
+ * A simple language service that will return the greating for the specified locale
+ */
 public interface LanguageService
 {
-    public String getGreeting(Locale locale);
+    public String getGreeting(Locale locale) throws LanguageNotSupportedException;
 }

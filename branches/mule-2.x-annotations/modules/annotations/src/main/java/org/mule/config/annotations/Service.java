@@ -9,6 +9,8 @@
  */
 package org.mule.config.annotations;
 
+import org.mule.impl.annotations.ServiceScope;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -44,5 +46,5 @@ public @interface Service
      * Note this refers to the actual service object instance
      * @return true if the service is a singleton
      */
-    boolean singleton() default false;
+    ServiceScope scope() default ServiceScope.PROTOTYPE;
 }

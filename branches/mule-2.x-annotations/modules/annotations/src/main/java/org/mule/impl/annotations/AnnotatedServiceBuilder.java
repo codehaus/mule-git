@@ -29,74 +29,67 @@ import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.util.PropertiesUtils;
+import org.mule.umo.model.UMOModel;
+import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.TemplateParser;
-import org.mule.util.object.AbstractObjectFactory;
-import org.mule.util.object.SimpleObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /** TODO */
 public class AnnotatedServiceBuilder
 {
-    private Class aClass;
+    private ScopedObjectFactory serviceFactory;
     private UMOManagementContext context;
-    private String modelName;
-    private Map properties;
+    private UMOModel model;
     private TemplateParser parser = TemplateParser.createAntStyleParser();
     private RegistryMapView regProps;
 
-    public String getModelName()
+    public UMOModel getModel()
     {
-        return modelName;
+        return model;
     }
 
-    public void setModelName(String modelName)
+    public void setModel(UMOModel model)
     {
-        this.modelName = modelName;
+        this.model = model;
     }
 
-    public Map getProperties()
-    {
-        return properties;
-    }
 
-    public void setProperties(Map properties)
+    public AnnotatedServiceBuilder(ScopedObjectFactory serviceFactory, UMOManagementContext context)
     {
-        this.properties = properties;
-    }
+        //What if we want to choose between singleton and prototype
+        this.serviceFactory = serviceFactory;
 
-    public AnnotatedServiceBuilder(Class aClass, UMOManagementContext context)
-    {
-        this.aClass = aClass;
         this.context = context;
         this.regProps = new RegistryMapView(context.getRegistry());
     }
 
     public UMOComponent createService() throws UMOException
     {
-        if (!aClass.isAnnotationPresent(Service.class))
+        Class serviceFactoryClass = serviceFactory.getObjectClass();
+        if (!serviceFactoryClass.isAnnotationPresent(Service.class))
         {
             return null;
         }
-        Service service = (Service) aClass.getAnnotation(Service.class);
+        Service service = (Service) serviceFactoryClass.getAnnotation(Service.class);
         UMOComponent component = new SedaComponent();
         component.setName(getValue(service.name()));
 
-        processServiceFactory(aClass, component, service);
+        serviceFactory.setScope(service.scope());
+        serviceFactory.initialise();
+        component.setServiceFactory(serviceFactory);
+        component.setModel(getModel());
 
-        processInboundEndpoint(aClass, component);
+        processInboundEndpoint(serviceFactoryClass, component);
 
-        processInboundRouters(aClass, component);
+        processInboundRouters(serviceFactoryClass, component);
 
-        processOutboundEndpoint(aClass, component);
+        processOutboundEndpoint(serviceFactoryClass, component);
 
-        processEndpointBindings(aClass, component);
+        processEndpointBindings(serviceFactoryClass, component);
 
         //check for Nested bindings
 
@@ -107,31 +100,6 @@ public class AnnotatedServiceBuilder
     {
         String value = parser.parse(regProps, key);
         return value;
-    }
-
-    protected void processServiceFactory(Class aClass, UMOComponent component, Service service) throws UMOException
-    {
-        AbstractObjectFactory factory;
-        if (service.singleton())
-        {
-            factory = new SingletonObjectFactory(aClass);
-        }
-        else
-        {
-            factory = new SimpleObjectFactory(aClass);
-        }
-        if (getProperties() != null)
-        {
-            factory.setProperties(getProperties());
-        }
-        factory.initialise();
-        component.setServiceFactory(factory);
-
-        if (getModelName() != null)
-        {
-            component.setModel(context.getRegistry().lookupModel(getModelName()));
-        }
-
     }
 
     protected void processInboundEndpoint(Class aClass, UMOComponent descriptor) throws UMOException

@@ -9,24 +9,28 @@
  */
 package org.mule.impl.annotations;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.annotations.Service;
 import org.mule.impl.ManagementContextAware;
-import org.mule.impl.annotations.AnnotatedServiceBuilder;
-import org.mule.impl.annotations.AnnotationsModel;
+import org.mule.impl.model.resolvers.AnnotatedEntryPointResolver;
+import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
+import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.registry.ObjectProcessor;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.model.UMOModel;
+import org.mule.util.BeanUtils;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This object processor allows users to register annotated services directly to the registry
  * and have them configured correctly.
- * It will look for an {@link org.mule.impl.annotations.AnnotationsModel} registered with the Registry.
- * If one is not found a default will be created called {@link org.mule.impl.annotations.AnnotationsModel.DEFAULT_MODEL_NAME}
+ * It will look for a non-system {@link org.mule.umo.UMOModel} registered with the Registry.
+ * If one is not found a default  Seda Model will be created
  * Finally, the processor will register the service with the Registry and return null.
  */
 public class AnnotatedServiceObjectFactory implements ObjectProcessor, ManagementContextAware
@@ -61,7 +65,7 @@ public class AnnotatedServiceObjectFactory implements ObjectProcessor, Managemen
             for (Iterator<UMOModel> iterator = models.iterator(); iterator.hasNext();)
             {
                 UMOModel m = iterator.next();
-                if(m instanceof AnnotationsModel)
+                if(!m.getName().equals(MuleProperties.OBJECT_SYSTEM_MODEL))
                 {
                     model = m;
                     break;
@@ -69,16 +73,25 @@ public class AnnotatedServiceObjectFactory implements ObjectProcessor, Managemen
             }
             if(model==null)
             {
-                model = new AnnotationsModel();
+                //Create a new Model and add the Annotations EPR to the list
+                model = new SedaModel();
+                LegacyEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+                resolverSet.addEntryPointResolver(new AnnotatedEntryPointResolver());
+                model.setEntryPointResolverSet(resolverSet);
                 context.getRegistry().registerModel(model, context);
             }
-            AnnotatedServiceBuilder builder = new AnnotatedServiceBuilder(aClass, context);
-            builder.setModelName(model.getName());
+
+            ScopedObjectFactory serviceFactory = new ScopedObjectFactory();
+            serviceFactory.setObjectClass(aClass);
+            Map props = BeanUtils.describe(object);
+            serviceFactory.setProperties(props);
+            AnnotatedServiceBuilder builder = new AnnotatedServiceBuilder(serviceFactory, context);
+            builder.setModel(model);
             UMOComponent service = builder.createService();
             context.getRegistry().registerComponent(service, context);
             return null;
         }
-        catch (UMOException e)
+        catch (Exception e)
         {
             throw new RuntimeException(e);
         }

@@ -19,14 +19,16 @@ import java.util.Locale;
  * This annotate service provides all the details Mule needs to configure a service without any
  * additional configuration!
  *
- * TODO RM*: Note that this is just a prototype so I have added support for filters or transformers
+ * TODO RM*: Note that this is just a prototype so I have not added support for filters or transformers
  */
 @Service(entryPoint = "hello", name = "helloService")
 @InboundEndpoint(endpoint = "${hello.endpoint}", synchronous = true)
 public class AnnotatedHelloComponent
 {
     @EndpointBinding(endpoint = "${greeter.endpoint}", interfaceMethod = "getGreeting")
-    private LanguageService languageService;
+    private transient LanguageService languageService;
+
+    private Locale messageLocale = Locale.getDefault();
 
     public LanguageService getLanguageService()
     {
@@ -38,9 +40,26 @@ public class AnnotatedHelloComponent
         this.languageService = languageService;
     }
 
+    public Locale getMessageLocale()
+    {
+        return messageLocale;
+    }
+
+    public void setMessageLocale(Locale messageLocale)
+    {
+        this.messageLocale = messageLocale;
+    }
+
     public String hello(String name)
     {
-        String greeting = languageService.getGreeting(Locale.getDefault());
-        return greeting + " " + name;
+        try
+        {
+            String greeting = languageService.getGreeting(getMessageLocale());
+            return greeting + " " + name;
+        }
+        catch (LanguageNotSupportedException e)
+        {
+            return "Sorry we couldn't greet you in your local languange: " + getMessageLocale();
+        }
     }
 }

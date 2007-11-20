@@ -16,7 +16,11 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-/** TODO */
+/**
+ * Creates a {@link UMOComponent} object from an annotated class. Note that it is the
+ * {@link org.mule.config.spring.factories.AnnotatedServiceFactoryBean} that orchestrated the creation
+ * of the {@link UMOComponent}
+ */
 public class AnnotatedServiceDefinitionParser extends AbstractMuleBeanDefinitionParser
 {
     protected Class getBeanClass(Element element)
@@ -31,8 +35,8 @@ public class AnnotatedServiceDefinitionParser extends AbstractMuleBeanDefinition
         String modelName = parent.getAttribute(ATTRIBUTE_NAME);
         builder.addPropertyReference("model", modelName);
         builder.setSingleton(true);
-        builder.addDependsOn(modelName);
         builder.setLazyInit(false);
+        //builder.addDependsOn(modelName);
 
         super.doParse(element, parserContext, builder);
     }

@@ -9,17 +9,19 @@
  */
 package org.mule.config.spring.handlers;
 
+import org.mule.config.spring.parser.specific.AnnotatedPojoComponentDefinitionParser;
 import org.mule.config.spring.parser.specific.AnnotatedServiceDefinitionParser;
-import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
-import org.mule.impl.annotations.AnnotationsModel;
 
-/** TODO */
+/**
+ * The Namespace handler used to register parsers for elements in the 'annotations' namespace
+ */
 public class AnnotationsNamespaceHandler extends AbstractIgnorableNamespaceHandler
 {
 
     public void init()
     {
         registerBeanDefinitionParser("service", new AnnotatedServiceDefinitionParser());
-        //registerBeanDefinitionParser("annotated-entrypoint-resolver", new ChildDefinitionParser("filter", IsXmlFilter.class));
+        registerBeanDefinitionParser("component", new AnnotatedPojoComponentDefinitionParser());
+        //TODO registerBeanDefinitionParser("annotated-entrypoint-resolver", new ChildDefinitionParser("filter", IsXmlFilter.class));
     }
 }

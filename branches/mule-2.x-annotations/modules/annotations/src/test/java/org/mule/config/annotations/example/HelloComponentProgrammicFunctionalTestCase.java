@@ -14,8 +14,9 @@ import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
-import java.util.Properties;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
 
 /**
  * Tests registering an annotated component with the registry programmatically and using
@@ -43,18 +44,18 @@ public class HelloComponentProgrammicFunctionalTestCase extends AbstractMuleTest
 
     public void testHelloComponent() throws Exception
     {
-        managementContext.getRegistry().registerObject("helloService", new AnnotatedHelloComponent());
-        managementContext.getRegistry().registerObject("greeter", new GreetingComponent());
+        AnnotatedHelloComponent hello = new AnnotatedHelloComponent();
+        //Note we are using the english locale
+        hello.setMessageLocale(Locale.ENGLISH);
 
-        //TODO we need object that are added at runtime to assume the same lifecycle as the ManagementContext
-        managementContext.getRegistry().lookupComponent("helloService").start();
-        managementContext.getRegistry().lookupComponent("greeter").start();
+        managementContext.getRegistry().registerObject("helloService", hello);
+        managementContext.getRegistry().registerObject("greeter", new AnnotatedGreetingComponent());
 
         MuleClient client = new MuleClient();
 
         UMOMessage message = client.send("vm://hello.service", "Ross", null);
 
         assertNotNull(message);
-        assertEquals("Hello Ross", message.getPayloadAsString());
+        assertEquals("Good day to you Ross", message.getPayloadAsString());
     }
 }
