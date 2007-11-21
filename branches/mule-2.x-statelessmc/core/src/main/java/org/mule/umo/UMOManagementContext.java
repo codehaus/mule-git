@@ -10,6 +10,7 @@
 package org.mule.umo;
 
 import org.mule.impl.Directories;
+import org.mule.impl.SystemInfo;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
@@ -29,8 +30,6 @@ import javax.transaction.TransactionManager;
  */
 public interface UMOManagementContext extends Lifecycle
 {
-    String getSystemName();
-
     Directories getDirectories();
 
     /**
@@ -57,13 +56,6 @@ public interface UMOManagementContext extends Lifecycle
     boolean isDisposed();
 
     boolean isDisposing();
-
-    /**
-     * Returns the long date when the server was started
-     *
-     * @return the long date when the server was started
-     */
-    long getStartDate();
 
     /**
      * Registers an intenal server event listener. The listener will be notified
@@ -111,39 +103,15 @@ public interface UMOManagementContext extends Lifecycle
      */
     void fireNotification(UMOServerNotification notification);
 
-    /**
-     * Sets the unique Id for this Manager instance. this id can be used to
-     * assign an identy to the manager so it can be identified in a network of
-     * Mule nodes
-     *
-     * @param id the unique Id for this manager in the network
-     */
-    void setId(String id);
+    AllStatistics getStatistics();
 
-    /**
-     * Gets the unique Id for this Manager instance. this id can be used to
-     * assign an identy to the manager so it can be identified in a network of
-     * Mule nodes
-     *
-     * @return the unique Id for this manager in the network
-     */
-    String getId();
-
-    String getDomain();
-
-    void setDomain(String domain);
-
-    String getClusterId();
-
-    void setClusterId(String clusterId);
-
-    public AllStatistics getStatistics();
-
-    public void setStatistics(AllStatistics stats);
+    void setStatistics(AllStatistics stats);
 
     Registry getRegistry();
     
     void applyLifecycle(Object object) throws UMOException;
+    
+    SystemInfo getSystemInfo();
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // Registry Facade

@@ -10,6 +10,7 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.MuleRuntimeException;
+import org.mule.MuleServer;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.umo.manager.UMOServerNotification;
@@ -101,11 +102,11 @@ public class NotificationLifecycleObject extends LifecycleObject
     {
         try
         {
-            return (UMOServerNotification)ctor.newInstance(new Object[]{action});
+            return (UMOServerNotification)ctor.newInstance(new Object[]{MuleServer.getManagementContext().getSystemInfo(), action});
         }
         catch (Exception e)
         {
-            throw new MuleRuntimeException(CoreMessages.failedToCreate("Notification:" + action) ,e);
+            throw new MuleRuntimeException(CoreMessages.failedToCreate("Notification:" + action + ", Constructor:" + ctor) ,e);
         }
     }
 }

@@ -144,17 +144,17 @@ public class TransientRegistry extends AbstractRegistry
 
     }
 
-    protected UMOLifecycleManager createLifecycleManager()
-    {
-        GenericLifecycleManager lcm = new GenericLifecycleManager();
-        UMOLifecyclePhase initPhase = new TransientRegistryInitialisePhase(getNotificationManager());
-        initPhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
-        lcm.registerLifecycle(initPhase);
-        UMOLifecyclePhase disposePhase = new TransientRegistryDisposePhase(getNotificationManager());
-        disposePhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
-        lcm.registerLifecycle(disposePhase);
-        return lcm;
-    }
+//    protected UMOLifecycleManager createLifecycleManager()
+//    {
+//        GenericLifecycleManager lcm = new GenericLifecycleManager();
+//        UMOLifecyclePhase initPhase = new TransientRegistryInitialisePhase(getNotificationManager());
+//        initPhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
+//        lcm.registerLifecycle(initPhase);
+//        UMOLifecyclePhase disposePhase = new TransientRegistryDisposePhase(getNotificationManager());
+//        disposePhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
+//        lcm.registerLifecycle(disposePhase);
+//        return lcm;
+//    }
 
     //@java.lang.Override
     protected void doInitialise() throws InitialisationException
@@ -517,7 +517,7 @@ public class TransientRegistry extends AbstractRegistry
         registry.registerObject(MuleProperties.OBJECT_MANAGMENT_CONTEXT_PROCESSOR, 
                                 new ManagementContextDependencyProcessor(context), context);
 
-        context.setId(UUID.getUUID());
+        //context.setId(UUID.getUUID());
 
 //      // TODO MULE-2161
         MuleServer.setManagementContext(context);

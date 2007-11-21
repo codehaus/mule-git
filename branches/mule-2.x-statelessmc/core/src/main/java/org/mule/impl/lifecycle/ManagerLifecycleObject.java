@@ -9,9 +9,9 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.impl.SystemInfo;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
-import org.mule.umo.UMOManagementContext;
 import org.mule.umo.manager.UMOServerNotification;
 
 /**
@@ -20,17 +20,20 @@ import org.mule.umo.manager.UMOServerNotification;
 public class ManagerLifecycleObject extends NotificationLifecycleObject
 {
     private Class notificationClass;
+    private SystemInfo sysInfo;
 
-    public ManagerLifecycleObject(Class type, Class notificationClass, ServerNotificationManager notificationManager)
+    public ManagerLifecycleObject(Class type, Class notificationClass, SystemInfo sysInfo, ServerNotificationManager notificationManager)
     {
         super(type, notificationManager);
         this.notificationClass = notificationClass;
+        this.sysInfo = sysInfo;
     }
 
-    protected UMOServerNotification createNotification(UMOManagementContext context, String action)
+    //@Override
+    protected UMOServerNotification createNotification(String action)
     {
         //return ClassUtils.instanciateClass(notificationClass, new Object[]{context, action});
 
-        return new ManagerNotification(context, action);
+        return new ManagerNotification(sysInfo, action);
     }
 }

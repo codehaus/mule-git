@@ -64,34 +64,14 @@ public class ManagementContext implements UMOManagementContext
      */
     private static transient Log logger = LogFactory.getLog(ManagementContext.class);
 
-    /**
-     * the unique id for this manager
-     */
-    private String id = null;
-
-    /**
-     * If this node is part of a cluster then this is the shared cluster Id
-     */
-    private String clusterId = null;
-
-    /**
-     * The domain name that this instance belongs to.
-     */
-    private String domain = null;
-
-    /**
-     * the date in milliseconds from when the server was started
-     */
-    private long startDate = 0;
-
+    private SystemInfo systemInfo = new SystemInfo();
+    
     /**
      * stats used for management
      */
     private AllStatistics stats = new AllStatistics();
 
     protected Directories directories;
-
-    protected String systemName;
 
     public ManagementContext(UMOLifecycleManager lifecycleManager)
     {
@@ -101,7 +81,7 @@ public class ManagementContext implements UMOManagementContext
 //        }
 //        this.lifecycleManager = lifecycleManager;
         
-        startDate = System.currentTimeMillis();
+        systemInfo.setStartDate(System.currentTimeMillis());
     }
 
     public void initialise() throws InitialisationException
@@ -146,12 +126,12 @@ public class ManagementContext implements UMOManagementContext
             getRegistry().getWorkManager().start();
             getRegistry().getNotificationManager().start(getRegistry().getWorkManager());
 
-            fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_INITIALISING));
+            fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_INITIALISING));
 
             directories.createDirectories();
             getRegistry().getLifecycleManager().firePhase(Initialisable.PHASE_NAME);
 
-            fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_INITIALISED));
+            fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_INITIALISED));
         }
         catch (Exception e)
         {
@@ -162,30 +142,30 @@ public class ManagementContext implements UMOManagementContext
 
     protected void setupIds() throws InitialisationException
     {
-        id = getRegistry().getConfiguration().getId();
-        clusterId = getRegistry().getConfiguration().getClusterId();
-        domain = getRegistry().getConfiguration().getDomainId();
+        systemInfo.setId(getRegistry().getConfiguration().getId());
+        systemInfo.setClusterId(getRegistry().getConfiguration().getClusterId());
+        systemInfo.setDomain(getRegistry().getConfiguration().getDomainId());
 
-        if (id == null)
+        if (systemInfo.getId() == null)
         {
             throw new InitialisationException(CoreMessages.objectIsNull("Instance ID"), this);
         }
-        if (clusterId == null)
+        if (systemInfo.getClusterId() == null)
         {
-            clusterId = CoreMessages.notClustered().getMessage();
+            systemInfo.setClusterId(CoreMessages.notClustered().getMessage());
         }
-        if (domain == null)
+        if (systemInfo.getDomain() == null)
         {
             try
             {
-                domain = InetAddress.getLocalHost().getHostName();
+                systemInfo.setDomain(InetAddress.getLocalHost().getHostName());
             }
             catch (UnknownHostException e)
             {
                 throw new InitialisationException(e, this);
             }
         }
-        systemName = domain + "." + clusterId + "." + id;
+        systemInfo.setSystemName(systemInfo.getDomain() + "." + systemInfo.getClusterId() + "." + systemInfo.getId());
     }
 
     public synchronized void start() throws UMOException
@@ -193,7 +173,7 @@ public class ManagementContext implements UMOManagementContext
         //getRegistry().getLifecycleManager().checkPhase(Startable.PHASE_NAME);
         if (!isStarted())
         {
-            fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STARTING));
+            fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_STARTING));
 
             directories.deleteMarkedDirectories();
 
@@ -203,7 +183,7 @@ public class ManagementContext implements UMOManagementContext
             {
                 logger.info(getStartSplash());
             }
-            fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STARTED));
+            fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_STARTED));
         }
     }
 
@@ -218,17 +198,17 @@ public class ManagementContext implements UMOManagementContext
     {
         getRegistry().getLifecycleManager().checkPhase(Stoppable.PHASE_NAME);
 
-        fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPING));
+        fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_STOPPING));
         getRegistry().getLifecycleManager().firePhase(Stoppable.PHASE_NAME);
 
-        fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_STOPPED));
+        fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_STOPPED));
     }
 
     public void dispose()
     {
        //TODO getRegistry().getLifecycleManager().checkPhase(Disposable.PHASE_NAME);
 
-        fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSING));
+        fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_DISPOSING));
 
 
         if (isDisposed())
@@ -256,9 +236,9 @@ public class ManagementContext implements UMOManagementContext
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
 
-        fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
+        fireNotification(new ManagerNotification(systemInfo, ManagerNotification.MANAGER_DISPOSED));
 
-        if ((startDate > 0) && logger.isInfoEnabled())
+        if ((systemInfo.getStartDate() > 0) && logger.isInfoEnabled())
         {
             logger.info(getEndSplash());
         }
@@ -360,27 +340,6 @@ public class ManagementContext implements UMOManagementContext
         }
     }
 
-
-    public String getSystemName()
-    {
-        return systemName;
-    }
-
-    public void setSystemName(String systemName)
-    {
-        this.systemName = systemName;
-    }
-
-    /**
-     * Returns the long date when the server was started
-     *
-     * @return the long date when the server was started
-     */
-    public long getStartDate()
-    {
-        return startDate;
-    }
-
     /**
      * Gets all statisitcs for this instance
      *
@@ -403,6 +362,11 @@ public class ManagementContext implements UMOManagementContext
     public Directories getDirectories()
     {
         return directories;
+    }
+    
+    public SystemInfo getSystemInfo()
+    {
+        return systemInfo;
     }
 
     public void registerListener(UMOServerNotificationListener l) throws NotificationException
@@ -454,44 +418,6 @@ public class ManagementContext implements UMOManagementContext
         // }
     }
 
-    public void setId(String id)
-    {
-        if (StringUtils.isBlank(id))
-        {
-            throw new IllegalArgumentException("Management Context ID can't be null or empty");
-        }
-//        checkLifecycleForPropertySet("id", Startable.PHASE_NAME);
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
-
-
-    public String getDomain()
-    {
-        return domain;
-    }
-
-    public void setDomain(String domain)
-    {
-//        checkLifecycleForPropertySet("domain", Initialisable.PHASE_NAME);
-        this.domain = domain;
-    }
-
-    public String getClusterId()
-    {
-        return clusterId;
-    }
-
-    public void setClusterId(String clusterId)
-    {
-//        checkLifecycleForPropertySet("clusterId", Initialisable.PHASE_NAME);
-        this.clusterId = clusterId;
-    }
-
 
     /**
      * Returns a formatted string that is a summary of the configuration of the
@@ -522,8 +448,8 @@ public class ManagementContext implements UMOManagementContext
             message.add(CoreMessages.versionNotSet().getMessage());
         }
         message.add(" ");
-        message.add(CoreMessages.serverStartedAt(getStartDate()).getMessage());
-        message.add("Server ID: " + id);
+        message.add(CoreMessages.serverStartedAt(systemInfo.getStartDate()).getMessage());
+        message.add("Server ID: " + systemInfo.getId());
 
         // JDK, OS, and Host
         message.add("JDK: " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.info")
@@ -570,9 +496,9 @@ public class ManagementContext implements UMOManagementContext
         long currentTime = System.currentTimeMillis();
         message.add(CoreMessages.shutdownNormally(new Date()).getMessage());
         long duration = 10;
-        if (startDate > 0)
+        if (systemInfo.getStartDate() > 0)
         {
-            duration = currentTime - startDate;
+            duration = currentTime - systemInfo.getStartDate();
         }
         message.add(CoreMessages.serverWasUpForDuration(duration).getMessage());
 

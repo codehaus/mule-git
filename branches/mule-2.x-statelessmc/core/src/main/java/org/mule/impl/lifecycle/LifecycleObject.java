@@ -26,6 +26,7 @@ public class LifecycleObject
     {
         this.type = type;
         this.notificationManager = notificationManager;
+        if (notificationManager == null) throw new RuntimeException("NotificationManager is null");        
     }
 
     public UMOServerNotification getPostNotification()
