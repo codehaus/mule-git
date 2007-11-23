@@ -1,0 +1,2 @@
+Initialized merge tracking via "svnmerge" with revisions "1-9839" from 
+https://svn.codehaus.org/mule/trunk/mule
