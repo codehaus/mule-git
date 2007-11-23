@@ -15,11 +15,10 @@ import org.mule.impl.RequestContext;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.JmsMessageUtils;
-import org.mule.transaction.TransactionCoordination;
 import org.mule.transformers.AbstractTransformer;
+import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.transformer.TransformerException;
@@ -48,21 +47,30 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
 
     protected Message transformToMessage(Object src) throws TransformerException
     {
-        Session session = null;
         try
         {
             Message result;
 
             if (src instanceof Message)
             {
-                result = (Message) src;
+                result = (Message)src;
                 result.clearProperties();
             }
             else
             {
-                session = this.getSession();
-                result = JmsMessageUtils.toMessage(src, session);
+                result = getResult(src);
             }
+//            else
+//            {
+//                    Session session = this.getSession();
+//                    result = JmsMessageUtils.toMessage(src, session);
+//                    if ((session != null) &&
+//                        (endpoint != null) &&
+//                        !session.getTransacted())
+//                    {
+//                       ((JmsConnector)endpoint.getConnector()).closeQuietly(session);
+//                    }
+//            }
 
             // set the event properties on the Message
             UMOEventContext ctx = RequestContext.getEventContext();
@@ -84,46 +92,6 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
         catch (Exception e)
         {
             throw new TransformerException(this, e);
-        }
-        finally
-        {
-            /*
-                session.getTransacted() would be easier in most cases, but e.g. in Weblogic 8.x
-                Java EE apps there could be some quirks, see http://forums.bea.com/thread.jspa?threadID=200007643
-                to get a picture.
-
-                Though JmsTransaction has this session.getTransacted() validation already, we're taking extra precautions
-                to cover XA cases and potentially to make up for a configuration error. E.g. omitting transaction
-                configuration from an outbound endpoint or router. Note, XA support in Mule will deliberately
-                fail with fanfares to signal this case, which is really a user error.
-              */
-
-            if (session != null && endpoint != null) // endpoint can be null in some programmatic tests only in fact
-            {
-                UMOTransaction muleTx = TransactionCoordination.getInstance().getTransaction();
-
-                final JmsConnector connector = (JmsConnector) endpoint.getConnector();
-                if (muleTx == null)
-                {
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("Closing non-transacted jms session: " + session);
-                    }
-                    connector.closeQuietly(session);
-                }
-                else if (!muleTx.hasResource(connector.getConnection()))
-                {
-                    // this is some other session from another connection, don't let it leak
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("Closing an orphaned, but transacted jms session: " + session +
-                                    ", transaction: " + muleTx);
-                    }
-                    connector.closeQuietly(session);
-                }
-            }
-            // aggressively killing any session refs
-            session = null;
         }
     }
 
@@ -212,6 +180,68 @@ public abstract class AbstractJmsTransformer extends AbstractTransformer
             throw new TransformerException(this, new IllegalStateException(
                 "This transformer needs a valid endpoint"));
         }
+    }
+    
+    /**
+     * Gets transformed message from object while cleanly closing any sessions 
+     * Added per MULE-1894
+     * @param src source object
+     * @return <code>Message</code> transformed message
+     * 
+     */
+    protected final Message getResult(Object src) throws JMSException, TransformerException 
+    {
+        boolean transacted = false;
+        boolean cached = false;
+
+        //Figure out if the session comes from a Transaction or Cache.  This
+        //affects how we close the session in this transformer.  
+        //Note: This session is only used for 
+   
+        //TODO: JmsMessageDispatcher has similar code to figure out if session is in transaction
+
+        Session session = null;
+        
+        if (endpoint != null)
+        {
+            if (endpoint.getTransactionConfig().isTransacted())
+            {
+                transacted = true;
+                session = ((JmsConnector)endpoint.getConnector()).getSessionFromTransaction();
+            }
+            
+            // find whether the session is being cached
+            UMOEvent event = RequestContext.getEvent();
+            if (event.getMessage().getBooleanProperty(JmsConstants.CACHE_JMS_SESSIONS_PROPERTY,
+                ((JmsConnector) endpoint.getConnector()).isCacheJmsSessions()))
+            {
+                cached = true;
+                // get cached session
+            }
+        }
+                
+        if (session == null)
+        {
+             session = this.getSession();
+        }
+        
+        //TODO: figure out if JmsSession caching is on.  Since it's off by default,
+        //deferring this for now. 
+        
+        try
+        {
+            return JmsMessageUtils.toMessage(src, session);
+        }
+        finally
+        {
+            // no longer necessary to close session here.... session is closed in either the dispatcher or the receiver
+            
+            if (session != null && !transacted && !cached)
+            {
+                //session.close();
+            }
+        }
+      
     }
 
 }

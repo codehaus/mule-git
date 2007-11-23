@@ -129,6 +129,9 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
      * Whether to create a consumer on connect.
      */
     private boolean eagerConsumer = true;
+    
+    private ThreadLocal localJmsSession;
+    private ThreadLocal localJmsReceiverSession;
 
     public JmsConnector()
     {
@@ -146,6 +149,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             defaultInboundTransformer = serviceDescriptor.createNewInboundTransformer();
             defaultOutboundTransformer = serviceDescriptor.createNewOutboundTransformer();
             defaultResponseTransformer = serviceDescriptor.createNewResponseTransformer();
+            localJmsSession = new ThreadLocal();
+            localJmsReceiverSession = new ThreadLocal();
         }
         catch (NotificationException nex)
         {
@@ -437,14 +442,19 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
         return null;
     }
-
+    
     public Session getSession(UMOImmutableEndpoint endpoint) throws JMSException
     {
         final boolean topic = getTopicResolver().isTopic(endpoint);
-        return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
+        return getSession(endpoint.getTransactionConfig().isTransacted(), topic, endpoint.canSend());
     }
 
     public Session getSession(boolean transacted, boolean topic) throws JMSException
+    {
+        return getSession(transacted, topic, true);
+    }
+   
+    public Session getSession(boolean transacted, boolean topic, boolean sender) throws JMSException
     {
         if (!isConnected())
         {
@@ -467,9 +477,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                                  Boolean.valueOf(transacted),
                                  new Integer(acknowledgementMode),
                                  Boolean.valueOf(noLocal)}));
-        }
-
-        session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
+        }      
+        
         if (tx != null)
         {
             logger.debug("Binding session " + session + " to current transaction " + tx);
@@ -480,6 +489,27 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             catch (TransactionException e)
             {
                 throw new RuntimeException("Could not bind session to current transaction", e);
+            }
+        }
+        else
+        {
+            if (sender)
+            {
+                session = (Session)localJmsSession.get();
+                if (session == null)
+                {
+                    session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
+                    localJmsSession.set(session);
+                }
+            }
+            else
+            {
+                session = (Session) localJmsReceiverSession.get();
+                if (session == null)
+                {
+                    session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
+                    localJmsReceiverSession.set(session);
+                }
             }
         }
         return session;
@@ -1020,11 +1050,19 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     {
         try
         {
+            if ((Session)this.localJmsSession.get() == session)
+            {
+                this.localJmsSession.remove();
+            }
+            else if ((Session)this.localJmsReceiverSession.get() == session)
+            {
+                this.localJmsReceiverSession.remove();
+            }
             close(session);
         }
         catch (JMSException e)
         {
-            logger.error("Failed to close jms session", e);
+            logger.error("Failed to close jms session consumer", e);
         }
     }
 
