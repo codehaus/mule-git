@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC 
+                 "-//OpenSymphony Group//DTD OSWorkflow 2.8//EN"
+                 "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<workflow>
+  <initial-actions>
+    <action id="1" name="start">
+      <results>
+        <unconditional-result old-status="Starting" status="Processing" step="1"/>
+      </results>
+    </action>
+  </initial-actions>
+
+  <steps>
+    <step id="1" name="sendMessage">
+      <actions>
+        <action id="2" name="sendMessage">
+          <pre-functions>
+            <function type="class">
+              <arg name="class.name">org.mule.providers.bpm.osworkflow.functions.SendMuleEvent</arg>
+              <arg name="endpoint">vm://echo</arg>
+              <arg name="payload">Message in a bottle.</arg>
+              <arg name="synchronous">true</arg>
+            </function>
+          </pre-functions>
+          <results>
+            <unconditional-result old-status="Processing" status="Processing" step="2"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+
+    <step id="2" name="receiveMessage">
+      <actions>
+        <action id="3" name="receiveMessage">
+          <results>
+            <result old-status="Processing" status="Finished" step="3">
+	            <conditions>
+	              <condition type="class">
+	                <arg name="class.name">org.mule.providers.bpm.osworkflow.conditions.ValidateMessage</arg>
+	                <arg name="expectedValue">Message in a bottle.</arg>
+	              </condition>
+	            </conditions>
+            </result>
+            <unconditional-result old-status="Processing" status="Error" step="4"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+
+    <step id="3" name="end" />
+
+    <step id="4" name="error">
+	  <actions>
+	    <action id="5" name="startOver">
+	      <results>
+	        <unconditional-result old-status="Error" status="Starting" step="1"/>
+	      </results>
+	    </action>
+	  </actions>
+    </step>
+  </steps>
+</workflow>

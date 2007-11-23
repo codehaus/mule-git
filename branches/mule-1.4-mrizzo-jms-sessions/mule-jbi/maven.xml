@@ -1,0 +1,114 @@
+<project default="multiproject:install"
+    xmlns:j="jelly:core"
+    xmlns:u="jelly:util"
+    xmlns:ant="jelly:ant"
+    xmlns:maven="jelly:maven">
+
+    <!--=================================================-->
+    <!--          Mule Release TARGETS                   -->
+    <!--=================================================-->
+
+    <goal name="setvars">
+        <j:set var="mule.release.dir" value="${maven.build.dir}\release"/>
+        <j:set var="mule.release.lib.dir" value="${mule.release.dir}\lib"/>
+        <j:set var="mule.release.lib.opt.dir" value="${mule.release.lib.dir}\opt"/>
+        <j:set var="mule.release.lib.patch.dir" value="${mule.release.lib.dir}\patch"/>
+        <j:set var="mule.release.dist.dir" value="${mule.release.dir}\dist"/>
+        <echo>Release dir is ${mule.release.dir}</echo>
+        <j:set var="mule.base.context.path" value="../../.."/>
+        <j:set var="mule.samples.dist" value="${mule.release.dir}/samples"/>
+        <echo>Samples release dir is ${mule.samples.dist}</echo>
+    </goal>
+
+
+    <postGoal name="test:test">
+        <j:if test="${context.getVariable('maven.test.skip') == null || context.getVariable('maven.test.skip') == 'false'}">
+            <echo>Setting maven.test.skip to true, so that tests do not run again!</echo>
+            <j:expr value="${context.setVariable('maven.test.skip', 'true')}"/>
+        </j:if>
+    </postGoal>
+
+    <goal name="build-classpath" prereqs="setvars">
+        <echo>Building classpath from ${mule.release.lib.dir}</echo>
+        <ant:path id="cp">
+            <ant:fileset dir="${mule.release.lib.dir}">
+                <ant:include name="*.jar"/>
+            </ant:fileset>
+            <ant:fileset dir="${mule.release.lib.dir}/opt">
+                <ant:include name="*.jar"/>
+            </ant:fileset>
+        </ant:path>
+        <property name="classpath" refid="cp"/>
+    </goal>
+
+    <postGoal name="test">
+        <j:set var="goal" value="test"/>
+        <attainGoal name="multiproject:goal"/>
+    </postGoal>
+
+    <goal name="cleanall" prereqs="clean">
+        <j:set var="goal" value="clean"/>
+        <attainGoal name="multiproject:goal"/>
+    </goal>
+
+    <!-- Idea project generation
+        We back up the root workspace and project so that the build doesn't blow away
+        the current environment. We then replace these files after the build has finished -->
+
+    <postGoal name="idea">
+        <attainGoal name="idea:multiproject"/>
+    </postGoal>
+
+    <goal name="idea-new">
+        <j:set var="newBuild" value="true"/>
+        <attainGoal name="idea"/>
+    </goal>
+
+    <preGoal name="idea:idea">
+        <echo>Backing up root workspace and project</echo>
+        <j:if test="${context.getVariable('newBuild')== null}">
+            <u:available file="${basedir}/${pom.artifactId}.iws">
+                <copy file="${basedir}/${pom.artifactId}.iws" tofile="${basedir}/${pom.artifactId}.iws-old" overwrite="true"/>
+            </u:available>
+            <u:available file="${basedir}/${pom.artifactId}.ipr">
+                <copy file="${basedir}/${pom.artifactId}.ipr" tofile="${basedir}/${pom.artifactId}.ipr-old" overwrite="true"/>
+            </u:available>
+            <u:available file="${basedir}/${pom.artifactId}.iml">
+                <copy file="${basedir}/${pom.artifactId}.iml" tofile="${basedir}/${pom.artifactId}.iml-old" overwrite="true"/>
+            </u:available>
+        </j:if>
+    </preGoal>
+
+    <postGoal name="idea:multiproject">
+        <!-- preserve workspace -->
+        <echo>Restoring root workspace and project</echo>
+        <j:if test="${context.getVariable('newBuild')== null}">
+            <u:available file="${basedir}/${pom.artifactId}.iws-old">
+                <delete file="${basedir}/${pom.artifactId}.iws"/>
+                <copy file="${basedir}/${pom.artifactId}.iws-old" tofile="${basedir}/${pom.artifactId}.iws"/>
+                <delete file="${basedir}/${pom.artifactId}.iws-old"/>
+            </u:available>
+            <u:available file="${basedir}/${pom.artifactId}.ipr-old">
+                <delete file="${basedir}/${pom.artifactId}.ipr"/>
+                <copy file="${basedir}/${pom.artifactId}.ipr-old" tofile="${basedir}/${pom.artifactId}.ipr"/>
+                <delete file="${basedir}/${pom.artifactId}.ipr-old"/>
+            </u:available>
+            <u:available file="${basedir}/${pom.artifactId}.iml-old">
+                <delete file="${basedir}/${pom.artifactId}.iml"/>
+                <copy file="${basedir}/${pom.artifactId}.iml-old" tofile="${basedir}/${pom.artifactId}.iml"/>
+                <delete file="${basedir}/${pom.artifactId}.iml-old"/>
+            </u:available>
+        </j:if>
+    </postGoal>
+
+    <preGoal name="eclipse">
+        <j:set var="goal" value="eclipse"/>
+        <attainGoal name="multiproject:goal"/>
+    </preGoal>
+
+    <postGoal name="eclipse">
+        <mkdir dir="${basedir}/src/conf"/>
+        <mkdir dir="${basedir}/src/test/conf"/>
+    </postGoal>
+
+</project>

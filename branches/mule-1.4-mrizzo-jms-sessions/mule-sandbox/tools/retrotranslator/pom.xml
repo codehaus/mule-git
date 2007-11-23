@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ 
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.mule.tools</groupId>
+ <artifactId>retrotranslator</artifactId>
+
+ <packaging>pom</packaging>
+ <name>Retrotranslator</name>
+ <description>This is a project to retrotranslate required Mule dependencies to JDK 1.4</description>
+ <version>1.0-SNAPSHOT</version>
+
+    <!-- Deploy the artifact to Mule's internal dependencies repo. --> 
+    <distributionManagement>
+        <repository>
+            <id>mule-deps</id>
+            <name>Mule Dependencies</name>
+            <url>dav:https://dav.codehaus.org/dist/mule/dependencies/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>mule-deps</id>
+            <name>Mule Dependencies</name>
+            <url>dav:https://dav.codehaus.org/dist/mule/dependencies/maven2/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-artifact</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${pom.basedir}/target</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                  <groupId>org.ops4j.pax.logging</groupId>
+                                  <artifactId>api</artifactId>
+                                  <version>0.9.4</version>
+                                </artifactItem>
+                                <artifactItem>
+                                  <groupId>org.ops4j.pax.logging</groupId>
+                                  <artifactId>service</artifactId>
+                                  <version>0.9.4</version>
+                                </artifactItem>
+                                <artifactItem>
+                                  <groupId>org.ops4j.pax.logging</groupId>
+                                  <artifactId>log4j</artifactId>
+                                  <version>0.9.4</version>
+                                </artifactItem>
+                                <artifactItem>
+                                  <groupId>org.ops4j.pax.logging</groupId>
+                                  <artifactId>jcl</artifactId>
+                                  <version>0.9.4</version>
+                                </artifactItem>
+                                <artifactItem>
+                                  <groupId>org.ops4j.pax.logging</groupId>
+                                  <artifactId>slf4j</artifactId>
+                                  <version>0.9.4</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>retrotranslator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>translate</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>
+                                    <directory>${pom.basedir}/target</directory>
+                                    <pattern>**/*.jar</pattern>
+                                </include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <classifier>jdk14</classifier>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>jdk14</classifier>
+                            <file>${pom.basedir}/target/api-0.9.4.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <!-- WebDAV for remote deployment -->
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+            </extension>
+        </extensions>
+    </build>
+</project>
