@@ -29,10 +29,12 @@
 
     <model name="model">
         <service name="service">
-            <singleton-object instance-ref="poot"/>
             <inbound-router>
                 <inbound-endpoint name="endpoint" address="test://${property}"/>
             </inbound-router>
+            <component>
+                <singleton-object instance-ref="poot"/>
+            </component>
         </service>
     </model>
 

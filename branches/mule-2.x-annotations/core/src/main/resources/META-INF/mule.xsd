@@ -177,12 +177,6 @@
         <xsd:attribute name="not" type="substitutableBoolean"/>
     </xsd:complexType>
 
-    <xsd:complexType name="nestedRouterCollectionType">
-        <xsd:sequence>
-            <xsd:element ref="abstract-binding" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
     <xsd:element name="abstract-binding" abstract="true" type="abstractBindingType"/>
     <xsd:complexType name="abstractBindingType"/>
 
@@ -210,8 +204,8 @@
     <xsd:element name="abstract-response-router" abstract="true" type="abstractResponseRouterType"/>
     <xsd:complexType name="abstractResponseRouterType"/>
 
-    <xsd:element name="abstract-threading-profile" abstract="true" type="abstractThreadingProfileType"/>
-    <xsd:complexType name="abstractThreadingProfileType"/>
+    <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType"/>
+    <xsd:complexType name="abstractComponentThreadingProfileType"/>
 
     <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType"/>
     <xsd:complexType name="abstractExceptionStrategyType"/>
@@ -292,15 +286,9 @@
         <xsd:complexContent>
             <xsd:extension base="abstractServiceType">
                 <xsd:sequence>
-                    <!-- minOccurs="0" to allow for <forwarding-router> which doesn't need a service. -->
-                    <xsd:element ref="abstract-object-factory" minOccurs="0">
-                        <xsd:annotation>
-                            <xsd:documentation>Factory to create the user's POJO service</xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:element>
-                    <xsd:element ref="properties" minOccurs="0"/>
                     <xsd:element name="inbound-router" type="inboundRouterCollectionType" minOccurs="0"/>
-                    <xsd:element name="nested-router" type="nestedRouterCollectionType" minOccurs="0"/>
+                    <!-- minOccurs="0" to allow for <forwarding-router/> and/or default component -->
+                    <xsd:element ref="abstract-component" minOccurs="0"/>
                     <xsd:element name="outbound-router" type="outboundRouterCollectionType" minOccurs="0"/>
                     <xsd:element name="response-router" type="responseRouterCollectionType" minOccurs="0"/>
                     <xsd:element ref="abstract-exception-strategy" minOccurs="0"/>
@@ -330,7 +318,7 @@
         <xsd:complexContent>
             <xsd:extension base="baseServiceType">
                 <xsd:sequence>
-                    <xsd:element ref="abstract-threading-profile" minOccurs="0"/>
+                    <xsd:element ref="abstract-component-threading-profile" minOccurs="0"/>
                     <xsd:element ref="abstract-queue-profile" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="queueTimeout" type="xsd:integer"/>
@@ -338,35 +326,68 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="bridge-service" type="bridgeServiceType" substitutionGroup="abstract-service"/>
-    <xsd:complexType name="bridgeServiceType">
+    <!--==============================================================-->
+    <!-- Components                                              -->
+    <!--==============================================================-->
+
+    <xsd:element name="abstract-component" abstract="true" type="abstractComponentType"/>
+    <xsd:complexType name="abstractComponentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A component that will be invoked by mule.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <!--<xsd:element ref="abstract-binding" minOccurs="0" maxOccurs="unbounded"/>-->
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="component" type="pojoComponentType" substitutionGroup="abstract-component"/>
+    <xsd:complexType name="pojoComponentType">
+        <xsd:annotation>
+            <xsd:documentation>Pojo component that will be invoked by mule.</xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="abstractServiceType">
+            <xsd:extension base="abstractComponentType">
                 <xsd:sequence>
-                    <xsd:element ref="abstract-inbound-endpoint" minOccurs="1" maxOccurs="unbounded"/>
-                    <xsd:choice>
-                        <xsd:element name="outbound-router" type="outboundRouterCollectionType" minOccurs="0"/>
-                        <!-- extra sugar - this is inserted in the first outbound pass through router
-                             (one is added if necessary) -->
-                        <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
-                    </xsd:choice>
+                    <xsd:element ref="abstract-object-factory" minOccurs="0"/>
+                    <xsd:element name="binding" type="pojoBindingType" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
+                <xsd:attribute name="class" type="xsd:NMTOKEN"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="pojoBindingType">
+        <xsd:annotation>
+            <xsd:documentation>Binding between the pojo component and endpoints.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="abstractBindingType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="interface" use="required"/>
+                <xsd:attribute name="method" use="optional"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!--==============================================================-->
-    <!-- POJO components                                              -->
-    <!--==============================================================-->
-
-    <xsd:element name="component" type="defaultComponentType" substitutionGroup="abstract-object-factory"/>
     <xsd:complexType name="defaultComponentType">
         <xsd:complexContent>
-            <xsd:extension base="pooledObjectFactoryType"/>
+            <xsd:extension base="abstractComponentType"/>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="pass-through-component" type="defaultComponentType" substitutionGroup="abstract-object-factory">
+    <xsd:element name="bridge-component" type="defaultComponentType" substitutionGroup="abstract-component">
+        <xsd:annotation>
+            <xsd:documentation>
+                Built-in BridgeComponent that enables a bridge between an inbound and outbound endpoints.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="pass-through-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
                 Built-in PassThroughComponent that enables a bridge between an inbound and outbound endpoints.
@@ -376,7 +397,7 @@
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="echo-component" type="defaultComponentType" substitutionGroup="abstract-object-factory">
+    <xsd:element name="echo-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
                 Built-in EchoComponent that logs the message and returns the payload back as the result.
@@ -384,7 +405,7 @@
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="log-component" type="defaultComponentType" substitutionGroup="abstract-object-factory">
+    <xsd:element name="log-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
                 Built-in LogComponent that simply logs the message content (or content length if it is a
@@ -393,7 +414,7 @@
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="null-component" type="defaultComponentType" substitutionGroup="abstract-object-factory">
+    <xsd:element name="null-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
                 Built-in NullComponent that will throw an exception if it receives a message.
@@ -401,7 +422,7 @@
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="no-args-call-component" type="noArgsCallWrapperType" substitutionGroup="abstract-object-factory">
+    <xsd:element name="no-args-call-component" type="noArgsCallWrapperType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
                 Built-in NoArgsCallWrapper
@@ -534,7 +555,7 @@
     <xsd:group name="defaultEndpointElements">
         <xsd:sequence>
             <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element ref="abstract-transformer" minOccurs="0"/>
+                <xsd:group ref="endpointTransformers"/>
                 <xsd:element ref="abstract-transaction" minOccurs="0"/>
                 <xsd:element ref="abstract-filter" minOccurs="0"/>
                 <xsd:element ref="abstract-security-filter" minOccurs="0"/>
@@ -569,8 +590,8 @@
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>
-        <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
-        <xsd:attribute name="responseTransformer-ref" type="xsd:NMTOKENS"/>
+        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
+        <xsd:attribute name="responseTransformer-refs" type="xsd:NMTOKENS"/>
     </xsd:attributeGroup>
 
     <xsd:element name="transaction" type="transactionType" substitutionGroup="abstract-transaction"/>
@@ -633,6 +654,40 @@
         <xsd:attribute name="address" type="xsd:string" use="required"/>
     </xsd:complexType>
 
+    <xsd:group name="endpointTransformers">
+        <xsd:annotation>
+            <xsd:documentation>
+                This allows the user to specify either a simple list of (normal) transformers or
+                separate bracketed lists of normal and response transformers.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:group ref="transformersList"/>
+            <xsd:sequence>
+                <xsd:element name="transformers" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:group ref="transformersList"/>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="responseTransformers" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:group ref="transformersList"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:choice>
+    </xsd:group>
+    
+    <xsd:group name="transformersList">
+        <xsd:annotation>
+            <xsd:documentation>
+                A list of transformers - normal or response, depending on context.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
 
     <!--==============================================================-->
     <!--   Filter elements                                            -->
@@ -977,10 +1032,13 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="threading-profile" type="threadingProfileType" substitutionGroup="abstract-threading-profile"/>
+    <xsd:element name="component-threading-profile" type="threadingProfileType" substitutionGroup="abstract-component-threading-profile"/>
+    <!-- this is a general threading type used by various elements here -->
     <xsd:complexType name="threadingProfileType">
         <xsd:complexContent>
-            <xsd:extension base="abstractThreadingProfileType">
+            <!-- this is a hack that allows us to use this general threading profile as a component threading profile
+                 without retyping everything -->
+            <xsd:extension base="abstractComponentThreadingProfileType">
                 <xsd:attribute name="maxThreadsActive" type="xsd:string"/>
                 <xsd:attribute name="maxThreadsIdle" type="xsd:string"/>
                 <xsd:attribute name="threadTTL" type="xsd:string"/>
@@ -1007,7 +1065,7 @@
     <!--   Exception strategies                                       -->
     <!--==============================================================-->
 
-    <xsd:element name="default-component-exception-strategy" type="exceptionStrategyType"
+    <xsd:element name="default-service-exception-strategy" type="exceptionStrategyType"
                  substitutionGroup="abstract-exception-strategy"/>
     <xsd:element name="default-connector-exception-strategy" type="exceptionStrategyType"
                  substitutionGroup="abstract-exception-strategy"/>
@@ -1159,22 +1217,6 @@
     <!--  Routers                                                     -->
     <!--==============================================================-->
 
-    <!--Nested Binding-->
-
-    <!-- should this be called nested-binding? -->
-    <xsd:element name="binding" type="nestedBindingType" substitutionGroup="abstract-binding"/>
-    <xsd:complexType name="nestedBindingType">
-        <xsd:complexContent>
-            <xsd:extension base="abstractBindingType">
-                <xsd:sequence>
-                    <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-                <xsd:attribute name="interface" use="required"/>
-                <xsd:attribute name="method" use="optional"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
 
     <!-- Inbound Router implementations -->
 
@@ -1238,7 +1280,7 @@
                 <xsd:sequence>
                     <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
+                <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
                 <xsd:attribute name="transformerFirst" type="substitutableBoolean"/>
             </xsd:extension>
         </xsd:complexContent>
@@ -1357,7 +1399,7 @@
                     <xsd:element ref="abstract-filter" minOccurs="0"/>
                     <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="transformer-ref" type="xsd:NMTOKENS"/>
+                <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

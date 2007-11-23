@@ -24,42 +24,48 @@
     <model name="main">
 
         <service name="testComponent1" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="eventCallback">
-                        <spring:bean class="org.mule.tck.functional.CounterCallback"/>
-                    </spring:entry>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint ref="sendEndpoint"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="eventCallback">
+                            <spring:bean class="org.mule.tck.functional.CounterCallback"/>
+                        </spring:entry>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
         <service name="testComponent2" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="eventCallback">
-                        <spring:bean class="org.mule.tck.functional.CounterCallback"/>
-                    </spring:entry>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint ref="sendManyEndpoint"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="eventCallback">
+                            <spring:bean class="org.mule.tck.functional.CounterCallback"/>
+                        </spring:entry>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
         <service name="testComponent3" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="eventCallback">
-                        <spring:bean class="org.mule.tck.functional.ResponseWriterCallback"/>
-                    </spring:entry>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint ref="asyncEndpoint"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="eventCallback">
+                            <spring:bean class="org.mule.tck.functional.ResponseWriterCallback"/>
+                        </spring:entry>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
     </model>

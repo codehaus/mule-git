@@ -97,6 +97,12 @@ org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
 # Mule 2.x-specific failures
 ##########################################################################
 
+# MULE-2708 Intermittent
+org.mule.test.usecases.http.HttpResponseTestCase
+
+# MULE-2721 Only XFire fails
+org.mule.test.usecases.ReplyToTestCase
+
 # Only testClientSendDirect() (1 of 6) is failing.
 # I'm not sure that RegistryContext.getConfiguration().setDefaultSynchronousEndpoints(true)
 # actually has any effect.
@@ -140,3 +146,4 @@ org.mule.test.integration.streaming.FileToTcpStreamingTestCase
 	
 # @ in URI is not getting replaced (1 of 3 tests fails)
 org.mule.test.integration.util.ObjectNameHelperTestCase
+

@@ -11,10 +11,12 @@
     <model name="testModel">
 
         <service name="queueComponent" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="jms://in"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="jms://out"/>
@@ -23,10 +25,12 @@
         </service>
 
         <service name="topicComponent" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="jms://topic:in"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="jms://topic:out"/>

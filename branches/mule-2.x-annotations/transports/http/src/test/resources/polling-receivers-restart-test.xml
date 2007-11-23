@@ -20,11 +20,13 @@
 
         <!-- singleton for easier testing only -->
         <service name="Test" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
             <inbound-router>
                 <inbound-endpoint name="httpEndpoint" connector-ref="PollingHttpConnector"
                                   address="http://localhost:60206/TestServer"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="stdio://System.out"/>
@@ -33,14 +35,16 @@
         </service>
 
         <service name="TestServer">
-            <singleton-object class="org.mule.components.simple.StaticComponent">
-                <properties>
-                    <spring:entry key="data" value="Here's your content."/>
-                </properties>
-            </singleton-object>
             <inbound-router>
                 <inbound-endpoint address="http://localhost:60206" connector-ref="HttpConnector"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.components.simple.StaticComponent">
+                    <properties>
+                        <spring:entry key="data" value="Here's your content."/>
+                    </properties>
+                </singleton-object>
+            </component>
         </service>
 
     </model>

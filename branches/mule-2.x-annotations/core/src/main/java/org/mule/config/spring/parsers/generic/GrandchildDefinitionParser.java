@@ -23,6 +23,11 @@ public class GrandchildDefinitionParser extends ChildDefinitionParser
         super(setterMethod, clazz);
     }
 
+    public GrandchildDefinitionParser(String setterMethod, Class clazz, Class constraint, boolean allowClassAttribute)
+    {
+        super(setterMethod, clazz, constraint, allowClassAttribute);
+    }
+
     protected String getParentBeanName(Element element)
     {
         Node parent = element.getParentNode();
@@ -34,7 +39,7 @@ public class GrandchildDefinitionParser extends ChildDefinitionParser
         Node grandparent = parent.getParentNode();
         if (grandparent == null)
         {
-            logger.error("No parent node found for element " + element);
+            logger.error("No parent node found for element " + parent);
             return null;
         }
         Node grandparentNameAttribute = grandparent.getAttributes().getNamedItem("name");

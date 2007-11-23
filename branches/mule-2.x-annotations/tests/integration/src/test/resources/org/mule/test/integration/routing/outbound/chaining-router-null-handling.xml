@@ -13,7 +13,6 @@
         <service name="bridge1">
             <inbound-router>
                 <inbound-endpoint address="vm://incomingPass"/>
-                <forwarding-router/>
             </inbound-router>
 
             <outbound-router>
@@ -30,7 +29,6 @@
         <service name="bridge2">
             <inbound-router>
                 <inbound-endpoint address="vm://incomingLastFail"/>
-                <forwarding-router/>
             </inbound-router>
 
             <outbound-router>
@@ -47,7 +45,6 @@
         <service name="bridge3">
             <inbound-router>
                 <inbound-endpoint address="vm://incomingFirstFail"/>
-                <forwarding-router/>
             </inbound-router>
 
             <outbound-router>
@@ -59,49 +56,57 @@
         </service>
 
         <service name="component1">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="appendComponentName" value="true"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://component1"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="appendComponentName" value="true"/>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
         <service name="component1Fail">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="throwException" value="true"/>
-                    <spring:entry key="appendComponentName" value="true"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://component1Fail"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                    <spring:entry key="throwException" value="true"/>
+                    <spring:entry key="appendComponentName" value="true"/>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
         <service name="component2Pass">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="appendComponentName" value="true"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://component2Pass"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="appendComponentName" value="true"/>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
 
         <service name="component2Fail">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="throwException" value="true"/>
-                    <spring:entry key="appendComponentName" value="true"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://component2Fail"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="throwException" value="true"/>
+                        <spring:entry key="appendComponentName" value="true"/>
+                    </properties>
+                </pooled-object>
+            </component>
         </service>
     </model>
 </mule>

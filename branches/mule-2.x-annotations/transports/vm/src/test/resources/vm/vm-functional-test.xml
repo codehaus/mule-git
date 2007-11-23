@@ -13,15 +13,17 @@
     <model name="asynchTestModel">
 
         <service name="myAsynchService">
-            <component class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="returnMessage" value="Polo"/>
-                </properties>
-            </component>
-
             <inbound-router>
                 <vm:inbound-endpoint path="in" connector-ref="asynchVm"/>
             </inbound-router>
+
+            <component>
+                <pooled-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="returnMessage" value="Polo"/>
+                    </properties>
+                </pooled-object>
+            </component>
 
             <outbound-router>
                 <outbound-pass-through-router>

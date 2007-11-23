@@ -14,10 +14,12 @@
 
     <model name="echoModel">
         <service name="echo">
-            <singleton-object class="org.mule.components.simple.BridgeComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:60209"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.components.simple.BridgeComponent"/>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="http://localhost:60210"/>
@@ -26,10 +28,12 @@
         </service>
 
         <service name="testComponent">
-            <singleton-object class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:60210"/>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
+            </component>
         </service>
 
     </model>

@@ -67,12 +67,13 @@
             Please refer to the Configuration Guide for a full description of all the parameters.
         -->
         <service name="GreeterUMO">
-            <component class="org.mule.samples.hello.Greeter"/>
             
             <inbound-router>
-                <inbound-endpoint address="stdio://System.in" transformer-ref="StdinToNameString"/>
+                <inbound-endpoint address="stdio://System.in" transformer-refs="StdinToNameString"/>
             </inbound-router>
             
+            <component class="org.mule.samples.hello.Greeter"/>
+
             <outbound-router>
                 <filtering-router>
                     <vm:outbound-endpoint path="chitchatter"/>
@@ -93,21 +94,22 @@
             -->
             
             <!-- Route unexpected errors to separate error handler -->
-            <default-component-exception-strategy>
+            <default-service-exception-strategy>
                 <vm:outbound-endpoint path="systemErrorHandler"/>
-            </default-component-exception-strategy>
+            </default-service-exception-strategy>
         </service>
 
         <service name="ChitChatUMO">
-            <component class="org.mule.samples.hello.ChitChatter"/>
 
             <inbound-router>
-                <vm:inbound-endpoint path="chitchatter" transformer-ref="NameStringToChatString"/>
+                <vm:inbound-endpoint path="chitchatter" transformer-refs="NameStringToChatString"/>
             </inbound-router>
                 
+            <component class="org.mule.samples.hello.ChitChatter"/>
+
             <outbound-router>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="stdio://System.out" transformer-ref="ChatStringToString" />
+                    <outbound-endpoint address="stdio://System.out" transformer-refs="ChatStringToString" />
                 </outbound-pass-through-router>
             </outbound-router>
 
@@ -120,8 +122,7 @@
             e.g. into an error file, send via email to a list, stored in a database, etc. -->
         <service name="UserErrorHandler">
             <inbound-router>
-                <vm:inbound-endpoint path="userErrorHandler" transformer-ref="ExceptionToString"/>
-                <forwarding-router/>
+                <vm:inbound-endpoint path="userErrorHandler" transformer-refs="ExceptionToString"/>
             </inbound-router>
             
             <outbound-router>
@@ -136,7 +137,6 @@
         <service name="SystemErrorHandler">
             <inbound-router>
                 <vm:inbound-endpoint path="systemErrorHandler"/>
-                <forwarding-router/>
             </inbound-router>
                 
             <outbound-router>

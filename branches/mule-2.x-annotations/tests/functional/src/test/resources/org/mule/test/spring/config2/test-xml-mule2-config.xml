@@ -116,45 +116,17 @@
             <!-- component-lifecycle-adapter-factory className="org.mule.tck.testmodels.mule.TestDefaultLifecycleAdapterFactory"/ -->
 
             <mule:service name="orangeComponent">
-
-                <mule:singleton-object instance-ref="orange">
-                    <mule:properties>
-                        <entry key="brand" value="Juicy Baby!"/>
-                        <entry key="segments" value="9"/>
-                        <entry key="radius" value="4.21"/>
-                        <entry key="mapProperties">
-                            <map>
-                                <entry key="prop1" value="prop1"/>
-                                <entry key="prop2" value="prop2"/>
-                            </map>
-                        </entry>
-                        <entry key="listProperties">
-                            <list>
-                                <value>prop1</value>
-                                <value>prop2</value>
-                                <value>prop3</value>
-                            </list>
-                        </entry>
-                        <entry key="arrayProperties">
-                            <list>
-                                <value>prop4</value>
-                                <value>prop5</value>
-                                <value>prop6</value>
-                            </list>
-                        </entry>
-                    </mule:properties>
-                </mule:singleton-object>
-
+                
                 <mule:inbound-router>
                     <mule:forwarding-catch-all-strategy>
                         <mule:outbound-endpoint
                                 address="test://catch.all"/>
                     </mule:forwarding-catch-all-strategy>
                     <mule:inbound-endpoint name="Orange"
-                                           address="test://orange/" transformer-ref="TestCompressionTransformer"
-                                           responseTransformer-ref="TestCompressionTransformer"/>
+                                           address="test://orange/" transformer-refs="TestCompressionTransformer"
+                                           responseTransformer-refs="TestCompressionTransformer"/>
                     <mule:inbound-endpoint ref="orangeEndpoint"
-                                           transformer-ref="TestCompressionTransformer">
+                                           transformer-refs="TestCompressionTransformer">
                         <mule:payload-type-filter expectedType="java.lang.String"/>
                         <mule:properties>
                             <entry key="testLocal" value="value1"/>
@@ -162,19 +134,46 @@
                     </mule:inbound-endpoint>
                 </mule:inbound-router>
 
-                <mule:nested-router>
+                <mule:component>
+                    <mule:singleton-object instance-ref="orange">
+                        <mule:properties>
+                            <entry key="brand" value="Juicy Baby!"/>
+                            <entry key="segments" value="9"/>
+                            <entry key="radius" value="4.21"/>
+                            <entry key="mapProperties">
+                                <map>
+                                    <entry key="prop1" value="prop1"/>
+                                    <entry key="prop2" value="prop2"/>
+                                </map>
+                            </entry>
+                            <entry key="listProperties">
+                                <list>
+                                    <value>prop1</value>
+                                    <value>prop2</value>
+                                    <value>prop3</value>
+                                </list>
+                            </entry>
+                            <entry key="arrayProperties">
+                                <list>
+                                    <value>prop4</value>
+                                    <value>prop5</value>
+                                    <value>prop6</value>
+                                </list>
+                            </entry>
+                        </mule:properties>
+                    </mule:singleton-object>
                     <mule:binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="wash">
                         <mule:outbound-endpoint address="test://do.wash"/>
                     </mule:binding>
                     <mule:binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="polish">
                         <mule:outbound-endpoint address="test://do.polish"/>
                     </mule:binding>
-                </mule:nested-router>
+                </mule:component>
 
                 <mule:outbound-router>
                     <mule:outbound-pass-through-router>
                         <mule:outbound-endpoint ref="appleInEndpoint"
-                                                transformer-ref="TestCompressionTransformer"/>
+                                                transformer-refs="TestCompressionTransformer"/>
                     </mule:outbound-pass-through-router>
                 </mule:outbound-router>
 
@@ -191,8 +190,6 @@
 
             <mule:service name="appleComponent">
 
-                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
-
                 <mule:inbound-router>
                     <mule:custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
                     <mule:inbound-endpoint ref="appleInEndpoint"/>
@@ -201,6 +198,8 @@
                     </mule:selective-consumer-router>
                     <mule:idempotent-receiver-router/>
                 </mule:inbound-router>
+
+                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
 
                 <mule:outbound-router>
                     <mule:custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
@@ -218,13 +217,13 @@
                     </mule:filtering-router>
                 </mule:outbound-router>
 
-                <mule:default-component-exception-strategy/>
+                <mule:default-service-exception-strategy/>
 
             </mule:service>
 
             <mule:service name="propertyExtractorTestComponent">
-                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:inbound-router/>
+                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:outbound-router>
                     <mule:filtering-router>
                         <mxml:jxpath-property-extractor/>
@@ -233,8 +232,8 @@
             </mule:service>
 
             <mule:service name="propertyExtractorResponseRouterTestComponent">
-                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:inbound-router/>
+                <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:response-router>
                     <mule:single-response-router>
                         <mxml:jxpath-property-extractor/>

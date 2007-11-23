@@ -15,15 +15,19 @@
         <ssl:ssl-server trustStore="trustStore" trustStorePassword="mulepassword"/>
     </ssl:connector>
 
+    <endpoint name="in" address="ssl://localhost:61655" synchronous="false"/>
+
     <model name="main">
 
         <service name="testComponent" class="org.mule.tck.testmodels.mule.TestSedaComponent">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
-
             <inbound-router>
-                <inbound-endpoint name="in" address="ssl://localhost:61655" synchronous="false"/>
+                <inbound-endpoint ref="in"/>
             </inbound-router>
 
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
+            
             <!-- This is just to avoid matching router warnings -->
             <outbound-router>
                 <outbound-pass-through-router>

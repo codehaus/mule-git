@@ -10,7 +10,6 @@
         <service name="bridge1">
             <inbound-router>
                 <inbound-endpoint address="file://${mule.working.dir}/test-data/in"/>
-                <forwarding-router/>
             </inbound-router>
             <outbound-router>
                 <outbound-pass-through-router>
@@ -20,10 +19,10 @@
         </service>
 
         <service name="bridge2">
-            <component class="org.mule.test.integration.streaming.SimpleStreamingBean"/>
             <inbound-router>
                 <inbound-endpoint address="tcp://localhost:34561"/>
             </inbound-router>
+            <component class="org.mule.test.integration.streaming.SimpleStreamingBean"/>
             <outbound-router>
                 <multicasting-router>
                     <!--<outbound-endpoint address="stdio://System.out" streaming="true"/>-->

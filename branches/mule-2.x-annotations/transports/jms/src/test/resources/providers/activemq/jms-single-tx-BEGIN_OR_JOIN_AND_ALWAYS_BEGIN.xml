@@ -24,7 +24,6 @@
     <model name="jmsTest">
 
         <service name="InputPart">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
             <inbound-router>
                 <inbound-endpoint ref="in">
                     <transaction action="ALWAYS_BEGIN">
@@ -32,19 +31,17 @@
                     </transaction>
                 </inbound-endpoint>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
-                    <outbound-endpoint ref="middle" transformer-ref="ObjectToJMSMessage"/>
+                    <outbound-endpoint ref="middle" transformer-refs="ObjectToJMSMessage"/>
                 </outbound-pass-through-router>
             </outbound-router>
         </service>
 
         <service name="OutputPart">
-            <singleton-object class="org.mule.tck.functional.FunctionalTestComponent">
-                <properties>
-                    <spring:entry key="returnMessage" value="OUTPUT MESSAGE"/>
-                </properties>
-            </singleton-object>
             <inbound-router>
                 <inbound-endpoint ref="middle">
                     <transaction action="BEGIN_OR_JOIN">
@@ -52,9 +49,16 @@
                     </transaction>
                 </inbound-endpoint>
             </inbound-router>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent">
+                    <properties>
+                        <spring:entry key="returnMessage" value="OUTPUT MESSAGE"/>
+                    </properties>
+                </singleton-object>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
-                    <outbound-endpoint ref="out" transformer-ref="ObjectToJMSMessage"/>
+                    <outbound-endpoint ref="out" transformer-refs="ObjectToJMSMessage"/>
                 </outbound-pass-through-router>
             </outbound-router>
         </service>

@@ -12,15 +12,17 @@
 
     <model name="NoArgsWrapperModel">
         <service name="WrapperUMO">
-            <component class="org.mule.components.simple.NoArgsCallWrapper">
-                <properties>
-                    <spring:entry key="delegateClass" value="org.mule.tck.testmodels.fruit.Apple"/>
-                    <spring:entry key="delegateMethod" value="toString"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://invoke"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.components.simple.NoArgsCallWrapper">
+                    <properties>
+                        <spring:entry key="delegateClass" value="org.mule.tck.testmodels.fruit.Apple"/>
+                        <spring:entry key="delegateMethod" value="toString"/>
+                    </properties>
+                </pooled-object>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="vm://out"/>
@@ -29,17 +31,19 @@
         </service>
 
         <service name="WrapperUMOInjected">
-            <component class="org.mule.components.simple.NoArgsCallWrapper">
-                <properties>
-                    <spring:entry key="delegateInstance">
-                        <spring:bean name="containerDelegate" class="org.mule.tck.testmodels.fruit.Apple"/>
-                    </spring:entry>
-                    <spring:entry key="delegateMethod" value="wash"/>
-                </properties>
-            </component>
             <inbound-router>
                 <inbound-endpoint address="vm://invokeWithInjected"/>
             </inbound-router>
+            <component>
+                <pooled-object class="org.mule.components.simple.NoArgsCallWrapper">
+                    <properties>
+                        <spring:entry key="delegateInstance">
+                            <spring:bean name="containerDelegate" class="org.mule.tck.testmodels.fruit.Apple"/>
+                        </spring:entry>
+                        <spring:entry key="delegateMethod" value="wash"/>
+                    </properties>
+                    </pooled-object>
+            </component>
             <outbound-router>
                 <outbound-pass-through-router>
                     <!--

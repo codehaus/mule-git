@@ -86,42 +86,14 @@
         <custom-entrypoint-resolver class="org.mule.tck.testmodels.mule.TestEntryPointResolverSet"/>
 
         <service name="orangeComponent">
-            <singleton-object instance-ref="orange">
-                <properties>
-                    <spring:entry key="brand" value="Juicy Baby!"/>
-                    <spring:entry key="segments" value="9"/>
-                    <spring:entry key="radius" value="4.21"/>
-                    <spring:entry key="mapProperties">
-                        <spring:map>
-                            <spring:entry key="prop1" value="prop1"/>
-                            <spring:entry key="prop2" value="prop2"/>
-                        </spring:map>
-                    </spring:entry>
-                    <spring:entry key="listProperties">
-                        <spring:list>
-                            <spring:value>prop1</spring:value>
-                            <spring:value>prop2</spring:value>
-                            <spring:value>prop3</spring:value>
-                        </spring:list>
-                    </spring:entry>
-                    <spring:entry key="arrayProperties">
-                        <spring:list>
-                            <spring:value>prop4</spring:value>
-                            <spring:value>prop5</spring:value>
-                            <spring:value>prop6</spring:value>
-                        </spring:list>
-                    </spring:entry>
-                </properties>
-            </singleton-object>
-            
             <inbound-router>
 
                 <forwarding-catch-all-strategy>
                     <outbound-endpoint address="test://catch.all"/>
                 </forwarding-catch-all-strategy>
-                <inbound-endpoint name="Orange" address="test://orange/" transformer-ref="TestCompressionTransformer"
-                                  responseTransformer-ref="TestCompressionTransformer"/>
-                <inbound-endpoint ref="orangeEndpoint" transformer-ref="TestCompressionTransformer">
+                <inbound-endpoint name="Orange" address="test://orange/" transformer-refs="TestCompressionTransformer"
+                                  responseTransformer-refs="TestCompressionTransformer"/>
+                <inbound-endpoint ref="orangeEndpoint" transformer-refs="TestCompressionTransformer">
                     <payload-type-filter expectedType="java.lang.String"/>
                     <properties>
                         <spring:entry key="testLocal" value="value1"/>
@@ -129,18 +101,45 @@
                 </inbound-endpoint>
             </inbound-router>
 
-            <nested-router>
+            <component>
+                <singleton-object instance-ref="orange">
+                    <properties>
+                        <spring:entry key="brand" value="Juicy Baby!"/>
+                        <spring:entry key="segments" value="9"/>
+                        <spring:entry key="radius" value="4.21"/>
+                        <spring:entry key="mapProperties">
+                            <spring:map>
+                                <spring:entry key="prop1" value="prop1"/>
+                                <spring:entry key="prop2" value="prop2"/>
+                            </spring:map>
+                        </spring:entry>
+                        <spring:entry key="listProperties">
+                            <spring:list>
+                                <spring:value>prop1</spring:value>
+                                <spring:value>prop2</spring:value>
+                                <spring:value>prop3</spring:value>
+                            </spring:list>
+                        </spring:entry>
+                        <spring:entry key="arrayProperties">
+                            <spring:list>
+                                <spring:value>prop4</spring:value>
+                                <spring:value>prop5</spring:value>
+                                <spring:value>prop6</spring:value>
+                            </spring:list>
+                        </spring:entry>
+                    </properties>
+                </singleton-object>
                 <binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="wash">
                     <outbound-endpoint address="test://do.wash"/>
                 </binding>
                 <binding interface="org.mule.tck.testmodels.fruit.FruitCleaner" method="polish">
                     <outbound-endpoint address="test://do.polish"/>
                 </binding>
-            </nested-router>
+            </component>            
 
             <outbound-router>
                 <outbound-pass-through-router>
-                    <outbound-endpoint ref="appleInEndpoint" transformer-ref="TestCompressionTransformer"/>
+                    <outbound-endpoint ref="appleInEndpoint" transformer-refs="TestCompressionTransformer"/>
                 </outbound-pass-through-router>
             </outbound-router>
 
@@ -150,13 +149,12 @@
                 <custom-response-router class="org.mule.tck.testmodels.mule.TestResponseAggregator"/>
             </response-router>
 
-            <default-component-exception-strategy>
+            <default-service-exception-strategy>
                 <outbound-endpoint address="test://orange.exceptions"/>
-            </default-component-exception-strategy>
+            </default-service-exception-strategy>
         </service>
 
         <service name="appleComponent">
-            <singleton-object instance-ref="apple"/>
             <inbound-router>
                 <custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
                 <inbound-endpoint ref="appleInEndpoint"/>
@@ -167,9 +165,13 @@
                 </idempotent-receiver-router>
             </inbound-router>
 
+            <component>
+                <singleton-object instance-ref="apple"/>
+            </component>
+
             <outbound-router>
                 <custom-catch-all-strategy class="org.mule.tck.testmodels.mule.TestCatchAllStrategy"/>
-                <filtering-router transformer-ref="TestCompressionTransformer">
+                <filtering-router transformer-refs="TestCompressionTransformer">
                     <outbound-endpoint address="test://appleQ2" name="TestApple-Out"/>
                     <payload-type-filter expectedType="java.lang.String"/>
                 </filtering-router>

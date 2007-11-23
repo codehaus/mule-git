@@ -19,15 +19,15 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-public class PojoServiceDefinitionParser extends ObjectFactoryDefinitionParser
+public class PojoComponentDefinitionParser extends ObjectFactoryDefinitionParser
 {
 
-    public PojoServiceDefinitionParser(Class beanClass)
+    public PojoComponentDefinitionParser(Class beanClass)
     {
         this(beanClass, "serviceFactory");
     }                                                             
     
-    public PojoServiceDefinitionParser(Class beanClass, String setterMethod)
+    public PojoComponentDefinitionParser(Class beanClass, String setterMethod)
     {
         super(beanClass, setterMethod);
     }
@@ -36,29 +36,7 @@ public class PojoServiceDefinitionParser extends ObjectFactoryDefinitionParser
     {
         super.parseChild(element, parserContext, builder);
 
-        try
-        {
-            // Get the POJO's class.
-            Class objectClass = getPojoClass(builder);
-
-            // Inject the UMOComponent into the POJO if the POJO needs it.
-            if (UMOComponentAware.class.isAssignableFrom(objectClass))
-            {
-                logger.debug("Injecting UMOComponent into class " + objectClass + " which implements the UMOComponentAware interface.");
-                // The UMOComponent should theoretically be the parent node.
-                Element parent = (Element) element.getParentNode();
-                String componentName = parent.getAttribute(ATTRIBUTE_NAME);
-                builder.addPropertyReference("component", componentName);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.warn(e);
-        }
-    }
-
-    protected Class getPojoClass(BeanDefinitionBuilder builder) throws ClassNotFoundException
-    {
+        // Get the POJO's class.
         MutablePropertyValues beanProperties = builder.getBeanDefinition().getPropertyValues();
         Class objectClass = null;
         if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS) != null)
@@ -70,9 +48,25 @@ public class PojoServiceDefinitionParser extends ObjectFactoryDefinitionParser
             if (beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME) != null)
             {
                 String objectClassName = (String) beanProperties.getPropertyValue(AbstractObjectFactory.ATTRIBUTE_OBJECT_CLASS_NAME).getValue();
-                objectClass = ClassUtils.getClass(objectClassName);
+                try
+                {
+                    objectClass = ClassUtils.getClass(objectClassName);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw new RuntimeException(e);
+                }
             }
+        }            
+
+        // Inject the UMOComponent into the POJO if the POJO needs it.
+        if (objectClass != null && UMOComponentAware.class.isAssignableFrom(objectClass))
+        {
+            logger.debug("Injecting UMOComponent into class " + objectClass + " which implements the UMOComponentAware interface.");
+            // The UMOComponent should theoretically be the parent node.
+            Element parent = (Element) element.getParentNode();
+            String componentName = parent.getAttribute(ATTRIBUTE_NAME);
+            builder.addPropertyReference("component", componentName);
         }
-        return objectClass;
     }
 }
