@@ -38,14 +38,14 @@ public class ManagementContextPostProcessor implements BeanPostProcessor, Applic
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException
     {
-        if(bean instanceof ManagementContextAware)
+        if (bean instanceof ManagementContextAware)
         {
-            if(getManagementContext()==null)
+            if (getManagementContext() == null)
             {
                 return bean;
             }
 
-            ((ManagementContextAware)bean).setManagementContext(getManagementContext());
+            ((ManagementContextAware) bean).setManagementContext(getManagementContext());
         }
         return bean;
     }

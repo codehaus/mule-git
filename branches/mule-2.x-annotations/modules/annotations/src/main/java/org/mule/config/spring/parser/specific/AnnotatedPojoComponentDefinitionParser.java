@@ -11,7 +11,7 @@
 package org.mule.config.spring.parser.specific;
 
 import org.mule.config.annotations.Service;
-import org.mule.config.spring.parsers.specific.PojoServiceDefinitionParser;
+import org.mule.config.spring.parsers.specific.PojoComponentDefinitionParser;
 import org.mule.impl.annotations.ScopedObjectFactory;
 import org.mule.util.object.AbstractObjectFactory;
 
@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * Always creates a {@link org.mule.impl.annotations.ScopedObjectFactory} component, then when passing
  * the Xml definition, it will set the 'scope' property based no the annotations on the class.
  */
-public class AnnotatedPojoComponentDefinitionParser extends PojoServiceDefinitionParser
+public class AnnotatedPojoComponentDefinitionParser extends PojoComponentDefinitionParser
 {
     public AnnotatedPojoComponentDefinitionParser()
     {

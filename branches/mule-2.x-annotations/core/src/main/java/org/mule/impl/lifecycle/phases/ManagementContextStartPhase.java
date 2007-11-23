@@ -52,7 +52,6 @@ public class ManagementContextStartPhase extends LifecyclePhase
                 ManagerNotification.getActionName(ManagerNotification.MANAGER_STARTING_MODELS),
                 ManagerNotification.getActionName(ManagerNotification.MANAGER_STARTED_MODELS)));
         startOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
-
         startOrderedObjects.add(new NotificationLifecycleObject(Startable.class));
 
 

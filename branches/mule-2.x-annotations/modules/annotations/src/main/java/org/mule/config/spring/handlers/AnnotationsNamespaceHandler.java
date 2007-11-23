@@ -15,7 +15,7 @@ import org.mule.config.spring.parser.specific.AnnotatedServiceDefinitionParser;
 /**
  * The Namespace handler used to register parsers for elements in the 'annotations' namespace
  */
-public class AnnotationsNamespaceHandler extends AbstractIgnorableNamespaceHandler
+public class AnnotationsNamespaceHandler extends AbstractMuleNamespaceHandler
 {
 
     public void init()

@@ -29,14 +29,10 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
 {
     public static final String SET_PROPERTIES_METHOD = "setProperties";
 
-    /**
-     * logger used by this class
-     */
+    /** logger used by this class */
     private static final Log logger = LogFactory.getLog(BeanUtils.class);
 
-    /**
-     * Exception safe version of BeanUtils.populateWithoutFail
-     */
+    /** Exception safe version of BeanUtils.populateWithoutFail */
     public static void populateWithoutFail(Object object, Map props, boolean logWarnings)
     {
         // Check to see if our object has a setProperties method where the properties
@@ -54,7 +50,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
                 if (logWarnings)
                 {
                     logger.warn("Property: " + SET_PROPERTIES_METHOD + "=" + Map.class.getName()
-                                + " not found on object: " + object.getClass().getName());
+                            + " not found on object: " + object.getClass().getName());
                 }
             }
         }
@@ -73,7 +69,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
                     if (logWarnings)
                     {
                         logger.warn("Property: " + entry.getKey() + "=" + entry.getValue()
-                                    + " not found on object: " + object.getClass().getName());
+                                + " not found on object: " + object.getClass().getName());
                     }
                 }
             }
@@ -83,6 +79,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
     /**
      * The Apache BeanUtils version of this converts all values to String, which is pretty useless, it also includes
      * stuff not defined by the user
+     *
      * @param object the object to Describe
      * @return a map of the properties on the object
      */
@@ -104,5 +101,4 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils
         }
         return props;
     }
-
 }
