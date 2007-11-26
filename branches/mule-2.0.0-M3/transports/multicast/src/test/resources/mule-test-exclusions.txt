@@ -1,7 +1,0 @@
-#
-# Test cases listed in this file are not run.
-#
-
-# Disable Multicast tests unless configured
-org.mule.providers.multicast.MulticastConnectorFunctionalTestCase
-
