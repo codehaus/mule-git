@@ -477,41 +477,46 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                                  Boolean.valueOf(transacted),
                                  new Integer(acknowledgementMode),
                                  Boolean.valueOf(noLocal)}));
-        }      
+        }            
         
-        if (tx != null)
+        if (sender)
         {
-            logger.debug("Binding session " + session + " to current transaction " + tx);
-            try
-            {
-                tx.bindResource(connection, session);
-            }
-            catch (TransactionException e)
-            {
-                throw new RuntimeException("Could not bind session to current transaction", e);
-            }
-        }
-        else
-        {
-            if (sender)
-            {
-                session = (Session)localJmsSession.get();
-                if (session == null)
-                {
-                    session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
-                    localJmsSession.set(session);
-                }
-            }
-            else
-            {
-                session = (Session) localJmsReceiverSession.get();
-                if (session == null)
-                {
-                    session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
-                    localJmsReceiverSession.set(session);
-                }
-            }
-        }
+             session = (Session)localJmsSession.get();
+             if (session == null)
+             {
+                 session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
+                 if (tx == null)
+                 {
+                     localJmsSession.set(session);
+                 }
+             }
+         }
+         else
+         {
+             session = (Session) localJmsReceiverSession.get();
+             if (session == null)
+             {
+                 session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
+                 if (tx == null)
+                 {
+                     localJmsReceiverSession.set(session);
+                 }
+             }
+         }
+            
+         if (tx != null)
+         {
+             logger.debug("Binding session " + session + " to current transaction " + tx);
+             try
+             {
+                 tx.bindResource(connection, session);
+             }
+             catch (TransactionException e)
+             {
+                 throw new RuntimeException("Could not bind session to current transaction", e);
+             }
+         }
+        
         return session;
     }
 
@@ -1052,11 +1057,11 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             if ((Session)this.localJmsSession.get() == session)
             {
-                this.localJmsSession.remove();
+                this.localJmsSession.set(null);
             }
             else if ((Session)this.localJmsReceiverSession.get() == session)
             {
-                this.localJmsReceiverSession.remove();
+                this.localJmsReceiverSession.set(null);
             }
             close(session);
         }
