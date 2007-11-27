@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+
+    <!-- 
+    <mule-environment-properties synchronous="true" synchronousEventTimeout="100000000"/>
+     -->
+
+    <!-- this connector/provider simulates an existing endpoint on a remote server -->
+    <vm:connector name="vmRemoteQueueConnector" queueEvents="true"/>
+
+    <vm:connector name="vmRemoteConnector" queueEvents="false"/>
+    
+    <model name="model">
+        <service name="TestReceiverUMO">
+            <inbound-router>
+                <inbound-endpoint address="vm://test.queue" connector-ref="vmRemoteQueueConnector"/>
+            </inbound-router>
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="stdio://System.out"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+        <service name="remoteUMO">
+            <inbound-router>
+                <inbound-endpoint address="vm://remote.endpoint" connector-ref="vmRemoteConnector" remoteSync="true"/>
+            </inbound-router>
+            <component>
+                <singleton-object class="org.mule.components.simple.StaticComponent">
+                    <properties>
+                        <spring:entry key="data" value="received from remote"/>
+                    </properties>
+                </singleton-object>
+            </component>
+        </service>
+    </model>
+</mule>

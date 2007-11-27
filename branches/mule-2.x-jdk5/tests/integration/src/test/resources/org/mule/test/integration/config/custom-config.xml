@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+    <!-- Test custom conntector parsing -->
+    <custom-connector name="customConnector" class="org.mule.tck.testmodels.mule.TestConnector">
+        <spring:property name="someProperty" value="foo"/>
+
+        <custom-exception-strategy class="org.mule.tck.testmodels.mule.TestExceptionStrategy">
+            <spring:property name="testProperty" value="bar"/>
+        </custom-exception-strategy>
+    </custom-connector>
+
+    <custom-transformer name="testTransformer" class="org.mule.tck.testmodels.mule.TestCompressionTransformer">
+        <spring:property name="beanProperty1" value="soo"/>
+        <spring:property name="beanProperty2" value="12345"/>
+    </custom-transformer>
+
+    <!-- Test custom filter parsing -->
+    <endpoint address="test://foo" name="fooEndpoint">
+        <custom-filter class="org.mule.test.integration.config.TestFilter">
+           <spring:property name="foo" value="goo"/>
+           <spring:property name="bar" value="12"/>
+        </custom-filter>
+    </endpoint>
+</mule>

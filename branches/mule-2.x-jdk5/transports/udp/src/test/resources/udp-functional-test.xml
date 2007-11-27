@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:udp="http://www.mulesource.org/schema/mule/udp/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+               http://www.mulesource.org/schema/mule/udp/2.0 http://www.mulesource.org/schema/mule/udp/2.0/mule-udp.xsd">
+
+    <configuration serverId="">
+        <default-threading-profile threadWaitTimeout="60000" threadTTL="60000"/>
+    </configuration>
+
+    <vm:connector name="vm-queue" queueEvents="true"/>
+
+    <!-- MULE-2109 -->
+    <!-- mule:endpoint name="serverEndpoint" address="udp://null:60131"/ -->
+    <endpoint name="serverEndpoint" address="udp://localhost:60131"/>
+
+    <model name="main">
+        <service name="testUDP1">
+            <inbound-router>
+                <inbound-endpoint ref="serverEndpoint"/>
+            </inbound-router>
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint address="vm://foo"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+    </model>
+
+</mule>

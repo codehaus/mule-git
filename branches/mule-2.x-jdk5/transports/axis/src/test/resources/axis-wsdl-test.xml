@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:axis="http://www.mulesource.org/schema/mule/axis/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/axis/2.0 http://www.mulesource.org/schema/mule/axis/2.0/mule-axis.xsd">
+
+    <model name="test">
+        <service name="EchoService1">
+            <inbound-router>
+                <inbound-endpoint address="axis:http://localhost:62081/services">
+                    <properties>
+                        <spring:entry key="serviceNamespace" value="http://foo"/>
+                    </properties>
+                </inbound-endpoint>
+            </inbound-router>
+            <component class="org.mule.components.simple.EchoComponent"/>
+        </service>
+
+        <service name="EchoService2">
+            <inbound-router>
+                <inbound-endpoint address="axis:http://localhost:62082/services">
+                    <properties>
+                        <spring:entry key="axisOptions">
+                            <spring:map>
+                                <spring:entry key="wsdlPortType" value="mulePortType"/>
+                                <spring:entry key="wsdlServiceElement" value="muleService"/>
+                                <spring:entry key="wsdlServicePort" value="muleServicePort"/>
+                            </spring:map>
+                        </spring:entry>
+                    </properties>
+                </inbound-endpoint>
+            </inbound-router>
+            <component class="org.mule.components.simple.EchoComponent"/>
+        </service>
+
+        <service name="EchoService3">
+            <inbound-router>
+                <inbound-endpoint address="axis:http://localhost:62083/services">
+                    <properties>
+                        <spring:entry key="wsdlFile" value="test-service.wsdl"/>
+                    </properties>
+                </inbound-endpoint>
+            </inbound-router>
+            <component class="org.mule.components.simple.EchoComponent"/>
+        </service>
+    </model>
+</mule>

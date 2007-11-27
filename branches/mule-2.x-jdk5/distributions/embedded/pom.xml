@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.distributions</groupId>
+        <artifactId>mule-distributions</artifactId>
+ <version>2.0.0-RC1-SNAPSHOT</version>
+    </parent>
+    <artifactId>mule</artifactId>
+    <!-- Packaging 'pom' ensures that maven does not try to bind a plugin to the 
+         'package' phase. We bind the assembly plugin here, that's enough. -->
+    <packaging>pom</packaging>
+    <name>Embedded (Single jar file)</name>
+    <description>Assembles the Mule core, modules, and transports into a single library (jar). This is useful for embedding Mule into an existing project.</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <!--
+                    Don't upgrade because of http://jira.codehaus.org/browse/MASSEMBLY-194,
+                    Needs to be fixed and then assembly descriptors should be updated.
+                 -->
+                <version>2.1</version>
+                <configuration>
+                    <!-- <finalName>mule-${version}.jar</finalName> -->
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <!--
+                                'attached' ensures there's only a single run bound to m2's lifecycle.
+                                The default 'assembly' goal would run every plugin in this pom twice.
+                            -->
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <!-- Do not publish (empty) source jars -->
+                    <attach>false</attach>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-examples-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-modules-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transports-all</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</project>
