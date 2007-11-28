@@ -10,6 +10,7 @@
 
 package org.mule.providers.udp;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
@@ -254,6 +255,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
             try
             {
                 UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
+                adapter.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, socket.getRemoteSocketAddress());
                 returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null)
