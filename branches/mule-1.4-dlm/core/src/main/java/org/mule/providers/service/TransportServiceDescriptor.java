@@ -17,6 +17,7 @@ import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.endpoint.EndpointBuilder;
 import org.mule.impl.endpoint.UrlEndpointBuilder;
 import org.mule.providers.NullPayload;
+import org.mule.transaction.XaTransactionFactory;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOTransactionConfig;
@@ -32,7 +33,6 @@ import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.ClassUtils;
 import org.mule.util.ObjectFactory;
 import org.mule.util.StringUtils;
-import org.mule.transaction.XaTransactionFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -107,7 +107,7 @@ public class TransportServiceDescriptor
         sessionHandler = removeProperty(MuleProperties.CONNECTOR_SESSION_HANDLER);
     }
 
-    void setOverrides(Properties props)
+    protected void setOverrides(Properties props)
     {
         if (props == null || props.size() == 0)
         {

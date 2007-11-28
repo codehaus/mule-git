@@ -11,6 +11,7 @@
 package org.mule.providers.jms.websphere;
 
 import org.mule.providers.jms.JmsConnector;
+import java.util.Properties;
 
 /**
  * Websphere-specific JMS connector.
@@ -21,5 +22,12 @@ public class WebsphereJmsConnector extends JmsConnector
     public WebsphereJmsConnector()
     {
         setRecoverJmsConnections(false);
+        if (serviceOverrides == null)
+        {
+            Properties override = new Properties();  
+            override.setProperty("transacted.message.receiver", "org.mule.providers.jms.websphere.WebsphereTransactedJmsMessageReceiver");
+            override.setProperty("xa.transacted.message.receiver", "org.mule.providers.jms.websphere.WebsphereTransactedJmsMessageReceiver");
+            this.setServiceOverrides(override);
+        }
     }
 }

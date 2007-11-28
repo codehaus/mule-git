@@ -136,13 +136,9 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         {
             responseTransformers = responseTransformers.replaceAll(" ", ",");
         }
-        // If we have user info, decode it as it might contain '@' or other encodable
-        // characters
+
         userInfo = uri.getUserInfo();
-        if (userInfo != null)
-        {
-            userInfo = decode(userInfo, uri);
-        }
+        
         return properties;
     }
 
