@@ -6,38 +6,12 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
- <version>2.0.0-RC1-SNAPSHOT</version>
+        <version>2.0.0-RC1-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.transports</groupId>
     <artifactId>mule-transports</artifactId>
     <packaging>pom</packaging>
     <name>Mule Transports</name>
-
-    <modules>
-        <module>all-transports</module>
-        <module>axis</module>
-        <module>bpm</module>
-        <module>ejb</module>
-        <module>email</module>
-        <module>file</module>
-        <module>ftp</module>
-        <module>http</module>
-        <module>jbpm</module>
-        <module>jdbc</module>
-        <module>jms</module>
-        <module>multicast</module>
-        <module>oaq</module>
-        <module>quartz</module>
-        <module>rmi</module>
-        <module>soap</module>
-        <module>ssl</module>
-        <module>stdio</module>
-        <module>tcp</module>
-        <module>udp</module>
-        <module>vm</module>
-        <module>xfire</module>
-        <module>xmpp</module>
-    </modules>
 
     <dependencies>
         <dependency>
@@ -112,6 +86,37 @@
                     </plugin>
                  </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>java14</id>
+            <activation>
+                <jdk>1.4</jdk>
+            </activation>
+            <modules>
+                <module>all-transports</module>
+                <module>axis</module>
+                <module>bpm</module>
+                <module>ejb</module>
+                <module>email</module>
+                <module>file</module>
+                <module>ftp</module>
+                <module>http</module>
+                <module>jbpm</module>
+                <module>jdbc</module>
+                <module>jms</module>
+                <module>multicast</module>
+                <module>oaq</module>
+                <module>quartz</module>
+                <module>rmi</module>
+                <module>soap</module>
+                <module>ssl</module>
+                <module>stdio</module>
+                <module>tcp</module>
+                <module>udp</module>
+                <module>vm</module>
+                <module>xfire</module>
+                <module>xmpp</module>
+            </modules>
         </profile>
         <profile>
             <id>java5</id>
