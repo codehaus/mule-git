@@ -1,5 +1,0 @@
-<workflows>
-  <workflow name="simple" type="resource" location="simple-process.xml"/>
-  <workflow name="message" type="resource" location="message-process.xml"/>
-</workflows>
-
