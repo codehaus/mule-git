@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -255,7 +256,11 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
             try
             {
                 UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
-                adapter.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, socket.getRemoteSocketAddress());
+                final SocketAddress clientAddress = socket.getRemoteSocketAddress();
+                if (clientAddress != null)
+                {
+                    adapter.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, clientAddress);
+                }
                 returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null)
