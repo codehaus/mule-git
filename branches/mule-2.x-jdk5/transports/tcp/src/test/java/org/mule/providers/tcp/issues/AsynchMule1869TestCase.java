@@ -37,21 +37,9 @@ public class AsynchMule1869TestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         client.dispatch("asyncClientEndpoint", TEST_MESSAGE, props);
-        Thread.sleep(2000);
-        logger.debug("----------------- receive now");
+        // MULE-2754
+        Thread.sleep(100);
         UMOMessage result =  client.request("asyncClientEndpoint", 10000);
-        assertNotNull("No message received", result);
-        assertEquals(TEST_MESSAGE + " Received Async", result.getPayloadAsString());
-    }
-
-    public void testDispatchAndReplyWithReceive() throws Exception
-    {
-        MuleClient client = new MuleClient();
-        Map props = new HashMap();
-        client.dispatch("asyncClientEndpoint", TEST_MESSAGE, props);
-        Thread.sleep(2000);
-        logger.debug("----------------- receive now");
-        UMOMessage result =  client.receive("asyncClientEndpoint", 10000);
         assertNotNull("No message received", result);
         assertEquals(TEST_MESSAGE + " Received Async", result.getPayloadAsString());
     }

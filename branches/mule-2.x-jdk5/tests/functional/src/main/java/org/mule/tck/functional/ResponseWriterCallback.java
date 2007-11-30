@@ -25,9 +25,9 @@ public class ResponseWriterCallback extends CounterCallback
 
     public void eventReceived(UMOEventContext context, Object component) throws Exception
     {
-        if(context.isSynchronous())
+        if (context.isSynchronous())
         {
-            throw new IllegalStateException("The ResponseWrterCallback should not be used for synchronous tests as it will cause two copies of the message to be written back to the client");
+            throw new IllegalStateException("The ResponseWriterCallback should not be used for synchronous tests as it will cause two copies of the message to be written back to the client");
         }
         super.eventReceived(context, component);
 
@@ -40,4 +40,5 @@ public class ResponseWriterCallback extends CounterCallback
         context.getOutputStream().write(result.getBytes());
         context.getOutputStream().flush();
     }
+    
 }

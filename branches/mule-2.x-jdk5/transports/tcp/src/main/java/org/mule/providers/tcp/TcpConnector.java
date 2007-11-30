@@ -65,12 +65,12 @@ public class TcpConnector extends AbstractConnector
     private TcpProtocol tcpProtocol;
     private boolean keepSendSocketOpen = false;
     private boolean keepAlive = false;
-    private PooledSocketFactory socketFactory;
+    private AbstractTcpSocketFactory socketFactory;
     private SimpleServerSocketFactory serverSocketFactory;
-    private GenericKeyedObjectPool dispatcherSocketsPool = new GenericKeyedObjectPool();
+    private GenericKeyedObjectPool socketsPool = new GenericKeyedObjectPool();
 
-    //TODO MULE-2031 remove once fixed
-    private UMOImmutableEndpoint lastEndpoint;
+    //TODO MULE-2300 remove once fixed
+    private TcpSocketKey lastSocketKey;
 
     public TcpConnector()
     {
@@ -121,11 +121,12 @@ public class TcpConnector extends AbstractConnector
 
     protected void doInitialise() throws InitialisationException
     {
-        dispatcherSocketsPool.setFactory(getSocketFactory());
-        dispatcherSocketsPool.setTestOnBorrow(true);
-        dispatcherSocketsPool.setTestOnReturn(true);
+        socketsPool.setFactory(getSocketFactory());
+        socketsPool.setTestOnBorrow(true);
+        socketsPool.setTestOnReturn(true);
         //There should only be one pooled instance per socket (key)
-        dispatcherSocketsPool.setMaxActive(1);
+        socketsPool.setMaxActive(1);
+        socketsPool.setWhenExhaustedAction(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
     }
 
     protected void doDispose()
@@ -133,7 +134,7 @@ public class TcpConnector extends AbstractConnector
         logger.debug("Closing TCP connector");
         try
         {
-            dispatcherSocketsPool.close();
+            socketsPool.close();
         }
         catch (Exception e)
         {
@@ -147,27 +148,34 @@ public class TcpConnector extends AbstractConnector
      */
     protected Socket getSocket(UMOImmutableEndpoint endpoint) throws Exception
     {
-        Socket socket = (Socket) dispatcherSocketsPool.borrowObject(endpoint);
+        TcpSocketKey socketKey = new TcpSocketKey(endpoint);
         if (logger.isDebugEnabled())
         {
-            if (null != lastEndpoint)
+            logger.debug("borrowing socket for " + socketKey + "/" + socketKey.hashCode());
+            if (null != lastSocketKey)
             {
-                logger.debug("same as " + lastEndpoint.hashCode() + "? " + lastEndpoint.equals(endpoint));
+                logger.debug("same as " + lastSocketKey.hashCode() + "? " + lastSocketKey.equals(socketKey));
             }
-            logger.debug("borrowing socket for " + endpoint.hashCode());
-            logger.debug("borrowing socket; debt " + dispatcherSocketsPool.getNumActive());
+        }
+        Socket socket = (Socket) socketsPool.borrowObject(socketKey);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("borrowed socket, "
+                    + (socket.isClosed() ? "closed" : "open") 
+                    + "; debt " + socketsPool.getNumActive());
         }
         return socket;
     }
 
     void releaseSocket(Socket socket, UMOImmutableEndpoint endpoint) throws Exception
     {
-        lastEndpoint = endpoint;
-        dispatcherSocketsPool.returnObject(endpoint, socket);
+        TcpSocketKey socketKey = new TcpSocketKey(endpoint);
+        lastSocketKey = socketKey;
+        socketsPool.returnObject(socketKey, socket);
         if (logger.isDebugEnabled())
         {
-            logger.debug("returning socket for " + endpoint.hashCode());
-            logger.debug("returned socket; debt " + dispatcherSocketsPool.getNumActive());
+            logger.debug("returning socket for " + socketKey.hashCode());
+            logger.debug("returned socket; debt " + socketsPool.getNumActive());
         }
     }
 
@@ -214,7 +222,7 @@ public class TcpConnector extends AbstractConnector
 
     protected void doDisconnect() throws Exception
     {
-        dispatcherSocketsPool.clear();
+        socketsPool.clear();
     }
 
     protected void doStart() throws UMOException
@@ -380,12 +388,12 @@ public class TcpConnector extends AbstractConnector
         this.sendTcpNoDelay = sendTcpNoDelay;
     }
 
-    protected void setSocketFactory(PooledSocketFactory socketFactory)
+    protected void setSocketFactory(AbstractTcpSocketFactory socketFactory)
     {
         this.socketFactory = socketFactory;
     }
 
-    protected PooledSocketFactory getSocketFactory()
+    protected AbstractTcpSocketFactory getSocketFactory()
     {
         return socketFactory;
     }

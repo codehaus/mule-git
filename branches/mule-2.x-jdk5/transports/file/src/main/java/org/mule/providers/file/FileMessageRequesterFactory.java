@@ -8,19 +8,22 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.oracle.jms;
+package org.mule.providers.file;
 
-import org.mule.providers.jms.JmsMessageDispatcherFactory;
+import org.mule.providers.AbstractMessageRequesterFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.umo.provider.UMOMessageRequester;
 
-public class OracleJmsMessageDispatcherFactory extends JmsMessageDispatcherFactory
+/**
+ * Creates a requester responsible for reading files from disk
+ */
+public class FileMessageRequesterFactory extends AbstractMessageRequesterFactory
 {
-
-    public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
+    /** {@inheritDoc} */
+    public UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        return new OracleJmsMessageDispatcher(endpoint);
+        return new FileMessageRequester(endpoint);
     }
 
 }
