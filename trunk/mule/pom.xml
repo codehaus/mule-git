@@ -769,15 +769,6 @@
         </profile>
 
         <profile>
-            <id>windows</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-        </profile>
-
-        <profile>
             <id>ci-server</id>
             <distributionManagement>
                 <site>
