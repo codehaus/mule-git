@@ -18,15 +18,17 @@ import java.util.Properties;
  */
 public class WebsphereJmsConnector extends JmsConnector
 {
+    public static final String RECEIVER_TYPE = "xa.transacted.message.receiver";
+    public static final String RECEIVER_CLASS = WebsphereTransactedJmsMessageReceiver.class.getName(); 
+    
     /** Constructs a new WebsphereJmsConnector. */
     public WebsphereJmsConnector()
     {
         setRecoverJmsConnections(false);
-        if (serviceOverrides == null)
+        if ((serviceOverrides == null) || (serviceOverrides.isEmpty()))
         {
             Properties override = new Properties();  
-            override.setProperty("transacted.message.receiver", "org.mule.providers.jms.websphere.WebsphereTransactedJmsMessageReceiver");
-            override.setProperty("xa.transacted.message.receiver", "org.mule.providers.jms.websphere.WebsphereTransactedJmsMessageReceiver");
+            override.setProperty(RECEIVER_TYPE, RECEIVER_CLASS);
             this.setServiceOverrides(override);
         }
     }
