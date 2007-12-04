@@ -17,8 +17,6 @@ import org.tanukisoftware.wrapper.WrapperManager;
 
 public class MuleServerWrapper implements WrapperListener
 {
-    private MuleServer mule;
-
     /*---------------------------------------------------------------
      * Constructors
      *-------------------------------------------------------------*/
@@ -70,7 +68,6 @@ public class MuleServerWrapper implements WrapperListener
      */
     public int stop(int exitCode)
     {
-        mule.shutdown();
         return exitCode;
     }
 
