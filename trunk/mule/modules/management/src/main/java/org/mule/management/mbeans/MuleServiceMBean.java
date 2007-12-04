@@ -57,6 +57,8 @@ public interface MuleServiceMBean
 
     String getLicense();
 
+    String getBuildDate();
+    
     String getBuildNumber();
 
     String getInstanceId();

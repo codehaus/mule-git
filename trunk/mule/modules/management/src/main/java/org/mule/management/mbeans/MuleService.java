@@ -41,9 +41,11 @@ public class MuleService implements MuleServiceMBean
     private String ip;
     private String os;
     private String buildNumber;
+    private String buildDate;
     // TODO
     private String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com";
     private String license;
+
 
     public MuleService()
     {
@@ -57,6 +59,7 @@ public class MuleService implements MuleServiceMBean
         os += " (" + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")";
 
         buildNumber = MuleManifest.getBuildNumber();
+        buildDate = MuleManifest.getBuildDate();
         try
         {
             InetAddress iad = InetAddress.getLocalHost();
@@ -203,6 +206,11 @@ public class MuleService implements MuleServiceMBean
         return license;
     }
 
+    public String getBuildDate()
+    {
+        return buildDate;
+    }
+    
     public String getBuildNumber()
     {
         return buildNumber;

@@ -495,6 +495,7 @@
                             <!--Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date-->
                             <!-- include repository revision from buildnumber plugin -->
                             <Build-Revision>${buildNumber}</Build-Revision>
+                            <Build-Date>${timestamp}</Build-Date>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -804,6 +805,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>buildnumber-maven-plugin</artifactId>
+                        <version>1.0-beta-2-MULE-5675</version>
                         <executions>
                             <execution>
                                 <phase>validate</phase>
@@ -816,12 +818,7 @@
                             <!-- never touch svn -->
                             <doCheck>false</doCheck>
                             <doUpdate>false</doUpdate>
-                            <!--
-                            <format>{0,date,yyyy-MMM-dd HH:mm:ss}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                            -->
+                            <timestampFormat>{0,date,yyyy-MMM-dd HH:mm:ss}</timestampFormat>
                         </configuration>
                      </plugin>
                 </plugins>
