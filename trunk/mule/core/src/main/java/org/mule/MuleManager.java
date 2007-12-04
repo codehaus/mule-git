@@ -86,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.transaction.TransactionManager;
+import javax.xml.parsers.SAXParserFactory;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
@@ -690,6 +691,7 @@ public class MuleManager implements UMOManager
     {
         validateEncoding();
         validateOSEncoding();
+        validateXML();
 
         if (!initialised.get())
         {
@@ -801,6 +803,26 @@ public class MuleManager implements UMOManager
         {
             throw new FatalException(CoreMessages.propertyHasInvalidValue("osEncoding",
                 config.getOSEncoding()), this);
+        }
+    }
+
+    /**
+     * Mule needs a proper JAXP implementation and will complain when run with a plain JDK
+     * 1.4. Use the supplied launcher or specify a proper JAXP implementation via
+     * <code>-Djava.endorsed.dirs</code>. See the following URLs for more information:
+     * <ul>
+     * <li> {@link http://xerces.apache.org/xerces2-j/faq-general.html#faq-4}
+     * <li> {@link http://xml.apache.org/xalan-j/faq.html#faq-N100D6}
+     * <li> {@link http://java.sun.com/j2se/1.4.2/docs/guide/standards/}
+     * </ul>
+     */
+    protected void validateXML() throws FatalException
+    {
+        SAXParserFactory f = SAXParserFactory.newInstance();
+        if (f == null || f.getClass().getName().indexOf("crimson") != -1)
+        {
+            throw new FatalException(CoreMessages.valueIsInvalidFor(f.getClass().getName(),
+                "javax.xml.parsers.SAXParserFactory"), this);
         }
     }
 
