@@ -203,14 +203,6 @@ public class MuleService implements MuleServiceMBean
         return license;
     }
 
-    /**
-     * @deprecated use getBuildNumber() instead
-     */
-    public String getBuildDate()
-    {
-        return buildNumber;
-    }
-    
     public String getBuildNumber()
     {
         return buildNumber;

@@ -57,11 +57,6 @@ public interface MuleServiceMBean
 
     String getLicense();
 
-    /**
-     * @deprecated use getBuildNumber() instead
-     */
-    String getBuildDate();
-    
     String getBuildNumber();
 
     String getInstanceId();
