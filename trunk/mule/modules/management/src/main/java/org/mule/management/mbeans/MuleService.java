@@ -11,6 +11,7 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleManager;
+import org.mule.MuleServer;
 import org.mule.config.MuleManifest;
 import org.mule.umo.UMOException;
 import org.mule.util.IOUtils;
@@ -219,5 +220,10 @@ public class MuleService implements MuleServiceMBean
     public String getInstanceId()
     {
         return MuleManager.getInstance().getId();
+    }
+
+    public String getConfigBuilderClassName()
+    {
+        return MuleServer.getConfigBuilderClassName();
     }
 }
