@@ -58,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -100,9 +99,9 @@ public abstract class AbstractComponent implements UMOComponent
     protected WaitableBoolean paused = new WaitableBoolean(false);
 
     protected UMOManagementContext managementContext;
-    
+
     protected UMOEntryPointResolverSet entryPointResolverSet;
-    
+
     /**
      * The initial states that the component can be started in
      */
@@ -143,37 +142,40 @@ public abstract class AbstractComponent implements UMOComponent
     protected List initialisationCallbacks = new ArrayList();
 
     /**
-     * Indicates whether a component has passed its initial startup state. 
+     * Indicates whether a component has passed its initial startup state.
      */
     private AtomicBoolean beyondInitialState = new AtomicBoolean(false);
 
     /**
      * The properties for the Mule UMO.
-     * 
+     *
      * @deprecated MULE-1933 Properties for the underlying service should be set on the ServiceFactory instead.
      */
     protected Map properties = new HashMap();
-    
-    /** For Spring only */
+
+    /**
+     * For Spring only
+     */
     public AbstractComponent()
     {
         // nop
     }
-    
+
     /**
      * Initialise the component. The component will first create a Mule UMO from the
      * UMODescriptor and then initialise a pool based on the attributes in the
      * UMODescriptor.
-     * 
-     * @throws org.mule.umo.lifecycle.InitialisationException if the component fails
-     *             to initialise
+     *
+     * @throws org.mule.umo.lifecycle.InitialisationException
+     *          if the component fails
+     *          to initialise
      */
     public final synchronized void initialise() throws InitialisationException
     {
         if (initialised.get())
         {
             throw new InitialisationException(
-                CoreMessages.objectAlreadyInitialised("Component '" + name + "'"), this);
+                    CoreMessages.objectAlreadyInitialised("Component '" + name + "'"), this);
         }
 
         if (inboundRouter == null)
@@ -206,9 +208,9 @@ public abstract class AbstractComponent implements UMOComponent
             ((ManagementContextAware) exceptionListener).setManagementContext(managementContext);
             ((Initialisable) exceptionListener).initialise();
         }
-        
+
         serviceFactory.initialise();
-        
+
         doInitialise();
 
         // initialise statistics
@@ -218,7 +220,7 @@ public abstract class AbstractComponent implements UMOComponent
         managementContext.getStatistics().add(stats);
         stats.setOutboundRouterStat(outboundRouter.getStatistics());
         stats.setInboundRouterStat(inboundRouter.getStatistics());
-        
+
         initialised.set(true);
         fireComponentNotification(ComponentNotification.COMPONENT_INITIALISED);
 
@@ -259,7 +261,7 @@ public abstract class AbstractComponent implements UMOComponent
             // Unregister Listeners for the component
             unregisterListeners();
             if (managementContext.getQueueManager().getQueueSession().getQueue(
-                name + ".component").size() > 0)
+                    name + ".component").size() > 0)
             {
                 try
                 {
@@ -287,7 +289,7 @@ public abstract class AbstractComponent implements UMOComponent
             logger.info("Component is already started: " + name);
             return;
         }
-        
+
         if (!beyondInitialState.get() && initialState.equals(AbstractComponent.INITIAL_STATE_STOPPED))
         {
             logger.info("Component " + name + " has not been started (initial state = 'stopped')");
@@ -308,9 +310,9 @@ public abstract class AbstractComponent implements UMOComponent
 
     /**
      * Starts a Mule Component.
-     * 
+     *
      * @param startPaused - Start component in a "paused" state (messages are
-     *            received but not processed).
+     *                    received but not processed).
      */
     protected void start(boolean startPaused) throws UMOException
     {
@@ -342,7 +344,7 @@ public abstract class AbstractComponent implements UMOComponent
         // gets routed to the component before it is started,
         // org.mule.impl.model.AbstractComponent.dispatchEvent() will throw a
         // ComponentException with message COMPONENT_X_IS_STOPPED (see MULE-526).
-        startListeners();        
+        startListeners();
     }
 
     /**
@@ -372,7 +374,7 @@ public abstract class AbstractComponent implements UMOComponent
 
     /**
      * Determines if the component is in a paused state
-     * 
+     *
      * @return True if the component is in a paused state, false otherwise
      */
     public boolean isPaused()
@@ -384,7 +386,7 @@ public abstract class AbstractComponent implements UMOComponent
      * Custom components can execute code necessary to put the component in a paused
      * state here. If a developer overloads this method the doResume() method MUST
      * also be overloaded to avoid inconsistent state in the component
-     * 
+     *
      * @throws UMOException
      */
     protected void doPause() throws UMOException
@@ -396,7 +398,7 @@ public abstract class AbstractComponent implements UMOComponent
      * Custom components can execute code necessary to resume a component once it has
      * been paused If a developer overloads this method the doPause() method MUST
      * also be overloaded to avoid inconsistent state in the component
-     * 
+     *
      * @throws UMOException
      */
     protected void doResume() throws UMOException
@@ -433,8 +435,8 @@ public abstract class AbstractComponent implements UMOComponent
         if (stopping.get() || stopped.get())
         {
             throw new ComponentException(
-                CoreMessages.componentIsStopped(name), 
-                event.getMessage(), this);
+                    CoreMessages.componentIsStopped(name),
+                    event.getMessage(), this);
         }
 
         try
@@ -473,7 +475,7 @@ public abstract class AbstractComponent implements UMOComponent
         if (logger.isDebugEnabled())
         {
             logger.debug("Component: " + name + " has received asynchronous event on: "
-                         + event.getEndpoint().getEndpointURI());
+                    + event.getEndpoint().getEndpointURI());
         }
 
         doDispatch(event);
@@ -484,8 +486,8 @@ public abstract class AbstractComponent implements UMOComponent
         if (stopping.get() || stopped.get())
         {
             throw new ComponentException(
-                CoreMessages.componentIsStopped(name), 
-                event.getMessage(), this);
+                    CoreMessages.componentIsStopped(name),
+                    event.getMessage(), this);
         }
 
         try
@@ -504,7 +506,7 @@ public abstract class AbstractComponent implements UMOComponent
         if (logger.isDebugEnabled())
         {
             logger.debug("Component: " + name + " has received synchronous event on: "
-                         + event.getEndpoint().getEndpointURI());
+                    + event.getEndpoint().getEndpointURI());
         }
         event = OptimizedRequestContext.unsafeSetEvent(event);
         return doSend(event);
@@ -514,7 +516,7 @@ public abstract class AbstractComponent implements UMOComponent
      * Called before an event is sent or dispatched to a component, it will block
      * until resume() is called. Users can override this method if they want to
      * handle pausing differently e.g. implement a store and forward policy
-     * 
+     *
      * @param event the current event being passed to the component
      * @throws InterruptedException if the thread is interrupted
      */
@@ -523,7 +525,7 @@ public abstract class AbstractComponent implements UMOComponent
         if (logger.isDebugEnabled() && paused.get())
         {
             logger.debug("Component: " + name
-                         + " is paused. Blocking call until resume is called");
+                    + " is paused. Blocking call until resume is called");
         }
         paused.whenFalse(null);
     }
@@ -621,7 +623,7 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    CoreMessages.failedtoRegisterOnEndpoint(name, endpoint.getEndpointURI()), e);
+                        CoreMessages.failedtoRegisterOnEndpoint(name, endpoint.getEndpointURI()), e);
             }
         }
     }
@@ -645,7 +647,7 @@ public abstract class AbstractComponent implements UMOComponent
             catch (Exception e)
             {
                 throw new ModelException(
-                    CoreMessages.failedToUnregister(name, endpoint.getEndpointURI()), e);
+                        CoreMessages.failedToUnregister(name, endpoint.getEndpointURI()), e);
             }
         }
     }
@@ -659,9 +661,9 @@ public abstract class AbstractComponent implements UMOComponent
         {
             endpoint = (UMOEndpoint) it.next();
             UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
-                endpoint);
+                    endpoint);
             if (receiver != null && endpoint.getConnector().isStarted()
-                && endpoint.getInitialState().equals(UMOEndpoint.INITIAL_STATE_STARTED))
+                    && endpoint.getInitialState().equals(UMOEndpoint.INITIAL_STATE_STARTED))
             {
                 receiver.start();
             }
@@ -677,7 +679,7 @@ public abstract class AbstractComponent implements UMOComponent
         {
             endpoint = (UMOEndpoint) it.next();
             UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
-                endpoint);
+                    endpoint);
             if (receiver != null)
             {
                 receiver.stop();
@@ -694,7 +696,7 @@ public abstract class AbstractComponent implements UMOComponent
         {
             endpoint = (UMOEndpoint) it.next();
             UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
-                endpoint);
+                    endpoint);
             if (receiver != null)
             {
                 try
@@ -704,9 +706,9 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        MessageFactory.createStaticMessage("Failed to connect listener "
+                            MessageFactory.createStaticMessage("Failed to connect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
-                        e);
+                            e);
                 }
             }
         }
@@ -721,7 +723,7 @@ public abstract class AbstractComponent implements UMOComponent
         {
             endpoint = (UMOEndpoint) it.next();
             UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
-                endpoint);
+                    endpoint);
             if (receiver != null)
             {
                 try
@@ -731,9 +733,9 @@ public abstract class AbstractComponent implements UMOComponent
                 catch (Exception e)
                 {
                     throw new ModelException(
-                        MessageFactory.createStaticMessage("Failed to disconnect listener "
+                            MessageFactory.createStaticMessage("Failed to disconnect listener "
                                     + receiver + " for endpoint " + endpoint.getName()),
-                        e);
+                            e);
                 }
             }
         }
@@ -751,18 +753,18 @@ public abstract class AbstractComponent implements UMOComponent
 
         // Add response endpoints
         if (responseRouter != null
-            && responseRouter.getEndpoints() != null)
+                && responseRouter.getEndpoints() != null)
         {
             endpoints.addAll(responseRouter.getEndpoints());
         }
         return endpoints;
     }
-    
+
     public void setManagementContext(UMOManagementContext context)
     {
         this.managementContext = context;
     }
-    
+
     protected MuleProxy createComponentProxy(Object pojoService) throws UMOException
     {
         MuleProxy proxy = new DefaultMuleProxy(pojoService, this, managementContext);
@@ -776,7 +778,7 @@ public abstract class AbstractComponent implements UMOComponent
         {
             throw new InitialisationException(MessageFactory.createStaticMessage("Component " + name + " has not been initialized properly, no serviceFactory."), this);
         }
-        
+
         Object component;
         try
         {
@@ -928,6 +930,6 @@ public abstract class AbstractComponent implements UMOComponent
      */
     public void setEntryPointResolverSet(UMOEntryPointResolverSet resolverSet)
     {
-        this.entryPointResolverSet = entryPointResolverSet;
+        this.entryPointResolverSet = resolverSet;
     }
 }

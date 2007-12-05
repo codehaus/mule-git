@@ -10,48 +10,69 @@
 
 package org.mule.config.spring.parsers.collection;
 
-import org.mule.config.spring.parsers.AbstractChildDefinitionParser;
+import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
+import org.mule.config.spring.parsers.assembly.BeanAssembler;
+import org.mule.util.CoreXMLUtils;
 
+import org.w3c.dom.Element;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Element;
 
 
 /**
  * Process an element as a value that is appended to a list in the parent object (the
  * enclosing XML element).
  */
-public class ChildListEntryDefinitionParser extends AbstractChildDefinitionParser
+public class ChildListEntryDefinitionParser extends ChildDefinitionParser
 {
 
-    private String propertyName;
+    public static final String VALUE = "value";
+    private boolean fromText = true;
 
+    /**
+     * Takes value from enclosed text
+     *
+     * @param propertyName
+     */
     public ChildListEntryDefinitionParser(String propertyName)
     {
-        super();
-        this.propertyName = propertyName;
+        super(propertyName, ListEntry.class);
+        setIgnoredDefault(true);
     }
 
-    public String getPropertyName(Element element)
+    /**
+     * Takes value from attribute
+     *
+     * @param propertyName
+     * @param attributeName
+     */
+    public ChildListEntryDefinitionParser(String propertyName, String attributeName)
     {
-        return propertyName;
+        this(propertyName);
+        addAlias(attributeName, VALUE);
+        removeIgnored(attributeName);
+        fromText = false;
     }
 
-    protected Class getBeanClass(Element element)
+    protected void postProcess(BeanAssembler assembler, Element element)
     {
-        return ListEntry.class;
+        if (fromText)
+        {
+            assembler.extendBean(VALUE, CoreXMLUtils.getTextChild(element), false);
+        }
+        super.postProcess(assembler, element);
     }
 
     protected void parseChild(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
-    {   
-        String beanType = element.getChildNodes().item(0).getNodeValue();
-        builder.setSource(new ListEntry(beanType));
-        postProcess(getBeanAssembler(element, builder), element);
-    }
-    
-    public static class ListEntry extends Object
     {
-        private Object proxiedObject;
+        super.parseChild(element, parserContext, builder);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public static class ListEntry
+    {
+
+        private Object value;
 
         public ListEntry()
         {
@@ -61,17 +82,17 @@ public class ChildListEntryDefinitionParser extends AbstractChildDefinitionParse
         public ListEntry(Object proxied)
         {
             this();
-            proxiedObject = proxied;
+            value = proxied;
         }
 
-        public Object getProxiedObject()
+        public Object getValue()
         {
-            return proxiedObject;
+            return value;
         }
 
-        public void setProxiedObject(Object proxiedObject)
+        public void setValue(Object value)
         {
-            this.proxiedObject = proxiedObject;
+            this.value = value;
         }   
     }
 
