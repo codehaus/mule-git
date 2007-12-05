@@ -10,12 +10,12 @@
 
 package org.mule.providers.udp;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageReceiver;
 import org.mule.providers.ConnectException;
 import org.mule.providers.udp.i18n.UdpMessages;
-import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -256,6 +257,11 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
             try
             {
                 UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
+                final SocketAddress clientAddress = socket.getRemoteSocketAddress();
+                if (clientAddress != null)
+                {
+                    adapter.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, clientAddress);
+                }
                 returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null)

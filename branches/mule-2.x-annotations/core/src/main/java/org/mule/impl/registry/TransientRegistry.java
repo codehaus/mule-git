@@ -40,8 +40,9 @@ import org.mule.impl.internal.notifications.SecurityNotificationListener;
 import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
-import org.mule.impl.lifecycle.ContainerManagedLifecyclePhase;
 import org.mule.impl.lifecycle.GenericLifecycleManager;
+import org.mule.impl.lifecycle.phases.ManagementContextDisposePhase;
+import org.mule.impl.lifecycle.phases.ManagementContextInitialisePhase;
 import org.mule.impl.lifecycle.phases.ManagementContextStartPhase;
 import org.mule.impl.lifecycle.phases.ManagementContextStopPhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryDisposePhase;
@@ -60,8 +61,6 @@ import org.mule.umo.UMOException;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.Stoppable;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
@@ -331,7 +330,7 @@ public class TransientRegistry extends AbstractRegistry
      */
     protected void doRegisterObject(String key, Object value) throws RegistrationException
     {
-        doRegisterObject(key, value, Object.class, null);
+        doRegisterObject(key, value, Object.class);
     }
 
     /**
@@ -340,7 +339,7 @@ public class TransientRegistry extends AbstractRegistry
      * @param key
      * @param value
      */
-    protected void doRegisterObject(String key, Object value, Object metadata, UMOManagementContext managementContext) throws RegistrationException
+    protected void doRegisterObject(String key, Object value, Object metadata) throws RegistrationException
     {
         if (isInitialised() || isInitialising())
         {
@@ -358,16 +357,21 @@ public class TransientRegistry extends AbstractRegistry
                 logger.warn("TransientRegistry already contains an object named '" + key + "'.  The previous object will be overwritten.");
             }
             objectMap.put(key, value);
-            if (managementContext != null) // need this check to call doRegisterObject(String, Object) successfully
+            try
             {
-                try
+                UMOManagementContext mc = MuleServer.getManagementContext();
+                if (mc != null)
                 {
-                    managementContext.applyLifecycle(value);
+                    mc.applyLifecycle(value);
                 }
-                catch (UMOException e)
+                else
                 {
-                    throw new RegistrationException(e);
+                    throw new RegistrationException("Unable to register object because ManagementContext has not yet been created.");
                 }
+            }
+            catch (UMOException e)
+            {
+                throw new RegistrationException(e);
             }
         }
         else
@@ -377,36 +381,36 @@ public class TransientRegistry extends AbstractRegistry
     }
 
     //@java.lang.Override
-    public void registerAgent(UMOAgent agent, UMOManagementContext managementContext) throws UMOException
+    public void registerAgent(UMOAgent agent) throws UMOException
     {
-        registerObject(agent.getName(), agent, UMOAgent.class, managementContext);
+        registerObject(agent.getName(), agent, UMOAgent.class);
     }
 
     //@java.lang.Override
-    public void registerConnector(UMOConnector connector, UMOManagementContext managementContext) throws UMOException
+    public void registerConnector(UMOConnector connector) throws UMOException
     {
-        registerObject(connector.getName(), connector, UMOConnector.class, managementContext);
+        registerObject(connector.getName(), connector, UMOConnector.class);
     }
 
     //@java.lang.Override
-    public void registerEndpoint(UMOImmutableEndpoint endpoint, UMOManagementContext managementContext) throws UMOException
+    public void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
     {
-        registerObject(endpoint.getName(), endpoint, UMOImmutableEndpoint.class, managementContext);
+        registerObject(endpoint.getName(), endpoint, UMOImmutableEndpoint.class);
     }
 
-    public void registerEndpointBuilder(String name, UMOEndpointBuilder builder, UMOManagementContext managementContext) throws UMOException
+    public void registerEndpointBuilder(String name, UMOEndpointBuilder builder) throws UMOException
     {
-        registerObject(name, builder, UMOEndpointBuilder.class, managementContext);
-    }
-
-    //@java.lang.Override
-    public void registerModel(UMOModel model, UMOManagementContext managementContext) throws UMOException
-    {
-        registerObject(model.getName(), model, UMOModel.class, managementContext);
+        registerObject(name, builder, UMOEndpointBuilder.class);
     }
 
     //@java.lang.Override
-    protected void doRegisterTransformer(UMOTransformer transformer, UMOManagementContext managementContext) throws UMOException
+    public void registerModel(UMOModel model) throws UMOException
+    {
+        registerObject(model.getName(), model, UMOModel.class);
+    }
+
+    //@java.lang.Override
+    protected void doRegisterTransformer(UMOTransformer transformer) throws UMOException
     {
         //TODO should we always throw an exception if an object already exists
         if (lookupTransformer(transformer.getName()) != null)
@@ -414,13 +418,13 @@ public class TransientRegistry extends AbstractRegistry
             throw new RegistrationException(CoreMessages.objectAlreadyRegistered("transformer: " +
                     transformer.getName(), lookupTransformer(transformer.getName()), transformer).getMessage());
         }
-        registerObject(transformer.getName(), transformer, UMOTransformer.class, managementContext);
+        registerObject(transformer.getName(), transformer, UMOTransformer.class);
     }
 
     //@java.lang.Override
-    public void registerComponent(UMOComponent component, UMOManagementContext managementContext) throws UMOException
+    public void registerComponent(UMOComponent component) throws UMOException
     {
-        registerObject(component.getName(), component, UMOComponent.class, managementContext);
+        registerObject(component.getName(), component, UMOComponent.class);
     }
 
     protected void unregisterObject(String key, Object metadata) throws UMOException
@@ -520,13 +524,14 @@ public class TransientRegistry extends AbstractRegistry
     public static TransientRegistry createNew() throws UMOException
     {
         //Use the default server lifecycleManager
-        //UMOLifecycleManager lifecycleManager = new DefaultLifecycleManager();
         UMOLifecycleManager lifecycleManager = new GenericLifecycleManager();
 
-        lifecycleManager.registerLifecycle(new ContainerManagedLifecyclePhase(Initialisable.PHASE_NAME, Initialisable.class, Disposable.PHASE_NAME));
+        //MULE-2275: Init is always taken care of by the Registry
+        lifecycleManager.registerLifecycle(new ManagementContextInitialisePhase());
         lifecycleManager.registerLifecycle(new ManagementContextStartPhase());
         lifecycleManager.registerLifecycle(new ManagementContextStopPhase());
-        lifecycleManager.registerLifecycle(new ContainerManagedLifecyclePhase(Disposable.PHASE_NAME, Disposable.class, Initialisable.PHASE_NAME));
+        //MULE-2275: Dispose can currently be called from the ManagmentContext to dispose the Registry
+        lifecycleManager.registerLifecycle(new ManagementContextDisposePhase());
 
         MuleConfiguration config = new MuleConfiguration();
 
@@ -536,6 +541,7 @@ public class TransientRegistry extends AbstractRegistry
         ThreadingProfile tp = config.getDefaultThreadingProfile();
         UMOWorkManager workManager = new MuleWorkManager(tp, "MuleServer");
 
+        // is this necessary?  it's also created in spring
         ServerNotificationManager notificationManager = new ServerNotificationManager();
         notificationManager.registerEventType(ManagerNotificationListener.class, ManagerNotification.class);
         notificationManager.registerEventType(ModelNotificationListener.class, ModelNotification.class);
@@ -564,7 +570,7 @@ public class TransientRegistry extends AbstractRegistry
 
         context.setId(UUID.getUUID());
 
-//      // TODO MULE-2161
+        // TODO MULE-2161
         MuleServer.setManagementContext(context);
         registry.registerObject(MuleProperties.OBJECT_MANAGEMENT_CONTEXT, context, context);
 

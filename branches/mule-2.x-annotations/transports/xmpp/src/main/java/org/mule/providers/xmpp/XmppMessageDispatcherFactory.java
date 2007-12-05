@@ -16,14 +16,15 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
 
 /**
- * <code>XmppMessageDispatcherFactory</code> creates a dispatcher responsible for
- * writing Xmpp packets to a an Jabber chat
+ * Creates a dispatcher responsible for writing Xmpp packets to a an Jabber chat
  */
 
 public class XmppMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
+
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {
         return new XmppMessageDispatcher(endpoint);
     }
+
 }

@@ -15,14 +15,12 @@ import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
 
-/**
- * <code>TcpMessageDispatcherFactory</code> TODO
- */
-
 public class TcpMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
+
     public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
     {
         return new TcpMessageDispatcher(endpoint);
     }
+
 }

@@ -306,7 +306,7 @@ public class MuleClient implements Disposable
     /**
      * sends an event synchronously to a components
      *
-     * @param component the name of the Mule components to send to
+     * @param componentName the name of the Mule components to send to
      * @param transformers a comma separated list of transformers to apply to the
      *            result message
      * @param message the message to send
@@ -376,7 +376,7 @@ public class MuleClient implements Disposable
     /**
      * dispatches an event asynchronously to the components
      *
-     * @param component the name of the Mule components to dispatch to
+     * @param componentName the name of the Mule components to dispatch to
      * @param message the message to send
      * @throws org.mule.umo.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
@@ -674,75 +674,6 @@ public class MuleClient implements Disposable
      * @return the message received or null if no message was received
      * @throws org.mule.umo.UMOException
      */
-    public UMOMessage receive(String url, long timeout) throws UMOException
-    {
-        UMOImmutableEndpoint endpoint = getInboundEndpoint(url);
-        try
-        {
-            UMOMessage message = endpoint.receive(timeout);
-            if (message != null && endpoint.getTransformers() != null)
-            {
-                message.applyTransformers(endpoint.getTransformers());
-            }
-            return message;
-        }
-        catch (Exception e)
-        {
-            throw new ReceiveException(endpoint, timeout, e);
-        }
-    }
-
-    /**
-     * Will receive an event from an endpointUri determined by the url
-     *
-     * @param url the Mule url used to determine the destination and transport of the
-     *            message
-     * @param transformers A comma separated list of transformers used to apply to
-     *            the result message
-     * @param timeout how long to block waiting to receive the event, if set to 0 the
-     *            receive will not wait at all and if set to -1 the receive will wait
-     *            forever
-     * @return the message received or null if no message was received
-     * @throws org.mule.umo.UMOException
-     */
-    public UMOMessage receive(String url, String transformers, long timeout) throws UMOException
-    {
-        return receive(url, MuleObjectHelper.getTransformers(transformers, ","), timeout);
-    }
-
-    /**
-     * Will receive an event from an endpointUri determined by the url
-     *
-     * @param url the Mule url used to determine the destination and transport of the
-     *            message
-     * @param transformers Transformers used to modify the result message
-     * @param timeout how long to block waiting to receive the event, if set to 0 the
-     *            receive will not wait at all and if set to -1 the receive will wait
-     *            forever
-     * @return the message received or null if no message was received
-     * @throws org.mule.umo.UMOException
-     */
-    public UMOMessage receive(String url, List transformers, long timeout) throws UMOException
-    {
-        UMOMessage message = receive(url, timeout);
-        if (message != null && transformers != null)
-        {
-             message.applyTransformers(transformers);
-        }
-        return message;
-    }
-
-    /**
-     * Will receive an event from an endpointUri determined by the url
-     *
-     * @param url the Mule url used to determine the destination and transport of the
-     *            message
-     * @param timeout how long to block waiting to receive the event, if set to 0 the
-     *            receive will not wait at all and if set to -1 the receive will wait
-     *            forever
-     * @return the message received or null if no message was received
-     * @throws org.mule.umo.UMOException
-     */
     public UMOMessage request(String url, long timeout) throws UMOException
     {
         UMOImmutableEndpoint endpoint = getInboundEndpoint(url);
@@ -840,12 +771,12 @@ public class MuleClient implements Disposable
 
     protected UMOImmutableEndpoint getInboundEndpoint(String uri) throws UMOException
     {
-        return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri, managementContext);
+        return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
     }
 
     protected UMOImmutableEndpoint getOutboundEndpoint(String uri) throws UMOException
     {
-        return managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri, managementContext);
+        return managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
     }
 
     protected UMOImmutableEndpoint getDefaultClientEndpoint(UMOComponent component, Object payload)
@@ -867,8 +798,7 @@ public class MuleClient implements Disposable
                 {
                     UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, managementContext);
                     builder.setTransformers(new LinkedList());
-                    return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder,
-                        managementContext);
+                    return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
                 }
             }
             else
@@ -880,8 +810,7 @@ public class MuleClient implements Disposable
         {
             UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("vm://mule.client", managementContext);
             builder.setName("muleClientProvider");
-            endpoint = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder,
-                managementContext);
+            endpoint = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
         }
         return endpoint;
     }
@@ -1062,7 +991,7 @@ public class MuleClient implements Disposable
     {
         try
         {
-            managementContext.getRegistry().registerObject(key, value, managementContext);
+            managementContext.getRegistry().registerObject(key, value);
         }
         catch (RegistrationException e)
         {

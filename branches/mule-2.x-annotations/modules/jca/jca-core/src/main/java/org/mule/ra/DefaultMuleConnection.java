@@ -10,7 +10,6 @@
 
 package org.mule.ra;
 
-import org.mule.MuleServer;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.client.i18n.ClientMessages;
@@ -132,12 +131,11 @@ public class DefaultMuleConnection implements MuleConnection
      */
     public UMOMessage receive(String url, long timeout) throws UMOException
     {
-        UMOImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(url,
-            MuleServer.getManagementContext());
+        UMOImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(url);
 
         try
         {
-            return endpoint.receive(timeout);
+            return endpoint.request(timeout);
         }
         catch (Exception e)
         {
@@ -157,8 +155,7 @@ public class DefaultMuleConnection implements MuleConnection
     protected UMOEvent getEvent(UMOMessage message, String uri, boolean synchronous)
         throws UMOException
     {
-        UMOImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri,
-            MuleServer.getManagementContext());
+        UMOImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
         //UMOConnector connector = endpoint.getConnector();
 
 //        if (!connector.isStarted() && manager.isStarted())

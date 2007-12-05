@@ -16,7 +16,6 @@ import org.mule.providers.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -35,7 +34,7 @@ public class SynchStreamingMule1687TestCase extends FunctionalTestCase
         return "tcp-synch-streaming-test.xml";
     }
 
-    public void testSendAndReceive() throws Exception
+    public void testSendAndRequest() throws Exception
     {
         MuleClient client = new MuleClient();
         UMOMessage message = client.send("tcp://localhost:65432",
@@ -44,6 +43,7 @@ public class SynchStreamingMule1687TestCase extends FunctionalTestCase
 
         Object payload = message.getPayload();
         assertTrue(payload instanceof InputStream);
+        assertEquals("Some value - set to make test ok", message.getPayloadAsString());
     }
 
 }

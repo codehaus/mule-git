@@ -1,16 +1,16 @@
-
 /*
- * $Id$
- * --------------------------------------------------------------------------------------
- * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
- *
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
- */
+* $Id$
+* --------------------------------------------------------------------------------------
+* Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+*
+* The software in this package is published under the terms of the CPAL v1.0
+* license, a copy of which has been included with this distribution in the
+* LICENSE.txt file.
+*/
 
 package org.mule.providers.tcp.protocols;
 
+import org.mule.impl.ResponseOutputStream;
 import org.mule.providers.tcp.TcpProtocol;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
@@ -32,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * protocols that had only a single write method taking just an array of bytes as a
  * parameter) to inherit from since they will all behave the same, i.e. if the object
  * is serializable, serialize it into an array of bytes and send it.
- *
+ * <p/>
  * <p>Note that the raw write method has changed name from <code>write</code> to
  * <code>writeByteArray</code>.  This is to remove ambiguity from the code.  In almost
  * all cases it is possible to call {@link #write(java.io.OutputStream, Object)} which
@@ -61,7 +62,7 @@ public abstract class AbstractByteProtocol implements TcpProtocol
         {
             if (streamOk)
             {
-                IOUtils.copy((InputStream) data, os);
+                IOUtils.copyLarge((InputStream) data, os);
                 os.flush();
                 os.close();
             }
@@ -103,7 +104,7 @@ public abstract class AbstractByteProtocol implements TcpProtocol
     /**
      * Manage non-blocking reads and handle errors
      *
-     * @param is The input stream to read from
+     * @param is     The input stream to read from
      * @param buffer The buffer to read into
      * @return The amount of data read (always non-zero, -1 on EOF or socket exception)
      * @throws IOException other than socket exceptions
@@ -116,9 +117,9 @@ public abstract class AbstractByteProtocol implements TcpProtocol
     /**
      * Manage non-blocking reads and handle errors
      *
-     * @param is The input stream to read from
+     * @param is     The input stream to read from
      * @param buffer The buffer to read into
-     * @param size The amount of data (upper bound) to read
+     * @param size   The amount of data (upper bound) to read
      * @return The amount of data read (always non-zero, -1 on EOF or socket exception)
      * @throws IOException other than socket exceptions
      */
@@ -165,7 +166,7 @@ public abstract class AbstractByteProtocol implements TcpProtocol
      *
      * @param source Source of data
      * @param buffer Buffer array for transfer
-     * @param dest Destination of data
+     * @param dest   Destination of data
      * @return Amount of data transferred, or -1 on eof or socket error
      * @throws IOException On non-socket error
      */
@@ -179,8 +180,8 @@ public abstract class AbstractByteProtocol implements TcpProtocol
      *
      * @param source Source of data
      * @param buffer Buffer array for transfer
-     * @param dest Destination of data
-     * @param size The amount of data (upper bound) to read
+     * @param dest   Destination of data
+     * @param size   The amount of data (upper bound) to read
      * @return Amount of data transferred, or -1 on eof or socket error
      * @throws IOException On non-socket error
      */
@@ -205,4 +206,10 @@ public abstract class AbstractByteProtocol implements TcpProtocol
             return data;
         }
     }
+
+    public ResponseOutputStream createResponse(Socket socket) throws IOException
+    {
+        return new ResponseOutputStream(socket, new ProtocolStream(this, streamOk, socket.getOutputStream()));
+    }
+
 }

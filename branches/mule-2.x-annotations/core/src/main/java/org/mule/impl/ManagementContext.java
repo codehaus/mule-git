@@ -57,65 +57,47 @@ import javax.transaction.TransactionManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * TODO document
- */
 public class ManagementContext implements UMOManagementContext
 {
-    /**
-     * logger used by this class
-     */
+
+    /** logger used by this class */
     private static transient Log logger = LogFactory.getLog(ManagementContext.class);
 
-    /**
-     * Default configuration
-     */
+    /** Names of items in the registry **/
+    public static final String NOTIFICATION_MANAGER = "_muleNotificationManager";
+
+    /** Default configuration */
     private MuleConfiguration config;
 
-    /**
-     * the unique id for this manager
-     */
+    /** the unique id for this manager */
     private String id = null;
 
-    /**
-     * If this node is part of a cluster then this is the shared cluster Id
-     */
+    /** If this node is part of a cluster then this is the shared cluster Id */
     private String clusterId = null;
 
-    /**
-     * The domain name that this instance belongs to.
-     */
+    /** The domain name that this instance belongs to. */
     private String domain = null;
 
-    /**
-     * the date in milliseconds from when the server was started
-     */
+    /** the date in milliseconds from when the server was started */
     private long startDate = 0;
 
-    /**
-     * stats used for management
-     */
+    /** stats used for management */
     private AllStatistics stats = new AllStatistics();
-
-    /**
-     * Manages all Server event notificationManager
-     */
-    private ServerNotificationManager notificationManager = null;
 
     private UMOSecurityManager securityManager;
 
     private UMOWorkManager workManager;
 
-    /**
-     * The queue manager to use for component queues and vm queues
-     */
+    /** The queue manager to use for component queues and vm queues */
     private QueueManager queueManager;
 
-    /**
-     * The transaction manager to use for this instance.
-     */
+    /** The transaction manager to use for this instance. */
     protected TransactionManager transactionManager;
 
+    /**
+     * LifecycleManager for the ManagementContext.  Note: this is NOT the same lifecycle manager
+     * as the one in the Registry.
+     */
     protected UMOLifecycleManager lifecycleManager;
 
     protected Directories directories;
@@ -129,7 +111,7 @@ public class ManagementContext implements UMOManagementContext
             throw new NullPointerException(CoreMessages.objectIsNull("lifecycleManager").getMessage());
         }
         this.lifecycleManager = lifecycleManager;
-        
+
         startDate = System.currentTimeMillis();
     }
 
@@ -141,9 +123,9 @@ public class ManagementContext implements UMOManagementContext
             throw new NullPointerException(CoreMessages.objectIsNull("securityManager").getMessage());
         }
 
-        if (notificationManager == null)
+        if (getNotificationManager() == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("notificationManager").getMessage());
+            throw new NullPointerException(CoreMessages.objectIsNull(NOTIFICATION_MANAGER).getMessage());
         }
 
         if (queueManager == null)
@@ -173,7 +155,7 @@ public class ManagementContext implements UMOManagementContext
 
             //We need to start the work manager straight away since we need it to fire notifications
             workManager.start();
-            notificationManager.start(workManager);
+            getNotificationManager().start(workManager);
 
             fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_INITIALISING));
 
@@ -255,10 +237,9 @@ public class ManagementContext implements UMOManagementContext
 
     public void dispose()
     {
-       //TODO lifecycleManager.checkPhase(Disposable.PHASE_NAME);
-
+        ServerNotificationManager notificationManager = getNotificationManager();
+        lifecycleManager.checkPhase(Disposable.PHASE_NAME);
         fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSING));
-
 
         if (isDisposed())
         {
@@ -285,7 +266,7 @@ public class ManagementContext implements UMOManagementContext
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
 
-        fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
+        notificationManager.fireEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
 
         if ((startDate > 0) && logger.isInfoEnabled())
         {
@@ -443,10 +424,7 @@ public class ManagementContext implements UMOManagementContext
         return stats;
     }
 
-    /**
-     * Sets statistics on this instance
-     *
-     */
+    /** Sets statistics on this instance */
     public void setStatistics(AllStatistics stat)
     {
         this.stats = stat;
@@ -464,6 +442,7 @@ public class ManagementContext implements UMOManagementContext
 
     public void registerListener(UMOServerNotificationListener l, String resourceIdentifier) throws NotificationException
     {
+        ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager == null)
         {
             throw new MuleRuntimeException(CoreMessages.serverNotificationManagerNotEnabled());
@@ -473,6 +452,7 @@ public class ManagementContext implements UMOManagementContext
 
     public void unregisterListener(UMOServerNotificationListener l)
     {
+        ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
             notificationManager.unregisterListener(l);
@@ -491,7 +471,7 @@ public class ManagementContext implements UMOManagementContext
      */
     public void fireNotification(UMOServerNotification notification)
     {
-        // if(notification instanceof CustomNotification) {
+        ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
             notificationManager.fireEvent(notification);
@@ -500,10 +480,6 @@ public class ManagementContext implements UMOManagementContext
         {
             logger.debug("Event Manager is not enabled, ignoring notification: " + notification);
         }
-        // } else {
-        // throw new UnsupportedOperationException(new
-        // Message(Messages.ONLY_CUSTOM_EVENTS_CAN_BE_FIRED).getMessage());
-        // }
     }
 
     public void setId(String id)
@@ -632,13 +608,14 @@ public class ManagementContext implements UMOManagementContext
 
     public ServerNotificationManager getNotificationManager()
     {
-        return notificationManager;
+        return (ServerNotificationManager) getRegistry().lookupObject(NOTIFICATION_MANAGER);
     }
 
     public void setNotificationManager(ServerNotificationManager notificationManager)
+            throws RegistrationException
     {
-        checkLifecycleForPropertySet("notificationManager", Initialisable.PHASE_NAME);
-        this.notificationManager = notificationManager;
+        checkLifecycleForPropertySet(NOTIFICATION_MANAGER, Initialisable.PHASE_NAME);
+        getRegistry().registerObject(NOTIFICATION_MANAGER, notificationManager);
     }
 
     /**
@@ -684,8 +661,8 @@ public class ManagementContext implements UMOManagementContext
         if (att.values().size() > 0)
         {
             message.add(StringUtils.defaultString(MuleManifest.getProductDescription(), notset));
-            message.add(CoreMessages.version().getMessage() + " Build: " 
-                + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
+            message.add(CoreMessages.version().getMessage() + " Build: "
+                    + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
 
             message.add(StringUtils.defaultString(MuleManifest.getVendorName(), notset));
             message.add(StringUtils.defaultString(MuleManifest.getProductMoreInfo(), notset));
@@ -722,7 +699,7 @@ public class ManagementContext implements UMOManagementContext
         if (agents.size() == 0)
         {
             message.add(CoreMessages.agentsRunning().getMessage() + " "
-                        + CoreMessages.none().getMessage());
+                    + CoreMessages.none().getMessage());
         }
         else
         {
@@ -730,7 +707,7 @@ public class ManagementContext implements UMOManagementContext
             UMOAgent umoAgent;
             for (Iterator iterator = agents.iterator(); iterator.hasNext();)
             {
-                umoAgent = (UMOAgent)iterator.next();
+                umoAgent = (UMOAgent) iterator.next();
                 message.add("  " + umoAgent.getDescription());
             }
         }
@@ -781,17 +758,21 @@ public class ManagementContext implements UMOManagementContext
     {
         this.lifecycleManager = lifecycleManager;
     }
-    
+
     /**
      * Resolve and return a handle to the registry.
-     * This should eventually be more intelligent (handle remote registries, clusters of Mule instances, etc.)  
+     * This should eventually be more intelligent (handle remote registries, clusters of Mule instances, etc.)
      * For now the registry is just a local singleton.
      */
     public Registry getRegistry()
     {
         return RegistryContext.getRegistry();
     }
-    
+
+    /**
+     * Apply current phase of the LifecycleManager.  Note: this is NOT the same lifecycle manager
+     * as the one in the Registry.
+     */
     public void applyLifecycle(Object object) throws UMOException
     {
         lifecycleManager.applyLifecycle(this, object);

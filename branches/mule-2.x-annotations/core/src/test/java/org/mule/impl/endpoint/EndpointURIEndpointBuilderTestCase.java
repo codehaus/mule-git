@@ -10,7 +10,6 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.MuleServer;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.tck.AbstractMuleTestCase;
@@ -31,13 +30,13 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
     public void testBuildInboundEndpoint() throws UMOException
     {
         String uri = "test://address";
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, MuleServer.getManagementContext());
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, managementContext);
         try
         {
             UMOImmutableEndpoint ep = endpointBuilder.buildInboundEndpoint();
             assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
             assertFalse(ep.canSend());
-            assertTrue(ep.canReceive());
+            assertTrue(ep.canRequest());
             assertTrue(TransformerUtils.isDefined(ep.getTransformers()));
             assertTrue(ep.getTransformers().get(0) instanceof TestInboundTransformer);
             assertTrue(TransformerUtils.isDefined(ep.getResponseTransformers()));
@@ -53,13 +52,13 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
     public void testBuildOutboundEndpoint() throws UMOException
     {
         String uri = "test://address";
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, MuleServer.getManagementContext());
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, managementContext);
         try
         {
             UMOImmutableEndpoint ep = endpointBuilder.buildOutboundEndpoint();
             assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
             assertTrue(ep.canSend());
-            assertFalse(ep.canReceive());
+            assertFalse(ep.canRequest());
             assertTrue(TransformerUtils.isDefined(ep.getTransformers()));
             assertTrue(ep.getTransformers().get(0) instanceof TestOutboundTransformer);
             assertTrue(TransformerUtils.isDefined(ep.getResponseTransformers()));
@@ -77,13 +76,13 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
     public void testBuildResponseEndpoint() throws UMOException
     {
         String uri = "test://address";
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, MuleServer.getManagementContext());
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, managementContext);
         try
         {
             UMOImmutableEndpoint ep = endpointBuilder.buildResponseEndpoint();
             assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RESPONSE, ep.getType());
             assertFalse(ep.canSend());
-            assertFalse(ep.canReceive());
+            assertFalse(ep.canRequest());
             assertTrue(TransformerUtils.isDefined(ep.getTransformers()));
             assertTrue(ep.getTransformers().get(0) instanceof TestInboundTransformer);
             assertFalse(TransformerUtils.isDefined(ep.getResponseTransformers()));
@@ -118,8 +117,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
     public void testHasSetEncodingMethod() throws EndpointException, SecurityException, NoSuchMethodException
     {
         String uri = "test://address";
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri,
-            MuleServer.getManagementContext());
+        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, managementContext);
         assertNotNull(endpointBuilder.getClass().getMethod("setEncoding", new Class[]{String.class}));
     }
     

@@ -32,7 +32,7 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         return "ftp-functional-test.xml";
     }
 
-    public void testSendAndReceive() throws Exception
+    public void testSendAndRequest() throws Exception
     {
         Map properties = new HashMap();
         MuleClient client = new MuleClient();
@@ -41,7 +41,7 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         assertNotNull(payload);
         assertEquals(TEST_MESSAGE, new String(payload.getPayload()));
         logger.info("received message OK!");
-        UMOMessage retrieved = client.receive("ftp://anonymous:email@localhost:" + PORT, getTimeout());
+        UMOMessage retrieved = client.request("ftp://anonymous:email@localhost:" + PORT, getTimeout());
         assertNotNull(retrieved);
         assertEquals(retrieved.getPayloadAsString(), TEST_MESSAGE);
     }

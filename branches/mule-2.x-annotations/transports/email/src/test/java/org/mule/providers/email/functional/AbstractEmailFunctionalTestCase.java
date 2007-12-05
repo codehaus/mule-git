@@ -132,12 +132,12 @@ public abstract class AbstractEmailFunctionalTestCase extends FunctionalTestCase
         assertEquals(message, receivedText.trim());
     }
 
-    protected void doReceive() throws Exception
+    protected void doRequest() throws Exception
     {
         assertEquals(1, server.getReceivedMessages().length);
 
         MuleClient client = new MuleClient();
-        UMOMessage message = client.receive("vm://receive", 5000);
+        UMOMessage message = client.request("vm://receive", 5000);
         
         assertNotNull(message);
         Object payload = message.getPayload();

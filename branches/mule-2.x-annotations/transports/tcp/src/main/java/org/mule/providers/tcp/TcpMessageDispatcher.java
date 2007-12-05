@@ -25,9 +25,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 /**
- * <code>TcpMessageDispatcher</code> will send transformed Mule events over TCP.
+ * Send transformed Mule events over TCP.
  */
-
 public class TcpMessageDispatcher extends AbstractMessageDispatcher
 {
 
@@ -63,7 +62,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
             {
                 try
                 {
-                    Object result = receiveFromSocket(socket, event.getTimeout());
+                    Object result = receiveFromSocket(socket, event.getTimeout(), endpoint);
                     if (result == null)
                     {
                         return null;
@@ -113,9 +112,10 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         bos.flush();
     }
 
-    private Object receiveFromSocket(final Socket socket, int timeout) throws IOException
+    protected static Object receiveFromSocket(final Socket socket, int timeout, final UMOImmutableEndpoint endpoint)
+            throws IOException
     {
-        final UMOImmutableEndpoint endpoint = getEndpoint();
+        final TcpConnector connector = (TcpConnector) endpoint.getConnector();
         DataInputStream underlyingIs = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         TcpInputStream tis = new TcpInputStream(underlyingIs)
         {
@@ -136,61 +136,25 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
                     throw e2;
                 }
             }
-            
+
         };
-        
+
         if (timeout >= 0)
         {
             socket.setSoTimeout(timeout);
         }
-        
+
         try
         {
             return connector.getTcpProtocol().read(tis);
         }
-        finally 
+        finally
         {
             if (!tis.isStreaming())
             {
                 tis.close();
             }
         }
-    }
-
-    /**
-     * Make a specific request to the underlying transport
-     * 
-     * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
-     *         returned if no data was avaialable
-     * @throws Exception if the call to the underlying protocal cuases an exception
-     */
-    protected UMOMessage doReceive(long timeout) throws Exception
-    {
-        Socket socket = connector.getSocket(endpoint);
-        try
-        {
-            Object result = receiveFromSocket(socket, (int)timeout);
-            if (result == null)
-            {
-                return null;
-            }
-            return new MuleMessage(connector.getMessageAdapter(result));
-        }
-        catch (SocketTimeoutException e)
-        {
-            // we don't necesarily expect to receive a resonse here
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Socket timed out normally while doing a synchronous receive on endpointUri: "
-                    + endpoint.getEndpointURI());
-            }
-            return null;
-        }
-        
     }
 
     protected synchronized void doDispose()

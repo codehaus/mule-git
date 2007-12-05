@@ -9,6 +9,7 @@
  */
 package org.mule.providers.tcp;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
@@ -30,8 +31,6 @@ import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +45,9 @@ import java.util.List;
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
@@ -224,20 +226,19 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         protected Object notify = new Object();
         private boolean moreMessages = true;
         
-        public TcpWorker(Object resource, AbstractMessageReceiver receiver) throws IOException
+        public TcpWorker(Socket socket, AbstractMessageReceiver receiver) throws IOException
         {
-            super(resource, receiver, new ResponseOutputStream((Socket) resource));
-
-            this.socket = (Socket) resource;
+            super(socket, receiver, ((TcpConnector) connector).getTcpProtocol().createResponse(socket));
+            this.socket = socket;
 
             final TcpConnector tcpConnector = ((TcpConnector) connector);
-            this.protocol = tcpConnector.getTcpProtocol();
+            protocol = tcpConnector.getTcpProtocol();
 
             try
             {
                 tcpConnector.configureSocket(TcpConnector.SERVER, socket);
 
-                underlyingIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                underlyingIn = new BufferedInputStream(socket.getInputStream());
                 dataIn = new TcpInputStream(underlyingIn)
                 {
                     public void close() throws IOException
@@ -254,7 +255,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                         }
                     }
                 };
-                dataOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                dataOut = new BufferedOutputStream(socket.getOutputStream());
             }
             catch (IOException e)
             {
@@ -270,7 +271,6 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         public void release()
         {
         	waitForStreams();
-
             releaseSocket();
         }
 
@@ -400,7 +400,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         protected Object processData(Object data) throws Exception
         {
             UMOMessageAdapter adapter = connector.getMessageAdapter(data);
-            OutputStream os = new ResponseOutputStream(socket);
+            OutputStream os = ((TcpConnector) connector).getTcpProtocol().createResponse(socket);
             UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), os);
             if (returnMessage != null)
             {
@@ -412,6 +412,16 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
         }
 
+        protected void preRouteMuleMessage(final MuleMessage message) throws Exception
+        {
+            super.preRouteMuleMessage(message);
+
+            final SocketAddress clientAddress = socket.getRemoteSocketAddress();
+            if (clientAddress != null)
+            {
+                message.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, clientAddress.toString());
+            }
+        }
     }
 
 }

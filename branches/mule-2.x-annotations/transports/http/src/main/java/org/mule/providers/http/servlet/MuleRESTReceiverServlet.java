@@ -73,7 +73,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
                                  + to);
                 }
 
-                UMOMessage returnMessage = endpoint.receive(to);
+                UMOMessage returnMessage = endpoint.request(to);
                 writeResponse(httpServletResponse, returnMessage);
             }
             else
@@ -154,7 +154,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
                 logger.debug("Making request using endpoint: " + endpoint.toString() + " timeout is: " + to);
             }
 
-            UMOMessage returnMessage = endpoint.receive(to);
+            UMOMessage returnMessage = endpoint.request(to);
             if (returnMessage != null)
             {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -180,8 +180,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
             throw new EndpointException(HttpMessages.httpParameterNotSet("endpoint"));
         }
 
-        UMOImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
-            endpointName, MuleServer.getManagementContext());
+        UMOImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointName);
         if (endpoint == null)
         {
             // if we dont find an endpoint for the given name, lets check the

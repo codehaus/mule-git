@@ -13,18 +13,14 @@ package org.mule.providers.soap.xfire;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.FatalConnectException;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.i18n.SoapMessages;
-import org.mule.providers.soap.xfire.i18n.XFireMessages;
-import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.transformer.TransformerException;
-import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.TemplateParser;
 
@@ -34,21 +30,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
-import org.codehaus.xfire.XFire;
 import org.codehaus.xfire.aegis.AegisBindingProvider;
 import org.codehaus.xfire.aegis.type.TypeMapping;
 import org.codehaus.xfire.aegis.type.basic.BeanType;
 import org.codehaus.xfire.client.Client;
-import org.codehaus.xfire.handler.Handler;
-import org.codehaus.xfire.service.OperationInfo;
-import org.codehaus.xfire.service.Service;
-import org.codehaus.xfire.transport.Transport;
 
 /**
  * The XFireMessageDispatcher is used for making Soap client requests to remote
@@ -72,105 +62,8 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     {
         if (client == null)
         {
-            final XFire xfire = connector.getXfire();
-            final String serviceName = getServiceName(endpoint);
-            final Service service = xfire.getServiceRegistry().getService(serviceName);
-
-            if (service == null)
-            {
-                throw new FatalConnectException(XFireMessages.serviceIsNull(serviceName), this);
-            }
-
-            List inList = connector.getServerInHandlers();
-            if (inList != null)
-            {
-                for (int i = 0; i < inList.size(); i++)
-                {
-                    Handler handler = (Handler) ClassUtils.instanciateClass(
-                                        inList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
-                    service.addInHandler(handler);
-                }
-            }
-
-            List outList = connector.getServerOutHandlers();
-            if (outList != null)
-            {
-                for (int i = 0; i < outList.size(); i++)
-                {
-                    Handler handler = (Handler) ClassUtils.instanciateClass(
-                                        outList.get(i).toString(), ClassUtils.NO_ARGS, this.getClass());
-                    service.addOutHandler(handler);
-                }
-            }
-
-            try
-            {
-                this.client = createXFireClient(endpoint, service, xfire);
-            }
-            catch (Exception ex)
-            {
-                disconnect();
-                throw ex;
-            }
+            client = connector.doClientConnect(endpoint, this);
         }
-    }
-
-    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire) throws Exception
-    {
-        return createXFireClient(endpoint, service, xfire, null);
-    }
-
-    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String transportClass) throws Exception
-    {
-        Class transportClazz = MuleUniversalTransport.class;
-
-        // TODO DO: this is suspicious: this method seems to be called by a subclass (couldn't find references to it) and still the config orverrides the transport class to use?
-        if (connector.getClientTransport() == null)
-        {
-            if (!StringUtils.isBlank(transportClass))
-            {
-                transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
-            }
-        }
-        else
-        {
-            transportClazz = ClassUtils.loadClass(connector.getClientTransport(), this.getClass());
-        }
-
-        Transport transport = (Transport)transportClazz.getConstructor(null).newInstance(null);
-        Client client = new Client(transport, service, endpoint.getEndpointURI().getUri().toString());
-        client.setXFire(xfire);
-        client.setEndpointUri(endpoint.getEndpointURI().getUri().toString());
-        return configureXFireClient(client);
-    }
-
-    protected Client configureXFireClient(Client client) throws Exception
-    {
-        client.addInHandler(new MuleHeadersInHandler());
-        client.addOutHandler(new MuleHeadersOutHandler());
-
-        List inList = connector.getClientInHandlers();
-        if (inList != null)
-        {
-            for (int i = 0; i < inList.size(); i++)
-            {
-                Class clazz = ClassUtils.loadClass(inList.get(i).toString(), this.getClass());
-                Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
-                client.addInHandler(handler);
-            }
-        }
-
-        List outList = connector.getClientOutHandlers();
-        if (outList != null)
-        {
-            for (int i = 0; i < outList.size(); i++)
-            {
-                Class clazz = ClassUtils.loadClass(outList.get(i).toString(), this.getClass());
-                Handler handler = (Handler)clazz.getConstructor(null).newInstance(null);
-                client.addOutHandler(handler);
-            }
-        }
-        return client;
     }
 
     protected void doDisconnect() throws Exception
@@ -262,7 +155,6 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
         for (int i = 0; i < arr.length; i++)
         {
-            head = "";
             head = (String)arr[i];
             if ((head != null)&&(!head.startsWith("MULE"))){
                 this.client.setProperty((String)arr[i], event.getMessage().getProperty((String)arr[i]));
@@ -295,56 +187,9 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     }
 
     /**
-     * Make a specific request to the underlying transport
-     *
-     * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
-     *         returned if no data was avaialable
-     * @throws Exception if the call to the underlying protocal cuases an exception
-     */
-    protected UMOMessage doReceive(long timeout) throws Exception
-    {
-        String serviceName = getServiceName(endpoint);
-
-        XFire xfire = connector.getXfire();
-        Service service = xfire.getServiceRegistry().getService(serviceName);
-
-        Client client = new Client(new MuleUniversalTransport(), service, endpoint.getEndpointURI()
-            .toString());
-        client.setXFire(xfire);
-        client.setTimeout((int)timeout);
-        client.setEndpointUri(endpoint.getEndpointURI().toString());
-
-        String method = (String)endpoint.getProperty(MuleProperties.MULE_METHOD_PROPERTY);
-        OperationInfo op = service.getServiceInfo().getOperation(method);
-
-        Properties params = endpoint.getEndpointURI().getUserParams();
-        String args[] = new String[params.size()];
-        int i = 0;
-        for (Iterator iterator = params.values().iterator(); iterator.hasNext(); i++)
-        {
-            args[i] = iterator.next().toString();
-        }
-
-        Object[] response = client.invoke(op, args);
-
-        if (response != null && response.length == 1)
-        {
-            return new MuleMessage(response[0]);
-        }
-        else
-        {
-            return new MuleMessage(response);
-        }
-    }
-
-    /**
      * Get the service that is mapped to the specified request.
      */
-    protected String getServiceName(UMOImmutableEndpoint endpoint)
+    protected static String getServiceName(UMOImmutableEndpoint endpoint)
     {
         String pathInfo = endpoint.getEndpointURI().getPath();
 

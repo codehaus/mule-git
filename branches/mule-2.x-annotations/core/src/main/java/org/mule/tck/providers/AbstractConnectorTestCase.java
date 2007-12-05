@@ -20,6 +20,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.umo.provider.UMOMessageDispatcherFactory;
+import org.mule.umo.provider.UMOMessageRequesterFactory;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -53,7 +54,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             fail("You need to set the connector name on the connector before returning it");
         }
         connector.setManagementContext(managementContext);
-        managementContext.getRegistry().registerConnector(connector, managementContext);
+        managementContext.getRegistry().registerConnector(connector);
     }
 
     protected void doTearDown() throws Exception
@@ -148,8 +149,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
         UMOComponent component = getTestComponent("anApple", Apple.class);
 
-        UMOImmutableEndpoint endpoint = managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
-            getTestEndpointURI(), managementContext);
+        UMOImmutableEndpoint endpoint = 
+            managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(getTestEndpointURI());
 
         try
         {
@@ -254,6 +255,15 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         assertNotNull(connector);
 
         UMOMessageDispatcherFactory factory = connector.getDispatcherFactory();
+        assertNotNull(factory);
+    }
+
+    public void testConnectorMessageRequesterFactory() throws Exception
+    {
+        UMOConnector connector = getConnector();
+        assertNotNull(connector);
+
+        UMOMessageRequesterFactory factory = connector.getRequesterFactory();
         assertNotNull(factory);
     }
 

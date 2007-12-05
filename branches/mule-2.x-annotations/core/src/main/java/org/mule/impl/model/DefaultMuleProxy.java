@@ -67,9 +67,6 @@ public class DefaultMuleProxy implements MuleProxy
     /**
      * Constructs a Proxy using the UMO's AbstractMessageDispatcher and the UMO
      * itself
-     *
-     * @param component  the underlying object that with receive events
-     * @param descriptor the UMOComponent descriptor associated with the component
      */
     public DefaultMuleProxy(Object pojoService, UMOComponent component, UMOManagementContext managementContext)
             throws UMOException
@@ -174,7 +171,7 @@ public class DefaultMuleProxy implements MuleProxy
         UMOMessage returnMessage = null;
         try
         {
-            if (event.getEndpoint().canReceive())
+            if (event.getEndpoint().canRequest())
             {
                 event = OptimizedRequestContext.unsafeSetEvent(event);
                 Object replyTo = event.getMessage().getReplyTo();
@@ -358,7 +355,7 @@ public class DefaultMuleProxy implements MuleProxy
             // get the endpointUri for this uri
             UMOImmutableEndpoint endpoint = managementContext.getRegistry()
                 .lookupEndpointFactory()
-                .getOutboundEndpoint(returnMessage.getReplyTo().toString(), managementContext);
+                .getOutboundEndpoint(returnMessage.getReplyTo().toString());
             // make sure remove the replyTo property as not cause a a forever
             // replyto loop
             returnMessage.removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
@@ -390,7 +387,7 @@ public class DefaultMuleProxy implements MuleProxy
 
         try
         {
-            if (event.getEndpoint().canReceive())
+            if (event.getEndpoint().canRequest())
             {
                 // dispatch the next receiver
                 event = OptimizedRequestContext.criticalSetEvent(event);

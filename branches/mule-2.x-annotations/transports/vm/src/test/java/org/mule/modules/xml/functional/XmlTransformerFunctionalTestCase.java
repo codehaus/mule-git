@@ -43,11 +43,6 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
         return sendObject("object-in");
     }
 
-    protected MuleClient sendObject2() throws UMOException
-    {
-        return sendObject("object-in-2");
-    }
-
     protected MuleClient sendObject(String endpoint) throws UMOException
     {
         MuleClient client = new MuleClient();
@@ -57,55 +52,55 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
 
     public void testXmlOut() throws Exception
     {
-        String xml = (String) receive(sendXml(), "xml-out", String.class);
+        String xml = (String) request(sendXml(), "xml-out", String.class);
         XMLAssert.assertXMLEqual(SIMPLE_XML, xml);
     }
 
     public void testXmlDomOut() throws UMOException
     {
-        Document dom = (Document) receive(sendXml(), "xml-dom-out", Document.class);
+        Document dom = (Document) request(sendXml(), "xml-dom-out", Document.class);
         assertEquals("parent", dom.getDocumentElement().getLocalName());
     }
 
     public void testXmlXsltOut() throws Exception
     {
-        String xml = (String) receive(sendXml(), "xml-xslt-out-string", String.class);
+        String xml = (String) request(sendXml(), "xml-xslt-out-string", String.class);
         XMLAssert.assertXMLEqual(CHILDLESS_XML, xml);
     }
 
     public void testDomXmlOut() throws Exception
     {
-        String xml = (String) receive(sendXml(), "dom-xml-out", String.class);
+        String xml = (String) request(sendXml(), "dom-xml-out", String.class);
         XMLAssert.assertXMLEqual(SIMPLE_XML, xml);
     }
 
     public void testObjectOut() throws Exception
     {
-        receive(sendObject(), "object-out", Parent.class);
+        request(sendObject(), "object-out", Parent.class);
     }
 
     public void testObjectXmlOut() throws Exception
     {
-        String xml = (String) receive(sendObject(), "object-xml-out", String.class);
+        String xml = (String) request(sendObject(), "object-xml-out", String.class);
         System.out.println(xml);
         XMLAssert.assertXMLEqual(SERIALIZED, xml);
     }
 
     public void testXmlObjectOut() throws UMOException
     {
-        receive(sendObject2(), "xml-object-out", Parent.class);
+        request(sendObject(), "xml-object-out", Parent.class);
     }
 
     public void testXmlJxpathOut() throws Exception
     {
-        String xml = (String) receive(sendXml(), "xml-jxpath-out", String.class);
+        String xml = (String) request(sendXml(), "xml-jxpath-out", String.class);
         assertEquals("1", xml);
     }
 
 
-    protected Object receive(MuleClient client, String endpoint, Class clazz) throws UMOException
+    protected Object request(MuleClient client, String endpoint, Class clazz) throws UMOException
     {
-        UMOMessage message = client.receive(endpoint, TIMEOUT);
+        UMOMessage message = client.request(endpoint, TIMEOUT);
         assertNotNull(message);
         assertNotNull(message.getPayload());
         assertTrue(message.getPayload().getClass().getName(), clazz.isAssignableFrom(message.getPayload().getClass()));

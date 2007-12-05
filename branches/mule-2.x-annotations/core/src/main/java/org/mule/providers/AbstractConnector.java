@@ -80,6 +80,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -1821,28 +1822,6 @@ public abstract class AbstractConnector
         }
     }
 
-    public UMOMessage receive(String uri, long timeout) throws Exception
-    {
-        return receive(getManagementContext().getRegistry().lookupEndpointFactory().getInboundEndpoint(uri,
-            getManagementContext()), timeout);
-    }
-
-    public UMOMessage receive(UMOImmutableEndpoint endpoint, long timeout) throws Exception
-    {
-        UMOMessageDispatcher dispatcher = null;
-        UMOMessage result = null;
-        try
-        {
-            dispatcher = this.getDispatcher(endpoint);
-            result = dispatcher.receive(timeout);
-            return result;
-        }
-        finally
-        {
-            setupDispatchReturn(endpoint, dispatcher, result);
-        }
-    }
-
     /**
      * This method will return the dispatcher to the pool or, if the payload is an inputstream,
      * replace the payload with a new DelegatingInputStream which returns the dispatcher to
@@ -1884,7 +1863,7 @@ public abstract class AbstractConnector
     public UMOMessage request(String uri, long timeout) throws Exception
     {
         return request(getManagementContext().getRegistry().lookupEndpointFactory()
-                .getInboundEndpoint(uri, getManagementContext()),
+                .getInboundEndpoint(uri),
                 timeout);
     }
 
@@ -2041,7 +2020,7 @@ public abstract class AbstractConnector
             }
 
             UMOMessageDispatcherFactory df = serviceDescriptor.createDispatcherFactory();
-            if(df!=null)
+            if (df != null)
             {
                 this.setDispatcherFactory(df);
             }
@@ -2056,7 +2035,7 @@ public abstract class AbstractConnector
             }
 
             UMOMessageRequesterFactory rf = serviceDescriptor.createRequesterFactory();
-            if(df!=null)
+            if (rf != null)
             {
                 this.setRequesterFactory(rf);
             }
