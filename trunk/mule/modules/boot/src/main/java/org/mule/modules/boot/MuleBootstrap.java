@@ -44,8 +44,12 @@ public final class MuleBootstrap
     public static final String MULE_VERSION_WRAPPER = "org.mule.modules.boot.VersionWrapper";
     
     public static final String CLI_OPTIONS[][] = {
+        {"builder", "true", "Configuration Builder Type"},
+        {"config", "true", "Configuration File"},
         {"main", "true", "Main Class"},
-        {"version", "false", "Show product and version information"}
+        {"mode", "true", "Run Mode"},
+        {"version", "false", "Show product and version information"},
+        {"props", "true", "Startup Properties"}
     };
     
     private MuleBootstrap()
@@ -58,8 +62,7 @@ public final class MuleBootstrap
         prepareBootstrapPhase();
         
         CommandLine commandLine = parseCommandLine(args);
-        String[] remainingArgs = commandLine.getArgs();
-        
+
         String mainClassName = commandLine.getOptionValue("main");
         if (commandLine.hasOption("version"))
         {
@@ -72,7 +75,7 @@ public final class MuleBootstrap
         
         if (mainClassName.equals(MULE_SERVER_WRAPPER) || mainClassName.equals(MULE_VERSION_WRAPPER))
         {
-            WrapperManager.start((WrapperListener) Class.forName(mainClassName).newInstance(), remainingArgs);
+            WrapperManager.start((WrapperListener) Class.forName(mainClassName).newInstance(), args);
         }
         else
         {
