@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:servlet="http://www.mulesource.org/schema/mule/servlet/2.0"
+       xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/servlet/2.0 http://www.mulesource.org/schema/mule/servlet/2.0/mule-servlet.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
+
+    <endpoint name="restFileEndpoint" address="file://./.mule/restFile"/>
+
+    <!-- workaround for http://mule.mulesource.org/jira/browse/MULE-1827 -->
+    <!-- does this work?  it's not named or applied anwhere!
+         see hello-http-config.xml for a more likely correct use -->
+    <transformer-message-properties>
+        <add-properties>
+            <spring:entry key="Content-Type" value="text/plain"/>
+        </add-properties>
+    </transformer-message-properties>
+
+    <model name="samples">
+
+        <service name="restTest">
+            <inbound-router>
+                <inbound-endpoint address="servlet://restPUTTest"/>
+            </inbound-router>
+            <component>
+                <pooled-object class="org.mule.samples.rest.RestTester">
+                    <properties>
+                        <spring:entry key="prefix" value="Received"/>
+                    </properties>
+                </pooled-object>
+            </component>
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint ref="restFileEndpoint"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+    </model>
+
+</mule>
