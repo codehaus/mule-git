@@ -31,30 +31,14 @@ public class WebsphereTransactedJmsMessageReceiver extends XaTransactedJmsMessag
         if (connector.isConnected() && connector.isEagerConsumer())
         {
             createConsumer();
-            // creating this consumer now would prevent from the actual worker
-            // consumer
-            // to receive the message!
-            //Antoine Borg 08 Dec 2006 - Uncommented for MULE-1150
-            // if we comment this line, if one tries to restart the service through
-            // JMX,
-            // this will fail...
-            //This Line seems to be the root to a number of problems and differences between
-            //Jms providers. A which point the consumer is created changes how the conneciton can be managed.
-            //For example, WebsphereMQ needs the consumer created here, otherwise ReconnectionStrategies don't work properly
-            //(See MULE-1150) However, is the consumer is created here for Active MQ, The worker thread cannot actually
-            //receive the message.  We need to test with a few more Jms providers and transactions to see which behaviour
-            // is correct.  My gut feeling is that the consumer should be created here and there is a bug in ActiveMQ
         }
         
         // MULE-1150 check whether mule is really connected      
-        if (connector.isConnected() && (this.connected.compareTo(false) == 0))
+        if (connector.isConnected() && !this.connected.get() && connector.getSessionFromTransaction() == null)
         {
-            if (connector.getSessionFromTransaction() == null)
-            {
-                // check connection by creating session
-                Session s = connector.getConnection().createSession(false, 1);
-                s.close();
-            }
+            // check connection by creating session
+            Session s = connector.getConnection().createSession(false, 1);
+            s.close();
         }
     }
 }

@@ -82,6 +82,7 @@ public interface MuleProperties
     String MULE_CORRELATION_GROUP_SIZE_PROPERTY = PROPERTY_PREFIX + "CORRELATION_GROUP_SIZE";
     String MULE_CORRELATION_SEQUENCE_PROPERTY = PROPERTY_PREFIX + "CORRELATION_SEQUENCE";
     String MULE_REMOTE_SYNC_PROPERTY = PROPERTY_PREFIX + "REMOTE_SYNC";
+    String MULE_REMOTE_CLIENT_ADDRESS = PROPERTY_PREFIX + "REMOTE_CLIENT_ADDRESS";
     String MULE_SOAP_METHOD = PROPERTY_PREFIX + "SOAP_METHOD";
     String MULE_JMS_SESSION = PROPERTY_PREFIX + "JMS_SESSION";
     // End Event Level properties
@@ -108,4 +109,6 @@ public interface MuleProperties
     // End Connector Service descriptor properties
 
     String MULE_WORKING_DIRECTORY_PROPERTY = "mule.working.dir";
+
+    String MULE_HOME_DIRECTORY_PROPERTY = "mule.home";
 }

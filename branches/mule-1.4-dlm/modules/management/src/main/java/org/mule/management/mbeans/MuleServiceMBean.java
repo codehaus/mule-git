@@ -57,12 +57,17 @@ public interface MuleServiceMBean
 
     String getLicense();
 
-    /**
-     * @deprecated use getBuildNumber() instead
-     */
     String getBuildDate();
-    
+
     String getBuildNumber();
 
     String getInstanceId();
+
+    /**
+     * Contains value of option -builder
+     *
+     * @return builder class name
+     */
+    String getConfigBuilderClassName();
+
 }

@@ -10,6 +10,7 @@
 
 package org.mule.providers.http;
 
+import org.mule.config.MuleProperties;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -37,6 +38,7 @@ import org.mule.util.ObjectUtils;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -112,9 +114,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
     protected class HttpWorker implements Work
     {
-        private HttpServerConnection conn = null;
+        private HttpServerConnection conn;
         private String cookieSpec;
-        private boolean enableCookies = false;
+        private boolean enableCookies;
+        private String remoteClientAddress;
 
         public HttpWorker(Socket socket) throws IOException
         {
@@ -133,6 +136,12 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             enableCookies =
                     MapUtils.getBooleanValue(endpoint.getProperties(), HttpConnector.HTTP_ENABLE_COOKIES_PROPERTY,
                             ((HttpConnector)connector).isEnableCookies());
+
+            final SocketAddress clientAddress = socket.getRemoteSocketAddress();
+            if (clientAddress != null)
+            {
+                remoteClientAddress = clientAddress.toString();
+            }
         }
 
         public void run()
@@ -398,14 +407,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return headers;
         }
 
-        /**
-         * Needed for setting connection specific properties (like ssl-certificates) in {@link HttpsMessageReceiver}
-         * @see HttpsMessageReceiver
-         * @param message
-         */
         protected void preRouteMessage(UMOMessage message)
         {
-            // no op
+            message.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, remoteClientAddress);
         }
 
         public void release()

@@ -55,6 +55,8 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
 
         protected void preRouteMessage(UMOMessage message)
         {
+            super.preRouteMessage(message);
+            
             if (peerCertificateChain != null)
             {
                 message.setProperty(HttpsConnector.PEER_CERTIFICATES, peerCertificateChain);

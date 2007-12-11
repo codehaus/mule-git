@@ -10,6 +10,7 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
@@ -31,9 +32,6 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageAdapter;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -52,6 +50,9 @@ import java.util.List;
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <code>TcpMessageReceiver</code> acts like a TCP server to receive socket
@@ -375,6 +376,16 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
         }
 
+        protected void preRouteMuleMessage(final MuleMessage message) throws Exception
+        {
+            super.preRouteMuleMessage(message);
+
+            final SocketAddress clientAddress = socket.getRemoteSocketAddress();
+            if (clientAddress != null)
+            {
+                message.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, clientAddress.toString());
+            }
+        }
     }
 
     protected class TcpStreamWorker extends TcpWorker

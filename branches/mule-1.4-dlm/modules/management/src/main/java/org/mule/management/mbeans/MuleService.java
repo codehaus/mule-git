@@ -11,6 +11,7 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleManager;
+import org.mule.MuleServer;
 import org.mule.config.MuleManifest;
 import org.mule.umo.UMOException;
 import org.mule.util.IOUtils;
@@ -41,9 +42,11 @@ public class MuleService implements MuleServiceMBean
     private String ip;
     private String os;
     private String buildNumber;
+    private String buildDate;
     // TODO
     private String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com";
     private String license;
+
 
     public MuleService()
     {
@@ -57,6 +60,7 @@ public class MuleService implements MuleServiceMBean
         os += " (" + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")";
 
         buildNumber = MuleManifest.getBuildNumber();
+        buildDate = MuleManifest.getBuildDate();
         try
         {
             InetAddress iad = InetAddress.getLocalHost();
@@ -193,7 +197,7 @@ public class MuleService implements MuleServiceMBean
             }
             catch (IOException e)
             {
-                logger.warn("Failed to load LICENSE.txt", e);
+                logger.warn("Failed to load MULE_LICENSE.txt", e);
             }
             if (license == null)
             {
@@ -203,12 +207,9 @@ public class MuleService implements MuleServiceMBean
         return license;
     }
 
-    /**
-     * @deprecated use getBuildNumber() instead
-     */
     public String getBuildDate()
     {
-        return buildNumber;
+        return buildDate;
     }
     
     public String getBuildNumber()
@@ -219,5 +220,10 @@ public class MuleService implements MuleServiceMBean
     public String getInstanceId()
     {
         return MuleManager.getInstance().getId();
+    }
+
+    public String getConfigBuilderClassName()
+    {
+        return MuleServer.getConfigBuilderClassName();
     }
 }

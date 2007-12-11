@@ -109,6 +109,8 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
 
         protected void preRouteMuleMessage(MuleMessage message) throws Exception
         {
+            super.preRouteMuleMessage(message);
+
             preRoute(message);
         }
     }
@@ -123,6 +125,8 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
 
         protected void preRouteMuleMessage(MuleMessage message) throws Exception
         {
+            super.preRouteMuleMessage(message);
+            
             preRoute(message);
         }
     }

@@ -21,6 +21,7 @@ import org.mule.util.StringUtils;
 import org.mule.util.queue.EventFilePersistenceStrategy;
 import org.mule.util.queue.QueuePersistenceStrategy;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -43,6 +44,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleConfiguration
 {
+    private static final String DEFAULT_LOG_DIRECTORY = "logs";
+    
     /**
      * logger used by this class
      */
@@ -381,6 +384,16 @@ public class MuleConfiguration
     public String getWorkingDirectory()
     {
         return workingDirectory;
+    }
+    
+    public String getMuleHomeDirectory()
+    {
+        return System.getProperty(MuleProperties.MULE_HOME_DIRECTORY_PROPERTY);
+    }
+    
+    public String getLogDirectory()
+    {
+        return getMuleHomeDirectory() + File.separator + DEFAULT_LOG_DIRECTORY; 
     }
 
     public void setWorkingDirectory(String workingDirectory)
