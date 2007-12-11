@@ -17,7 +17,7 @@ import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
@@ -469,7 +469,7 @@ public class ManagementContext implements UMOManagementContext
         {
             throw new MuleRuntimeException(CoreMessages.serverNotificationManagerNotEnabled());
         }
-        notificationManager.registerListener(l, resourceIdentifier);
+        notificationManager.addListenerSubscription(l, resourceIdentifier);
     }
 
     public void unregisterListener(UMOServerNotificationListener l)
@@ -477,7 +477,7 @@ public class ManagementContext implements UMOManagementContext
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
-            notificationManager.unregisterListener(l);
+            notificationManager.removeListener(l);
         }
     }
 

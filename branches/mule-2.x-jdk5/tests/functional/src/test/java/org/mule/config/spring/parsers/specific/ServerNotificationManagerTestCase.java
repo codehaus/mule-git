@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ServerNotificationManagerTestCase.java 10004 2007-12-05 20:10:01Z acooke $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,9 +10,9 @@
 
 package org.mule.config.spring.parsers.specific;
 
-import org.mule.impl.internal.notifications.ServerNotificationManager;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
+import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.manager.UMOServerNotificationListener;
@@ -27,16 +27,24 @@ public class ServerNotificationManagerTestCase extends FunctionalTestCase
         return "org/mule/config/spring/parsers/specific/server-notification-manager-test.xml";
     }
 
+    public void testDynamicAttribute()
+    {
+        ServerNotificationManager manager = managementContext.getNotificationManager();
+        assertTrue(manager.isDynamic());
+    }
+
     public void testRoutingConfiguration()
     {
         ServerNotificationManager manager = managementContext.getNotificationManager();
-        assertTrue(manager.getEventTypes().size() > 2);
-        Object iface = manager.getEventTypes().get(TestInterface.class);
-        assertNotNull(iface);
-        assertEquals(iface, TestEvent.class);
-        iface = manager.getEventTypes().get(TestInterface2.class);
-        assertNotNull(iface);
-        assertEquals(iface, AdminNotification.class);        
+        assertTrue(manager.getInterfaceToEvents().size() > 2);
+        Object ifaces = manager.getInterfaceToEvents().get(TestInterface.class);
+        assertNotNull(ifaces);
+        assertTrue(ifaces instanceof Collection);
+        assertTrue(((Collection) ifaces).contains(TestEvent.class));
+        ifaces = manager.getInterfaceToEvents().get(TestInterface2.class);
+        assertNotNull(ifaces);
+        assertTrue(ifaces instanceof Collection);
+        assertTrue(((Collection) ifaces).contains(AdminNotification.class));        
     }
 
     public void testSimpleNotification() throws InterruptedException

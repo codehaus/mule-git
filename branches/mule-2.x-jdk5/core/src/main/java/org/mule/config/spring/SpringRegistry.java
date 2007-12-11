@@ -33,7 +33,6 @@ import org.mule.umo.manager.UMOAgent;
 import org.mule.umo.model.UMOModel;
 import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.transformer.UMOTransformer;
-import org.mule.util.MapUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringUtils;
 
@@ -118,10 +117,11 @@ public class SpringRegistry extends AbstractRegistry implements ApplicationConte
     protected Collection doLookupObjects(Class type)
     {
         Map map = applicationContext.getBeansOfType(type);
-        if (logger.isDebugEnabled())
-        {
-            MapUtils.debugPrint(System.out, "Beans of type " + type, map);
-        }
+        // MULE-2762
+        //if (logger.isDebugEnabled())
+        //{
+        //    MapUtils.debugPrint(System.out, "Beans of type " + type, map);
+        //}
         return map.values();
     }
 

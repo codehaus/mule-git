@@ -329,7 +329,6 @@ public class MuleConfiguration
         this.workListener = workListener;
     }
 
-
     public String getId()
     {
         return id;
@@ -337,6 +336,10 @@ public class MuleConfiguration
 
     public void setId(String id)
     {
+        if (StringUtils.isBlank(id))
+        {
+            throw new RuntimeException("Cannot set server id to null/blank");
+        }
         this.id = id;
     }
 
@@ -392,4 +395,5 @@ public class MuleConfiguration
     {
         this.systemModelType = systemModelType;
     }
+
 }

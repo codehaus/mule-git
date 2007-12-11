@@ -59,19 +59,15 @@
 
     <mule:mule name="_muleSystemModel">
 
-        <bean name="_muleConfiguration" class="org.mule.config.MuleConfiguration" depends-on="_muleManagementContext"/>
-
-        <!--
-           <mule:configuration
-                   serverId="_defaultx"
-                   defaultSynchronousEndpoints="false"
-                   domainId="org.mule"
-                   defaultRemoteSync="false"
-                   defaultSynchronousEventTimeout="3000"
-                   defaultEncoding="UTF-8"
-                   defaultTransactionTimeout="5000"
-                   workingDirectory=".mule"/>
-        -->
+       <mule:configuration
+               serverId="_defaultx"
+               defaultSynchronousEndpoints="false"
+               domainId="org.mule"
+               defaultRemoteSync="false"
+               defaultSynchronousEventTimeout="3000"
+               defaultEncoding="UTF-8"
+               defaultTransactionTimeout="5000"
+               workingDirectory=".mule"/>
 
         <mule:model name="_muleSystemModel"/>
 
@@ -108,12 +104,11 @@
         </property>
     </bean>
 
-    <!-- don't use the notifications element here as that is a reference to a named bean (this one!) -->
+    <!-- don't use the mule notifications element here as that is a reference to a named bean (this one!) -->
     <bean name="_muleNotificationManager"
-          class="org.mule.impl.internal.notifications.ServerNotificationManager">
-        <property name="eventTypes">
+          class="org.mule.impl.internal.notifications.manager.ServerNotificationManager">
+        <property name="interfaceToEvents">
             <map>
-                <!-- we'll probably want to encapsulate these in to boolean switches -->
                 <entry key="org.mule.impl.internal.notifications.ManagerNotificationListener"
                        value="org.mule.impl.internal.notifications.ManagerNotification"/>
                 <entry key="org.mule.impl.internal.notifications.ModelNotificationListener"

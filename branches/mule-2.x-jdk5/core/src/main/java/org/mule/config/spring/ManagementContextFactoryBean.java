@@ -13,7 +13,7 @@ import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.config.MuleProperties;
 import org.mule.impl.ManagementContext;
-import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOManagementContext;
@@ -153,7 +153,7 @@ public class ManagementContextFactoryBean extends AbstractFactoryBean
     {
         try
         {
-            Map temp = null;
+            Map temp;
             //Legacy handling.  If the context contains an AutowireUMOManagerFactoryBean, then we're dealing
             //with an old Mule config file and we change the way we deal with some of the components
             if (ClassUtils.isClassOnPath(LEGACY_MANAGER_PLACEHOLDER_CLASS, getClass()))
