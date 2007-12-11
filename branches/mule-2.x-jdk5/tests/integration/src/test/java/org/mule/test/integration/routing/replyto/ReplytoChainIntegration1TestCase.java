@@ -20,16 +20,16 @@ import java.util.Map;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-public class ReplytoChainIntegrationTestCase extends FunctionalTestCase
+public class ReplytoChainIntegration1TestCase extends FunctionalTestCase
 {
-    public ReplytoChainIntegrationTestCase()
+    public ReplytoChainIntegration1TestCase()
     {
         setDisposeManagerPerSuite(true);
     }
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/routing/replyto/injection-test.xml";
+        return "org/mule/test/integration/routing/replyto/replyto-chain-integration-test-1.xml";
     }
 
     public void testReplyToChain() throws Exception
@@ -41,7 +41,7 @@ public class ReplytoChainIntegrationTestCase extends FunctionalTestCase
         props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
         UMOMessage result = client.send("vm://pojo1", message, null);
         assertNotNull(result);
-        // Te
         assertEquals("Received: " + message, ((ActiveMQTextMessage)result.getPayload()).getText());
     }
+    
 }
