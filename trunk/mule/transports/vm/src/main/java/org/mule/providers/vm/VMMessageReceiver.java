@@ -99,7 +99,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         List messages = new LinkedList();
 
         /*
-         * Determine how many messages to batch in this poll: we need drain the queue
+         * Determine how many messages to batch in this poll: we need to drain the queue
          * quickly, but not by slamming the workManager too hard. It is impossible to
          * determine this more precisely without proper load statistics/feedback or some
          * kind of "event cost estimate". Therefore we just try to use half of the
@@ -150,7 +150,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
     }
 
     /*
-     * Even though the VM transport is "polling" for messages, the nonexistant cost of
+     * Even though the VM transport is "polling" for messages, the nonexistent cost of
      * accessing the queue is a good reason to not use the regular scheduling mechanism in
      * order to both minimize latency and maximize throughput.
      */
