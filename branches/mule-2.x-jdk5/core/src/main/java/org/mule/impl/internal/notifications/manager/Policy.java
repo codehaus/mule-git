@@ -88,6 +88,19 @@ class Policy
         return true;
     }
 
+    protected static boolean notASuperclassOfAnyClassInSet(Set set, Class clazz)
+    {
+        for (Iterator iterator = set.iterator(); iterator.hasNext();)
+        {
+            Class disabled = (Class) iterator.next();
+            if (clazz.isAssignableFrom(disabled))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     void dispatch(UMOServerNotification notification)
     {
         if (null != notification)
@@ -113,24 +126,31 @@ class Policy
         }
     }
 
-    boolean isEventEnabled(Class clazz)
+    /**
+     * This returns true if the given type or any subclass is accepted.  In this way a user can
+     * ask for a whole set of classes at once.
+     *
+     * @param type
+     * @return
+     */
+    boolean isNotificationEnabled(Class type)
     {
-        if (knownEvents.containsKey(clazz))
+        if (knownEvents.containsKey(type))
         {
-            return ((Boolean) knownEvents.get(clazz)).booleanValue();
+            return ((Boolean) knownEvents.get(type)).booleanValue();
         }
         else
         {
             for (Iterator events = eventToSenders.keySet().iterator(); events.hasNext();)
             {
                 Class event = (Class) events.next();
-                if (event.isAssignableFrom(clazz))
+                if (type.isAssignableFrom(event))
                 {
-                    knownEvents.put(clazz, Boolean.TRUE);
+                    knownEvents.put(type, Boolean.TRUE);
                     return true;
                 }
             }
-            knownEvents.put(clazz, Boolean.FALSE);
+            knownEvents.put(type, Boolean.FALSE);
             return false;
         }
     }

@@ -249,7 +249,7 @@
         <xsd:attribute name="defaultEncoding" type="xsd:string"/>
         <xsd:attribute name="defaultTransactionTimeout" type="xsd:string"/>
         <xsd:attribute name="defaultRemoteSync" type="substitutableBoolean" default="false"/>
-        <xsd:attribute name="serverId" type="xsd:string" use="required"/>
+        <xsd:attribute name="serverId" type="nonBlankString" use="required"/>
         <xsd:attribute name="clusterId" type="xsd:string" use="optional"/>
         <xsd:attribute name="domainId" type="xsd:string" use="optional"/>
     </xsd:complexType>
@@ -284,14 +284,14 @@
     <xsd:element name="abstract-disable-notification" abstract="true" type="abstractDisableNotificationType"/>
     <xsd:complexType name="abstractDisableNotificationType"/>
 
-    <xsd:element name="define-notification" substitutionGroup="abstract-define-notification" type="defineNotificationType"/>
+    <xsd:element name="notification" substitutionGroup="abstract-define-notification" type="defineNotificationType"/>
     <xsd:complexType name="defineNotificationType">
         <xsd:complexContent>
             <xsd:extension base="abstractDefineNotificationType">
                 <xsd:attribute name="event-class" type="substitutableClass">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The class associated with an event that will be delivered to the interface.
+                            The class associated with a notification event that will be delivered to the interface.
                             This can be used instead of the event attribute to specify a custom class.
                         </xsd:documentation>
                     </xsd:annotation>
@@ -299,7 +299,7 @@
                 <xsd:attribute name="event">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The event to deliver.
+                            The notification event to deliver.
                         </xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
@@ -313,6 +313,7 @@
                             <xsd:enumeration value="CONNECTION"/>
                             <xsd:enumeration value="REGISTRY"/>
                             <xsd:enumeration value="CUSTOM"/>
+                            <xsd:enumeration value="MESSAGE"/>
                             <xsd:enumeration value="EXCEPTION"/>
                             <xsd:enumeration value="TRANSACTION"/>
                         </xsd:restriction>
@@ -321,14 +322,14 @@
                 <xsd:attribute name="interface-class" type="substitutableClass">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The interface (class name) that will receive the event.
+                            The interface (class name) that will receive the notification event.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="interface">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The interface that will receive the event.
+                            The interface that will receive the notification event.
                         </xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
@@ -342,6 +343,7 @@
                             <xsd:enumeration value="CONNECTION"/>
                             <xsd:enumeration value="REGISTRY"/>
                             <xsd:enumeration value="CUSTOM"/>
+                            <xsd:enumeration value="MESSAGE"/>
                             <xsd:enumeration value="EXCEPTION"/>
                             <xsd:enumeration value="TRANSACTION"/>
                         </xsd:restriction>
@@ -2076,6 +2078,22 @@
             <xsd:simpleType>
                 <xsd:restriction base="xsd:string">
                     <xsd:pattern value="\[?[A-Za-z0-9\.$]+"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="nonBlankString">
+        <xsd:annotation>
+            <xsd:documentation>
+                A custom xsd:string-like type that cannot be empty
+                (is there a better way?)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value=".+"/>
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:union>

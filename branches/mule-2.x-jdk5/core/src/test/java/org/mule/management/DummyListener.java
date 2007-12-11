@@ -8,13 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.samples.voipservice.interfaces;
+package org.mule.management;
 
-import org.mule.samples.voipservice.to.CreditProfileTO;
+import org.mule.umo.manager.UMOServerNotificationListener;
+import org.mule.umo.manager.UMOServerNotification;
 
-import java.io.IOException;
-
-public interface CreditAgency
+public class DummyListener implements UMOServerNotificationListener
 {
-    CreditProfileTO getCreditProfile(CreditProfileTO creditProfileTO) throws IOException;
+
+    public void onNotification(UMOServerNotification notification)
+    {
+        // empty
+    }
+
 }

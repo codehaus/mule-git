@@ -269,7 +269,7 @@ public class ManagementContext implements UMOManagementContext
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
 
-        notificationManager.fireEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
+        notificationManager.fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
 
         if ((startDate > 0) && logger.isInfoEnabled())
         {
@@ -496,7 +496,7 @@ public class ManagementContext implements UMOManagementContext
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
-            notificationManager.fireEvent(notification);
+            notificationManager.fireNotification(notification);
         }
         else if (logger.isDebugEnabled())
         {

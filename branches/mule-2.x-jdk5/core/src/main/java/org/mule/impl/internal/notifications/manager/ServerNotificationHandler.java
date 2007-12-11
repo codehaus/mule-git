@@ -8,16 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.samples.voipservice.interfaces;
+package org.mule.impl.internal.notifications.manager;
 
-import org.mule.samples.voipservice.to.AddressTO;
+import org.mule.umo.manager.UMOServerNotification;
 
-import java.io.IOException;
-
-public interface AddressValidation
+public interface ServerNotificationHandler
 {
-    int SUCCESS = 1;
-    int FAILURE = -1;
 
-    int validateAddress(AddressTO addressTO) throws IOException;
+    public void fireNotification(UMOServerNotification notification);
+
+    public boolean isNotificationDynamic();
+
+    public boolean isNotificationEnabled(Class type);
+
 }

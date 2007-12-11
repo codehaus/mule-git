@@ -32,46 +32,46 @@ class Configuration
 {
 
     protected Log logger = LogFactory.getLog(getClass());
-    private Map interfaceToEvents = new HashMap(); // map from interface to collection of events
+    private Map interfaceToTypes = new HashMap(); // map from interface to collection of events
     private Set listenerSubscriptionPairs = new HashSet();
     private Set disabledInterfaces = new HashSet();
-    private Set disabledEvents = new HashSet();
+    private Set disabledNotificationTypes = new HashSet();
     private boolean dirty = true;
     private Policy policy;
 
-    synchronized void addInterfaceToEvent(Class iface, Class event)
+    synchronized void addInterfaceToType(Class iface, Class type)
     {
         dirty = true;
-        if (!UMOServerNotification.class.isAssignableFrom(event))
+        if (!UMOServerNotification.class.isAssignableFrom(type))
         {
             throw new IllegalArgumentException(
-                    CoreMessages.propertyIsNotSupportedType("event",
-                            UMOServerNotification.class, event).getMessage());
+                    CoreMessages.propertyIsNotSupportedType("type",
+                            UMOServerNotification.class, type).getMessage());
         }
-        if (!interfaceToEvents.containsKey(iface))
+        if (!interfaceToTypes.containsKey(iface))
         {
-            interfaceToEvents.put(iface, new HashSet());
+            interfaceToTypes.put(iface, new HashSet());
         }
-        Set events = (Set) interfaceToEvents.get(iface);
-        events.add(event);
+        Set events = (Set) interfaceToTypes.get(iface);
+        events.add(type);
         if (logger.isDebugEnabled())
         {
-            logger.debug("Registered event type: " + event);
-            logger.debug("Binding listener type '" + iface + "' to event type '" + event + "'");
+            logger.debug("Registered event type: " + type);
+            logger.debug("Binding listener type '" + iface + "' to event type '" + type + "'");
         }
     }
 
     /**
-     * @param interfaceToEvents map from interace to a particular event
+     * @param interfaceToTypes map from interace to a particular event
      * @throws ClassNotFoundException
      */
-    synchronized void addAllInterfaceToEvents(Map interfaceToEvents) throws ClassNotFoundException
+    synchronized void addAllInterfaceToTypes(Map interfaceToTypes) throws ClassNotFoundException
     {
         dirty = true;
-        for (Iterator ifaces = interfaceToEvents.keySet().iterator(); ifaces.hasNext();)
+        for (Iterator ifaces = interfaceToTypes.keySet().iterator(); ifaces.hasNext();)
         {
             Object iface = ifaces.next();
-            addInterfaceToEvent(ServerNotificationManager.toClass(iface), ServerNotificationManager.toClass(interfaceToEvents.get(iface)));
+            addInterfaceToType(ServerNotificationManager.toClass(iface), ServerNotificationManager.toClass(interfaceToTypes.get(iface)));
         }
     }
 
@@ -90,10 +90,6 @@ class Configuration
         }
     }
 
-    /**
-     * We only remove one listener, event though several may be registered
-     * - this is historical behaviour, tested elsewhere.
-     */
     synchronized void removeListener(UMOServerNotificationListener listener)
     {
         dirty = true;
@@ -104,7 +100,6 @@ class Configuration
             if (pair.getListener().equals(listener))
             {
                 toRemove.add(pair);
-                break; // see above - remove just one listener
             }
         }
         listenerSubscriptionPairs.removeAll(toRemove);
@@ -134,18 +129,18 @@ class Configuration
         }
     }
 
-    synchronized void disableEvent(Class event)
+    synchronized void disableType(Class type)
     {
         dirty = true;
-        disabledEvents.add(event);
+        disabledNotificationTypes.add(type);
     }
 
-    synchronized void disableAllEvents(Collection events) throws ClassNotFoundException
+    synchronized void disableAllTypes(Collection types) throws ClassNotFoundException
     {
         dirty = true;
-        for (Iterator event = events.iterator(); event.hasNext();)
+        for (Iterator event = types.iterator(); event.hasNext();)
         {
-            disableEvent(ServerNotificationManager.toClass(event.next()));
+            disableType(ServerNotificationManager.toClass(event.next()));
         }
     }
 
@@ -153,7 +148,7 @@ class Configuration
     {
         if (dirty)
         {
-            policy = new Policy(interfaceToEvents, listenerSubscriptionPairs, disabledInterfaces, disabledEvents);
+            policy = new Policy(interfaceToTypes, listenerSubscriptionPairs, disabledInterfaces, disabledNotificationTypes);
             dirty = false;
         }
         return policy;
@@ -161,9 +156,9 @@ class Configuration
 
     // for tests -------------------------------
 
-    Map getInterfaceToEvents()
+    Map getInterfaceToTypes()
     {
-        return Collections.unmodifiableMap(interfaceToEvents);
+        return Collections.unmodifiableMap(interfaceToTypes);
     }
 
     Collection getListeners()

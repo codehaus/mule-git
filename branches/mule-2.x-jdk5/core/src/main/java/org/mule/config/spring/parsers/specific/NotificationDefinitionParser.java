@@ -13,15 +13,15 @@ package org.mule.config.spring.parsers.specific;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
 import org.mule.config.spring.parsers.processors.CheckExclusiveAttributes;
 import org.mule.config.spring.parsers.processors.CheckRequiredAttributes;
+import org.mule.config.spring.parsers.PreProcessor;
+import org.mule.config.spring.parsers.assembly.PropertyConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-public class NotificationDefinitionDefinitionParser extends ChildMapEntryDefinitionParser
+public class NotificationDefinitionParser extends ChildMapEntryDefinitionParser
 {
 
     public static final Map EVENT_MAP;
@@ -70,7 +70,7 @@ public class NotificationDefinitionDefinitionParser extends ChildMapEntryDefinit
         INTERFACE_MAP.put("TRANSACTION", org.mule.impl.internal.notifications.TransactionNotificationListener.class.getName());
     }
 
-    public NotificationDefinitionDefinitionParser()
+    public NotificationDefinitionParser()
     {
         super("interfaceToType", INTERFACE_CLASS, EVENT_CLASS);
         addMapping(EVENT, EVENT_MAP);
@@ -81,6 +81,29 @@ public class NotificationDefinitionDefinitionParser extends ChildMapEntryDefinit
         registerPreProcessor(new CheckExclusiveAttributes(EVENT_ATTRIBUTES));
         registerPreProcessor(new CheckRequiredAttributes(INTERFACE_ATTRIBUTES));
         registerPreProcessor(new CheckRequiredAttributes(EVENT_ATTRIBUTES));
+        registerPreProcessor(new SetDefaults());
+    }
+
+    /**
+     * If only one of event or interface is set, use it as default for the other
+     */
+    private class SetDefaults implements PreProcessor
+    {
+
+        public void preProcess(PropertyConfiguration config, Element element)
+        {
+            copy(element, INTERFACE, EVENT, EVENT_CLASS);
+            copy(element, EVENT, INTERFACE, INTERFACE_CLASS);
+        }
+
+        private void copy(Element element, String from, String to, String blocker)
+        {
+            if (element.hasAttribute(from) && !element.hasAttribute(to) && !element.hasAttribute(blocker))
+            {
+                element.setAttribute(to, element.getAttribute(from));
+            }
+        }
+
     }
 
 }
