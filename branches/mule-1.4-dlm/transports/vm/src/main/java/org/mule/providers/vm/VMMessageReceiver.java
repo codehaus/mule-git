@@ -26,6 +26,8 @@ import org.mule.util.queue.QueueSession;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionException;
+
 /**
  * <code>VMMessageReceiver</code> is a listener for events from a Mule component which
  * then simply passes the events on to the target component.
@@ -42,6 +44,20 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         super(connector, component, endpoint);
         this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isTransacted());
         this.connector = (VMConnector) connector;
+    }
+
+    /*
+     * We only need to start scheduling this receiver if event queueing is enabled on the
+     * connector; otherwise events are delivered via onEvent/onCall.
+     */
+    // @Override
+    protected void schedule()
+        throws RejectedExecutionException, NullPointerException, IllegalArgumentException
+    {
+        if (connector.isQueueEvents())
+        {
+            super.schedule();
+        }
     }
 
     protected void doDispose()
