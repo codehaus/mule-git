@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd">
+
+    <http:connector name="httpConnector" reuseAddress="true"/>
+
+    <transformer-message-properties name="setResponseType">
+        <add-properties>
+            <spring:entry key="Content-Type" value="text/baz;charset=UTF-16BE"/>
+        </add-properties>
+    </transformer-message-properties>
+
+    <endpoint name="clientEndpoint" address="http://localhost:60198" synchronous="true"/>
+
+    <model name="main">
+        <service name="testComponent">
+            <inbound-router>
+                <inbound-endpoint ref="clientEndpoint" responseTransformer-refs="setResponseType"/>
+            </inbound-router>
+            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+        </service>
+    </model>
+
+</mule>

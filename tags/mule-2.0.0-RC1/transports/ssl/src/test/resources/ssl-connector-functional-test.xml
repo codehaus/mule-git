@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:ssl="http://www.mulesource.org/schema/mule/ssl/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/ssl/2.0 http://www.mulesource.org/schema/mule/ssl/2.0/mule-ssl.xsd">
+
+    <!-- keepSendSocketOpen is required for the Async test case?  see TCP -->
+    <ssl:connector name="SslConnector" keepSendSocketOpen="true">
+        <ssl:ssl-client clientKeyStore="clientKeyStore" clientKeyStorePassword="mulepassword"/>
+        <ssl:ssl-key-store keyStore="serverKeystore" keyStorePassword="mulepassword" keyPassword="mulepassword"/>
+        <ssl:ssl-server trustStore="trustStore" trustStorePassword="mulepassword"/>
+    </ssl:connector>
+
+    <ssl:endpoint name="in" host="localhost" port="61655" synchronous="false"/>
+
+    <model name="main">
+
+        <service name="testComponent" class="org.mule.tck.testmodels.mule.TestSedaComponent">
+            <inbound-router>
+                <inbound-endpoint ref="in"/>
+            </inbound-router>
+
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalTestComponent"/>
+            </component>
+            
+            <!-- This is just to avoid matching router warnings -->
+            <outbound-router>
+                <outbound-pass-through-router>
+                    <outbound-endpoint name="test1" address="test://test"/>
+                </outbound-pass-through-router>
+            </outbound-router>
+        </service>
+
+
+    </model>
+
+
+</mule>
