@@ -29,7 +29,7 @@ public class SetLendersAsRecipients extends AbstractEventAwareTransformer
     public SetLendersAsRecipients()
     {
         this.registerSourceType(LoanBrokerQuoteRequest.class);
-        this.setReturnClass(CustomerQuoteRequest.class);
+        this.setReturnClass(UMOMessage.class);
     }
 
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException
