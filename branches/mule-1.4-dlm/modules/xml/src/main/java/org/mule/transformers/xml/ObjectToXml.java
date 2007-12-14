@@ -30,6 +30,7 @@ public class ObjectToXml extends AbstractXStreamTransformer
     public ObjectToXml()
     {
         this.registerSourceType(Object.class);
+        this.setReturnClass(String.class);
     }
 
     public boolean isAcceptUMOMessage()

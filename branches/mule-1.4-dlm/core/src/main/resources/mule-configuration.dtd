@@ -498,7 +498,7 @@ Jndi
         the transformer can validate that the returnObject is of expected type before return
         to the callee.
 -->
-<!ATTLIST transformer returnClass             CDATA             "java.lang.Object">
+<!ATTLIST transformer returnClass             CDATA                 #IMPLIED>
 
 <!--
     Determines whether the tranformer should through an exception if an incompatible source type

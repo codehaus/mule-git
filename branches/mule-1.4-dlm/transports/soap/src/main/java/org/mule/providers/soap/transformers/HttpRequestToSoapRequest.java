@@ -39,6 +39,7 @@ public class HttpRequestToSoapRequest extends AbstractEventAwareTransformer
     {
         registerSourceType(String.class);
         registerSourceType(byte[].class);
+        setReturnClass(String.class);
     }
 
     public Object transform(Object src, String encoding, UMOEventContext context) throws TransformerException

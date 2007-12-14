@@ -33,7 +33,7 @@ groovy-engine-1.1-jdk14
 hibernate-3.2.2.ga
 hivemind-1.1.1
 hivemind-lib-1.1.1
-javassist-3.0
+javassist-3.6.ga
 jaxen-1.1.1
 jbpm-3.1.4
 jcl104-over-slf4j-1.4.3
@@ -88,7 +88,7 @@ mx4j-jmx-2.1.1
 mx4j-remote-2.1.1
 mx4j-tools-2.1.1
 nanocontainer-1.0
-ognl-2.6.9
+ognl-2.7.1
 opensaml-1.0.1
 org.mortbay.jetty-5.1.12
 oro-2.0.7
