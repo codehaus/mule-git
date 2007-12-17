@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-modules</artifactId>
- <version>2.0.0-RC2-SNAPSHOT</version>
+        <version>2.0.0-RC2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-builders</artifactId>
     <name>Mule Configuration Builders</name>
@@ -17,34 +17,6 @@
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>${version}</version>
-        </dependency>
-        <!-- Used by MuleXmlConfigurationBuilder -->
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
-            <exclusions>
-                <!-- we want newer collections via core -->
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <!-- we want newer beanutils via core -->
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                </exclusion>
-                <!-- we like slf4j -->
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <!-- no XML -->
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- Used by MuleXmlBuilderContextServlet -->
         <dependency>
