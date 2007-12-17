@@ -11,7 +11,8 @@ package org.mule.umo;
 
 import org.mule.impl.Directories;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
+import org.mule.impl.internal.notifications.manager.ServerNotificationHandler;
 import org.mule.management.stats.AllStatistics;
 import org.mule.registry.Registry;
 import org.mule.registry.RegistrationException;
@@ -27,11 +28,9 @@ import org.mule.util.queue.QueueManager;
 
 import javax.transaction.TransactionManager;
 
-/**
- * TODO document
- */
 public interface UMOManagementContext extends Lifecycle
 {
+
     String getSystemName();
 
     UMOStore getStore(String name) throws UMOException;
@@ -212,8 +211,8 @@ public interface UMOManagementContext extends Lifecycle
     void setWorkManager(UMOWorkManager workManager);
 
     /**
-     * Sets the queue manager used by mule for queuing events. This is used by
-     * both components and vm provider.
+     * Sets the queue manager used by mule for queuing events. This is used for
+     * component queues
      *
      * @param queueManager
      * 
@@ -221,8 +220,8 @@ public interface UMOManagementContext extends Lifecycle
     void setQueueManager(QueueManager queueManager);
 
     /**
-     * Gets the queue manager used by mule for queuing events. This is used by
-     * both components and vm provider.
+     * Gets the queue manager used by mule for queuing events. This is used for
+     * component queues.
      *
      * @return
      *

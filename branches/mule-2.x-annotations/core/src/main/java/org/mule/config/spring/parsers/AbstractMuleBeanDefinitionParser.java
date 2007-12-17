@@ -31,7 +31,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -191,7 +190,7 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
      */
     protected void postProcess(BeanAssembler assembler, Element element)
     {
-        AutoIdUtils.ensureUniqueName(element, "bean");
+        element.setAttribute(ATTRIBUTE_NAME, getBeanName(element));
         Iterator processes = postProcessors.iterator();
         while (processes.hasNext())
         {
@@ -240,7 +239,6 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
         BeanDefinitionBuilder builder = createBeanDefinitionBuilder(element, beanClass);
         builder.setSource(parserContext.extractSource(element));
         builder.setSingleton(isSingleton());
-        builder.addDependsOn("_muleRegistry");
 
         List interfaces = ClassUtils.getAllInterfaces(beanClass);
         if(interfaces!=null)
@@ -384,12 +382,7 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
     //@Override
     protected String resolveId(Element element, AbstractBeanDefinition definition, ParserContext parserContext) throws BeanDefinitionStoreException
     {
-        String name = element.getAttribute(ATTRIBUTE_NAME);
-        if(StringUtils.hasText(name))
-        {
-            return name;
-        }
-        return super.resolveId(element, definition, parserContext);
+        return getBeanName(element);
     }
 
     protected boolean isSingleton()
@@ -474,4 +467,10 @@ public abstract class AbstractMuleBeanDefinitionParser extends AbstractBeanDefin
     {
         this.beanAssemblerFactory = beanAssemblerFactory;
     }
+
+    public String getBeanName(Element element)
+    {
+        return AutoIdUtils.getUniqueName(element, "mule-bean");
+    }
+
 }

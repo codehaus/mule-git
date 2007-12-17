@@ -17,7 +17,7 @@ import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.internal.notifications.ServerNotificationManager;
+import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
@@ -88,7 +88,7 @@ public class ManagementContext implements UMOManagementContext
 
     private UMOWorkManager workManager;
 
-    /** The queue manager to use for component queues and vm queues */
+    /** The queue manager to use for component queues */
     private QueueManager queueManager;
 
     /** The transaction manager to use for this instance. */
@@ -236,15 +236,16 @@ public class ManagementContext implements UMOManagementContext
     }
 
     public void dispose()
-    {
+    {        
+        if (isDisposing())
+        {
+            return;
+        }
+             
         ServerNotificationManager notificationManager = getNotificationManager();
         lifecycleManager.checkPhase(Disposable.PHASE_NAME);
         fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSING));
 
-        if (isDisposed())
-        {
-            return;
-        }
         try
         {
             if (isStarted())
@@ -266,7 +267,7 @@ public class ManagementContext implements UMOManagementContext
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
 
-        notificationManager.fireEvent(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
+        notificationManager.fireNotification(new ManagerNotification(this, ManagerNotification.MANAGER_DISPOSED));
 
         if ((startDate > 0) && logger.isInfoEnabled())
         {
@@ -447,7 +448,7 @@ public class ManagementContext implements UMOManagementContext
         {
             throw new MuleRuntimeException(CoreMessages.serverNotificationManagerNotEnabled());
         }
-        notificationManager.registerListener(l, resourceIdentifier);
+        notificationManager.addListenerSubscription(l, resourceIdentifier);
     }
 
     public void unregisterListener(UMOServerNotificationListener l)
@@ -455,7 +456,7 @@ public class ManagementContext implements UMOManagementContext
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
-            notificationManager.unregisterListener(l);
+            notificationManager.removeListener(l);
         }
     }
 
@@ -474,7 +475,7 @@ public class ManagementContext implements UMOManagementContext
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
         {
-            notificationManager.fireEvent(notification);
+            notificationManager.fireNotification(notification);
         }
         else if (logger.isDebugEnabled())
         {

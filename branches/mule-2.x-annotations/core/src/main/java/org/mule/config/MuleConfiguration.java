@@ -16,12 +16,14 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.registry.RegistrationException;
+import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
 import org.mule.umo.manager.DefaultWorkListener;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
+import java.io.File;
 import javax.resource.spi.work.WorkListener;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleConfiguration
 {
+    private static final String DEFAULT_LOG_DIRECTORY = "logs";
 
     /** logger used by this class */
     protected transient Log logger = LogFactory.getLog(getClass());
@@ -179,7 +182,14 @@ public class MuleConfiguration
 
     private ThreadingProfile getThreadingProfile(String name)
     {
-        ThreadingProfile tp = (ThreadingProfile) RegistryContext.getRegistry().lookupObject(name);
+        ThreadingProfile tp = null;
+    
+        Registry registry = RegistryContext.getRegistry();
+        if (registry != null)
+        {
+            tp = (ThreadingProfile) RegistryContext.getRegistry().lookupObject(name);
+        }
+
         if (null != tp)
         {
             return tp;
@@ -214,6 +224,16 @@ public class MuleConfiguration
     public String getWorkingDirectory()
     {
         return workingDirectory;
+    }
+    
+    public String getMuleHomeDirectory()
+    {
+        return System.getProperty(MuleProperties.MULE_HOME_DIRECTORY_PROPERTY);
+    }
+    
+    public String getLogDirectory()
+    {
+        return getMuleHomeDirectory() + File.separator + DEFAULT_LOG_DIRECTORY; 
     }
 
     public void setWorkingDirectory(String workingDirectory)
@@ -329,7 +349,6 @@ public class MuleConfiguration
         this.workListener = workListener;
     }
 
-
     public String getId()
     {
         return id;
@@ -337,6 +356,10 @@ public class MuleConfiguration
 
     public void setId(String id)
     {
+        if (StringUtils.isBlank(id))
+        {
+            throw new RuntimeException("Cannot set server id to null/blank");
+        }
         this.id = id;
     }
 
@@ -392,4 +415,5 @@ public class MuleConfiguration
     {
         this.systemModelType = systemModelType;
     }
+
 }

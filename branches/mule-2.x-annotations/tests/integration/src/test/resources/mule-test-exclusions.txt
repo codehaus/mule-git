@@ -8,7 +8,9 @@ org.mule.test.integration.client.MuleClientAxisExternalTestCase
 org.mule.test.integration.client.MuleClientWsdlSoapExternalTestCase
 org.mule.test.integration.providers.xmpp.XmppFunctionalTestCase
 
+# Require updated config?
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration2TestCase
+org.mule.test.integration.routing.replyto.ReplytoChainIntegration3TestCase
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
 
 # MULE-2257
@@ -27,7 +29,6 @@ org.mule.test.integration.client.MuleClientRemotingJmsTestCase
 org.mule.test.integration.transaction.OutboundTransactionsTestCase
 
 # These tests work when run from the IDE (IntelliJ)
-org.mule.test.integration.routing.replyto.ReplytoChainIntegration3TestCase
 org.mule.test.usecases.dlq.DLQExceptionHandlerTestCase
 
 org.mule.test.integration.routing.nested.NestedRouterTestCase
@@ -50,6 +51,7 @@ org.mule.test.integration.providers.jdbc.JdbcNonTransactionalFunctionalTestCase
 org.mule.test.integration.providers.jdbc.JdbcNullParamsTestCase
 org.mule.test.integration.providers.jdbc.JdbcTransactionalJdbcFunctionalTestCase
 org.mule.test.integration.providers.jdbc.JdbcTransactionalXaFunctionalTestCase
+org.mule.test.integration.transaction.XATransactionsWithSpringDAO
 # Convert transacted endpoint to XML config
 org.mule.test.integration.client.MuleClientTransactionTestCase
 
@@ -83,11 +85,6 @@ org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
 ##########################################################################
 # Mule 2.x-specific failures
 ##########################################################################
-
-# MULE-2738
-# JmsMessageAdapter [main]: Message access violation
-# java.lang.IllegalStateException: Only owner thread can write to message: Thread[jmsConnector.receiver
-org.mule.test.integration.routing.replyto.ReplytoChainIntegrationTestCase
 
 # MULE-2737
 # When sending to http://localhost:18081/RemoteService, throws:

@@ -10,10 +10,15 @@
 
 package org.mule.util;
 
+import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
+
+import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Attr;
-import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
+import org.w3c.dom.NodeList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * These only depend on standard (JSE) XML classes and are used by Spring config code.
@@ -21,6 +26,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
  */
 public class CoreXMLUtils
 {
+
+    private static final Log logger = LogFactory.getLog(CoreXMLUtils.class);
 
     public static final String MULE_DEFAULT_NAMESPACE = "http://www.mulesource.org/schema/mule/core";
     public static final String MULE_NAMESPACE_PREFIX = "http://www.mulesource.org/schema/mule/";
@@ -67,6 +74,54 @@ public class CoreXMLUtils
             name = attribute.getName();
         }
         return name;
+    }
+
+    public static String getTextChild(Element element)
+    {
+        NodeList children = element.getChildNodes();
+        String value = null;
+        for (int i = 0; i < children.getLength(); ++i)
+        {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE)
+            {
+                if (null != value)
+                {
+                    throw new IllegalStateException(
+                            "Element " + elementToString(element) + " has more than one text child.");
+                }
+                else
+                {
+                    value = child.getNodeValue();
+                }
+            }
+        }
+        return value;
+    }
+
+    public static String getNameOrId(Element element)
+    {
+        String id = element.getAttribute(AbstractMuleBeanDefinitionParser.ATTRIBUTE_ID);
+        String name = element.getAttribute(AbstractMuleBeanDefinitionParser.ATTRIBUTE_NAME);
+        if (StringUtils.isBlank(id))
+        {
+            if (StringUtils.isBlank(name))
+            {
+                return "";
+            }
+            else
+            {
+                return name;
+            }
+        }
+        else
+        {
+            if (!StringUtils.isBlank(name) && !name.equals(id))
+            {
+                logger.warn("Id (" + id + ") and name (" + name + ") differ for " + elementToString(element));
+            }
+            return id;
+        }
     }
 
 }

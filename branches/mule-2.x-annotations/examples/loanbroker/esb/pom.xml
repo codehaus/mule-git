@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-loanbroker-parent</artifactId>
-        <version>2.0.0-RC1-SNAPSHOT</version>
+        <version>2.0.0-RC2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-example-loanbroker-esb</artifactId>
     <packaging>jar</packaging>
@@ -65,7 +65,7 @@
             <!-- But still need castor at runtime -->
             <groupId>castor</groupId>
             <artifactId>castor</artifactId>
-            <version>0.9.9</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 

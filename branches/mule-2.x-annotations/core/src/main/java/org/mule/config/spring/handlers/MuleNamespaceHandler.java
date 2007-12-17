@@ -23,7 +23,6 @@ import org.mule.config.spring.factories.ResponseEndpointFactoryBean;
 import org.mule.config.spring.parsers.collection.AttributeMapDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildListDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapDefinitionParser;
-import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.delegate.InheritDefinitionParser;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
@@ -52,12 +51,14 @@ import org.mule.config.spring.parsers.specific.TransactionFactoryDefinitionParse
 import org.mule.config.spring.parsers.specific.TransactionManagerDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerRefDefinitionParser;
-import org.mule.config.spring.parsers.specific.NotificationRouteDefinitionParser;
+import org.mule.config.spring.parsers.specific.NotificationDefinitionParser;
+import org.mule.config.spring.parsers.specific.NotificationDisableDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.GenericEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.ManagementContext;
+import org.mule.impl.internal.notifications.manager.ListenerSubscriptionPair;
 import org.mule.impl.container.JndiContainerContext;
 import org.mule.impl.container.PropertiesContainerContext;
 import org.mule.impl.container.RmiContainerContext;
@@ -162,10 +163,10 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("default-connector-exception-strategy", new ChildDefinitionParser("exceptionListener", DefaultExceptionStrategy.class));
         registerBeanDefinitionParser("pooling-profile", new PoolingProfileDefinitionParser());
         registerBeanDefinitionParser("queue-profile", new ChildDefinitionParser("queueProfile", QueueProfile.class));
-        registerBeanDefinitionParser("notifications", new NamedDefinitionParser(ManagementContext.NOTIFICATION_MANAGER));
-        registerBeanDefinitionParser("route", new NotificationRouteDefinitionParser());
-        registerBeanDefinitionParser("disable", new ChildListEntryDefinitionParser("disableInterface", "interface"));
-        registerBeanDefinitionParser("listener", new ParentDefinitionParser().addAlias("ref", "listener").addReference("listener"));
+        registerBeanDefinitionParser("notifications", new NamedDefinitionParser(ManagementContext.NOTIFICATION_MANAGER).addAlias("dynamic", "notificationDynamic"));
+        registerBeanDefinitionParser("notification", new NotificationDefinitionParser());
+        registerBeanDefinitionParser("disable-notification", new NotificationDisableDefinitionParser());
+        registerBeanDefinitionParser("notification-listener", new ChildDefinitionParser("allListenerSubscriptionPair", ListenerSubscriptionPair.class).addAlias("ref", "listener").addReference("listener"));
 
         //Connector elements
         registerBeanDefinitionParser("dispatcher-threading-profile", new ThreadingProfileDefinitionParser("dispatcherThreadingProfile", MuleConfiguration.DEFAULT_MESSAGE_DISPATCHER_THREADING_PROFILE));
@@ -271,8 +272,8 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("response-router", new ChildDefinitionParser("responseRouter", ResponseRouterCollection.class));
 
         //NoArgsCallWrapper
-        registerBeanDefinitionParser("delegateClass", new AttributeMapDefinitionParser("properties"));
-        registerBeanDefinitionParser("delegateInstance", new AttributeMapDefinitionParser("properties"));
+        registerBeanDefinitionParser("delegateClass", new AttributeMapDefinitionParser("properties").addAlias("class", "delegateClass").addAlias("method", "delegateMethod"));
+        registerBeanDefinitionParser("delegateInstance", new AttributeMapDefinitionParser("properties").addAlias("ref", "delegateInstance").addAlias("method", "delegateMethod"));
 
         //Inbound Routers
         registerBeanDefinitionParser("forwarding-router", new ForwardingRouterDefinitionParser());
