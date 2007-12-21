@@ -13,17 +13,17 @@ package org.mule.ra;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
-import org.mule.config.ThreadingProfile;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.AbstractConnector;
+import org.mule.impl.model.ModelFactory;
+import org.mule.impl.model.ModelServiceNotFoundException;
 import org.mule.providers.service.TransportFactory;
 import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.manager.UMOManager;
-import org.mule.umo.manager.UMOWorkManager;
+import org.mule.umo.model.UMOModel;
 import org.mule.util.ClassUtils;
 
 import java.io.IOException;
@@ -96,15 +96,14 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 ConfigurationBuilder builder = null;
                 try
                 {
-                    builder = (ConfigurationBuilder)ClassUtils.instanciateClass(
-                        info.getConfigurationBuilder(), ClassUtils.NO_ARGS);
+                    builder = (ConfigurationBuilder) ClassUtils.instanciateClass(info.getConfigurationBuilder(),
+                        ClassUtils.NO_ARGS);
 
                 }
                 catch (Exception e)
                 {
-                    throw new ResourceAdapterInternalException(
-                        "Failed to instanciate configurationBuilder class: " + info.getConfigurationBuilder(),
-                        e);
+                    throw new ResourceAdapterInternalException("Failed to instanciate configurationBuilder class: "
+                                                               + info.getConfigurationBuilder(), e);
                 }
 
                 try
@@ -154,33 +153,49 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
         if (activationSpec.getClass().equals(MuleActivationSpec.class))
         {
-
+            MuleActivationSpec muleActivationSpec = (MuleActivationSpec) activationSpec;
             try
             {
-                UMOEndpointURI uri = new MuleEndpointURI(((MuleActivationSpec)activationSpec).getEndpoint());
-                UMOEndpoint endpoint = TransportFactory.createEndpoint(uri,
-                    UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+                UMOEndpointURI uri = new MuleEndpointURI(muleActivationSpec.getEndpoint());
+                UMOEndpoint endpoint = TransportFactory.createEndpoint(uri, UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
 
-                ((AbstractConnector)endpoint.getConnector()).getReceiverThreadingProfile()
-                    .setWorkManagerFactory(new ThreadingProfile.WorkManagerFactory()
-                    {
-                        public UMOWorkManager createWorkManager(ThreadingProfile profile, String name)
-                        {
-                            return new DelegateWorkManager(bootstrapContext.getWorkManager());
+                // Use synchronous endpoint, because Work will be scheduled by
+                // JcaComponent when it is invoked.
+                endpoint.setSynchronous(true);
 
-                        }
-                    });
                 // TODO manage transactions
                 MessageEndpoint messageEndpoint = null;
                 messageEndpoint = endpointFactory.createEndpoint(null);
 
+                // should be a JCA Model
+                UMOModel model = MuleManager.getInstance().lookupModel(muleActivationSpec.getModelName());
+
+                if (model == null)
+                {
+                    model = createModel(muleActivationSpec);
+                }
+
+                if (!(model instanceof JcaModel))
+                {
+                    throw new ResourceException("Model:-" + muleActivationSpec.getModelName()
+                                                + "  is not compatible with JCA type");
+                }
+
+                JcaModel jcaModel = (JcaModel) model;
+                jcaModel.setWorkManager(new DelegateWorkManager(bootstrapContext.getWorkManager()));
+
                 String name = "JcaComponent#" + messageEndpoint.hashCode();
                 MuleDescriptor descriptor = new MuleDescriptor(name);
                 descriptor.getInboundRouter().addEndpoint(endpoint);
-                descriptor.setImplementationInstance(messageEndpoint);
-                MuleManager.getInstance().lookupModel(JcaModel.JCA_MODEL_TYPE).registerComponent(descriptor);
 
-                MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec)activationSpec);
+                // Set endpointFactory rather than endpoint here, so we can obtain a
+                // new endpoint instance from factory for each incoming message in
+                // JcaComponet as reccomended by JCA specification
+                descriptor.setImplementation(endpointFactory);
+                descriptor.setModelName(muleActivationSpec.getModelName());
+
+                model.registerComponent(descriptor);
+                MuleEndpointKey key = new MuleEndpointKey(endpointFactory, muleActivationSpec);
 
                 endpoints.put(key, descriptor);
             }
@@ -191,8 +206,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
         }
         else
         {
-            throw new NotSupportedException("That type of ActicationSpec not supported: "
-                                            + activationSpec.getClass());
+            throw new NotSupportedException("That type of ActicationSpec not supported: " + activationSpec.getClass());
         }
 
     }
@@ -206,8 +220,8 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
         if (activationSpec.getClass().equals(MuleActivationSpec.class))
         {
-            MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec)activationSpec);
-            UMODescriptor descriptor = (UMODescriptor)endpoints.get(key);
+            MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec) activationSpec);
+            UMODescriptor descriptor = (UMODescriptor) endpoints.get(key);
             if (descriptor == null)
             {
                 logger.warn("No endpoint was registered with key: " + key);
@@ -215,7 +229,9 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             }
             try
             {
-                manager.lookupModel(JcaModel.JCA_MODEL_TYPE).unregisterComponent(descriptor);
+                UMOModel model = MuleManager.getInstance().lookupModel(
+                    ((MuleActivationSpec) activationSpec).getModelName());
+                model.unregisterComponent(descriptor);
             }
             catch (UMOException e)
             {
@@ -314,7 +330,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             return false;
         }
 
-        final MuleResourceAdapter muleResourceAdapter = (MuleResourceAdapter)o;
+        final MuleResourceAdapter muleResourceAdapter = (MuleResourceAdapter) o;
 
         if (info != null ? !info.equals(muleResourceAdapter.info) : muleResourceAdapter.info != null)
         {
@@ -327,6 +343,16 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     public int hashCode()
     {
         return (info != null ? info.hashCode() : 0);
+    }
+
+    private UMOModel createModel(MuleActivationSpec activationSpec) throws ModelServiceNotFoundException, UMOException
+    {
+        JcaModel model = (JcaModel) ModelFactory.createModel(JcaModel.JCA_MODEL_TYPE);
+        model.setName(activationSpec.getModelName());
+
+        manager.registerModel(model);
+
+        return model;
     }
 
 }
