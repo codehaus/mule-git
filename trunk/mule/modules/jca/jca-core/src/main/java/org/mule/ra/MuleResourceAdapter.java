@@ -65,6 +65,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     private transient BootstrapContext bootstrapContext;
     private MuleConnectionRequestInfo info = new MuleConnectionRequestInfo();
     private final Map endpoints = new HashMap();
+    private String defaultJcaModelName;
 
     public MuleResourceAdapter()
     {
@@ -159,22 +160,35 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 UMOEndpointURI uri = new MuleEndpointURI(muleActivationSpec.getEndpoint());
                 UMOEndpoint endpoint = TransportFactory.createEndpoint(uri, UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
 
-                // Use synchronous endpoint, because Work will be scheduled by
-                // JcaComponent when it is invoked.
-                endpoint.setSynchronous(true);
+                // Use asynchronous endpoint as we need to dispatch to component
+                // rather than send.
+                endpoint.setSynchronous(false);
 
                 // TODO manage transactions
                 MessageEndpoint messageEndpoint = null;
                 messageEndpoint = endpointFactory.createEndpoint(null);
 
-                // should be a JCA Model
-                UMOModel model = MuleManager.getInstance().lookupModel(muleActivationSpec.getModelName());
-
-                if (model == null)
+                // Resolve modelName
+                // JCA specification mentions activationSpec properties inheriting
+                // resourceAdaptor properites, but this doesn't seem to work, at
+                // least with JBOSS, so do it manually.
+                String modelName = muleActivationSpec.getModelName();
+                if (modelName == null)
                 {
-                    model = createModel(muleActivationSpec);
+                    modelName = defaultJcaModelName;
+                }
+                if (modelName == null)
+                {
+                    throw new ResourceException(
+                        "The 'modelName' property has not been configured for either the MuleResourceAdaptor or MuleActicationSpec.");
                 }
 
+                // Lookup/create JCA Model
+                UMOModel model = MuleManager.getInstance().lookupModel(modelName);
+                if (model == null)
+                {
+                    model = createJcaModel(modelName);
+                }
                 if (!(model instanceof JcaModel))
                 {
                     throw new ResourceException("Model:-" + muleActivationSpec.getModelName()
@@ -192,7 +206,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 // new endpoint instance from factory for each incoming message in
                 // JcaComponet as reccomended by JCA specification
                 descriptor.setImplementation(endpointFactory);
-                descriptor.setModelName(muleActivationSpec.getModelName());
+                descriptor.setModelName(modelName);
 
                 model.registerComponent(descriptor);
                 MuleEndpointKey key = new MuleEndpointKey(endpointFactory, muleActivationSpec);
@@ -345,14 +359,22 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
         return (info != null ? info.hashCode() : 0);
     }
 
-    private UMOModel createModel(MuleActivationSpec activationSpec) throws ModelServiceNotFoundException, UMOException
+    private UMOModel createJcaModel(String modelName) throws ModelServiceNotFoundException, UMOException
     {
         JcaModel model = (JcaModel) ModelFactory.createModel(JcaModel.JCA_MODEL_TYPE);
-        model.setName(activationSpec.getModelName());
-
+        model.setName(modelName);
         manager.registerModel(model);
-
         return model;
+    }
+
+    public String getModelName()
+    {
+        return defaultJcaModelName;
+    }
+
+    public void setModelName(String modelName)
+    {
+        this.defaultJcaModelName = modelName;
     }
 
 }

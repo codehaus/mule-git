@@ -16,7 +16,6 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
-import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.impl.model.AbstractComponent;
 import org.mule.ra.i18n.JcaMessages;
 import org.mule.umo.ComponentException;
@@ -109,9 +108,6 @@ public class JcaComponent extends AbstractComponent implements WorkListener
                 .lookupModel(this.getDescriptor().getModelName())
                 .getEntryPointResolver()
                 .resolveEntryPoint(descriptor);
-
-            MuleManager.getInstance().fireNotification(
-                new ComponentNotification(descriptor, ComponentNotification.COMPONENT_INITIALISED));
         }
         catch (UMOException e)
         {
