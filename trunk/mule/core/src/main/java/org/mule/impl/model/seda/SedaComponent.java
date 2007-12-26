@@ -260,6 +260,19 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
     public void doStop() throws UMOException
     {
+        if (MuleManager.getInstance().getQueueManager().getQueueSession().getQueue(
+            descriptor.getName() + ".component").size() > 0)
+        {
+            try
+            {
+                stopping.whenFalse(null);
+            }
+            catch (InterruptedException e)
+            {
+                // we can ignore this
+                // TODO MULE-863: Why?
+            }
+        }
         workManager.stop();
         if (proxyPool != null)
         {
