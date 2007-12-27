@@ -29,7 +29,7 @@ public class XmlPrettyPrinterTransformer extends AbstractTransformer
     public XmlPrettyPrinterTransformer()
     {
         super();
-        this.registerSourceType(java.lang.String.class);
+        this.registerSourceType(String.class);
         this.registerSourceType(org.dom4j.Document.class);
         this.setReturnClass(String.class);
     }
@@ -57,7 +57,7 @@ public class XmlPrettyPrinterTransformer extends AbstractTransformer
             ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
             Document document = null;
 
-            if (src instanceof java.lang.String)
+            if (src instanceof String)
             {
                 String text = (String) src;
                 document = DocumentHelper.parseText(text);
