@@ -12,6 +12,9 @@ package org.mule.transformers.xml;
 
 import org.mule.transformers.AbstractTransformer;
 import org.mule.umo.transformer.TransformerException;
+import org.mule.util.BeanUtils;
+
+import java.util.Map;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.dom4j.Document;
@@ -21,7 +24,7 @@ import org.dom4j.io.XMLWriter;
 
 public class XmlPrettyPrinterTransformer extends AbstractTransformer
 {
-    protected final OutputFormat format = OutputFormat.createPrettyPrint();
+    protected OutputFormat outputFormat = OutputFormat.createPrettyPrint();
 
     public XmlPrettyPrinterTransformer()
     {
@@ -29,6 +32,21 @@ public class XmlPrettyPrinterTransformer extends AbstractTransformer
         this.registerSourceType(java.lang.String.class);
         this.registerSourceType(org.dom4j.Document.class);
         this.setReturnClass(String.class);
+    }
+
+    public synchronized OutputFormat getOutputFormat()
+    {
+        return outputFormat;
+    }
+
+    public synchronized void setOutputFormat(OutputFormat newFormat)
+    {
+        outputFormat = newFormat;
+    }
+
+    public synchronized void setOutputFormatProperties(Map properties)
+    {
+        BeanUtils.populateWithoutFail(outputFormat, properties, false);
     }
 
     // @Override
@@ -49,7 +67,7 @@ public class XmlPrettyPrinterTransformer extends AbstractTransformer
                 document = (Document) src;
             }
 
-            XMLWriter writer = new XMLWriter(resultStream, format);
+            XMLWriter writer = new XMLWriter(resultStream, this.getOutputFormat());
             writer.write(document);
             writer.close();
             return resultStream.toString(encoding);
