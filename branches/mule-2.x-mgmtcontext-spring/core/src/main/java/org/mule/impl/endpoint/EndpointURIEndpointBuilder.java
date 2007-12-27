@@ -10,11 +10,10 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.config.spring.parsers.specific.URIBuilder;
 import org.mule.impl.ManagementContextAware;
 import org.mule.umo.UMOManagementContext;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implements ManagementContextAware
 {

@@ -11,6 +11,7 @@
 package org.mule.test.config;
 
 import org.mule.MuleServer;
+import org.mule.config.ConfigurationException;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.provider.UMOConnector;
@@ -65,7 +66,7 @@ public class ConnectorCreationTestCase extends FunctionalTestCase
             managementContext = getBuilder().configure("/org/mule/test/config/connector-create-never.xml");
             fail("Should fail as there is no existing test connector");
         }
-        catch (BeanCreationException e)
+        catch (ConfigurationException e)
         {
             // expected
         }

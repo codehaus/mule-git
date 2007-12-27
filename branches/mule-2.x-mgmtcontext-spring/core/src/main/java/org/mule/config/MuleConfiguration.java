@@ -15,15 +15,14 @@ import org.mule.RegistryContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.SingleAttemptConnectionStrategy;
-import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
 import org.mule.umo.manager.DefaultWorkListener;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
 import java.io.File;
+
 import javax.resource.spi.work.WorkListener;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -240,7 +239,6 @@ public class MuleConfiguration
     {
         // fix windows backslashes in absolute paths, convert them to forward ones
         this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
-        updateApplicationProperty(MuleProperties.MULE_WORKING_DIRECTORY_PROPERTY, this.workingDirectory);
     }
 
     public String[] getConfigResources()
@@ -381,29 +379,6 @@ public class MuleConfiguration
     public void setDomainId(String domainId)
     {
         this.domainId = domainId;
-    }
-
-    private void updateApplicationProperty(String name, Object value)
-    {
-        if (RegistryContext.getRegistry() != null)
-        {
-            try
-            {
-                RegistryContext.getRegistry().unregisterObject(name);
-            }
-            catch (UMOException e)
-            {
-                //ignore
-            }
-            try
-            {
-                RegistryContext.getRegistry().registerObject(name, value);
-            }
-            catch (RegistrationException e)
-            {
-                logger.error(e);
-            }
-        }
     }
 
     public String getSystemModelType()
