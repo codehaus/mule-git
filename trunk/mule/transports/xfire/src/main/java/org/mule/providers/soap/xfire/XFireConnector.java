@@ -34,6 +34,7 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.xfire.DefaultXFire;
 import org.codehaus.xfire.XFire;
@@ -81,6 +82,8 @@ public class XFireConnector extends AbstractConnector
     private String serviceTransport = null;
     private List serverInHandlers = null;
     private List serverOutHandlers = null;
+    
+    private Map extraProperties = null;
 
     public XFireConnector()
     {
@@ -557,5 +560,22 @@ public class XFireConnector extends AbstractConnector
     public void setServerOutHandlers(List serverOutHandlers)
     {
         this.serverOutHandlers = serverOutHandlers;
+    }
+
+    public Map getExtraProperties()
+    {
+        return extraProperties;
+    }
+
+    public void setExtraProperties(Map extraProperties)
+    {
+    	if (this.extraProperties != null)
+    	{	
+    		this.extraProperties.putAll(extraProperties);
+    	}
+    	else
+    	{
+    		this.extraProperties = extraProperties;	
+    	}
     }
 }
