@@ -133,7 +133,7 @@
                 <endpoint address="xfire:http://localhost:8486" type="receiver" connector="WsSecuritySigned">
                     <security-filter className="org.mule.extras.wssecurity.filters.WsSecurityFilter">
                         <properties>
-                            <property value="in-Signed-security.properties" name="wsSignatureFile"/>
+                            <property value="in-signed-security.properties" name="wsSignatureFile"/>
                         </properties>
                     </security-filter>
                 </endpoint>
