@@ -2,7 +2,14 @@
 <deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
     <globalConfiguration>
         <requestFlow>
-            <handler type="java:org.apache.ws.axis.security.WSDoAllSender"/>
+            <handler type="java:org.apache.ws.axis.security.WSDoAllSender">
+                <parameter name="action" value="Encrypt"/>
+                <parameter name="user" value="mulealias"/>
+                <parameter name="passwordCallbackClass" value="org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler"/>
+                <parameter name="encryptionPropFile" value="out-encrypted-security.properties"/>
+                <parameter name="signatureKeyIdentifier" value="DirectReference"/>
+                <parameter name="useReqSigCert" value="false"/>
+            </handler>
         </requestFlow>
         <responseFlow>
             <handler type="java:org.mule.providers.soap.axis.extensions.MuleSoapHeadersHandler"/>

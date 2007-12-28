@@ -13,7 +13,6 @@ package org.mule.extras.wssecurity.filters;
 import org.mule.MuleManager;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.extras.wssecurity.handlers.MuleWSSInHandler;
-import org.mule.extras.wssecurity.headers.WsSecurityHeadersSetter;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
 import org.mule.providers.soap.axis.AxisConnector;
@@ -54,6 +53,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
     private String wsDecryptionFile = null;
     private String wsSignatureFile = null;
     private Map addOutboundProperties = null;
+    private Map addInboundProperties = null;
 
     public String getWsDecryptionFile()
     {
@@ -103,15 +103,28 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
             }
 
             Service service = server.getServiceRegistry().getService(serviceName);
-
+             
             // remove security in handlers if present
+                  
             Object[] connectorArray = MuleManager.getInstance().getConnectors().values().toArray();
             XFireConnector connector = null;
-            for (i = 0; i < connectorArray.length; i++)
+            XFireConnector tempConnector = null;
+            
+            for (int iter = 0; iter < connectorArray.length; iter++)
             {
-                if (connectorArray[i] instanceof XFireConnector)
+                if (connectorArray[iter] instanceof XFireConnector)
                 {
-                    connector = (XFireConnector)connectorArray[i];
+                    tempConnector = (XFireConnector)connectorArray[iter];
+
+                    if (tempConnector.getReceivers(event.getEndpoint().getEndpointURI().toString()).length == 0)
+                    {
+                        connector = null;
+                    }
+                    else
+                    {
+                        connector = tempConnector;
+                        iter = connectorArray.length;
+                    }
                 }
             }
 
@@ -154,22 +167,48 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
                 {
                     service.addInHandler(new MuleWSSInHandler());
                 }
-    
-                // look for security properties in the message
-                Properties props = new Properties();
-                if (event.getMessage().getProperty("action") != null)
+                
+                // set properties on service
+                if (service.getProperty("action") == null)
                 {
-                    props.putAll(getProperties(event));
-                }
-    
-                // put the security properties found in the message, if any, in the
-                // service
-                if (!props.isEmpty())
-                {
-                    Object[] keys = props.keySet().toArray();
-                    for (i = 0; i < keys.length; i++)
+                    if (connector.getExtraProperties() != null)
                     {
-                        service.setProperty((String)keys[i], props.getProperty((String)keys[i]));
+                        Properties props = new Properties();
+                        props.putAll(connector.getExtraProperties());
+                        if (addInboundProperties != null)
+                        {
+                            props.putAll(addInboundProperties);
+                        }
+                        Object[] keys = props.keySet().toArray();
+                        for (i = 0; i < props.size(); i++)
+                        {
+                            service.setProperty(keys[i].toString(), props.getProperty((String)keys[i]));
+                        }
+                    }
+                    else
+                    {
+                        // use defaults
+                        service.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
+                        service.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
+
+                        if (addInboundProperties != null)
+                        {
+                            Properties props = new Properties();
+                            props.putAll(this.addInboundProperties);
+                            Object[] keys = props.keySet().toArray();
+                            for (i = 0; i < props.size(); i++)
+                            {
+                                service.setProperty(keys[i].toString(), props.getProperty((String)keys[i]));
+                            }
+                        }
+                    }
+                    if (wsDecryptionFile != null)
+                    {
+                        service.setProperty(WSHandlerConstants.DEC_PROP_FILE, wsDecryptionFile);
+                    }
+                    if (wsSignatureFile != null)
+                    {
+                        service.setProperty(WSHandlerConstants.SIG_PROP_FILE, wsSignatureFile);
                     }
                 }
             }
@@ -241,13 +280,9 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
                     connector.setClientOutHandlers(clientHandlers);
                 }
                 
-                // look for security properties in the message
-                Properties props = new Properties();  
                 if (addOutboundProperties != null)
                 {
-                    logger.warn("Properties set on the Security Filter will override those set on the message");
-                    props.putAll(getAddOutboundProperties());
-                    event.getMessage().addProperties(props);
+                    connector.setExtraProperties(getAddOutboundProperties());
                 }
             }
         }
@@ -263,16 +298,12 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
                     processString = processString[1].split("/");
                 }
     
-                Hashtable options = new Hashtable();
-                        
+                Handler outHandler = new WSDoAllSender();
+                
                 if (addOutboundProperties != null)
                 {
-                    logger.warn("Properties set on the Security Filter will override those set on the message");
-                    options.putAll(getAddOutboundProperties());
-                    event.getMessage().addProperties(options);
+                    outHandler.setOptions(new Hashtable(getAddOutboundProperties()));
                 }
-        
-                Handler outHandler = new WSDoAllSender();
                 connector.getClientProvider().setGlobalRequest(outHandler);
             }
         }
@@ -292,10 +323,6 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      */
     protected Properties getProperties(UMOEvent event)
     {
-        WsSecurityHeadersSetter secHeaders = new WsSecurityHeadersSetter();
-
-        Properties props2 = secHeaders.addSecurityHeaders(event.getMessage());
-
         Properties props = new Properties();
 
         if (wsDecryptionFile != null)
@@ -306,7 +333,6 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
         {
             props.put(WSHandlerConstants.SIG_PROP_FILE, wsSignatureFile);
         }
-        props.putAll(props2);
         return props;
     }
 
@@ -318,5 +344,13 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
     public void setAddOutboundProperties(Map addOutboundProperties)
     {
         this.addOutboundProperties = addOutboundProperties;
+    }
+
+    public Map getAddInboundProperties() {
+        return addInboundProperties;
+    }
+
+    public void setAddInboundProperties(Map addInboundProperties) {
+        this.addInboundProperties = addInboundProperties;
     }
 }

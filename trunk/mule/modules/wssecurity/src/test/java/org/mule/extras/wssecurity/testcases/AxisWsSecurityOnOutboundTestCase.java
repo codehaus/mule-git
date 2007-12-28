@@ -29,7 +29,4 @@ public class AxisWsSecurityOnOutboundTestCase extends FunctionalTestCase
     {
         return "axis-wssecurity-outbound-with-properties-config.xml";
     }
-
 }
-
-

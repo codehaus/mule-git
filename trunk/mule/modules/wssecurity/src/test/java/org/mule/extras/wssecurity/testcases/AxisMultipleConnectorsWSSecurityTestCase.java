@@ -14,10 +14,6 @@ import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
-import java.util.Properties;
-
-import org.apache.ws.security.handler.WSHandlerConstants;
-
 public class AxisMultipleConnectorsWSSecurityTestCase extends FunctionalTestCase
 {
     
@@ -29,27 +25,10 @@ public class AxisMultipleConnectorsWSSecurityTestCase extends FunctionalTestCase
     
     public void testAxisAuthentication() throws Exception
     {
-        // Action to perform : Signature
-        Properties props = new Properties();
-
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.ENCRYPT);
-        // User name to send
-        props.setProperty(WSHandlerConstants.USER, "mulealias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
-        // Property file containing the Encryption properties
-        props.setProperty(WSHandlerConstants.ENC_PROP_FILE, "out-encrypted-security.properties");
-
-        // Set signature method to DirectReference
-        props.setProperty(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
-
-        props.setProperty(WSHandlerConstants.USE_REQ_SIG_CERT, "false");
-
         UMOMessage result = null;
 
         MuleClient client = new MuleClient();
-        result = client.send("vm://secured", "Inputgot", props);
+        result = client.send("vm://secured", "Inputgot", null);
         assertNotNull(result.getPayload());
         assertTrue(result.getPayloadAsString().equalsIgnoreCase("inputgot"));
         System.out.println("Message Echoed is: " + result.getPayload().toString());

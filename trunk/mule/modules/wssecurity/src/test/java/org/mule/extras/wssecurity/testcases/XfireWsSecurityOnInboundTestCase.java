@@ -26,16 +26,12 @@ public class XfireWsSecurityOnInboundTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
         // Password type : text or digest
         props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "gooduser");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
-        UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test", props);
+        UMOMessage m = client.send("Test1", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));
@@ -46,19 +42,15 @@ public class XfireWsSecurityOnInboundTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
         // Password type : text or digest
         props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "baduser");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
         UMOMessage m = null;
         try
         {
-            m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test", props);
+            m = client.send("xfire:http://localhost:8282/MySecuredUMO?connector=WsSecurity&method=echo", "Test", props);
         }
         catch (Exception e)
         {
@@ -72,16 +64,12 @@ public class XfireWsSecurityOnInboundTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.ENCRYPT);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "mulealias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
         // Property file containing the Encryption properties
         props.setProperty(WSHandlerConstants.ENC_PROP_FILE, "out-encrypted-security.properties");
 
-        UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test", props);
+        UMOMessage m = client.send("Test3", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));
@@ -92,12 +80,8 @@ public class XfireWsSecurityOnInboundTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "myBadAlias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
         // Property file containing the Encryption properties
         props.setProperty(WSHandlerConstants.ENC_PROP_FILE, "out-encrypted-security.properties");
 
@@ -118,18 +102,12 @@ public class XfireWsSecurityOnInboundTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
         // User in keystore
         props.setProperty(WSHandlerConstants.USER, "mulealias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
         // Configuration for accessing private key in keystore
         props.setProperty(WSHandlerConstants.SIG_PROP_FILE, "out-signed-security.properties");
-        // possible values are : "IssuerSerial" ( recommended ) and "DirectReference"
-        props.setProperty(WSHandlerConstants.SIG_KEY_ID, "IssuerSerial");
 
-        UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test", props);
+        UMOMessage m = client.send("Test5", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));

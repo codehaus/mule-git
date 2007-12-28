@@ -34,14 +34,10 @@ public class XfireMultipleConnectorsWSSecurityTestCase extends FunctionalTestCas
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
         // Password type : text or digest
         props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
         // User name to send
         props.setProperty(WSHandlerConstants.USER, "gooduser");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
         UMOMessage m = client.send("vm://secured", "Test", props);
         assertNotNull(m);

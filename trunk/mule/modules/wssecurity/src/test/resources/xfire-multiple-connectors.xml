@@ -19,9 +19,13 @@
                 <entry value="org.codehaus.xfire.util.dom.DOMOutHandler"/>
                 <entry value="org.codehaus.xfire.security.wss4j.WSS4JOutHandler"/>
             </list>
+			<map name="extraProperties">
+                <property value="UsernameToken" name="action"/>
+                <property value="org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler" name="passwordCallbackClass"/>
+            </map>
         </properties> 
     </connector>
-    
+
     <connector name="UnsecuredConnector"  className="org.mule.providers.soap.xfire.XFireConnector"/>
 
     <model name="test">
@@ -60,11 +64,11 @@
                 </router>
             </outbound-router>
         </mule-descriptor>
-        
+
         <mule-descriptor name="UnSecuredWs"  implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="xfire:http://localhost:8284" connector="UnsecuredConnector"/>
             </inbound-router>
         </mule-descriptor>
-       </model>
+    </model>
 </mule-configuration>

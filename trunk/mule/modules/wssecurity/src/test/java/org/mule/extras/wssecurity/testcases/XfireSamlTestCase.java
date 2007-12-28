@@ -16,7 +16,6 @@ import org.mule.umo.UMOMessage;
 
 import java.util.Properties;
 
-import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.handler.WSHandlerConstants;
 
 public class XfireSamlTestCase extends FunctionalTestCase
@@ -34,50 +33,13 @@ public class XfireSamlTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : saml token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.SAML_TOKEN_UNSIGNED);
         // saml configuration file
         props.setProperty(WSHandlerConstants.SAML_PROP_FILE, "saml.properties");
-        // Password type : text or digest
-        props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
-        // User name to send
-        props.setProperty(WSHandlerConstants.USER, "mulealias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
-
-        UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test",
-                                   props);
+        
+        UMOMessage m = client.send("unsignedAddr", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));
-    }
-
-    public void _testBadUnsignedSamlTokenAuthentication () throws Exception
-    {
-        MuleClient client = new MuleClient();
-        Properties props = new Properties();
-
-        // Action to perform : user token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
-        // Password type : text or digest
-        props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
-        // User name to send
-        props.setProperty(WSHandlerConstants.USER, "baduser");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
-
-        UMOMessage m = null;
-        try
-        {
-            m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test", props);
-        }
-        catch (Exception e)
-        {
-            assertNotNull(e);
-        }
-        assertNull(m);
     }
 
     public void _testGoodSignedSamlTokenAuthentication () throws Exception
@@ -85,24 +47,10 @@ public class XfireSamlTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Properties props = new Properties();
 
-        // Action to perform : saml token
-        props.setProperty(WSHandlerConstants.ACTION, WSHandlerConstants.SAML_TOKEN_SIGNED);
         // saml configuration file
         props.setProperty(WSHandlerConstants.SAML_PROP_FILE, "saml.properties");
-        // Password type : text or digest
-        props.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
-        // User name to send
-        props.setProperty(WSHandlerConstants.USER, "mulealias");
-        // Callback used to retrive password for given user.
-        props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS,
-                          "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
-        // Configuration for accessing private key in keystore
-        props.setProperty(WSHandlerConstants.SIG_PROP_FILE, "out-signed-security.properties");
-        // "IssuerSerial" is not supported
-        props.setProperty(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
-
-        UMOMessage m = client.send("xfire:http://localhost:8282/MySecuredUMO?method=echo", "Test",
-                                   props);
+        
+        UMOMessage m = client.send("signedAddr", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));
@@ -110,6 +58,6 @@ public class XfireSamlTestCase extends FunctionalTestCase
 
     protected String getConfigResources ()
     {
-        return "wssecurity-mule-config-for-inbound.xml";
+        return "wssecurity-mule-saml-config.xml";
     }
 }
