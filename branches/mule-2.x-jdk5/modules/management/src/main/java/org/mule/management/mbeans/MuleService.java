@@ -41,6 +41,7 @@ public class MuleService implements MuleServiceMBean
     private String host;
     private String ip;
     private String os;
+    private String buildNumber;
     private String buildDate;
     // TODO
     private String copyright = "Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com";
@@ -60,7 +61,8 @@ public class MuleService implements MuleServiceMBean
         }
         os += " (" + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")";
 
-        buildDate = MuleManifest.getBuildNumber();
+        buildNumber = MuleManifest.getBuildNumber();
+        buildDate = MuleManifest.getBuildDate();
         try
         {
             InetAddress iad = InetAddress.getLocalHost();
@@ -192,7 +194,7 @@ public class MuleService implements MuleServiceMBean
             }
             catch (IOException e)
             {
-                logger.warn("Failed to load LICENSE.txt", e);
+                logger.warn("Failed to load MULE_LICENSE.txt", e);
             }
             if (license == null)
             {
@@ -202,9 +204,17 @@ public class MuleService implements MuleServiceMBean
         return license;
     }
 
+    /**
+     * @deprecated use getBuildNumber() instead
+     */
     public String getBuildDate()
     {
         return buildDate;
+    }
+
+    public String getBuildNumber()
+    {
+        return buildNumber;
     }
 
     public String getInstanceId()

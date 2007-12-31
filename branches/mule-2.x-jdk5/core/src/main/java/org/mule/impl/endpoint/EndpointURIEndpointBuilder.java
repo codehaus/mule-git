@@ -13,15 +13,38 @@ package org.mule.impl.endpoint;
 import org.mule.config.spring.parsers.specific.URIBuilder;
 import org.mule.impl.ManagementContextAware;
 import org.mule.umo.UMOManagementContext;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implements ManagementContextAware
 {
 
     public EndpointURIEndpointBuilder()
     {
-        super();
+        // blank
+    }
+
+    public EndpointURIEndpointBuilder(EndpointURIEndpointBuilder global) throws EndpointException
+    {
+        // can't (concisely) use setters where null is a possibility
+        // for consistency, set directly on all fields (this also avoids logic in getters)
+        uriBuilder = global.uriBuilder;
+        connector = global.connector;
+        transformers = global.transformers;
+        responseTransformers = global.responseTransformers;
+        name = global.name; // this seems a bit odd, but is tested for in the big spring config test case
+        properties = global.properties;
+        transactionConfig = global.transactionConfig;
+        filter = global.filter;
+        deleteUnacceptedMessages = global.deleteUnacceptedMessages;
+        securityFilter = global.securityFilter;
+        synchronous = global.synchronous;
+        remoteSync = global.remoteSync;
+        remoteSyncTimeout = global.remoteSyncTimeout;
+        streaming = global.streaming;
+        encoding = global.encoding;
+        connectionStrategy = global.connectionStrategy;
     }
 
     public EndpointURIEndpointBuilder(URIBuilder URIBuilder, UMOManagementContext managementContext)
@@ -67,7 +90,6 @@ public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implemen
         setSecurityFilter(source.getSecurityFilter());
         setConnectionStrategy(source.getConnectionStrategy());
         setSynchronous(source.isSynchronous());
-        setCreateConnector(source.getCreateConnector());
         setManagementContext(source.getManagementContext());
     }
 

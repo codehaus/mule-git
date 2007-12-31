@@ -13,18 +13,30 @@ package org.mule.config.spring.parsers.specific;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.util.ClassUtils;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.StringTokenizer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.TreeMap;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This has the following logic:
- * - if address is specified, it is used verbatim.  this is consistent with the generic case
+ * - if an address is specified, it is used verbatim (except for parameters); this is consistent with the generic case
  * - otherwise, we construct from components, omitting things that aren't specified as much as possible
  * (use required attributes to guarantee entries)
+ *
+ * In addition, parameters are handled as follows:
+ * - parameters can be given in the uri, thr queryMap, or both
+ * - queryMap values override uri values
+ * - the order of parameters in the uri remains the same (even if values change)
+ * - queryMap parameters are appended after uri parameters
+ * (I don't think ordering should matter, but XFire seems to require it) 
  *
  * TODO - check that we have sufficient control via XML (what about empty strings?)
  *
@@ -176,8 +188,9 @@ public class URIBuilder
     {
         StringBuffer buffer = new StringBuffer();
         appendMeta(buffer);
-        appendAddress(buffer);
-        appendQueries(buffer);
+        OrderedQueryParameters uriQueries = appendAddress(buffer);
+        uriQueries.override(queryMap);
+        buffer.append(uriQueries.toString());
         return buffer.toString();
     }
 
@@ -190,16 +203,45 @@ public class URIBuilder
         }
     }
 
-    private void appendAddress(StringBuffer buffer)
+    private OrderedQueryParameters appendAddress(StringBuffer buffer)
     {
         if (null != address)
         {
-            buffer.append(address);
+            int index = address.indexOf(QUERY);
+            if (index > -1)
+            {
+                buffer.append(address.substring(0, index));
+                return parseQueries(address.substring(index + 1));
+            }
+            else
+            {
+                buffer.append(address);
+                return new OrderedQueryParameters();
+            }
         }
         else
         {
             constructAddress(buffer);
+            return new OrderedQueryParameters();
         }
+    }
+
+    private OrderedQueryParameters parseQueries(String queries)
+    {
+        OrderedQueryParameters map = new OrderedQueryParameters();
+        StringTokenizer query = new StringTokenizer(queries, AND);
+        while (query.hasMoreTokens())
+        {
+            StringTokenizer nameValue = new StringTokenizer(query.nextToken(), EQUALS);
+            String name = nameValue.nextToken();
+            String value = null;
+            if (nameValue.hasMoreTokens())
+            {
+                value = nameValue.nextToken();
+            }
+            map.put(name, value);
+        }
+        return map;
     }
 
     private void constructAddress(StringBuffer buffer)
@@ -235,33 +277,6 @@ public class URIBuilder
                 buffer.append("/");
             }
             buffer.append(path);
-        }
-    }
-
-    private void appendQueries(StringBuffer buffer)
-    {
-        if (null != queryMap)
-        {
-            // crude, but probably sufficient to allow literal values in path
-            boolean first = buffer.indexOf(QUERY) == -1;
-            // order so that testing is simpler
-            Iterator keys = new TreeSet(queryMap.keySet()).iterator();
-            while (keys.hasNext())
-            {
-                if (first)
-                {
-                    buffer.append(QUERY);
-                    first = false;
-                }
-                else
-                {
-                    buffer.append(AND);
-                }
-                String key = (String)keys.next();
-                buffer.append(key);
-                buffer.append(EQUALS);
-                buffer.append((String) queryMap.get(key));
-            }
         }
     }
 
@@ -319,6 +334,94 @@ public class URIBuilder
     public String toString()
     {
         return getConstructor();
+    }
+
+    public boolean equals(Object other)
+    {
+        if (null == other || !getClass().equals(other.getClass())) return false;
+        if (this == other) return true;
+
+        URIBuilder builder = (URIBuilder) other;
+        return equal(address, builder.address)
+                && equal(meta, builder.meta)
+                && equal(protocol, builder.protocol)
+                && equal(user, builder.user)
+                && equal(password, builder.password)
+                && equal(host, builder.host)
+                && equal(port, builder.port)
+                && equal(path, builder.path)
+                && equal(queryMap, builder.queryMap);
+    }
+
+    protected static boolean equal(Object a, Object b)
+    {
+        return ClassUtils.equal(a, b);
+    }
+
+    public int hashCode()
+    {
+        return ClassUtils.hash(new Object[]{address, meta, protocol, user, password, host, port, path, queryMap});
+    }
+
+    private static class OrderedQueryParameters
+    {
+
+        private Map values = new HashMap();
+        private List orderedKeys = new LinkedList();
+
+        public void put(String name, String value)
+        {
+            values.put(name, value);
+            orderedKeys.add(name);
+        }
+
+        public void override(Map map)
+        {
+            if (null != map)
+            {
+                // order additional parameters
+                Iterator names = new TreeMap(map).keySet().iterator();
+                while (names.hasNext())
+                {
+                    String name = (String) names.next();
+                    String value  =(String) map.get(name);
+                    if (! values.keySet().contains(name))
+                    {
+                        orderedKeys.add(name);
+                    }
+                    values.put(name, value);
+                }
+            }
+        }
+
+        public String toString()
+        {
+            StringBuffer buffer = new StringBuffer();
+            Iterator keys = orderedKeys.iterator();
+            boolean first = true;
+            while (keys.hasNext())
+            {
+                if (first)
+                {
+                    buffer.append(QUERY);
+                    first = false;
+                }
+                else
+                {
+                    buffer.append(AND);
+                }
+                String key = (String)keys.next();
+                buffer.append(key);
+                String value = (String)values.get(key);
+                if (null != value)
+                {
+                    buffer.append(EQUALS);
+                    buffer.append(value);
+                }
+            }
+            return buffer.toString();
+        }
+
     }
 
 }

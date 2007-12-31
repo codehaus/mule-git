@@ -39,7 +39,7 @@ import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.MapUtils;
-import org.mule.util.object.SimpleObjectFactory;
+import org.mule.util.object.PrototypeObjectFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public class MuleManagerComponent implements Callable, Initialisable
     {
         Object result;
         logger.debug("Message received by MuleManagerComponent");
-        ByteArrayInputStream in = new ByteArrayInputStream(context.getTransformedMessageAsBytes());
+        ByteArrayInputStream in = new ByteArrayInputStream(context.transformMessageToBytes());
         AdminNotification action = (AdminNotification) wireFormat.read(in);
         if (AdminNotification.ACTION_INVOKE == action.getAction())
         {
@@ -254,7 +254,7 @@ public class MuleManagerComponent implements Callable, Initialisable
             props.put("wireFormat", wireFormat);
             props.put("encoding", encoding);
             props.put("synchronousEventTimeout", new Integer(eventTimeout));
-            component.setServiceFactory(new SimpleObjectFactory(MuleManagerComponent.class, props));
+            component.setServiceFactory(new PrototypeObjectFactory(MuleManagerComponent.class, props));
 
             component.setManagementContext(managementContext);
             //component.initialise();

@@ -30,8 +30,6 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.concurrent.Latch;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -44,13 +42,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
-import junit.framework.TestResult;
 
 /**
  * <code>AbstractMuleTestCase</code> is a base class for Mule testcases. This
@@ -276,7 +276,8 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     protected TestCaseWatchdog createWatchdog()
     {
-        return new TestCaseWatchdog(10, TimeUnit.MINUTES, this);
+        // TODO - temp extension acooke
+        return new TestCaseWatchdog(1000, TimeUnit.MINUTES, this);
     }
 
     public void handleTimeout(long timeout, TimeUnit unit)
@@ -352,10 +353,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     protected ConfigurationBuilder getBuilder() throws Exception
     {
-        MuleXmlConfigurationBuilder builder = new MuleXmlConfigurationBuilder();
-        // TODO MULE-1988
-        builder.setStartContext(false);
-        return builder;
+        return new MuleXmlConfigurationBuilder();
     }
 
     protected String getConfigurationResources()

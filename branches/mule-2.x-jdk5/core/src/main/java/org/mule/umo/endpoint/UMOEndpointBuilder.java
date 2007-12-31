@@ -50,15 +50,6 @@ public interface UMOEndpointBuilder extends ManagementContextAware, Cloneable
      */
     UMOImmutableEndpoint buildOutboundEndpoint() throws EndpointException, InitialisationException;
 
-    /**
-     * Constructs response endpoints See MULE-2293
-     * 
-     * @return
-     * @throws EndpointException
-     * @throws InitialisationException
-     */
-    UMOImmutableEndpoint buildResponseEndpoint() throws EndpointException, InitialisationException;
-
     void setConnector(UMOConnector connector);
 
     void addTransformer(UMOTransformer transformer);
@@ -92,8 +83,6 @@ public interface UMOEndpointBuilder extends ManagementContextAware, Cloneable
     void setInitialState(String initialState);
 
     void setEncoding(String encoding);
-
-    void setCreateConnector(int createConnector);
 
     void setRegistryId(String registryId);
 

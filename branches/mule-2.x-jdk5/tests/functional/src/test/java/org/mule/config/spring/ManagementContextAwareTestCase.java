@@ -8,20 +8,24 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.config;
+package org.mule.config.spring;
 
 import org.mule.tck.FunctionalTestCase;
 
-public class AlwaysCreateConnectorTestCase extends FunctionalTestCase
+/**
+ * This tests that we can have references to management context aware objects within a config
+ */
+public class ManagementContextAwareTestCase extends FunctionalTestCase
 {
+
     protected String getConfigResources()
     {
-        return "always-create-connector-config.xml";
+        return "management-context-aware-test.xml";
     }
 
-    public void testConnectorConfig() throws Exception
+    public void testStartup()
     {
-        assertEquals(2, managementContext.getRegistry().getConnectors().size());
+        // only want startup to succeed
     }
-    
+
 }

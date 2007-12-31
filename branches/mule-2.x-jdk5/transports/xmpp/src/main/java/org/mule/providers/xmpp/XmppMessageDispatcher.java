@@ -135,7 +135,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         // avoid duplicate transformation
         if (!(msgObj instanceof Message))
         {
-            message = (Message)event.getTransformedMessage();
+            message = (Message)event.transformMessage();
         }
         else
         {
@@ -147,7 +147,12 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
             logger.trace("Transformed packet: " + message.toXML());
         }
 
-        if (chat != null)
+        // if the endpoint specified a designated recipient, use that
+        if (message.getTo() != null)
+        {
+            xmppConnection.sendPacket(message);
+        }
+        else if (chat != null)
         {
             chat.sendMessage(message);
         }

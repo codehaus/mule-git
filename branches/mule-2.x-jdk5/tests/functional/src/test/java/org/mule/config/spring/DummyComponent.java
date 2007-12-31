@@ -8,22 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.factories;
+package org.mule.config.spring;
 
-/**
- * Spring FactoryBean used to create concrete instances of response endpoints
- */
-public class ResponseEndpointFactoryBean extends AbstractEndpointFactoryBean
+import org.mule.impl.ManagementContextAware;
+
+public class DummyComponent
 {
 
-    public ResponseEndpointFactoryBean()
+    public void setProperty(ManagementContextAware dummy)
     {
-        super();
-    }
-
-    public Object doGetObject() throws Exception
-    {
-        return buildResponseEndpoint();
+        // empty
     }
 
 }
