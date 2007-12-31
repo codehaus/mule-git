@@ -148,7 +148,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     }
 
     protected Client configureXFireClient(Client client) throws Exception
-    {
+    {       
         client.addInHandler(new MuleHeadersInHandler());
         client.addOutHandler(new MuleHeadersOutHandler());
 
@@ -173,6 +173,18 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
                 client.addOutHandler(handler);
             }
         }
+        
+        if (this.connector.getExtraProperties() != null)
+        {
+            Properties props = new Properties();
+            props.putAll(this.connector.getExtraProperties());
+            Object[] keys = props.keySet().toArray();
+            for (int i = 0; i < props.size(); i++)
+            {
+                client.setProperty(keys[i].toString(), props.getProperty((String) keys[i]));
+            }
+        }
+        
         return client;
     }
 

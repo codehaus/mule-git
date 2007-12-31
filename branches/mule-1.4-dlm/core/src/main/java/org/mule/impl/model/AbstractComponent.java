@@ -178,19 +178,6 @@ public abstract class AbstractComponent implements UMOComponent
 
             // Unregister Listeners for the component
             unregisterListeners();
-            if (MuleManager.getInstance().getQueueManager().getQueueSession().getQueue(
-                descriptor.getName() + ".component").size() > 0)
-            {
-                try
-                {
-                    stopping.whenFalse(null);
-                }
-                catch (InterruptedException e)
-                {
-                    // we can ignore this
-                    // TODO MULE-863: Why?
-                }
-            }
 
             doStop();
             stopped.set(true);

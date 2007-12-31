@@ -10,9 +10,12 @@
 
 package org.mule.extras.wssecurity.handlers;
 
+import org.mule.MuleManager;
+import org.mule.providers.soap.xfire.XFireConnector;
 import org.mule.umo.security.SecurityException;
 
 import java.security.cert.X509Certificate;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -88,6 +91,24 @@ public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
             {
                 action = getString(WSHandlerConstants.ACTION, msgContext);
             }
+            // try getting the action from the Xfire Connector
+            if (action == null)
+            {
+                Map connectors = MuleManager.getInstance().getConnectors();
+                Object[] arr = connectors.values().toArray();
+                for (int i =0; i < arr.length; i++)
+                {
+                    Object c = arr[i];
+                    if (c instanceof XFireConnector)
+                    {
+                        action = (String)((XFireConnector)c).getExtraProperties().get(WSHandlerConstants.ACTION);
+                        if (action != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
             if (action == null)
             {
                 throw new XFireRuntimeException("MuleWSSInHandler: No action defined");
@@ -123,7 +144,7 @@ public class MuleWSSInHandler extends AbstractWSS4JHandler implements Handler
             {
                 reqData.setSigCrypto(loadSignatureCrypto(reqData));
             }
-
+            
             Vector wsResult;
 
             // process the security header

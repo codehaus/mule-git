@@ -16,7 +16,8 @@ public class PasswordContainer
 {
     private Properties passwords;
     
-    public PasswordContainer(Properties props){
+    public PasswordContainer(Properties props)
+    {
         passwords = props;
     }
 

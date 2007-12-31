@@ -19,8 +19,26 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkException;
 
-public class SedaComponentTestCase extends AbstractMuleTestCase
+public class SedaComponentTestCase extends AbstractMuleTestCase // AbstractComponentTestCase
 {
+    // Cannot extend AbstractComponentTestCase because of inconsistent behaviour. See
+    // MULE-2843
+
+    // protected void doSetUp() throws Exception
+    // {
+    // MuleManager.getInstance().setQueueManager(new TransactionalQueueManager());
+    //        
+    // UMODescriptor descriptor = new MuleDescriptor("direct");
+    // descriptor.setImplementation(new Object());
+    // SedaModel sedaModel = new SedaModel();
+    // sedaModel.setQueueProfile(new QueueProfile());
+    // component = sedaModel.createComponent(descriptor);
+    // }
+    //
+    // protected void doTearDown() throws Exception
+    // {
+    // component = null;
+    // }
 
     public void testSpiWorkThrowableHandling() throws Exception
     {
