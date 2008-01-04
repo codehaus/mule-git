@@ -30,7 +30,7 @@
 
     <transformers>
         <transformer name="jmsmessagetoobject" className="org.mule.providers.jms.transformers.JMSMessageToObject"/>
-        <transformer name="inboundtransformer" className="org.mule.transformers.simple.ByteArrayToString"></transformer>
+        <transformer name="inboundtransformer" className="org.mule.transformers.simple.ByteArrayToString"/>
     </transformers>
 
     <model name="model">
