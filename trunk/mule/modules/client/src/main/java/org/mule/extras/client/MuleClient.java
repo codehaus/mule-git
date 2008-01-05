@@ -55,6 +55,7 @@ import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -406,7 +407,7 @@ public class MuleClient implements Disposable
         {
             throw new MessagingException(
                 CoreMessages.objectNotRegisteredWithManager("Component '" + component + "'"), 
-                message, null);
+                message);
         }
         UMOTransformer trans = null;
         if (transformers != null)
@@ -476,7 +477,7 @@ public class MuleClient implements Disposable
         {
             throw new MessagingException(
                 CoreMessages.objectNotRegisteredWithManager("Component '" + component + "'"), 
-                message, null);
+                message);
         }
         UMOSession session = new MuleSession(ModelHelper.getComponent(component));
         UMOEndpoint endpoint = getDefaultClientEndpoint(session.getComponent().getDescriptor(),
