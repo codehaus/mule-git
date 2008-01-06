@@ -123,7 +123,7 @@
                 <jdk>1.5</jdk>
             </activation>
             <modules>
-                <module>cxf</module>
+                <module>xfire</module>
             </modules>
         </profile>
     </profiles>

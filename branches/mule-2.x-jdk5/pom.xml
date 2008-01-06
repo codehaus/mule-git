@@ -884,14 +884,6 @@
         </plugins>
     </reporting>
 
-    <!--
-    The default profiles for the build are configured in the file settings.xml.
-    You can override the default profiles from the command line as follows:
-        "mvn -Ddistributions=true -Dtests=false -Doracle=true"
-
-    (For other ways to work with profiles, see
-        http://maven.apache.org/guides/introduction/introduction-to-profiles.html)
-    -->
     <profiles>
         <profile>
             <id>java14</id>
@@ -953,8 +945,8 @@
                                             <version>[2.0.6,)</version>
                                         </requireMavenVersion>
                                         <requireJavaVersion>
-                                            <!-- java version is Java 5 exactly -->
-                                            <version>[1.5.0, 1.6.0)</version>
+                                            <!-- Java version must be 1.5 or higher -->
+                                            <version>[1.5.0,)</version>
                                         </requireJavaVersion>
                                     </rules>
                                 </configuration>
@@ -973,6 +965,9 @@
                     </plugin>
                 </plugins>
             </build>
+            <modules>
+                <module>transports</module>
+            </modules>
         </profile>
 
         <profile>
