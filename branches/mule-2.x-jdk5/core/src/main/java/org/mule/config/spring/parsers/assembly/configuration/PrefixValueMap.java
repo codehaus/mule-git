@@ -8,21 +8,21 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.parsers.assembly;
+package org.mule.config.spring.parsers.assembly.configuration;
 
-public interface SingleProperty
+public class PrefixValueMap implements ValueMap
 {
 
-    boolean isCollection();
+    private String prefix;
 
-    void setCollection();
+    public PrefixValueMap(String prefix)
+    {
+        this.prefix = prefix;
+    }
 
-    boolean isIgnored();
-
-    void setIgnored();
-
-    boolean isReference();
-
-    void setReference();
+    public Object rewrite(String value)
+    {
+        return prefix + value;
+    }
 
 }

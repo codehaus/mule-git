@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.parsers.assembly;
+package org.mule.config.spring.parsers.assembly.configuration;
 
 import java.util.Map;
 
@@ -52,6 +52,11 @@ public class ReusablePropertyConfiguration implements PropertyConfiguration
     }
 
     public void addMapping(String propertyName, String mappings)
+    {
+        delegate.addMapping(propertyName, mappings);
+    }
+
+    public void addMapping(String propertyName, ValueMap mappings)
     {
         delegate.addMapping(propertyName, mappings);
     }
@@ -111,7 +116,7 @@ public class ReusablePropertyConfiguration implements PropertyConfiguration
         return delegate.translateName(oldName);
     }
 
-    public String translateValue(String name, String value)
+    public Object translateValue(String name, String value)
     {
         return delegate.translateValue(name, value);
     }

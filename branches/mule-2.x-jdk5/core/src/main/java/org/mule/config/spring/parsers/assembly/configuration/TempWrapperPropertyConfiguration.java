@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.parsers.assembly;
+package org.mule.config.spring.parsers.assembly.configuration;
 
 import java.util.Map;
 
@@ -44,6 +44,11 @@ public class TempWrapperPropertyConfiguration implements PropertyConfiguration
     }
 
     public void addMapping(String propertyName, String mappings)
+    {
+        extra.addMapping(propertyName, mappings);
+    }
+
+    public void addMapping(String propertyName, ValueMap mappings)
     {
         extra.addMapping(propertyName, mappings);
     }
@@ -110,9 +115,17 @@ public class TempWrapperPropertyConfiguration implements PropertyConfiguration
         return extra.translateName(delegate.translateName(oldName));
     }
 
-    public String translateValue(String name, String value)
+    public Object translateValue(String name, String value)
     {
-        return extra.translateValue(name, delegate.translateValue(name, value));
+        Object intermediate = delegate.translateValue(name, value);
+        if (intermediate.equals(value))
+        {
+            return extra.translateValue(name, value);
+        }
+        else
+        {
+            return intermediate;
+        }
     }
 
 }

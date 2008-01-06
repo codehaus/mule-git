@@ -57,6 +57,7 @@ import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -173,6 +174,7 @@ public class MuleClient implements Disposable
                         + MuleXmlConfigurationBuilder.class.getName());
             builder = new MuleXmlConfigurationBuilder();
         }
+        logger.info("Initializing Mule...");
         managementContext = builder.configure(configResources);
     }
 
@@ -218,12 +220,12 @@ public class MuleClient implements Disposable
         }
         else
         {
-            logger.info("Using existing ManagementContext");
+            logger.info("Using existing ManagementContext: " + managementContext);
         }
 
         if (!managementContext.isStarted() && startManager == true)
         {
-            logger.info("Starting ManagementContext");
+            logger.info("Starting Mule...");
             managementContext.start();
         }
     }
@@ -311,7 +313,7 @@ public class MuleClient implements Disposable
         {
             throw new MessagingException(
                 CoreMessages.objectNotRegistered("Component", componentName),
-                message, null);
+                message);
         }
         List trans = null;
         if (transformers != null)
@@ -377,7 +379,7 @@ public class MuleClient implements Disposable
         {
             throw new MessagingException(
                 CoreMessages.objectNotRegistered("Component", componentName),
-                message, null);
+                message);
         }
         UMOSession session = new MuleSession(component);
         UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
@@ -972,7 +974,8 @@ public class MuleClient implements Disposable
         // Dispose the managementContext only if the managementContext was created for this client
         if (RegistryContext.getConfiguration().isClientMode())
         {
-           managementContext.dispose();
+            logger.info("Stopping Mule...");
+            managementContext.dispose();
         }
     }
 

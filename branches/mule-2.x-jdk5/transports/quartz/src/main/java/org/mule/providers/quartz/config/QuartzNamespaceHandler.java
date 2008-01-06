@@ -11,25 +11,27 @@ package org.mule.providers.quartz.config;
 
 import org.mule.config.spring.parsers.collection.ChildMapDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
+import org.mule.config.spring.parsers.specific.URIBuilder;
+import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
+import org.mule.config.spring.factories.InboundEndpointFactoryBean;
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.providers.quartz.QuartzConnector;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-/** Registers Bean Definition Parsers for the "quartz" namespace. */
-public class QuartzNamespaceHandler extends NamespaceHandlerSupport
+/**
+ * Registers Bean Definition Parsers for the "quartz" namespace
+ */
+public class QuartzNamespaceHandler extends AbstractMuleNamespaceHandler
 {
+
     public void init()
     {
-        registerBeanDefinitionParser("connector", new QuartzConnectorDefinitionParser());
+        registerStandardTransportEndpoints(QuartzConnector.QUARTZ, URIBuilder.PATH_ATTRIBUTES);
+        registerMuleBeanDefinitionParser("connector", new MuleOrphanDefinitionParser(QuartzConnector.class, true)).addAlias("scheduler", "quartzScheduler");
         registerBeanDefinitionParser("factory-properties", new ChildMapDefinitionParser("factoryProperties"));
     }
-}
 
-class QuartzConnectorDefinitionParser extends MuleOrphanDefinitionParser
-{
-    public QuartzConnectorDefinitionParser()
-    {
-        super(QuartzConnector.class, true);
-        addAlias("scheduler", "quartzScheduler");
-    }
 }

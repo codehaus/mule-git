@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.parsers.assembly;
+package org.mule.config.spring.parsers.assembly.configuration;
 
 import java.util.Map;
 
@@ -28,6 +28,8 @@ public interface PropertyConfiguration
     void addMapping(String propertyName, Map mappings);
 
     void addMapping(String propertyName, String mappings);
+
+    void addMapping(String propertyName, ValueMap mappings);
 
     void addAlias(String alias, String propertyName);
 
@@ -68,6 +70,6 @@ public interface PropertyConfiguration
      */
     String translateName(String oldName);
 
-    String translateValue(String name, String value);
+    Object translateValue(String name, String value);
 
 }

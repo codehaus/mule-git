@@ -12,7 +12,8 @@ package org.mule.config.spring.parsers.delegate;
 
 import org.mule.config.spring.parsers.MuleChildDefinitionParser;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
-import org.mule.config.spring.parsers.assembly.PropertyConfiguration;
+import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
+import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 
@@ -21,7 +22,7 @@ public class AbstractSingleParentFamilyChildDefinitionParser
     extends AbstractSingleParentFamilyDefinitionParser implements MuleChildDefinitionParser
 {
 
-    protected MuleDefinitionParser addDelegate(MuleDefinitionParser delegate)
+    protected MuleDefinitionParserConfiguration addDelegate(MuleDefinitionParser delegate)
     {
         return addDelegateAsChild(delegate);
     }

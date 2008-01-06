@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.spring.parsers.assembly;
+package org.mule.config.spring.parsers.assembly.configuration;
 
 public class SinglePropertyLiteral implements SingleProperty
 {
