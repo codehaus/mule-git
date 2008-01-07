@@ -9,10 +9,12 @@
  */
 package org.mule.providers.http.config;
 
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.collection.ChildListDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
 import org.mule.config.spring.parsers.specific.ComplexComponentDefinitionParser;
+import org.mule.impl.endpoint.URIBuilder;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.components.RestServiceWrapper;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
@@ -20,18 +22,18 @@ import org.mule.providers.http.transformers.HttpResponseToString;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
 import org.mule.providers.http.transformers.UMOMessageToHttpResponse;
 
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-
 /**
  * Reigsters a Bean Definition Parser for handling <code><http:connector></code> elements.
  */
-public class HttpNamespaceHandler extends NamespaceHandlerSupport
+public class HttpNamespaceHandler extends AbstractMuleNamespaceHandler
 {
 
     public void init()
     {
-        registerBeanDefinitionParser("connector", new MuleOrphanDefinitionParser(HttpConnector.class, true));
+        registerStandardTransportEndpoints(HttpConnector.HTTP, URIBuilder.SOCKET_ATTRIBUTES);
         
+        registerBeanDefinitionParser("connector", new MuleOrphanDefinitionParser(HttpConnector.class, true));
+
         registerBeanDefinitionParser("rest-service-component", new ComplexComponentDefinitionParser(RestServiceWrapper.class));
         registerBeanDefinitionParser("payloadParameterNames", new ChildListDefinitionParser("payloadParameterNames"));
         registerBeanDefinitionParser("requiredParams", new ChildMapEntryDefinitionParser("requiredParams","key","value"));

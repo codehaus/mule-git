@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MuleConfiguration
 {
+
     private static final String DEFAULT_LOG_DIRECTORY = "logs";
 
     /** logger used by this class */

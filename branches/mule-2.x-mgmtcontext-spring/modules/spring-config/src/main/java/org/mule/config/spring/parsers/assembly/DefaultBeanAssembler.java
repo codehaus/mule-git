@@ -11,6 +11,9 @@
 package org.mule.config.spring.parsers.assembly;
 
 import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
+import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
+import org.mule.config.spring.parsers.assembly.configuration.SingleProperty;
+import org.mule.config.spring.parsers.assembly.configuration.SinglePropertyLiteral;
 import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
 import org.mule.config.spring.util.CoreXMLUtils;
@@ -28,6 +31,7 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.MapFactoryBean;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
@@ -80,7 +84,7 @@ public class DefaultBeanAssembler implements BeanAssembler
      * by explicit annotation or by the "-ref" at the end of an attribute name.  We do not
      * check the Spring repo to see if a name already exists since that could lead to
      * unpredictable behaviour.
-     * (see {@link org.mule.config.spring.parsers.assembly.PropertyConfiguration})
+     * (see {@link org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration})
      * @param attribute The attribute to add
      */
     public void extendBean(Attr attribute)
@@ -91,7 +95,7 @@ public class DefaultBeanAssembler implements BeanAssembler
             logger.debug(attribute + " for " + bean.getBeanDefinition().getBeanClassName());
             String oldValue = attribute.getNodeValue();
             String newName = bestGuessName(beanConfig, oldName, bean.getBeanDefinition().getBeanClassName());
-            String newValue = beanConfig.translateValue(oldName, oldValue);
+            Object newValue = beanConfig.translateValue(oldName, oldValue);
             addPropertyWithReference(bean.getBeanDefinition().getPropertyValues(),
                     beanConfig.getSingleProperty(oldName), newName, newValue);
         }
@@ -121,7 +125,7 @@ public class DefaultBeanAssembler implements BeanAssembler
         String oldName = CoreXMLUtils.attributeName(attribute);
         String oldValue = attribute.getNodeValue();
         String newName = bestGuessName(targetConfig, oldName, bean.getBeanDefinition().getBeanClassName());
-        String newValue = targetConfig.translateValue(oldName, oldValue);
+        Object newValue = targetConfig.translateValue(oldName, oldValue);
         addPropertyWithReference(target.getPropertyValues(),
                 targetConfig.getSingleProperty(oldName), newName, newValue);
     }
@@ -144,6 +148,7 @@ public class DefaultBeanAssembler implements BeanAssembler
      * Insert the bean we have built into the target (typically the parent bean).
      *
      * <p>This is the most complex case because the bean can have an aribtrary type.
+     * 
      * @param oldName The identifying the bean (typically element name).
      */
     public void insertBeanInTarget(String oldName)
@@ -151,32 +156,53 @@ public class DefaultBeanAssembler implements BeanAssembler
         logger.debug("insert " + bean.getBeanDefinition().getBeanClassName() + " -> " + target.getBeanClassName());
         assertTargetPresent();
         String beanClass = bean.getBeanDefinition().getBeanClassName();
-        PropertyValues pvs = bean.getRawBeanDefinition().getPropertyValues();
+        PropertyValues sourceProperties = bean.getRawBeanDefinition().getPropertyValues();
         String newName = bestGuessName(targetConfig, oldName, target.getBeanClassName());
-        PropertyValue pv = target.getPropertyValues().getPropertyValue(newName);
+        MutablePropertyValues targetProperties = target.getPropertyValues();
+        PropertyValue pv = targetProperties.getPropertyValue(newName);
+        Object oldValue = null == pv ? null : pv.getValue();
+
         if (! targetConfig.isIgnored(oldName))
         {
-            if (ChildMapEntryDefinitionParser.KeyValuePair.class.getName().equals(beanClass))
+            if (targetConfig.isCollection(oldName) ||
+                    beanClass.equals(ChildListEntryDefinitionParser.ListEntry.class.getName()))
             {
-                if (pv == null)
+                if (null == oldValue)
                 {
-                    pv = new PropertyValue(newName, new ManagedMap());
+                    if (beanClass.equals(ChildMapEntryDefinitionParser.KeyValuePair.class.getName()) ||
+                            beanClass.equals(MapFactoryBean.class.getName()))
+                    {
+                        // a collection of maps requires an extra intermediate object that does the
+                        // lazy combination/caching of maps when first used
+                        BeanDefinitionBuilder combiner = BeanDefinitionBuilder.rootBeanDefinition(MapCombiner.class);
+                        targetProperties.addPropertyValue(newName, combiner.getBeanDefinition());
+                        MutablePropertyValues combinerProperties = combiner.getBeanDefinition().getPropertyValues();
+                        oldValue = new ManagedList();
+                        pv = new PropertyValue(MapCombiner.LIST, oldValue);
+                        combinerProperties.addPropertyValue(pv);
+                    }
+                    else
+                    {
+                        oldValue = new ManagedList();
+                        pv = new PropertyValue(newName, oldValue);
+                        targetProperties.addPropertyValue(pv);
+                    }
                 }
-                ((Map) pv.getValue()).put(
-                        pvs.getPropertyValue(ChildMapEntryDefinitionParser.KEY).getValue(),
-                        pvs.getPropertyValue(ChildMapEntryDefinitionParser.VALUE).getValue());
-            }
-            else if (targetConfig.isCollection(oldName) ||
-                    ChildListEntryDefinitionParser.ListEntry.class.getName().equals(beanClass))
-            {
-                if (pv == null)
+
+                List list = retrieveList(oldValue);
+                if (ChildMapEntryDefinitionParser.KeyValuePair.class.getName().equals(beanClass))
                 {
-                    pv = new PropertyValue(newName, new ManagedList());
+                    if (list.isEmpty())
+                    {
+                        list.add(new ManagedMap());
+                    }
+                    retrieveMap(list.get(list.size() - 1)).put(
+                            sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.KEY).getValue(),
+                            sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.VALUE).getValue());
                 }
-                List list = (List) pv.getValue();
-                if (ChildListEntryDefinitionParser.ListEntry.class.getName().equals(beanClass))
+                else if (beanClass.equals(ChildListEntryDefinitionParser.ListEntry.class.getName()))
                 {
-                    list.add(pvs.getPropertyValue(ChildListEntryDefinitionParser.VALUE).getValue());
+                    list.add(sourceProperties.getPropertyValue(ChildListEntryDefinitionParser.VALUE).getValue());
                 }
                 else
                 {
@@ -185,10 +211,68 @@ public class DefaultBeanAssembler implements BeanAssembler
             }
             else
             {
-                pv = new PropertyValue(newName, bean.getBeanDefinition());
+                // not a collection
+
+                if (ChildMapEntryDefinitionParser.KeyValuePair.class.getName().equals(beanClass))
+                {
+                    if (null == pv || null == oldValue)
+                    {
+                        pv = new PropertyValue(newName, new ManagedMap());
+                        targetProperties.addPropertyValue(pv);
+                    }
+                    retrieveMap(pv.getValue()).put(
+                            sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.KEY).getValue(),
+                            sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.VALUE).getValue());
+                }
+                else
+                {
+                    targetProperties.addPropertyValue(newName, bean.getBeanDefinition());
+                }
             }
-            target.getPropertyValues().addPropertyValue(pv);
         }
+    }
+
+    private static List retrieveList(Object value)
+    {
+        if (value instanceof List)
+        {
+            return (List) value;
+        }
+        else if (isDefinitionOf(value, MapCombiner.class))
+        {
+            return (List) unpackDefinition(value, MapCombiner.LIST);
+        }
+        else
+        {
+            throw new ClassCastException("Collection not of expected type: " + value);
+        }
+    }
+
+    private static Map retrieveMap(Object value)
+    {
+        if (value instanceof Map)
+        {
+            return (Map) value;
+        }
+        else if (isDefinitionOf(value, MapFactoryBean.class))
+        {
+            return (Map) unpackDefinition(value, "sourceMap");
+        }
+        else
+        {
+            throw new ClassCastException("Map not of expected type: " + value);
+        }
+    }
+
+    private static boolean isDefinitionOf(Object value, Class clazz)
+    {
+        return value instanceof BeanDefinition &&
+                ((BeanDefinition) value).getBeanClassName().equals(clazz.getName());
+    }
+
+    private static Object unpackDefinition(Object definition, String name)
+    {
+        return ((BeanDefinition) definition).getPropertyValues().getPropertyValue(name).getValue();
     }
 
 
@@ -240,9 +324,14 @@ public class DefaultBeanAssembler implements BeanAssembler
                     {
                         config.setCollection();
                     }
-                    for (StringTokenizer ref = new StringTokenizer((String) value); ref.hasMoreTokens();)
+                    for (StringTokenizer refs = new StringTokenizer((String) value); refs.hasMoreTokens();)
                     {
-                        addPropertyWithoutReference(properties, config, name, new RuntimeBeanReference(ref.nextToken()));
+                        String ref = refs.nextToken();
+                        if (logger.isDebugEnabled())
+                        {
+                            logger.debug("possible non-dependent reference: " + name + "/" + ref);
+                        }
+                        addPropertyWithoutReference(properties, config, name, new RuntimeBeanReference(ref));
                     }
                 }
                 else
@@ -262,7 +351,10 @@ public class DefaultBeanAssembler implements BeanAssembler
     {
         if (!config.isIgnored())
         {
-            logger.debug(name + ": " + value);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(name + ": " + value);
+            }
             Object oldValue = null;
             if (properties.contains(name))
             {

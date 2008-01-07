@@ -14,6 +14,8 @@ import org.mule.util.ArrayUtils;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.PreProcessor;
 import org.mule.config.spring.parsers.PostProcessor;
+import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
+import org.mule.config.spring.parsers.assembly.configuration.ValueMap;
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
 
 import java.util.Map;
@@ -53,7 +55,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         this.delegates = delegates;
     }
 
-    protected MuleDefinitionParser addDelegate(MuleDefinitionParser delegate)
+    protected MuleDefinitionParserConfiguration addDelegate(MuleDefinitionParser delegate)
     {
         delegates = (MuleDefinitionParser[]) ArrayUtils.add(delegates, delegate);
         return delegate;
@@ -69,23 +71,25 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return delegates[index];
     }
 
-    public void registerPreProcessor(PreProcessor preProcessor)
+    public MuleDefinitionParserConfiguration registerPreProcessor(PreProcessor preProcessor)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
             delegates[i].registerPreProcessor(preProcessor);
         }
+        return this;
     }
 
-    public void registerPostProcessor(PostProcessor postProcessor)
+    public MuleDefinitionParserConfiguration registerPostProcessor(PostProcessor postProcessor)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
             delegates[i].registerPostProcessor(postProcessor);
         }
+        return this;
     }
 
-    public MuleDefinitionParser addReference(String propertyName)
+    public MuleDefinitionParserConfiguration addReference(String propertyName)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -94,7 +98,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser addMapping(String propertyName, Map mappings)
+    public MuleDefinitionParserConfiguration addMapping(String propertyName, Map mappings)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -103,7 +107,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser addMapping(String propertyName, String mappings)
+    public MuleDefinitionParserConfiguration addMapping(String propertyName, String mappings)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -112,7 +116,16 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser addAlias(String alias, String propertyName)
+    public MuleDefinitionParserConfiguration addMapping(String propertyName, ValueMap mappings)
+    {
+        for (int i = 0; i < delegates.length; ++i)
+        {
+            delegates[i].addMapping(propertyName, mappings);
+        }
+        return this;
+    }
+
+    public MuleDefinitionParserConfiguration addAlias(String alias, String propertyName)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -121,7 +134,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser addCollection(String propertyName)
+    public MuleDefinitionParserConfiguration addCollection(String propertyName)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -130,7 +143,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser addIgnored(String propertyName)
+    public MuleDefinitionParserConfiguration addIgnored(String propertyName)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -139,7 +152,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser removeIgnored(String propertyName)
+    public MuleDefinitionParserConfiguration removeIgnored(String propertyName)
     {
         for (int i = 0; i < delegates.length; ++i)
         {
@@ -148,7 +161,7 @@ public abstract class AbstractDelegatingDefinitionParser extends AbstractBeanDef
         return this;
     }
 
-    public MuleDefinitionParser setIgnoredDefault(boolean ignoreAll)
+    public MuleDefinitionParserConfiguration setIgnoredDefault(boolean ignoreAll)
     {
         for (int i = 0; i < delegates.length; ++i)
         {

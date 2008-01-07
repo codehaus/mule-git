@@ -29,7 +29,11 @@
                    forceJndiDestinations="true"
                    specification="1.1">
         <spring:property name="numberOfConcurrentTransactedReceivers" value="7"/>
-        <test:connection-factory username="myuser" password="mypass"/>
+        <test:connection-factory username="myuser" password="mypass">
+            <properties>
+                <!-- just testing to see if this validates -->
+            </properties>
+        </test:connection-factory>
         <jms:redelivery-handler class="org.mule.providers.jms.test.TestRedeliveryHandler" />
     </jms:connector>
 
@@ -57,5 +61,15 @@
     <custom-transaction-factory name="txFactory" class="org.mule.tck.testmodels.mule.TestTransactionFactory">
         <spring:property name="value" value="foo"/>
     </custom-transaction-factory>
+
+    <jms:endpoint name="endpoint1" queue="blah" connector-ref="jmsConnectorDefaults">
+        <jms:selector expression="foo"/>
+    </jms:endpoint>
+
+    <jms:endpoint name="endpoint2" address="jms://blah" connector-ref="jmsConnectorDefaults">
+        <not-filter>
+            <jms:property-filter pattern="bar"/>
+        </not-filter>
+    </jms:endpoint>
 
 </mule>

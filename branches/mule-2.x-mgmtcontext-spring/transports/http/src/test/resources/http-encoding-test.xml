@@ -11,17 +11,15 @@
     <http:connector name="httpConnector" reuseAddress="true"/>
 
     <transformer-message-properties name="setResponseType">
-        <add-properties>
-            <spring:entry key="Content-Type" value="text/baz;charset=UTF-16BE"/>
-        </add-properties>
+        <add-message-property key="Content-Type" value="text/baz;charset=UTF-16BE"/>
     </transformer-message-properties>
 
-    <endpoint name="clientEndpoint" address="http://localhost:60198" synchronous="true"/>
+    <http:endpoint name="clientEndpoint" host="localhost" port="60198" synchronous="true"/>
 
     <model name="main">
         <service name="testComponent">
             <inbound-router>
-                <inbound-endpoint ref="clientEndpoint" responseTransformer-refs="setResponseType"/>
+                <http:inbound-endpoint ref="clientEndpoint" responseTransformer-refs="setResponseType"/>
             </inbound-router>
             <component class="org.mule.tck.functional.FunctionalTestComponent"/>
         </service>

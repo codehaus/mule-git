@@ -12,6 +12,7 @@ package org.mule.config.spring.parsers.delegate;
 
 import org.mule.config.spring.parsers.MuleChildDefinitionParser;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
+import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -27,12 +28,22 @@ public abstract class AbstractSingleParentFamilyDefinitionParser
         extends AbstractFirstResultSerialDefinitionParser
 {
 
+    public AbstractSingleParentFamilyDefinitionParser()
+    {
+        super();
+    }
+
+    public AbstractSingleParentFamilyDefinitionParser(boolean doReset)
+    {
+        super(doReset);
+    }
+
     protected MuleChildDefinitionParser addChildDelegate(MuleChildDefinitionParser delegate)
     {
         return (MuleChildDefinitionParser) super.addDelegate(delegate);
     }
 
-    protected MuleDefinitionParser addDelegate(MuleDefinitionParser delegate)
+    protected MuleDefinitionParserConfiguration addDelegate(MuleDefinitionParser delegate)
     {
         if (size() > 0)
         {
@@ -44,7 +55,7 @@ public abstract class AbstractSingleParentFamilyDefinitionParser
         }
     }
 
-    protected MuleChildDefinitionParser addDelegateAsChild(MuleDefinitionParser delegate)
+    protected MuleDefinitionParserConfiguration addDelegateAsChild(MuleDefinitionParser delegate)
     {
         if (delegate instanceof MuleChildDefinitionParser)
         {

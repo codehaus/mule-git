@@ -9,18 +9,23 @@
  */
 package org.mule.providers.bpm.config;
 
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.impl.endpoint.URIBuilder;
 import org.mule.providers.bpm.ProcessConnector;
-
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Registers a Bean Definition Parsers for the "bpm" namespace.
  */
-public class BpmNamespaceHandler extends NamespaceHandlerSupport
+public class BpmNamespaceHandler extends AbstractMuleNamespaceHandler
 {
+
+    public static final String PROCESS = "process";
+
     public void init()
     {
+        registerStandardTransportEndpoints(ProcessConnector.BPM, new String[]{PROCESS}).addAlias(PROCESS, URIBuilder.PATH);
         registerBeanDefinitionParser("connector", new MuleOrphanDefinitionParser(ProcessConnector.class, true));
     }
+
 }

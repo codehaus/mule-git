@@ -23,6 +23,7 @@ import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.EndpointNotFoundException;
+import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.Lifecycle;
@@ -100,12 +101,9 @@ public class CxfServiceComponent implements Callable, Lifecycle
         String request = eventContext.getMessage().getStringProperty(HttpConnector.HTTP_REQUEST_PROPERTY,
             StringUtils.EMPTY);
 
-        Properties params = eventContext.getEndpointURI().getParams();
-        if (params.size() > 0
-            || request.toLowerCase().endsWith(org.mule.providers.soap.SoapConstants.WSDL_PROPERTY))
+        if (request.indexOf('?') > -1)
         {
-
-            return generateWSDLOrXSD(eventContext, request, params);
+            return generateWSDLOrXSD(eventContext, request);
         }
         else
         {
@@ -115,17 +113,23 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }
     }
 
-    protected Object generateWSDLOrXSD(UMOEventContext eventContext, String req, Properties params)
+    protected Object generateWSDLOrXSD(UMOEventContext eventContext, String req)
         throws EndpointNotFoundException, IOException
     {
-        // TODO: we need to handle ?xsd too, but the request URL from Mule looks
-        // funny,
-        // so I'm not sure about how this code should work
-        String uri = eventContext.getEndpointURI().toString();
-        if (!uri.contains("?"))
-        {
-            uri += "?wsdl";
+        // TODO: Is there a way to make this not so ugly?
+        String uriBase = eventContext.getEndpointURI().getAddress().toString();
+        int qIdx = uriBase.indexOf('?');
+        if (qIdx > -1) {
+            uriBase = uriBase.substring(0, qIdx);
         }
+        
+        qIdx = req.indexOf('?');
+        if (qIdx > -1) {
+            req = req.substring(qIdx);
+        }
+        
+        String uri = uriBase + req;
+        
         String ctxUri = eventContext.getEndpointURI().getPath();
 
         EndpointInfo ei = receiver.getServer().getEndpoint().getEndpointInfo();
@@ -167,7 +171,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         {
             MessageImpl m = new MessageImpl();
 
-            Object payload = ctx.getTransformedMessage();
+            Object payload = ctx.transformMessage();
 
             if (payload instanceof InputStream)
             {
@@ -184,7 +188,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
             }
             else
             {
-                InputStream is = (InputStream) ctx.getTransformedMessage(InputStream.class);
+                InputStream is = (InputStream) ctx.transformMessage(InputStream.class);
                 m.put(Message.ENCODING, ctx.getEncoding());
                 m.setContent(InputStream.class, is);
             }
@@ -245,7 +249,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
     protected InputStream getMessageStream(UMOEventContext context) throws UMOException
     {
         InputStream is;
-        Object eventMsgPayload = context.getTransformedMessage();
+        Object eventMsgPayload = context.transformMessage();
 
         if (eventMsgPayload instanceof InputStream)
         {
@@ -253,7 +257,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }
         else
         {
-            is = (InputStream) context.getTransformedMessage(InputStream.class);
+            is = (InputStream) context.transformMessage(InputStream.class);
         }
         return is;
     }

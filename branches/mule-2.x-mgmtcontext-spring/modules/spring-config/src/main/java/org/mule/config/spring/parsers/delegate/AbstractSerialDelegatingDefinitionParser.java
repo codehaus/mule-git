@@ -14,7 +14,8 @@ import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.PreProcessor;
-import org.mule.config.spring.parsers.assembly.PropertyConfiguration;
+import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
+import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
 import org.mule.util.StringUtils;
 
 import java.util.HashSet;
@@ -43,9 +44,24 @@ public abstract class AbstractSerialDelegatingDefinitionParser extends AbstractD
 
     private int index = 0;
     private boolean first;
+    private boolean doReset;
     private String originalId;
     private String originalName;
     private Set handledExceptions = new HashSet();
+
+    public AbstractSerialDelegatingDefinitionParser()
+    {
+        this(true); // by default, reset name
+    }
+
+    /**
+     * @param doReset Should the name be reset after called.  This is typically true (it protects the
+     * parent from changes made by children) unless this is itself nested.
+     */
+    public AbstractSerialDelegatingDefinitionParser(boolean doReset)
+    {
+        this.doReset = doReset;
+    }
 
     public AbstractBeanDefinition parseDelegate(Element element, ParserContext parserContext)
     {
@@ -103,7 +119,7 @@ public abstract class AbstractSerialDelegatingDefinitionParser extends AbstractD
         return parser.parseDelegate(element, parserContext);
     }
 
-    protected MuleDefinitionParser addDelegate(MuleDefinitionParser delegate)
+    protected MuleDefinitionParserConfiguration addDelegate(MuleDefinitionParser delegate)
     {
         delegate.registerPreProcessor(new PreProcessor()
         {
@@ -114,7 +130,7 @@ public abstract class AbstractSerialDelegatingDefinitionParser extends AbstractD
                     originalId = element.getAttribute(AbstractMuleBeanDefinitionParser.ATTRIBUTE_ID);
                     originalName = element.getAttribute(AbstractMuleBeanDefinitionParser.ATTRIBUTE_NAME);
                 }
-                else
+                else if (doReset)
                 {
                     resetNameAndId(element);
                 }
@@ -178,6 +194,14 @@ public abstract class AbstractSerialDelegatingDefinitionParser extends AbstractD
         }
     }
 
+    public static void enableAttributes(MuleDefinitionParser delegate, String[][] attributes)
+    {
+        for (int i = 0; i < attributes.length; ++i)
+        {
+            enableAttributes(delegate, attributes[i], true);
+        }
+    }
+
     public static void enableAttributes(MuleDefinitionParser delegate, String[] attributes)
     {
         enableAttributes(delegate, attributes, true);
@@ -186,6 +210,14 @@ public abstract class AbstractSerialDelegatingDefinitionParser extends AbstractD
     public static void enableAttribute(MuleDefinitionParser delegate, String attribute)
     {
         enableAttributes(delegate, new String[]{attribute}, true);
+    }
+
+    public static void disableAttributes(MuleDefinitionParser delegate, String[][] attributes)
+    {
+        for (int i = 0; i < attributes.length; ++i)
+        {
+            enableAttributes(delegate, attributes[i], false);
+        }
     }
 
     public static void disableAttributes(MuleDefinitionParser delegate, String[] attributes)

@@ -37,6 +37,7 @@ import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.transformer.DiscoverableTransformer;
 import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.BeanUtils;
+import org.mule.util.ClassUtils;
 import org.mule.util.SpiUtils;
 
 import java.util.Collection;
@@ -205,9 +206,10 @@ public class TransientRegistry extends AbstractRegistry
     /** Looks up the service descriptor from a singleton cache and creates a new one if not found. */
     public ServiceDescriptor lookupServiceDescriptor(String type, String name, Properties overrides) throws ServiceException
     {
-        AbstractServiceDescriptor.Key key = new AbstractServiceDescriptor.Key(name, overrides);
+        String key = new AbstractServiceDescriptor.Key(name, overrides).getKey();
         //TODO If we want these descriptors loaded form Spring we need to checnge the key mechanism
-        ServiceDescriptor sd = (ServiceDescriptor) lookupObject(String.valueOf(key.hashCode()));
+        //and the scope, and then deal with circular reference issues.
+        ServiceDescriptor sd = (ServiceDescriptor) lookupObject(key);
 
         synchronized (this)
         {
@@ -216,7 +218,7 @@ public class TransientRegistry extends AbstractRegistry
                 sd = createServiceDescriptor(type, name, overrides);
                 try
                 {
-                    registerObject(String.valueOf(key.hashCode()), sd, ServiceDescriptor.class);
+                    registerObject(key, sd, ServiceDescriptor.class);
                 }
                 catch (RegistrationException e)
                 {
@@ -270,7 +272,13 @@ public class TransientRegistry extends AbstractRegistry
     protected Object applyProcessors(Object object)
     {
         Object theObject = object;
-        Collection processors = lookupObjects(ObjectProcessor.class);
+        // this may be an incorrect hack.  the problem is that if we try to lookup objects in spring before
+        // it is initialised, we end up triggering object creation.  that causes circular dependencies because
+        // this may have originally been called while creating objects in spring...  so we prevent that by
+        // only doing the full lookup once everything is stable.  ac.
+        Collection processors = 
+                lookupObjects(ObjectProcessor.class,
+                        (null != getParent() && getParent().isInitialised()) ? getDefaultScope() : SCOPE_IMMEDIATE);
         for (Iterator iterator = processors.iterator(); iterator.hasNext();)
         {
             ObjectProcessor o = (ObjectProcessor) iterator.next();
@@ -323,7 +331,9 @@ public class TransientRegistry extends AbstractRegistry
                 }
                 else
                 {
-                    throw new RegistrationException("Unable to register object because ManagementContext has not yet been created.");
+                    throw new RegistrationException("Unable to register object (\""
+                            + key + ":" + ClassUtils.getSimpleName(value.getClass())
+                            + "\") because ManagementContext has not yet been created.");
                 }
             }
             catch (UMOException e)

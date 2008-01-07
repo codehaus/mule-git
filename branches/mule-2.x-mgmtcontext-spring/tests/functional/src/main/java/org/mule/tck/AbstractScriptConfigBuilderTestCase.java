@@ -215,15 +215,12 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         UMONestedRouter route1 = (UMONestedRouter) router.getRouters().get(0);
         assertEquals(FruitCleaner.class, route1.getInterface());
         assertEquals("wash", route1.getMethod());
-        assertNotNull(route1.getOutboundRouter());
-        assertEquals(1, route1.getOutboundRouter().getEndpoints().size());
+        assertNotNull(route1.getEndpoint());
         // check second Router
         UMONestedRouter route2 = (UMONestedRouter) router.getRouters().get(1);
         assertEquals(FruitCleaner.class, route2.getInterface());
         assertEquals("polish", route2.getMethod());
-        assertNotNull(route2.getOutboundRouter());
-        assertEquals(1, route2.getOutboundRouter().getEndpoints().size());
-
+        assertNotNull(route1.getEndpoint());
     }
 
     public void testDescriptorEndpoints()
@@ -308,10 +305,10 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         assertEquals(2, messageRouter.getEndpoints().size());
         UMOEndpoint ep = (UMOEndpoint) messageRouter.getEndpoints().get(0);
         assertEquals("response1", ep.getEndpointURI().getAddress());
-        assertEquals(UMOEndpoint.ENDPOINT_TYPE_RESPONSE, ep.getType());
+        assertEquals(UMOEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
         ep = (UMOEndpoint) messageRouter.getEndpoints().get(1);
         assertEquals("AppleResponseQueue", ep.getEndpointURI().getAddress());
-        assertEquals(UMOEndpoint.ENDPOINT_TYPE_RESPONSE, ep.getType());
+        assertEquals(UMOEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
     }
 
     /* excluded - dep on management
