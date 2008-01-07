@@ -20,7 +20,7 @@ import org.mule.config.spring.parsers.assembly.configuration.SimplePropertyConfi
 import org.mule.config.spring.parsers.assembly.configuration.ValueMap;
 import org.mule.config.spring.parsers.collection.DynamicAttributeDefinitionParser;
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import java.util.Map;
 
@@ -53,7 +53,7 @@ public class AllAttributeChildDefinitionParser
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
         {
-            String name = CoreXMLUtils.attributeName((Attr) attributes.item(i));
+            String name = SpringXMLUtils.attributeName((Attr) attributes.item(i));
             if (!isIgnored(name))
             {
                 delegate.setAttributeName(name);

@@ -11,7 +11,7 @@
 package org.mule.config.spring.parsers.delegate;
 
 import org.mule.config.spring.parsers.MuleDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.CollectionUtils;
 
 import java.util.HashMap;
@@ -49,13 +49,13 @@ public class AttributeSelectionDefinitionParser extends AbstractParallelDelegati
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
         {
-            String attribute = CoreXMLUtils.attributeName((Attr) attributes.item(i));
+            String attribute = SpringXMLUtils.attributeName((Attr) attributes.item(i));
             if (attributeToParserIndex.containsKey(attribute))
             {
                 return getDelegate(((Integer) attributeToParserIndex.get(attribute)).intValue());
             }
         }
-        throw new IllegalArgumentException("Element " + CoreXMLUtils.elementToString(element) +
+        throw new IllegalArgumentException("Element " + SpringXMLUtils.elementToString(element) +
                 " does not contain any attribute from " +
                 CollectionUtils.toString(attributeToParserIndex.keySet(), 10, false));
     }

@@ -13,7 +13,7 @@ import org.mule.config.spring.parsers.assembly.BeanAssembler;
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
 import org.mule.config.spring.parsers.assembly.configuration.ReusablePropertyConfiguration;
 import org.mule.config.spring.parsers.assembly.configuration.TempWrapperPropertyConfiguration;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.StringUtils;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -60,7 +60,7 @@ public abstract class AbstractHierarchicalDefinitionParser extends AbstractMuleB
             String parentBean = getParentBeanName(element);
             if (StringUtils.isBlank(parentBean))
             {
-                throw new IllegalStateException("No parent for " + CoreXMLUtils.elementToString(element));
+                throw new IllegalStateException("No parent for " + SpringXMLUtils.elementToString(element));
             }
             return getRegistry().getBeanDefinition(parentBean);
         }

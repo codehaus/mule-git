@@ -9,7 +9,7 @@
  */
 package org.mule.config.spring;
 
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.StringUtils;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,9 +62,9 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("parsing: " + CoreXMLUtils.elementToString(element));
+            logger.debug("parsing: " + SpringXMLUtils.elementToString(element));
         }
-        if (CoreXMLUtils.isBeansNamespace(element))
+        if (SpringXMLUtils.isBeansNamespace(element))
         {
             return handleSpringElements(element, parent);
         }
@@ -98,7 +98,7 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
             // which handles iteration internally (this is a hack needed because Spring doesn't
             // expose the DP for "<spring:entry>" elements directly).
 
-            if (CoreXMLUtils.isMuleNamespace(element) && isRecurse)
+            if (SpringXMLUtils.isMuleNamespace(element) && isRecurse)
             {
                 NodeList list = element.getChildNodes();
                 for (int i = 0; i < list.getLength(); i++)
@@ -128,7 +128,7 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
         // these are only called if they are at a "top level" - if they are nested inside
         // other spring elements then spring will handle them itself
 
-        if (CoreXMLUtils.isLocalName(element, BEANS))
+        if (SpringXMLUtils.isLocalName(element, BEANS))
         {
             // the delegate doesn't support the full spring schema, but it seems that
             // we can invoke the DefaultBeanDefinitionDocumentReader via registerBeanDefinitions
@@ -145,7 +145,7 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
             }
         }
 
-        else if (CoreXMLUtils.isLocalName(element, PROPERTY_ELEMENT))
+        else if (SpringXMLUtils.isLocalName(element, PROPERTY_ELEMENT))
         {
             parsePropertyElement(element, parent);
         }
@@ -169,13 +169,13 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
 //            parseSetElement(element, bd);
 //        }
 
-        else if (CoreXMLUtils.isLocalName(element, BEAN_ELEMENT))
+        else if (SpringXMLUtils.isLocalName(element, BEAN_ELEMENT))
         {
             registerBeanDefinitionHolder(parseBeanDefinitionElement(element, parent));
         }
         else
         {
-            throw new IllegalStateException("Unexpected Spring element: " + CoreXMLUtils.elementToString(element));
+            throw new IllegalStateException("Unexpected Spring element: " + SpringXMLUtils.elementToString(element));
         }
 
         return parent;
@@ -210,10 +210,10 @@ public class MuleHierarchicalBeanDefinitionParserDelegate extends BeanDefinition
 
     protected String generateChildBeanName(Element e)
     {
-        String id = CoreXMLUtils.getNameOrId(e);
+        String id = SpringXMLUtils.getNameOrId(e);
         if (StringUtils.isBlank(id))
         {
-            String parentId = CoreXMLUtils.getNameOrId((Element) e.getParentNode());
+            String parentId = SpringXMLUtils.getNameOrId((Element) e.getParentNode());
             return "." + parentId + ":" + e.getLocalName();
         }
         else

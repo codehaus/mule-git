@@ -10,7 +10,7 @@
 package org.mule.config.spring.parsers.collection;
 
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import org.springframework.beans.factory.config.MapFactoryBean;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -43,7 +43,7 @@ public class AttributeMapDefinitionParser extends ChildDefinitionParser
         for (int x = 0; x < attributes.getLength(); x++)
         {
             Attr attribute = (Attr) attributes.item(x);
-            String oldName = CoreXMLUtils.attributeName(attribute);
+            String oldName = SpringXMLUtils.attributeName(attribute);
             //TODO How can I use bestGuessName
             String name = beanPropertyConfiguration.translateName(oldName);
             Object value = beanPropertyConfiguration.translateValue(oldName, attribute.getNodeValue());

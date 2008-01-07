@@ -16,7 +16,7 @@ import org.mule.config.spring.parsers.assembly.configuration.SingleProperty;
 import org.mule.config.spring.parsers.assembly.configuration.SinglePropertyLiteral;
 import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.collection.ChildMapEntryDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -89,7 +89,7 @@ public class DefaultBeanAssembler implements BeanAssembler
      */
     public void extendBean(Attr attribute)
     {
-        String oldName = CoreXMLUtils.attributeName(attribute);
+        String oldName = SpringXMLUtils.attributeName(attribute);
         if (!beanConfig.isIgnored(oldName))
         {
             logger.debug(attribute + " for " + bean.getBeanDefinition().getBeanClassName());
@@ -122,7 +122,7 @@ public class DefaultBeanAssembler implements BeanAssembler
      */
     public void extendTarget(Attr attribute)
     {
-        String oldName = CoreXMLUtils.attributeName(attribute);
+        String oldName = SpringXMLUtils.attributeName(attribute);
         String oldValue = attribute.getNodeValue();
         String newName = bestGuessName(targetConfig, oldName, bean.getBeanDefinition().getBeanClassName());
         Object newValue = targetConfig.translateValue(oldName, oldValue);

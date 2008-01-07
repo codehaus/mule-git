@@ -10,7 +10,7 @@
 package org.mule.config.spring.parsers.generic;
 
 import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -51,7 +51,7 @@ public class MuleOrphanDefinitionParser extends OrphanDefinitionParser
         {
             throw new IllegalStateException("This element should be embedded inside the Mule <"
                     + ROOT_ELEMENT + "> or <" + ROOT_UNSAFE_ELEMENT + "> elements: "
-                    + CoreXMLUtils.elementToString(element));
+                    + SpringXMLUtils.elementToString(element));
         }
     }
 

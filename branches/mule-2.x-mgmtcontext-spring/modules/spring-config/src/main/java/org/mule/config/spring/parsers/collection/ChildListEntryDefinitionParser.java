@@ -12,7 +12,7 @@ package org.mule.config.spring.parsers.collection;
 
 import org.mule.config.spring.parsers.assembly.BeanAssembler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -58,7 +58,7 @@ public class ChildListEntryDefinitionParser extends ChildDefinitionParser
     {
         if (fromText)
         {
-            assembler.extendBean(VALUE, CoreXMLUtils.getTextChild(element), false);
+            assembler.extendBean(VALUE, SpringXMLUtils.getTextChild(element), false);
         }
         super.postProcess(assembler, element);
     }

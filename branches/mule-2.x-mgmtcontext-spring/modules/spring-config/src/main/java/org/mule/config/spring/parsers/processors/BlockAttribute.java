@@ -12,7 +12,7 @@ package org.mule.config.spring.parsers.processors;
 
 import org.mule.config.spring.parsers.PreProcessor;
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class BlockAttribute implements PreProcessor
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++)
         {
-            String alias = CoreXMLUtils.attributeName((Attr) attributes.item(i));
+            String alias = SpringXMLUtils.attributeName((Attr) attributes.item(i));
             String name = config.translateName(alias);
             if (disallowed.contains(name))
             {

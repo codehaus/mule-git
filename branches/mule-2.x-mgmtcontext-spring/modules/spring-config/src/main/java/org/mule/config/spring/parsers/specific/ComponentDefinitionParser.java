@@ -16,7 +16,7 @@ import org.mule.config.spring.parsers.PreProcessor;
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
 import org.mule.config.spring.parsers.delegate.AbstractParallelDelegatingDefinitionParser;
 import org.mule.config.spring.parsers.generic.ParentDefinitionParser;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.object.PooledObjectFactory;
 
@@ -70,7 +70,7 @@ class CheckExclusiveClassAttributeObjectFactory implements PreProcessor
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++)
         {
-            String alias = CoreXMLUtils.attributeName((Attr) attributes.item(i));
+            String alias = SpringXMLUtils.attributeName((Attr) attributes.item(i));
             if (alias.equals(AbstractMuleBeanDefinitionParser.ATTRIBUTE_CLASS))
             {
                 for (int j = 0; j < element.getChildNodes().getLength(); j++)
@@ -82,7 +82,7 @@ class CheckExclusiveClassAttributeObjectFactory implements PreProcessor
                         message.append(child.getLocalName());
                         message.append("' cannot appear with the 'class' attrtibute");
                         message.append(" in element ");
-                        message.append(CoreXMLUtils.elementToString(element));
+                        message.append(SpringXMLUtils.elementToString(element));
                         message.append(".");
                         throw new CheckExclusiveClassAttributeObjectFactoryException(message.toString());
                     }

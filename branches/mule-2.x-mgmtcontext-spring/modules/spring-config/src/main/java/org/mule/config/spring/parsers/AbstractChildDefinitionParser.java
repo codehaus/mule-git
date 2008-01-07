@@ -11,7 +11,7 @@ package org.mule.config.spring.parsers;
 
 import org.mule.config.spring.parsers.assembly.BeanAssembler;
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 import org.mule.util.StringUtils;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -69,7 +69,7 @@ public abstract class AbstractChildDefinitionParser
 
     public String getBeanName(Element e)
     {
-        String name = CoreXMLUtils.getNameOrId(e);
+        String name = SpringXMLUtils.getNameOrId(e);
         if (StringUtils.isBlank(name))
         {
             String parentId = getParentBeanName(e);

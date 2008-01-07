@@ -12,7 +12,7 @@ package org.mule.config.spring.parsers.processors;
 
 import org.mule.config.spring.parsers.PreProcessor;
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
-import org.mule.config.spring.util.CoreXMLUtils;
+import org.mule.config.spring.util.SpringXMLUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ public class RequireAttribute implements PreProcessor
             boolean found = false;
             for (int i = 0; i < attributes.getLength() && !found; i++)
             {
-                String alias = CoreXMLUtils.attributeName((Attr) attributes.item(i));
+                String alias = SpringXMLUtils.attributeName((Attr) attributes.item(i));
                 // don't translate to alias because the error message is in terms of the attributes
                 // the user enters - we don't want to expose the details of translations
 //                found = name.equals(config.translateName(alias));
