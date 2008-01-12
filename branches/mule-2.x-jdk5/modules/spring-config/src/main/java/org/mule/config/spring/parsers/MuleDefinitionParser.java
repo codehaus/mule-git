@@ -33,4 +33,6 @@ public interface MuleDefinitionParser extends BeanDefinitionParser, MuleDefiniti
 
     String getBeanName(Element element);
 
+    MuleDefinitionParser addBeanFlag(String flag);
+
 }
