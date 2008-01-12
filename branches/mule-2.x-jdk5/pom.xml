@@ -910,6 +910,10 @@
                             <source>1.4</source>
                             <target>1.4</target>
                             <encoding>ISO-8859-1</encoding>
+                            <compilerArguments>
+                                 <!-- define this as a property in your settings.xml -->
+                                 <bootclasspath>${java14.rt.jar}</bootclasspath> 
+                            </compilerArguments>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -971,6 +975,10 @@
                             <source>1.5</source>
                             <target>1.5</target>
                             <encoding>ISO-8859-1</encoding>
+                            <compilerArguments>
+                                <!-- define this as a property in your settings.xml -->
+                                <bootclasspath>${java15.rt.jar}</bootclasspath>
+                            </compilerArguments>
                         </configuration>
                     </plugin>
                 </plugins>
