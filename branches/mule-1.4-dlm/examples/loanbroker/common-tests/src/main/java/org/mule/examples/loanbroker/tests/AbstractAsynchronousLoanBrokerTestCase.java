@@ -40,7 +40,7 @@ public abstract class AbstractAsynchronousLoanBrokerTestCase extends AbstractLoa
      */
     protected int getDelay()
     {
-        return 3000;
+        return 30000;
     }
 
     protected int getWarmUpMessages()
