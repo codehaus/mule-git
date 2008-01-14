@@ -61,6 +61,11 @@ public class DefaultBeanAssembler implements BeanAssembler
         return bean;
     }
 
+    protected void setBean(BeanDefinitionBuilder bean)
+    {
+        this.bean = bean;
+    }
+
     public BeanDefinition getTarget()
     {
         return target;
@@ -170,6 +175,7 @@ public class DefaultBeanAssembler implements BeanAssembler
                 if (null == oldValue)
                 {
                     if (beanClass.equals(ChildMapEntryDefinitionParser.KeyValuePair.class.getName()) ||
+                            beanClass.equals(MapEntryCombiner.class.getName()) ||
                             beanClass.equals(MapFactoryBean.class.getName()))
                     {
                         // a collection of maps requires an extra intermediate object that does the
@@ -192,10 +198,7 @@ public class DefaultBeanAssembler implements BeanAssembler
                 List list = retrieveList(oldValue);
                 if (ChildMapEntryDefinitionParser.KeyValuePair.class.getName().equals(beanClass))
                 {
-                    if (list.isEmpty())
-                    {
-                        list.add(new ManagedMap());
-                    }
+                    list.add(new ManagedMap());
                     retrieveMap(list.get(list.size() - 1)).put(
                             sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.KEY).getValue(),
                             sourceProperties.getPropertyValue(ChildMapEntryDefinitionParser.VALUE).getValue());

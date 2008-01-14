@@ -27,6 +27,11 @@ import org.w3c.dom.Element;
 public class ParentDefinitionParser extends AbstractHierarchicalDefinitionParser
 {
 
+    public ParentDefinitionParser()
+    {
+        addBeanFlag(MuleHierarchicalBeanDefinitionParserDelegate.MULE_NO_REGISTRATION);
+    }
+
     protected Class getBeanClass(Element element)
     {
         try
@@ -44,8 +49,8 @@ public class ParentDefinitionParser extends AbstractHierarchicalDefinitionParser
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext)
     {
         preProcess(element);
+        setParserContext(parserContext);
         setRegistry(parserContext.getRegistry());
-        this.setParserContext(parserContext);
         Class beanClass = getBeanClass(element);
         Assert.state(beanClass != null, "Class returned from getBeanClass(Element) must not be null, element is: " + element.getNodeName());
         BeanDefinitionBuilder builder = createBeanDefinitionBuilder(element, beanClass);
@@ -58,7 +63,6 @@ public class ParentDefinitionParser extends AbstractHierarchicalDefinitionParser
         doParse(element, parserContext, builder);
         BeanAssembler beanAssembler = getBeanAssembler(element, builder);
         beanAssembler.copyBeanToTarget();
-        beanAssembler.setBeanFlag(MuleHierarchicalBeanDefinitionParserDelegate.MULE_NO_REGISTRATION);
         return (AbstractBeanDefinition) beanAssembler.getTarget();
     }
 
