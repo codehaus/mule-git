@@ -14,8 +14,11 @@ import org.mule.MuleManager;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.TransactionException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
@@ -38,6 +41,8 @@ public class XaTransaction extends AbstractTransaction
      * Map of enlisted resources
      */
     private Map resources = null;
+    
+    private boolean reuseSession;
 
     /**
      * Default constructor
@@ -45,6 +50,17 @@ public class XaTransaction extends AbstractTransaction
     public XaTransaction()
     {
         super();
+    }
+    
+    public XaTransaction(boolean reuseSession)
+    {
+        super();
+        this.reuseSession = reuseSession;
+    }
+
+    public void setReuseSession(boolean reuseSession)
+    {
+        this.reuseSession = reuseSession;
     }
 
     protected void doBegin() throws TransactionException
@@ -249,6 +265,41 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
+    public void closeResources()
+    {
+        Object[] resourceArr = resources.entrySet().toArray();
+        for (int i = 0; i < resourceArr.length; i++)
+        {
+            Entry resource = (Entry) resourceArr[i];
+
+            Object t = resource.getValue();
+            Method method;
+
+            try
+            {
+                Method[] methodArr = t.getClass().getMethods();
+
+                for (int m = 0; m < methodArr.length; m++)
+                {
+                    if (methodArr[m].getName().equalsIgnoreCase("close"))
+                    {
+                        method = methodArr[m];
+                        method.invoke(t, new Object[]{});
+                        break;
+                    }
+                }
+            }
+            catch (IllegalAccessException e)
+            {
+                logger.warn(CoreMessages.failedToDispose("Failed to close XA Session when removing Transaction " + e.getCause()));
+            }
+            catch (InvocationTargetException e)
+            {
+                logger.warn(CoreMessages.failedToDispose("Failed to close XA Session when removing Transaction" + e.getCause()));
+            }
+        }
+    }
+    
     public Object getResource(Object key)
     {
         synchronized (this)
@@ -310,5 +361,10 @@ public class XaTransaction extends AbstractTransaction
     public String toString()
     {
         return transaction == null ? " <n/a>" : transaction.toString();
+    }
+
+    public boolean isReuseSession()
+    {
+        return reuseSession;
     }
 }
