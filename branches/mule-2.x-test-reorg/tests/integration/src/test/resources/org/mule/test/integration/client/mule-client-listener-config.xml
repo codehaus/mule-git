@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+    <model name="model">
+        <service name="vmComponent" initialState="stopped">
+            <inbound-router>
+                <inbound-endpoint address="vm://test.queue" synchronous="true"/>
+            </inbound-router>
+            <component>
+                <singleton-object class="org.mule.test.integration.service.TestReceiver"/>
+            </component>
+        </service>
+
+        <service name="tcpComponent" initialState="stopped">
+            <inbound-router>
+                <inbound-endpoint address="tcp://localhost:56324" synchronous="true">
+                    <transformer-byte-array-to-string/>
+                </inbound-endpoint>
+            </inbound-router>
+            <component>
+                <singleton-object class="org.mule.test.integration.service.TestReceiver"/>
+            </component>
+        </service>
+    </model>
+</mule>
