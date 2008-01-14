@@ -13,7 +13,7 @@ package org.mule.impl.endpoint;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -105,9 +105,9 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.getInitialState();
     }
 
-    public UMOManagementContext getManagementContext()
+    public MuleContext getMuleContext()
     {
-        return endpoint.getManagementContext();
+        return endpoint.getMuleContext();
     }
 
     public String getName()

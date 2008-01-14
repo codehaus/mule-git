@@ -18,7 +18,7 @@ import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -66,7 +66,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
      */
     public static final String[] IGNORED_DOT_MULE_DIRS = new String[]{"transaction-log"};
 
-    protected static UMOManagementContext managementContext;
+    protected static MuleContext muleContext;
 
     /**
      * This flag controls whether the text boxes will be logged when starting each test case.
@@ -81,7 +81,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     protected final transient Log logger = LogFactory.getLog(this.getClass());
 
     /**
-     * Start the ManagementContext once it's configured (defaults to false for AbstractMuleTestCase, true for FunctionalTestCase).
+     * Start the MuleContext once it's configured (defaults to false for AbstractMuleTestCase, true for FunctionalTestCase).
      */
     private boolean startContext = false;
 
@@ -314,15 +314,15 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                 disposeManager();
             }
 
-            managementContext = createManagementContext();
-            MuleServer.setManagementContext(managementContext);
-//            if(!managementContext.getRegistry().isInitialised())
+            muleContext = createMuleContext();
+            MuleServer.setMuleContext(muleContext);
+//            if(!muleContext.getRegistry().isInitialised())
 //            {
-//                managementContext.getRegistry().initialise();
+//                muleContext.getRegistry().initialise();
 //            }
-            if (isStartContext() && managementContext.isStarted() == false)
+            if (isStartContext() && muleContext.isStarted() == false)
             {
-                managementContext.start();
+                muleContext.start();
             }
 
             doSetUp();
@@ -334,13 +334,13 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         }
     }
 
-    protected UMOManagementContext createManagementContext() throws Exception
+    protected MuleContext createMuleContext() throws Exception
     {
         // Should we set up the manager for every method?
-        UMOManagementContext context;
-        if (getTestInfo().isDisposeManagerPerSuite() && managementContext != null)
+        MuleContext context;
+        if (getTestInfo().isDisposeManagerPerSuite() && muleContext != null)
         {
-            context = managementContext;
+            context = muleContext;
         }
         else
         {
@@ -422,9 +422,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         try
         {
-            if (managementContext != null && !(managementContext.isDisposed() || managementContext.isDisposing()))
+            if (muleContext != null && !(muleContext.isDisposed() || muleContext.isDisposing()))
             {
-                managementContext.dispose();
+                muleContext.dispose();
 
                 if (RegistryContext.getRegistry() != null)
                 {
@@ -439,7 +439,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         }
         finally
         {
-            managementContext = null;
+            muleContext = null;
             RegistryContext.setRegistry(null);
         }
     }
@@ -456,22 +456,22 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public static UMOEndpoint getTestEndpoint(String name, String type) throws Exception
     {
-        return MuleTestUtils.getTestEndpoint(name, type, managementContext);
+        return MuleTestUtils.getTestEndpoint(name, type, muleContext);
     }
 
     public static UMOEvent getTestEvent(Object data, UMOComponent component) throws Exception
     {
-        return MuleTestUtils.getTestEvent(data, component, managementContext);
+        return MuleTestUtils.getTestEvent(data, component, muleContext);
     }
 
     public static UMOEvent getTestEvent(Object data) throws Exception
     {
-        return MuleTestUtils.getTestEvent(data, managementContext);
+        return MuleTestUtils.getTestEvent(data, muleContext);
     }
 
     public static UMOEventContext getTestEventContext(Object data) throws Exception
     {
-        return MuleTestUtils.getTestEventContext(data, managementContext);
+        return MuleTestUtils.getTestEventContext(data, muleContext);
     }
 
     public static UMOTransformer getTestTransformer() throws Exception
@@ -481,13 +481,13 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public static UMOEvent getTestEvent(Object data, UMOImmutableEndpoint endpoint) throws Exception
     {
-        return MuleTestUtils.getTestEvent(data, endpoint, managementContext);
+        return MuleTestUtils.getTestEvent(data, endpoint, muleContext);
     }
 
     public static UMOEvent getTestEvent(Object data, UMOComponent component, UMOImmutableEndpoint endpoint)
         throws Exception
     {
-        return MuleTestUtils.getTestEvent(data, component, endpoint, managementContext);
+        return MuleTestUtils.getTestEvent(data, component, endpoint, muleContext);
     }
 
     public static UMOSession getTestSession(UMOComponent component)
@@ -497,22 +497,22 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public static TestConnector getTestConnector() throws Exception
     {
-        return MuleTestUtils.getTestConnector(managementContext);
+        return MuleTestUtils.getTestConnector(muleContext);
     }
 
     public static UMOComponent getTestComponent() throws Exception
     {
-        return MuleTestUtils.getTestComponent(managementContext);
+        return MuleTestUtils.getTestComponent(muleContext);
     }
 
     public static UMOComponent getTestComponent(String name, Class clazz) throws Exception
     {
-        return MuleTestUtils.getTestComponent(name, clazz, managementContext);
+        return MuleTestUtils.getTestComponent(name, clazz, muleContext);
     }
 
     public static UMOComponent getTestComponent(String name, Class clazz, Map props) throws Exception
     {
-        return MuleTestUtils.getTestComponent(name, clazz, props, managementContext);
+        return MuleTestUtils.getTestComponent(name, clazz, props, muleContext);
     }
 
     public static class TestInfo

@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.umo.TransactionException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 
@@ -28,7 +28,7 @@ public class TestTransactionFactory implements UMOTransactionFactory
     // for testsing properties
     private String value;
 
-    public UMOTransaction beginTransaction(UMOManagementContext managementContext) throws TransactionException
+    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
         return (UMOTransaction) new Mock(UMOTransaction.class).proxy();
     }

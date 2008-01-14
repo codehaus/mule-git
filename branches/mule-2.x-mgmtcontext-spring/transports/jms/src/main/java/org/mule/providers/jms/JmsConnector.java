@@ -212,7 +212,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
         try
         {
-            managementContext.registerListener(this, getName());
+            muleContext.registerListener(this, getName());
         }
         catch (NotificationException nex)
         {
@@ -255,7 +255,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         try
         {
             cf = (ConnectionFactory) connectionFactory.getOrCreate();
-            if (cf instanceof XAConnectionFactory && managementContext.getTransactionManager() != null)
+            if (cf instanceof XAConnectionFactory && muleContext.getTransactionManager() != null)
             {
                 cf = new ConnectionFactoryWrapper(cf);
             }

@@ -20,7 +20,7 @@ import org.mule.routing.filters.ObjectFilter;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.transformer.UMOTransformer;
@@ -89,9 +89,9 @@ public final class MuleObjectHelper
             iprovider = (UMOImmutableEndpoint) iterator.next();
             if (iprovider.getProtocol().equals(protocol))
             {
-                UMOManagementContext managementContext = MuleServer.getManagementContext();
-                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(iprovider, managementContext);
-                return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
+                MuleContext muleContext = MuleServer.getMuleContext();
+                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(iprovider, muleContext);
+                return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
             }
         }
         return null;
@@ -118,9 +118,9 @@ public final class MuleObjectHelper
             iprovider = (UMOImmutableEndpoint) iterator.next();
             if (filter.accept(iprovider.getEndpointURI()))
             {
-                UMOManagementContext managementContext = MuleServer.getManagementContext();
-                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(iprovider, managementContext);
-                return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
+                MuleContext muleContext = MuleServer.getMuleContext();
+                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(iprovider, muleContext);
+                return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
             }
         }
 

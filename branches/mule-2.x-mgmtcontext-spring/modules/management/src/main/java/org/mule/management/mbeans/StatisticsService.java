@@ -14,7 +14,7 @@ import org.mule.management.stats.AllStatistics;
 import org.mule.management.stats.printers.CSVPrinter;
 import org.mule.management.stats.printers.HtmlTablePrinter;
 import org.mule.management.stats.printers.XMLPrinter;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 
 import java.io.StringWriter;
 import java.util.Collection;
@@ -38,18 +38,18 @@ public class StatisticsService implements StatisticsServiceMBean
     protected static final Log logger = LogFactory.getLog(StatisticsService.class);
 
     private AllStatistics stats = new AllStatistics();
-    private UMOManagementContext managementContext = null;
+    private MuleContext muleContext = null;
 
-    public void setManagementContext(UMOManagementContext context)
+    public void setMuleContext(MuleContext context)
     {
-        this.managementContext = context;
-        if (managementContext == null)
+        this.muleContext = context;
+        if (muleContext == null)
         {
             stats = new AllStatistics();
         }
         else
         {
-            stats = this.managementContext.getStatistics();
+            stats = this.muleContext.getStatistics();
         }
 
     }

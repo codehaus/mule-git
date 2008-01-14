@@ -292,7 +292,7 @@ public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFu
 //            throws UMOException
 //        {
 //            this(exceptionStrategyCalled);
-//            UMOEndpoint ep = managementContext.getRegistry().createEndpointFromUri(deadLetter, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+//            UMOEndpoint ep = muleContext.getRegistry().createEndpointFromUri(deadLetter, UMOEndpoint.ENDPOINT_TYPE_SENDER);
 //            // lets include dispatch to the deadLetter queue in the sme tx.
 //            ep.setTransactionConfig(new MuleTransactionConfig());
 //            ep.getTransactionConfig().setAction(UMOTransactionConfig.ACTION_JOIN_IF_POSSIBLE);
@@ -365,7 +365,7 @@ public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFu
 //
 //        addResultListener(getDeadLetterDest().getAddress(), countDown);
 //
-//        JmsConnector umoCnn = (JmsConnector)managementContext.getRegistry().lookupConnector(CONNECTOR_NAME);
+//        JmsConnector umoCnn = (JmsConnector)muleContext.getRegistry().lookupConnector(CONNECTOR_NAME);
 //
 //        // After redelivery retry the message and then fail
 //        umoCnn.setMaxRedelivery(1);
@@ -374,7 +374,7 @@ public abstract class AbstractJmsTransactionFunctionalTest extends AbstractJmsFu
 //        umoCnn.setExceptionListener(new RollbackExceptionListener(countDown, getDeadLetterDest()));
 //
 //        // Start the server
-//        managementContext.start();
+//        muleContext.start();
 //
 //        // Send a test message firstso that it is there when the component is
 //        // started

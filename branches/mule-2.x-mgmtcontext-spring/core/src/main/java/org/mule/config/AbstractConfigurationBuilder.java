@@ -12,7 +12,7 @@ package org.mule.config;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.impl.ManagementContext;
+import org.mule.impl.DefaultMuleContext;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
 import org.mule.impl.internal.notifications.ComponentNotification;
@@ -37,13 +37,13 @@ import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.impl.lifecycle.GenericLifecycleManager;
-import org.mule.impl.lifecycle.phases.ManagementContextDisposePhase;
-import org.mule.impl.lifecycle.phases.ManagementContextInitialisePhase;
-import org.mule.impl.lifecycle.phases.ManagementContextStartPhase;
-import org.mule.impl.lifecycle.phases.ManagementContextStopPhase;
+import org.mule.impl.lifecycle.phases.MuleContextDisposePhase;
+import org.mule.impl.lifecycle.phases.MuleContextInitialisePhase;
+import org.mule.impl.lifecycle.phases.MuleContextStartPhase;
+import org.mule.impl.lifecycle.phases.MuleContextStopPhase;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.registry.Registry;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.PropertiesUtils;
@@ -72,7 +72,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String configResources) throws ConfigurationException
+    public MuleContext configure(String configResources) throws ConfigurationException
     {
         return configure(StringUtils.splitAndTrim(configResources, ",; "), new Properties());
     }
@@ -88,7 +88,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String configResources, Properties startupProperties)
+    public MuleContext configure(String configResources, Properties startupProperties)
         throws ConfigurationException
     {
         return configure(StringUtils.splitAndTrim(configResources, ",; "), startupProperties);
@@ -102,7 +102,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String[] configResources) throws ConfigurationException
+    public MuleContext configure(String[] configResources) throws ConfigurationException
     {
         return configure(configResources, new Properties());
     }
@@ -118,7 +118,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String[] configResources, String startupPropertiesFile)
+    public MuleContext configure(String[] configResources, String startupPropertiesFile)
         throws ConfigurationException
     {
         try
@@ -143,7 +143,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String configResources, String startupPropertiesFile)
+    public MuleContext configure(String configResources, String startupPropertiesFile)
         throws ConfigurationException
     {
         try
@@ -165,20 +165,20 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
     }
 
     /**
-     * Creates a default managementContext. This needs to go somewhere else before
+     * Creates a default muleContext. This needs to go somewhere else before
      * ConfigurationBuilder invocation. This will also allow multiple
      * configurationBuilders to be used.
      * 
      * @return
      */
-    protected UMOManagementContext createManagementContext()
+    protected MuleContext createMuleContext()
     {
-        // Create ManagementContext life-cycle manager
+        // Create MuleContext life-cycle manager
         UMOLifecycleManager lifecycleManager = new GenericLifecycleManager();
-        lifecycleManager.registerLifecycle(new ManagementContextInitialisePhase());
-        lifecycleManager.registerLifecycle(new ManagementContextStartPhase());
-        lifecycleManager.registerLifecycle(new ManagementContextStopPhase());
-        lifecycleManager.registerLifecycle(new ManagementContextDisposePhase());
+        lifecycleManager.registerLifecycle(new MuleContextInitialisePhase());
+        lifecycleManager.registerLifecycle(new MuleContextStartPhase());
+        lifecycleManager.registerLifecycle(new MuleContextStopPhase());
+        lifecycleManager.registerLifecycle(new MuleContextDisposePhase());
 
         MuleConfiguration config = new MuleConfiguration();
 
@@ -203,11 +203,11 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
         notificationManager.addInterfaceToType(TransactionNotificationListener.class,
             TransactionNotification.class);
 
-        UMOManagementContext managementContext = new ManagementContext(lifecycleManager);
-        managementContext.setNotificationManager(notificationManager);
-        managementContext.setWorkManager(workManager);
-        managementContext.setConfiguration(config);
-        return managementContext;
+        MuleContext muleContext = new DefaultMuleContext(lifecycleManager);
+        muleContext.setNotificationManager(notificationManager);
+        muleContext.setWorkManager(workManager);
+        muleContext.setConfiguration(config);
+        return muleContext;
     }
 
     /**
@@ -221,24 +221,24 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
      * @return A configured UMOManager
      * @throws org.mule.config.ConfigurationException
      */
-    public UMOManagementContext configure(String[] configResources, Properties startupProperties)
+    public MuleContext configure(String[] configResources, Properties startupProperties)
         throws ConfigurationException
     {
         // 1) Pre-ConfigurationBuilder logic. This should happen before
         // ConfigurationBuilder is invoked
         // --------------------------------------------------------------------------------
         Registry registry = RegistryContext.getOrCreateRegistry();
-        UMOManagementContext managementContext = createManagementContext();
-        MuleServer.setManagementContext(managementContext);
+        MuleContext muleContext = createMuleContext();
+        MuleServer.setMuleContext(muleContext);
         try
         {
-            managementContext.initialise();
+            muleContext.initialise();
             registry.registerObjects(startupProperties);
             // --------------------------------------------------------------------------------
 
             // 2) ConfigurationBuilder logic---------------------------------------------------         
             
-            doConfigure(managementContext, configResources);
+            doConfigure(muleContext, configResources);
             
             // --------------------------------------------------------------------------------
         }
@@ -248,11 +248,11 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
         }
 
         configured = true;
-        return managementContext;
+        return muleContext;
 
     }
 
-    protected abstract void doConfigure(UMOManagementContext managementContext, String[] configResources)
+    protected abstract void doConfigure(MuleContext muleContext, String[] configResources)
         throws Exception;
 
     public boolean isConfigured()

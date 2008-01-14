@@ -124,9 +124,9 @@ public interface MuleProperties
 
     //Object Name Keys
 
-    String OBJECT_MANAGEMENT_CONTEXT = "_muleManagementContext";
+    String OBJECT_MULE_CONTEXT = "_muleContext";
     String OBJECT_SYSTEM_MODEL = "_muleSystemModel";
-    String OBJECT_MANAGMENT_CONTEXT_PROCESSOR = "_muleManagementContextProcessor";
+    String OBJECT_MULE_CONTEXT_PROCESSOR = "_muleContextProcessor";
     String OBJECT_PROPERTY_PLACEHOLDER_PROCESSOR = "_mulePropertyPlaceholderProcessor";
     String OBJECT_OBJECT_NAME_PROCESSOR = "_muleObjectNameProcessor";
     String OBJECT_LIFECYCLE_MANAGER = "_muleLifecycleManager";

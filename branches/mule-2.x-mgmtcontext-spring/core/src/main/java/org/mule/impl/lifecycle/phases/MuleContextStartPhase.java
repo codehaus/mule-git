@@ -14,7 +14,7 @@ import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;
@@ -26,22 +26,22 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * The Start phase for the Management context LifecycleManager. Calling {@link org.mule.umo.UMOManagementContext#start()}
+ * The Start phase for the Management context LifecycleManager. Calling {@link org.mule.umo.MuleContext#start()}
  * with initiate this phase via the {@link org.mule.umo.lifecycle.UMOLifecycleManager}.
  * This phase controls the order in which objects should be started.
  *
- * @see org.mule.umo.UMOManagementContext
+ * @see org.mule.umo.MuleContext
  * @see org.mule.umo.lifecycle.UMOLifecycleManager
  * @see org.mule.umo.lifecycle.Startable
  */
-public class ManagementContextStartPhase extends LifecyclePhase
+public class MuleContextStartPhase extends LifecyclePhase
 {
-    public ManagementContextStartPhase()
+    public MuleContextStartPhase()
     {
-        this(new Class[]{Registry.class, UMOManagementContext.class});
+        this(new Class[]{Registry.class, MuleContext.class});
     }
 
-    public ManagementContextStartPhase(Class[] ignorredObjects)
+    public MuleContextStartPhase(Class[] ignorredObjects)
     {
         super(Startable.PHASE_NAME, Startable.class, Stoppable.PHASE_NAME);
 

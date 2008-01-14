@@ -32,10 +32,10 @@ import org.mule.registry.RegistrationException;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.FutureMessageResult;
 import org.mule.umo.MessagingException;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,7 +84,7 @@ import org.apache.commons.logging.LogFactory;
  * endpoint is determined by the protocol, so the first JMS endpoint is used.
  * <p>
  * Note that there must be a configured MuleManager for this client to work. It will
- * use the one available using <code>managementContext</code>
+ * use the one available using <code>muleContext</code>
  *
  * @see org.mule.impl.endpoint.MuleEndpointURI
  */
@@ -99,7 +98,7 @@ public class MuleClient implements Disposable
     /**
      * the local UMOManager instance
      */
-    private UMOManagementContext managementContext;
+    private MuleContext muleContext;
 
     private List dispatchers = new ArrayList();
 
@@ -121,9 +120,9 @@ public class MuleClient implements Disposable
         init(startContext);
     }
 
-    public MuleClient(UMOManagementContext context) throws UMOException
+    public MuleClient(MuleContext context) throws UMOException
     {
-        this.managementContext = context;
+        this.muleContext = context;
         init(false);
     }
 
@@ -144,7 +143,7 @@ public class MuleClient implements Disposable
 
     /**
      * Configures a new MuleClient and either uses an existing Manager running in
-     * this JVM or creates a new empty managementContext
+     * this JVM or creates a new empty muleContext
      *
      * @param user the username to use when connecting to a remote server instance
      * @param password the password for the user
@@ -175,7 +174,7 @@ public class MuleClient implements Disposable
             builder = new SpringXmlConfigurationBuilder();
         }
         logger.info("Initializing Mule...");
-        managementContext = builder.configure(configResources);
+        muleContext = builder.configure(configResources);
     }
 
     /**
@@ -207,27 +206,27 @@ public class MuleClient implements Disposable
     {
         // if we are creating a server for this client then set client mode
         // this will disable Admin connections by default;
-        // If there is no local managementContext present create a default managementContext
-        if (managementContext == null)
+        // If there is no local muleContext present create a default muleContext
+        if (muleContext == null)
         {
-            managementContext = MuleServer.getManagementContext();
+            muleContext = MuleServer.getMuleContext();
         }
-        if (managementContext == null)
+        if (muleContext == null)
         {
-            logger.info("No existing ManagementContext found, creating a new Mule instance");
-            // Doing this for now, because we have no ManagementContextFactory
+            logger.info("No existing MuleContext found, creating a new Mule instance");
+            // Doing this for now, because we have no MuleContextFactory
             ConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
-            managementContext = configurationBuilder.configure(new String[]{});
+            muleContext = configurationBuilder.configure(new String[]{});
         }
         else
         {
-            logger.info("Using existing ManagementContext: " + managementContext);
+            logger.info("Using existing MuleContext: " + muleContext);
         }
 
-        if (!managementContext.isStarted() && startManager == true)
+        if (!muleContext.isStarted() && startManager == true)
         {
             logger.info("Starting Mule...");
-            managementContext.start();
+            muleContext.start();
         }
     }
 
@@ -309,7 +308,7 @@ public class MuleClient implements Disposable
     public UMOMessage sendDirect(String componentName, String transformers, UMOMessage message)
         throws UMOException
     {
-        UMOComponent component = managementContext.getRegistry().lookupComponent(componentName);
+        UMOComponent component = muleContext.getRegistry().lookupComponent(componentName);
         if (component == null)
         {
             throw new MessagingException(
@@ -324,7 +323,7 @@ public class MuleClient implements Disposable
 
         if (!RegistryContext.getConfiguration().isDefaultSynchronousEndpoints())
         {
-            logger.warn("The mule managementContext is running synchronously, a null message payload will be returned");
+            logger.warn("The mule muleContext is running synchronously, a null message payload will be returned");
         }
         UMOSession session = new MuleSession(component);
         UMOImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
@@ -375,7 +374,7 @@ public class MuleClient implements Disposable
      */
     public void dispatchDirect(String componentName, UMOMessage message) throws UMOException
     {
-        UMOComponent component = managementContext.getRegistry().lookupComponent(componentName);
+        UMOComponent component = muleContext.getRegistry().lookupComponent(componentName);
         if (component == null)
         {
             throw new MessagingException(
@@ -472,9 +471,9 @@ public class MuleClient implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(call);
 
-        if (managementContext.getWorkManager() != null)
+        if (muleContext.getWorkManager() != null)
         {
-            result.setExecutor(managementContext.getWorkManager());
+            result.setExecutor(muleContext.getWorkManager());
         }
 
         result.execute();
@@ -537,9 +536,9 @@ public class MuleClient implements Disposable
 
         FutureMessageResult result = new FutureMessageResult(call);
 
-        if (managementContext.getWorkManager() != null)
+        if (muleContext.getWorkManager() != null)
         {
-            result.setExecutor(managementContext.getWorkManager());
+            result.setExecutor(muleContext.getWorkManager());
         }
 
         if (StringUtils.isNotBlank(transformers))
@@ -738,7 +737,7 @@ public class MuleClient implements Disposable
         throws UMOException
     {
         UMOImmutableEndpoint endpoint = getOutboundEndpoint(uri);
-        if (!endpoint.getConnector().isStarted() &&managementContext.isStarted())
+        if (!endpoint.getConnector().isStarted() &&muleContext.isStarted())
         {
             endpoint.getConnector().start();
         }
@@ -763,12 +762,12 @@ public class MuleClient implements Disposable
 
     protected UMOImmutableEndpoint getInboundEndpoint(String uri) throws UMOException
     {
-        return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
+        return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
     }
 
     protected UMOImmutableEndpoint getOutboundEndpoint(String uri) throws UMOException
     {
-        return managementContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+        return muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
     }
 
     protected UMOImmutableEndpoint getDefaultClientEndpoint(UMOComponent component, Object payload)
@@ -788,9 +787,9 @@ public class MuleClient implements Disposable
                 }
                 else
                 {
-                    UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, managementContext);
+                    UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, muleContext);
                     builder.setTransformers(new LinkedList());
-                    return managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
+                    return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
                 }
             }
             else
@@ -800,9 +799,9 @@ public class MuleClient implements Disposable
         }
         else
         {
-            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("vm://mule.client", managementContext);
+            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("vm://mule.client", muleContext);
             builder.setName("muleClientProvider");
-            endpoint = managementContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
+            endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
         }
         return endpoint;
     }
@@ -844,13 +843,13 @@ public class MuleClient implements Disposable
     }
 
     /**
-     * Overriding methods may want to return a custom managementContext here
+     * Overriding methods may want to return a custom muleContext here
      * 
      * @return the UMOManager to use
      */
-    public UMOManagementContext getManagementContext()
+    public MuleContext getMuleContext()
     {
-        return managementContext;
+        return muleContext;
     }
 
     /**
@@ -941,7 +940,7 @@ public class MuleClient implements Disposable
     public RemoteDispatcher getRemoteDispatcher(String serverEndpoint) throws UMOException
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint);
-        rd.setExecutor(managementContext.getWorkManager());
+        rd.setExecutor(muleContext.getWorkManager());
         dispatchers.add(rd);
         return rd;
     }
@@ -951,7 +950,7 @@ public class MuleClient implements Disposable
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint, new MuleCredentials(user,
             password.toCharArray()));
-        rd.setExecutor(managementContext.getWorkManager());
+        rd.setExecutor(muleContext.getWorkManager());
         dispatchers.add(rd);
         return rd;
     }
@@ -972,11 +971,11 @@ public class MuleClient implements Disposable
             }
             dispatchers.clear();
         }
-        // Dispose the managementContext only if the managementContext was created for this client
+        // Dispose the muleContext only if the muleContext was created for this client
         if (RegistryContext.getConfiguration().isClientMode())
         {
             logger.info("Stopping Mule...");
-            managementContext.dispose();
+            muleContext.dispose();
         }
     }
 
@@ -984,7 +983,7 @@ public class MuleClient implements Disposable
     {
         try
         {
-            managementContext.getRegistry().registerObject(key, value);
+            muleContext.getRegistry().registerObject(key, value);
         }
         catch (RegistrationException e)
         {
@@ -994,7 +993,7 @@ public class MuleClient implements Disposable
 
     public Object getProperty(String key)
     {
-        return managementContext.getRegistry().lookupObject(key);
+        return muleContext.getRegistry().lookupObject(key);
     }
 
     public MuleConfiguration getConfiguration()

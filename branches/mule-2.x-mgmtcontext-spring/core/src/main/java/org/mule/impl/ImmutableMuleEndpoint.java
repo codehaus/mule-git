@@ -15,7 +15,7 @@ import org.mule.providers.ConnectionStrategy;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -145,7 +145,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     protected String registryId = null;
 
-    protected UMOManagementContext managementContext;
+    protected MuleContext muleContext;
 
     protected ConnectionStrategy connectionStrategy;
 
@@ -464,9 +464,9 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
     }
 
-    public UMOManagementContext getManagementContext()
+    public MuleContext getMuleContext()
     {
-        return managementContext;
+        return muleContext;
     }
 
     /**

@@ -43,7 +43,7 @@ public class ActiveMQJmsXaTransactionFunctionalTestCase extends ActiveMQJmsTrans
 //        }
 //        txManager.setTransactionTimeout(15000);
 //        super.doSetUp();
-//        managementContext.setTransactionManager(txManager);
+//        muleContext.setTransactionManager(txManager);
 //    }
 //
 //    public JmsConnector createConnector() throws Exception

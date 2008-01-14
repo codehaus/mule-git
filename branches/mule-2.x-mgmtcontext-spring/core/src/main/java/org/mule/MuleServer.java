@@ -15,8 +15,8 @@ import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleShutdownHook;
+import org.mule.umo.MuleContext;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
@@ -99,12 +99,12 @@ public class MuleServer implements Runnable
     protected Map options = Collections.EMPTY_MAP;
 
     /**
-     * The ManagementContext should contain anything which does not belong in the Registry.
-     * There is one ManagementContext per Mule instance.
-     * Assuming it has been created, a handle to the local ManagementContext can be obtained from anywhere
-     * by calling MuleServer.getManagementContext()
+     * The MuleContext should contain anything which does not belong in the Registry.
+     * There is one MuleContext per Mule instance.
+     * Assuming it has been created, a handle to the local MuleContext can be obtained from anywhere
+     * by calling MuleServer.getMuleContext()
      */
-    protected static UMOManagementContext managementContext = null;
+    protected static MuleContext muleContext = null;
 
     /**
      * Application entry point.
@@ -251,7 +251,7 @@ public class MuleServer implements Runnable
             logger.info("Mule Server initializing...");
             initialize();
             logger.info("Mule Server starting...");
-            managementContext.start();
+            muleContext.start();
         }
         catch (Throwable e)
         {
@@ -328,7 +328,7 @@ public class MuleServer implements Runnable
                 logger.warn("A configuration file was not set, using default: " + DEFAULT_CONFIGURATION);
                 configurationResources = DEFAULT_CONFIGURATION;
             }
-            managementContext = cfgBuilder.configure(configurationResources, getStartupPropertiesFile());
+            muleContext = cfgBuilder.configure(configurationResources, getStartupPropertiesFile());
         }
     }
 
@@ -355,14 +355,14 @@ public class MuleServer implements Runnable
         msgs.add(root.getMessage() + " (" + root.getClass().getName() + ")");
         msgs.add(" ");
         msgs.add(CoreMessages.fatalErrorInShutdown());
-        msgs.add(CoreMessages.serverStartedAt(managementContext.getStartDate()));
+        msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()));
         msgs.add(CoreMessages.serverShutdownAt(new Date()));
 
         String shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.fatal(shutdownMessage);
 
         // make sure that Mule is shutdown correctly.
-        managementContext.dispose();
+        muleContext.dispose();
         System.exit(0);
     }
 
@@ -374,13 +374,13 @@ public class MuleServer implements Runnable
         logger.info("Mule server shutting dow due to normal shutdown request");
         List msgs = new ArrayList();
         msgs.add(CoreMessages.normalShutdown());
-        msgs.add(CoreMessages.serverStartedAt(managementContext.getStartDate()).getMessage());
+        msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()).getMessage());
         msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
         String shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.info(shutdownMessage);
 
         // make sure that Mule is shutdown correctly.
-        managementContext.dispose();
+        muleContext.dispose();
         System.exit(0);
     }
 
@@ -429,27 +429,27 @@ public class MuleServer implements Runnable
         MuleServer.startupPropertiesFile = startupPropertiesFile;
     }
 
-    public static UMOManagementContext getManagementContext()
+    public static MuleContext getMuleContext()
     {
-        return managementContext;
+        return muleContext;
     }
 
-    public static void setManagementContext(UMOManagementContext managementContext)
+    public static void setMuleContext(MuleContext muleContext)
     {
-        MuleServer.managementContext = managementContext;
+        MuleServer.muleContext = muleContext;
     }
 
      /**
      * This class is installed only for MuleServer running as commandline app. A clean Mule
-     * shutdown can be achieved by disposing the {@link org.mule.impl.ManagementContext}.
+     * shutdown can be achieved by disposing the {@link org.mule.impl.DefaultMuleContext}.
      */
     private class ShutdownThread extends Thread
     {
         public void run()
         {
-            if (!managementContext.isDisposed() && !managementContext.isDisposing())
+            if (!muleContext.isDisposed() && !muleContext.isDisposing())
             {
-                managementContext.dispose();
+                muleContext.dispose();
             }
         }
     }

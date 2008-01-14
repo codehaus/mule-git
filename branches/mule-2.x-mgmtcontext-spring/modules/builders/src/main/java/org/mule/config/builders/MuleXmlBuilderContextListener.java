@@ -14,7 +14,7 @@ import org.mule.MuleServer;
 import org.mule.config.ConfigurationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.util.StringUtils;
 
 import javax.servlet.ServletContext;
@@ -51,7 +51,7 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
      */
     public static final String INIT_PARAMETER_WEBAPP_CLASSPATH = "org.mule.webapp.classpath";
 
-    private UMOManagementContext managementContext;
+    private MuleContext muleContext;
     
     protected transient final Log logger = LogFactory.getLog(MuleXmlBuilderContextListener.class);
     
@@ -81,8 +81,8 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
 
         try
         {
-            managementContext = createManager(config, webappClasspath, context);
-            managementContext.start();
+            muleContext = createManager(config, webappClasspath, context);
+            muleContext.start();
         }
         catch (UMOException ex)
         {
@@ -107,7 +107,7 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
      *            local file system or on the classpath.
      * @return A configured UMOManager instance
      */
-    protected UMOManagementContext createManager(String configResource, String webappClasspath, ServletContext context)
+    protected MuleContext createManager(String configResource, String webappClasspath, ServletContext context)
         throws ConfigurationException
     {
         WebappMuleXmlConfigurationBuilder builder = new WebappMuleXmlConfigurationBuilder(context, webappClasspath);
@@ -132,11 +132,11 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
 
     public void destroy()
     {
-        if (managementContext != null)
+        if (muleContext != null)
         {
-            if (!managementContext.isDisposing() || !managementContext.isDisposed())
+            if (!muleContext.isDisposing() || !muleContext.isDisposed())
             {
-                managementContext.dispose();
+                muleContext.dispose();
             }
         }
     }

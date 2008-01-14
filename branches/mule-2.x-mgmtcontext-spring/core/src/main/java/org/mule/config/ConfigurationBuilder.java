@@ -10,7 +10,7 @@
 
 package org.mule.config;
 
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 
 import java.util.Properties;
 
@@ -29,7 +29,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String configResources) throws ConfigurationException;
+    MuleContext configure(String configResources) throws ConfigurationException;
 
     /**
      * Will configure a UMOManager based on the configuration file(s) provided.
@@ -39,7 +39,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String[] configResources) throws ConfigurationException;
+    MuleContext configure(String[] configResources) throws ConfigurationException;
 
     /**
      * Will configure a UMOManager based on the configuration file(s) provided.
@@ -52,7 +52,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String configResources, String startupPropertiesFile) throws ConfigurationException;
+    MuleContext configure(String configResources, String startupPropertiesFile) throws ConfigurationException;
 
     /**
      * Will configure a UMOManager based on the configuration file(s) provided.
@@ -65,7 +65,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String[] configResources, String startupPropertiesFile) throws ConfigurationException;
+    MuleContext configure(String[] configResources, String startupPropertiesFile) throws ConfigurationException;
 
     /**
      * Will configure a UMOManager based on the configuration file(s) provided.
@@ -78,7 +78,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String configResources, Properties startupProperties) throws ConfigurationException;
+    MuleContext configure(String configResources, Properties startupProperties) throws ConfigurationException;
 
     /**
      * Will configure a UMOManager based on the configuration file(s) provided.
@@ -91,7 +91,7 @@ public interface ConfigurationBuilder
      * @return A configured UMOManager
      * @throws ConfigurationException
      */
-    UMOManagementContext configure(String[] configResources, Properties startupProperties) throws ConfigurationException;
+    MuleContext configure(String[] configResources, Properties startupProperties) throws ConfigurationException;
 
 
 

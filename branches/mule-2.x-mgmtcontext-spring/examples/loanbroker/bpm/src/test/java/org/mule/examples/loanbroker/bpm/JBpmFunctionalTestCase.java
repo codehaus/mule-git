@@ -52,7 +52,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         super.testSingleLoanRequest();
         
         ProcessConnector connector =
-            (ProcessConnector) managementContext.getRegistry().lookupConnector("jBpmConnector");
+            (ProcessConnector) muleContext.getRegistry().lookupConnector("jBpmConnector");
         if (connector == null)
         {
             throw new ConfigurationException(MessageFactory.createStaticMessage("Unable to look up jBpmConnector from Mule registry."));

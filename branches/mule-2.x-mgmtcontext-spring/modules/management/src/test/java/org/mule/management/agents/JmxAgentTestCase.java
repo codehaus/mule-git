@@ -37,12 +37,12 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
         
         serviceUrl = new JMXServiceURL(JmxAgent.DEFAULT_REMOTING_URI);
         
-        managementContext.getRegistry().registerAgent(new RmiRegistryAgent());
+        muleContext.getRegistry().registerAgent(new RmiRegistryAgent());
 
         jmxAgent = new JmxAgent();
         jmxAgent.setConnectorServerUrl(JmxAgent.DEFAULT_REMOTING_URI);
         
-        managementContext.setId(DOMAIN);
+        muleContext.setId(DOMAIN);
     }
 
     protected void doTearDown()
@@ -53,16 +53,16 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
     public void testDefaultProperties() throws Exception
     {
         jmxAgent.setCredentials(getValidCredentials());
-        managementContext.getRegistry().registerAgent(jmxAgent);
-        managementContext.start();
+        muleContext.getRegistry().registerAgent(jmxAgent);
+        muleContext.start();
     }
 
     public void testSuccessfulRemoteConnection() throws Exception
     {
         configureProperties();
         jmxAgent.setCredentials(getValidCredentials());
-        managementContext.getRegistry().registerAgent(jmxAgent);
-        managementContext.start();
+        muleContext.getRegistry().registerAgent(jmxAgent);
+        muleContext.start();
 
         JMXConnector connector = null;
         try
@@ -86,8 +86,8 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
     {
         configureProperties();
         jmxAgent.setCredentials(getValidCredentials());
-        managementContext.getRegistry().registerAgent(jmxAgent);
-        managementContext.start();
+        muleContext.getRegistry().registerAgent(jmxAgent);
+        muleContext.start();
 
         JMXConnector connector = null;
         try
@@ -112,8 +112,8 @@ public class JmxAgentTestCase extends AbstractMuleTestCase
     {
         configureProperties();
         jmxAgent.setCredentials(null);
-        managementContext.getRegistry().registerAgent(jmxAgent);
-        managementContext.start();
+        muleContext.getRegistry().registerAgent(jmxAgent);
+        muleContext.start();
 
         JMXConnector connector = null;
         try

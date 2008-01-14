@@ -41,7 +41,7 @@ public class NoArgsCallComponentTestCase extends FunctionalTestCase
     }
 
     public void testDelegateClassNamespaceHandler() throws Exception{
-        UMOComponent component=managementContext.getRegistry().lookupComponent(SERVICE_DC_NAME);
+        UMOComponent component=muleContext.getRegistry().lookupComponent(SERVICE_DC_NAME);
         Object object=component.getServiceFactory().getOrCreate();
         assertEquals(object.getClass().getName(), NoArgsCallWrapper.class.getName());
         NoArgsCallWrapper noArgsCallWrapper = (NoArgsCallWrapper)object;
@@ -50,7 +50,7 @@ public class NoArgsCallComponentTestCase extends FunctionalTestCase
     }
 
     public void testDelegateInstanceNamespaceHandler() throws Exception{
-        UMOComponent component=managementContext.getRegistry().lookupComponent(SERVICE_DI_NAME);
+        UMOComponent component=muleContext.getRegistry().lookupComponent(SERVICE_DI_NAME);
         Object object=component.getServiceFactory().getOrCreate();
         assertEquals(object.getClass().getName(), NoArgsCallWrapper.class.getName());
         NoArgsCallWrapper noArgsCallWrapper = (NoArgsCallWrapper)object;

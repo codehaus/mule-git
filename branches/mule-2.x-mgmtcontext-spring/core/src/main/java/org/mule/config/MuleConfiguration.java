@@ -119,13 +119,13 @@ public class MuleConfiguration
      */
     private boolean clientMode = false;
 
-    /** The unique Id for this ManagementContext */
+    /** The unique Id for this MuleContext */
     private String id;
 
-    /** The cluster Id for this ManagementContext */
+    /** The cluster Id for this MuleContext */
     private String clusterId;
 
-    /** The Domain Id for this ManagementContext */
+    /** The Domain Id for this MuleContext */
     private String domainId;
 
     /**

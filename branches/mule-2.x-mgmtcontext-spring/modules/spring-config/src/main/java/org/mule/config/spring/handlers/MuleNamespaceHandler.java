@@ -157,7 +157,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("default-component-threading-profile", new DefaultThreadingProfileDefinitionParser(MuleConfiguration.DEFAULT_COMPONENT_THREADING_PROFILE));
         registerBeanDefinitionParser("default-dispatcher-connection-strategy", new ConnectionStrategyDefinitionParser());
         registerBeanDefinitionParser("default-receiver-connection-strategy", new ConnectionStrategyDefinitionParser());
-        //registerBeanDefinitionParser("mule-configuration", new ManagementContextDefinitionParser());
+        //registerBeanDefinitionParser("mule-configuration", new MuleContextDefinitionParser());
         registerBeanDefinitionParser("component-threading-profile", new ThreadingProfileDefinitionParser("threadingProfile", MuleConfiguration.DEFAULT_COMPONENT_THREADING_PROFILE));
         registerBeanDefinitionParser("custom-exception-strategy", new ChildDefinitionParser("exceptionListener", null));
         registerBeanDefinitionParser("default-service-exception-strategy", new ChildDefinitionParser("exceptionListener", DefaultComponentExceptionStrategy.class));

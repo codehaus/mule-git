@@ -12,7 +12,7 @@ import org.mule.impl.security.MuleSecurityManager;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.model.UMOModel;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.MemoryPersistenceStrategy;
@@ -22,9 +22,9 @@ import org.mule.util.queue.TransactionalQueueManager;
 public class DefaultConfigurationBuilder extends AbstractConfigurationBuilder
 {
 
-    protected void doConfigure(UMOManagementContext managementContext, String[] configResources) throws Exception
+    protected void doConfigure(MuleContext muleContext, String[] configResources) throws Exception
     {
-        configureDefaults(managementContext.getRegistry());
+        configureDefaults(muleContext.getRegistry());
     }
 
     protected void configureDefaults(Registry registry) throws RegistrationException, UMOException

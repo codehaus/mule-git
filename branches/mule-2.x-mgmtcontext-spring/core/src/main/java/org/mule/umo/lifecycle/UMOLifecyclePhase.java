@@ -11,7 +11,7 @@ package org.mule.umo.lifecycle;
 
 import org.mule.impl.lifecycle.LifecycleObject;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 
 import java.util.Set;
 
@@ -27,7 +27,7 @@ public interface UMOLifecyclePhase
 {
     String ALL_PHASES = "all";
 
-    void fireLifecycle(UMOManagementContext managementContext, String currentPhase) throws UMOException;
+    void fireLifecycle(MuleContext muleContext, String currentPhase) throws UMOException;
 
     void addOrderedLifecycleObject(LifecycleObject lco);
 

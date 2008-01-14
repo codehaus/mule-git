@@ -23,7 +23,7 @@ public class XmppNamespaceHandlerTestCase extends FunctionalTestCase
     public void testConfig() throws Exception
     {
         XmppConnector connector = 
-            (XmppConnector)managementContext.getRegistry().lookupConnector("xmppConnector");
+            (XmppConnector)muleContext.getRegistry().lookupConnector("xmppConnector");
         
         assertNotNull(connector);
     }

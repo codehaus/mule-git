@@ -148,7 +148,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     private JmsConnector lookupConnector()
     {
-        UMOConnector connector = managementContext.getRegistry().lookupConnector("jmsConnector");
+        UMOConnector connector = muleContext.getRegistry().lookupConnector("jmsConnector");
         assertNotNull("Connector not found in config", connector);
         assertTrue("Connector is not a JmsConnector", connector instanceof JmsConnector);
         return (JmsConnector) connector;

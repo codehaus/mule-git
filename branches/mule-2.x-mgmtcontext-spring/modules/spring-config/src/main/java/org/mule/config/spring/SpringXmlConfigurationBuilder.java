@@ -14,7 +14,7 @@ import org.mule.config.AbstractConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.registry.Registry;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.util.IOUtils;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class SpringXmlConfigurationBuilder extends AbstractConfigurationBuilder
         this.parentContext = parentContext;
     }
 
-    protected void doConfigure(UMOManagementContext managementContext, String[] configResources)
+    protected void doConfigure(MuleContext muleContext, String[] configResources)
         throws Exception
     {
         if (configResources == null)
@@ -59,8 +59,8 @@ public class SpringXmlConfigurationBuilder extends AbstractConfigurationBuilder
         String[] all = new String[configResources.length + 1];
         all[0] = defaultConfigResource;
         System.arraycopy(configResources, 0, all, 1, configResources.length);
-        createSpringParentRegistry(managementContext, managementContext.getRegistry(), all);
-        managementContext.getRegistry().getConfiguration().setConfigResources(configResources);
+        createSpringParentRegistry(muleContext, muleContext.getRegistry(), all);
+        muleContext.getRegistry().getConfiguration().setConfigResources(configResources);
     }
 
     /**
@@ -69,12 +69,12 @@ public class SpringXmlConfigurationBuilder extends AbstractConfigurationBuilder
      * MuleApplicationContext constructor to ensure that the Registry can be used
      * during the initialization phase of Spring.
      * 
-     * @param managementContext
+     * @param muleContext
      * @param registry
      * @param all
      * @see MuleApplicationContext#setupParentSpringRegistry(Registry registry
      */
-    protected void createSpringParentRegistry(UMOManagementContext managementContext,
+    protected void createSpringParentRegistry(MuleContext muleContext,
                                               Registry registry,
                                               String[] all)
     {
@@ -82,11 +82,11 @@ public class SpringXmlConfigurationBuilder extends AbstractConfigurationBuilder
         {
             if (parentContext != null)
             {
-                new MuleApplicationContext(managementContext, registry, all, parentContext);
+                new MuleApplicationContext(muleContext, registry, all, parentContext);
             }
             else
             {
-                new MuleApplicationContext(managementContext, registry, all);
+                new MuleApplicationContext(muleContext, registry, all);
             }
         }
         catch (BeansException e)

@@ -11,7 +11,7 @@
 package org.mule.test.integration.providers.axis;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.config.ConfigurationBuilder;
 
 /**
@@ -20,11 +20,11 @@ import org.mule.config.ConfigurationBuilder;
 public class AxisOverJMSWithTransactionsBadTestCase extends FunctionalTestCase
 {
 
-    protected UMOManagementContext createManagementContext() throws Exception
+    protected MuleContext createMuleContext() throws Exception
     {
         try
         {
-            super.createManagementContext();
+            super.createMuleContext();
             throw new IllegalStateException("Expected config to fail");
         }
         catch (Exception e)

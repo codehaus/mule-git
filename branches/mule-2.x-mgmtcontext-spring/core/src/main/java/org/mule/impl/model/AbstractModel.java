@@ -15,7 +15,7 @@ import org.mule.impl.DefaultLifecycleAdapterFactory;
 import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.UMOLifecycleAdapterFactory;
 import org.mule.umo.manager.UMOServerNotification;
@@ -46,7 +46,7 @@ public abstract class AbstractModel implements UMOModel
 
     //private Map components = new ConcurrentSkipListMap();
 
-    protected UMOManagementContext managementContext;
+    protected MuleContext muleContext;
 
     /** Collection for mule descriptors registered in this Manager */
     //protected Map descriptors = new ConcurrentHashMap();
@@ -157,7 +157,7 @@ public abstract class AbstractModel implements UMOModel
 //        if (component == null)
 //        {
 //            component = createComponent(descriptor);
-//            component.setManagementContext(managementContext);
+//            component.setMuleContext(muleContext);
 //            descriptors.put(descriptor.getName(), descriptor);
 //            components.put(descriptor.getName(), component);
 //        }
@@ -223,7 +223,7 @@ public abstract class AbstractModel implements UMOModel
     {
         fireNotification(new ModelNotification(this, ModelNotification.MODEL_DISPOSING));
 
-//        Collection components = managementContext.getRegistry().lookupComponents(getName());
+//        Collection components = muleContext.getRegistry().lookupComponents(getName());
 //        UMOComponent component;
 //        for (Iterator i = components.iterator(); i.hasNext();)
 //        {
@@ -275,7 +275,7 @@ public abstract class AbstractModel implements UMOModel
     {
         fireNotification(new ModelNotification(this, ModelNotification.MODEL_STOPPING));
         
-//        Collection components = managementContext.getRegistry().lookupComponents(getName());
+//        Collection components = muleContext.getRegistry().lookupComponents(getName());
 //        UMOComponent component;
 //        for (Iterator i = components.iterator(); i.hasNext();)
 //        {
@@ -304,7 +304,7 @@ public abstract class AbstractModel implements UMOModel
         {
             fireNotification(new ModelNotification(this, ModelNotification.MODEL_STARTING));
 
-//            Collection components = managementContext.getRegistry().lookupComponents(getName());
+//            Collection components = muleContext.getRegistry().lookupComponents(getName());
 //            UMOComponent component;
 //            for (Iterator i = components.iterator(); i.hasNext();)
 //            {
@@ -417,15 +417,15 @@ public abstract class AbstractModel implements UMOModel
             fireNotification(new ModelNotification(this, ModelNotification.MODEL_INITIALISING));
 
             // TODO this doesn't feel right, should be injected?
-//            if (exceptionListener instanceof ManagementContextAware)
+//            if (exceptionListener instanceof MuleContextAware)
 //            {
-//                ((ManagementContextAware) exceptionListener).setManagementContext(managementContext);
+//                ((MuleContextAware) exceptionListener).setMuleContext(muleContext);
 //            }
 //            if (exceptionListener instanceof Initialisable)
 //            {
 //                ((Initialisable) exceptionListener).initialise();
 //            }
-//            Collection components = managementContext.getRegistry().lookupComponents(this.name);
+//            Collection components = muleContext.getRegistry().lookupComponents(this.name);
 //            UMOComponent component;
 //            for (Iterator i = components.iterator(); i.hasNext();)
 //            {
@@ -476,19 +476,19 @@ public abstract class AbstractModel implements UMOModel
 
     void fireNotification(UMOServerNotification notification)
     {
-        if (managementContext != null)
+        if (muleContext != null)
         {
-            managementContext.fireNotification(notification);
+            muleContext.fireNotification(notification);
         }
         else if (logger.isDebugEnabled())
         {
-            logger.debug("ManagementContext is not yet available for firing notifications, ignoring event: " + notification);
+            logger.debug("MuleContext is not yet available for firing notifications, ignoring event: " + notification);
         }
     }
 
-    public void setManagementContext(UMOManagementContext context)
+    public void setMuleContext(MuleContext context)
     {
-        this.managementContext = context;
+        this.muleContext = context;
     }
 
 //    protected abstract UMOComponent createComponent(UMODescriptor descriptor);

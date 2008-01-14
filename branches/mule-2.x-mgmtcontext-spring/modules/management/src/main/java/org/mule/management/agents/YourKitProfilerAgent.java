@@ -19,7 +19,7 @@ import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.util.ClassUtils;
@@ -109,8 +109,8 @@ public class YourKitProfilerAgent implements UMOAgent
         {
             mBeanServer = (MBeanServer) servers.get(0);
 
-            UMOManagementContext managementContext = MuleServer.getManagementContext();
-            profilerName = jmxSupport.getObjectName(jmxSupport.getDomainName(managementContext) + ":" + PROFILER_OBJECT_NAME);
+            MuleContext muleContext = MuleServer.getMuleContext();
+            profilerName = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":" + PROFILER_OBJECT_NAME);
 
             // unregister existing YourKit MBean first if required
             unregisterMBeansIfNecessary();

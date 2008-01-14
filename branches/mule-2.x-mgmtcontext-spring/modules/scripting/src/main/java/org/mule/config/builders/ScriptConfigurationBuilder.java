@@ -13,7 +13,7 @@ package org.mule.config.builders;
 import org.mule.components.script.jsr223.Scriptable;
 import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOManagementContext;
+import org.mule.umo.MuleContext;
 
 import javax.script.Bindings;
 
@@ -24,7 +24,7 @@ public class ScriptConfigurationBuilder extends DefaultConfigurationBuilder
 
     private Scriptable scriptComponent = new Scriptable();
 
-    protected UMOManagementContext managementContext = null;
+    protected MuleContext muleContext = null;
     protected boolean initialised = false;
 
     public ScriptConfigurationBuilder() throws UMOException
@@ -46,10 +46,10 @@ public class ScriptConfigurationBuilder extends DefaultConfigurationBuilder
         scriptComponent.setScriptEngineName(scriptEngineName);
     }
 
-    protected void doConfigure(UMOManagementContext managementContext, String[] configResources)
+    protected void doConfigure(MuleContext muleContext, String[] configResources)
         throws Exception
     {
-        super.doConfigure(managementContext, configResources);
+        super.doConfigure(muleContext, configResources);
         for (int i = 0; i < configResources.length; i++)
         {
             String configResource = configResources[i];
@@ -63,7 +63,7 @@ public class ScriptConfigurationBuilder extends DefaultConfigurationBuilder
 
     protected void populateBindings(Bindings bindings)
     {
-        bindings.put("managementContext", managementContext);
+        bindings.put("muleContext", muleContext);
     }
 
 }

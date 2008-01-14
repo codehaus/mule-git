@@ -28,7 +28,7 @@ import org.mule.util.queue.QueueManager;
 
 import javax.transaction.TransactionManager;
 
-public interface UMOManagementContext extends Lifecycle
+public interface MuleContext extends Lifecycle
 {
 
     String getSystemName();
