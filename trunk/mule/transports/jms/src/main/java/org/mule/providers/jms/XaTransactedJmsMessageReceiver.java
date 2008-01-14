@@ -15,9 +15,7 @@ import org.mule.providers.ConnectException;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.providers.TransactedPollingMessageReceiver;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
-import org.mule.transaction.TransactionCallback;
 import org.mule.transaction.TransactionCoordination;
-import org.mule.transaction.TransactionTemplate;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -27,7 +25,6 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jms.Destination;
@@ -36,7 +33,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
@@ -176,62 +172,13 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         try
         {
             JmsThreadContext ctx = context.getContext();
-                                   
             // Create consumer if necessary
             if (ctx.consumer == null)
             {
                 createConsumer();
             }
-            
-            // Do polling          
-            TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(), connector
-                    .getExceptionListener(),this.reuseSession);
-
-                if (this.isReceiveMessagesInTransaction())
-                {
-                	// Receive messages and process them in a single transaction
-                    // Do not enable threading here, but several workers
-                    // may have been started
-                    TransactionCallback cb = new TransactionCallback()
-                    {
-                        public Object doInTransaction() throws Exception
-                        {
-                            List messages = getMessages();
-                            if (messages != null && messages.size() > 0)
-                            {
-                                for (Iterator it = messages.iterator(); it.hasNext();)
-                                {
-                                    processMessage(it.next());
-                                }
-                            }
-                            return null;
-                        }
-                    };
-                    tt.execute(cb);
-                }
-                else
-                {
-                    // Receive messages and launch a worker for each message
-                    List messages = getMessages();
-                    if (messages != null && messages.size() > 0)
-                    {
-                        final CountDownLatch countdown = new CountDownLatch(messages.size());
-                        for (Iterator it = messages.iterator(); it.hasNext();)
-                        {
-                            try
-                            {
-                                this.getWorkManager().scheduleWork(
-                                    new MessageProcessorWorker(tt, countdown, it.next()));
-                            }
-                            catch (Exception e)
-                            {
-                                countdown.countDown();
-                                throw e;
-                            }
-                        }
-                        countdown.await();
-                    }
-                }
+            // Do polling
+            super.poll();
         }
         catch (Exception e)
         {
@@ -343,7 +290,6 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     protected void closeConsumer(boolean force)
     {
         JmsThreadContext ctx = context.getContext();
-        
         if (ctx == null)
         {
             return;
