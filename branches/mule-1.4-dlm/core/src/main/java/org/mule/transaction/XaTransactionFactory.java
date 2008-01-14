@@ -21,6 +21,7 @@ import org.mule.umo.UMOTransactionFactory;
  */
 public class XaTransactionFactory implements UMOTransactionFactory
 {
+    private boolean reuseSession = false;
 
     public XaTransactionFactory()
     {
@@ -31,7 +32,7 @@ public class XaTransactionFactory implements UMOTransactionFactory
     {
         try
         {
-            XaTransaction xat = new XaTransaction();
+            XaTransaction xat = new XaTransaction(isReuseSession());
             xat.begin();
             return xat;
         }
@@ -51,5 +52,15 @@ public class XaTransactionFactory implements UMOTransactionFactory
     public boolean isTransacted()
     {
         return true;
+    }
+
+    public void setReuseSession(boolean reuseSession)
+    {
+        this.reuseSession = reuseSession;
+    }
+
+    public boolean isReuseSession()
+    {
+        return this.reuseSession;
     }
 }

@@ -13,6 +13,7 @@ package org.mule.transaction;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
+import org.mule.umo.UMOTransactionFactory;
 
 import java.beans.ExceptionListener;
 
@@ -25,11 +26,19 @@ public class TransactionTemplate
 
     private final UMOTransactionConfig config;
     private final ExceptionListener exceptionListener;
+    private boolean reuseSession = false;
 
     public TransactionTemplate(UMOTransactionConfig config, ExceptionListener listener)
     {
         this.config = config;
         exceptionListener = listener;
+    }
+    
+    public TransactionTemplate(UMOTransactionConfig config, ExceptionListener listener, boolean reuseSession)
+    {
+        this.config = config;
+        exceptionListener = listener;
+        this.reuseSession = reuseSession;
     }
 
     public Object execute(TransactionCallback callback) throws Exception
@@ -80,7 +89,13 @@ public class TransactionTemplate
                             || (action == UMOTransactionConfig.ACTION_BEGIN_OR_JOIN && tx == null))
             {
                 logger.debug("Beginning transaction");
-                tx = config.getFactory().beginTransaction();
+                
+                UMOTransactionFactory factory = config.getFactory();
+                if (factory instanceof XaTransactionFactory)
+                {
+                    ((XaTransactionFactory) factory).setReuseSession(this.isReuseSession());
+                }
+                tx = factory.beginTransaction();
                 logger.debug("Transaction successfully started");
             }
             else
@@ -163,6 +178,11 @@ public class TransactionTemplate
                 throw e;
             }
         }
+    }
+
+    public boolean isReuseSession()
+    {
+        return reuseSession;
     }
 
 }
