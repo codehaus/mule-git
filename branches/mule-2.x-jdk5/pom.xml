@@ -728,16 +728,6 @@
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <configuration>
                     <downloadSources>true</downloadSources>
-                    <classpathContainers>
-                        <!-- 
-                             SEE http://jira.codehaus.org/browse/MECLIPSE-172
-                             (second comment for this workaround)
-
-                             Unfortunately, that plugin version has not yet been released.
-                        -->
-                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/sun-jdk-1.5.0.13</classpathContainer>
-                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
-                    </classpathContainers>
                 </configuration>
             </plugin>
             <plugin>

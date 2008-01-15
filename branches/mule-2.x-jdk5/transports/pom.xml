@@ -94,7 +94,7 @@
             </build>
         </profile>
         <profile>
-            <id>java14</id>
+            <id>jdk14</id>
             <activation>
                 <jdk>1.4</jdk>
             </activation>
@@ -124,7 +124,7 @@
             </modules>
         </profile>
         <profile>
-            <id>java5</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>1.5</jdk>
             </activation>
