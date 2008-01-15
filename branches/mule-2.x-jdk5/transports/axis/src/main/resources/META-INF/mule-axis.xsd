@@ -93,7 +93,8 @@
                     <xsd:group ref="generalPropertyElements"/>
                     <xsd:group ref="mule:propertiesGroup"/>
                 </xsd:sequence>
-                <xsd:attributeGroup ref="propertyAttributes"/>
+                <xsd:attributeGroup ref="inboundPropertyAttributes"/>
+                <xsd:attributeGroup ref="generalPropertyAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -106,7 +107,7 @@
                     <xsd:group ref="generalPropertyElements"/>
                     <xsd:group ref="mule:propertiesGroup"/>
                 </xsd:sequence>
-                <xsd:attributeGroup ref="propertyAttributes"/>
+                <xsd:attributeGroup ref="generalPropertyAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -120,14 +121,20 @@
                     <xsd:group ref="generalPropertyElements"/>
                     <xsd:group ref="mule:propertiesGroup"/>
                 </xsd:sequence>
-                <xsd:attributeGroup ref="propertyAttributes"/>
+                <xsd:attributeGroup ref="inboundPropertyAttributes"/>
+                <xsd:attributeGroup ref="generalPropertyAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:attributeGroup name="propertyAttributes">
+    <xsd:attributeGroup name="inboundPropertyAttributes">
+        <xsd:attribute name="wsdlFile" type="xsd:string"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="generalPropertyAttributes">
         <xsd:attribute name="clientConfig" type="xsd:string"/>
         <xsd:attribute name="soapAction" type="xsd:string"/>
+        <xsd:attribute name="SOAPAction" type="xsd:string"/>
         <xsd:attribute name="serviceNamespace" type="xsd:string"/>
         <xsd:attribute name="style">
             <xsd:simpleType>
@@ -160,6 +167,7 @@
                     <xsd:attribute name="allowedMethods" type="xsd:string"/>
                     <xsd:attribute name="scope" type="xsd:string"/>
                     <xsd:attribute name="wsdlPortType" type="xsd:string"/>
+                    <xsd:attribute name="wsdlServicePort" type="xsd:string"/>
                     <xsd:attribute name="wsdlServiceElement" type="xsd:string"/>
                     <xsd:attribute name="wsdlTargetNamespace" type="xsd:string"/>
                     <xsd:attribute name="wsdlInputSchema" type="xsd:string"/>
@@ -185,7 +193,15 @@
                             <xsd:complexType>
                                 <xsd:attribute name="parameter" type="xsd:string" use="required"/>
                                 <xsd:attribute name="type" type="xsd:string" use="required"/>
-                                <xsd:attribute name="mode" type="xsd:string" use="required"/>
+                                <xsd:attribute name="mode">
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:NMTOKEN">
+                                            <xsd:enumeration value="IN"/>
+                                            <xsd:enumeration value="OUT"/>
+                                            <xsd:enumeration value="INOUT"/>
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:attribute>
                             </xsd:complexType>
                         </xsd:element>
                         <xsd:element name="soap-return" minOccurs="0">
