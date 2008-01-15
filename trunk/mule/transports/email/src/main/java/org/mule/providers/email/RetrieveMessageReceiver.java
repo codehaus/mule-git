@@ -179,7 +179,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
             }
             catch (MessagingException e)
             {
-                logger.error("failled to set message deleted: " + e.getMessage(), e);
+                logger.error("failed to set message deleted: " + e.getMessage(), e);
             }
         }
         return message;
