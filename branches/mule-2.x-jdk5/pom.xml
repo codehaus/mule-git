@@ -209,29 +209,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-<!--            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-remoting</artifactId>
-                <version>${springVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>aopalliance</groupId>
-                        <artifactId>aopalliance</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>commons-logging</artifactId>
-                        <groupId>commons-logging</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-web</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
@@ -614,6 +591,47 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <!-- MULE-2070: 1.0-alpha-3 is broke so enforce previous version  -->
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven-version</id>
+                        <goals>
+                            <goal>enforce-once</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <!-- minimum version is 2.0.6, higher versions allowed -->
+                                    <version>[2.0.6,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <!-- minimum version is 1.4.2, Java 5 and higher not allowed -->
+                                    <version>[1.4.2,1.5.0)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 
+                Default is still to compile to JDK 1.4. Individual modules may override
+                this setting.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.4</source>
+                    <target>1.4</target>
+                    <encoding>ISO-8859-1</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -647,7 +665,6 @@
                             <Dev-List-Email>dev@mule.codehaus.org</Dev-List-Email>
                         </manifestEntries>
                     </archive>
-
                 </configuration>
             </plugin>
 
@@ -907,28 +924,10 @@
 
     <profiles>
         <profile>
-            <id>java14</id>
+            <id>jdk14</id>
             <activation>
                 <jdk>1.4</jdk>
             </activation>
-            <build>
-                <plugins>
-                    <!-- Compile to JDK 1.4 -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.4</source>
-                            <target>1.4</target>
-                            <encoding>ISO-8859-1</encoding>
-                            <compilerArguments>
-                                 <!-- define this as a property in your settings.xml -->
-                                 <bootclasspath>${java14.rt.jar}</bootclasspath> 
-                            </compilerArguments>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
             <modules>
                 <module>buildtools</module>
                 <module>core</module>
@@ -946,7 +945,7 @@
         </profile>
 
         <profile>
-            <id>java5</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>1.5</jdk>
             </activation>
@@ -978,7 +977,10 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- Compile to JDK 1.5 -->
+                    <!-- 
+                        If this profile is activated, all classes will be compiled using
+                        JDK 1.5 compatability.
+                    -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
@@ -986,10 +988,6 @@
                             <source>1.5</source>
                             <target>1.5</target>
                             <encoding>ISO-8859-1</encoding>
-                            <compilerArguments>
-                                <!-- define this as a property in your settings.xml -->
-                                <bootclasspath>${java15.rt.jar}</bootclasspath>
-                            </compilerArguments>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -1001,12 +999,6 @@
 
         <profile>
             <id>distributions</id>
-            <activation>
-                <property>
-                    <name>distributions</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <modules>
                 <module>distributions</module>
             </modules>
@@ -1064,62 +1056,6 @@
                             <timestampFormat>{0,date,yyyy-MMM-dd HH:mm:ss}</timestampFormat>
                         </configuration>
                      </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!--
-            The maven-enforcer-plugin has an option to skip all checks (-Denforcer.skip=true)
-            but this runs the enforcer plugin anyway with each and every module, sometimes 
-            even multiple times.
-
-            So we put it in a profile here to completely disable the enforcer plugin
-            e.g. on the CI server etc.
-        -->
-        <profile>
-            <id>enforcer-plugin</id>
-            <activation>
-                <property>
-                    <!--
-                        This profile is activated if NO system property
-                        'skipEnforcer' is found. Disable this profile
-                        by specifying -DskipEnforcer=true on the commandline
-                        -->
-                    <name>!skipEnforcer</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <!-- Enforce minimum maven version.
-                         This must be done through the maven-enforcer-plugin as per 
-                         http://jira.codehaus.org/browse/MNG-2423 the prerequisites are not inherited.
-                         -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <!-- MULE-2070: 1.0-alpha-3 is broke so enforce previous version  -->
-                        <version>1.0-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <id>enforce-maven-version</id>
-                                <goals>
-                                    <goal>enforce-once</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireMavenVersion>
-                                            <!-- minimum version is 2.0.6, higher versions allowed -->
-                                            <version>[2.0.6,)</version>
-                                        </requireMavenVersion>
-                                        <requireJavaVersion>
-                                            <!-- minimum version is 1.4.2, Java 5 and higher not allowed -->
-                                            <version>[1.4.2,1.5.0)</version>
-                                        </requireJavaVersion>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
