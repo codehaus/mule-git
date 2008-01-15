@@ -166,6 +166,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    // @Override
     protected UMOMessage handleUnacceptedFilter(UMOMessage message)
     {
         super.handleUnacceptedFilter(message);
@@ -181,7 +182,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                 logger.error("failled to set message deleted: " + e.getMessage(), e);
             }
         }
-        return null;
+        return message;
     }
 
     public void messagesRemoved(MessageCountEvent event)
