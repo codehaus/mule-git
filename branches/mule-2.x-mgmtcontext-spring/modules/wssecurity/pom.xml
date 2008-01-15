@@ -101,6 +101,8 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
             <version>${version}</version>
+            <!--  For some reason this module doesn't compile when client module has "test" scope -->
+            <!--<scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.mule.tests</groupId>
