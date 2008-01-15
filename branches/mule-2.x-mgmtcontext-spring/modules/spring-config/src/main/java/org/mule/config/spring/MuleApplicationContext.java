@@ -97,8 +97,6 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
     /**
      * @param registry
      * @param configLocations
-     * @deprecated Do we need all these constructors when only our
-     *             SpringConfigurationBuilder creates this?
      */
     public MuleApplicationContext(MuleContext muleContext, Registry registry, Resource[] configResources)
     {
@@ -110,8 +108,6 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
      * @param configLocations
      * @param refresh
      * @throws BeansException
-     * @deprecated Do we need all these constructors when only our
-     *             SpringConfigurationBuilder creates this?
      */
     public MuleApplicationContext(MuleContext muleContext, Registry registry, String[] configLocations, boolean refresh)
         throws BeansException
@@ -130,8 +126,6 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
      * @param registry
      * @param configLocations
      * @param parent 
-     * @deprecated Do we need all these constructors when only our
-     *             SpringConfigurationBuilder creates this?
      */
     public MuleApplicationContext(MuleContext muleContext, Registry registry, Resource[] configResources, ApplicationContext parent)
     {
@@ -148,8 +142,6 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
      * @param configLocations
      * @param refresh
      * @throws BeansException 
-     * @deprecated Do we need all these constructors when only our
-     *             SpringConfigurationBuilder creates this?
      */
     public MuleApplicationContext(MuleContext muleContext, Registry registry, Resource[] configResources, boolean refresh)
         throws BeansException
@@ -202,7 +194,14 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
         beanDefinitionReader.setDocumentReaderClass(MuleBeanDefinitionDocumentReader.class);
         //add error reporting
         beanDefinitionReader.setProblemReporter(new MissingParserProblemReporter());
-        beanDefinitionReader.loadBeanDefinitions(configLocations);
+        if (configLocations != null)
+        {
+            beanDefinitionReader.loadBeanDefinitions(configLocations);
+        }
+        else
+        {
+            beanDefinitionReader.loadBeanDefinitions(configResources);
+        }
     }
 
     //@Override

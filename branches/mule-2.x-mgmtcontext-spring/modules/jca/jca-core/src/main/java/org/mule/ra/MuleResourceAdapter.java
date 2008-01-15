@@ -12,7 +12,7 @@ package org.mule.ra;
 
 import org.mule.RegistryContext;
 import org.mule.config.ConfigurationBuilder;
-import org.mule.config.ConfigurationException;
+import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.endpoint.URIBuilder;
@@ -90,7 +90,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             try
             {
                 builder = (ConfigurationBuilder) ClassUtils.instanciateClass(info.getConfigurationBuilder(),
-                    ClassUtils.NO_ARGS);
+                    new Object[]{info.getConfigurations()});
             }
             catch (Exception e)
             {
@@ -101,9 +101,9 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             try
             {
                 logger.info("Initializing Mule...");
-                muleContext = builder.configure(info.getConfigurations());
+                muleContext = new DefaultMuleContextFactory().createMuleContext(builder);
             }
-            catch (ConfigurationException e)
+            catch (UMOException e)
             {
                 logger.error(e);
                 throw new ResourceAdapterInternalException(

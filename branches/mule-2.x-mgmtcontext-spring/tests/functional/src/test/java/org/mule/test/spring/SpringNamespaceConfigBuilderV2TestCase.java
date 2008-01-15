@@ -56,7 +56,7 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
     // @Override
     public ConfigurationBuilder getBuilder()
     {
-        return new SpringXmlConfigurationBuilder();
+        return new SpringXmlConfigurationBuilder(getConfigResources());
     }
 
     public void testPropertyExtractorConfig() throws Exception

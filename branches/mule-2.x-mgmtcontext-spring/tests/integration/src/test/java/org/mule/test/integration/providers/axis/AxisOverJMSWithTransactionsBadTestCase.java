@@ -10,9 +10,11 @@
 
 package org.mule.test.integration.providers.axis;
 
+import org.mule.config.builders.DefaultsConfigurationBuilder;
+import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.MuleContext;
-import org.mule.config.ConfigurationBuilder;
+import org.mule.umo.MuleContextFactory;
 
 /**
  * Check that we cannot name embedded transaction factory
@@ -32,9 +34,8 @@ public class AxisOverJMSWithTransactionsBadTestCase extends FunctionalTestCase
             logger.debug(e);
             if (e.toString().indexOf("Attribute name is not allowed here") > -1)
             {
-                ConfigurationBuilder builder = getBuilder();
-                return builder.configure("org/mule/test/integration/providers/axis/axis-over-jms-config.xml",
-                        getStartUpProperties());
+                MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+                return muleContextFactory.createMuleContext(new DefaultsConfigurationBuilder());
             }
             else
             {

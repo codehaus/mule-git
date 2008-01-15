@@ -14,6 +14,7 @@ import org.mule.MuleException;
 import org.mule.MuleServer;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.MuleContextAware;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -58,7 +59,7 @@ import org.apache.commons.logging.LogFactory;
  * firewall
  */
 
-public class MuleManagerComponent implements Callable, Initialisable
+public class MuleManagerComponent implements Callable, Initialisable, MuleContextAware
 {
     /**
      * logger used by this class
@@ -76,6 +77,8 @@ public class MuleManagerComponent implements Callable, Initialisable
     protected String encoding;
 
     protected int synchronousEventTimeout = 5000;
+
+    protected MuleContext muleContext;
 
     public void initialise() throws InitialisationException
     {
@@ -334,5 +337,10 @@ public class MuleManagerComponent implements Callable, Initialisable
     public void setSynchronousEventTimeout(int synchronousEventTimeout)
     {
         this.synchronousEventTimeout = synchronousEventTimeout;
+    }
+    public void setMuleContext(MuleContext context)
+    {
+        this.muleContext = context;
+        
     }
 }

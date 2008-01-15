@@ -10,16 +10,15 @@
 
 package org.mule.extras.client;
 
-import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
-import org.mule.config.builders.DefaultConfigurationBuilder;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.extras.client.i18n.ClientMessages;
+import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -33,6 +32,7 @@ import org.mule.transformers.TransformerUtils;
 import org.mule.umo.FutureMessageResult;
 import org.mule.umo.MessagingException;
 import org.mule.umo.MuleContext;
+import org.mule.umo.MuleContextFactory;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -43,6 +43,7 @@ import org.mule.umo.endpoint.UMOEndpointBuilder;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Disposable;
+import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.DispatchException;
 import org.mule.umo.provider.ReceiveException;
 import org.mule.util.MuleObjectHelper;
@@ -103,6 +104,8 @@ public class MuleClient implements Disposable
     private List dispatchers = new ArrayList();
 
     private MuleCredentials user;
+    
+    private MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
 
     /**
      * Creates a default Mule client that will use the default serverEndpoint to
@@ -138,7 +141,7 @@ public class MuleClient implements Disposable
      */
     public MuleClient(String configResources) throws UMOException
     {
-        this(configResources, new SpringXmlConfigurationBuilder());
+        this(configResources, new SpringXmlConfigurationBuilder(configResources));
     }
 
     /**
@@ -164,17 +167,18 @@ public class MuleClient implements Disposable
      * @throws ConfigurationException is there is a MuleManager instance already
      *             running in this JVM or if the builder fails to configure the
      *             Manager
+     * @throws InitialisationException 
      */
-    public MuleClient(String configResources, ConfigurationBuilder builder) throws ConfigurationException
+    public MuleClient(String configResources, ConfigurationBuilder builder) throws ConfigurationException, InitialisationException
     {
         if (builder == null)
         {
             logger.info("Builder passed in was null, using default builder: "
                         + SpringXmlConfigurationBuilder.class.getName());
-            builder = new SpringXmlConfigurationBuilder();
+            builder = new SpringXmlConfigurationBuilder(configResources);
         }
         logger.info("Initializing Mule...");
-        muleContext = builder.configure(configResources);
+        muleContext = muleContextFactory.createMuleContext(builder);
     }
 
     /**
@@ -188,9 +192,10 @@ public class MuleClient implements Disposable
      * @throws ConfigurationException is there is a MuleManager instance already
      *             running in this JVM or if the builder fails to configure the
      *             Manager
+     * @throws InitialisationException 
      */
     public MuleClient(String configResources, ConfigurationBuilder builder, String user, String password)
-        throws ConfigurationException
+        throws ConfigurationException, InitialisationException
     {
         this(configResources, builder);
         this.user = new MuleCredentials(user, password.toCharArray());
@@ -209,14 +214,7 @@ public class MuleClient implements Disposable
         // If there is no local muleContext present create a default muleContext
         if (muleContext == null)
         {
-            muleContext = MuleServer.getMuleContext();
-        }
-        if (muleContext == null)
-        {
-            logger.info("No existing MuleContext found, creating a new Mule instance");
-            // Doing this for now, because we have no MuleContextFactory
-            ConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
-            muleContext = configurationBuilder.configure(new String[]{});
+            muleContext = muleContextFactory.getMuleContext();
         }
         else
         {

@@ -12,88 +12,36 @@ package org.mule.config;
 
 import org.mule.umo.MuleContext;
 
-import java.util.Properties;
-
 /**
- * <code>ConfigurationBuilder</code> is a Strategy class used to configure a
- * UMOManager instance using different configuration mechanisms, such as for Xml, a
- * script or some other means.
+ * A <code>ConfigurationBuilder</code> is used to configure a Mule instance,
+ * represented by a MuleContext instance. Multiple ConfigurationBuilder's can be used
+ * to configure a single mule instance with each ConfigurationBuilder doing one of
+ * more of the following:
+ * <li> Creation of mule runtime artifacts (endpoint's, connector's, service's,
+ * transformer's) which are then registered with the <code>Registy</code 
+ * <li> Creation and registration of SecurityManager / TransactionManager / TransactionManagerFactory / QueueManager
+ * and ThreadingProfile's.  Unlike the runtime artifacts mule only uses a single instance of each of these and so if 
+ * multiple configuration builder create and register these artifacts only one will be used.
+ * <li> Configuration of existing Mule configuration related artifacts such as <code>MuleConfiguration</code> and 
+ * <code>ServerNotificationManager</code>
+ * <br/><br/>
+ * Which of the above takes place, depends on what the configuration source contains and the ConfgurationBuilder implementation is used.
  */
 public interface ConfigurationBuilder
 {
+
     /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
+     * Will configure a MuleContext based on the configuration provided
      * 
-     * @param configResources a comma separated list of configuration files to load,
-     *            this should be accessible on the classpath or filesystem
-     * @return A configured UMOManager
+     * @param muleContext
      * @throws ConfigurationException
      */
-    MuleContext configure(String configResources) throws ConfigurationException;
+    void configure(MuleContext muleContext) throws ConfigurationException;
 
     /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
-     *
-     * @param configResources an array of configuration files to load,
-     *            this should be accessible on the classpath or filesystem
-     * @return A configured UMOManager
-     * @throws ConfigurationException
-     */
-    MuleContext configure(String[] configResources) throws ConfigurationException;
-
-    /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
+     * Indicate whether this ConfigurationBulder has been configured yet
      * 
-     * @param configResources - A comma-separated list of configuration files to
-     *            load, these should be accessible on the classpath or filesystem
-     * @param startupPropertiesFile - An optional file containing startup properties.
-     *            This is useful for managing different environments (dev, test,
-     *            production)
-     * @return A configured UMOManager
-     * @throws ConfigurationException
+     * @return <code>true</code> if this ConfigurationBulder has been configured.
      */
-    MuleContext configure(String configResources, String startupPropertiesFile) throws ConfigurationException;
-
-    /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
-     *
-     * @param configResources - An array list of configuration files to
-     *            load, these should be accessible on the classpath or filesystem
-     * @param startupPropertiesFile - An optional file containing startup properties.
-     *            This is useful for managing different environments (dev, test,
-     *            production)
-     * @return A configured UMOManager
-     * @throws ConfigurationException
-     */
-    MuleContext configure(String[] configResources, String startupPropertiesFile) throws ConfigurationException;
-
-    /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
-     *
-     * @param configResources - A comma-separated list of configuration files to
-     *            load, these should be accessible on the classpath or filesystem
-     * @param startupProperties - Optional properties to be set before configuring
-     *            the Mule server. This is useful for managing different environments
-     *            (dev, test, production)
-     * @return A configured UMOManager
-     * @throws ConfigurationException
-     */
-    MuleContext configure(String configResources, Properties startupProperties) throws ConfigurationException;
-
-    /**
-     * Will configure a UMOManager based on the configuration file(s) provided.
-     *
-     * @param configResources - An array list of configuration files to
-     *            load, these should be accessible on the classpath or filesystem
-     * @param startupProperties - Optional properties to be set before configuring
-     *            the Mule server. This is useful for managing different environments
-     *            (dev, test, production)
-     * @return A configured UMOManager
-     * @throws ConfigurationException
-     */
-    MuleContext configure(String[] configResources, Properties startupProperties) throws ConfigurationException;
-
-
-
     boolean isConfigured();
 }

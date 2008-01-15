@@ -190,13 +190,15 @@ public class ConfigScannerAgent extends AbstractAgent
     {
         try
         {
-            Class cfgBuilderClass = ClassUtils.loadClass("org.mule.config.builders.MuleXmlConfigurationBuilder", MuleServer.class);
-            ConfigurationBuilder cfgBuilder = (ConfigurationBuilder)cfgBuilderClass.newInstance();
+            Class cfgBuilderClass = ClassUtils.loadClass(
+                "org.mule.config.spring.SpringXmlConfigurationBuilder", MuleServer.class);
+            ConfigurationBuilder cfgBuilder = (ConfigurationBuilder) ClassUtils.instanciateClass(
+                cfgBuilderClass, new Object[]{configFile});
 
             if (!cfgBuilder.isConfigured())
             {
                 // TODO Update after MULE-1988
-                cfgBuilder.configure(configFile);
+                cfgBuilder.configure(muleContext);
             }
         }
         catch (Exception e)

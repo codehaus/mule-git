@@ -1,7 +1,6 @@
 
 package org.mule.config.builders;
 
-import org.mule.config.AbstractConfigurationBuilder;
 import org.mule.config.ChainedThreadingProfile;
 import org.mule.config.MuleProperties;
 import org.mule.config.ThreadingProfile;
@@ -11,25 +10,44 @@ import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
 import org.mule.umo.MuleContext;
+import org.mule.umo.UMOException;
 import org.mule.umo.model.UMOModel;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.MemoryPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.TransactionalQueueManager;
 
-public class DefaultConfigurationBuilder extends AbstractConfigurationBuilder
+/**
+ * Configures defaults required by Mule. This configuration builder is used to
+ * configure mule with these defaults when no other ConfigurationBuilder that sets
+ * these is being used. This is used by both AbstractMuleTestCase and MuleClient.
+ * <br>
+ * <br>
+ * Default instances of the following are configured:
+ * <li> {@link SimpleRegistryBootstrap}
+ * <li> {@link QueueManager}
+ * <li> {@link SecurityManager}
+ * <li> {@link EndpointFactory}
+ * <li> {@link UMOModel} systemModel
+ * <li> {@link ThreadingProfile} defaultThreadingProfile
+ * <li> {@link ThreadingProfile} defaultMessageDispatcherThreadingProfile
+ * <li> {@link ThreadingProfile} defaultMessageRequesterThreadingProfile
+ * <li> {@link ThreadingProfile} defaultMessageReceiverThreadingProfile
+ * <li> {@link ThreadingProfile} defaultComponentThreadingProfile
+ */
+public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
 {
 
-    protected void doConfigure(MuleContext muleContext, String[] configResources) throws Exception
+    protected void doConfigure(MuleContext muleContext) throws Exception
     {
         configureDefaults(muleContext.getRegistry());
     }
 
     protected void configureDefaults(Registry registry) throws RegistrationException, UMOException
     {
-        registry.registerObject(MuleProperties.OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP, new SimpleRegistryBootstrap());
+        registry.registerObject(MuleProperties.OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP,
+            new SimpleRegistryBootstrap());
         QueueManager queueManager = new TransactionalQueueManager();
         queueManager.setPersistenceStrategy(new CachingPersistenceStrategy(new MemoryPersistenceStrategy()));
         registry.registerObject(MuleProperties.OBJECT_QUEUE_MANAGER, queueManager);

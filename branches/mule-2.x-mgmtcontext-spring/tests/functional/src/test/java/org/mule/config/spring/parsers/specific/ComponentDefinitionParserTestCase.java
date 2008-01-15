@@ -16,10 +16,12 @@ import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.config.spring.parsers.specific.CheckExclusiveClassAttributeObjectFactory.CheckExclusiveClassAttributeObjectFactoryException;
+import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.routing.nested.NestedRouter;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOComponent;
 import org.mule.umo.MuleContext;
+import org.mule.umo.MuleContextFactory;
+import org.mule.umo.UMOComponent;
 import org.mule.util.object.PooledObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -28,10 +30,13 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
 {
 
+    private MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+
     public void testObjectFactoryComponent() throws Exception
     {
-        muleContext = getBuilder().configure(
+        ConfigurationBuilder configBuilder = new SpringXmlConfigurationBuilder(
             "org/mule/config/spring/parsers/specific/component-ok-test.xml");
+        muleContext = muleContextFactory.createMuleContext(configBuilder);
         UMOComponent component = muleContext.getRegistry().lookupComponent("service");
         validateCorrectComponentCreation(component);
         assertEquals(SingletonObjectFactory.class, component.getServiceFactory().getClass());
@@ -40,8 +45,9 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
 
     public void testShortcutComponent() throws Exception
     {
-        muleContext = getBuilder().configure(
+        ConfigurationBuilder configBuilder = new SpringXmlConfigurationBuilder(
             "org/mule/config/spring/parsers/specific/component-ok-test.xml");
+        muleContext = muleContextFactory.createMuleContext(configBuilder);
         UMOComponent component = muleContext.getRegistry().lookupComponent("service2");
         validateCorrectComponentCreation(component);
         assertEquals(PooledObjectFactory.class, component.getServiceFactory().getClass());
@@ -52,15 +58,18 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
     {
         try
         {
-            muleContext = getBuilder().configure(
+            ConfigurationBuilder configBuilder = new SpringXmlConfigurationBuilder(
                 "org/mule/config/spring/parsers/specific/component-bad-test.xml");
+            muleContextFactory.createMuleContext(configBuilder);
             throw new IllegalStateException("Expected config to fail");
         }
         catch (Exception e)
         {
             assertEquals(ConfigurationException.class, e.getClass());
             assertEquals(BeanDefinitionStoreException.class, e.getCause().getClass());
-            assertEquals(CheckExclusiveClassAttributeObjectFactoryException.class, e.getCause().getCause().getClass());
+            assertEquals(CheckExclusiveClassAttributeObjectFactoryException.class, e.getCause()
+                .getCause()
+                .getClass());
         }
     }
 
@@ -77,11 +86,6 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
     protected MuleContext createMuleContext() throws Exception
     {
         return null;
-    }
-
-    protected ConfigurationBuilder getBuilder() throws Exception
-    {
-        return new SpringXmlConfigurationBuilder();
     }
 
 }

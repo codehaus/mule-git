@@ -42,7 +42,7 @@ public abstract class FunctionalTestCase extends AbstractMuleTestCase
     
     protected ConfigurationBuilder getBuilder() throws Exception
     {
-        return new SpringXmlConfigurationBuilder();
+        return new SpringXmlConfigurationBuilder(getConfigurationResources());
     }
 
     protected MuleContext createMuleContext() throws Exception

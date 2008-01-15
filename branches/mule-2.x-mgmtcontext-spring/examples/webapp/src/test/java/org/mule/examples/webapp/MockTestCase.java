@@ -40,6 +40,10 @@ public class MockTestCase extends AbstractWebappTestCase
     protected ConfigurationBuilder getBuilder() throws Exception
     {
         Mock context = new Mock(ServletContext.class);
+        context.expect("getInitParameter",new IsInstanceOf(String.class));
+        context.expect("getInitParameter",new IsInstanceOf(String.class));
+        
+        // For some reason spring calls getResourceAsStream on the ServletContext twice for each file.  
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
@@ -47,6 +51,15 @@ public class MockTestCase extends AbstractWebappTestCase
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
         context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
-        return new WebappMuleXmlConfigurationBuilder((ServletContext) context.proxy(), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        context.expectAndReturn("getResourceAsStream", new FullConstraintMatcher(new IsInstanceOf(String.class)), null);
+        return new WebappMuleXmlConfigurationBuilder((ServletContext) context.proxy(), getConfigurationResources());
     }
 }

@@ -37,7 +37,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
 
     protected ConfigurationBuilder getBuilder() throws Exception 
     {
-        return new SpringXmlConfigurationBuilder();
+        return new SpringXmlConfigurationBuilder(getConfigResources());
     }
     
     // @Override
