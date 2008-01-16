@@ -14,9 +14,11 @@ import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOException;
 import org.mule.util.ClassUtils;
+import org.mule.util.MapUtils;
 import org.mule.util.SpiUtils;
 import org.mule.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -106,21 +107,28 @@ public final class ExceptionHelper
             registerExceptionReader(new NamingExceptionReader());
             J2SE_VERSION = System.getProperty("java.specification.version");
 
-            errorCodes = SpiUtils.findServiceDescriptor("org/mule/config",
-                "mule-exception-codes.properties", ExceptionHelper.class);
-            if (errorCodes == null)
+            String name = SpiUtils.SERVICE_ROOT + SpiUtils.EXCEPTION_SERVICE_PATH + "mule-exception-codes.properties";
+            InputStream in = ExceptionHelper.class.getClassLoader().getResourceAsStream(name);
+            if (in == null)
             {
                 throw new IllegalArgumentException(
-                    "Failed to load resource: META_INF/services/org/mule/config/mule-exception-codes.properties");
+                    "Failed to load resource: " + name);
             }
+            errorCodes.load(in);
+            in.close();
+                        
             reverseErrorCodes = MapUtils.invertMap(errorCodes);
-            errorDocs = SpiUtils.findServiceDescriptor("org/mule/config", "mule-exception-config.properties",
-                ExceptionHelper.class);
-            if (errorDocs == null)
+            
+            name = SpiUtils.SERVICE_ROOT + SpiUtils.EXCEPTION_SERVICE_PATH + "mule-exception-config.properties";
+            in = ExceptionHelper.class.getClassLoader().getResourceAsStream(name);
+            if (in == null)
             {
                 throw new IllegalArgumentException(
-                    "Failed to load resource: META_INF/services/org/mule/config/mule-exception-config.properties");
+                    "Failed to load resource: " + name);
             }
+            errorDocs.load(in);
+            in.close();
+
             initialised = true;
         }
         catch (Exception e)
