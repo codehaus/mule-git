@@ -11,6 +11,7 @@ package org.mule.impl.lifecycle;
 
 import org.mule.MuleRuntimeException;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.umo.UMOManagementContext;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.ClassUtils;
@@ -38,6 +39,10 @@ public class NotificationLifecycleObject extends LifecycleObject
         {
             throw new NullPointerException("notificationClass");
         }
+        
+        // MULE-2903: make sure the notifiactionClass is properly loaded and initialized
+        ClassUtils.initializeClass(notificationClass);
+        
         if(!UMOServerNotification.class.isAssignableFrom(notificationClass))
         {
             throw new IllegalArgumentException("Notification class must be of type: " + UMOServerNotification.class.getName());
@@ -49,11 +54,11 @@ public class NotificationLifecycleObject extends LifecycleObject
         }
     }
 
-    public NotificationLifecycleObject(Class type, Class notificationClass, String preNotificationName, String postNotificationName)
+    public NotificationLifecycleObject(Class type, Class notificationClass, int preNotification, int postNotification)
     {
         this(type, notificationClass);
-        setPreNotificationName(preNotificationName);
-        setPostNotificationName(postNotificationName);
+        setPreNotificationName(ManagerNotification.getActionName(preNotification));
+        setPostNotificationName(ManagerNotification.getActionName(postNotification));
     }
 
     public String getPostNotificationName()
