@@ -3,4 +3,5 @@
 #
 org.mule.providers.vm.issues.ResponseTransformerMule2165TestCase
 
-#org.mule.providers.vm.functional.VmTransactionTestCase
+# MULE-2905
+org.mule.providers.vm.functional.VmTransactionTestCase

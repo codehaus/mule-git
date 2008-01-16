@@ -14,12 +14,15 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.UMOMessage;
 
-public class VmTransactionTestCase extends FunctionalTestCase {
-    protected String getConfigResources() {
+public class VmTransactionTestCase extends FunctionalTestCase
+{
+    protected String getConfigResources()
+    {
         return "vm-transaction.xml";
     }
 
-    public void testAttachments() throws Exception {
+    public void testAttachments() throws Exception
+    {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", "TEST", null);
         UMOMessage message = client.receive("vm://out", 10000);
@@ -27,9 +30,11 @@ public class VmTransactionTestCase extends FunctionalTestCase {
 
     }
 
-    public static class TestComponent {
+    public static class TestComponent
+    {
 
-        public Object process(Object a) throws Exception {
+        public Object process(Object a) throws Exception
+        {
             assertNotNull(TransactionCoordination.getInstance().getTransaction());
             return a;
         }
