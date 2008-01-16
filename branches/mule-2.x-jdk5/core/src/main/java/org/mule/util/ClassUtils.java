@@ -291,17 +291,18 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     }
 
     /**
-     * Ensure that the class is properly initialized when the argument is passed in
+     * Ensure that the given class is properly initialized when the argument is passed in
      * as .class literal. This method can never fail unless the bytecode is corrupted or
      * the VM is otherwise seriously confused.
      * 
      * @param clazz the Class to be initialized
+     * @return the same class but initialized
      */
-    public static void initializeClass(Class clazz)
+    public static Class initializeClass(Class clazz)
     {
         try
         {
-            getClass(clazz.getName(), true);
+            return getClass(clazz.getName(), true);
         }
         catch (ClassNotFoundException e)
         {

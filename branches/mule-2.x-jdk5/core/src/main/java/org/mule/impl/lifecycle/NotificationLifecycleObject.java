@@ -35,18 +35,20 @@ public class NotificationLifecycleObject extends LifecycleObject
     public NotificationLifecycleObject(Class type, Class notificationClass)
     {
         super(type);
-        if(notificationClass==null)
+
+        if (notificationClass==null)
         {
-            throw new NullPointerException("notificationClass");
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("notificationClass").toString());
         }
-        
+
         // MULE-2903: make sure the notifiactionClass is properly loaded and initialized
-        ClassUtils.initializeClass(notificationClass);
-        
-        if(!UMOServerNotification.class.isAssignableFrom(notificationClass))
+        notificationClass = ClassUtils.initializeClass(notificationClass);
+
+        if (!UMOServerNotification.class.isAssignableFrom(notificationClass))
         {
             throw new IllegalArgumentException("Notification class must be of type: " + UMOServerNotification.class.getName());
         }
+
         ctor = ClassUtils.getConstructor(notificationClass, new Class[]{Object.class, String.class});
         if(ctor==null)
         {
