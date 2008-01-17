@@ -8,14 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.xmpp;
+package org.mule.tck.exceptions;
 
-public class XmppNamespaceHandlerTestCase extends AbstractNamespaceHandlerTestCase
+import org.mule.MuleException;
+
+public class FunctionalTestException extends MuleException
 {
-
-    public XmppNamespaceHandlerTestCase()
+    public FunctionalTestException()
     {
-        super(XmppConnector.XMPP);
+        super("Functional Test Component Exception");
     }
-
 }
+
+

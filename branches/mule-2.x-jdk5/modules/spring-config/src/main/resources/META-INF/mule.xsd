@@ -1281,17 +1281,10 @@
     <!-- Custom connector element -->
 
     <xsd:element name="custom-connector" type="customConnectorType" substitutionGroup="abstract-connector"/>
-
     <xsd:complexType name="customConnectorType">
         <xsd:complexContent>
-            <xsd:extension base="abstractConnectorType">
-                <!-- MULE-2091, 2093 - cannot extend connectorType as need properties first -->
-                <xsd:sequence>
-                    <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
-                    <xsd:group ref="connectorElements"/>
-                </xsd:sequence>
+            <xsd:extension base="connectorType">
                 <xsd:attribute name="class" type="substitutableClass" use="required"/>
-                <xsd:attributeGroup ref="connectorAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -1307,7 +1300,7 @@
     <xsd:complexType name="abstractModelType">
         <xsd:sequence>
             <xsd:element ref="abstract-exception-strategy" minOccurs="0"/>
-            <xsd:element ref="abstract-entrypoint-resolver" minOccurs="0"/>
+            <xsd:element ref="abstract-entrypoint-resolver-set" minOccurs="0"/>
             <xsd:element ref="abstract-service" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="name" type="xsd:string" use="required"/>
@@ -1337,6 +1330,34 @@
     <xsd:element name="abstract-queue-profile" abstract="true" type="abstractQueueProfileType"/>
     <xsd:complexType name="abstractQueueProfileType"/>
 
+    <xsd:element name="abstract-entrypoint-resolver-set" abstract="true" type="abstractEntrypointResolverSetType"/>
+    <xsd:complexType name="abstractEntrypointResolverSetType"/>
+
+    <xsd:element name="legacy-entrypoint-resolvers" type="extensibleEntrypointResolverSet" substitutionGroup="abstract-entrypoint-resolver-set"/>
+    <xsd:element name="entrypoint-resolvers" type="extensibleEntrypointResolverSet" substitutionGroup="abstract-entrypoint-resolver-set"/>
+    <xsd:complexType name="extensibleEntrypointResolverSet">
+        <xsd:complexContent>
+            <xsd:extension base="abstractEntrypointResolverSetType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-entrypoint-resolver" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-entrypoint-resolvers" type="customEntrypointResolverSetType"
+                 substitutionGroup="abstract-entrypoint-resolver-set"/>
+    <xsd:complexType name="customEntrypointResolverSetType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractEntrypointResolverSetType">
+                <xsd:sequence>
+                    <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="class" type="substitutableClass" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:element name="abstract-entrypoint-resolver" abstract="true" type="abstractEntrypointResolverType"/>
     <xsd:complexType name="abstractEntrypointResolverType"/>
 
@@ -1353,14 +1374,12 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="callable-entrypoint-resolver" type="callableEntrypointResolverType"
-                 substitutionGroup="abstract-entrypoint-resolver"/>
-    <xsd:complexType name="callableEntrypointResolverType">
-        <xsd:complexContent>
-            <xsd:extension base="abstractEntrypointResolverType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
+    <xsd:element name="callable-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
+    <xsd:element name="property-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
+    <xsd:element name="method-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
+    <xsd:element name="reflection-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
+    <xsd:element name="no-arguments-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
+    <xsd:element name="array-entrypoint-resolver" type="abstractEntrypointResolverType" substitutionGroup="abstract-entrypoint-resolver"/>
 
     <!--==============================================================-->
     <!--  Routers                                                     -->
@@ -2199,6 +2218,8 @@
         <xsd:complexContent>
             <xsd:extension base="abstractConnectorType">
                 <xsd:sequence>
+                    <!-- for normal connectors, this is for emergency use only, but it is
+                         critical for custom connector -->
                     <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
                     <xsd:group ref="connectorElements"/>
                 </xsd:sequence>
@@ -2208,13 +2229,15 @@
     </xsd:complexType>
 
     <!-- we do this so that they can be included elsewhere - necessary because
-         custom connector needs "properties" to be first element, so cannot
+         custom connector needs "property" to be first element, so cannot
          inherit directly -->
 
     <xsd:attributeGroup name="connectorAttributes">
         <xsd:attribute name="name" type="xsd:string" use="required"/>
         <xsd:attribute name="createDispatcherPerRequest" type="substitutableBoolean"/>
         <xsd:attribute name="createMultipleTransactedReceivers" type="substitutableBoolean"/>
+        <xsd:attribute name="numberOfConcurrentTransactedReceivers" type="substitutableInt"/>
+        <xsd:attribute name="dynamicNotification" type="substitutableBoolean"/>
     </xsd:attributeGroup>
 
     <xsd:group name="connectorElements">
