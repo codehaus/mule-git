@@ -23,7 +23,6 @@ import org.mule.providers.tcp.i18n.TcpMessages;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.Disposable;
@@ -358,21 +357,6 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                     protocol.write(dataOut, o);
                     dataOut.flush();
                 }
-            }
-        }
-
-        protected Object processData(Object data) throws Exception
-        {
-            UMOMessageAdapter adapter = connector.getMessageAdapter(data);
-            OutputStream os = new ResponseOutputStream(socket);
-            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), os);
-            if (returnMessage != null)
-            {
-                return returnMessage;
-            }
-            else
-            {
-                return null;
             }
         }
 

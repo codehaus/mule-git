@@ -2,3 +2,6 @@
 # Test cases listed in this file are not run.
 #
 org.mule.providers.vm.issues.ResponseTransformerMule2165TestCase
+
+# MULE-2905
+org.mule.providers.vm.functional.VmTransactionTestCase
