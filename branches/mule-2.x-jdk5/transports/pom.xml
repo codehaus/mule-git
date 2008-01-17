@@ -96,7 +96,16 @@
         <profile>
             <id>jdk14</id>
             <activation>
-                <jdk>1.4</jdk>
+                <property>
+                    <!--
+                        This profile is always active and is NOT activated by JDK
+                        on purpose. We always want to compile at least the 1.4 compatible
+                        sources as the bottom line.
+
+                        To disable this profile specify -DskipJDK14=true on the commandline
+                        -->
+                    <name>!skipJDK14</name>
+                </property>
             </activation>
             <modules>
                 <module>all-transports</module>
