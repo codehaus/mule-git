@@ -10,7 +10,6 @@
 
 package org.mule.providers.stream;
 
-import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
@@ -18,10 +17,7 @@ import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.umo.provider.UMOMessageReceiver;
-
-import com.mockobjects.dynamic.Mock;
 
 public class StreamMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
@@ -44,8 +40,6 @@ public class StreamMessageReceiverTestCase extends AbstractMessageReceiverTestCa
         assertNotNull(component);
 
         endpoint.getConnector().startConnector();
-        Mock connector = new Mock(UMOConnector.class);
-        connector.expectAndReturn("getExceptionListener", new DefaultExceptionStrategy());
 
         receiver.setFrequency(1001);
         receiver.setInputStream(System.in);
@@ -55,11 +49,6 @@ public class StreamMessageReceiverTestCase extends AbstractMessageReceiverTestCa
         assertTrue(receiver.getFrequency() == StreamMessageReceiver.DEFAULT_POLL_FREQUENCY);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.tck.providers.AbstractMessageReceiverTestCase#getMessageReceiver()
-     */
     public UMOMessageReceiver getMessageReceiver() throws InitialisationException
     {
         return new StreamMessageReceiver(endpoint.getConnector(), component, endpoint, 1000);
