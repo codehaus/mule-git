@@ -11,9 +11,9 @@
 package org.mule.transaction;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.umo.TransactionException;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
-import org.mule.umo.TransactionException;
 import org.mule.umo.UMOTransactionFactory;
 
 import java.beans.ExceptionListener;
@@ -69,8 +69,6 @@ public class TransactionTemplate
                     What you refer to, however, is the 'Not Supported' TX behavior. A SUSPEND is performed
                     in this case with (optional) RESUME later.
 
-                    Revamping/enhancing the TX attributes in Mule is coming next on my action list for
-                    transactions in Mule after bringing Atomikos & ArjunaTS on-board and ditching a broken JOTM.
                  */
 
                 throw new IllegalTransactionStateException(
@@ -80,24 +78,21 @@ public class TransactionTemplate
             {
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("TransactionTemplate ACTION_ALWAYS_BEGIN && tx != null");
+                    logger.debug("Transaction action is ACTION_ALWAYS_BEGIN, " +
+                                 "cuurent TX: " + tx);
                 }
                 if (tx.isXA())
                 {
                     // suspend current transaction
                     suspendedXATx = tx;
                     suspendXATransaction(suspendedXATx);
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug(suspendedXATx + " is suspended");
-                    }
                 }
                 else
                 {
                     // commit/rollback
                     resolveTransaction(tx);
                 }
-                //transaction will be begin below
+                //transaction will be started below
                 tx = null;
             }
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_JOIN && tx == null)
@@ -117,7 +112,7 @@ public class TransactionTemplate
                     ((XaTransactionFactory) factory).setReuseSession(this.isReuseSession());
                 }
                 tx = factory.beginTransaction();
-                logger.debug("Transaction successfully started");
+                logger.debug("Transaction successfully started: " + tx);
             }
             else
             {
@@ -133,11 +128,6 @@ public class TransactionTemplate
                     {
                         resumeXATransaction(suspendedXATx);
                         tx = suspendedXATx;
-                        if (logger.isDebugEnabled())
-                        {
-                            logger.debug(tx + " is resumed");
-                        }
-
                     }
                 }
                 return result;
@@ -146,8 +136,7 @@ public class TransactionTemplate
             {
                 if (exceptionListener != null)
                 {
-                    logger
-                        .info("Exception Caught in Transaction template.  Handing off to exception handler: "
+                    logger.info("Exception Caught in Transaction template.  Handing off to exception handler: "
                                         + exceptionListener);
                     exceptionListener.exceptionThrown(e);
                 }
@@ -194,7 +183,7 @@ public class TransactionTemplate
                 if (tx != null)
                 {
                     // TODO MULE-863: Correct level?  With trace?
-                    logger.info("Error caught: rollback transaction", e);
+                    logger.info("Error caught, rolling back TX " + tx, e);
                     tx.rollback();
                 }
                 throw e;
@@ -206,7 +195,7 @@ public class TransactionTemplate
     {
         if (tx.isRollbackOnly())
         {
-            logger.debug("Transaction is marked for rollback");
+            logger.debug("Transaction has been marked rollbackOnly, rolling it back: " + tx);
             tx.rollback();
         }
         else
@@ -218,12 +207,29 @@ public class TransactionTemplate
 
     protected void suspendXATransaction(UMOTransaction tx) throws TransactionException
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Suspending " + tx);
+        }
+
         tx.suspend();
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Successfully suspended " + tx);
+            logger.debug("Unbinding the following TX from the current context: " + tx);
+        }
+        
         TransactionCoordination.getInstance().unbindTransaction(tx);
     }
 
     protected void resumeXATransaction(UMOTransaction tx) throws TransactionException
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Re-binding and Resuming " + tx);
+        }
+
         TransactionCoordination.getInstance().bindTransaction(tx);
         tx.resume();
     }
