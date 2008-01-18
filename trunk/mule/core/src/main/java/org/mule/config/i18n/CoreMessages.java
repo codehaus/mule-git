@@ -867,4 +867,9 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 230);
     }
 
+    public static Message cannotMixSingleAndXATransaction()
+    {
+        return createMessage(BUNDLE_PATH, 231);
+    }
+
 }

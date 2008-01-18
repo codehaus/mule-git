@@ -40,8 +40,8 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     public static final String DEFAULT_OUTPUT_MESSAGE = "OUTPUT MESSAGE";
     public static final String DEFAULT_INPUT_MQ_QUEUE_NAME = "in";
     public static final String DEFAULT_INPUT_MULE_QUEUE_NAME = "jms://" + DEFAULT_INPUT_MQ_QUEUE_NAME;
-    public static final String DEFUALT_OUTPUT_MQ_QUEUE_NAME = "out";
-    public static final String DEFUALT_OUTPUT_MULE_QUEUE_NAME = "jms://" + DEFUALT_OUTPUT_MQ_QUEUE_NAME;
+    public static final String DEFAULT_OUTPUT_MQ_QUEUE_NAME = "out";
+    public static final String DEFAULT_OUTPUT_MULE_QUEUE_NAME = "jms://" + DEFAULT_OUTPUT_MQ_QUEUE_NAME;
     public static final long TIMEOUT = 5000;
     public static final long SMALL_TIMEOUT = 1000;
     public static final long LOCK_WAIT = 1000;
@@ -55,7 +55,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     protected UMOMessage recieveMessage() throws Exception
     {
-        UMOMessage result = client.receive(DEFUALT_OUTPUT_MULE_QUEUE_NAME, TIMEOUT);
+        UMOMessage result = client.receive(DEFAULT_OUTPUT_MULE_QUEUE_NAME, TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());
@@ -68,7 +68,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     {
         dispatchMessage();
         recieveMessage();
-        UMOMessage result = client.receive(DEFUALT_OUTPUT_MULE_QUEUE_NAME, SMALL_TIMEOUT);
+        UMOMessage result = client.receive(DEFAULT_OUTPUT_MULE_QUEUE_NAME, SMALL_TIMEOUT);
         assertNull(result);
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
         public String getOutputQueue()
         {
-            return DEFUALT_OUTPUT_MQ_QUEUE_NAME;
+            return DEFAULT_OUTPUT_MQ_QUEUE_NAME;
         }
 
         public int getAcknowledge()
@@ -164,10 +164,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     producer = session.createProducer(destination);
                     scenario.send(session, producer);
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
                 finally
                 {
                     if (producer != null)
@@ -176,10 +172,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     }
                 }
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
             finally
             {
                 if (session != null)
@@ -187,10 +179,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     session.close();
                 }
             }
-        }
-        catch (Exception e)
-        {
-            throw e;
         }
         finally
         {
@@ -221,10 +209,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     consumer = session.createConsumer(destination);
                     return scenario.receive(session, consumer);
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
                 finally
                 {
                     if (consumer != null)
@@ -233,10 +217,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     }
                 }
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
             finally
             {
                 if (session != null)
@@ -244,10 +224,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                     session.close();
                 }
             }
-        }
-        catch (Exception e)
-        {
-            throw e;
         }
         finally
         {

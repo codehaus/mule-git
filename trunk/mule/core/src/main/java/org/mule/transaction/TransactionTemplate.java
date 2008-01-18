@@ -13,6 +13,7 @@ package org.mule.transaction;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
+import org.mule.umo.TransactionException;
 
 import java.beans.ExceptionListener;
 
@@ -42,6 +43,7 @@ public class TransactionTemplate
         {
             byte action = config.getAction();
             UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+            UMOTransaction suspendedXATx = null;
 
             if (action == UMOTransactionConfig.ACTION_NONE && tx != null)
             {
@@ -67,8 +69,27 @@ public class TransactionTemplate
             }
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_BEGIN && tx != null)
             {
-                throw new IllegalTransactionStateException(
-                    CoreMessages.transactionAvailableButActionIs("Always Begin"));
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("TransactionTemplate ACTION_ALWAYS_BEGIN && tx != null");
+                }
+                if (tx.isXA())
+                {
+                    // suspend current transaction
+                    suspendedXATx = tx;
+                    suspendXATransaction(suspendedXATx);
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug(suspendedXATx + " is suspended");
+                    }
+                }
+                else
+                {
+                    // commit/rollback
+                    resolveTransaction(tx);
+                }
+                //transaction will be begin below
+                tx = null;
             }
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_JOIN && tx == null)
             {
@@ -92,15 +113,16 @@ public class TransactionTemplate
                 Object result = callback.doInTransaction();
                 if (tx != null)
                 {
-                    if (tx.isRollbackOnly())
+                    resolveTransaction(tx);
+                    if (suspendedXATx != null)
                     {
-                        logger.debug("Transaction is marked for rollback");
-                        tx.rollback();
-                    }
-                    else
-                    {
-                        logger.debug("Committing transaction " + tx);
-                        tx.commit();
+                        resumeXATransaction(suspendedXATx);
+                        tx = suspendedXATx;
+                        if (logger.isDebugEnabled())
+                        {
+                            logger.debug(tx + " is resumed");
+                        }
+
                     }
                 }
                 return result;
@@ -135,11 +157,11 @@ public class TransactionTemplate
                     if (tx.isRollbackOnly())
                     {
                         logger.debug("Exception caught: rollback transaction", e);
-                        tx.rollback();
                     }
-                    else
+                    resolveTransaction(tx);
+                    if (suspendedXATx != null)
                     {
-                        tx.commit();
+                        resumeXATransaction(suspendedXATx);
                     }
                 }
                 // we've handled this exception above. just return null now
@@ -163,6 +185,32 @@ public class TransactionTemplate
                 throw e;
             }
         }
+    }
+
+    protected void resolveTransaction(UMOTransaction tx) throws TransactionException
+    {
+        if (tx.isRollbackOnly())
+        {
+            logger.debug("Transaction is marked for rollback");
+            tx.rollback();
+        }
+        else
+        {
+            logger.debug("Committing transaction " + tx);
+            tx.commit();
+        }
+    }
+
+    protected void suspendXATransaction(UMOTransaction tx) throws TransactionException
+    {
+        tx.suspend();
+        TransactionCoordination.getInstance().unbindTransaction(tx);
+    }
+
+    protected void resumeXATransaction(UMOTransaction tx) throws TransactionException
+    {
+        TransactionCoordination.getInstance().bindTransaction(tx);
+        tx.resume();
     }
 
 }

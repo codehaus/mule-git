@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.InvalidTransactionException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
@@ -310,5 +311,58 @@ public class XaTransaction extends AbstractTransaction
     public String toString()
     {
         return transaction == null ? " <n/a>" : transaction.toString();
+    }
+
+    public Transaction getTransaction()
+    {
+        return transaction;
+    }
+
+    public boolean isXA()
+    {
+        return true;
+    }
+
+    public void resume() throws TransactionException
+    {
+        TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
+
+        if (txManager == null)
+        {
+            throw new IllegalStateException(
+                    CoreMessages.objectNotRegisteredWithManager("Transaction Manager").getMessage());
+        }
+        try
+        {
+            txManager.resume(transaction);
+        }
+        catch (InvalidTransactionException e)
+        {
+            throw new TransactionException(e);
+        }
+        catch (SystemException e)
+        {
+            throw new TransactionException(e);
+        }
+    }
+
+    public Transaction suspend() throws TransactionException
+    {
+        TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
+
+        if (txManager == null)
+        {
+            throw new IllegalStateException(
+                    CoreMessages.objectNotRegisteredWithManager("Transaction Manager").getMessage());
+        }
+        try
+        {
+            transaction = txManager.suspend();
+        }
+        catch (SystemException e)
+        {
+            throw new TransactionException(e);
+        }
+        return transaction;
     }
 }
