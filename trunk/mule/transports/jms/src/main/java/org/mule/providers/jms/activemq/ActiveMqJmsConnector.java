@@ -19,8 +19,6 @@ import java.lang.reflect.Proxy;
 
 import javax.jms.Connection;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
 /**
  * ActiveMQ 4.x-specific JMS connector.
  */
@@ -33,15 +31,6 @@ public class ActiveMqJmsConnector extends JmsConnector
     {
         setEagerConsumer(false);
         // TODO MULE-1409 better support for ActiveMQ 4.x temp destinations
-    }
-
-    protected void applyVendorSpecificConnectionFactoryProperties()
-    {
-        super.applyVendorSpecificConnectionFactoryProperties();
-        if (getConnectionFactory() instanceof ActiveMQConnectionFactory)
-        {
-            ((ActiveMQConnectionFactory) getConnectionFactory()).getRedeliveryPolicy().setMaximumRedeliveries(getMaxRedelivery());
-        }
     }
 
     /**

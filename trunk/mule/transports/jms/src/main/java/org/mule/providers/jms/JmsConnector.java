@@ -361,7 +361,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 // apply connection factory properties
                 BeanUtils.populateWithoutFail(connectionFactory, connectionFactoryProperties, true);
             }
-            applyVendorSpecificConnectionFactoryProperties();
         }
         catch (Exception e)
         {
@@ -380,10 +379,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             throw new ConnectException(e, this);
         }
-    }
-
-    protected void applyVendorSpecificConnectionFactoryProperties(){
-        //template method
     }
 
     protected void doDisconnect() throws ConnectException
