@@ -56,7 +56,6 @@
             <artifactId>log4j</artifactId>
         </dependency>
 
-        <!-- The following libraries are provided by the mule-module-util bundle -->
         <dependency>
             <groupId>backport-util-concurrent</groupId>
             <artifactId>backport-util-concurrent</artifactId>
@@ -137,7 +136,7 @@
         <dependency>
             <groupId>commons-pool</groupId>
             <artifactId>commons-pool</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency>
         <!-- These are used by the TCK, which will hopefully be in its own project some day -->
         <!-- Unit tests -->

@@ -17,10 +17,11 @@ public class JmsTopicTestCase extends AbstractJmsFunctionalTestCase
 
     public void testJmsTopic() throws Exception
     {
+        // One message is sent.
         dispatchMessage();
-        recieveMessage();
-        recieveMessage();
-
+        // The same message is read twice from the same JMS topic.
+        receiveMessage();
+        receiveMessage();
     }
 
     protected String getConfigResources()
