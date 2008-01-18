@@ -4,7 +4,17 @@
         "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 <mule-configuration id="persistent_vmqueue_test" version="1.0">
 
-    <connector name="jmsConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
+    <connector name="jmsConnector1" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
+        <properties>
+            <property name="connectionFactoryClass" value="org.apache.activemq.ActiveMQConnectionFactory"/>
+            <map name="connectionFactoryProperties">
+                <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+            </map>
+            <property name="specification" value="1.1"/>
+        </properties>
+    </connector>
+
+    <connector name="jmsConnector2" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
         <properties>
             <property name="connectionFactoryClass" value="org.apache.activemq.ActiveMQConnectionFactory"/>
             <map name="connectionFactoryProperties">
@@ -19,14 +29,15 @@
 
         <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
             <inbound-router>
-                <endpoint address="jms://in" connector="jmsConnector">
+                <endpoint address="jms://in" connector="jmsConnector1">
                     <transaction action="BEGIN_OR_JOIN"
                                  factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </endpoint>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="jms://middle" connector="jmsConnector"/>
+                    <endpoint address="vm://middle">
+                    </endpoint>
                 </router>
             </outbound-router>
 
@@ -34,20 +45,27 @@
 
         <mule-descriptor name="Part2" implementation="org.mule.tck.functional.FunctionalTestComponent" singleton="true">
             <inbound-router>
-                <endpoint address="jms://middle" connector="jmsConnector">
-                    <transaction action="ALWAYS_BEGIN"
-                                 factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                <endpoint address="vm://middle">
                 </endpoint>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="jms://out" connector="jmsConnector"/>
+                    <endpoint address="jms://out" connector="jmsConnector2">
+                        <transaction action="BEGIN_OR_JOIN"
+                                     factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                    </endpoint>
+                    <transaction action="ALWAYS_BEGIN"
+                                 factory="org.mule.providers.jms.JmsTransactionFactory"/>
                 </router>
             </outbound-router>
             <properties>
-                <property name="returnMessage" value="OUTPUT MESSAGE"/>
+            <property name="returnMessage" value="OUTPUT MESSAGE"/>
             </properties>
         </mule-descriptor>
 
     </model>
+ 
+
+
+
 </mule-configuration>

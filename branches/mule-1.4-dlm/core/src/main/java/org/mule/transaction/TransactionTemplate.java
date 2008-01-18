@@ -11,8 +11,10 @@
 package org.mule.transaction;
 
 import org.mule.config.i18n.CoreMessages;
+import org.mule.umo.TransactionException;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionConfig;
+import org.mule.umo.UMOTransactionFactory;
 
 import java.beans.ExceptionListener;
 
@@ -25,11 +27,19 @@ public class TransactionTemplate
 
     private final UMOTransactionConfig config;
     private final ExceptionListener exceptionListener;
+    private boolean reuseSession = false;
 
     public TransactionTemplate(UMOTransactionConfig config, ExceptionListener listener)
     {
         this.config = config;
         exceptionListener = listener;
+    }
+    
+    public TransactionTemplate(UMOTransactionConfig config, ExceptionListener listener, boolean reuseSession)
+    {
+        this.config = config;
+        exceptionListener = listener;
+        this.reuseSession = reuseSession;
     }
 
     public Object execute(TransactionCallback callback) throws Exception
@@ -42,6 +52,7 @@ public class TransactionTemplate
         {
             byte action = config.getAction();
             UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+            UMOTransaction suspendedXATx = null;
 
             if (action == UMOTransactionConfig.ACTION_NONE && tx != null)
             {
@@ -58,8 +69,6 @@ public class TransactionTemplate
                     What you refer to, however, is the 'Not Supported' TX behavior. A SUSPEND is performed
                     in this case with (optional) RESUME later.
 
-                    Revamping/enhancing the TX attributes in Mule is coming next on my action list for
-                    transactions in Mule after bringing Atomikos & ArjunaTS on-board and ditching a broken JOTM.
                  */
 
                 throw new IllegalTransactionStateException(
@@ -67,8 +76,24 @@ public class TransactionTemplate
             }
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_BEGIN && tx != null)
             {
-                throw new IllegalTransactionStateException(
-                    CoreMessages.transactionAvailableButActionIs("Always Begin"));
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Transaction action is ACTION_ALWAYS_BEGIN, " +
+                                 "cuurent TX: " + tx);
+                }
+                if (tx.isXA())
+                {
+                    // suspend current transaction
+                    suspendedXATx = tx;
+                    suspendXATransaction(suspendedXATx);
+                }
+                else
+                {
+                    // commit/rollback
+                    resolveTransaction(tx);
+                }
+                //transaction will be started below
+                tx = null;
             }
             else if (action == UMOTransactionConfig.ACTION_ALWAYS_JOIN && tx == null)
             {
@@ -80,8 +105,14 @@ public class TransactionTemplate
                             || (action == UMOTransactionConfig.ACTION_BEGIN_OR_JOIN && tx == null))
             {
                 logger.debug("Beginning transaction");
-                tx = config.getFactory().beginTransaction();
-                logger.debug("Transaction successfully started");
+                
+                UMOTransactionFactory factory = config.getFactory();
+                if (factory instanceof XaTransactionFactory)
+                {
+                    ((XaTransactionFactory) factory).setReuseSession(this.isReuseSession());
+                }
+                tx = factory.beginTransaction();
+                logger.debug("Transaction successfully started: " + tx);
             }
             else
             {
@@ -92,15 +123,11 @@ public class TransactionTemplate
                 Object result = callback.doInTransaction();
                 if (tx != null)
                 {
-                    if (tx.isRollbackOnly())
+                    resolveTransaction(tx);
+                    if (suspendedXATx != null)
                     {
-                        logger.debug("Transaction is marked for rollback");
-                        tx.rollback();
-                    }
-                    else
-                    {
-                        logger.debug("Committing transaction " + tx);
-                        tx.commit();
+                        resumeXATransaction(suspendedXATx);
+                        tx = suspendedXATx;
                     }
                 }
                 return result;
@@ -109,8 +136,7 @@ public class TransactionTemplate
             {
                 if (exceptionListener != null)
                 {
-                    logger
-                        .info("Exception Caught in Transaction template.  Handing off to exception handler: "
+                    logger.info("Exception Caught in Transaction template.  Handing off to exception handler: "
                                         + exceptionListener);
                     exceptionListener.exceptionThrown(e);
                 }
@@ -135,11 +161,11 @@ public class TransactionTemplate
                     if (tx.isRollbackOnly())
                     {
                         logger.debug("Exception caught: rollback transaction", e);
-                        tx.rollback();
                     }
-                    else
+                    resolveTransaction(tx);
+                    if (suspendedXATx != null)
                     {
-                        tx.commit();
+                        resumeXATransaction(suspendedXATx);
                     }
                 }
                 // we've handled this exception above. just return null now
@@ -157,12 +183,60 @@ public class TransactionTemplate
                 if (tx != null)
                 {
                     // TODO MULE-863: Correct level?  With trace?
-                    logger.info("Error caught: rollback transaction", e);
+                    logger.info("Error caught, rolling back TX " + tx, e);
                     tx.rollback();
                 }
                 throw e;
             }
         }
+    }
+
+    protected void resolveTransaction(UMOTransaction tx) throws TransactionException
+    {
+        if (tx.isRollbackOnly())
+        {
+            logger.debug("Transaction has been marked rollbackOnly, rolling it back: " + tx);
+            tx.rollback();
+        }
+        else
+        {
+            logger.debug("Committing transaction " + tx);
+            tx.commit();
+        }
+    }
+
+    protected void suspendXATransaction(UMOTransaction tx) throws TransactionException
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Suspending " + tx);
+        }
+
+        tx.suspend();
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Successfully suspended " + tx);
+            logger.debug("Unbinding the following TX from the current context: " + tx);
+        }
+        
+        TransactionCoordination.getInstance().unbindTransaction(tx);
+    }
+
+    protected void resumeXATransaction(UMOTransaction tx) throws TransactionException
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Re-binding and Resuming " + tx);
+        }
+
+        TransactionCoordination.getInstance().bindTransaction(tx);
+        tx.resume();
+    }
+
+    public boolean isReuseSession()
+    {
+        return reuseSession;
     }
 
 }

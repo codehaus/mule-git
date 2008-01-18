@@ -22,8 +22,8 @@ import java.util.Set;
 
 /**
  * Get transaction status inside component
- * There is a separate transaction for each component  
- * when single transaction(action: BEGIN_OR_JOIN) and jms transaport are used
+ * There is a separate transaction for each component
+ * when single transaction(action: BEGIN_OR_JOIN) and jms transport are used
  */
 public class JmsSingleTransactionComponentTestCase extends AbstractJmsFunctionalTestCase
 {

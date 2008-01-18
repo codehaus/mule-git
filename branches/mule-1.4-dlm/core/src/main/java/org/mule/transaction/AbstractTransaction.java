@@ -16,6 +16,8 @@ import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOTransaction;
 
+import javax.transaction.Transaction;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -157,4 +159,18 @@ public abstract class AbstractTransaction implements UMOTransaction
         MuleManager.getInstance().fireNotification(notification);
     }
 
+    public boolean isXA()
+    {
+        return false;
+    }
+
+    public void resume() throws TransactionException
+    {
+        throw new IllegalTransactionStateException(CoreMessages.notMuleXaTransaction(this));
+    }
+
+    public Transaction suspend() throws TransactionException
+    {
+        throw new IllegalTransactionStateException(CoreMessages.notMuleXaTransaction(this));
+    }
 }

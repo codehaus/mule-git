@@ -15,7 +15,9 @@ import org.mule.providers.ConnectException;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.providers.TransactedPollingMessageReceiver;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
+import org.mule.transaction.TransactionCallback;
 import org.mule.transaction.TransactionCoordination;
+import org.mule.transaction.TransactionTemplate;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -25,6 +27,7 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jms.Destination;
@@ -63,7 +66,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     {
         public JmsThreadContext getContext()
         {
-            return (JmsThreadContext)get();
+            return (JmsThreadContext) get();
         }
 
         protected Object initialValue()
@@ -177,8 +180,30 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             {
                 createConsumer();
             }
-            // Do polling
-            super.poll();
+            
+            // Do polling          
+            TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(), connector
+                    .getExceptionListener(),this.reuseSession);
+
+            // Receive messages and process them in a single transaction
+            // Do not enable threading here, but several workers
+            // may have been started
+            TransactionCallback cb = new TransactionCallback()
+            {
+                public Object doInTransaction() throws Exception
+                {
+                    List messages = getMessages();
+                    if (messages != null && messages.size() > 0)
+                    {
+                        for (Iterator it = messages.iterator(); it.hasNext();)
+                        {
+                            processMessage(it.next());
+                        }
+                    }
+                    return null;
+                }
+            };
+            tt.execute(cb);
         }
         catch (Exception e)
         {
