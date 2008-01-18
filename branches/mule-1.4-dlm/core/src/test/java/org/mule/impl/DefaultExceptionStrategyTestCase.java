@@ -66,7 +66,7 @@ public class DefaultExceptionStrategyTestCase extends AbstractMuleTestCase
         });
 
         // throwing exception
-        DefaultExceptionStrategy listener = new DefaultExceptionStrategy();
+        InstrumentedExceptionStrategy listener = new InstrumentedExceptionStrategy();
         listener.exceptionThrown(new IllegalArgumentException("boom"));
 
         // Wait for the notifcation event to be fired as they are queue
@@ -85,12 +85,17 @@ public class DefaultExceptionStrategyTestCase extends AbstractMuleTestCase
             count++;
             super.defaultHandler(t);
         }
+        
+        // @Override
+        protected void logException(Throwable t)
+        {
+            // do not log anything here, we're running as part of a unit test
+        }
 
         public int getCount()
         {
             return count;
         }
-
     }
 
 }
