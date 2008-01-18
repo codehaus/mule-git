@@ -182,7 +182,6 @@ public class TransactionTemplate
             {
                 if (tx != null)
                 {
-                    // TODO MULE-863: Correct level?  With trace?
                     logger.info("Error caught, rolling back TX " + tx, e);
                     tx.rollback();
                 }
