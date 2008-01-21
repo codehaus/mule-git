@@ -44,6 +44,7 @@ import javax.resource.spi.work.WorkListener;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -147,7 +148,7 @@ public class MuleWorkManager implements UMOWorkManager
         }
         catch (UMOException e)
         {
-            // TODO MULE-863: Is this serious?
+            // Ok, stop failed but since we're being disposed anyway just log and continue
             logger.warn("Error while disposing Work Manager: " + e.getMessage(), e);
         }
     }

@@ -162,7 +162,6 @@ public final class ExceptionHelper
             }
             catch (ClassNotFoundException e)
             {
-                // TODO MULE-863: Either we handle this, or we don't
                 logger.error(e.getMessage(), e);
                 return null;
             }

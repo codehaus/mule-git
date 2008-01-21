@@ -274,7 +274,6 @@ public class MuleManagerComponent implements Callable, Initialisable
         }
         catch (Exception e1)
         {
-            // TODO MULE-863: Is this sufficient?
             // log the inner exception here since the earlier exception was logged earlier
             logger.error("Failed to format message, using direct string (details at debug level): " + e1.getMessage());
             logger.debug(e1.toString(), e1);

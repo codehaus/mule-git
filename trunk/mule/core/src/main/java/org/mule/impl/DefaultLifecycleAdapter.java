@@ -150,7 +150,6 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             }
             catch (Exception e)
             {
-                // TODO MULE-863: Handle or fail
                 logger.error("failed to dispose: " + descriptor.getName(), e);
             }
         }

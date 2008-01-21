@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
 public class MuleConfiguration
 {
     private static final String DEFAULT_LOG_DIRECTORY = "logs";
-    
+
     /**
      * logger used by this class
      */
@@ -126,9 +126,9 @@ public class MuleConfiguration
      */
     private boolean synchronous = DEFAULT_SYNCHRONOUS;
 
-
     /**
-     * The type of model used for the internal system model where system created services are registered
+     * The type of model used for the internal system model where system created
+     * services are registered
      */
     private String systemModelType = DEFAULT_SYSTEM_MODEL_TYPE;
 
@@ -263,7 +263,7 @@ public class MuleConfiguration
     {
         this.synchronous = synchronous;
     }
-    
+
     public String getModel()
     {
         return model;
@@ -385,20 +385,20 @@ public class MuleConfiguration
     {
         return workingDirectory;
     }
-    
+
     public String getMuleHomeDirectory()
     {
         return System.getProperty(MuleProperties.MULE_HOME_DIRECTORY_PROPERTY);
     }
-    
+
     public String getLogDirectory()
     {
-        return getMuleHomeDirectory() + File.separator + DEFAULT_LOG_DIRECTORY; 
+        return getMuleHomeDirectory() + File.separator + DEFAULT_LOG_DIRECTORY;
     }
 
     public void setWorkingDirectory(String workingDirectory)
     {
-        // fix windows backslashes in absolute paths, convert them to forward ones 
+        // fix windows backslashes in absolute paths, convert them to forward ones
         this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
         updateApplicationProperty(MuleProperties.MULE_WORKING_DIRECTORY_PROPERTY, this.workingDirectory);
     }
@@ -446,7 +446,7 @@ public class MuleConfiguration
      */
     public String getProductVersion()
     {
-        return getManifestProperty("Implementation-Version");
+        return MuleManifest.getProductVersion();
     }
 
     /**
@@ -454,7 +454,7 @@ public class MuleConfiguration
      */
     public String getVendorName()
     {
-        return getManifestProperty("Specification-Vendor");
+        return MuleManifest.getVendorName();
     }
 
     /**
@@ -462,7 +462,7 @@ public class MuleConfiguration
      */
     public String getVendorUrl()
     {
-        return getManifestProperty("Vendor-Url");
+        return MuleManifest.getVendorUrl();
     }
 
     /**
@@ -470,7 +470,7 @@ public class MuleConfiguration
      */
     public String getProductUrl()
     {
-        return getManifestProperty("Product-Url");
+        return MuleManifest.getProductUrl();
     }
 
     /**
@@ -478,7 +478,7 @@ public class MuleConfiguration
      */
     public String getProductName()
     {
-        return getManifestProperty("Implementation-Title");
+        return MuleManifest.getProductName();
     }
 
     /**
@@ -486,7 +486,7 @@ public class MuleConfiguration
      */
     public String getProductMoreInfo()
     {
-        return getManifestProperty("More-Info");
+        return MuleManifest.getProductMoreInfo();
     }
 
     /**
@@ -494,7 +494,7 @@ public class MuleConfiguration
      */
     public String getProductSupport()
     {
-        return getManifestProperty("Support");
+        return MuleManifest.getProductSupport();
     }
 
     /**
@@ -502,7 +502,7 @@ public class MuleConfiguration
      */
     public String getProductLicenseInfo()
     {
-        return getManifestProperty("License");
+        return MuleManifest.getProductLicenseInfo();
     }
 
     /**
@@ -510,7 +510,7 @@ public class MuleConfiguration
      */
     public String getProductDescription()
     {
-        return getManifestProperty("Description");
+        return MuleManifest.getProductDescription();
     }
 
     /**
@@ -518,7 +518,7 @@ public class MuleConfiguration
      */
     public String getBuildDate()
     {
-        return getManifestProperty("Build-Date");
+        return MuleManifest.getBuildDate();
     }
 
     /**
@@ -555,8 +555,7 @@ public class MuleConfiguration
                         }
                         catch (IOException e1)
                         {
-                            // TODO MULE-863: Is this sufficient (was printStackTrace) and correct?
-                            logger.debug("Failure reading manifest: " + e1.getMessage(), e1);
+                            logger.error("Failure reading manifest: " + e1.getMessage(), e1);
                         }
                         return null;
                     }
@@ -575,7 +574,6 @@ public class MuleConfiguration
             }
             catch (IOException e)
             {
-                // TODO MULE-863
                 logger.warn("Failed to read manifest Info, Manifest information will not display correctly: "
                             + e.getMessage());
             }
@@ -640,8 +638,7 @@ public class MuleConfiguration
         }
         catch (Exception e)
         {
-            throw new MuleRuntimeException(
-                CoreMessages.failedToClone("Connection Strategy"), e);
+            throw new MuleRuntimeException(CoreMessages.failedToClone("Connection Strategy"), e);
         }
     }
 

@@ -78,6 +78,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -472,7 +473,6 @@ public abstract class AbstractConnector
         }
         catch (UMOException e)
         {
-            // TODO MULE-863: What should we really do?
             logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
         }
 

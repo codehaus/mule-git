@@ -187,7 +187,8 @@ public class DefaultMuleProxy implements MuleProxy
                 }
                 catch (Exception e)
                 {
-                    // TODO MULE-863: If this is an error, do something
+                    // We're being disposed. If there was an error while disposing the interceptor
+                    // there's not much we can do here.
                     logger.error(
                         CoreMessages.failedToDispose("Component '" + descriptor.getName() + "'"), e);
                 }
