@@ -26,11 +26,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * The Stop phase for the Management context LifecycleManager. Calling {@link org.mule.api.MuleContext#stop()}
+ * The Stop phase for the Management context LifecycleManager. Calling {@link org.mule.umo.UMOManagementContext#stop()}
  * with initiate this phase via the {@link org.mule.umo.lifecycle.UMOLifecycleManager}.
  * This phase controls the order in which objects should be stopped.
  *
- * @see org.mule.api.MuleContext
+ * @see org.mule.umo.UMOManagementContext
  * @see org.mule.umo.lifecycle.UMOLifecycleManager
  * @see org.mule.umo.lifecycle.Stoppable
  */
@@ -49,8 +49,7 @@ public class MuleContextStopPhase extends LifecyclePhase
         stopOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
         stopOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
         stopOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, ManagerNotification.class,
-                ManagerNotification.getActionName(ManagerNotification.MANAGER_STOPPING_MODELS),
-                ManagerNotification.getActionName(ManagerNotification.MANAGER_STOPPED_MODELS)));
+                ManagerNotification.MANAGER_STOPPING_MODELS,ManagerNotification.MANAGER_STOPPED_MODELS));
         stopOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
         stopOrderedObjects.add(new NotificationLifecycleObject(Stoppable.class));
 

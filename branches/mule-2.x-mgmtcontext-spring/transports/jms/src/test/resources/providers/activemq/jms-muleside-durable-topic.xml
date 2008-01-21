@@ -15,9 +15,7 @@
 
     <jms:endpoint name="out" queue="out" connector-ref="jmsConnector"/>
 
-    <custom-transformer name="ObjectToJMSMessage"
-                        class="org.mule.providers.jms.transformers.ObjectToJMSMessage"
-                        returnClass="javax.jms.TextMessage"/>
+    <jms:object-to-jmsmessage-transformer name="ObjectToJMSMessage"/>
 
     <model name="TEST">
 

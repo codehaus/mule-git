@@ -10,22 +10,12 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.tck.FunctionalTestCase;
-
-public class XmppNamespaceHandlerTestCase extends FunctionalTestCase
+public class XmppNamespaceHandlerTestCase extends AbstractNamespaceHandlerTestCase
 {
 
-    protected String getConfigResources()
+    public XmppNamespaceHandlerTestCase()
     {
-        return "xmpp-namespace-config.xml";
+        super(XmppConnector.XMPP);
     }
 
-    public void testConfig() throws Exception
-    {
-        XmppConnector connector = 
-            (XmppConnector)muleContext.getRegistry().lookupConnector("xmppConnector");
-        
-        assertNotNull(connector);
-    }
-    
 }

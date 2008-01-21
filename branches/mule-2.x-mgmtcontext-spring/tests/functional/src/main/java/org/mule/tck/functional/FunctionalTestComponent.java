@@ -15,6 +15,7 @@ import org.mule.MuleServer;
 import org.mule.api.MuleContext;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.RequestContext;
+import org.mule.tck.exceptions.FunctionalTestException;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Disposable;
@@ -126,7 +127,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
         if (throwException)
         {
-            throw new MuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
+            throw new FunctionalTestException();
         }
 
         return replyMessage;

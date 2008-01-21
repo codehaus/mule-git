@@ -16,7 +16,6 @@ import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.assembly.configuration.PrefixValueMap;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.specific.FilterDefinitionParser;
-import org.mule.config.spring.parsers.specific.ObjectFactoryWrapper;
 import org.mule.config.spring.parsers.specific.TransactionFactoryDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
@@ -33,6 +32,7 @@ import org.mule.providers.jms.transformers.JMSMessageToObject;
 import org.mule.providers.jms.transformers.ObjectToJMSMessage;
 import org.mule.providers.jms.weblogic.WeblogicJmsConnector;
 import org.mule.providers.jms.websphere.WebsphereJmsConnector;
+import org.mule.transaction.XaTransactionFactory;
 
 /**
  * Registers Bean Definition Parsers for the "jms" namespace.
@@ -51,22 +51,18 @@ public class JmsNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("connector", new JmsConnectorDefinitionParser());
         registerBeanDefinitionParser("custom-connector", new JmsConnectorDefinitionParser());
         registerBeanDefinitionParser("activemq-connector", new JmsConnectorDefinitionParser(ActiveMQJmsConnector.class));
-
-        // TODO XA
         registerBeanDefinitionParser("activemq-xa-connector", new JmsConnectorDefinitionParser(ActiveMQXAJmsConnector.class));
-
+        
         registerBeanDefinitionParser("weblogic-connector", new JmsConnectorDefinitionParser(WeblogicJmsConnector.class));
         registerBeanDefinitionParser("websphere-connector", new JmsConnectorDefinitionParser(WebsphereJmsConnector.class));
 
-        registerBeanDefinitionParser("connection-factory", new ConnectionFactoryDefinitionParser());
-        registerBeanDefinitionParser("redelivery-handler", new ObjectFactoryWrapper("redeliveryHandler"));
-
         registerBeanDefinitionParser("transaction-factory", new TransactionFactoryDefinitionParser(JmsTransactionFactory.class));
         registerBeanDefinitionParser("client-ack-transaction-factory", new TransactionFactoryDefinitionParser(JmsClientAcknowledgeTransactionFactory.class));
+        registerBeanDefinitionParser("xa-transaction-factory", new TransactionFactoryDefinitionParser(XaTransactionFactory.class));        
 
-        registerBeanDefinitionParser("transformer-jmsmessage-to-object", new TransformerDefinitionParser(JMSMessageToObject.class));   
-        registerBeanDefinitionParser("transformer-object-to-jmsmessage", new TransformerDefinitionParser(ObjectToJMSMessage.class));
+        registerBeanDefinitionParser("jmsmessage-to-object-transformer", new TransformerDefinitionParser(JMSMessageToObject.class));
 
+        registerBeanDefinitionParser("object-to-jmsmessage-transformer", new TransformerDefinitionParser(ObjectToJMSMessage.class));
         registerBeanDefinitionParser("property-filter", new FilterDefinitionParser(JmsPropertyFilter.class));
         registerBeanDefinitionParser("selector", new ChildDefinitionParser(FilterDefinitionParser.FILTER, JmsSelectorFilter.class));
     }

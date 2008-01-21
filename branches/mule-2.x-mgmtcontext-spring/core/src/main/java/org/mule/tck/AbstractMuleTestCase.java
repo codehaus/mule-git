@@ -67,21 +67,19 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     /**
      * Top-level directories under <code>.mule</code> which are not deleted on each
-     * test case recycle. This is required, e.g. to play nice with transaction
-     * manager recovery service object store.
+     * test case recycle. This is required, e.g. to play nice with transaction manager
+     * recovery service object store.
      */
     public static final String[] IGNORED_DOT_MULE_DIRS = new String[]{"transaction-log"};
 
     protected static MuleContext muleContext;
 
     /**
-     * This flag controls whether the text boxes will be logged when starting each
-     * test case.
+     * This flag controls whether the text boxes will be logged when starting each test case.
      */
     private static final boolean verbose;
 
-    // A Map of test case extension objects. JUnit creates a new TestCase instance
-    // for
+    // A Map of test case extension objects. JUnit creates a new TestCase instance for
     // every method, so we need to record metainfo outside the test.
     private static final Map testInfos = Collections.synchronizedMap(new HashMap());
 
@@ -89,8 +87,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     protected final transient Log logger = LogFactory.getLog(this.getClass());
 
     /**
-     * Start the MuleContext once it's configured (defaults to false for
-     * AbstractMuleTestCase, true for FunctionalTestCase).
+     * Start the muleContext once it's configured (defaults to false for AbstractMuleTestCase, true for FunctionalTestCase).
      */
     private boolean startContext = false;
 
@@ -125,17 +122,15 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     public static final String TEST_MESSAGE = "Test Message";
 
     /**
-     * Default timeout for multithreaded tests (using CountDownLatch,
-     * WaitableBoolean, etc.), in milliseconds. The higher this value, the more
-     * reliable the test will be, so it should be set high for Continuous
-     * Integration. However, this can waste time during day-to-day development
-     * cycles, so you may want to temporarily lower it while debugging.
+     * Default timeout for multithreaded tests (using CountDownLatch, WaitableBoolean, etc.),
+     * in milliseconds.  The higher this value, the more reliable the test will be, so it
+     * should be set high for Continuous Integration.  However, this can waste time during
+     * day-to-day development cycles, so you may want to temporarily lower it while debugging.
      */
     public static final long LOCK_TIMEOUT = 30000;
 
     /**
-     * Use this as a semaphore to the unit test to indicate when a callback has
-     * successfully been called.
+     * Use this as a semaphore to the unit test to indicate when a callback has successfully been called.
      */
     protected Latch callbackCalled;
 
@@ -214,14 +209,14 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     /**
-     * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can
-     * extend this class from ConditionalTestCase. Subclasses can override
-     * <code>isDisabledInThisEnvironment</code> to skip a single test.
+     * Shamelessly copy from Spring's ConditionalTestCase so in MULE-2.0 we can extend
+     * this class from ConditionalTestCase.
+     * 
+     * Subclasses can override <code>isDisabledInThisEnvironment</code> to skip a single test.
      */
     public void runBare() throws Throwable
     {
-        // getName will return the name of the method being run. Use the real JUnit
-        // implementation,
+        // getName will return the name of the method being run. Use the real JUnit implementation,
         // this class has a different implementation
         if (this.isDisabledInThisEnvironment(super.getName()))
         {
@@ -234,9 +229,8 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     /**
-     * Subclasses can override this method to skip the execution of the entire test
-     * class.
-     * 
+     * Subclasses can override this method to skip the execution of the entire test class.
+     *
      * @return <code>true</code> if the test class should not be run.
      */
     protected boolean isDisabledInThisEnvironment()
@@ -245,9 +239,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     /**
-     * Indicates whether this test has been explicitly disabled through the
-     * configuration file loaded by TestInfo.
-     * 
+     * Indicates whether this test has been explicitly disabled through the configuration
+     * file loaded by TestInfo.
+     *
      * @return whether the test has been explicitly disabled
      */
     protected boolean isExcluded()
@@ -257,7 +251,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     /**
      * Should this test run?
-     * 
+     *
      * @param testMethodName name of the test method
      * @return whether the test should execute in the current envionment
      */
@@ -270,8 +264,8 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         if (offline)
         {
-            logger.warn(StringMessageUtils.getBoilerPlate("Working offline cannot run test: " + method, '=',
-                80));
+            logger.warn(StringMessageUtils.getBoilerPlate(
+                    "Working offline cannot run test: " + method, '=', 80));
         }
         return offline;
     }
@@ -288,8 +282,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     protected TestCaseWatchdog createWatchdog()
     {
-        // TODO - temp extension acooke
-        return new TestCaseWatchdog(1000, TimeUnit.MINUTES, this);
+        return new TestCaseWatchdog(10, TimeUnit.MINUTES, this);
     }
 
     public void handleTimeout(long timeout, TimeUnit unit)
@@ -327,11 +320,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             }
 
             muleContext = createMuleContext();
-            // if(!muleContext.getRegistry().isInitialised())
-            // {
-            // muleContext.getRegistry().initialise();
-            // }
-            if (isStartContext() && muleContext.isStarted() == false)
+            if (isStartContext() && null != muleContext && muleContext.isStarted() == false)
             {
                 muleContext.start();
             }
@@ -443,8 +432,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                 if (RegistryContext.getRegistry() != null)
                 {
                     final String workingDir = RegistryContext.getConfiguration().getWorkingDirectory();
-                    // do not delete TM recovery object store, everything else is
-                    // good to go
+                    // do not delete TM recovery object store, everything else is good to go
                     FileUtils.deleteTree(FileUtils.newFile(workingDir), IGNORED_DOT_MULE_DIRS);
 
                     RegistryContext.getRegistry().dispose();
@@ -454,9 +442,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         }
         finally
         {
-            muleContext = null;
-            MuleServer.setMuleContext(null);
+            muleContext = null; 
             RegistryContext.setRegistry(null);
+            MuleServer.setMuleContext(muleContext);
         }
     }
 
@@ -636,7 +624,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         {
             StringBuffer buf = new StringBuffer();
             return buf.append(name).append(", (").append(runCount).append(" / ").append(testCount).append(
-                ") tests run, disposePerSuite=").append(disposeManagerPerSuite).toString();
+                    ") tests run, disposePerSuite=").append(disposeManagerPerSuite).toString();
         }
     }
 

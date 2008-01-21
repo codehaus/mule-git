@@ -49,7 +49,7 @@
         <spring:property name="containerProperty" value="myString"/>
     </custom-transformer>
 
-    <transformer-no-action name="Default"/>
+    <no-action-transformer name="Default"/>
 
     <endpoint name="fruitBowlEndpoint" address="test://fruitBowlPublishQ">
         <mxml:jxpath-filter expectedValue="bar" pattern="name">
@@ -81,7 +81,7 @@
             <outbound-endpoint address=" test://component.exceptions "/>
         </custom-exception-strategy>
 
-        <custom-entrypoint-resolver class="org.mule.tck.testmodels.mule.TestEntryPointResolverSet"/>
+        <custom-entry-point-resolver-set class="org.mule.tck.testmodels.mule.TestEntryPointResolverSet"/>
 
         <service name="orangeComponent">
             <inbound-router>

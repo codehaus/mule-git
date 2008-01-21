@@ -87,10 +87,10 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="dom-to-xml" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="dom-to-output-handler" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="dom-to-xml-transformer" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="dom-to-output-handler-transformer" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
 
-    <xsd:element name="jxpath-extractor" type="jxpathExtractorType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="jxpath-extractor-transformer" type="jxpathExtractorType" substitutionGroup="mule:abstract-transformer"/>
     <xsd:complexType name="jxpathExtractorType">
         <xsd:complexContent>
             <xsd:extension base="mule:abstractTransformerType">
@@ -100,7 +100,7 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="object-to-xml" type="objectToXmlType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="object-to-xml-transformer" type="objectToXmlType" substitutionGroup="mule:abstract-transformer"/>
     <xsd:complexType name="objectToXmlType">
         <xsd:complexContent>
             <xsd:extension base="mule:abstractTransformerType">
@@ -109,8 +109,8 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="xml-to-dom" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="xml-to-object" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="xml-to-dom-transformer" type="xmlTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="xml-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
 
     <xsd:element name="xslt-transformer" type="xsltTransformerType" substitutionGroup="mule:abstract-transformer"/>
     <xsd:complexType name="xsltTransformerType">
@@ -124,6 +124,26 @@
                 <xsd:attribute name="xslt" type="xsd:string"/>
                 <xsd:attribute name="xsl-file" type="xsd:string"/>
                 <xsd:attribute name="transformerFactoryClass" type="xsd:NMTOKEN"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="xml-prettyprinter-transformer" type="xmlPrettyPrinterType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:complexType name="xmlPrettyPrinterType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractTransformerType">
+                <xsd:attribute name="encoding" type="xsd:string"/>
+                <xsd:attribute name="expandEmptyElements" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="indent" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="indentSize" type="mule:substitutableInt"/>
+                <xsd:attribute name="lineSeparator" type="xsd:string"/>
+                <xsd:attribute name="newLineAfterNTags" type="mule:substitutableInt"/>
+                <xsd:attribute name="newlines" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="omitEncoding" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="padText" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="suppressDeclaration" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="trimText" type="mule:substitutableBoolean"/>
+                <xsd:attribute name="XHTML" type="mule:substitutableBoolean"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

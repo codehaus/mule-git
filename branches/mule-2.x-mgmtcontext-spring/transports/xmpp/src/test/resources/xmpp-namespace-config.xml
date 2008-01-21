@@ -10,4 +10,9 @@
 
     <xmpp:connector name="xmppConnector"/>
 
+    <xmpp:endpoint name="simpleEndpoint" host="localhost" port="1234" user="mule" password="secret" recipient="recipient"/>
+
+    <xmpp:endpoint name="groupChatEndpoint" host="localhost" port="1234" user="mule" password="secret" recipient="recipient"
+        groupChat="true" nickname="bob"/>
+
 </mule>

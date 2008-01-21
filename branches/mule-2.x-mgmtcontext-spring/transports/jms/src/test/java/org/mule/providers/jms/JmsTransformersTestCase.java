@@ -11,7 +11,7 @@
 package org.mule.providers.jms;
 
 import org.mule.impl.RequestContext;
-import org.mule.providers.jms.functional.AbstractJmsFunctionalTestCase;
+import org.mule.providers.jms.integration.AbstractJmsFunctionalTestCase;
 import org.mule.providers.jms.transformers.AbstractJmsTransformer;
 import org.mule.providers.jms.transformers.JMSMessageToObject;
 import org.mule.providers.jms.transformers.ObjectToJMSMessage;
@@ -51,7 +51,7 @@ public class JmsTransformersTestCase extends AbstractJmsFunctionalTestCase
         super.doSetUp();
         
         JmsConnector connector = (JmsConnector) muleContext.getRegistry().lookupConnector("jmsConnector");
-        ConnectionFactory cf = (ConnectionFactory) connector.getConnectionFactory().getOrCreate();
+        ConnectionFactory cf = (ConnectionFactory) connector.getConnectionFactory();
         
         session = cf.createConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);                
     }

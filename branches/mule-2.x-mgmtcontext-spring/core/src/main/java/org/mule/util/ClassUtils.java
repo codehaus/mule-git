@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 /**
  * Extend the Apache Commons ClassUtils to provide additional functionality.
@@ -290,6 +291,26 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         }
     }
 
+    /**
+     * Ensure that the given class is properly initialized when the argument is passed in
+     * as .class literal. This method can never fail unless the bytecode is corrupted or
+     * the VM is otherwise seriously confused.
+     * 
+     * @param clazz the Class to be initialized
+     * @return the same class but initialized
+     */
+    public static Class initializeClass(Class clazz)
+    {
+        try
+        {
+            return getClass(clazz.getName(), true);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new IllegalStateException();
+        }
+    }
+
     public static Object instanciateClass(Class clazz, Object[] constructorArgs)
             throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException,
             IllegalAccessException, InvocationTargetException
@@ -475,7 +496,7 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
                                              Class[] parameterTypes,
                                              boolean voidOk,
                                              boolean matchOnObject,
-                                             Set ignoredMethodNames,
+                                             Collection ignoredMethodNames,
                                              WildcardFilter filter)
     {
 
