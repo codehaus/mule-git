@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases.axis.clientbridge;
 
+import org.mule.api.MuleContext;
+import org.mule.api.MuleContextFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.umo.MuleContext;
-import org.mule.umo.MuleContextFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 

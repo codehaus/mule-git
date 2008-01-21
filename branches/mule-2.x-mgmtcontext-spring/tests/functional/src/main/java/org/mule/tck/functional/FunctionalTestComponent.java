@@ -12,10 +12,10 @@ package org.mule.tck.functional;
 
 import org.mule.MuleException;
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.RequestContext;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.Callable;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;

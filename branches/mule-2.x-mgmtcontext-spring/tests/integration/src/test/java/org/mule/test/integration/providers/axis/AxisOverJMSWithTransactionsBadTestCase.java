@@ -10,11 +10,11 @@
 
 package org.mule.test.integration.providers.axis;
 
-import org.mule.config.builders.DefaultsConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleContextFactory;
 import org.mule.impl.DefaultMuleContextFactory;
+import org.mule.impl.config.builders.DefaultsConfigurationBuilder;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.MuleContext;
-import org.mule.umo.MuleContextFactory;
 
 /**
  * Check that we cannot name embedded transaction factory

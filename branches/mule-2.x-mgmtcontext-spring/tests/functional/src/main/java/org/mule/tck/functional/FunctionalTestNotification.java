@@ -32,7 +32,7 @@ import org.mule.umo.transformer.TransformerException;
  *
  * @see org.mule.tck.functional.FunctionalTestComponent
  * @see org.mule.tck.functional.FunctionalTestNotificationListener
- * @see org.mule.umo.MuleContext
+ * @see org.mule.api.MuleContext
  */
 public class FunctionalTestNotification extends CustomNotification
 {

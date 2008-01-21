@@ -10,7 +10,7 @@
 
 package org.mule.test.spring;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.response.AbstractResponseRouter;

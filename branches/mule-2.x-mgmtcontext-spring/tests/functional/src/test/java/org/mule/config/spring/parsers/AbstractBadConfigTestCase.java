@@ -10,7 +10,7 @@
 
 package org.mule.config.spring.parsers;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
 

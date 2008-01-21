@@ -10,8 +10,8 @@
 
 package org.mule.config.spring;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.transformer.UMOTransformer;
