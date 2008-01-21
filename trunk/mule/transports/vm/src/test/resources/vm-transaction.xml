@@ -14,19 +14,55 @@
         </properties>
     </connector>
 
+    <connector name="vmOnFly" className="org.mule.providers.vm.VMConnector">
+        <properties>
+            <property name="queueEvents" value="false"/>
+            <property name="numberOfConcurrentTransactedReceivers" value="1"/>
+        </properties>
+    </connector>
+
+
     <model name="main">
-        <mule-descriptor name="test" implementation="org.mule.providers.vm.functional.VmTransactionTestCase$TestComponent">
+        <mule-descriptor name="test"
+                         implementation="org.mule.providers.vm.functional.VmTransactionTestCase$TestComponent">
             <inbound-router>
-                <endpoint address="vm://in">
+                <endpoint address="vm://in" connector="vm">
                     <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.vm.VMTransactionFactory"/>
                 </endpoint>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="vm://out"/>
+                    <endpoint address="vm://out" connector="vm"/>
                 </router>
             </outbound-router>
             <threading-profile maxThreadsActive="1"/>
         </mule-descriptor>
+
+        <mule-descriptor name="test2"
+                         implementation="org.mule.providers.vm.functional.VmTransactionTestCase$TestComponent">
+            <inbound-router>
+                <endpoint address="vm://sync" connector="vm">
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.vm.VMTransactionFactory"/>
+                </endpoint>
+            </inbound-router>
+            <threading-profile maxThreadsActive="1"/>
+        </mule-descriptor>
+
+        <mule-descriptor name="test3"
+                         implementation="org.mule.providers.vm.functional.VmTransactionTestCase$TestComponent">
+            <inbound-router>
+                <endpoint address="vm://int3" connector="vmOnFly">
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.vm.VMTransactionFactory"/>
+                </endpoint>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="vm://outt3" connector="vm"/>
+                </router>
+            </outbound-router>
+            <threading-profile maxThreadsActive="1"/>
+        </mule-descriptor>
+
+
     </model>
 </mule-configuration>
