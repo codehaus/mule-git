@@ -56,7 +56,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
         tx.commit();
 
         tx = tm.getTransaction();
-        assertNotNull("Committing via TX handle should NOT disassociate TX from the current thread.",
+        assertNotNull("Committing via TX handle should NOT disassociated TX from the current thread.",
                       tx);
         assertEquals("TX status should have been COMMITTED.", Status.STATUS_COMMITTED, tx.getStatus());
 
@@ -85,7 +85,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
 
         tm.commit();
 
-        assertNull("Committing via TX Manager should have disassociate TX from the current thread.",
+        assertNull("Committing via TX Manager should have disassociated TX from the current thread.",
                    tm.getTransaction());
     }
 
@@ -101,12 +101,12 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
 
         tm.rollback();
 
-        assertNull("Committing via TX Manager should have disassociate TX from the current thread.",
+        assertNull("Committing via TX Manager should have disassociated TX from the current thread.",
                    tm.getTransaction());
     }
 
     /**
-     * AlwaysBegin action suspends current transaction and begin new
+     * AlwaysBegin action suspends current transaction and begins a new one.
      *
      * @throws Exception if any error
      */
@@ -124,7 +124,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
         config.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
         TransactionTemplate template = new TransactionTemplate(config, new DefaultExceptionStrategy());
 
-        // and the callee component which should begin new transaction, current must be suspend
+        // and the callee component which should begin new transaction, current must be suspended
         final UMOTransactionConfig nestedConfig = new MuleTransactionConfig();
         nestedConfig.setFactory(new XaTransactionFactory());
         nestedConfig.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
@@ -140,15 +140,15 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
                         new TransactionTemplate(nestedConfig, new DefaultExceptionStrategy());
                 final Transaction firstTx = tm.getTransaction();
                 assertNotNull(firstTx);
-                assertEquals(firstTx.getStatus(), javax.transaction.Status.STATUS_ACTIVE);
+                assertEquals(firstTx.getStatus(), Status.STATUS_ACTIVE);
                 return nestedTemplate.execute(new TransactionCallback()
                 {
                     public Object doInTransaction() throws Exception
                     {
                         Transaction secondTx = tm.getTransaction();
                         assertNotNull(secondTx);
-                        assertEquals(firstTx.getStatus(), javax.transaction.Status.STATUS_ACTIVE);
-                        assertEquals(secondTx.getStatus(), javax.transaction.Status.STATUS_ACTIVE);
+                        assertEquals(firstTx.getStatus(), Status.STATUS_ACTIVE);
+                        assertEquals(secondTx.getStatus(), Status.STATUS_ACTIVE);
                         try
                         {
                             tm.resume(firstTx);
@@ -156,8 +156,10 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
                         }
                         catch (java.lang.IllegalStateException e)
                         {
+                            // expected
+
                             //Thrown if the thread is already associated with another transaction.
-                            //Second tx is associated with current thread
+                            //Second tx is associated with the current thread
                         }
                         try
                         {
@@ -179,7 +181,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
                 });
             }
         });
-        assertNull("Committing via TX Manager should have disassociate TX from the current thread.",
+        assertNull("Committing via TX Manager should have disassociated TX from the current thread.",
                    tm.getTransaction());
     }
 
@@ -206,7 +208,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
         muleTx.commit();
 
         Transaction jtaTx = tm.getTransaction();
-        assertNull("Committing via TX Manager should have disassociate TX from the current thread.", jtaTx);
+        assertNull("Committing via TX Manager should have disassociated TX from the current thread.", jtaTx);
         assertEquals(Status.STATUS_NO_TRANSACTION, muleTx.getStatus());
     }
 
