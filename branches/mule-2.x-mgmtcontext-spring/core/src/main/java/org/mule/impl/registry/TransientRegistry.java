@@ -11,6 +11,7 @@ package org.mule.impl.registry;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.lifecycle.GenericLifecycleManager;
@@ -22,7 +23,6 @@ import org.mule.registry.Registry;
 import org.mule.registry.ServiceDescriptor;
 import org.mule.registry.ServiceDescriptorFactory;
 import org.mule.registry.ServiceException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointBuilder;

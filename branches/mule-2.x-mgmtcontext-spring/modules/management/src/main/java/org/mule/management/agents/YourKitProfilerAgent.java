@@ -12,6 +12,7 @@ package org.mule.management.agents;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.YourKitProfilerService;
@@ -19,7 +20,6 @@ import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 import org.mule.util.ClassUtils;

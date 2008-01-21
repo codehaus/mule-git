@@ -8,17 +8,20 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.builders;
+package org.mule.impl.config.builders;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.MuleContext;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract {@link ConfigurationBuilder} implementation used for
@@ -28,6 +31,8 @@ import java.io.InputStream;
  */
 public abstract class AbstractResourceConfigurationBuilder extends AbstractConfigurationBuilder
 {
+
+    protected static final Log logger = LogFactory.getLog(AutoConfigurationBuilder.class);
 
     protected String[] configResources;
 
@@ -59,7 +64,12 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
         {
             throw new ConfigurationException(CoreMessages.objectIsNull("Configuration Resource"));
         }
+
+        logger.info("Configuring Mule with configuration resource(s) \"" + createConfigResourcesString()
+                    + "\" using " + this.getClass().getName());
+
         super.configure(muleContext);
+
         muleContext.getRegistry().getConfiguration().setConfigResources(configResources);
     }
 
@@ -92,6 +102,22 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
         {
             throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource));
         }
+    }
+
+    private String createConfigResourcesString()
+    {
+        StringBuffer configResourcesString = new StringBuffer();
+        configResourcesString.append("[");
+        for (int i = 0; i < configResources.length; i++)
+        {
+            configResourcesString.append(configResources[i]);
+            if (i < configResources.length - 1)
+            {
+                configResourcesString.append(", ");
+            }
+        }
+        configResourcesString.append("]");
+        return configResourcesString.toString();
     }
 
 }

@@ -10,12 +10,12 @@
 package org.mule.providers;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleMessage;
 import org.mule.transaction.TransactionCallback;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transaction.TransactionTemplate;
 import org.mule.umo.TransactionException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;

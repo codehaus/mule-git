@@ -11,11 +11,11 @@
 package org.mule.impl;
 
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.umo.FutureMessageResult;
-import org.mule.umo.MuleContext;
 import org.mule.umo.TransactionException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;

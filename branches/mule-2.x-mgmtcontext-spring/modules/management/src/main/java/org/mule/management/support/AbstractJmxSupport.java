@@ -9,7 +9,7 @@
  */
 package org.mule.management.support;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 import org.mule.util.StringUtils;
 
 import java.util.Collection;

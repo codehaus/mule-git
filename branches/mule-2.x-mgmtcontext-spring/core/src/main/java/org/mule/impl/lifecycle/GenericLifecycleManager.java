@@ -9,9 +9,9 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.lifecycle.phases.NotInLifecyclePhase;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.lifecycle.UMOLifecyclePhase;
 import org.mule.util.StringMessageUtils;

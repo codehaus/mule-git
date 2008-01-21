@@ -9,12 +9,12 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.lifecycle.phases.MuleContextStartPhase;
 import org.mule.impl.lifecycle.phases.MuleContextStopPhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryDisposePhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryInitialisePhase;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.Startable;
 import org.mule.umo.lifecycle.Stoppable;

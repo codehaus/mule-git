@@ -11,11 +11,11 @@
 package org.mule.routing.inbound;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.routing.AggregationException;
 import org.mule.umo.MessagingException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;

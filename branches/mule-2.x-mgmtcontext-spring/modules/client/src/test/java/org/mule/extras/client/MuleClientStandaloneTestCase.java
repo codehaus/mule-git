@@ -1,8 +1,8 @@
 
 package org.mule.extras.client;
 
+import org.mule.api.MuleContext;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOException;
 
 public class MuleClientStandaloneTestCase extends AbstractMuleTestCase

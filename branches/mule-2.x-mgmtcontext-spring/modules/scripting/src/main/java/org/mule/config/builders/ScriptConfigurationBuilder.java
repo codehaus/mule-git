@@ -10,9 +10,10 @@
 
 package org.mule.config.builders;
 
+import org.mule.api.MuleContext;
 import org.mule.components.script.jsr223.Scriptable;
 import org.mule.config.builders.i18n.BuildersMessages;
-import org.mule.umo.MuleContext;
+import org.mule.impl.config.builders.AbstractResourceConfigurationBuilder;
 import org.mule.umo.UMOException;
 
 import javax.script.Bindings;

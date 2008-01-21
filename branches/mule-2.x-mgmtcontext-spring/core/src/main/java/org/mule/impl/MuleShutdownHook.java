@@ -11,11 +11,11 @@ package org.mule.impl;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.util.StringMessageUtils;
 
 import java.util.ArrayList;

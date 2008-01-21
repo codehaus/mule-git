@@ -11,11 +11,11 @@
 package org.mule.config.builders;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleContextFactory;
 import org.mule.config.ConfigurationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.umo.MuleContext;
-import org.mule.umo.MuleContextFactory;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;

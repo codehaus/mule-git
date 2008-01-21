@@ -9,7 +9,7 @@
  */
 package org.mule.impl;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 
 /**
  * Objects who want to be aware of the MuleContext should implement this interface. Once the context has

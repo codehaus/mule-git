@@ -10,13 +10,13 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.ImmutableMuleEndpoint;
 import org.mule.impl.MuleContextAware;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOFilter;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpoint;

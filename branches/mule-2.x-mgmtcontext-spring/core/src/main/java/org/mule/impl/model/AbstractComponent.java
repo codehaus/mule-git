@@ -10,6 +10,7 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.MuleContext;
 import org.mule.components.simple.PassThroughComponent;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
@@ -31,7 +32,6 @@ import org.mule.umo.ComponentException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;

@@ -9,11 +9,11 @@
  */
 package org.mule.config.bootstrap;
 
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleContextAware;
 import org.mule.registry.Registry;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.Initialisable;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.DiscoverableTransformer;

@@ -10,9 +10,9 @@
 
 package org.mule.ra;
 
+import org.mule.api.MuleContext;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;

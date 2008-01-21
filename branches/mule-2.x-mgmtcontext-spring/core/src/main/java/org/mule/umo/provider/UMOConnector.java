@@ -10,13 +10,13 @@
 
 package org.mule.umo.provider;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
 import org.mule.umo.MessagingException;
 import org.mule.umo.NamedObject;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.Lifecycle;

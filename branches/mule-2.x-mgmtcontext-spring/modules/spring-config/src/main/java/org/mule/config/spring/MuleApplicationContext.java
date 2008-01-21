@@ -10,8 +10,8 @@
 
 package org.mule.config.spring;
 
+import org.mule.api.MuleContext;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 import org.mule.util.ClassUtils;
 
 import java.io.IOException;

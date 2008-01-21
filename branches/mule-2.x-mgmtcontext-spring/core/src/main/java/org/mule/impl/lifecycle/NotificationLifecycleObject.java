@@ -10,8 +10,8 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.MuleRuntimeException;
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.MuleContext;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.ClassUtils;
 

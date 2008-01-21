@@ -10,6 +10,7 @@
 
 package org.mule.impl;
 
+import org.mule.api.MuleContext;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ExceptionNotification;
@@ -21,7 +22,6 @@ import org.mule.umo.TransactionException;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.InvalidEndpointTypeException;

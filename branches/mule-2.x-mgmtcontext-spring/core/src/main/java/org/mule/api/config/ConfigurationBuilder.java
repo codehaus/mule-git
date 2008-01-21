@@ -8,9 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config;
+package org.mule.api.config;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
+import org.mule.config.ConfigurationException;
 
 /**
  * A <code>ConfigurationBuilder</code> is used to configure a Mule instance,

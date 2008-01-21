@@ -10,8 +10,8 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 import org.mule.umo.endpoint.EndpointException;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;

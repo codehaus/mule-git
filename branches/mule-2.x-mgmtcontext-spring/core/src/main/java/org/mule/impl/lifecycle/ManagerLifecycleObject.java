@@ -9,8 +9,8 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.umo.MuleContext;
 import org.mule.umo.manager.UMOServerNotification;
 
 /**

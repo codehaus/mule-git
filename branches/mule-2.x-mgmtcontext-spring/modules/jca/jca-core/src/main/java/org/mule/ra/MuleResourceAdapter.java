@@ -11,13 +11,13 @@
 package org.mule.ra;
 
 import org.mule.RegistryContext;
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.endpoint.URIBuilder;
 import org.mule.impl.model.ModelFactory;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOException;
 import org.mule.umo.endpoint.UMOEndpointBuilder;

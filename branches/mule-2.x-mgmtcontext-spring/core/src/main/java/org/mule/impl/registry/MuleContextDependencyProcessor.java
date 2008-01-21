@@ -9,8 +9,8 @@
  */
 package org.mule.impl.registry;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 
 /**
  * TODO

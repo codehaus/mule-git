@@ -10,12 +10,12 @@
 
 package org.mule.impl;
 
+import org.mule.api.MuleContext;
 import org.mule.config.MuleManifest;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOFilter;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpointURI;

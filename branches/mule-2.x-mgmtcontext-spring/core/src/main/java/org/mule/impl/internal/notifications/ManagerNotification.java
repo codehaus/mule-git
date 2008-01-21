@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 import org.mule.umo.manager.UMOServerNotification;
 
 /**

@@ -10,6 +10,8 @@
 
 package org.mule.umo;
 
+import org.mule.api.MuleContext;
+
 /**
  * <code>UMOTransactionFactory</code> creates a transaction.
  *

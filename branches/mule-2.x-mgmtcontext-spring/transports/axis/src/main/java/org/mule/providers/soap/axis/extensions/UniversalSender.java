@@ -12,6 +12,7 @@ package org.mule.providers.soap.axis.extensions;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
@@ -22,7 +23,6 @@ import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.extras.AxisCleanAndAddProperties;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;

@@ -10,6 +10,7 @@
 
 package org.mule.tck;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.DefaultMuleContext;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
@@ -25,7 +26,6 @@ import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.mule.TestAgent;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;

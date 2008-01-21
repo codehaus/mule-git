@@ -12,6 +12,7 @@ package org.mule.impl.endpoint;
 
 import org.mule.MuleException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.impl.MuleTransactionConfig;
@@ -24,7 +25,6 @@ import org.mule.providers.service.TransportServiceDescriptor;
 import org.mule.registry.ServiceDescriptorFactory;
 import org.mule.registry.ServiceException;
 import org.mule.transformers.TransformerUtils;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOFilter;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.EndpointException;

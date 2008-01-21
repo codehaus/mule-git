@@ -9,8 +9,8 @@
  */
 package org.mule.umo.lifecycle;
 
+import org.mule.api.MuleContext;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 
 import java.util.Set;
 

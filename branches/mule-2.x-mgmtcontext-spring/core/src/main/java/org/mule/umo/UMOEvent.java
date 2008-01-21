@@ -10,6 +10,7 @@
 
 package org.mule.umo;
 
+import org.mule.api.MuleContext;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.security.UMOCredentials;
 import org.mule.umo.transformer.TransformerException;

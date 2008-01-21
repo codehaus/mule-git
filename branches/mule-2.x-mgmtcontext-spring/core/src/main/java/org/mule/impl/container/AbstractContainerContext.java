@@ -11,8 +11,8 @@
 package org.mule.impl.container;
 
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.ContainerException;
 import org.mule.umo.manager.UMOContainerContext;

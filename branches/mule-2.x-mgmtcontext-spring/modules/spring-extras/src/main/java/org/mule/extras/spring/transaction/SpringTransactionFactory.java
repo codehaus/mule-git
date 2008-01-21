@@ -10,9 +10,9 @@
 
 package org.mule.extras.spring.transaction;
 
+import org.mule.api.MuleContext;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.umo.TransactionException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 

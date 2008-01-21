@@ -12,6 +12,7 @@ package org.mule.impl.internal.admin;
 
 import org.mule.MuleException;
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleContextAware;
@@ -26,7 +27,6 @@ import org.mule.impl.model.seda.SedaComponent;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
 import org.mule.transformers.wire.WireFormat;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOEventContext;

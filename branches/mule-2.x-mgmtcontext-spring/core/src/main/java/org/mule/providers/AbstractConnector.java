@@ -12,6 +12,7 @@ package org.mule.providers;
 
 import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.ThreadingProfile;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.AlreadyInitialisedException;
@@ -30,7 +31,6 @@ import org.mule.registry.ServiceException;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformers.TransformerUtils;
 import org.mule.umo.MessagingException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;

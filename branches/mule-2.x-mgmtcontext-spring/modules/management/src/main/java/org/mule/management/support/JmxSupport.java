@@ -10,7 +10,7 @@
 
 package org.mule.management.support;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;

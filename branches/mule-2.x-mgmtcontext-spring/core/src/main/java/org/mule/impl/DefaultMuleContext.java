@@ -11,6 +11,7 @@ package org.mule.impl;
 
 import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleManifest;
 import org.mule.config.MuleProperties;
@@ -21,7 +22,6 @@ import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.registry.RegistrationException;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOException;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.FatalException;

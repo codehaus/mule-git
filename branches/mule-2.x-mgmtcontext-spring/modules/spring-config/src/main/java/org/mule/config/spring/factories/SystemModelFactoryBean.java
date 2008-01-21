@@ -10,11 +10,11 @@
 package org.mule.config.spring.factories;
 
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleContextAware;
 import org.mule.impl.model.ModelFactory;
-import org.mule.umo.MuleContext;
 import org.mule.umo.model.UMOModel;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;

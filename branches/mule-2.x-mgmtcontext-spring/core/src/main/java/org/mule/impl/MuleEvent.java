@@ -12,10 +12,10 @@ package org.mule.impl;
 
 import org.mule.MuleException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.security.MuleCredentials;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;

@@ -8,18 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.builders;
+package org.mule.impl.config.builders;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
-import org.mule.umo.MuleContext;
 
 /**
- * A support class for {@link org.mule.config.ConfigurationBuilder} implementations
+ * A support class for {@link org.mule.api.config.ConfigurationBuilder} implementations
  * that handles the logic of creating config arrays and {@link java.util.Properties}
  * arguments
  * 
- * @see org.mule.config.ConfigurationBuilder
+ * @see org.mule.api.config.ConfigurationBuilder
  */
 public abstract class AbstractConfigurationBuilder implements ConfigurationBuilder
 {

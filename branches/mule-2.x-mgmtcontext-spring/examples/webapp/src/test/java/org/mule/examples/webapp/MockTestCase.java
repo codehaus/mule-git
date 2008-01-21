@@ -10,7 +10,7 @@
 
 package org.mule.examples.webapp;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.builders.WebappMuleXmlConfigurationBuilder;
 
 import com.mockobjects.constraint.IsInstanceOf;

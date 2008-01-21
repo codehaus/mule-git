@@ -9,7 +9,7 @@
  */
 package org.mule.impl;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.manager.UMOAgent;
 

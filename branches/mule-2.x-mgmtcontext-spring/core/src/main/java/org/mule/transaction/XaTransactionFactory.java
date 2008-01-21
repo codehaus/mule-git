@@ -10,9 +10,9 @@
 
 package org.mule.transaction;
 
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.umo.TransactionException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.UMOTransactionFactory;
 

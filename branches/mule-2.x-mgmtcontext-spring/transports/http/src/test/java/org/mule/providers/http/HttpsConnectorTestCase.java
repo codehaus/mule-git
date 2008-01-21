@@ -10,12 +10,12 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.MuleContext;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;

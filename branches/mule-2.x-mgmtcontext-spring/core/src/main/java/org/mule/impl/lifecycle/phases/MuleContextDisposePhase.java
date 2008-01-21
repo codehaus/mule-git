@@ -9,9 +9,9 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.Disposable;
 import org.mule.umo.lifecycle.Initialisable;
 

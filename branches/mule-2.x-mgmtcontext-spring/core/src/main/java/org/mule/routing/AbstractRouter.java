@@ -9,9 +9,9 @@
  */
 package org.mule.routing;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
 import org.mule.management.stats.RouterStatistics;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.routing.UMORouter;
 

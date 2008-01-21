@@ -10,10 +10,10 @@
 package org.mule.config.spring.processors;
 
 import org.mule.RegistryContext;
+import org.mule.api.MuleContext;
 import org.mule.config.PropertyFactory;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleContextAware;
-import org.mule.umo.MuleContext;
 
 import java.io.IOException;
 import java.util.HashMap;

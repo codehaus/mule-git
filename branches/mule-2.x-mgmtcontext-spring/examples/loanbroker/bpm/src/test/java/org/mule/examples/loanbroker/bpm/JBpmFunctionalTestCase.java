@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.bpm;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;

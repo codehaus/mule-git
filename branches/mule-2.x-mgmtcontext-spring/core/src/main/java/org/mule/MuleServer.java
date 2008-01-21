@@ -10,14 +10,13 @@
 
 package org.mule;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.MuleShutdownHook;
-import org.mule.umo.MuleContext;
-import org.mule.umo.MuleContextFactory;
 import org.mule.umo.UMOException;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
@@ -330,7 +329,7 @@ public class MuleServer implements Runnable
             }
             Properties startupProperties = PropertiesUtils.loadProperties(getStartupPropertiesFile(),
                 getClass());
-            MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+            DefaultMuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
             muleContextFactory.createMuleContext(configurationResources, startupProperties);
         }
     }

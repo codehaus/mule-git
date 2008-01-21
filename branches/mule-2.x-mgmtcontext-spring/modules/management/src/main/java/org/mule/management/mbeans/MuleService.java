@@ -11,9 +11,9 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.config.MuleManifest;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.util.IOUtils;
 import org.mule.util.StringMessageUtils;
 

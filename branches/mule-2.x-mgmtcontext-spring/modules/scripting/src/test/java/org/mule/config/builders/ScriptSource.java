@@ -9,7 +9,7 @@
  */
 package org.mule.config.builders;
 
-import org.mule.umo.MuleContext;
+import org.mule.api.MuleContext;
 
 public class ScriptSource
 {

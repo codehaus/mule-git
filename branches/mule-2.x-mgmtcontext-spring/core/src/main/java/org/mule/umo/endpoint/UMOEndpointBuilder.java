@@ -10,11 +10,11 @@
 
 package org.mule.umo.endpoint;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.MuleContextAware;
 import org.mule.impl.endpoint.URIBuilder;
 import org.mule.providers.ConnectionStrategy;
 import org.mule.umo.UMOFilter;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.provider.UMOConnector;

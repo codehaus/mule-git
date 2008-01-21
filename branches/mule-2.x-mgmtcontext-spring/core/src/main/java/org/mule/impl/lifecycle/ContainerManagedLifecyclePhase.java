@@ -9,8 +9,8 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.MuleContext;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 
 /**
  * A container-managed lifecycle phase is called by the container itself. This class acts as a marker to enable

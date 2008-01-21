@@ -11,13 +11,13 @@
 package org.mule.providers.soap;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.UMOComponentAware;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEventContext;
-import org.mule.umo.MuleContext;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;

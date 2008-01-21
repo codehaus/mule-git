@@ -10,9 +10,9 @@
 
 package org.mule.config.spring;
 
-import org.mule.config.builders.AbstractResourceConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.impl.config.builders.AbstractResourceConfigurationBuilder;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

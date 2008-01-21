@@ -1,9 +1,9 @@
 
-package org.mule.config.builders;
+package org.mule.impl.config.builders;
 
-import org.mule.config.ConfigurationBuilder;
+import org.mule.api.MuleContext;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 
 import java.util.Map;
 
@@ -26,7 +26,10 @@ public class SimpleConfigurationBuilder extends AbstractConfigurationBuilder
 
     protected void doConfigure(MuleContext muleContext) throws Exception
     {
-        muleContext.getRegistry().registerObjects(objects);
+        if (objects != null && objects.size() > 0)
+        {
+            muleContext.getRegistry().registerObjects(objects);
+        }
     }
 
 }

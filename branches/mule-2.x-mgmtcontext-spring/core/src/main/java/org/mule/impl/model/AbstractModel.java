@@ -10,12 +10,12 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.MuleContext;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.DefaultLifecycleAdapterFactory;
 import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
 import org.mule.umo.UMOException;
-import org.mule.umo.MuleContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.UMOLifecycleAdapterFactory;
 import org.mule.umo.manager.UMOServerNotification;

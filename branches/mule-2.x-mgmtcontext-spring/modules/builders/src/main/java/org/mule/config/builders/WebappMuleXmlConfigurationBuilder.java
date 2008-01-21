@@ -10,10 +10,10 @@
 
 package org.mule.config.builders;
 
+import org.mule.api.MuleContext;
 import org.mule.config.spring.MuleApplicationContext;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.registry.Registry;
-import org.mule.umo.MuleContext;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

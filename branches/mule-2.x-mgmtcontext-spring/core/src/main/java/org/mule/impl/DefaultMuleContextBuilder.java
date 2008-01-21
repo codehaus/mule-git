@@ -10,6 +10,8 @@
 
 package org.mule.impl;
 
+import org.mule.api.MuleContext;
+import org.mule.api.MuleContextBuilder;
 import org.mule.config.MuleConfiguration;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
@@ -40,13 +42,23 @@ import org.mule.impl.lifecycle.phases.MuleContextInitialisePhase;
 import org.mule.impl.lifecycle.phases.MuleContextStartPhase;
 import org.mule.impl.lifecycle.phases.MuleContextStopPhase;
 import org.mule.impl.work.MuleWorkManager;
-import org.mule.umo.MuleContext;
-import org.mule.umo.MuleContextBuilder;
 import org.mule.umo.lifecycle.UMOLifecycleManager;
 import org.mule.umo.manager.UMOWorkManager;
+import org.mule.util.ClassUtils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * Implementation of {@link MuleContextBuilder} that uses {@link DefaultMuleContext}
+ * as the default {@link MuleContext} implementation and builds it with defaults
+ * values for {@link MuleConfiguration}, {@link UMOLifecycleManager},
+ * {@link UMOWorkManager} and {@link ServerNotificationManager}.
+ */
 public class DefaultMuleContextBuilder implements MuleContextBuilder
 {
+
+    protected static final Log logger = LogFactory.getLog(DefaultMuleContextBuilder.class);
 
     protected MuleConfiguration muleConfiguration;
 
@@ -56,8 +68,12 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
 
     protected ServerNotificationManager notificationManager;
 
+    /**
+     * {@inheritDoc}
+     */
     public MuleContext buildMuleContext()
     {
+        logger.debug("Building new DefaultMuleContext instance with MuleContextBuilder: " + this);
         MuleContext muleContext = new DefaultMuleContext(getLifecycleManager());
         muleContext.setConfiguration(getMuleConfiguration());
         muleContext.setWorkManager(getWorkManager());
@@ -65,24 +81,28 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         return muleContext;
     }
 
-    public void setMuleConfiguration(MuleConfiguration muleConfiguration)
+    public DefaultMuleContextBuilder setMuleConfiguration(MuleConfiguration muleConfiguration)
     {
         this.muleConfiguration = muleConfiguration;
+        return this;
     }
 
-    public void setWorkManager(UMOWorkManager workManager)
+    public DefaultMuleContextBuilder setWorkManager(UMOWorkManager workManager)
     {
         this.workManager = workManager;
+        return this;
     }
 
-    public void setNotificationManager(ServerNotificationManager notificationManager)
+    public DefaultMuleContextBuilder setNotificationManager(ServerNotificationManager notificationManager)
     {
         this.notificationManager = notificationManager;
+        return this;
     }
 
-    public void setLifecycleManager(UMOLifecycleManager lifecycleManager)
+    public DefaultMuleContextBuilder setLifecycleManager(UMOLifecycleManager lifecycleManager)
     {
         this.lifecycleManager = lifecycleManager;
+        return this;
     }
 
     protected MuleConfiguration getMuleConfiguration()
@@ -123,8 +143,8 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
         else
         {
-            return new MuleWorkManager(getMuleConfiguration().getDefaultComponentThreadingProfile(), "MuleServer");
-           
+            return new MuleWorkManager(getMuleConfiguration().getDefaultComponentThreadingProfile(),
+                "MuleServer");
         }
     }
 
@@ -160,4 +180,10 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
     }
 
+    public String toString()
+    {
+        return ClassUtils.getClassName(getClass()) + "{muleConfiguration=" + muleConfiguration
+               + ", lifecycleManager=" + lifecycleManager + ", workManager=" + workManager
+               + ", notificationManager=" + notificationManager + "}";
+    }
 }

@@ -10,11 +10,11 @@
 
 package org.mule.management.mbeans;
 
+import org.mule.api.MuleContext;
 import org.mule.management.stats.AllStatistics;
 import org.mule.management.stats.printers.CSVPrinter;
 import org.mule.management.stats.printers.HtmlTablePrinter;
 import org.mule.management.stats.printers.XMLPrinter;
-import org.mule.umo.MuleContext;
 
 import java.io.StringWriter;
 import java.util.Collection;
