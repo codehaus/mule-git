@@ -33,6 +33,8 @@
             <container-property name="dataSource" reference="jdbcDataSource"/>
             <map name="queries">
                 <property name="getTest" value="SELECT ID, TYPE, DATA, ACK, RESULT FROM TEST WHERE TYPE = ${type} AND ACK IS NULL"/>
+                <property name="insertTest" value="INSERT INTO TEST(TYPE, DATA) VALUES (${type}, ${data})"/>
+                <property name="callTest" value="call TEST_PROC(${a}, ${b;int;inout}, ${c;int;out}, ${s;string;out})"/>
             </map>
         </properties>
     </connector>
@@ -56,6 +58,28 @@
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="jdbc://getTest"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="bridgeB" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="vm://proc.test"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jdbc://callTest?a=3&amp;b=5"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="bridgeC" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="vm://insert.test"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jdbc://insertTest?type=4&amp;data=test insert"/>
                 </router>
             </outbound-router>
         </mule-descriptor>

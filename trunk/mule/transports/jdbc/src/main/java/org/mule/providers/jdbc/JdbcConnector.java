@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -581,6 +582,29 @@ public class JdbcConnector extends AbstractConnector
         return sb.toString();
     }
 
+    public Object[][] getParamsTypes(List params)
+    {
+        Object[][] result = new Object[params.size()][3];
+        int k = 0;
+        for (Iterator iter = params.iterator(); iter.hasNext(); k++)
+        {
+            String param = (String) iter.next();
+            param = param.substring(2, param.length() - 1);
+            StringTokenizer tokenizer = new StringTokenizer(param, ";");
+            int i = 0;
+            while (tokenizer.hasMoreTokens())
+            {
+                result[k][i] = tokenizer.nextToken();
+                i++;
+                if (i > 2)
+                {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     public Object[] getParams(UMOImmutableEndpoint endpoint, List paramNames, Object message, String query)
         throws Exception
     {
@@ -589,7 +613,16 @@ public class JdbcConnector extends AbstractConnector
         for (int i = 0; i < paramNames.size(); i++)
         {
             String param = (String)paramNames.get(i);
-            String name = param.substring(2, param.length() - 1);
+            String name;
+            int idx;
+            if ((idx = param.indexOf(";")) != -1)
+            {
+                name = param.substring(2, idx);
+            }
+            else
+            {
+                name = param.substring(2, param.length() - 1);
+            }
             Object value = null;
             // If we find a value and it happens to be null, thats acceptable
             boolean foundValue = false;

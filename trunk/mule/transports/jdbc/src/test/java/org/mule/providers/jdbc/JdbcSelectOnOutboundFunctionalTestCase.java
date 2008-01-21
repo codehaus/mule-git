@@ -21,6 +21,8 @@ import org.mule.umo.UMOMessage;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.apache.commons.dbutils.QueryRunner;
 
@@ -40,6 +42,13 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 
         JdbcConnector jdbcConnector = (JdbcConnector) MuleManager.getInstance().getConnectors().get("jdbcConnector");
         QueryRunner qr = new QueryRunner(jdbcConnector.getDataSource());
+
+        qr.update(jdbcConnector.getConnection(), "CREATE PROCEDURE TEST_PROC(IN A INTEGER,\n" +
+                "INOUT B INTEGER, OUT C DOUBLE, OUT S VARCHAR(1024))\n" +
+                "PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME \n" +
+                "'org.mule.providers.jdbc.DerbyStoredProc.plus'");
+        logger.debug("Procedure created");
+
         int updated;
 
         try
@@ -68,6 +77,8 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         QueryRunner qr = new QueryRunner(jdbcConnector.getDataSource());
         int updated = qr.update(jdbcConnector.getConnection(), "DELETE FROM TEST");
         logger.debug(updated + " rows deleted");
+        qr.update(jdbcConnector.getConnection(), "DROP PROCEDURE TEST_PROC");
+        logger.debug("Procedure dropped");
 
         super.doFunctionalTearDown();
     }
@@ -90,6 +101,38 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         Map resultMap = (Map) resultList.get(0);
         assertEquals(new Integer(1), resultMap.get("TYPE"));
         assertEquals(TEST_VALUES[0], resultMap.get("DATA"));
+    }
+
+    public void testStoredProc() throws Exception 
+    {
+        MuleClient client = new MuleClient();
+        UMOMessage reply = client.send("vm://proc.test", new MuleMessage(NullPayload.getInstance()));
+        assertNotNull(reply.getPayload());
+        assertTrue(reply.getPayload() instanceof Map);
+        Map resultMap = (Map) reply.getPayload();
+        assertTrue(resultMap.size() == 3);
+        assertEquals(resultMap.get("b"), new Integer(10));
+        assertEquals(resultMap.get("c"), new Double(8.3));
+        assertEquals(resultMap.get("s"), "test");
+    }
+
+    public void testInsert() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        UMOMessage reply = client.send("vm://insert.test", new MuleMessage(NullPayload.getInstance()));
+        assertTrue(reply.getPayload() instanceof NullPayload);
+        JdbcConnector jdbcConnector = (JdbcConnector) MuleManager.getInstance().getConnectors().get("jdbcConnector");
+        PreparedStatement statement = jdbcConnector.getConnection().prepareStatement("SELECT type, data FROM Test WHERE type = 4 AND data='test insert'");
+        ResultSet result = statement.executeQuery();
+        int counter = 0;
+        while (result.next())
+        {
+            counter++;
+        }
+        assertEquals(counter, 1);
+        result.close();
+        statement.close();
+
     }
 
     public void testSelectOnOutboundByPropertyExtractor() throws Exception
