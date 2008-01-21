@@ -57,6 +57,9 @@ public class XmlPrettyPrinterTransformerTestCase extends AbstractTransformerTest
         t.setPadText(true);
         assertEquals(4, f.getIndent().length());
         assertTrue(f.isPadText());
+        
+        t.setIndentString("   ");
+        assertEquals(3, t.getIndentSize());
     }
 
 }
