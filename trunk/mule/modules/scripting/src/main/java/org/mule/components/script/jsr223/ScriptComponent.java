@@ -10,30 +10,28 @@
 
 package org.mule.components.script.jsr223;
 
-import org.mule.MuleManager;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.util.MuleLogger;
 
 import javax.script.Bindings;
+
 
 /**
  * A JSR 223 Script component. Allows any JSR 223 compliant script engines such as
  * JavaScript, Groovy or Rhino to be embedded as Mule components.
  */
-public class ScriptComponent extends Scriptable implements Callable
+public class ScriptComponent extends AbstractScriptComponent implements Callable
 {
-    private Bindings bindings;
-
-    public void initialise() throws InitialisationException
+    
+    protected void populateBindings(Bindings namespace, UMOEventContext context)
     {
-        super.initialise();
-        bindings = getScriptEngine().createBindings();
+        super.populateBindings(namespace, context);
+        namespace.put("result", new Object());
     }
 
     public Object onCall(UMOEventContext eventContext) throws Exception
     {
+        Bindings bindings = this.getBindings();
         populateBindings(bindings, eventContext);
         Object result = runScript(bindings);
         if (result == null)
@@ -41,22 +39,6 @@ public class ScriptComponent extends Scriptable implements Callable
             result = bindings.get("result");
         }
         return result;
-    }
-
-    protected void populateBindings(Bindings namespace, UMOEventContext context)
-    {
-        namespace.put("eventContext", context);
-        namespace.put("managementContext", MuleManager.getInstance());
-        namespace.put("message", context.getMessage());
-        namespace.put("descriptor", context.getComponentDescriptor());
-        namespace.put("componentNamespace", this.bindings);
-        namespace.put("log", new MuleLogger(logger));
-        namespace.put("result", new Object());
-    }
-
-    public Bindings getBindings()
-    {
-        return bindings;
     }
 
 }
