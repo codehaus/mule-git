@@ -10,8 +10,8 @@
 
 package org.mule.providers.http;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.impl.transport.AbstractMessageAdapter;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -120,7 +120,7 @@ public class HttpMessageAdapter extends AbstractMessageAdapter
     /*
     * (non-Javadoc)
     *
-    * @see org.mule.providers.UMOMessageAdapter#getProperty(java.lang.Object)
+    * @see org.mule.impl.transport.UMOMessageAdapter#getProperty(java.lang.Object)
     */
     public Object getProperty(String key)
     {

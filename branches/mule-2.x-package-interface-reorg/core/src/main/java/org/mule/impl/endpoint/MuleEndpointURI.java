@@ -11,14 +11,15 @@
 package org.mule.impl.endpoint;
 
 import org.mule.RegistryContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.service.TransportServiceDescriptor;
-import org.mule.registry.ServiceDescriptorFactory;
-import org.mule.registry.ServiceException;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.MalformedEndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.EndpointURIBuilder;
+import org.mule.api.endpoint.MalformedEndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.registry.ServiceDescriptorFactory;
+import org.mule.api.registry.ServiceException;
+import org.mule.impl.transport.service.TransportServiceDescriptor;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
 

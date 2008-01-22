@@ -11,10 +11,10 @@
 package org.mule.extras.spring.transaction;
 
 import org.mule.api.MuleContext;
-import org.mule.transaction.AbstractSingleResourceTransaction;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.UMOTransactionFactory;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.UMOTransactionFactory;
+import org.mule.impl.transaction.AbstractSingleResourceTransaction;
 
 import org.springframework.jdbc.datasource.ConnectionHolder;
 import org.springframework.jms.connection.JmsResourceHolder;

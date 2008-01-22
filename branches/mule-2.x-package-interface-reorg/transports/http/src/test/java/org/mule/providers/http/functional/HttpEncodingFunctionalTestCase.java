@@ -10,10 +10,10 @@
 
 package org.mule.providers.http.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.Map;

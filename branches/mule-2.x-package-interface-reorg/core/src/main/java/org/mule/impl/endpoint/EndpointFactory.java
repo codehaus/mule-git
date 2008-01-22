@@ -12,13 +12,13 @@ package org.mule.impl.endpoint;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointFactory;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointFactory;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

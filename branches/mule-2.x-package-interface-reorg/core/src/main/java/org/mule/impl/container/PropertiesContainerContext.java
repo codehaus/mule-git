@@ -10,10 +10,10 @@
 
 package org.mule.impl.container;
 
-import org.mule.registry.RegistrationException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ContainerException;
-import org.mule.umo.manager.ObjectNotFoundException;
+import org.mule.api.context.ContainerException;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.registry.RegistrationException;
 import org.mule.util.TemplateParser;
 
 import java.io.Reader;
@@ -92,7 +92,7 @@ public class PropertiesContainerContext extends AbstractContainerContext impleme
      *            implementation to check the type of this key and look up objects
      *            accordingly
      * @return the component found in the container
-     * @throws org.mule.umo.manager.ObjectNotFoundException if the component is not
+     * @throws org.mule.api.context.ObjectNotFoundException if the component is not
      *             found
      */
     public Object getComponent(Object key) throws ObjectNotFoundException

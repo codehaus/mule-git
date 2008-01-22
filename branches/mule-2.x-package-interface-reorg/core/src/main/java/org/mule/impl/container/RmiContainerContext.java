@@ -10,8 +10,8 @@
 
 package org.mule.impl.container;
 
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ObjectNotFoundException;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.ClassUtils;
 
 import javax.naming.NamingException;

@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.UMOException;
 
 public class TcpSocketKeyTestCase extends FunctionalTestCase
 {

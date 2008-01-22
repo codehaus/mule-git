@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.util.DateUtils;
 import org.mule.util.TemplateParser;
 import org.mule.util.UUID;

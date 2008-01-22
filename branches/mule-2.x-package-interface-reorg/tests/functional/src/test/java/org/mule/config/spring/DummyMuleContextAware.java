@@ -11,11 +11,11 @@
 package org.mule.config.spring;
 
 import org.mule.api.MuleContext;
-import org.mule.impl.MuleContextAware;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 
 import java.util.List;
 

@@ -10,8 +10,8 @@
 
 package org.mule.providers.file;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOMessage;
 
 import java.io.BufferedReader;
 import java.io.File;

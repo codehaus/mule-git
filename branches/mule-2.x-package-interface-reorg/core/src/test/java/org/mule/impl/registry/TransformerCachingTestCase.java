@@ -9,12 +9,12 @@
  */
 package org.mule.impl.registry;
 
+import org.mule.api.transformer.DiscoverableTransformer;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.impl.transformer.simple.ObjectToByteArray;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transformers.AbstractTransformer;
-import org.mule.transformers.simple.ObjectToByteArray;
-import org.mule.umo.transformer.DiscoverableTransformer;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.io.FilterInputStream;
 import java.io.InputStream;

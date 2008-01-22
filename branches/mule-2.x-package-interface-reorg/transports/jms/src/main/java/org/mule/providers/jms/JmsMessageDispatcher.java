@@ -10,17 +10,17 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringUtils;

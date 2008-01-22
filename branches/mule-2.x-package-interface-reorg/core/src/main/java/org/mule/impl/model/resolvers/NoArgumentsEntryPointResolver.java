@@ -9,8 +9,8 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.transformer.TransformerException;
 import org.mule.util.ClassUtils;
 
 /**
@@ -18,10 +18,10 @@ import org.mule.util.ClassUtils;
  * event, this resolver will always only look for No-Arg servic methods.
  * <p/>
  * Note that the {@link org.mule.impl.model.resolvers.ReflectionEntryPointResolver} supports the resolution
- * of no-arg service methods if the event payload received is of type {@link org.mule.providers.NullPayload}.
+ * of no-arg service methods if the event payload received is of type {@link org.mule.impl.transport.NullPayload}.
  *
  * @see org.mule.impl.model.resolvers.ReflectionEntryPointResolver
- * @see org.mule.providers.NullPayload
+ * @see org.mule.impl.transport.NullPayload
  */
 public class NoArgumentsEntryPointResolver extends AbstractArgumentEntryPointResolver
 {

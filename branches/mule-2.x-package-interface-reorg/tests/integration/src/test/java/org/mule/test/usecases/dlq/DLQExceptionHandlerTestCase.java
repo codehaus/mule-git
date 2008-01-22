@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases.dlq;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.message.ExceptionMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 
 public class DLQExceptionHandlerTestCase extends FunctionalTestCase

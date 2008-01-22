@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.filters;
 
+import org.mule.api.UMOMessage;
+import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.providers.http.HttpConnector;
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.umo.UMOMessage;
 
 /**
  * <code>HttpRequestWildcardFilter</code> filters out wildcard URL expressions. You

@@ -10,9 +10,9 @@
 
 package org.mule.test;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 /**
  * This test has been re-written to use entry point resolvers.

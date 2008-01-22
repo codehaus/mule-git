@@ -10,13 +10,13 @@
 
 package org.mule.impl.model.direct;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.model.MuleProxy;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.model.AbstractComponent;
-import org.mule.impl.model.MuleProxy;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.List;
 

@@ -11,13 +11,13 @@
 package org.mule.providers.quartz;
 
 import org.mule.RegistryContext;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.providers.quartz.jobs.DelegatingJob;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
 import org.mule.util.ClassUtils;
 
 import java.util.Date;

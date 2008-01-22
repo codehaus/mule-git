@@ -16,7 +16,7 @@
 
     <model name="Dual XMPP Test">
         <mule-descriptor name="Inbound Listener"
-            implementation="org.mule.components.simple.EchoComponent">
+            implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <global-endpoint name="inbound"/>
             </inbound-router>
@@ -27,7 +27,7 @@
             </outbound-router>
         </mule-descriptor>
         <mule-descriptor name="Outbound Sender"
-            implementation="org.mule.components.simple.EchoComponent">
+            implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="vm://relay.queue"/>
             </inbound-router>

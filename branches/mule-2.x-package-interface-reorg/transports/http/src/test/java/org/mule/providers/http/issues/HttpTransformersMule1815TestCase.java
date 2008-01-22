@@ -10,12 +10,12 @@
 
 package org.mule.providers.http.issues;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.StringAppendTestTransformer;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 public class HttpTransformersMule1815TestCase extends FunctionalTestCase
 {

@@ -11,11 +11,11 @@
 package org.mule.providers.soap.axis.extensions;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOComponent;
 import org.mule.impl.RequestContext;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.AxisMessageReceiver;
 import org.mule.providers.soap.axis.AxisServiceProxy;
-import org.mule.umo.UMOComponent;
 
 import java.lang.reflect.Proxy;
 

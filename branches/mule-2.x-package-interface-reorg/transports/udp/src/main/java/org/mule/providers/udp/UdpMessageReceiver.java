@@ -10,20 +10,20 @@
 
 package org.mule.providers.udp;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.ConnectException;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.ConnectException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.udp.i18n.UdpMessages;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

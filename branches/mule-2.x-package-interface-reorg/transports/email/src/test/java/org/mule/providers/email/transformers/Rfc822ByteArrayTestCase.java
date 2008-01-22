@@ -10,10 +10,10 @@
 
 package org.mule.providers.email.transformers;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.TransformerException;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.TransformerException;
 
 import java.io.IOException;
 import java.util.Properties;

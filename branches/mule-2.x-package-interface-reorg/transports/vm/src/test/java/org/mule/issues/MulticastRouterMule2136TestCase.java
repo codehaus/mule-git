@@ -10,10 +10,10 @@
 
 package org.mule.issues;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.modules.xml.functional.AbstractXmlFunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 
 /**

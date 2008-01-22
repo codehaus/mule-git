@@ -11,9 +11,9 @@
 package org.mule.samples.errorhandler;
 
 import org.mule.MuleServer;
+import org.mule.api.UMOException;
 import org.mule.samples.errorhandler.handlers.DefaultHandler;
 import org.mule.samples.errorhandler.handlers.FatalHandler;
-import org.mule.umo.UMOException;
 
 import java.util.HashMap;
 import java.util.Iterator;

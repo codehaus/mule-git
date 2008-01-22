@@ -10,9 +10,9 @@
 
 package org.mule.providers.email.issues;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.email.AbstractRetrieveMailConnector;
 import org.mule.providers.email.connectors.ImapConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
 
 import java.io.File;

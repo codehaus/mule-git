@@ -10,23 +10,23 @@
 
 package org.mule.test.integration;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.routing.UMOOutboundRouter;
+import org.mule.api.transformer.TransformerException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
+import org.mule.impl.transformer.AbstractEventAwareTransformer;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transformers.AbstractEventAwareTransformer;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.routing.UMOOutboundRouter;
-import org.mule.umo.transformer.TransformerException;
 
 import java.io.IOException;
 import java.io.InputStream;

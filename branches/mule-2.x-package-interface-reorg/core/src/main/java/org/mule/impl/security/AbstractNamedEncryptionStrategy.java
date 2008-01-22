@@ -10,7 +10,7 @@
 
 package org.mule.impl.security;
 
-import org.mule.umo.UMOEncryptionStrategy;
+import org.mule.api.UMOEncryptionStrategy;
 
 public abstract class AbstractNamedEncryptionStrategy implements UMOEncryptionStrategy
 {

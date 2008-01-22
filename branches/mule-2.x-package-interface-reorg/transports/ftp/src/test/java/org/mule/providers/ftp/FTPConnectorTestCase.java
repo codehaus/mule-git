@@ -10,14 +10,14 @@
 
 package org.mule.providers.ftp;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import java.util.Properties;
 

@@ -10,10 +10,10 @@
 
 package org.mule.providers.jms.issues;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 public class JmsRemoteSyncMule2868TestCase extends FunctionalTestCase
 {

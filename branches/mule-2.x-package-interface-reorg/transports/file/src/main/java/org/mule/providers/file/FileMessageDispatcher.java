@@ -16,17 +16,17 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URLDecoder;
 
-import org.mule.MuleException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.OutputHandler;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
 import org.mule.providers.file.i18n.FileMessages;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.OutputHandler;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 
@@ -46,7 +46,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnectorSession#dispatch(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.UMOEvent)
      */
     protected void doDispatch(UMOEvent event) throws Exception
     {
@@ -139,7 +139,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnectorSession#send(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {

@@ -10,10 +10,10 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class EjbEndpointTestCase extends AbstractMuleTestCase
 {

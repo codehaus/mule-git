@@ -10,14 +10,14 @@
 
 package org.mule.providers.jdbc;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOTransaction;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.util.ArrayUtils;
 import org.mule.util.StringUtils;
 
@@ -50,7 +50,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.AbstractMessageDispatcher#doDispose()
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doDispose()
      */
     protected void doDispose()
     {
@@ -136,7 +136,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.AbstractMessageDispatcher#doDispatch(org.mule.umo.UMOEvent)
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doDispatch(org.mule.api.UMOEvent)
      */
     protected void doDispatch(UMOEvent event) throws Exception
     {
@@ -160,7 +160,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.AbstractMessageDispatcher#doSend(org.mule.umo.UMOEvent)
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doSend(org.mule.api.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {

@@ -10,16 +10,16 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEventContext;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.UMOInboundRouterCollection;
+import org.mule.impl.routing.inbound.InboundRouterCollection;
 import org.mule.providers.email.transformers.EmailMessageToString;
-import org.mule.routing.inbound.InboundRouterCollection;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.UMOInboundRouterCollection;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

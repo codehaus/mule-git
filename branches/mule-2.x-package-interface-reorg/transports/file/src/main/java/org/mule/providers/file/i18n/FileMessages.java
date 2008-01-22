@@ -10,9 +10,9 @@
 
 package org.mule.providers.file.i18n;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.imple.config.i18n.Message;
+import org.mule.imple.config.i18n.MessageFactory;
 
 public class FileMessages extends MessageFactory
 {

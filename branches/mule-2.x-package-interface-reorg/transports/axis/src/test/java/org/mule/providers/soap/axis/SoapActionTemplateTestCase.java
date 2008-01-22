@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import javax.xml.namespace.QName;
 

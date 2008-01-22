@@ -10,8 +10,8 @@
 
 package org.mule.providers.jdbc.test;
 
+import org.mule.api.UMOEventContext;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.umo.UMOEventContext;
 
 import java.util.Map;
 

@@ -10,11 +10,11 @@
 
 package org.mule.providers.tcp.integration;
 
+import org.mule.api.UMOEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
-import org.mule.umo.UMOEventContext;
 
 import java.util.HashMap;
 

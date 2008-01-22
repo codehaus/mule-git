@@ -10,9 +10,9 @@
 
 package org.mule.providers.udp;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;

@@ -9,10 +9,10 @@
  */
 package org.mule.providers.vm.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.io.File;
 

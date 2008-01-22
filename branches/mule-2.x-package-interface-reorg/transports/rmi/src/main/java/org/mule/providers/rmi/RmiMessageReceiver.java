@@ -10,15 +10,15 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOComponent;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractPollingMessageReceiver;
-import org.mule.providers.ConnectException;
+import org.mule.impl.transport.AbstractPollingMessageReceiver;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.rmi.i18n.RmiMessages;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

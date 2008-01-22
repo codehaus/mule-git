@@ -10,7 +10,7 @@
 
 package org.mule.impl;
 
-import org.mule.config.ThreadingProfile;
+import org.mule.api.config.ThreadingProfile;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.tck.AbstractMuleTestCase;
 

@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.MessagingException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.transformer.simple.SerializableToByteArray;
+import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
 import org.mule.providers.soap.i18n.SoapMessages;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.MessagingException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringUtils;
 
 import java.util.Iterator;

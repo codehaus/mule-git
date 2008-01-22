@@ -12,8 +12,8 @@ package org.mule.impl.config.builders;
 
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.config.ConfigurationException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 

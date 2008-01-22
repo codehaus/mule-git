@@ -10,11 +10,11 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.providers.AbstractConnector;
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.providers.udp.UdpMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

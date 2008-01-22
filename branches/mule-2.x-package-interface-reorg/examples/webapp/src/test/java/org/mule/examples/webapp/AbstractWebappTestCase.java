@@ -10,12 +10,12 @@
 
 package org.mule.examples.webapp;
 
+import org.mule.api.UMOMessage;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 public abstract class AbstractWebappTestCase extends AbstractMuleTestCase

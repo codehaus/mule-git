@@ -9,13 +9,13 @@
  */
 package org.mule.config.spring;
 
-import org.mule.routing.inbound.ForwardingConsumer;
-import org.mule.routing.inbound.IdempotentSecureHashReceiver;
-import org.mule.routing.inbound.InboundPassThroughRouter;
-import org.mule.routing.inbound.SelectiveConsumer;
+import org.mule.api.UMOComponent;
+import org.mule.api.routing.UMORouter;
+import org.mule.impl.routing.inbound.ForwardingConsumer;
+import org.mule.impl.routing.inbound.IdempotentSecureHashReceiver;
+import org.mule.impl.routing.inbound.InboundPassThroughRouter;
+import org.mule.impl.routing.inbound.SelectiveConsumer;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.routing.UMORouter;
 
 import java.util.List;
 

@@ -10,9 +10,9 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 public class VMConnectorTestCase extends AbstractConnectorTestCase
 {

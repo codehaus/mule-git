@@ -10,9 +10,9 @@
 
 package org.mule.extras.wssecurity.callbackhandlers;
 
-import org.mule.MuleException;
 import org.mule.RegistryContext;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.IOException;
 import java.util.Properties;

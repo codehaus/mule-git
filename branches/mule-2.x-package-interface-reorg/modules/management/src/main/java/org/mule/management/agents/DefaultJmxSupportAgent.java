@@ -10,10 +10,10 @@
 
 package org.mule.management.agents;
 
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOAgent;
 import org.mule.util.StringUtils;
 import org.mule.RegistryContext;
 
@@ -102,7 +102,7 @@ public class DefaultJmxSupportAgent extends AbstractAgent
      * There is no guarantee that by throwing a Recoverable exception that the Mule
      * instance will not shut down.
      *
-     * @throws org.mule.umo.lifecycle.InitialisationException
+     * @throws org.mule.api.lifecycle.InitialisationException
      *          if a fatal error occurs
      *          causing the Mule instance to shutdown
      */

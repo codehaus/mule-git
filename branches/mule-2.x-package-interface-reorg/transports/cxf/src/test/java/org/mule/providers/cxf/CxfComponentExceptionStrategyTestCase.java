@@ -28,7 +28,7 @@ public class CxfComponentExceptionStrategyTestCase extends FunctionalTestCase
             client.send("cxf:http://localhost:63181/services/CxfDefault?method=testXFireException", "TEST",
                 null);
         }
-        catch (org.mule.umo.provider.DispatchException ex)
+        catch (org.mule.api.transport.DispatchException ex)
         {
             final Throwable t = ex.getCause();
             assertNotNull("Cause should've been filled in.", t);
@@ -51,7 +51,7 @@ public class CxfComponentExceptionStrategyTestCase extends FunctionalTestCase
                 "cxf:http://localhost:63181/services/CxfWithExceptionStrategy?method=testXFireException",
                 "TEST", null);
         }
-        catch (org.mule.umo.provider.DispatchException ex)
+        catch (org.mule.api.transport.DispatchException ex)
         {
             final Throwable t = ex.getCause();
             t.printStackTrace();
@@ -74,7 +74,7 @@ public class CxfComponentExceptionStrategyTestCase extends FunctionalTestCase
                 "cxf:http://localhost:63181/services/CxfWithExceptionStrategy?method=testNonXFireException",
                 "TEST", null);
         }
-        catch (org.mule.umo.provider.DispatchException ex)
+        catch (org.mule.api.transport.DispatchException ex)
         {
             final Throwable t = ex.getCause();
             assertNotNull("Cause should've been filled in.", t);

@@ -10,10 +10,11 @@
 
 package org.mule.impl;
 
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
 
 /**
  * <code>RequestContext</code> is a thread context where components can get the

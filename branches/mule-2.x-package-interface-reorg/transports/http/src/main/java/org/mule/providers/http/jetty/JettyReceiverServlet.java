@@ -10,10 +10,10 @@
 
 package org.mule.providers.http.jetty;
 
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.servlet.MuleReceiverServlet;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;

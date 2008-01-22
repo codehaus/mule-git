@@ -10,9 +10,9 @@
 
 package org.mule.modules.xml.functional;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.w3c.dom.Document;

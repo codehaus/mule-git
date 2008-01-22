@@ -10,9 +10,9 @@
 
 package org.mule.impl.security;
 
-import org.mule.config.MuleProperties;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.security.UMOCredentialsAccessor;
+import org.mule.api.UMOEvent;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.security.UMOCredentialsAccessor;
 
 /**
  * <code>MuleHeaderCredentialsAccessor</code> obtains and sets the user credentials

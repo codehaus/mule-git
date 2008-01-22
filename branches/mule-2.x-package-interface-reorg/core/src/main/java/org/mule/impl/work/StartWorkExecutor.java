@@ -27,6 +27,7 @@
 
 package org.mule.impl.work;
 
+import org.mule.api.work.WorkExecutor;
 import org.mule.util.concurrent.Latch;
 
 import javax.resource.spi.work.WorkException;

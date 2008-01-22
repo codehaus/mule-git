@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.providers.http.HttpsConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
 
 public class AxisConnectorHttpsTestCase extends FunctionalTestCase
 {

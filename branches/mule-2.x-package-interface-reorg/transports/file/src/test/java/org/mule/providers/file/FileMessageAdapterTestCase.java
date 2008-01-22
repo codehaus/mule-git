@@ -11,9 +11,9 @@
 package org.mule.providers.file;
 
 import org.mule.RegistryContext;
+import org.mule.api.MessagingException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.FileUtils;
 
 import java.io.File;

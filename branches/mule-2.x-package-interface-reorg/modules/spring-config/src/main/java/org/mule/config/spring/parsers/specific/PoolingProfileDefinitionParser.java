@@ -9,7 +9,7 @@
  */
 package org.mule.config.spring.parsers.specific;
 
-import org.mule.config.PoolingProfile;
+import org.mule.impl.config.PoolingProfile;
 
 /**
  * This parser is responsible for processing the <code><pooling-profile><code> configuration elements.

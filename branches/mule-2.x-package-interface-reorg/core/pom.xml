@@ -180,13 +180,13 @@
                                     org.mule.management.stats.*,
                                     org.mule.model,
                                     org.mule.persistence.*,
-                                    org.mule.providers.*,
+                                    org.mule.impl.transport.*,
                                     org.mule.registry.*,
                                     org.mule.registry.metadata,
                                     org.mule.routing.*,
                                     org.mule.transaction.*,
-                                    org.mule.transformers.*,
-                                    org.mule.umo.*,
+                                    org.mule.impl.transformer.*,
+                                    org.mule.api.*,
                                     org.mule.util.*
                                 </Export-Package>
                                 <Private-Package>

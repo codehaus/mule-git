@@ -10,7 +10,7 @@
 
 package org.mule.util;
 
-import org.mule.routing.filters.WildcardFilter;
+import org.mule.impl.routing.filters.WildcardFilter;
 
 import java.io.BufferedReader;
 import java.io.CharArrayReader;
@@ -24,13 +24,13 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * Extend the Apache Commons ClassUtils to provide additional functionality.

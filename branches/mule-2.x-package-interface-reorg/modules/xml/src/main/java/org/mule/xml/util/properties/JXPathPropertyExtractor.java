@@ -10,7 +10,7 @@
 
 package org.mule.xml.util.properties;
 
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOMessage;
 import org.mule.util.properties.PropertyExtractor;
 
 import org.apache.commons.jxpath.JXPathContext;

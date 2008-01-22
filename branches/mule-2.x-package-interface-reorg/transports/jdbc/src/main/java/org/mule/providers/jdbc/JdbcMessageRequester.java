@@ -10,10 +10,10 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.providers.AbstractMessageRequester;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractMessageRequester;
 
 
 public class JdbcMessageRequester extends AbstractMessageRequester
@@ -30,7 +30,7 @@ public class JdbcMessageRequester extends AbstractMessageRequester
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.providers.AbstractMessageDispatcher#doDispose()
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doDispose()
      */
     protected void doDispose()
     {

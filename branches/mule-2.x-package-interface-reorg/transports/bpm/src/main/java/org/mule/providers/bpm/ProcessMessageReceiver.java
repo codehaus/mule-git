@@ -10,15 +10,15 @@
 
 package org.mule.providers.bpm;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
 
 import java.util.Map;
 

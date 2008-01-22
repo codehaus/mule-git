@@ -10,10 +10,10 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ObjectNameHelper;
 
 import org.apache.commons.logging.Log;

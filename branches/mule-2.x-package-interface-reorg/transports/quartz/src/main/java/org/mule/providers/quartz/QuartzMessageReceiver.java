@@ -10,16 +10,16 @@
 
 package org.mule.providers.quartz;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.providers.quartz.jobs.MuleReceiverJob;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 
 import java.util.Date;
 

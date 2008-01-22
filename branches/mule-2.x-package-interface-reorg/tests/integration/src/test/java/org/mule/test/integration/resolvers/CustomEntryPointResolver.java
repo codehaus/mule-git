@@ -10,9 +10,9 @@
 
 package org.mule.test.integration.resolvers;
 
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.model.InvocationResult;
-import org.mule.umo.UMOEventContext;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
+import org.mule.api.model.UMOEntryPointResolver;
 
 public class CustomEntryPointResolver implements UMOEntryPointResolver
 {

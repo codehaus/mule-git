@@ -10,9 +10,9 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.MessagingException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 public class HttpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {

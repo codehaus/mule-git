@@ -9,7 +9,7 @@
  */
 package org.mule.tck.functional;
 
-import org.mule.umo.UMOEventContext;
+import org.mule.api.UMOEventContext;
 
 /**
  * A test callback that writes the results of a service invocation to the response output stream

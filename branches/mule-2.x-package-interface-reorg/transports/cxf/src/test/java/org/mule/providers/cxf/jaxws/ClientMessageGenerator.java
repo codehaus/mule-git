@@ -1,8 +1,8 @@
 package org.mule.providers.cxf.jaxws;
 
-import org.mule.umo.UMOEventContext;
+import org.mule.api.UMOEventContext;
 
-public class ClientMessageGenerator implements org.mule.umo.lifecycle.Callable 
+public class ClientMessageGenerator implements org.mule.api.lifecycle.Callable 
 {
     
     public Object onCall(UMOEventContext eventContext) throws Exception 

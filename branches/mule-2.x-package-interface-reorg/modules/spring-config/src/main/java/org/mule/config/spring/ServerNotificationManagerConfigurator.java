@@ -2,7 +2,7 @@
 package org.mule.config.spring;
 
 import org.mule.api.MuleContext;
-import org.mule.impl.MuleContextAware;
+import org.mule.api.context.MuleContextAware;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 
 import java.util.Collection;

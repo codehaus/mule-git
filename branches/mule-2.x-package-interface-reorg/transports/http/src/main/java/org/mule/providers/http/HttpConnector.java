@@ -10,16 +10,16 @@
 
 package org.mule.providers.http;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.tcp.TcpConnector;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -185,7 +185,7 @@ public class HttpConnector extends TcpConnector
     }
 
     /**
-     * @see org.mule.umo.provider.UMOConnector#getProtocol()
+     * @see org.mule.api.transport.UMOConnector#getProtocol()
      */
     public String getProtocol()
     {

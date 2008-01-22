@@ -10,8 +10,8 @@
 
 package org.mule.providers.ejb;
 
+import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.providers.rmi.RmiMessageAdapter;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
 
 /*
  * Wraps an object obtained by calling a method on an EJB object

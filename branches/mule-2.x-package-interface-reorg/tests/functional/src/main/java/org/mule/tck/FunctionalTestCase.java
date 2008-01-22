@@ -12,11 +12,11 @@ package org.mule.tck;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
+import org.mule.api.UMOComponent;
 import org.mule.api.config.ConfigurationBuilder;
+import org.mule.api.registry.RegistrationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
-import org.mule.registry.RegistrationException;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.umo.UMOComponent;
 
 /**
  * Is a base tast case for tests that initialise Mule using a configuration file. The

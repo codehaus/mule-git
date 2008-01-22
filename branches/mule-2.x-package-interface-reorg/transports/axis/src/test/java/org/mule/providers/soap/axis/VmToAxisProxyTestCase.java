@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class VmToAxisProxyTestCase extends FunctionalTestCase
 {
@@ -24,7 +24,7 @@ public class VmToAxisProxyTestCase extends FunctionalTestCase
 
     public void testWSProxy() throws Exception
     {
-        if (isOffline("org.mule.providers.soap.axis.VmToAxisProxyTestCase.testWSProxy()"))
+        if (isOffline("org.mule.impl.transport.soap.axis.VmToAxisProxyTestCase.testWSProxy()"))
         {
             return;
         }

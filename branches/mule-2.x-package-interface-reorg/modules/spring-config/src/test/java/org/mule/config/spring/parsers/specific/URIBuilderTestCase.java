@@ -1,8 +1,8 @@
 package org.mule.config.spring.parsers.specific;
 
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.endpoint.URIBuilder;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 import java.util.HashMap;
 import java.util.Map;

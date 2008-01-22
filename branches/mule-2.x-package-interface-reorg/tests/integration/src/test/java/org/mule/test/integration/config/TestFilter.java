@@ -9,8 +9,8 @@
  */
 package org.mule.test.integration.config;
 
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOMessage;
 
 /**
  * TODO

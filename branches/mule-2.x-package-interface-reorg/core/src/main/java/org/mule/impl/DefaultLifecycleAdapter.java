@@ -10,25 +10,26 @@
 
 package org.mule.impl;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.ComponentException;
+import org.mule.api.Invocation;
+import org.mule.api.MuleException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOComponentAware;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.lifecycle.UMOLifecycleAdapter;
+import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.routing.UMONestedRouter;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
-import org.mule.routing.nested.NestedInvocationHandler;
-import org.mule.transformers.TransformerTemplate;
-import org.mule.umo.ComponentException;
-import org.mule.umo.Invocation;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
-import org.mule.umo.lifecycle.UMOLifecycleAdapter;
-import org.mule.umo.model.UMOEntryPointResolverSet;
-import org.mule.umo.routing.UMONestedRouter;
+import org.mule.impl.routing.nested.NestedInvocationHandler;
+import org.mule.impl.transformer.TransformerTemplate;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

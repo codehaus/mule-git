@@ -12,7 +12,7 @@
 
     <smtp:connector name="smtpConnector">
         <service-overrides messageAdapter="org.mule.providers.email.SimpleMailMessageAdapter"
-                           outboundTransformer="org.mule.transformers.NoActionTransformer"/>
+                           outboundTransformer="org.mule.impl.transformer.NoActionTransformer"/>
     </smtp:connector>
 
     <model name="test">

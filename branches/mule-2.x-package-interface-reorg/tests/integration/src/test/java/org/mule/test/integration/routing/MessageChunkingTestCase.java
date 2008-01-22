@@ -11,13 +11,13 @@
 package org.mule.test.integration.routing;
 
 
+import org.mule.api.context.UMOServerNotification;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.MessageNotificationListener;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestNotification;
 import org.mule.tck.functional.FunctionalTestNotificationListener;
-import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.concurrent.Latch;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

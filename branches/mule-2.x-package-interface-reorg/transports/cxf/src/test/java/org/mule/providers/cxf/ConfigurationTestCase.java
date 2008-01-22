@@ -10,8 +10,8 @@
 
 package org.mule.providers.cxf;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 import java.util.Collection;
 import java.util.Iterator;

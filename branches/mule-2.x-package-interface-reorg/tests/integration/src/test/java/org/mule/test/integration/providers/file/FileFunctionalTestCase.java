@@ -11,12 +11,12 @@
 package org.mule.test.integration.providers.file;
 
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.context.UMOServerNotification;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.FunctionalTestNotification;
 import org.mule.tck.functional.FunctionalTestNotificationListener;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 

@@ -10,18 +10,18 @@
 
 package org.mule.providers.jms;
 
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.AbstractReceiverWorker;
-import org.mule.providers.ConnectException;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.AbstractReceiverWorker;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ClassUtils;
 
 import java.util.ArrayList;

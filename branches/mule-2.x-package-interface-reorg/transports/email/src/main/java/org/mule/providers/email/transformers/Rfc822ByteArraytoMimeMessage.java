@@ -10,10 +10,10 @@
 
 package org.mule.providers.email.transformers;
 
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.providers.email.AbstractMailConnector;
-import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.TransformerException;
 
 import java.io.ByteArrayInputStream;
 

@@ -10,8 +10,8 @@
 
 package org.mule.extras.spring.transaction;
 
+import org.mule.api.UMOTransaction;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOTransaction;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

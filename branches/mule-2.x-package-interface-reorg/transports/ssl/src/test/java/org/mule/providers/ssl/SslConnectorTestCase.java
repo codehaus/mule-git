@@ -10,13 +10,13 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
 
 import java.io.IOException;
 

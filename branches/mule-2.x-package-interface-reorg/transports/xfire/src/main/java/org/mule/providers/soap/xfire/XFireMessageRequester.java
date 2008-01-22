@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageRequester;
+import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.util.Iterator;
 import java.util.Properties;

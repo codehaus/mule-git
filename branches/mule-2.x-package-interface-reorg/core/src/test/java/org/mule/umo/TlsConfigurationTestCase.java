@@ -10,8 +10,8 @@
 
 package org.mule.umo;
 
+import org.mule.api.security.tls.TlsConfiguration;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.security.tls.TlsConfiguration;
 
 import javax.net.ssl.SSLSocketFactory;
 

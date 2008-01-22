@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class AxisEndpointMule2164TestCase extends AbstractMuleTestCase
 {

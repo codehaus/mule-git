@@ -10,8 +10,8 @@
 
 package org.mule.tck.testmodels.mule;
 
+import org.mule.api.UMOException;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.umo.UMOException;
 
 
 /**

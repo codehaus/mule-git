@@ -10,11 +10,11 @@
 
 package org.mule.providers.udp;
 
-import org.mule.providers.AbstractConnector;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.transport.AbstractConnector;
 
 import java.net.DatagramSocket;
 

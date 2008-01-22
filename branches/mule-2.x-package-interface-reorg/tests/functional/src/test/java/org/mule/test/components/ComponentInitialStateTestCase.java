@@ -10,12 +10,12 @@
 
 package org.mule.test.components;
 
-import org.mule.providers.AbstractConnector;
+import org.mule.api.ComponentException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.ComponentException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 public class ComponentInitialStateTestCase extends FunctionalTestCase
 {

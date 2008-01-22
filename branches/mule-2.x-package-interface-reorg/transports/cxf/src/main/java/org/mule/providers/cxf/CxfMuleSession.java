@@ -11,7 +11,8 @@
 package org.mule.providers.cxf;
 
 import org.apache.cxf.transport.Session;
-import org.mule.umo.UMOSession;
+
+import org.mule.api.UMOSession;
 
 /**
  * Mules session wrapper for XFire

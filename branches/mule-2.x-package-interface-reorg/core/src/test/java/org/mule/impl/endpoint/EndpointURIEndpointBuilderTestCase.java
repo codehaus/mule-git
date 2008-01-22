@@ -10,18 +10,18 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleTransactionConfig;
-import org.mule.providers.SingleAttemptConnectionStrategy;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.SingleAttemptConnectionStrategy;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
 import org.mule.tck.testmodels.mule.TestOutboundTransformer;
 import org.mule.tck.testmodels.mule.TestResponseTransformer;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.ObjectNameHelper;
 
 public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase

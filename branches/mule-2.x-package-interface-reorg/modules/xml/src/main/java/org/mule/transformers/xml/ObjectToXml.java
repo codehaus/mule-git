@@ -10,8 +10,8 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
 
 /**
  * <code>ObjectToXml</code> converts any object to XML using Xstream. Xstream uses

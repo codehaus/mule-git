@@ -10,22 +10,22 @@
 
 package org.mule.impl.model.seda.optimised;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MessagingException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.model.ModelException;
+import org.mule.api.model.MuleProxy;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.impl.model.MuleProxy;
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
-import org.mule.umo.model.ModelException;
+import org.mule.impl.management.stats.ComponentStatistics;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.QueueSession;
 
 import org.apache.commons.logging.Log;
@@ -165,7 +165,7 @@ public class OptimisedMuleProxy implements MuleProxy
      * 
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws org.mule.umo.UMOException if the call fails
+     * @throws org.mule.api.UMOException if the call fails
      */
     public Object onCall(UMOEvent event) throws UMOException
     {

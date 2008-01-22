@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.UMOComponent;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.UMOComponent;
+import org.mule.api.context.UMOServerNotification;
 
 /**
  * <code>ComponentNotification</code> is fired when an event such as the component
@@ -19,7 +19,7 @@ import org.mule.umo.manager.UMOServerNotification;
  * component Descriptor.
  * 
  * @see org.mule.impl.MuleDescriptor
- * @see org.mule.umo.UMODescriptor
+ * @see org.mule.api.UMODescriptor
  */
 public class ComponentNotification extends UMOServerNotification
 {

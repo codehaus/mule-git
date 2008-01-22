@@ -11,9 +11,9 @@
 package org.mule.providers.vm;
 
 import org.mule.api.MuleContext;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.UMOTransactionFactory;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.UMOTransactionFactory;
 
 public class VMTransactionFactory implements UMOTransactionFactory
 {

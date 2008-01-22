@@ -11,9 +11,9 @@
 package org.mule.providers.jms;
 
 import org.mule.api.MuleContext;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.UMOTransactionFactory;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.UMOTransactionFactory;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ public class JmsTransactionFactory implements UMOTransactionFactory
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionFactory#beginTransaction(org.mule.umo.provider.UMOMessageDispatcher)
+     * @see org.mule.api.UMOTransactionFactory#beginTransaction(org.mule.api.transport.UMOMessageDispatcher)
      */
     public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
     {

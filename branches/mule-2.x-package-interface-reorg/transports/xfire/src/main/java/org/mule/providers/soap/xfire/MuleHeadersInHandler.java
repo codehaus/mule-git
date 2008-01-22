@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
 import org.mule.providers.soap.MuleSoapHeaders;
 
 import org.codehaus.xfire.MessageContext;

@@ -10,16 +10,16 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.TlsDirectKeyStore;
+import org.mule.api.security.TlsDirectTrustStore;
+import org.mule.api.security.TlsIndirectKeyStore;
+import org.mule.api.security.TlsProtocolHandler;
+import org.mule.api.security.provider.SecurityProviderFactory;
+import org.mule.api.security.tls.TlsConfiguration;
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.providers.tcp.protocols.DirectProtocol;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.TlsDirectKeyStore;
-import org.mule.umo.security.TlsDirectTrustStore;
-import org.mule.umo.security.TlsIndirectKeyStore;
-import org.mule.umo.security.TlsProtocolHandler;
-import org.mule.umo.security.provider.SecurityProviderFactory;
-import org.mule.umo.security.tls.TlsConfiguration;
 
 import java.io.IOException;
 import java.net.ServerSocket;

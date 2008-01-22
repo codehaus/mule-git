@@ -10,8 +10,8 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.util.ClassUtils;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
  *
  * TODO - check that we have sufficient control via XML (what about empty strings?)
  *
- * Not called EndpointURIBuilder because of {@link org.mule.impl.endpoint.EndpointURIBuilder}
+ * Not called EndpointURIBuilder because of {@link org.mule.api.endpoint.EndpointURIBuilder}
  */
 public class URIBuilder
 {

@@ -11,7 +11,18 @@
 package org.mule.extras.client;
 
 import org.mule.RegistryContext;
-import org.mule.config.MuleProperties;
+import org.mule.api.FutureMessageResult;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointFactory;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.security.UMOCredentials;
+import org.mule.api.transformer.wire.WireFormat;
+import org.mule.api.transport.DispatchException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
@@ -19,19 +30,8 @@ import org.mule.impl.MuleSessionHandler;
 import org.mule.impl.RequestContext;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.security.MuleCredentials;
-import org.mule.providers.AbstractConnector;
-import org.mule.transformers.wire.SerializationWireFormat;
-import org.mule.transformers.wire.WireFormat;
-import org.mule.umo.FutureMessageResult;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointFactory;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.security.UMOCredentials;
+import org.mule.impl.transformer.wire.SerializationWireFormat;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.util.MuleObjectHelper;
 
 import java.io.ByteArrayInputStream;
@@ -109,7 +109,7 @@ public class RemoteDispatcher implements Disposable
      * @param payload the object that is the payload of the event
      * @param messageProperties any properties to be associated with the payload. as
      *            null
-     * @throws org.mule.umo.UMOException if the dispatch fails or the components or
+     * @throws org.mule.api.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public void dispatchToRemoteComponent(String component, Object payload, Map messageProperties)
@@ -128,7 +128,7 @@ public class RemoteDispatcher implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.umo.UMOException if the dispatch fails or the components or
+     * @throws org.mule.api.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public UMOMessage sendToRemoteComponent(String component, Object payload, Map messageProperties)
@@ -151,7 +151,7 @@ public class RemoteDispatcher implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.umo.UMOException if the dispatch fails or the components or
+     * @throws org.mule.api.UMOException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendAsyncToRemoteComponent(final String component,

@@ -10,13 +10,13 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOEndpoint;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.util.IOUtils;
 
 import com.mockobjects.constraint.Constraint;

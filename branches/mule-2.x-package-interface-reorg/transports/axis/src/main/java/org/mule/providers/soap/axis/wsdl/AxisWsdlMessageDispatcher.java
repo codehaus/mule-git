@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis.wsdl;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.AxisMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.util.ArrayList;
 import java.util.Iterator;

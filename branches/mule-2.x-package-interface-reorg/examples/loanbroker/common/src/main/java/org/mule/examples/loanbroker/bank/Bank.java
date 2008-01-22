@@ -10,14 +10,14 @@
 
 package org.mule.examples.loanbroker.bank;
 
-import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOComponentAware;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.endpoint.UMOEndpoint;
 import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.impl.UMOComponentAware;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.imple.config.i18n.MessageFactory;
 
 import java.io.Serializable;
 import java.util.List;

@@ -9,8 +9,8 @@
  */
 package org.mule.providers.http.servlet;
 
-import org.mule.transformers.AbstractDiscoverableTransformer;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractDiscoverableTransformer;
 
 import java.io.IOException;
 

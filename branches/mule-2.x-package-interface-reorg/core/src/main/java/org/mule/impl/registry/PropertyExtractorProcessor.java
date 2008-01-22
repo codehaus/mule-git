@@ -9,7 +9,8 @@
  */
 package org.mule.impl.registry;
 
-import org.mule.umo.lifecycle.Disposable;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.registry.ObjectProcessor;
 import org.mule.util.properties.PropertyExtractor;
 import org.mule.util.properties.PropertyExtractorManager;
 

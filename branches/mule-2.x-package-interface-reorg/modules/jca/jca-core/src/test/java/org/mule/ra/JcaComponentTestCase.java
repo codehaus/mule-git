@@ -10,14 +10,14 @@
 
 package org.mule.ra;
 
-import org.mule.components.simple.EchoComponent;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.component.simple.EchoComponent;
 import org.mule.impl.model.ModelFactory;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.object.SingletonObjectFactory;
 
 public class JcaComponentTestCase extends AbstractMuleTestCase // AbstractComponentTestCase

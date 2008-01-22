@@ -9,11 +9,11 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.model.InvocationResult;
+import org.mule.api.UMOEventContext;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.model.InvocationResult;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

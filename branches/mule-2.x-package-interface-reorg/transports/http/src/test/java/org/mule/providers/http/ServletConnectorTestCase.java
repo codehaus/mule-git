@@ -10,9 +10,9 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.http.servlet.ServletConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 public class ServletConnectorTestCase extends AbstractConnectorTestCase
 {

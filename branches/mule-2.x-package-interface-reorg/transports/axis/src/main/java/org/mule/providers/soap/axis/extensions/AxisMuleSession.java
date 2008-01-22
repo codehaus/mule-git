@@ -9,7 +9,7 @@
  */
 package org.mule.providers.soap.axis.extensions;
 
-import org.mule.umo.UMOSession;
+import org.mule.api.UMOSession;
 
 import java.util.Enumeration;
 

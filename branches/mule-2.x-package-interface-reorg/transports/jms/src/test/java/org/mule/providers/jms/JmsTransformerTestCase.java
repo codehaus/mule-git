@@ -10,13 +10,13 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.UMOMessage;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.providers.jms.transformers.ObjectToJMSMessage;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOMessage;
 
 import com.mockobjects.constraint.Constraint;
 import com.mockobjects.constraint.IsEqual;

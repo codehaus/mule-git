@@ -11,12 +11,12 @@
 package org.mule.providers.email.transformers;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.providers.email.MailProperties;
 import org.mule.providers.email.MailUtils;
 import org.mule.providers.email.SmtpConnector;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.TemplateParser;

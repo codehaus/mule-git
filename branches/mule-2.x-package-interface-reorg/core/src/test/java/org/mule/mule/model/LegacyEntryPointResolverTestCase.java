@@ -10,7 +10,9 @@
 
 package org.mule.mule.model;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOException;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.model.UMOEntryPointResolverSet;
 import org.mule.impl.RequestContext;
 import org.mule.impl.model.resolvers.ArrayEntryPointResolver;
 import org.mule.impl.model.resolvers.EntryPointNotFoundException;
@@ -25,8 +27,6 @@ import org.mule.tck.testmodels.fruit.FruitLover;
 import org.mule.tck.testmodels.fruit.Kiwi;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
-import org.mule.umo.UMOException;
-import org.mule.umo.model.UMOEntryPointResolverSet;
 
 import java.util.Arrays;
 

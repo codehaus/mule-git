@@ -11,9 +11,9 @@
 package org.mule.api;
 
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.config.ConfigurationException;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.config.builders.DefaultsConfigurationBuilder;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.List;
 

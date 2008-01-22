@@ -10,13 +10,13 @@
 
 package org.mule.examples.loanbroker.tests;
 
+import org.mule.api.UMOMessage;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public abstract class AbstractLoanBrokerTestCase extends FunctionalTestCase
 {

@@ -11,11 +11,11 @@ package org.mule.impl.lifecycle;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.umo.lifecycle.UMOLifecyclePhase;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.lifecycle.UMOLifecyclePhase;
+import org.mule.api.registry.Registry;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -32,11 +32,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Represents a configurable lifecycle phase. This is a default implementation of a 'generic phase' in that is
  * can be configured to represnt any phase. Instances of this phase can then be registered with a
- * {@link org.mule.umo.lifecycle.UMOLifecycleManager} and by used to enforce a lifecycle phase on an object.
+ * {@link org.mule.api.lifecycle.UMOLifecycleManager} and by used to enforce a lifecycle phase on an object.
  * Usually, Lifecycle phases have a fixed configuration in which case a specialisation of this class should be
  * created that initialises its configuration internally.
  *
- * @see org.mule.umo.lifecycle.UMOLifecyclePhase
+ * @see org.mule.api.lifecycle.UMOLifecyclePhase
  */
 public class LifecyclePhase implements UMOLifecyclePhase
 {

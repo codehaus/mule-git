@@ -11,6 +11,8 @@
 package org.mule.management.config;
 
 import org.mule.RegistryContext;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.registry.Registry;
 import org.mule.config.spring.SpringRegistry;
 import org.mule.impl.internal.admin.EndpointNotificationLoggerAgent;
 import org.mule.impl.internal.admin.Log4jNotificationLoggerAgent;
@@ -21,10 +23,8 @@ import org.mule.management.agents.Mx4jAgent;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
-import org.mule.registry.Registry;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestAgent;
-import org.mule.umo.manager.UMOAgent;
 
 import java.util.Collection;
 import java.util.Iterator;

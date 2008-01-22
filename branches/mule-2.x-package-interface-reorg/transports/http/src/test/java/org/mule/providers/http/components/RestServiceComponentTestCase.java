@@ -9,10 +9,10 @@
  */
 package org.mule.providers.http.components;
 
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.routing.filters.logic.NotFilter;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
+import org.mule.api.UMOComponent;
+import org.mule.impl.routing.filters.WildcardFilter;
+import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.http.components.RestServiceWrapper;
 
 public class RestServiceComponentTestCase extends FunctionalTestCase

@@ -10,20 +10,20 @@
 
 package org.mule.test.integration;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.UMOOutboundRouter;
+import org.mule.api.routing.UMOOutboundRouterCollection;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.transformer.TransformerUtils;
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.providers.vm.VMConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.MuleTestUtils;
-import org.mule.transformers.TransformerUtils;
 import org.mule.transformers.xml.ObjectToXml;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.UMOOutboundRouter;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
 
 /**
  * Test the creation of various endpoints from the service descriptor

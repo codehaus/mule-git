@@ -9,8 +9,8 @@
  */
 package org.mule.providers.stdio;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class StdioNamespaceHandlerTestCase extends FunctionalTestCase
 {

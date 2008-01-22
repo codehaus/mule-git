@@ -10,8 +10,8 @@
 
 package org.mule.impl.container;
 
+import org.mule.api.context.ObjectNotFoundException;
 import org.mule.providers.ejb.i18n.EjbMessages;
-import org.mule.umo.manager.ObjectNotFoundException;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

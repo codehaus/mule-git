@@ -10,20 +10,20 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.OutputHandler;
+import org.mule.api.transport.ReceiveException;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
 import org.mule.providers.http.transformers.ObjectToHttpClientMethodRequest;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.OutputHandler;
-import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
@@ -209,7 +209,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnector#send(org.mule.api.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {        

@@ -12,14 +12,14 @@ package org.mule.providers.http.servlet;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.EndpointNotFoundException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.http.i18n.HttpMessages;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.EndpointNotFoundException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import java.io.IOException;
 

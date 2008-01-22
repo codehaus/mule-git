@@ -10,14 +10,14 @@
 
 package org.mule.providers.http.functional;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
 
-public class ETagComponent implements org.mule.umo.lifecycle.Callable
+public class ETagComponent implements org.mule.api.lifecycle.Callable
 {
     String ETAG_VALUE = "0123456789";
     

@@ -10,9 +10,9 @@
 
 package org.mule.providers.bpm.jbpm;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.bpm.BPMS;
-import org.mule.umo.UMOMessage;
 import org.mule.util.NumberUtils;
 
 /**

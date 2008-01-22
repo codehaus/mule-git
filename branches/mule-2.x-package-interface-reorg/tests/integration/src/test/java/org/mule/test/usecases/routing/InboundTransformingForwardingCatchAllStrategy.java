@@ -10,17 +10,17 @@
 
 package org.mule.test.usecases.routing;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.ComponentRoutingException;
+import org.mule.api.routing.RoutingException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.routing.AbstractCatchAllStrategy;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.ComponentRoutingException;
-import org.mule.umo.routing.RoutingException;
+import org.mule.impl.routing.AbstractCatchAllStrategy;
+import org.mule.imple.config.i18n.CoreMessages;
 
 public class InboundTransformingForwardingCatchAllStrategy extends AbstractCatchAllStrategy
 {

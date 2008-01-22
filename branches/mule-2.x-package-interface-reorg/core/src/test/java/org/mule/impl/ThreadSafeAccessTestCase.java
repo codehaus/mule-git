@@ -10,13 +10,14 @@
 
 package org.mule.impl;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.model.direct.DirectComponent;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.util.Map;
 

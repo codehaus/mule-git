@@ -10,10 +10,10 @@
 
 package org.mule.providers.udp;
 
-import org.mule.providers.AbstractMessageDispatcherFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.impl.transport.AbstractMessageDispatcherFactory;
 
 /**
  * <code>UdpMessageDispatcherFactory</code> creates a dispatcher for sending UDP

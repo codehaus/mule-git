@@ -10,12 +10,12 @@
 
 package org.mule.tck.providers;
 
+import org.mule.api.MessagingException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 public abstract class AbstractMessageAdapterTestCase extends AbstractMuleTestCase
 {

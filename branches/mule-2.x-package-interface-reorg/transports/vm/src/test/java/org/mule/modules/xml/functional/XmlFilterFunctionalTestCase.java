@@ -10,8 +10,8 @@
 
 package org.mule.modules.xml.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOMessage;
 
 import java.util.Random;
 

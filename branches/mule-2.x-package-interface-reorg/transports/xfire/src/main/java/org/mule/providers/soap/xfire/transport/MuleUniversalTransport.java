@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.xfire.transport;
 
+import org.mule.api.UMOEvent;
 import org.mule.impl.RequestContext;
 import org.mule.providers.soap.xfire.MuleInvoker;
-import org.mule.umo.UMOEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

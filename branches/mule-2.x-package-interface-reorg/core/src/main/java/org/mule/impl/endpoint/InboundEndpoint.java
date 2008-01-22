@@ -10,7 +10,7 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 
 public class InboundEndpoint extends MuleEndpoint
 {

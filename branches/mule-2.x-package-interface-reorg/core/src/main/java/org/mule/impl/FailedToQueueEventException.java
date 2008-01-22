@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
-import org.mule.config.i18n.Message;
-import org.mule.umo.ComponentException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
+import org.mule.api.ComponentException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.imple.config.i18n.Message;
 
 /**
  * <code>FailedToQueueEventException</code> is thrown when an event cannot be put

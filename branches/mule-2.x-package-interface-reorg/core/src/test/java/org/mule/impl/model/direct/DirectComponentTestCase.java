@@ -10,8 +10,8 @@
 
 package org.mule.impl.model.direct;
 
+import org.mule.api.UMOException;
 import org.mule.impl.model.AbstractComponentTestCase;
-import org.mule.umo.UMOException;
 import org.mule.util.object.SingletonObjectFactory;
 
 public class DirectComponentTestCase extends AbstractComponentTestCase

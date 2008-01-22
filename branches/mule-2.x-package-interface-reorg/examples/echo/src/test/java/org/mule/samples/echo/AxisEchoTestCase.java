@@ -10,10 +10,10 @@
 
 package org.mule.samples.echo;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
 import java.io.IOException;

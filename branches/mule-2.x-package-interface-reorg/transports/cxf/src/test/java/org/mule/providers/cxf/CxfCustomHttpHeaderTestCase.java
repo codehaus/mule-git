@@ -10,13 +10,13 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.context.UMOServerNotification;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.MessageNotificationListener;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.manager.UMOServerNotification;
 
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;

@@ -11,8 +11,8 @@
 package org.mule.providers.file;
 
 import org.mule.RegistryContext;
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
 
 import java.io.File;

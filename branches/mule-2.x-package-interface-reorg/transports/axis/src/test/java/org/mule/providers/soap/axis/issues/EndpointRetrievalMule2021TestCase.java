@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.axis.issues;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
 {

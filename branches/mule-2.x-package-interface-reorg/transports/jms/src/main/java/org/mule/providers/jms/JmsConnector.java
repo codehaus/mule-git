@@ -10,28 +10,28 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MessagingException;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.StartException;
+import org.mule.api.transport.ReplyToHandler;
+import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.ConnectException;
-import org.mule.providers.FatalConnectException;
-import org.mule.providers.ReplyToHandler;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.ConnectException;
+import org.mule.impl.transport.FatalConnectException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.jms.i18n.JmsMessages;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.MessagingException;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.StartException;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.text.MessageFormat;
 
@@ -830,7 +830,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
      *
      * @param eagerConsumer Value to set for property 'eagerConsumer'.
      * @see #eagerConsumer
-     * @see org.mule.providers.jms.XaTransactedJmsMessageReceiver
+     * @see org.mule.impl.transport.jms.XaTransactedJmsMessageReceiver
      */
     public void setEagerConsumer(final boolean eagerConsumer)
     {

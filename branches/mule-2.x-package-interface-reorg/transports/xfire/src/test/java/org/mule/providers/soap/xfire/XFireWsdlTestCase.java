@@ -10,17 +10,17 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.providers.AbstractConnector;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
 
 import org.custommonkey.xmlunit.XMLAssert;
 

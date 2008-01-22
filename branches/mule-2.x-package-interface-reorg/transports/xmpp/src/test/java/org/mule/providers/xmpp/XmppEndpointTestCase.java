@@ -10,9 +10,9 @@
 
 package org.mule.providers.xmpp;
 
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public class XmppEndpointTestCase extends AbstractMuleTestCase
 {

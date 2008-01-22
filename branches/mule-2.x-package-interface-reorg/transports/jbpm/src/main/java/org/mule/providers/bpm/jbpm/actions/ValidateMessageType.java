@@ -18,7 +18,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 /**
  * Throws an exception if the incoming message's class is not as expected.
  * 
- *  <action class="org.mule.providers.bpm.jbpm.actions.ValidateMessageType">
+ *  <action class="org.mule.impl.transport.bpm.jbpm.actions.ValidateMessageType">
  *     <expectedType>com.mycompany.MyClass</expectedType> 
  *  </action>
  *  

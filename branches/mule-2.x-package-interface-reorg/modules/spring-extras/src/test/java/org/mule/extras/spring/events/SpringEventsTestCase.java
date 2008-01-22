@@ -10,14 +10,14 @@
 
 package org.mule.extras.spring.events;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.concurrent.Latch;
 

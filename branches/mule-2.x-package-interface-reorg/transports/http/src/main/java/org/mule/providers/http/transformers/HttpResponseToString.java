@@ -10,11 +10,11 @@
 
 package org.mule.providers.http.transformers;
 
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpResponse;
 import org.mule.providers.http.ResponseWriter;
-import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.transformer.TransformerException;
 
 import java.io.IOException;
 import java.io.InputStream;

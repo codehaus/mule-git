@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.MessagingException;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.umo.MessagingException;
 
 import java.util.Collections;
 import java.util.Map;

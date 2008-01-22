@@ -10,11 +10,11 @@
 
 package org.mule.providers.ejb;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.rmi.RmiMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * Will repeatedly call a method on an EJB object. If the method takes parameters A

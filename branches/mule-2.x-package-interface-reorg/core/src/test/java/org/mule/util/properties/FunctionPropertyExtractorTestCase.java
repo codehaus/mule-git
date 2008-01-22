@@ -9,9 +9,9 @@
  */
 package org.mule.util.properties;
 
+import org.mule.api.UMOMessage;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;

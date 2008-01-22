@@ -10,14 +10,14 @@
 
 package org.mule.providers.http.functional;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpsConnector;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.mule.TestSedaComponent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 

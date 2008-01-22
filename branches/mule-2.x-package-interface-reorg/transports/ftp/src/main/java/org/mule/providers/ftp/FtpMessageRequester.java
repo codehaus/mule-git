@@ -10,11 +10,11 @@
 
 package org.mule.providers.ftp;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageRequester;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractMessageRequester;
 
 import java.io.FilenameFilter;
 import java.io.IOException;

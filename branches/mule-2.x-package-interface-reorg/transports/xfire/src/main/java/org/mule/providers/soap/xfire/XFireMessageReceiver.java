@@ -10,14 +10,14 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.converters.QNameConverter;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.config.converters.QNameConverter;
+import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.soap.SoapConstants;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;

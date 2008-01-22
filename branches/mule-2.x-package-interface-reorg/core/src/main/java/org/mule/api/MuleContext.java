@@ -9,22 +9,21 @@
  */
 package org.mule.api;
 
-import org.mule.config.MuleConfiguration;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Lifecycle;
+import org.mule.api.lifecycle.UMOLifecycleManager;
+import org.mule.api.registry.RegistrationException;
+import org.mule.api.registry.Registry;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.store.UMOStore;
 import org.mule.impl.Directories;
+import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
-import org.mule.management.stats.AllStatistics;
-import org.mule.registry.RegistrationException;
-import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.Lifecycle;
-import org.mule.umo.lifecycle.UMOLifecycleManager;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
-import org.mule.umo.manager.UMOWorkManager;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.store.UMOStore;
+import org.mule.impl.management.stats.AllStatistics;
 import org.mule.util.queue.QueueManager;
 
 import javax.transaction.TransactionManager;

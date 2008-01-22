@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.xfire.testmodels.CustomFault;
 import org.mule.providers.soap.xfire.testmodels.XFireEnabledFaultMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.provider.DispatchException;
 
 import org.codehaus.xfire.fault.XFireFault;
 

@@ -11,9 +11,9 @@
 package org.mule.util;
 
 import org.mule.RegistryContext;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 
 /**
  * Generates consistent objects names for Mule components

@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.transaction.TransactionCallback;
+import org.mule.api.transaction.TransactionCallback;
 
 import javax.jms.Message;
 

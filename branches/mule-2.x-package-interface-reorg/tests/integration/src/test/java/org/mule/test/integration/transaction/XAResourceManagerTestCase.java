@@ -71,7 +71,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#getLogger()
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#getLogger()
          */
         protected Log getLogger()
         {
@@ -81,7 +81,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#createTransactionContext(java.lang.Object)
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#createTransactionContext(java.lang.Object)
          */
         protected AbstractTransactionContext createTransactionContext(Object session)
         {
@@ -91,7 +91,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#doBegin(org.mule.transaction.xa.AbstractTransactionContext)
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#doBegin(org.mule.impl.transaction.xa.AbstractTransactionContext)
          */
         protected void doBegin(AbstractTransactionContext context)
         {
@@ -101,7 +101,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#doPrepare(org.mule.transaction.xa.AbstractTransactionContext)
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#doPrepare(org.mule.impl.transaction.xa.AbstractTransactionContext)
          */
         protected int doPrepare(AbstractTransactionContext context)
         {
@@ -112,7 +112,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#doCommit(org.mule.transaction.xa.AbstractTransactionContext)
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#doCommit(org.mule.impl.transaction.xa.AbstractTransactionContext)
          */
         protected void doCommit(AbstractTransactionContext context) throws ResourceManagerException
         {
@@ -122,7 +122,7 @@ public class XAResourceManagerTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.transaction.xa.AbstractResourceManager#doRollback(org.mule.transaction.xa.AbstractTransactionContext)
+         * @see org.mule.impl.transaction.xa.AbstractResourceManager#doRollback(org.mule.impl.transaction.xa.AbstractTransactionContext)
          */
         protected void doRollback(AbstractTransactionContext context) throws ResourceManagerException
         {

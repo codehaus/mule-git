@@ -10,15 +10,15 @@
 
 package org.mule.impl.security;
 
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.SecurityProviderNotFoundException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.security.UMOSecurityProvider;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityProviderNotFoundException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.UnknownAuthenticationTypeException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

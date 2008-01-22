@@ -11,11 +11,11 @@
 package org.mule.providers.cxf.support;
 
 import static javax.xml.XMLConstants.XML_NS_URI;
-import static org.mule.config.MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_EVENT_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_EVENT_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
 import static org.mule.providers.soap.MuleSoapHeaders.MULE_HEADER;
 
 import javax.xml.namespace.QName;
@@ -26,8 +26,9 @@ import org.apache.cxf.helpers.DOMUtils;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.Phase;
+
+import org.mule.api.UMOEvent;
 import org.mule.providers.soap.MuleSoapHeaders;
-import org.mule.umo.UMOEvent;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

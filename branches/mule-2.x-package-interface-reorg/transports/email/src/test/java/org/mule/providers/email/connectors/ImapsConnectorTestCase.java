@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.connectors;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.email.ImapsConnector;
-import org.mule.umo.provider.UMOConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
 

@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.issues;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.http.jetty.JettyConnector;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class RestEndpointMule1881TestCase extends AbstractMuleTestCase
 {

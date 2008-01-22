@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.umo.MessagingException;
+import org.mule.api.MessagingException;
 
 import javax.jms.JMSException;
 import javax.jms.Message;

@@ -9,7 +9,8 @@ import org.apache.cxf.transport.ChainInitiationObserver;
 import org.apache.cxf.transport.Destination;
 import org.apache.cxf.transport.DestinationFactory;
 import org.apache.cxf.transport.MessageObserver;
-import org.mule.umo.endpoint.EndpointNotFoundException;
+
+import org.mule.api.endpoint.EndpointNotFoundException;
 
 public final class CxfUtils
 {

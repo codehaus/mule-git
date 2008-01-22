@@ -10,13 +10,13 @@
 
 package org.mule.test.integration.routing;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.routing.RoutingException;
+import org.mule.api.transformer.TransformerException;
 import org.mule.impl.MuleMessage;
-import org.mule.routing.inbound.EventGroup;
-import org.mule.routing.response.ResponseCorrelationAggregator;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.routing.RoutingException;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.impl.routing.inbound.EventGroup;
+import org.mule.impl.routing.response.ResponseCorrelationAggregator;
 
 import java.util.Iterator;
 
@@ -30,7 +30,7 @@ public class TestAggregator extends ResponseCorrelationAggregator
      * 
      * @param events the event group for this request
      * @return an aggregated message
-     * @throws org.mule.umo.routing.RoutingException if the aggregation fails. in
+     * @throws org.mule.api.routing.RoutingException if the aggregation fails. in
      *             this scenario the whole event group is removed and passed to the
      *             exception handler for this componenet
      */

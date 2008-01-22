@@ -39,7 +39,7 @@
                 <inbound-endpoint address="http://localhost:60206" connector-ref="HttpConnector"/>
             </inbound>
             <component>
-                <singleton-object class="org.mule.components.simple.StaticComponent">
+                <singleton-object class="org.mule.impl.component.simple.StaticComponent">
                     <property key="data" value="Here's your content."/>
                 </singleton-object>
             </component>

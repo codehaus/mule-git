@@ -10,7 +10,7 @@
 
 package org.mule.impl.registry;
 
-import org.mule.registry.RegistrationException;
+import org.mule.api.registry.RegistrationException;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.StringUtils;
 

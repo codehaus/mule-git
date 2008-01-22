@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis.extensions;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.soap.axis.AxisConnector;
 
 import java.util.HashMap;

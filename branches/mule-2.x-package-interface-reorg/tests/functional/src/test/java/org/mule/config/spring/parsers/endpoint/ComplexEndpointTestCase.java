@@ -10,8 +10,8 @@
 
 package org.mule.config.spring.parsers.endpoint;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 
 public class ComplexEndpointTestCase extends AbstractEndpointTestCase
 {

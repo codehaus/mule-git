@@ -10,6 +10,10 @@
 
 package org.mule.impl.internal.admin;
 
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
 import org.mule.impl.internal.notifications.ComponentNotificationListener;
@@ -21,10 +25,6 @@ import org.mule.impl.internal.notifications.MessageNotificationListener;
 import org.mule.impl.internal.notifications.ModelNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.SecurityNotificationListener;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
 
 import java.util.HashSet;
 import java.util.Iterator;

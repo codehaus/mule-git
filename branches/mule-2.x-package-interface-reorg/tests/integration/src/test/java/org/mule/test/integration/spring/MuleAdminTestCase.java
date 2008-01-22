@@ -10,10 +10,10 @@
 
 package org.mule.test.integration.spring;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.extras.client.RemoteDispatcher;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class MuleAdminTestCase extends FunctionalTestCase
 {

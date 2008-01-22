@@ -10,9 +10,9 @@
 
 package org.mule.ra;
 
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.util.StringUtils;
 
 import java.io.Serializable;

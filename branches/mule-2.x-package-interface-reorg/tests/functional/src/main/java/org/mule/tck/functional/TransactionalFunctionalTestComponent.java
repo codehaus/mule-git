@@ -10,10 +10,10 @@
 
 package org.mule.tck.functional;
 
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOTransaction;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOTransaction;
+import org.mule.imple.config.i18n.MessageFactory;
 
 /**
  * This component is useful for unit tests involving transactionality because it

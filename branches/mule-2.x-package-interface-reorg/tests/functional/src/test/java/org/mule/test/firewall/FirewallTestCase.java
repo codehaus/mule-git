@@ -10,7 +10,7 @@
 
 package org.mule.test.firewall;
 
-import org.mule.config.factories.HostNameFactory;
+import org.mule.impl.config.factories.HostNameFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.io.IOException;

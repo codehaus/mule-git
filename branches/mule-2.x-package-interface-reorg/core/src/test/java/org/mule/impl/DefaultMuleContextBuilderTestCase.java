@@ -11,8 +11,8 @@
 package org.mule.impl;
 
 import org.mule.api.MuleContext;
-import org.mule.config.MuleConfiguration;
-import org.mule.config.ThreadingProfile;
+import org.mule.api.config.ThreadingProfile;
+import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.impl.lifecycle.GenericLifecycleManager;
 import org.mule.impl.lifecycle.phases.MuleContextDisposePhase;

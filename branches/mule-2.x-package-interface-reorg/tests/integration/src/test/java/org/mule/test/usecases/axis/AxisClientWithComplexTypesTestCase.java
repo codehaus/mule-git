@@ -10,9 +10,9 @@
 
 package org.mule.test.usecases.axis;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.providers.soap.axis.AxisConnector;
 
 import java.util.HashMap;

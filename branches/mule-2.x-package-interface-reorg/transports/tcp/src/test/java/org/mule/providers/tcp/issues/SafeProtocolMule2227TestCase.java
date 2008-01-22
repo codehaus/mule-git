@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.issues;
 
+import org.mule.api.UMOException;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.protocols.SafeProtocolTestCase;
-import org.mule.umo.UMOException;
 
 public class SafeProtocolMule2227TestCase extends SafeProtocolTestCase
 {

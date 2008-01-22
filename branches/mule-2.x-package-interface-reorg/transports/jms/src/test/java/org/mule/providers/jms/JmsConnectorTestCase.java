@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

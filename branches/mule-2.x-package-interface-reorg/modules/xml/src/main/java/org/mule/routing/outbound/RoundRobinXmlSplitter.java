@@ -10,14 +10,14 @@
 
 package org.mule.routing.outbound;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.routing.CouldNotRouteOutboundMessageException;
+import org.mule.api.routing.RoutingException;
 import org.mule.impl.MuleMessage;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
-import org.mule.umo.routing.RoutingException;
 
 import java.util.HashMap;
 import java.util.Iterator;

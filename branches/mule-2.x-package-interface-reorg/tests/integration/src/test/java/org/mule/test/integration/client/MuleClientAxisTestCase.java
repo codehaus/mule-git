@@ -10,10 +10,10 @@
 
 package org.mule.test.integration.client;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.integration.service.Person;
-import org.mule.umo.UMOMessage;
 
 public class MuleClientAxisTestCase extends FunctionalTestCase
 {

@@ -10,14 +10,14 @@
 
 package org.mule.config.spring.processors;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.context.UMOContainerContext;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.model.UMOModel;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.manager.UMOAgent;
-import org.mule.umo.manager.UMOContainerContext;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 

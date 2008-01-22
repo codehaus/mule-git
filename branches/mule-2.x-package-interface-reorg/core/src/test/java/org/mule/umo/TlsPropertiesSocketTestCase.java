@@ -10,9 +10,9 @@
 
 package org.mule.umo;
 
+import org.mule.api.security.tls.TlsConfiguration;
+import org.mule.api.security.tls.TlsPropertiesSocketFactory;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.security.tls.TlsConfiguration;
-import org.mule.umo.security.tls.TlsPropertiesSocketFactory;
 
 public class TlsPropertiesSocketTestCase extends AbstractMuleTestCase
 {

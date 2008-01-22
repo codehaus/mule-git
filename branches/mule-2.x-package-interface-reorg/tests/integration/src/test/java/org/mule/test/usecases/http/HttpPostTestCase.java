@@ -10,9 +10,9 @@
 
 package org.mule.test.usecases.http;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class HttpPostTestCase extends FunctionalTestCase
 {

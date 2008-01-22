@@ -39,7 +39,7 @@
 
     <model name="dev">
         <mule-descriptor name="RollbackComponent"
-            implementation="org.mule.components.simple.NullComponent">
+            implementation="org.mule.impl.component.simple.NullComponent">
             <inbound-router>
                 <endpoint type="receiver" address="jms://request.queue">
                     <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>

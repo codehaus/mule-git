@@ -10,8 +10,8 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class ConnectorFactoryTestCase extends AbstractMuleTestCase
 {

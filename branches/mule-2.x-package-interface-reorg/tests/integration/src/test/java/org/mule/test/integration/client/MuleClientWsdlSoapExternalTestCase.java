@@ -10,10 +10,10 @@
 
 package org.mule.test.integration.client;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.StringUtils;
 

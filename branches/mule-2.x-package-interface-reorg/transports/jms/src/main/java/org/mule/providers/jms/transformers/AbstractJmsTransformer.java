@@ -10,18 +10,18 @@
 
 package org.mule.providers.jms.transformers;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOTransaction;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.DiscoverableTransformer;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.providers.jms.JmsMessageUtils;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.DiscoverableTransformer;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.ClassUtils;
 
 import java.util.Iterator;

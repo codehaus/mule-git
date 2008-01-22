@@ -10,10 +10,10 @@
 
 package org.mule.providers.file;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.umo.MessagingException;
+import org.mule.api.MessagingException;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 
 /**

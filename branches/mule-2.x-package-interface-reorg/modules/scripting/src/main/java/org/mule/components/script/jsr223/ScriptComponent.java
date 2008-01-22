@@ -10,9 +10,9 @@
 
 package org.mule.components.script.jsr223;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.MuleLogger;
 
 import javax.script.Bindings;

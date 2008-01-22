@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.jdbc.test.TestDataSource;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

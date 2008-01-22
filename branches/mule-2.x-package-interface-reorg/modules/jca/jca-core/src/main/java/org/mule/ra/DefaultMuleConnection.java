@@ -11,22 +11,22 @@
 package org.mule.ra;
 
 import org.mule.api.MuleContext;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.ReceiveException;
 import org.mule.extras.client.i18n.ClientMessages;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.security.MuleCredentials;
-import org.mule.providers.AbstractConnector;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.ra.i18n.JcaMessages;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.ReceiveException;
 
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class DefaultMuleConnection implements MuleConnection
      * @param messageProperties any properties to be associated with the payload. In
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public void dispatch(String url, Object payload, Map messageProperties) throws UMOException
     {
@@ -93,7 +93,7 @@ public class DefaultMuleConnection implements MuleConnection
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
      * @return a umomessage response.
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public UMOMessage send(String url, Object payload, Map messageProperties) throws UMOException
     {
@@ -127,7 +127,7 @@ public class DefaultMuleConnection implements MuleConnection
      *            receive will not wait at all and if set to -1 the receive will wait
      *            forever
      * @return the message received or null if no message was received
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public UMOMessage receive(String url, long timeout) throws UMOException
     {

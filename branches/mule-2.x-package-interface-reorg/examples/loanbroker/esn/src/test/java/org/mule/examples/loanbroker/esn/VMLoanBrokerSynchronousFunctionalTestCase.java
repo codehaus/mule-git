@@ -10,9 +10,9 @@
 
 package org.mule.examples.loanbroker.esn;
 
+import org.mule.api.UMOComponent;
 import org.mule.examples.loanbroker.tests.AbstractLoanBrokerTestCase;
 import org.mule.impl.model.seda.SedaModel;
-import org.mule.umo.UMOComponent;
 
 
 public class VMLoanBrokerSynchronousFunctionalTestCase extends AbstractLoanBrokerTestCase

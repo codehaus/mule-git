@@ -10,7 +10,7 @@
 
 package org.mule.impl.model.seda;
 
-import org.mule.MuleRuntimeException;
+import org.mule.api.MuleRuntimeException;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.object.PrototypeObjectFactory;
 

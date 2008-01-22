@@ -10,7 +10,7 @@
 
 package org.mule.providers.http;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
 import org.mule.util.MapUtils;
 
 import java.util.Collections;

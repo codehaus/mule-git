@@ -9,7 +9,7 @@
  */
 package org.mule.providers.jms.integration;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
 import org.mule.impl.message.ExceptionMessage;
 
 import javax.jms.JMSException;

@@ -9,10 +9,10 @@
  */
 package org.mule.providers.jdbc.config;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.providers.jdbc.test.TestDataSource;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 
 /**

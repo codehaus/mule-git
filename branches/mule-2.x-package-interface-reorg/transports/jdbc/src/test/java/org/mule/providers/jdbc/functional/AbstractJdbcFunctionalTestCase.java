@@ -10,10 +10,10 @@
 
 package org.mule.providers.jdbc.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.providers.jdbc.util.MuleDerbyUtils;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.util.List;
 

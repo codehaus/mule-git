@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.impl.routing.filters.WildcardFilter;
 
 /**
  * This does the work necessary to deliver events to a particular listener.  It is generated for a

@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.umo.manager.UMOServerNotificationListener;
+import org.mule.api.context.UMOServerNotificationListener;
 
 /**
  * A simple tuple that stores a listener with an optional subscription (used to match a resource ID).

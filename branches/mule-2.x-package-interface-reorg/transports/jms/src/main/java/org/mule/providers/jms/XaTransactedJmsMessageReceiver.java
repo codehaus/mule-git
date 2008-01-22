@@ -10,18 +10,18 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOTransaction;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.ConnectException;
-import org.mule.providers.SingleAttemptConnectionStrategy;
-import org.mule.providers.TransactedPollingMessageReceiver;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transport.ConnectException;
+import org.mule.impl.transport.SingleAttemptConnectionStrategy;
+import org.mule.impl.transport.TransactedPollingMessageReceiver;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
@@ -196,7 +196,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.TransactionEnabledPollingMessageReceiver#getMessages()
+     * @see org.mule.impl.transport.TransactionEnabledPollingMessageReceiver#getMessages()
      */
     protected List getMessages() throws Exception
     {
@@ -279,7 +279,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.TransactionEnabledPollingMessageReceiver#processMessage(java.lang.Object)
+     * @see org.mule.impl.transport.TransactionEnabledPollingMessageReceiver#processMessage(java.lang.Object)
      */
     protected void processMessage(Object msg) throws Exception
     {

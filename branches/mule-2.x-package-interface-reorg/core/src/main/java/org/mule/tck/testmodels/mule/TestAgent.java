@@ -10,9 +10,9 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOAgent;
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.lifecycle.InitialisationException;
 
 /**
  * Mock agent

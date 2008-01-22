@@ -9,7 +9,7 @@
  */
 package org.mule.providers.bpm;
 
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOMessage;
 
 import java.util.Map;
 

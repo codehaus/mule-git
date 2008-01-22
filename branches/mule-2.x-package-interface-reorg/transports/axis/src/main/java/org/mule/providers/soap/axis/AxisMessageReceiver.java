@@ -10,20 +10,20 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.providers.soap.axis.extensions.MuleMsgProvider;
 import org.mule.providers.soap.axis.extensions.MuleRPCProvider;
 import org.mule.providers.soap.axis.i18n.AxisMessages;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;

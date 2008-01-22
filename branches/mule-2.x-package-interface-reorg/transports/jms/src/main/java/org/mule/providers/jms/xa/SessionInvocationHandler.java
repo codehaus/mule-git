@@ -9,11 +9,11 @@
  */
 package org.mule.providers.jms.xa;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.transaction.XaTransaction;
-import org.mule.umo.UMOTransaction;
+import org.mule.api.UMOTransaction;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transaction.XaTransaction;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

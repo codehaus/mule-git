@@ -10,7 +10,7 @@
 
 package org.mule.test.config;
 
-import org.mule.config.converters.QNameConverter;
+import org.mule.impl.config.converters.QNameConverter;
 import org.mule.tck.AbstractMuleTestCase;
 
 import javax.xml.namespace.QName;

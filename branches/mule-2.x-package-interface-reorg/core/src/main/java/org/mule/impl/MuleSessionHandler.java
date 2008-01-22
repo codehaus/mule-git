@@ -10,15 +10,15 @@
 
 package org.mule.impl;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.transformers.codec.Base64Decoder;
-import org.mule.transformers.codec.Base64Encoder;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.provider.UMOSessionHandler;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.UMOSessionHandler;
+import org.mule.impl.transformer.codec.Base64Decoder;
+import org.mule.impl.transformer.codec.Base64Encoder;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;

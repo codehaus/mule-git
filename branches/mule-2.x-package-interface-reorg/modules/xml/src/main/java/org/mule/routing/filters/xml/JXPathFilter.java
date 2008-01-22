@@ -10,8 +10,8 @@
 
 package org.mule.routing.filters.xml;
 
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOMessage;
 import org.mule.util.StringMessageUtils;
 
 import java.util.Iterator;

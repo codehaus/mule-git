@@ -10,27 +10,27 @@
 
 package org.mule.impl.model.seda;
 
-import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
-import org.mule.config.MuleConfiguration;
-import org.mule.config.QueueProfile;
-import org.mule.config.ThreadingProfile;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.ComponentException;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.model.MuleProxy;
 import org.mule.impl.FailedToQueueEventException;
 import org.mule.impl.MuleEvent;
+import org.mule.impl.config.MuleConfiguration;
+import org.mule.impl.config.QueueProfile;
+import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
-import org.mule.impl.model.MuleProxy;
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.umo.ComponentException;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
-import org.mule.umo.manager.UMOWorkManager;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 
@@ -84,9 +84,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
      * UMODescriptor and then initialise a pool based on the attributes in the
      * UMODescriptor.
      * 
-     * @throws org.mule.umo.lifecycle.InitialisationException if the component fails
+     * @throws org.mule.api.lifecycle.InitialisationException if the component fails
      *             to initialise
-     * @see org.mule.umo.UMODescriptor
+     * @see org.mule.api.UMODescriptor
      */
     public synchronized void doInitialise() throws InitialisationException
     {

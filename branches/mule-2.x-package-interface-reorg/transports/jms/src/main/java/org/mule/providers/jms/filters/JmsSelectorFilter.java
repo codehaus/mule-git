@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.filters;
 
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOMessage;
 
 /**
  * <code>JmsSelectorFilter</code> is a wrapper for a JMS Selector. This filter

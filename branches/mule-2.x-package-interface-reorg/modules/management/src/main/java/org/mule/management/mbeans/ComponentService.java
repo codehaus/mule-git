@@ -11,11 +11,11 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
 
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
@@ -74,8 +74,8 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Muleconfiguration to true. this causes all internal queues to store their
      * state.
      * 
-     * @throws org.mule.umo.UMOException if the component failed to pause.
-     * @see org.mule.config.MuleConfiguration
+     * @throws org.mule.api.UMOException if the component failed to pause.
+     * @see org.mule.impl.config.MuleConfiguration
      */
     public void pause() throws UMOException
     {
@@ -86,7 +86,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Resumes the Component that has been paused. If the component is not paused
      * nothing is executed.
      * 
-     * @throws org.mule.umo.UMOException if the component failed to resume
+     * @throws org.mule.api.UMOException if the component failed to resume
      */
     public void resume() throws UMOException
     {

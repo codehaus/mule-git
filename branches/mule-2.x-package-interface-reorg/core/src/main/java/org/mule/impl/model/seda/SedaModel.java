@@ -11,10 +11,10 @@
 package org.mule.impl.model.seda;
 
 import org.mule.RegistryContext;
-import org.mule.config.PoolingProfile;
-import org.mule.config.QueueProfile;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.config.PoolingProfile;
+import org.mule.impl.config.QueueProfile;
 import org.mule.impl.model.AbstractModel;
-import org.mule.umo.lifecycle.InitialisationException;
 
 /**
  * A mule component service model that uses Seda principals to achieve high

@@ -11,9 +11,9 @@
 package org.mule.providers.jdbc;
 
 import org.mule.api.MuleContext;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.UMOTransactionFactory;
+import org.mule.api.TransactionException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.UMOTransactionFactory;
 
 /**
  * TODO
@@ -24,7 +24,7 @@ public class JdbcTransactionFactory implements UMOTransactionFactory
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionFactory#beginTransaction()
+     * @see org.mule.api.UMOTransactionFactory#beginTransaction()
      */
     public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
@@ -36,7 +36,7 @@ public class JdbcTransactionFactory implements UMOTransactionFactory
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionFactory#isTransacted()
+     * @see org.mule.api.UMOTransactionFactory#isTransacted()
      */
     public boolean isTransacted()
     {

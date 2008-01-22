@@ -9,10 +9,10 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.model.UMOEntryPointResolverSet;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.model.UMOEntryPointResolverSet;
 import org.mule.util.CollectionUtils;
 
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Provides the default implementation of an {@link org.mule.umo.model.UMOEntryPointResolverSet}
+ * Provides the default implementation of an {@link org.mule.api.model.UMOEntryPointResolverSet}
  * It resolves a method to call on the given component when an event is received.
  * This object maintains a set of Resolvers that will be used in order to resolve
  * an entrypoint on a service object until one is found or until the set is

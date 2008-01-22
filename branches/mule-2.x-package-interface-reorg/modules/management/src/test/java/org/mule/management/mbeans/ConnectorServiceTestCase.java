@@ -10,10 +10,10 @@
 
 package org.mule.management.mbeans;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.management.AbstractMuleJmxTestCase;
 import org.mule.management.agents.JmxAgent;
 import org.mule.tck.testmodels.mule.TestConnector;
-import org.mule.umo.provider.UMOConnector;
 
 import java.util.Set;
 

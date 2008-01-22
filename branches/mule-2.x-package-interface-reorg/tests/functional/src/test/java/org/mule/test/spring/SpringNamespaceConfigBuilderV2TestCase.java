@@ -10,19 +10,19 @@
 
 package org.mule.test.spring;
 
+import org.mule.api.UMOComponent;
 import org.mule.api.config.ConfigurationBuilder;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.routing.UMOInboundRouterCollection;
+import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.routing.UMOResponseRouterCollection;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
-import org.mule.routing.outbound.AbstractOutboundRouter;
-import org.mule.routing.response.AbstractResponseRouter;
+import org.mule.impl.routing.outbound.AbstractOutboundRouter;
+import org.mule.impl.routing.response.AbstractResponseRouter;
 import org.mule.tck.AbstractConfigBuilderTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.routing.UMOResponseRouterCollection;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.properties.PropertyExtractor;
 import org.mule.xml.util.properties.JXPathPropertyExtractor;
 

@@ -10,10 +10,10 @@
 
 package org.mule.impl.message;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.RequestContext;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 import java.util.Date;
 import java.util.Iterator;

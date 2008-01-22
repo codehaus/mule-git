@@ -10,15 +10,15 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.registry.Registry;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.registry.Registry;
 
 /**
  * <code>RegistyNotification</code> is fired when an event such as an object being
  * registered in the Registry starting occurs. The payload of this event will always
  * be a reference to the Registry ID.
  *
- * @see org.mule.registry.Registry
+ * @see org.mule.api.registry.Registry
  * @see org.mule.api.MuleContext
  */
 public class RegistryNotification extends UMOServerNotification

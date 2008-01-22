@@ -11,23 +11,23 @@
 package org.mule.extras.wssecurity.filters;
 
 import org.mule.RegistryContext;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOEvent;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.CryptoFailureException;
+import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityProviderNotFoundException;
+import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.api.security.UnsupportedAuthenticationSchemeException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.extras.wssecurity.handlers.MuleWSSInHandler;
 import org.mule.extras.wssecurity.headers.WsSecurityHeadersSetter;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
 import org.mule.providers.soap.xfire.XFireConnector;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.security.CryptoFailureException;
-import org.mule.umo.security.EncryptionStrategyNotFoundException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.SecurityProviderNotFoundException;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
-import org.mule.umo.security.UnsupportedAuthenticationSchemeException;
 
 import java.util.ArrayList;
 import java.util.Collection;

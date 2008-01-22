@@ -10,18 +10,18 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Lifecycle;
 import org.mule.impl.MuleMessage;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.xfire.transport.MuleLocalChannel;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.Lifecycle;
 import org.mule.util.StringUtils;
 
 import java.io.InputStream;

@@ -10,8 +10,8 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.model.UMOModel;
+import org.mule.api.UMOException;
+import org.mule.api.model.UMOModel;
 
 /**
  * <code>ModelService</code> exposes service information and actions on the Mule

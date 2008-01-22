@@ -1,8 +1,8 @@
 
 package org.mule.extras.client;
 
+import org.mule.api.UMOException;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOException;
 
 public class MuleClientTestCase extends AbstractMuleTestCase
 {

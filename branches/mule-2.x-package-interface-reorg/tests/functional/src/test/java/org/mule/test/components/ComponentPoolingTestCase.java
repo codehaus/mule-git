@@ -10,10 +10,10 @@
 
 package org.mule.test.components;
 
+import org.mule.api.UMOComponent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.mule.TestSedaComponent;
-import org.mule.umo.UMOComponent;
 
 public class ComponentPoolingTestCase extends FunctionalTestCase
 {

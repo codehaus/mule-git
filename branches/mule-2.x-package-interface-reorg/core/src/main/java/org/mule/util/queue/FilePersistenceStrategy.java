@@ -12,8 +12,8 @@ package org.mule.util.queue;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.MuleConfiguration;
-import org.mule.impl.MuleContextAware;
+import org.mule.api.context.MuleContextAware;
+import org.mule.impl.config.MuleConfiguration;
 import org.mule.util.FileUtils;
 import org.mule.util.file.DeleteException;
 
@@ -64,7 +64,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy, MuleCo
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#store(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#store(java.lang.Object)
      */
     public Object store(String queue, Object obj) throws IOException
     {
@@ -80,7 +80,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy, MuleCo
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#remove(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#remove(java.lang.Object)
      */
     public void remove(String queue, Object id) throws IOException
     {
@@ -101,7 +101,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy, MuleCo
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#load(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#load(java.lang.Object)
      */
     public Object load(String queue, Object id) throws IOException
     {
@@ -129,7 +129,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy, MuleCo
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#restore()
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#restore()
      */
     public List restore() throws IOException
     {
@@ -192,7 +192,7 @@ public class FilePersistenceStrategy implements QueuePersistenceStrategy, MuleCo
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#close()
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#close()
      */
     public void close() throws IOException
     {

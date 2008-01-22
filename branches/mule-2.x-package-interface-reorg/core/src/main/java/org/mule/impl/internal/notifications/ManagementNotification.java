@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
 
 /**
  * <code>ManagementNotification</code> is fired when monitored resources such as
  * internal queues reach capacity
  * 
  * @see org.mule.MuleManager
- * @see org.mule.umo.manager.UMOManager
+ * @see org.mule.api.context.UMOManager
  */
 public class ManagementNotification extends UMOServerNotification
 {

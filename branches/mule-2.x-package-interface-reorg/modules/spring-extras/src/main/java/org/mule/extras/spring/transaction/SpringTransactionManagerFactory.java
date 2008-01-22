@@ -10,7 +10,7 @@
 
 package org.mule.extras.spring.transaction;
 
-import org.mule.umo.manager.UMOTransactionManagerFactory;
+import org.mule.api.context.UMOTransactionManagerFactory;
 
 import javax.transaction.TransactionManager;
 

@@ -10,8 +10,8 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
 
 import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;

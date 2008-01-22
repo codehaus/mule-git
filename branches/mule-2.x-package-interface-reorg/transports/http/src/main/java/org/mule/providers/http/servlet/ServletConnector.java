@@ -10,11 +10,11 @@
 
 package org.mule.providers.http.servlet;
 
-import org.mule.providers.AbstractConnector;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpsConnector;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.Map;
 

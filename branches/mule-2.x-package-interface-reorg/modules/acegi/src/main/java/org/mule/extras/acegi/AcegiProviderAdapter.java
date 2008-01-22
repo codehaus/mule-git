@@ -10,13 +10,13 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UMOSecurityContextFactory;
-import org.mule.umo.security.UMOSecurityProvider;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UMOSecurityContextFactory;
+import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.UnknownAuthenticationTypeException;
 
 import java.util.Map;
 

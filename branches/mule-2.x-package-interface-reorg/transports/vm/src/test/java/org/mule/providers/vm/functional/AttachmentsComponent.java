@@ -9,10 +9,10 @@
  */
 package org.mule.providers.vm.functional;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
 import org.mule.impl.MuleMessage;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
 
 import java.io.File;
 

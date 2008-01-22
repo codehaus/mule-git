@@ -34,7 +34,7 @@
     -->
     <model name="InjectionProblem">
         <mule-descriptor name="pojo1"
-            implementation="org.mule.components.simple.EchoComponent">
+            implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="vm://pojo1" synchronous="true" />
             </inbound-router>
@@ -47,7 +47,7 @@
         </mule-descriptor>
 
         <mule-descriptor name="pojo2"
-            implementation="org.mule.components.simple.EchoComponent">
+            implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="jms://pojo2" remoteSync="false" />
             </inbound-router>
@@ -65,7 +65,7 @@
         </mule-descriptor>
 
         <mule-descriptor name="pojo3"
-            implementation="org.mule.components.simple.EchoComponent">
+            implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="jms://pojo3"/>
             </inbound-router>

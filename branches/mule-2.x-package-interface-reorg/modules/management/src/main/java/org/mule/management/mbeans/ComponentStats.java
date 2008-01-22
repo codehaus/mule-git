@@ -10,8 +10,8 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.management.stats.RouterStatistics;
+import org.mule.impl.management.stats.ComponentStatistics;
+import org.mule.impl.management.stats.RouterStatistics;
 
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;

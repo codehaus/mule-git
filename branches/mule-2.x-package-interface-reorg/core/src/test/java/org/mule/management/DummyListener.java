@@ -10,8 +10,8 @@
 
 package org.mule.management;
 
-import org.mule.umo.manager.UMOServerNotificationListener;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
 
 public class DummyListener implements UMOServerNotificationListener
 {

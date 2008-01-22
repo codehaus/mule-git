@@ -9,9 +9,9 @@
  */
 package org.mule.providers.email.config;
 
+import org.mule.api.UMOException;
 import org.mule.providers.email.ImapConnector;
 import org.mule.providers.email.ImapsConnector;
-import org.mule.umo.UMOException;
 
 public class ImapNamespaceHandlerTestCase extends AbstractEmailNamespaceHandlerTestCase
 {

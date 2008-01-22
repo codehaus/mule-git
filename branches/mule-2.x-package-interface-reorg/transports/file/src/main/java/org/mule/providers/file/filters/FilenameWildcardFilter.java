@@ -10,9 +10,9 @@
 
 package org.mule.providers.file.filters;
 
+import org.mule.api.UMOMessage;
+import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.providers.file.FileConnector;
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.umo.UMOMessage;
 
 import java.io.File;
 import java.io.FilenameFilter;

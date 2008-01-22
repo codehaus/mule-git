@@ -10,9 +10,9 @@
 
 package org.mule.tck.functional;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.AbstractExceptionListener;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

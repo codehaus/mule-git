@@ -10,12 +10,12 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.stdio.i18n.StdioMessages;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
 import org.mule.util.StringUtils;
 
 import java.io.OutputStream;
@@ -87,7 +87,7 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnector#send(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnector#send(org.mule.api.UMOEvent)
      */
     protected UMOMessage doSend(UMOEvent event) throws Exception
     {

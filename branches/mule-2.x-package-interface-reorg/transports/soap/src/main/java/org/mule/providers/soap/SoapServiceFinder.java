@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap;
 
+import org.mule.api.registry.ServiceDescriptor;
+import org.mule.api.registry.ServiceException;
+import org.mule.api.registry.ServiceFinder;
 import org.mule.providers.soap.i18n.SoapMessages;
-import org.mule.registry.ServiceDescriptor;
-import org.mule.registry.ServiceException;
-import org.mule.registry.ServiceFinder;
 import org.mule.util.ClassUtils;
 import org.mule.util.PropertiesUtils;
 

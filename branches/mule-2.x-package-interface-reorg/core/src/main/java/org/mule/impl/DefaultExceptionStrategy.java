@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.NullPayload;
 import org.mule.util.ObjectUtils;
 
 /**

@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.transaction;
 
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.UMOTransaction;
+import org.mule.api.UMOTransaction;
+import org.mule.impl.transaction.TransactionCoordination;
 
 import java.util.Map;
 

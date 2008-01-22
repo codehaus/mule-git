@@ -24,7 +24,7 @@ public class XFireAddClientServiceInterfaceTestCase extends AbstractMuleTestCase
         connector = new XFireConnector();
         connector.setMuleContext(muleContext);
         List clientServices = new ArrayList();
-        clientServices.add("org.mule.components.simple.EchoService");
+        clientServices.add("org.mule.api.component.EchoService");
         connector.setClientServices(clientServices);
         connector.initialise();
     }

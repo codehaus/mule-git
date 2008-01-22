@@ -10,56 +10,57 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.ComponentException;
+import org.mule.api.InitialisationCallback;
 import org.mule.api.MuleContext;
-import org.mule.components.simple.PassThroughComponent;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOComponentAware;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.model.ModelException;
+import org.mule.api.model.MuleProxy;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.model.UMOModel;
+import org.mule.api.routing.UMOInboundRouterCollection;
+import org.mule.api.routing.UMONestedRouterCollection;
+import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.routing.UMOResponseRouterCollection;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.impl.DefaultComponentExceptionStrategy;
-import org.mule.impl.InitialisationCallback;
-import org.mule.impl.MuleContextAware;
 import org.mule.impl.OptimizedRequestContext;
-import org.mule.impl.UMOComponentAware;
-import org.mule.impl.model.resolvers.DefaultEntryPointResolverSet;
+import org.mule.impl.component.simple.PassThroughComponent;
 import org.mule.impl.internal.notifications.ComponentNotification;
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.providers.AbstractConnector;
-import org.mule.routing.inbound.InboundPassThroughRouter;
-import org.mule.routing.inbound.InboundRouterCollection;
-import org.mule.routing.nested.NestedRouterCollection;
-import org.mule.routing.outbound.OutboundPassThroughRouter;
-import org.mule.routing.outbound.OutboundRouterCollection;
-import org.mule.routing.response.ResponseRouterCollection;
-import org.mule.umo.ComponentException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.umo.model.ModelException;
-import org.mule.umo.model.UMOEntryPointResolverSet;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOMessageReceiver;
-import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.umo.routing.UMONestedRouterCollection;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.routing.UMOResponseRouterCollection;
+import org.mule.impl.management.stats.ComponentStatistics;
+import org.mule.impl.model.resolvers.DefaultEntryPointResolverSet;
+import org.mule.impl.routing.inbound.InboundPassThroughRouter;
+import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.nested.NestedRouterCollection;
+import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
+import org.mule.impl.routing.outbound.OutboundRouterCollection;
+import org.mule.impl.routing.response.ResponseRouterCollection;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.concurrent.WaitableBoolean;
 import org.mule.util.object.ObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
 
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
@@ -172,7 +173,7 @@ public abstract class AbstractComponent implements UMOComponent
      * UMODescriptor and then initialise a pool based on the attributes in the
      * UMODescriptor.
      *
-     * @throws org.mule.umo.lifecycle.InitialisationException
+     * @throws org.mule.api.lifecycle.InitialisationException
      *          if the component fails
      *          to initialise
      */
@@ -316,7 +317,7 @@ public abstract class AbstractComponent implements UMOComponent
         // be
         // some initialization required for the component which needs to have them
         // connected.
-        // For example, the org.mule.providers.soap.glue.GlueMessageReceiver adds
+        // For example, the org.mule.impl.transport.soap.glue.GlueMessageReceiver adds
         // InitialisationCallbacks within its doConnect() method (see MULE-804).
         connectListeners();
 

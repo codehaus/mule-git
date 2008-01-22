@@ -12,19 +12,19 @@ package org.mule.providers.soap.xfire.transport;
 
 
 import org.mule.RegistryContext;
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.OutputHandler;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.OutputHandler;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;

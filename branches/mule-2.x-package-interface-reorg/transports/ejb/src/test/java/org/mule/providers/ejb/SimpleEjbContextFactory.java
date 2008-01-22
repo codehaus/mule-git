@@ -10,7 +10,7 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.config.PropertyFactory;
+import org.mule.api.config.PropertyFactory;
 import org.mule.impl.jndi.MuleInitialContextFactory;
 
 import java.util.Hashtable;

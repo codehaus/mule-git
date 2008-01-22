@@ -10,6 +10,7 @@
 
 package org.mule.management;
 
+import org.mule.api.context.UMOServerNotification;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.impl.internal.notifications.ComponentNotificationListener;
 import org.mule.impl.internal.notifications.CustomNotification;
@@ -20,7 +21,6 @@ import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.internal.notifications.ModelNotificationListener;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.manager.UMOServerNotification;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

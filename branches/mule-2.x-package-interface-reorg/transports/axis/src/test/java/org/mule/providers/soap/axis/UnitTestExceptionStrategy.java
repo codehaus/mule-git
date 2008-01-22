@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOMessage;
 import org.mule.impl.DefaultComponentExceptionStrategy;
-import org.mule.umo.UMOMessage;
 
 import java.util.ArrayList;
 import java.util.List;

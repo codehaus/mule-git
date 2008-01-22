@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
 
 /**
  * <code>SecurityNotification</code> is fired when a request for authorisation
@@ -19,7 +19,7 @@ import org.mule.umo.manager.UMOServerNotification;
  * access log, block clients, etc.
  * 
  * @see org.mule.MuleManager
- * @see org.mule.umo.manager.UMOManager
+ * @see org.mule.api.context.UMOManager
  */
 public class SecurityNotification extends UMOServerNotification
 {
@@ -34,7 +34,7 @@ public class SecurityNotification extends UMOServerNotification
         registerAction("authenitication failed", SECURITY_AUTHENTICATION_FAILED);
     }
 
-    public SecurityNotification(org.mule.umo.security.SecurityException message, int action)
+    public SecurityNotification(org.mule.api.security.SecurityException message, int action)
     {
         super(message, action);
         resourceIdentifier = message.toString();

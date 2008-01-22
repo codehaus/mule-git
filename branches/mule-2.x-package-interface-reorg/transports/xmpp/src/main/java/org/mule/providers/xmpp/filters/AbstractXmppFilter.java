@@ -10,8 +10,8 @@
 
 package org.mule.providers.xmpp.filters;
 
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOMessage;
 
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Packet;

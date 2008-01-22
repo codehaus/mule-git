@@ -10,10 +10,10 @@
 
 package org.mule.providers.email;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 import javax.mail.internet.MimeMessage;
 

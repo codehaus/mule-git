@@ -11,19 +11,19 @@
 package org.mule.impl.internal.admin;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.wire.WireFormat;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.service.TransportFactory;
-import org.mule.transformers.wire.SerializationWireFormat;
-import org.mule.transformers.wire.WireFormat;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.impl.transformer.wire.SerializationWireFormat;
+import org.mule.impl.transport.service.TransportFactory;
 import org.mule.util.StringUtils;
 
 import org.apache.commons.logging.Log;

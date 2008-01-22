@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.MuleProperties;
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.transformer.simple.SerializableToByteArray;
+import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Iterator;
 

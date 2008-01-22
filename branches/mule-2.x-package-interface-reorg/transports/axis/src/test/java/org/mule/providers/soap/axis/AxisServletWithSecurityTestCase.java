@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.servlet.MuleReceiverServlet;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.beans.ExceptionListener;
 import java.util.HashMap;

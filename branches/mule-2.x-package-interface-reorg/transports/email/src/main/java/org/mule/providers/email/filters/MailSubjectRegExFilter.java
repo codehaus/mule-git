@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.filters;
 
-import org.mule.routing.filters.RegExFilter;
+import org.mule.impl.routing.filters.RegExFilter;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;

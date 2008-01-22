@@ -10,10 +10,10 @@
 
 package org.mule.providers.tcp.issues;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.protocols.LengthProtocol;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.io.BufferedInputStream;
 import java.net.InetSocketAddress;

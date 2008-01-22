@@ -10,11 +10,26 @@
 
 package org.mule.tck;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.model.UMOModel;
+import org.mule.api.routing.UMOInboundRouterCollection;
+import org.mule.api.routing.UMONestedRouter;
+import org.mule.api.routing.UMONestedRouterCollection;
+import org.mule.api.routing.UMOOutboundRouter;
+import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.routing.UMOResponseRouter;
+import org.mule.api.routing.UMOResponseRouterCollection;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.AbstractExceptionListener;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
-import org.mule.routing.ForwardingCatchAllStrategy;
+import org.mule.impl.routing.ForwardingCatchAllStrategy;
+import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
+import org.mule.impl.transformer.TransformerUtils;
 import org.mule.routing.filters.xml.JXPathFilter;
-import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.testmodels.fruit.FruitCleaner;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
@@ -22,21 +37,6 @@ import org.mule.tck.testmodels.mule.TestEntryPointResolverSet;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
 import org.mule.tck.testmodels.mule.TestResponseAggregator;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.umo.routing.UMONestedRouter;
-import org.mule.umo.routing.UMONestedRouterCollection;
-import org.mule.umo.routing.UMOOutboundRouter;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.routing.UMOResponseRouter;
-import org.mule.umo.routing.UMOResponseRouterCollection;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.List;
 

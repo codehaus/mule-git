@@ -10,15 +10,15 @@
 
 package org.mule.providers.file;
 
-import org.mule.MuleException;
 import org.mule.RegistryContext;
+import org.mule.api.MuleException;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageRequester;
+import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
 import org.mule.providers.file.i18n.FileMessages;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.FileUtils;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class FileMessageRequester extends AbstractMessageRequester
     /**
      * There is no associated session for a file connector
      *
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public Object getDelegateSession() throws UMOException
     {

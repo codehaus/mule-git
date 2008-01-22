@@ -10,21 +10,21 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.ExceptionHelper;
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.impl.config.ExceptionHelper;
+import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.extras.AxisCleanAndAddProperties;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.InvocationHandler;

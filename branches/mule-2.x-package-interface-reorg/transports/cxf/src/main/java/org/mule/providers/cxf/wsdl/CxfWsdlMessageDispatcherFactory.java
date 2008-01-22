@@ -10,10 +10,10 @@
 
 package org.mule.providers.cxf.wsdl;
 
-import org.mule.providers.AbstractMessageDispatcherFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.impl.transport.AbstractMessageDispatcherFactory;
 
 /**
  * Creates an XFire WSDL Message Dispatcher

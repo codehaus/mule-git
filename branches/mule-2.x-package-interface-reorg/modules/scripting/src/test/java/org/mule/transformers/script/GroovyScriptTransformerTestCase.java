@@ -10,8 +10,8 @@
 
 package org.mule.transformers.script;
 
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.ArrayList;
 import java.util.List;

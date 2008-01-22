@@ -10,9 +10,9 @@
 
 package org.mule.providers.vm;
 
-import org.mule.providers.AbstractMessageRequester;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 

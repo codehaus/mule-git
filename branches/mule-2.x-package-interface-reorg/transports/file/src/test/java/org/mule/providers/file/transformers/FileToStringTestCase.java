@@ -10,9 +10,9 @@
 
 package org.mule.providers.file.transformers;
 
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.FileUtils;
 import org.mule.util.SystemUtils;
 

@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.provider.UMOConnectable;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.transport.UMOConnectable;
 
 /**
  * Is fired by a connector when a connection is made, or disconnected of the

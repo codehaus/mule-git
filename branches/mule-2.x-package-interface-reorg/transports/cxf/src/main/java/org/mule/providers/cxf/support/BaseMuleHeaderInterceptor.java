@@ -1,10 +1,10 @@
 
 package org.mule.providers.cxf.support;
 
-import static org.mule.config.MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY;
-import static org.mule.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY;
+import static org.mule.api.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
 import static org.mule.providers.soap.MuleSoapHeaders.MULE_10_ACTOR;
 import static org.mule.providers.soap.MuleSoapHeaders.MULE_HEADER;
 import static org.mule.providers.soap.MuleSoapHeaders.MULE_NAMESPACE;

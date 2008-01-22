@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 
 import javax.jms.Destination;
 
@@ -24,7 +24,7 @@ public interface JmsTopicResolver
      * Use endpoint configuration to detect a topic.
      * @param endpoint endpoint to test
      * @return true if endpoint's config tells it's a topic
-     * @see #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean)
+     * @see #isTopic(org.mule.api.endpoint.UMOImmutableEndpoint, boolean)
      */
     boolean isTopic(UMOImmutableEndpoint endpoint);
 

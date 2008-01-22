@@ -10,11 +10,11 @@
 
 package org.mule.impl.internal.notifications;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnectable;
 import org.mule.impl.MuleMessage;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.provider.UMOConnectable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -10,8 +10,8 @@
 
 package org.mule.impl.model;
 
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.model.ModelException;
+import org.mule.api.model.ModelException;
+import org.mule.imple.config.i18n.MessageFactory;
 
 /**
  * Is thrown when a model service name is specified and cannot be found or loaded

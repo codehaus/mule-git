@@ -10,10 +10,10 @@
 
 package org.mule.providers.tcp.protocols;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 public class SafeProtocolTestCase extends FunctionalTestCase
 {

@@ -34,7 +34,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
  * <p>
  * Data are read until a new document is found or there are no more data
  * (momentarily).  For slower networks,
- * {@link org.mule.providers.tcp.protocols.XmlMessageEOFProtocol} may be more reliable.
+ * {@link org.mule.impl.transport.tcp.protocols.XmlMessageEOFProtocol} may be more reliable.
  * </p>
  * <p>
  * Also, the default character encoding for the platform is used to decode the

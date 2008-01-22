@@ -10,20 +10,20 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.DispatchException;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.cxf.i18n.CxfMessages;
 import org.mule.providers.cxf.support.MuleHeadersInInterceptor;
 import org.mule.providers.cxf.support.MuleHeadersOutInterceptor;
 import org.mule.providers.soap.i18n.SoapMessages;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.transformer.TransformerException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

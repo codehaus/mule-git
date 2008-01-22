@@ -10,10 +10,10 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.api.MessagingException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.util.StringUtils;
 
 import java.util.Iterator;

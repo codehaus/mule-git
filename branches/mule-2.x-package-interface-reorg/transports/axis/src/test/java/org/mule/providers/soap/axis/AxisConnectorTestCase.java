@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 /**
  * Test case for AxisConnector's basic behaviour

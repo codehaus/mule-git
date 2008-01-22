@@ -10,7 +10,8 @@
 package org.mule.impl.registry;
 
 import org.mule.api.MuleContext;
-import org.mule.impl.MuleContextAware;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.registry.ObjectProcessor;
 
 /**
  * TODO

@@ -10,23 +10,23 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.api.MuleContext;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.registry.Registry;
 import org.mule.impl.lifecycle.phases.MuleContextStartPhase;
 import org.mule.impl.lifecycle.phases.MuleContextStopPhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryDisposePhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryInitialisePhase;
-import org.mule.registry.Registry;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
 
 /**
  * Creates the default Mule lifecycleManager with {@link Initialisable#initialise()}, {@link Startable#start()},
- * {@link Stoppable#stop()} and {@link org.mule.umo.lifecycle.Disposable#dispose()}.
+ * {@link Stoppable#stop()} and {@link org.mule.api.lifecycle.Disposable#dispose()}.
  *
- * @see org.mule.umo.lifecycle.Initialisable
- * @see org.mule.umo.lifecycle.Startable
- * @see org.mule.umo.lifecycle.Stoppable
- * @see org.mule.umo.lifecycle.Disposable
+ * @see org.mule.api.lifecycle.Initialisable
+ * @see org.mule.api.lifecycle.Startable
+ * @see org.mule.api.lifecycle.Stoppable
+ * @see org.mule.api.lifecycle.Disposable
  */
 public class DefaultLifecycleManager extends GenericLifecycleManager
 {

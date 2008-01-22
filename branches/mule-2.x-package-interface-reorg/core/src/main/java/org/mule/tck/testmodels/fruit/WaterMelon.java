@@ -10,11 +10,11 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
 
 import java.util.HashMap;
 

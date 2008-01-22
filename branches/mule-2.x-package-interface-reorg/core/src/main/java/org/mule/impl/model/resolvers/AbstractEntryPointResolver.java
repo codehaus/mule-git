@@ -9,12 +9,12 @@
  */
 package org.mule.impl.model.resolvers;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.transformer.TransformerException;
 import org.mule.impl.VoidResult;
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.impl.transport.NullPayload;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -27,7 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A Base class for {@link org.mule.umo.model.UMOEntryPointResolver}. It provides parameters for
+ * A Base class for {@link org.mule.api.model.UMOEntryPointResolver}. It provides parameters for
  * detemining if the payload of the message should be transformed first and whether void methods are
  * acceptible. It also provides a method cashe for those resolvers that use reflection to discover methods
  * on the component.

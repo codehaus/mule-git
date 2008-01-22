@@ -11,10 +11,10 @@
 package org.mule.management.mbeans;
 
 import org.mule.api.MuleContext;
-import org.mule.management.stats.AllStatistics;
-import org.mule.management.stats.printers.CSVPrinter;
-import org.mule.management.stats.printers.HtmlTablePrinter;
-import org.mule.management.stats.printers.XMLPrinter;
+import org.mule.impl.management.stats.AllStatistics;
+import org.mule.impl.management.stats.printers.CSVPrinter;
+import org.mule.impl.management.stats.printers.HtmlTablePrinter;
+import org.mule.impl.management.stats.printers.XMLPrinter;
 
 import java.io.StringWriter;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class StatisticsService implements StatisticsServiceMBean
     }
 
     /**
-     * @see org.mule.management.stats.Statistics#clear()
+     * @see org.mule.api.management.stats.Statistics#clear()
      */
     public void clear()
     {
@@ -63,7 +63,7 @@ public class StatisticsService implements StatisticsServiceMBean
     }
 
     /**
-     * @see org.mule.management.stats.Statistics#isEnabled()
+     * @see org.mule.api.management.stats.Statistics#isEnabled()
      */
     public boolean isEnabled()
     {
@@ -71,7 +71,7 @@ public class StatisticsService implements StatisticsServiceMBean
     }
 
     /**
-     * @see org.mule.management.stats.Statistics#setEnabled(boolean)
+     * @see org.mule.api.management.stats.Statistics#setEnabled(boolean)
      */
     public void setEnabled(boolean b)
     {

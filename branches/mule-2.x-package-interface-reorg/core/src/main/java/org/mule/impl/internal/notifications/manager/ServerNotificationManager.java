@@ -10,27 +10,28 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.LifecycleException;
-import org.mule.umo.manager.UMOWorkManager;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
-import org.mule.util.ClassUtils;
-import org.mule.impl.internal.notifications.BlockingServerEvent;
-import org.mule.config.MuleConfiguration;
 import org.mule.RegistryContext;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.LifecycleException;
+import org.mule.impl.config.MuleConfiguration;
+import org.mule.impl.internal.notifications.BlockingServerEvent;
+import org.mule.util.ClassUtils;
 
-import java.util.Map;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkListener;
 import javax.resource.spi.work.WorkManager;
-import javax.resource.spi.work.WorkException;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

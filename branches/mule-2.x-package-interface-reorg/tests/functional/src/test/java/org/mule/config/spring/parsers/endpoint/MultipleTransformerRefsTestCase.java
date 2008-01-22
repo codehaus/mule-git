@@ -10,9 +10,9 @@
 
 package org.mule.config.spring.parsers.endpoint;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.UMOTransformer;
 
 import java.util.List;
 

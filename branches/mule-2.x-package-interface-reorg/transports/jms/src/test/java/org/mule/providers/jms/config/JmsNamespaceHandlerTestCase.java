@@ -9,19 +9,19 @@
  */
 package org.mule.providers.jms.config;
 
+import org.mule.api.UMOFilter;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.jms.DefaultRedeliveryHandler;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.filters.JmsPropertyFilter;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
 import org.mule.providers.jms.test.TestConnectionFactory;
 import org.mule.providers.jms.test.TestRedeliveryHandler;
-import org.mule.routing.filters.logic.NotFilter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestTransactionFactory;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import javax.jms.Session;
 

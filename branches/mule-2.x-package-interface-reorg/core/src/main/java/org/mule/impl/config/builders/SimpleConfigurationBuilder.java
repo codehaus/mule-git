@@ -3,7 +3,7 @@ package org.mule.impl.config.builders;
 
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.registry.Registry;
+import org.mule.api.registry.Registry;
 
 import java.util.Map;
 

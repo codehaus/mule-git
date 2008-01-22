@@ -10,10 +10,10 @@
 
 package org.mule.providers.email;
 
-import org.mule.providers.AbstractMessageRequesterFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageRequester;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageRequester;
+import org.mule.impl.transport.AbstractMessageRequesterFactory;
 
 /**
  * A source of mail receiving message dispatchers.

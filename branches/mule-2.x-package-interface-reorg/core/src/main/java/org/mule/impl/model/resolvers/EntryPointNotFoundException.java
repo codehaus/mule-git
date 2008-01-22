@@ -9,8 +9,8 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
+import org.mule.imple.config.i18n.MessageFactory;
 
 /**
  * Tis exception gets thrown by the {@link org.mule.impl.model.resolvers.DefaultEntryPointResolverSet} if after trying

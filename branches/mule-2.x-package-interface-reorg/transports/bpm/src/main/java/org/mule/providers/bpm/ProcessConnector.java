@@ -10,13 +10,13 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.config.ConfigurationException;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.AbstractConnector;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.util.Map;

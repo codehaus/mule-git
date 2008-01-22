@@ -10,11 +10,12 @@
 
 package org.mule.impl.model;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.registry.AbstractServiceDescriptor;
-import org.mule.registry.ServiceException;
-import org.mule.umo.model.UMOModel;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.model.ModelServiceDescriptor;
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.AbstractServiceDescriptor;
+import org.mule.api.registry.ServiceException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 

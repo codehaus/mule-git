@@ -10,11 +10,11 @@
 
 package org.mule.providers.http.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformers.xml.XsltTransformer;
-import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
 import java.io.InputStream;

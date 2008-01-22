@@ -10,8 +10,8 @@
 
 package org.mule.samples.errorhandler.exceptions;
 
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
+import org.mule.imple.config.i18n.MessageFactory;
 
 /**
  * <code>BusinessException</code> TODO (document class)

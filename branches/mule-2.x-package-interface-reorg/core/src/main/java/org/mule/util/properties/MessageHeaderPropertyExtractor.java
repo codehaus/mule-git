@@ -10,10 +10,8 @@
 
 package org.mule.util.properties;
 
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOMessage;
-
-import java.sql.Timestamp;
+import org.mule.api.UMOMessage;
+import org.mule.impl.transport.NullPayload;
 
 /**
  * Looks up the property on the message using the name given.

@@ -9,12 +9,12 @@
  */
 package org.mule.mule.model;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
 import org.mule.impl.model.resolvers.MethodHeaderPropertyEntryPointResolver;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
 
 public class MethodHeaderEntryPointResolverTestCase extends AbstractMuleTestCase
 {

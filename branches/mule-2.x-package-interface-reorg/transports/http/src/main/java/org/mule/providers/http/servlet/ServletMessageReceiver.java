@@ -10,12 +10,12 @@
 
 package org.mule.providers.http.servlet;
 
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
 
 /**
  * <code>ServletMessageReceiver</code> is a receiver that is invoked from a Servlet

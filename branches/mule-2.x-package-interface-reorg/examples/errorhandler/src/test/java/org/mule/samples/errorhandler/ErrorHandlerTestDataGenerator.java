@@ -10,12 +10,12 @@
 
 package org.mule.samples.errorhandler;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.MuleException;
+import org.mule.api.lifecycle.FatalException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.samples.errorhandler.exceptions.BusinessException;
 import org.mule.transformers.xml.ObjectToXml;
-import org.mule.umo.lifecycle.FatalException;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.FileUtils;
 
 import java.io.IOException;

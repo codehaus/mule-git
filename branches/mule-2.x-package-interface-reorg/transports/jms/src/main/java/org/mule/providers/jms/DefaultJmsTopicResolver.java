@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.util.MapUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -61,7 +61,7 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
     /**
      * Will use endpoint's resource info to detect a topic,
      * as in {@code jms://topic:trade.PriceUpdatesTopic}. This
-     * method will call {@link #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean)}
+     * method will call {@link #isTopic(org.mule.api.endpoint.UMOImmutableEndpoint, boolean)}
      * with fallback flag set to <strong>true</false>.
      * <p/>
      * <strong>NOTE:</strong> When using topics, use the '.' (dot) symbol for subcontext separation,
@@ -69,7 +69,7 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
      * topic endpoint due to the way URI's are parsed. 
      * @param endpoint endpoint to test
      * @return true if the endpoint has a topic configuration
-     * @see #isTopic(org.mule.umo.endpoint.UMOImmutableEndpoint, boolean) 
+     * @see #isTopic(org.mule.api.endpoint.UMOImmutableEndpoint, boolean) 
      */
     public boolean isTopic (UMOImmutableEndpoint endpoint)
     {

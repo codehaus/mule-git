@@ -10,12 +10,12 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.providers.http.transformers.UMOMessageToHttpResponse;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.CollectionUtils;
 
 import com.mockobjects.dynamic.Mock;

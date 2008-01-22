@@ -34,7 +34,7 @@
             <property name="maxRedelivery" value="2"/>
         </properties>
         <threading-profile maxThreadsActive="2" maxThreadsIdle="2" threadTTL="60000" poolExhaustedAction="WAIT"/>
-        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+        <connection-strategy className="org.mule.impl.transport.SimpleRetryConnectionStrategy">
             <properties>
                 <property name="retryCount" value="4"/>
                 <property name="frequency" value="10000"/>
@@ -55,7 +55,7 @@
             <property name="maxRedelivery" value="2"/>
         </properties>
         <threading-profile maxThreadsActive="5" maxThreadsIdle="5" threadTTL="60000" poolExhaustedAction="WAIT"/>
-        <connection-strategy className="org.mule.providers.SimpleRetryConnectionStrategy">
+        <connection-strategy className="org.mule.impl.transport.SimpleRetryConnectionStrategy">
             <properties>
                 <property name="retryCount" value="4"/>
                 <property name="frequency" value="10000"/>
@@ -93,7 +93,7 @@
 
     <model name="bus-instance">
 
-        <mule-descriptor name="service1" implementation="org.mule.components.simple.EchoComponent">
+        <mule-descriptor name="service1" implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="endpoint1" type="receiver" synchronous="true">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
@@ -112,7 +112,7 @@
         </mule-descriptor>
 
 
-        <mule-descriptor name="service2" implementation="org.mule.components.simple.EchoComponent">
+        <mule-descriptor name="service2" implementation="org.mule.impl.component.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="endpoint2" type="receiver" synchronous="true">
                     <transaction action="ALWAYS_BEGIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>

@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.xfire;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.Person;
 import org.mule.tck.testmodels.services.PersonResponse;
-import org.mule.umo.UMOMessage;
 
 public class WsdlComplexTypeMethodTestCase extends FunctionalTestCase
 {

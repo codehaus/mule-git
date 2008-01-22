@@ -11,14 +11,14 @@
 package org.mule.examples.loanbroker;
 
 import org.mule.api.MuleContextFactory;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;

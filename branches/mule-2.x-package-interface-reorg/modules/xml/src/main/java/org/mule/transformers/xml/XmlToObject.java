@@ -10,8 +10,8 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
  * objects that get marshalled to XML do not need to implement any interfaces including
  * Serializable and you don't even need to specify a default constructor.
  *
- * @see org.mule.transformers.xml.ObjectToXml
+ * @see org.mule.impl.transformer.xml.ObjectToXml
  */
 
 public class XmlToObject extends AbstractXStreamTransformer

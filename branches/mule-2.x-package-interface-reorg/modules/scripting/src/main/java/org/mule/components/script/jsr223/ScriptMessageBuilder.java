@@ -10,12 +10,12 @@
 
 package org.mule.components.script.jsr223;
 
-import org.mule.components.builder.AbstractMessageBuilder;
-import org.mule.components.builder.MessageBuilderException;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.component.builder.AbstractMessageBuilder;
+import org.mule.impl.component.builder.MessageBuilderException;
 
 import javax.script.Bindings;
 import javax.script.Compilable;

@@ -10,9 +10,9 @@
 
 package org.mule.management.mbeans;
 
+import org.mule.impl.management.stats.RouterStatistics;
+import org.mule.impl.management.stats.SedaComponentStatistics;
 import org.mule.management.AbstractMuleJmxTestCase;
-import org.mule.management.stats.RouterStatistics;
-import org.mule.management.stats.SedaComponentStatistics;
 
 import java.util.Set;
 

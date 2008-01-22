@@ -10,12 +10,12 @@
 
 package org.mule.providers.http;
 
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
 
 import java.io.IOException;
 import java.net.Socket;

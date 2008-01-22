@@ -10,14 +10,14 @@
 
 package org.mule.providers.http.servlet;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.MessagingException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.api.transport.UniqueIdNotSupportedException;
+import org.mule.impl.transport.AbstractMessageAdapter;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.HttpConstants;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.umo.provider.UniqueIdNotSupportedException;
 
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -99,7 +99,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.providers.UMOMessageAdapter#getMessage()
+     * @see org.mule.api.providers.UMOMessageAdapter#getMessage()
      */
     public Object getPayload()
     {
@@ -114,7 +114,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.providers.UMOMessageAdapter#setMessage(java.lang.Object)
+     * @see org.mule.api.providers.UMOMessageAdapter#setMessage(java.lang.Object)
      */
     private void setPayload(HttpServletRequest message) throws MessagingException
     {

@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.umo.UMOSession;
+import org.mule.api.UMOSession;
 
 import org.codehaus.xfire.transport.Session;
 

@@ -10,8 +10,8 @@
 
 package org.mule.test.usecases;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
 
 public class ReceiverComponent implements Callable
 {

@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.umo.UMOEventContext;
+import org.mule.api.UMOEventContext;
 
 /**
  * A test object not implementing Callable, but having a matching method accepting

@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms.activemq;
 
-import org.mule.providers.ConnectException;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.xa.ConnectionInvocationHandler;
 import org.mule.util.ClassUtils;

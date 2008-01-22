@@ -12,18 +12,18 @@ package org.mule.ra;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
 import org.mule.api.config.ConfigurationBuilder;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.model.UMOModel;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.endpoint.URIBuilder;
 import org.mule.impl.model.ModelFactory;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.model.UMOModel;
 import org.mule.util.ClassUtils;
 import org.mule.util.object.SingletonObjectFactory;
 

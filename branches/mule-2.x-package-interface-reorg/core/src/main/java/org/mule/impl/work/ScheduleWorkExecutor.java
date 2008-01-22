@@ -27,6 +27,8 @@
 
 package org.mule.impl.work;
 
+import org.mule.api.work.WorkExecutor;
+
 import javax.resource.spi.work.WorkException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;

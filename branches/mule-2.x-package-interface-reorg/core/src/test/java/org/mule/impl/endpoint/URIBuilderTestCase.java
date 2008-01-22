@@ -1,7 +1,7 @@
 package org.mule.impl.endpoint;
 
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 import java.util.HashMap;
 import java.util.Map;

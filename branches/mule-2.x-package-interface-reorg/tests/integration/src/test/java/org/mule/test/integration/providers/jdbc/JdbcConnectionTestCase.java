@@ -11,14 +11,14 @@
 package org.mule.test.integration.providers.jdbc;
 
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.providers.SimpleRetryConnectionStrategy;
+import org.mule.impl.transport.SimpleRetryConnectionStrategy;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 import javax.sql.DataSource;
 

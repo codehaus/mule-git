@@ -13,12 +13,12 @@ package org.mule.impl.config.builders;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleContextFactory;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.config.ConfigurationException;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public class AutoConfigurationBuilderTestCase extends AbstractMuleTestCase
 {

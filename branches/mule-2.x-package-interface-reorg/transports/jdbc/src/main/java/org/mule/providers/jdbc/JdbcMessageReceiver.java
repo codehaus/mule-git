@@ -10,17 +10,17 @@
 
 package org.mule.providers.jdbc;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOTransaction;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.ConnectException;
-import org.mule.providers.TransactedPollingMessageReceiver;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transport.ConnectException;
+import org.mule.impl.transport.TransactedPollingMessageReceiver;
 import org.mule.util.ArrayUtils;
 
 import java.sql.Connection;

@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.config.i18n.Message;
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
+import org.mule.imple.config.i18n.Message;
 
 /**
  * Thrown by the ServerNotification Manager if unrecognised listeners or events are

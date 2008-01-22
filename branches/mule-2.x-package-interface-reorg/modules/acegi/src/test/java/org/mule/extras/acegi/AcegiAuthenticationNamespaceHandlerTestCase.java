@@ -10,8 +10,8 @@
 
 package org.mule.extras.acegi;
 
+import org.mule.api.endpoint.UMOEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOEndpoint;
 
 import java.util.Collection;
 import java.util.Iterator;

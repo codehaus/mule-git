@@ -11,8 +11,8 @@
 package org.mule.issues;
 
 import org.mule.tck.FunctionalTestCase;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOMessage;
 
 public class TransformerChainMule2063TestCase extends FunctionalTestCase
 {

@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.transformers;
 
-import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractTransformer;
 
 import javax.mail.Message;
 import javax.mail.internet.MimeMultipart;
@@ -32,7 +32,7 @@ public class EmailMessageToString extends AbstractTransformer
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transformers.AbstractTransformer#doTransform(java.lang.Object)
+     * @see org.mule.impl.transformer.AbstractTransformer#doTransform(java.lang.Object)
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {

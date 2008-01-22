@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.manager.UMOServerNotificationListener;
+import org.mule.api.context.UMOServerNotificationListener;
 
 /**
  * <code>ConnectionNotificationListener</code> is an observer interface that

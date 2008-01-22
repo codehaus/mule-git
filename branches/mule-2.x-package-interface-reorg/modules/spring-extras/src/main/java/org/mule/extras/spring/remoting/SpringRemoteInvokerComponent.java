@@ -10,11 +10,11 @@
 
 package org.mule.extras.spring.remoting;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import org.springframework.beans.factory.InitializingBean;

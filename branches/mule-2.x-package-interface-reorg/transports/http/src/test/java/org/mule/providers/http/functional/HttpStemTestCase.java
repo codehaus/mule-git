@@ -10,11 +10,11 @@
 
 package org.mule.providers.http.functional;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOException;
 
 public class HttpStemTestCase extends FunctionalTestCase
 {

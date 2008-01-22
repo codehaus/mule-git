@@ -14,7 +14,7 @@ import org.mule.impl.internal.notifications.CustomNotificationListener;
 
 /**
  * By implementing this listener interface and registering the object with the
- * {@link org.mule.api.MuleContext#registerListener(org.mule.umo.manager.UMOServerNotificationListener)}
+ * {@link org.mule.api.MuleContext#registerListener(org.mule.api.context.UMOServerNotificationListener)}
  * You can receive {@link org.mule.tck.functional.FunctionalTestNotification}s from the
  * {@link org.mule.tck.functional.FunctionalTestComponent}.
  *

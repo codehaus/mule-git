@@ -10,9 +10,9 @@
 
 package org.mule.providers.quartz;
 
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.impl.transport.NullPayload;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 

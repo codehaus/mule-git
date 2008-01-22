@@ -10,12 +10,12 @@
 
 package org.mule.providers.ftp.issues;
 
+import org.mule.api.UMOEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.ftp.AbstractFtpServerTestCase;
 import org.mule.providers.ftp.server.NamedPayload;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
-import org.mule.umo.UMOEventContext;
 
 import java.util.HashMap;
 

@@ -10,14 +10,14 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UMOSecurityContextFactory;
-import org.mule.umo.security.UMOSecurityProvider;
-import org.mule.umo.security.UnauthorisedException;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UMOSecurityContextFactory;
+import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.UnauthorisedException;
+import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.IOException;
 import java.security.Security;
@@ -183,11 +183,11 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
      * Login Context is successfully created, it will then attempt to login.
      *
      * @return UMOAuthentication
-     * @throws org.mule.umo.security.SecurityException
+     * @throws org.mule.api.security.SecurityException
      *
      */
     public final UMOAuthentication authenticate(UMOAuthentication authentication)
-            throws org.mule.umo.security.SecurityException
+            throws org.mule.api.security.SecurityException
     {
         LoginContext loginContext;
         JaasAuthentication auth = (JaasAuthentication)authentication;
@@ -209,7 +209,7 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
         }
         catch (LoginException e)
         {
-            throw new org.mule.umo.security.UnauthorisedException(
+            throw new org.mule.api.security.UnauthorisedException(
                     CoreMessages.cannotLoadFromClasspath(loginContextName));
         }
 

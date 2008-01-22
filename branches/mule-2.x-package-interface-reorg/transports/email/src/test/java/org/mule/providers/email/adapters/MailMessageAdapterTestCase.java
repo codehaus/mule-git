@@ -10,11 +10,11 @@
 
 package org.mule.providers.email.adapters;
 
+import org.mule.api.MessagingException;
+import org.mule.api.registry.ServiceDescriptorFactory;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.providers.email.MailMessageAdapter;
-import org.mule.registry.ServiceDescriptorFactory;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.util.Properties;
 

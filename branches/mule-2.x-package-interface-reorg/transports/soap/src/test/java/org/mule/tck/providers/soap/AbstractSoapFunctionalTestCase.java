@@ -10,15 +10,15 @@
 
 package org.mule.tck.providers.soap;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.Person;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.DispatchException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

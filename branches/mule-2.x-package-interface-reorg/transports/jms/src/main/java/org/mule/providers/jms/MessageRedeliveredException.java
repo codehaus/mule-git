@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.i18n.Message;
+import org.mule.api.MessagingException;
+import org.mule.imple.config.i18n.Message;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.umo.MessagingException;
 
 public class MessageRedeliveredException extends MessagingException
 {

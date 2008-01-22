@@ -10,9 +10,9 @@
 
 package org.mule.examples.stockquote;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 public abstract class AbstractStockQuoteFunctionalTestCase extends FunctionalTestCase

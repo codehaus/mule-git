@@ -9,10 +9,10 @@
  */
 package org.mule.providers.vm.config;
 
-import org.mule.config.QueueProfile;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.impl.config.QueueProfile;
 import org.mule.impl.endpoint.URIBuilder;
 import org.mule.providers.vm.VMConnector;
 

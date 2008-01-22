@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.model.UMOModel;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.model.UMOModel;
 
 /**
  * <code>ModelNotification</code> is fired when an event such as the model starting
  * occurs. The payload of this event will always be a reference to the model.
  * 
- * @see org.mule.umo.model.UMOModel
+ * @see org.mule.api.model.UMOModel
  */
 public class ModelNotification extends UMOServerNotification implements BlockingServerEvent
 {

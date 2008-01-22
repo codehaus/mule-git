@@ -10,11 +10,11 @@
 
 package org.mule.providers.email.transformers;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.simple.SerializableToByteArray;
 import org.mule.providers.email.MailMessageAdapter;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;

@@ -10,10 +10,10 @@
 
 package org.mule.impl.container;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ContainerException;
-import org.mule.umo.manager.ObjectNotFoundException;
+import org.mule.api.context.ContainerException;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ObjectUtils;
 
 import java.io.Reader;

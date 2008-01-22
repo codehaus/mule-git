@@ -10,8 +10,8 @@
 
 package org.mule.providers.http;
 
-import org.mule.umo.UMOEvent;
-import org.mule.umo.provider.OutputHandler;
+import org.mule.api.UMOEvent;
+import org.mule.api.transport.OutputHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;

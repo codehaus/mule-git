@@ -12,7 +12,9 @@ package org.mule.impl;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleContextBuilder;
-import org.mule.config.MuleConfiguration;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.UMOLifecycleManager;
+import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
 import org.mule.impl.internal.notifications.ComponentNotification;
@@ -42,8 +44,6 @@ import org.mule.impl.lifecycle.phases.MuleContextInitialisePhase;
 import org.mule.impl.lifecycle.phases.MuleContextStartPhase;
 import org.mule.impl.lifecycle.phases.MuleContextStopPhase;
 import org.mule.impl.work.MuleWorkManager;
-import org.mule.umo.lifecycle.UMOLifecycleManager;
-import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.ClassUtils;
 
 import org.apache.commons.logging.Log;

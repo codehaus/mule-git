@@ -10,12 +10,12 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.TransactionException;
+import org.mule.impl.transaction.AbstractSingleResourceTransaction;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.transaction.AbstractSingleResourceTransaction;
-import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.umo.TransactionException;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;

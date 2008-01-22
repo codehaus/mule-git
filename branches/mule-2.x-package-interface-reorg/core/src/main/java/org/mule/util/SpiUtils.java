@@ -10,10 +10,10 @@
 
 package org.mule.util;
 
-import org.mule.config.ExceptionHelper;
+import org.mule.api.registry.ServiceDescriptorFactory;
+import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.model.ModelFactory;
-import org.mule.providers.service.TransportFactory;
-import org.mule.registry.ServiceDescriptorFactory;
+import org.mule.impl.transport.service.TransportFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

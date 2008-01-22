@@ -10,15 +10,15 @@
 
 package org.mule.providers.file;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.providers.AbstractConnector;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transformer.simple.ByteArrayToSerializable;
+import org.mule.impl.transformer.simple.SerializableToByteArray;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transformers.TransformerUtils;
-import org.mule.transformers.simple.ByteArrayToSerializable;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class ConnectorServiceOverridesTestCase extends FunctionalTestCase
 {
@@ -33,7 +33,7 @@ public class ConnectorServiceOverridesTestCase extends FunctionalTestCase
         FileConnector c = (FileConnector) muleContext.getRegistry().lookupConnector("fileConnector2");
         assertNotNull(c);
         assertNotNull(c.getServiceOverrides());
-        assertEquals("org.mule.transformers.simple.ByteArrayToSerializable", c.getServiceOverrides().get(
+        assertEquals("org.mule.impl.transformer.simple.ByteArrayToSerializable", c.getServiceOverrides().get(
             "inbound.transformer"));
         assertNotNull(TransformerUtils.firstOrNull(c.getDefaultInboundTransformers()));
         assertNotNull(TransformerUtils.firstOrNull(c.getDefaultOutboundTransformers()));

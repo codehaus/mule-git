@@ -9,10 +9,10 @@
  */
 package org.mule.providers.file;
 
+import org.mule.api.UMOEventContext;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.umo.UMOEventContext;
 import org.mule.util.FileUtils;
 
 import java.io.File;

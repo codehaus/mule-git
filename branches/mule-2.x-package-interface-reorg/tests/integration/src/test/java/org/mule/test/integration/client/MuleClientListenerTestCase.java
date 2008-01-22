@@ -11,11 +11,11 @@
 package org.mule.test.integration.client;
 
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.NoReceiverForEndpointException;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.NoReceiverForEndpointException;
 
 
 public class MuleClientListenerTestCase extends FunctionalTestCase

@@ -1,0 +1,27 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+package org.mule.impl.routing.nested;
+
+import org.mule.api.routing.UMONestedRouterCollection;
+import org.mule.impl.management.stats.RouterStatistics;
+import org.mule.impl.routing.AbstractRouterCollection;
+
+/**
+ * TODO
+ */
+public class NestedRouterCollection extends AbstractRouterCollection implements UMONestedRouterCollection
+{
+
+    public NestedRouterCollection()
+    {
+        super(RouterStatistics.TYPE_INBOUND);
+    }
+
+}

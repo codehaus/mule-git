@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.DispatchException;
 
 public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
 {

@@ -10,23 +10,22 @@
 
 package org.mule.impl;
 
-import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.providers.DefaultMessageAdapter;
-import org.mule.providers.NullPayload;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.PropertyScope;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.provider.UMOMutableMessageAdapter;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.PropertyScope;
+import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.UMOMutableMessageAdapter;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
+import org.mule.impl.transport.NullPayload;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.DebugOptions;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
@@ -36,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

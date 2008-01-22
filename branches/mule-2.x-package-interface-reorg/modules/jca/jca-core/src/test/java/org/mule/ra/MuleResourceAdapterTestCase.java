@@ -11,14 +11,14 @@
 
 package org.mule.ra;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.model.UMOModel;
+import org.mule.api.routing.UMOInboundRouterCollection;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.routing.UMOInboundRouterCollection;
 
 import java.lang.reflect.Method;
 import java.util.Timer;

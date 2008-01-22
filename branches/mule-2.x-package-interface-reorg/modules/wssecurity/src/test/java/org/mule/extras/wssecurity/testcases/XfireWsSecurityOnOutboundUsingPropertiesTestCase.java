@@ -10,10 +10,10 @@
 
 package org.mule.extras.wssecurity.testcases;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class XfireWsSecurityOnOutboundUsingPropertiesTestCase extends FunctionalTestCase
 {  

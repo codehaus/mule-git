@@ -10,10 +10,10 @@
 
 package org.mule.providers.xmpp;
 
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public abstract class AbstractNamespaceHandlerTestCase extends FunctionalTestCase
 {

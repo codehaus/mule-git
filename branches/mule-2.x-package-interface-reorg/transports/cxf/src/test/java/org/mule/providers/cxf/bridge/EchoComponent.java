@@ -1,9 +1,9 @@
 
 package org.mule.providers.cxf.bridge;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
 
 import javax.xml.transform.Source;
 

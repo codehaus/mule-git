@@ -10,7 +10,7 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
 public class XsltTransformerUTF8TestCase extends AbstractXmlTransformerTestCase

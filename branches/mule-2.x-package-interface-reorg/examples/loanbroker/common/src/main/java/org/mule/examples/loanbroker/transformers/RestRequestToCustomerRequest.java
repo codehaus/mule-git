@@ -10,11 +10,11 @@
 
 package org.mule.examples.loanbroker.transformers;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 
 /**
  * Converts parameters on the message into a CustomerQuoteRequest object

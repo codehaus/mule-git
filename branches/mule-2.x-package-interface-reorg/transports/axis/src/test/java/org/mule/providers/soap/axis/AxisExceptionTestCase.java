@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.TestComponent;
 import org.mule.tck.testmodels.services.TestComponentException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.DispatchException;
 
 public class AxisExceptionTestCase extends FunctionalTestCase
 {

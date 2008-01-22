@@ -10,11 +10,11 @@
 
 package org.mule.modules.xml.config;
 
-import org.mule.routing.outbound.AbstractOutboundRouter;
+import org.mule.api.UMOComponent;
+import org.mule.impl.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.outbound.FilteringXmlMessageSplitter;
 import org.mule.routing.outbound.RoundRobinXmlSplitter;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
 
 import java.util.List;
 import java.util.Map;

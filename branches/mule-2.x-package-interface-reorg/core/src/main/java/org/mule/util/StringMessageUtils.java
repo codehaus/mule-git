@@ -10,9 +10,9 @@
 
 package org.mule.util;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.config.MuleProperties;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;

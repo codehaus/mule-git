@@ -10,9 +10,9 @@
 
 package org.mule.impl.message;
 
-import org.mule.config.ExceptionHelper;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOExceptionPayload;
+import org.mule.api.UMOException;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.impl.config.ExceptionHelper;
 
 import java.util.Map;
 

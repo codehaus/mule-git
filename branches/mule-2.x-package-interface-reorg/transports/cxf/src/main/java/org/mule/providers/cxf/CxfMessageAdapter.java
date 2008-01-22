@@ -10,8 +10,8 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.MuleException;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.MuleException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.providers.cxf.i18n.CxfMessages;
 
 import java.util.ArrayList;

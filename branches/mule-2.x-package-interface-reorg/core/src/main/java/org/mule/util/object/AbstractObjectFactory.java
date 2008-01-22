@@ -9,11 +9,11 @@
  */
 package org.mule.util.object;
 
-import org.mule.config.ConfigurationException;
-import org.mule.impl.UMOComponentAware;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOComponentAware;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 

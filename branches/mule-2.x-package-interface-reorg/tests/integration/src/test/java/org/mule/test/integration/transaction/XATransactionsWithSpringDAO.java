@@ -10,12 +10,12 @@
 
 package org.mule.test.integration.transaction;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.providers.jdbc.util.MuleDerbyUtils;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.integration.transaction.extras.Book;
-import org.mule.umo.UMOMessage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -11,10 +11,11 @@
 package org.mule.transformers.simple;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
 import org.mule.impl.MuleMessage;
+import org.mule.impl.transformer.simple.MessagePropertiesTransformer;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
 
 import java.util.Collections;
 import java.util.HashMap;

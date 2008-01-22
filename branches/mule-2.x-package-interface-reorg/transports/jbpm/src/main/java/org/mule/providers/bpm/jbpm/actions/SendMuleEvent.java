@@ -10,10 +10,10 @@
 
 package org.mule.providers.bpm.jbpm.actions;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.providers.bpm.ProcessConnector;
 import org.mule.providers.bpm.jbpm.MuleMessageService;
-import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;

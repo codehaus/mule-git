@@ -9,8 +9,8 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 

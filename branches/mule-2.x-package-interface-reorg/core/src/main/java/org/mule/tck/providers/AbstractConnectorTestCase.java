@@ -10,17 +10,17 @@
 
 package org.mule.tck.providers;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.providers.AbstractConnector;
+import org.mule.api.MuleException;
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.UMOMessageDispatcherFactory;
+import org.mule.api.transport.UMOMessageRequesterFactory;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.provider.UMOMessageDispatcherFactory;
-import org.mule.umo.provider.UMOMessageRequesterFactory;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

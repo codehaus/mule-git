@@ -9,7 +9,7 @@
  */
 package org.mule.tck.functional;
 
-import org.mule.umo.UMOEventContext;
+import org.mule.api.UMOEventContext;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 

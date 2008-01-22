@@ -10,13 +10,13 @@
 
 package org.mule.providers.stdio;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractPollingMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.impl.transport.AbstractPollingMessageReceiver;
 
 import java.io.InputStream;
 import java.io.PrintStream;

@@ -11,10 +11,10 @@
 package org.mule.test.integration.client;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.jms.JmsConstants;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.Map;

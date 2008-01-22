@@ -10,12 +10,12 @@
 
 package org.mule.providers.email.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.email.GreenMailUtilities;
 import org.mule.providers.email.ImapConnector;
 import org.mule.providers.email.Pop3Connector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.Servers;

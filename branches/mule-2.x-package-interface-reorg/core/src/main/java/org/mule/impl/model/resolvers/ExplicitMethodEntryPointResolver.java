@@ -9,17 +9,17 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * An Entrypoint resolver that allows the user to set one or more acceptiple methd names to look for.

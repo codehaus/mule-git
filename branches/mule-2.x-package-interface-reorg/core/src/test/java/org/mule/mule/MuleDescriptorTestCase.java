@@ -10,13 +10,13 @@
 
 package org.mule.mule;
 
-import org.mule.components.simple.PassThroughComponent;
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.impl.component.simple.PassThroughComponent;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.util.object.SingletonObjectFactory;
 
 public class MuleDescriptorTestCase extends AbstractMuleTestCase

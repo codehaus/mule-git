@@ -27,9 +27,10 @@
 
 package org.mule.impl.work;
 
-import org.mule.config.ThreadingProfile;
-import org.mule.umo.UMOException;
-import org.mule.umo.manager.UMOWorkManager;
+import org.mule.api.UMOException;
+import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.work.WorkExecutor;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -44,6 +45,7 @@ import javax.resource.spi.work.WorkListener;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

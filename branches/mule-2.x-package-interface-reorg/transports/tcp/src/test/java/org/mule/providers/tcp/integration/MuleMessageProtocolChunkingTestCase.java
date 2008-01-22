@@ -10,10 +10,10 @@
 
 package org.mule.providers.tcp.integration;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 /**
  * This test was set for the new changes due to Mule1199

@@ -10,7 +10,7 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.umo.security.UMOAuthentication;
+import org.mule.api.security.UMOAuthentication;
 
 import java.io.IOException;
 

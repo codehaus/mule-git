@@ -10,20 +10,20 @@
 
 package org.mule.ra;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.ComponentException;
+import org.mule.api.MessagingException;
+import org.mule.api.MuleException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.model.AbstractComponent;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.ra.i18n.JcaMessages;
-import org.mule.umo.ComponentException;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.umo.manager.UMOWorkManager;
 
 import javax.resource.spi.UnavailableException;
 import javax.resource.spi.endpoint.MessageEndpointFactory;

@@ -10,10 +10,10 @@
 
 package org.mule.providers.udp;
 
+import org.mule.api.MessagingException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 import java.net.DatagramPacket;
 

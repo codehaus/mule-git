@@ -10,14 +10,14 @@
 
 package org.mule.impl.model.resolvers;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.model.InvocationResult;
-import org.mule.umo.model.UMOEntryPointResolver;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.model.InvocationResult;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.ClassUtils;
-import org.mule.MuleRuntimeException;
 
 import java.lang.reflect.Method;
 
@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * An entrypoint resolver that only allows Service objects that implmement the
  * Callable interface
  *
- * @see org.mule.umo.lifecycle.Callable
+ * @see org.mule.api.lifecycle.Callable
  */
 public class CallableEntryPointResolver implements UMOEntryPointResolver
 {

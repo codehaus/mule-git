@@ -10,9 +10,9 @@
 
 package org.mule.providers.file;
 
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 /**
  * Test the syntax of the SimpleFilename parser

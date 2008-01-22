@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.MuleException;
-import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.MuleException;
+import org.mule.impl.config.ExceptionHelper;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.io.IOException;

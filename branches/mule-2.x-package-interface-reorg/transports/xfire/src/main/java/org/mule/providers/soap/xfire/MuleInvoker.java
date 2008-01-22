@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.NullPayload;
 
 import java.lang.reflect.Method;
 

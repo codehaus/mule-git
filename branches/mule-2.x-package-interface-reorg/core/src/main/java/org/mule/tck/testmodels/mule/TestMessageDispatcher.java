@@ -10,11 +10,11 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.RoutingException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.RoutingException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 
 public class TestMessageDispatcher extends AbstractMessageDispatcher
 {

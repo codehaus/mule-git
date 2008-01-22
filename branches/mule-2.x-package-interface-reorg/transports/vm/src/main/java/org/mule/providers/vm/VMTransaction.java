@@ -11,10 +11,10 @@
 package org.mule.providers.vm;
 
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.transaction.AbstractSingleResourceTransaction;
-import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.umo.TransactionException;
+import org.mule.api.TransactionException;
+import org.mule.impl.transaction.AbstractSingleResourceTransaction;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueueSession;
 import org.mule.util.xa.ResourceManagerException;

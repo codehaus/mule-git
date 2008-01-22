@@ -10,17 +10,17 @@
 
 package org.mule.impl.model.pipeline;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.DispatchException;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.model.direct.DirectComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.DispatchException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 public class PipelineComponent extends DirectComponent
 {

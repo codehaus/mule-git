@@ -32,7 +32,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
  * jBPM's implementation of Mule's generic BPMS interface.
  * This class should be set as the "bpms" property of the BPM Connector:
  *
- *   <connector name="jBpmConnector" className="org.mule.providers.bpm.ProcessConnector">
+ *   <connector name="jBpmConnector" className="org.mule.impl.transport.bpm.ProcessConnector">
  *       <properties>
  *           <spring-property name="bpms">
  *              <ref local="jbpm" />
@@ -40,7 +40,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
  *       </properties>
  *   </connector>
  *
- *   <bean id="jbpm" class="org.mule.providers.bpm.jbpm.Jbpm" destroy-method="destroy">
+ *   <bean id="jbpm" class="org.mule.impl.transport.bpm.jbpm.Jbpm" destroy-method="destroy">
  *       <spring-property name="jbpmConfiguration">
  *           <ref local="jbpmConfig" />
  *       </spring-property>

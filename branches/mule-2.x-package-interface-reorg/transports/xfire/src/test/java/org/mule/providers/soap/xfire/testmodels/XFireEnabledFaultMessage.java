@@ -39,7 +39,7 @@ public class XFireEnabledFaultMessage extends FaultInfoException
 
     public static QName getFaultName()
     {
-        return new QName("http://org.mule.providers.soap.xfire.testmodels/XFireTestService/", "XFireEnabledFaultMessage");
+        return new QName("http://org.mule.impl.transport.soap.xfire.testmodels/XFireTestService/", "XFireEnabledFaultMessage");
     }
 
 }

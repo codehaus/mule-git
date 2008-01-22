@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.xfire.wsdl;
 
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractConnectable;
 import org.mule.providers.soap.xfire.XFireConnector;
-import org.mule.providers.AbstractConnectable;
 import org.mule.util.StringUtils;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 import java.net.URL;
 

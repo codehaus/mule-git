@@ -10,17 +10,17 @@
 
 package org.mule.providers.rmi;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.ConnectException;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.rmi.i18n.RmiMessages;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -83,7 +83,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
     /**
      * Initializes endpoint
      *
-     * @throws org.mule.providers.ConnectException
+     * @throws org.mule.impl.transport.ConnectException
      *
      */
     protected void doConnect() throws ConnectException
@@ -158,7 +158,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
      * Gets RmiAble objetc for registry to add in.
      *
      * @return java.rmi.Remote and RmiAble implementing class
-     * @throws org.mule.umo.lifecycle.ConnectException
+     * @throws org.mule.api.lifecycle.ConnectException
      *
      */
     private RmiAble getRmiObject() throws ConnectException
@@ -189,7 +189,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
      *
      * @param message
      * @return
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public Object routeMessage(Object message) throws UMOException
     {

@@ -10,9 +10,9 @@
 
 package org.mule.extras.wssecurity.testcases;
 
+import org.mule.api.security.UMOEndpointSecurityFilter;
 import org.mule.extras.wssecurity.filters.WsSecurityFilter;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.security.UMOEndpointSecurityFilter;
 
 public class WsSecurityNamespaceHandlerTestCase extends FunctionalTestCase
 {

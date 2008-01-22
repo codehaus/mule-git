@@ -10,12 +10,12 @@
 
 package org.mule.routing.filters;
 
-import org.mule.config.ConfigurationException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.ConfigurationException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
-import org.mule.routing.outbound.FilteringOutboundRouter;
+import org.mule.impl.routing.outbound.FilteringOutboundRouter;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class OGNLFilterTestCase extends FunctionalTestCase
 {

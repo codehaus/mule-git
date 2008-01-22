@@ -10,7 +10,7 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.umo.endpoint.MalformedEndpointException;
+import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.util.StringUtils;
 
 import java.net.URI;

@@ -10,29 +10,30 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.UMOLifecycleAdapter;
+import org.mule.api.model.ModelException;
+import org.mule.api.model.MuleProxy;
+import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.model.UMOModel;
+import org.mule.api.transport.ReplyToHandler;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
+import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.message.ExceptionPayload;
-import org.mule.management.stats.ComponentStatistics;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.NullPayload;
-import org.mule.providers.ReplyToHandler;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.UMOLifecycleAdapter;
-import org.mule.umo.model.ModelException;
-import org.mule.umo.model.UMOEntryPointResolverSet;
-import org.mule.umo.model.UMOModel;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.NullPayload;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.QueueSession;
 
 import org.apache.commons.logging.Log;

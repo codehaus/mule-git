@@ -10,19 +10,19 @@
 
 package org.mule.providers.file;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractConnector;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.transformer.simple.ByteArrayToSerializable;
+import org.mule.impl.transformer.simple.SerializableToByteArray;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
-import org.mule.transformers.simple.ByteArrayToSerializable;
-import org.mule.transformers.simple.SerializableToByteArray;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
 
@@ -105,7 +105,7 @@ public class FileConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.providers.AbstractConnector#doInitialise()
+     * @see org.mule.impl.transport.AbstractConnector#doInitialise()
      */
     public FileConnector()
     {
@@ -505,7 +505,7 @@ public class FileConnector extends AbstractConnector
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
-     * @throws org.mule.umo.UMOException
+     * @throws org.mule.api.UMOException
      */
     public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
         throws UMOException

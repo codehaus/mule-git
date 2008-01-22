@@ -10,7 +10,7 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.api.MuleContext;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
 
 /**
  * TODO

@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.api.transport.UMOMessageAdapter;
 
 /**
  * <code>FilenameParser</code> is a simple expression parser interface for

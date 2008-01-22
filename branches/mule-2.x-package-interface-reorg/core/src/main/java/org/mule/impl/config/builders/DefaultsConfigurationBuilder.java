@@ -2,17 +2,17 @@
 package org.mule.impl.config.builders;
 
 import org.mule.api.MuleContext;
-import org.mule.config.ChainedThreadingProfile;
-import org.mule.config.MuleProperties;
-import org.mule.config.ThreadingProfile;
-import org.mule.config.bootstrap.SimpleRegistryBootstrap;
+import org.mule.api.UMOException;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.config.ThreadingProfile;
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.RegistrationException;
+import org.mule.api.registry.Registry;
+import org.mule.impl.config.ChainedThreadingProfile;
+import org.mule.impl.config.bootstrap.SimpleRegistryBootstrap;
 import org.mule.impl.endpoint.EndpointFactory;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
-import org.mule.registry.RegistrationException;
-import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
-import org.mule.umo.model.UMOModel;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.MemoryPersistenceStrategy;
 import org.mule.util.queue.QueueManager;

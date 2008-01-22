@@ -10,11 +10,11 @@
 
 package org.mule.providers.file.issues;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.file.AbstractFileFunctionalTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.io.File;
 

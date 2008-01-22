@@ -12,7 +12,7 @@ package org.mule.impl.config.builders;
 
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.config.ConfigurationException;
+import org.mule.api.config.ConfigurationException;
 
 /**
  * A support class for {@link org.mule.api.config.ConfigurationBuilder} implementations

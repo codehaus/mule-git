@@ -11,8 +11,8 @@
 package org.mule.providers.multicast;
 
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.api.MessagingException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
 
 import java.net.DatagramPacket;

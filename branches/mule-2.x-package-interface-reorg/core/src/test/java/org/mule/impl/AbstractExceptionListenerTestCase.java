@@ -10,12 +10,12 @@
 
 package org.mule.impl;
 
+import org.mule.api.endpoint.InvalidEndpointTypeException;
 import org.mule.impl.endpoint.InboundEndpoint;
 import org.mule.impl.endpoint.OutboundEndpoint;
-import org.mule.routing.outbound.AbstractOutboundRouter;
-import org.mule.routing.outbound.TransformerRouter;
+import org.mule.impl.routing.outbound.AbstractOutboundRouter;
+import org.mule.impl.routing.outbound.TransformerRouter;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.InvalidEndpointTypeException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
 
 /**
  * Exception related to the LoanBroker example app.

@@ -11,19 +11,19 @@
 package org.mule.providers.http.servlet;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.transport.NoReceiverForEndpointException;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.endpoint.DynamicEndpointURIEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.service.TransportFactory;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpMessageReceiver;
 import org.mule.providers.http.i18n.HttpMessages;
-import org.mule.providers.service.TransportFactory;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.provider.NoReceiverForEndpointException;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.PropertiesUtils;
 
 import java.io.IOException;

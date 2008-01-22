@@ -10,10 +10,10 @@
 
 package org.mule.providers.multicast;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.providers.udp.UdpConnector;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 
 /**
  * <code>MulticastConnector</code> can dispatch mule events using ip multicasting

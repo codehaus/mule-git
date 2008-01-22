@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.components.simple.EchoService;
-import org.mule.providers.AbstractConnector;
+import org.mule.api.component.EchoService;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
 

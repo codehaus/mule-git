@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.axis;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.soap.axis.mock.MockAxisServer;
 import org.mule.providers.soap.axis.mock.MockProvider;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.util.Map;
 import java.util.List;

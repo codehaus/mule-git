@@ -10,9 +10,9 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 
 /**
  * Wraps an object obtained by calling a method on a Remote object

@@ -10,19 +10,19 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.providers.AbstractMessageDispatcherFactory;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.provider.UMOMessageDispatcher;
-import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.api.MessagingException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.AbstractMessageAdapter;
+import org.mule.impl.transport.AbstractMessageDispatcherFactory;
+import org.mule.impl.transport.AbstractMessageReceiver;
 
 /**
  * <code>TestConnector</code> use a mock connector

@@ -10,11 +10,11 @@
 
 package org.mule.config.spring.factories;
 
-import org.mule.impl.MuleContextAware;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

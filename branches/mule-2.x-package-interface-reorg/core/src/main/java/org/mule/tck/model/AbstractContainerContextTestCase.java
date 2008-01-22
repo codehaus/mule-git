@@ -10,13 +10,13 @@
 
 package org.mule.tck.model;
 
-import org.mule.config.ConfigurationException;
+import org.mule.api.UMOComponent;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.context.UMOContainerContext;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.FruitBowl;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.umo.manager.UMOContainerContext;
 
 public abstract class AbstractContainerContextTestCase extends AbstractMuleTestCase
 {

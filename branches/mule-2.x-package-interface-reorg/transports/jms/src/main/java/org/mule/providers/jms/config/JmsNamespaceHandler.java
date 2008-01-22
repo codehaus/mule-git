@@ -21,6 +21,7 @@ import org.mule.config.spring.parsers.specific.TransactionDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
 import org.mule.impl.endpoint.URIBuilder;
+import org.mule.impl.transaction.XaTransactionFactory;
 import org.mule.providers.jms.JmsClientAcknowledgeTransactionFactory;
 import org.mule.providers.jms.JmsConnector;
 import org.mule.providers.jms.JmsTransactionFactory;
@@ -32,7 +33,6 @@ import org.mule.providers.jms.transformers.JMSMessageToObject;
 import org.mule.providers.jms.transformers.ObjectToJMSMessage;
 import org.mule.providers.jms.weblogic.WeblogicJmsConnector;
 import org.mule.providers.jms.websphere.WebsphereJmsConnector;
-import org.mule.transaction.XaTransactionFactory;
 
 /**
  * Registers Bean Definition Parsers for the "jms" namespace.

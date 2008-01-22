@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.axis.extras;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.AxisConnector;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;

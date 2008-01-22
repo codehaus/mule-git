@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.ExceptionReader;
+import org.mule.api.config.ExceptionReader;
 
 import java.util.HashMap;
 import java.util.Map;

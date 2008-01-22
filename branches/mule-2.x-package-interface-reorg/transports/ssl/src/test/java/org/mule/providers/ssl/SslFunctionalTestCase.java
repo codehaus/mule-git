@@ -10,14 +10,14 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.CounterCallback;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.mule.TestSedaComponent;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.Map;

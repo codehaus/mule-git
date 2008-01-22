@@ -38,7 +38,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#openInputStream(java.io.File)
+     * @see org.mule.impl.transaction.xa.file.FileSession#openInputStream(java.io.File)
      */
     public FileInputStream openInputStream(File f) throws IOException
     {
@@ -56,7 +56,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#openOutputStream(java.io.File,
+     * @see org.mule.impl.transaction.xa.file.FileSession#openOutputStream(java.io.File,
      *      boolean)
      */
     public FileOutputStream openOutputStream(File f, boolean append) throws IOException
@@ -75,7 +75,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#openOutputStream(java.io.File)
+     * @see org.mule.impl.transaction.xa.file.FileSession#openOutputStream(java.io.File)
      */
     public FileOutputStream openOutputStream(File f) throws IOException
     {
@@ -85,7 +85,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#mkdir(java.io.File)
+     * @see org.mule.impl.transaction.xa.file.FileSession#mkdir(java.io.File)
      */
     public boolean mkdir(File f) throws IOException
     {
@@ -103,7 +103,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#openRandomAccess(java.io.File,
+     * @see org.mule.impl.transaction.xa.file.FileSession#openRandomAccess(java.io.File,
      *      java.lang.String)
      */
     public RandomAccessFile openRandomAccess(File f, String mode) throws IOException
@@ -122,7 +122,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#delete(java.io.File)
+     * @see org.mule.impl.transaction.xa.file.FileSession#delete(java.io.File)
      */
     public void delete(File f) throws IOException
     {
@@ -142,7 +142,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#copy(java.io.File, java.io.File)
+     * @see org.mule.impl.transaction.xa.file.FileSession#copy(java.io.File, java.io.File)
      */
     public void copy(File source, File dest) throws IOException
     {
@@ -174,7 +174,7 @@ public class TransactedFileSession extends DefaultXASession implements FileSessi
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.file.FileSession#rename(java.io.File,
+     * @see org.mule.impl.transaction.xa.file.FileSession#rename(java.io.File,
      *      java.io.File)
      */
     public void rename(File source, File dest) throws IOException

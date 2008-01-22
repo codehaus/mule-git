@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.issues;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

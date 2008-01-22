@@ -18,14 +18,14 @@
             <inbound>
                 <bpm:inbound-endpoint process="simple"/>
             </inbound>
-            <component class="org.mule.components.simple.LogComponent"/>
+            <component class="org.mule.impl.component.simple.LogComponent"/>
         </service>
 
         <service name="fromMessageProcess">
             <inbound>
                 <bpm:inbound-endpoint process="message"/>
             </inbound>
-            <component class="org.mule.components.simple.LogComponent"/>
+            <component class="org.mule.impl.component.simple.LogComponent"/>
             <outbound>
                 <outbound-pass-through-router>
                     <vm:outbound-endpoint path="echo"/>
@@ -37,7 +37,7 @@
             <inbound>
                 <vm:inbound-endpoint path="echo"/>
             </inbound>
-            <component class="org.mule.components.simple.EchoComponent"/>
+            <component class="org.mule.impl.component.simple.EchoComponent"/>
         </service>
 
     </model>

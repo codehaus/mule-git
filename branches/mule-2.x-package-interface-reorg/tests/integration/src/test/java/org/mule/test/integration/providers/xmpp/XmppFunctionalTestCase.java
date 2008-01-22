@@ -10,12 +10,12 @@
 
 package org.mule.test.integration.providers.xmpp;
 
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.xmpp.XmppConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.provider.UMOConnector;
 
 import org.jivesoftware.smack.XMPPConnection;
 

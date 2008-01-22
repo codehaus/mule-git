@@ -10,13 +10,12 @@
 
 package org.mule.tck;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.tck.testmodels.fruit.InvalidSatsuma;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
-import org.mule.transformers.TransformerUtils;
 
 import java.util.Arrays;
 

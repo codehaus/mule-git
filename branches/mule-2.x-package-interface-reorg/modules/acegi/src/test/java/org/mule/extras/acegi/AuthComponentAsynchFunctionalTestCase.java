@@ -10,12 +10,12 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.UMOMessage;
 
 import java.util.HashMap;
 import java.util.Map;

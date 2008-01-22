@@ -10,12 +10,12 @@
 
 package org.mule.examples.loanbroker.issues;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.examples.loanbroker.bank.Bank;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 import java.util.Iterator;
 import java.util.Set;

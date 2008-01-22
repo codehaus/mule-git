@@ -10,8 +10,8 @@
 
 package org.mule.providers.ejb;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.rmi.RmiMessageDispatcher;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 /**
  * Invokes a method on an EJB object stored in Jndi. A dispatcher is created for each

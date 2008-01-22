@@ -10,11 +10,11 @@
 
 package org.mule.management.config;
 
+import org.mule.api.context.UMOAgent;
 import org.mule.management.agents.JmxAgent;
 import org.mule.management.agents.JmxServerNotificationAgent;
 import org.mule.management.agents.Log4jAgent;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.manager.UMOAgent;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;

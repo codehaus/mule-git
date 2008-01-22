@@ -11,7 +11,7 @@
 package org.mule.impl.internal.notifications;
 
 import org.mule.api.MuleContext;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
 
 /**
  * <code>ManagerNotification</code> is fired when an event such as the manager

@@ -11,18 +11,18 @@
 package org.mule.impl.model;
 
 import org.mule.api.MuleContext;
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.UMOLifecycleAdapterFactory;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.model.UMOModel;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.DefaultLifecycleAdapterFactory;
 import org.mule.impl.internal.notifications.ModelNotification;
 import org.mule.impl.model.resolvers.DefaultEntryPointResolverSet;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.UMOLifecycleAdapterFactory;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.model.UMOEntryPointResolverSet;
-import org.mule.umo.model.UMOModel;
 
 import java.beans.ExceptionListener;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOModel#getName()
+     * @see org.mule.api.UMOModel#getName()
      */
     public String getName()
     {
@@ -66,7 +66,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOModel#setName(java.lang.String)
+     * @see org.mule.api.UMOModel#setName(java.lang.String)
      */
     public void setName(String name)
     {
@@ -76,7 +76,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.model.UMOModel#getEntryPointResolver()
+     * @see org.mule.api.model.UMOModel#getEntryPointResolver()
      */
     public UMOEntryPointResolverSet getEntryPointResolverSet()
     {
@@ -90,7 +90,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.model.UMOModel#setEntryPointResolver(org.mule.umo.model.UMOEntryPointResolver)
+     * @see org.mule.api.model.UMOModel#setEntryPointResolver(org.mule.api.model.UMOEntryPointResolver)
      */
     public void setEntryPointResolverSet(UMOEntryPointResolverSet entryPointResolverSet)
     {
@@ -117,7 +117,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.model.UMOModel#getLifecycleAdapterFactory()
+     * @see org.mule.api.model.UMOModel#getLifecycleAdapterFactory()
      */
     public UMOLifecycleAdapterFactory getLifecycleAdapterFactory()
     {
@@ -127,7 +127,7 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.model.UMOModel#setLifecycleAdapterFactory(org.mule.umo.lifecycle.UMOLifecycleAdapterFactory)
+     * @see org.mule.api.model.UMOModel#setLifecycleAdapterFactory(org.mule.api.lifecycle.UMOLifecycleAdapterFactory)
      */
     public void setLifecycleAdapterFactory(UMOLifecycleAdapterFactory lifecycleAdapterFactory)
     {

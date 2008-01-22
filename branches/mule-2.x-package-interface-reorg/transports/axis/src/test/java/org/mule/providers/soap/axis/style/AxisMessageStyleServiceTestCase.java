@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.axis.style;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;

@@ -10,12 +10,12 @@
 
 package org.mule.providers.email.transformers;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.AlreadyInitialisedException;
+import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Properties;
 

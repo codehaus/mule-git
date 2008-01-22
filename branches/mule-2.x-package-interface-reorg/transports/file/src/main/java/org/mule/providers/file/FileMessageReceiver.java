@@ -10,18 +10,18 @@
 
 package org.mule.providers.file;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.routing.RoutingException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractPollingMessageReceiver;
-import org.mule.providers.ConnectException;
+import org.mule.impl.transport.AbstractPollingMessageReceiver;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.file.i18n.FileMessages;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.routing.RoutingException;
 import org.mule.util.FileUtils;
 
 import java.io.File;
@@ -456,7 +456,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
      * Get a list of files to be processed.
      *
      * @return an array of files to be processed.
-     * @throws org.mule.MuleException which will wrap any other exceptions or errors.
+     * @throws org.mule.api.MuleException which will wrap any other exceptions or errors.
      */
     File[] listFiles() throws MuleException
     {

@@ -10,11 +10,11 @@
 
 package org.mule.providers.quartz.jobs;
 
+import org.mule.api.UMOException;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.NullPayload;
 import org.mule.providers.quartz.QuartzConnector;
 import org.mule.providers.quartz.i18n.QuartzMessages;
-import org.mule.umo.UMOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

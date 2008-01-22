@@ -10,13 +10,13 @@
 
 package org.mule.providers.soap.xfire.transport;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.context.UMOWorkManager;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.providers.soap.xfire.XFireConnector;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.manager.UMOWorkManager;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;

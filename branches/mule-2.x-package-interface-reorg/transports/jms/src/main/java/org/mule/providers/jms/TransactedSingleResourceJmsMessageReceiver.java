@@ -10,23 +10,23 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.StartException;
+import org.mule.api.lifecycle.StopException;
+import org.mule.api.transaction.TransactionCallback;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.ConnectException;
+import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.impl.transaction.TransactionTemplate;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.ConnectException;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
-import org.mule.transaction.TransactionCallback;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.transaction.TransactionTemplate;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.StartException;
-import org.mule.umo.lifecycle.StopException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 
 import javax.jms.Destination;

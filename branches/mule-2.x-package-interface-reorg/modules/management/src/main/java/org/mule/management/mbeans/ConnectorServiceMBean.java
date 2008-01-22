@@ -10,8 +10,8 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Initialisable;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Initialisable;
 
 import java.beans.ExceptionListener;
 

@@ -9,7 +9,7 @@
  */
 package org.mule.providers.rmi.config;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
 import org.mule.config.spring.factories.InboundEndpointFactoryBean;
 import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;

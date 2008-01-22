@@ -10,12 +10,12 @@
 
 package org.mule.providers.email;
 
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.TlsIndirectKeyStore;
-import org.mule.umo.security.TlsIndirectTrustStore;
-import org.mule.umo.security.tls.TlsConfiguration;
-import org.mule.umo.security.tls.TlsPropertiesMapper;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.TlsIndirectKeyStore;
+import org.mule.api.security.TlsIndirectTrustStore;
+import org.mule.api.security.tls.TlsConfiguration;
+import org.mule.api.security.tls.TlsPropertiesMapper;
 
 import java.io.IOException;
 import java.util.Properties;

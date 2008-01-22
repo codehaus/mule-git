@@ -10,11 +10,11 @@
 
 package org.mule.providers.file;
 
-import org.mule.impl.ThreadSafeAccess;
-import org.mule.providers.AbstractMessageAdapter;
+import org.mule.api.MessagingException;
+import org.mule.api.ThreadSafeAccess;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.providers.file.i18n.FileMessages;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
 import org.mule.util.ObjectUtils;
 
 import java.io.File;

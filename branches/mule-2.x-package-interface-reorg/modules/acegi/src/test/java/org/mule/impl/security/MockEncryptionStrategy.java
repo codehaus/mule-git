@@ -10,9 +10,9 @@
 
 package org.mule.impl.security;
 
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.CryptoFailureException;
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.CryptoFailureException;
 
 /**
  * Empty mock for tests

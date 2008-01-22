@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.UMOTransaction;
+import org.mule.api.context.UMOServerNotification;
 
 public class TransactionNotification extends UMOServerNotification implements BlockingServerEvent
 {

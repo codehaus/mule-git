@@ -12,16 +12,16 @@ package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleContextFactory;
+import org.mule.api.UMOComponent;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.components.simple.PassThroughComponent;
-import org.mule.components.simple.StaticComponent;
-import org.mule.config.ConfigurationException;
+import org.mule.api.config.ConfigurationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.config.spring.parsers.specific.CheckExclusiveClassAttributeObjectFactory.CheckExclusiveClassAttributeObjectFactoryException;
 import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.routing.nested.NestedRouter;
+import org.mule.impl.component.simple.PassThroughComponent;
+import org.mule.impl.component.simple.StaticComponent;
+import org.mule.impl.routing.nested.NestedRouter;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOComponent;
 import org.mule.util.object.PooledObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
 

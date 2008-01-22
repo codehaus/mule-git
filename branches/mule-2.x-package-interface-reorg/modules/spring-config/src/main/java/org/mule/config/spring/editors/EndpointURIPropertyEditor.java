@@ -9,13 +9,13 @@
  */
 package org.mule.config.spring.editors;
 
+import org.mule.api.endpoint.EndpointException;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.umo.endpoint.EndpointException;
 
 import java.beans.PropertyEditorSupport;
 
 /**
- * Translates a connector name property into the corresponding {@link org.mule.umo.provider.UMOConnector}
+ * Translates a connector name property into the corresponding {@link org.mule.api.transport.UMOConnector}
  * instance.
  */
 public class EndpointURIPropertyEditor extends PropertyEditorSupport

@@ -10,14 +10,14 @@
 
 package org.mule.test.integration.client;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.MalformedEndpointException;
+import org.mule.api.transformer.TransformerException;
 import org.mule.extras.client.MuleClient;
 import org.mule.extras.client.RemoteDispatcher;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.MalformedEndpointException;
-import org.mule.umo.transformer.TransformerException;
 
 import java.util.Date;
 

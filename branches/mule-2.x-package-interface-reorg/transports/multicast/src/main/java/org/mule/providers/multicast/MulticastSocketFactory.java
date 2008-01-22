@@ -9,9 +9,9 @@
  */
 package org.mule.providers.multicast;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.providers.udp.UdpSocketFactory;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 import java.io.IOException;
 import java.net.DatagramSocket;

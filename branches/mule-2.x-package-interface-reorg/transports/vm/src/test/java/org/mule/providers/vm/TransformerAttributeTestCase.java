@@ -10,11 +10,11 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.StringAppendTestTransformer;
-import org.mule.umo.UMOMessage;
 
 public class TransformerAttributeTestCase extends FunctionalTestCase
 {

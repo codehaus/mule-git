@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
+import org.mule.api.context.UMOServerNotification;
 import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.impl.internal.notifications.ExceptionNotificationListener;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.manager.UMOServerNotification;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

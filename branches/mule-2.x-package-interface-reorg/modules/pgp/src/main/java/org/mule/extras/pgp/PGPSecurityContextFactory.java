@@ -10,9 +10,9 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UMOSecurityContextFactory;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UMOSecurityContextFactory;
 
 public class PGPSecurityContextFactory implements UMOSecurityContextFactory
 {
@@ -20,7 +20,7 @@ public class PGPSecurityContextFactory implements UMOSecurityContextFactory
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOSecurityContextFactory#create(org.mule.umo.security.UMOAuthentication)
+     * @see org.mule.api.security.UMOSecurityContextFactory#create(org.mule.api.security.UMOAuthentication)
      */
     public UMOSecurityContext create(UMOAuthentication authentication)
     {

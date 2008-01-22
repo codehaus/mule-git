@@ -10,20 +10,20 @@
 
 package org.mule.extras.pgp.filters;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UnauthorisedException;
+import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.extras.pgp.PGPAuthentication;
 import org.mule.extras.pgp.PGPCryptInfo;
 import org.mule.extras.pgp.PGPKeyRing;
 import org.mule.extras.pgp.i18n.PGPMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UnauthorisedException;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.umo.UMOEvent)
+     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.api.UMOEvent)
      */
     protected void authenticateInbound(UMOEvent event)
         throws SecurityException, UnauthorisedException, UnknownAuthenticationTypeException
@@ -159,7 +159,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.umo.UMOEvent)
+     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.api.UMOEvent)
      */
     protected void authenticateOutbound(UMOEvent event) throws SecurityException, UnauthorisedException
     {

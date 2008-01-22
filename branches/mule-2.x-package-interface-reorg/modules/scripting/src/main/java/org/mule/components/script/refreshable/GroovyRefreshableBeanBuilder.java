@@ -10,10 +10,10 @@
 
 package org.mule.components.script.refreshable;
 
-import org.mule.MuleException;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.MuleException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 
 import groovy.lang.GroovyObject;

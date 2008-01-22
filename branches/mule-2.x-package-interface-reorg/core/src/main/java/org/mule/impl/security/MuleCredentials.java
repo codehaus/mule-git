@@ -10,13 +10,13 @@
 
 package org.mule.impl.security;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.security.CryptoFailureException;
-import org.mule.umo.security.EncryptionStrategyNotFoundException;
-import org.mule.umo.security.UMOCredentials;
-import org.mule.umo.security.UMOSecurityManager;
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.security.CryptoFailureException;
+import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.UMOCredentials;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ArrayUtils;
 
 import java.util.StringTokenizer;

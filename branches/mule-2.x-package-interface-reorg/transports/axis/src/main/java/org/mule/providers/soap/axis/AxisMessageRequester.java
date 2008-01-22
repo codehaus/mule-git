@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.AbstractMessageRequester;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transport.AbstractMessageRequester;
 
 import java.util.Iterator;
 import java.util.Map;

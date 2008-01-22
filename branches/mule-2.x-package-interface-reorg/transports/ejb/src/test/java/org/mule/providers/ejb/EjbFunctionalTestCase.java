@@ -10,17 +10,17 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.config.i18n.Message;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.imple.config.i18n.Message;
 import org.mule.providers.rmi.RmiConnector;
 import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
 
 import java.util.HashMap;
 import java.util.Properties;

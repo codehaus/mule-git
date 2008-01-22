@@ -10,23 +10,23 @@
 
 package org.mule.extras.jaas.filters;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.CredentialsNotSetException;
+import org.mule.api.security.CryptoFailureException;
+import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityProviderNotFoundException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOCredentials;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UnauthorisedException;
+import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.extras.jaas.JaasAuthentication;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.impl.security.MuleHeaderCredentialsAccessor;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.CredentialsNotSetException;
-import org.mule.umo.security.CryptoFailureException;
-import org.mule.umo.security.EncryptionStrategyNotFoundException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.SecurityProviderNotFoundException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOCredentials;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UnauthorisedException;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 public class JaasSecurityFilter extends AbstractEndpointSecurityFilter
 {

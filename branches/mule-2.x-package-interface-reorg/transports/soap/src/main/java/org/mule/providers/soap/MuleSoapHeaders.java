@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap;
 
-import org.mule.config.MuleProperties;
-import org.mule.umo.UMOEvent;
+import org.mule.api.UMOEvent;
+import org.mule.api.config.MuleProperties;
 
 import java.util.Iterator;
 

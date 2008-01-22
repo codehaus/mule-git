@@ -10,7 +10,7 @@
 package org.mule.config.spring.parsers.specific;
 
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.routing.inbound.CorrelationAggregator;
+import org.mule.impl.routing.inbound.CorrelationAggregator;
 
 /**
  * Generic router definition parser for parsing all Router elements.

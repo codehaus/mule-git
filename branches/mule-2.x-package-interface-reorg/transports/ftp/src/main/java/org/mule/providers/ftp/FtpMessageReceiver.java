@@ -10,15 +10,15 @@
 
 package org.mule.providers.ftp;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractPollingMessageReceiver;
+import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.providers.file.FileConnector;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 
 import java.io.FilenameFilter;
 import java.io.IOException;

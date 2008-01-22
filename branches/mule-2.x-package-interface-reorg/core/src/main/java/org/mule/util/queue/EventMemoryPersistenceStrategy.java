@@ -10,7 +10,7 @@
 
 package org.mule.util.queue;
 
-import org.mule.umo.UMOEvent;
+import org.mule.api.UMOEvent;
 
 public class EventMemoryPersistenceStrategy extends MemoryPersistenceStrategy
 {

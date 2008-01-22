@@ -10,8 +10,8 @@
 
 package org.mule.providers.ejb;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.rmi.RmiConnector;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

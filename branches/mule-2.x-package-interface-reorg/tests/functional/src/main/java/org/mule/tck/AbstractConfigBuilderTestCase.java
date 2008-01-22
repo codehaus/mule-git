@@ -10,37 +10,37 @@
 
 package org.mule.tck;
 
-import org.mule.MuleException;
 import org.mule.RegistryContext;
-import org.mule.config.ThreadingProfile;
+import org.mule.api.MuleException;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOFilter;
+import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.model.UMOModel;
+import org.mule.api.routing.UMOInboundRouter;
+import org.mule.api.routing.UMOInboundRouterCollection;
+import org.mule.api.routing.UMONestedRouter;
+import org.mule.api.routing.UMOOutboundRouter;
+import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.providers.AbstractConnector;
-import org.mule.routing.filters.PayloadTypeFilter;
-import org.mule.routing.filters.RegExFilter;
-import org.mule.routing.filters.logic.AndFilter;
+import org.mule.impl.routing.filters.PayloadTypeFilter;
+import org.mule.impl.routing.filters.RegExFilter;
+import org.mule.impl.routing.filters.logic.AndFilter;
+import org.mule.impl.routing.inbound.IdempotentReceiver;
+import org.mule.impl.routing.inbound.SelectiveConsumer;
+import org.mule.impl.routing.outbound.FilteringOutboundRouter;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.routing.filters.xml.JXPathFilter;
-import org.mule.routing.inbound.IdempotentReceiver;
-import org.mule.routing.inbound.SelectiveConsumer;
-import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.mule.tck.testmodels.mule.TestCatchAllStrategy;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.routing.UMOInboundRouter;
-import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.umo.routing.UMONestedRouter;
-import org.mule.umo.routing.UMOOutboundRouter;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.transformer.UMOTransformer;
 
 public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {

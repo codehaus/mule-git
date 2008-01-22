@@ -9,34 +9,34 @@
  */
 package org.mule.impl;
 
-import org.mule.MuleRuntimeException;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.MuleConfiguration;
-import org.mule.config.MuleManifest;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.UMOException;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.UMOTransactionManagerFactory;
+import org.mule.api.context.UMOWorkManager;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.FatalException;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.lifecycle.UMOLifecycleManager;
+import org.mule.api.registry.RegistrationException;
+import org.mule.api.registry.Registry;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.store.UMOStore;
+import org.mule.impl.config.MuleConfiguration;
+import org.mule.impl.config.MuleManifest;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
-import org.mule.management.stats.AllStatistics;
-import org.mule.registry.RegistrationException;
-import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.FatalException;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
-import org.mule.umo.lifecycle.UMOLifecycleManager;
-import org.mule.umo.manager.UMOAgent;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
-import org.mule.umo.manager.UMOTransactionManagerFactory;
-import org.mule.umo.manager.UMOWorkManager;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.store.UMOStore;
+import org.mule.impl.management.stats.AllStatistics;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
@@ -583,7 +583,7 @@ public class DefaultMuleContext implements MuleContext
      * object.
      *
      * @return a workManager instance used by the current MuleManager
-     * @see org.mule.config.ThreadingProfile
+     * @see org.mule.api.config.ThreadingProfile
      * @see MuleConfiguration
      */
     public UMOWorkManager getWorkManager()
@@ -607,7 +607,7 @@ public class DefaultMuleContext implements MuleContext
      * @param workManager the workManager instance used by the current
      *                    MuleManager
      * @throws IllegalStateException if the workManager has already been set.
-     * @see org.mule.config.ThreadingProfile
+     * @see org.mule.api.config.ThreadingProfile
      * @see MuleConfiguration
      * @see org.mule.impl.work.MuleWorkManager
      */

@@ -10,13 +10,13 @@
 
 package org.mule.providers.http;
 
-import org.mule.providers.AbstractMessageRequester;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.ReceiveException;
+import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringUtils;
 
 import org.apache.commons.codec.binary.Base64;

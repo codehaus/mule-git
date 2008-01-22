@@ -10,8 +10,8 @@
 
 package org.mule.providers.cxf.wsdl;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.providers.cxf.CxfMessageDispatcher;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.util.StringUtils;
 
 import javax.xml.namespace.QName;

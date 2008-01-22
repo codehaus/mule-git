@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -66,9 +66,9 @@ public class MuleObjectServiceFactory extends ObjectServiceFactory
      * <li><code>javax.ejb.EJBObject</code>
      * <li><code>javax.ejb.EJBLocalObject</code>
      * <li><code>javax.rmi.CORBA.Stub</code>
-     * <li><code>org.mule.umo.lifecycle.Callable</code>
-     * <li><code>org.mule.umo.lifecycle.Initialisable</code>
-     * <li><code>org.mule.umo.lifecycle.Disposable</code>
+     * <li><code>org.mule.api.lifecycle.Callable</code>
+     * <li><code>org.mule.api.lifecycle.Initialisable</code>
+     * <li><code>org.mule.api.lifecycle.Disposable</code>
      * 
      * @param className the fully qualified class name
      */

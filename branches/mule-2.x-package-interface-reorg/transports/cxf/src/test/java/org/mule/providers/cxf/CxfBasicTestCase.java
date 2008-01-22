@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
 import org.custommonkey.xmlunit.XMLUnit;

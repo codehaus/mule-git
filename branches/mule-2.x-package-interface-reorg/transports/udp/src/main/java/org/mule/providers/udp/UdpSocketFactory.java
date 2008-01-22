@@ -9,8 +9,8 @@
  */
 package org.mule.providers.udp;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.util.MapUtils;
 
 import java.io.IOException;

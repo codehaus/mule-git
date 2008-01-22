@@ -10,16 +10,16 @@
 
 package org.mule.tck.functional;
 
-import org.mule.MuleException;
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.MuleException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.impl.RequestContext;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.exceptions.FunctionalTestException;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -147,7 +147,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
     /**
      * This method duplicates much of the functionality for the {@link #onCall} method above. This method is currently
-     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.umo.UMOEventContext} as
+     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.UMOEventContext} as
      * a complex type.
      * TODO: It would be nice to remove this method or at least refactor the methods so there is little or no duplication
      *
@@ -203,13 +203,13 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
      * An Event callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.umo.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
      * <p/>
      * Another option is to register a {@link FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link FunctionalTestNotification} for every message received by this component
      *
      * @return the callback to call when a message is received
-     * @see org.mule.umo.UMODescriptor
+     * @see org.mule.api.UMODescriptor
      * @see org.mule.tck.functional.FunctionalTestNotification
      * @see org.mule.tck.functional.FunctionalTestNotificationListener
      */
@@ -223,13 +223,13 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
      * An Event callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.umo.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
      * <p/>
      * Another option is to register a {@link FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link FunctionalTestNotification} for every message received by this component
      *
      * @param eventCallback the callback to call when a message is received
-     * @see org.mule.umo.UMODescriptor
+     * @see org.mule.api.UMODescriptor
      * @see org.mule.tck.functional.FunctionalTestNotification
      * @see org.mule.tck.functional.FunctionalTestNotificationListener
      */

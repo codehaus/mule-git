@@ -11,7 +11,7 @@
 package org.mule.providers.tcp.protocols;
 
 /**
- * Extend {@link org.mule.providers.tcp.protocols.XmlMessageProtocol} to continue reading
+ * Extend {@link org.mule.impl.transport.tcp.protocols.XmlMessageProtocol} to continue reading
  * until either a new message or EOF is found.
  */
 public class XmlMessageEOFProtocol extends XmlMessageProtocol

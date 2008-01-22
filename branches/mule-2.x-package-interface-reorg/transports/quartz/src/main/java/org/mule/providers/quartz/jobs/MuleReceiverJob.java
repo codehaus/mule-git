@@ -12,9 +12,9 @@ package org.mule.providers.quartz.jobs;
 
 import org.mule.RegistryContext;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.NullPayload;
 import org.mule.providers.quartz.QuartzConnector;
 import org.mule.providers.quartz.QuartzMessageReceiver;
 import org.mule.providers.quartz.i18n.QuartzMessages;

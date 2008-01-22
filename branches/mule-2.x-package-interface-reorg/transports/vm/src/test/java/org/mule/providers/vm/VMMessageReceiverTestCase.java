@@ -10,9 +10,9 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 public class VMMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {

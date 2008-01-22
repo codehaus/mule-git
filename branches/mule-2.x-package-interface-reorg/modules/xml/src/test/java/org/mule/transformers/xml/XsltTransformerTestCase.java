@@ -10,12 +10,12 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.RequestContext;
 import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
 import java.util.HashMap;

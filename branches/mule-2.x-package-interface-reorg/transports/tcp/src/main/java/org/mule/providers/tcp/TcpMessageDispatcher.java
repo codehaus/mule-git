@@ -10,12 +10,12 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.TransformerException;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

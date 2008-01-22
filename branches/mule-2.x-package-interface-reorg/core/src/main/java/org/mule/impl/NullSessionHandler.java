@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.provider.UMOSessionHandler;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.transport.UMOSessionHandler;
 
 /**
  * A session handler that ignores any session information

@@ -10,10 +10,10 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
 import org.dom4j.DocumentHelper;

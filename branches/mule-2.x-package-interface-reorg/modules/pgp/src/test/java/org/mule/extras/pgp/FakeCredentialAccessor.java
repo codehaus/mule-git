@@ -10,8 +10,8 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.umo.UMOEvent;
-import org.mule.umo.security.UMOCredentialsAccessor;
+import org.mule.api.UMOEvent;
+import org.mule.api.security.UMOCredentialsAccessor;
 
 public class FakeCredentialAccessor implements UMOCredentialsAccessor
 {
@@ -19,7 +19,7 @@ public class FakeCredentialAccessor implements UMOCredentialsAccessor
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOCredentialsAccessor#getCredentials(org.mule.umo.UMOEvent)
+     * @see org.mule.api.security.UMOCredentialsAccessor#getCredentials(org.mule.api.UMOEvent)
      */
     public Object getCredentials(UMOEvent event)
     {
@@ -29,7 +29,7 @@ public class FakeCredentialAccessor implements UMOCredentialsAccessor
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOCredentialsAccessor#setCredentials(org.mule.umo.UMOEvent,
+     * @see org.mule.api.security.UMOCredentialsAccessor#setCredentials(org.mule.api.UMOEvent,
      *      java.lang.Object)
      */
     public void setCredentials(UMOEvent event, Object credentials)

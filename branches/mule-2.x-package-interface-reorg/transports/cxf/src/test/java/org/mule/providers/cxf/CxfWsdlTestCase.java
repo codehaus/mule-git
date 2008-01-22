@@ -10,16 +10,16 @@
 
 package org.mule.providers.cxf;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.registry.Registry;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
-import org.mule.providers.AbstractConnector;
-import org.mule.registry.Registry;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpoint;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.w3c.dom.Document;

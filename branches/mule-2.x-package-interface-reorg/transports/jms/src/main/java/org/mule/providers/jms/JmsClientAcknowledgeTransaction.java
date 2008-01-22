@@ -10,11 +10,11 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.TransactionException;
+import org.mule.impl.transaction.AbstractSingleResourceTransaction;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.transaction.AbstractSingleResourceTransaction;
-import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.umo.TransactionException;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -39,7 +39,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
     /*
     * (non-Javadoc)
     *
-    * @see org.mule.transaction.AbstractSingleResourceTransaction#doBegin()
+    * @see org.mule.impl.transaction.AbstractSingleResourceTransaction#doBegin()
     */
     protected void doBegin() throws TransactionException
     {
@@ -49,7 +49,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.AbstractSingleResourceTransaction#doCommit()
+     * @see org.mule.impl.transaction.AbstractSingleResourceTransaction#doCommit()
      */
     protected void doCommit() throws TransactionException
     {
@@ -71,7 +71,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.AbstractSingleResourceTransaction#doRollback()
+     * @see org.mule.impl.transaction.AbstractSingleResourceTransaction#doRollback()
      */
     protected void doRollback() throws TransactionException
     {
@@ -85,7 +85,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransaction#bindResource(java.lang.Object,
+     * @see org.mule.api.UMOTransaction#bindResource(java.lang.Object,
      *      java.lang.Object)
      */
     public void bindResource(Object key, Object resource) throws TransactionException

@@ -10,11 +10,11 @@
 
 package org.mule.test.config;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.transformer.NoActionTransformer;
+import org.mule.impl.transformer.TransformerUtils;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transformers.NoActionTransformer;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class EndpointTransformerTestCase extends AbstractMuleTestCase
 {

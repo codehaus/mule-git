@@ -10,8 +10,8 @@
 
 package org.mule.providers.tcp.i18n;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.imple.config.i18n.Message;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.tcp.TcpConnector;
 
 import java.net.URI;

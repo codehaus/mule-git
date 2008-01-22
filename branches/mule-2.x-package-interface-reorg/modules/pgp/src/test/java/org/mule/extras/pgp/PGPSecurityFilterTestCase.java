@@ -10,10 +10,10 @@
 
 package org.mule.extras.pgp;
 
+import org.mule.api.UMOExceptionPayload;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOExceptionPayload;
-import org.mule.umo.UMOMessage;
 import org.mule.util.FileUtils;
 
 import java.io.File;

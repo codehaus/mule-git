@@ -10,13 +10,13 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,30 +69,30 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
     public Object getResultData()
     {
         return "<org.mule.impl.MuleMessage>\n"
-               + " <adapter class=\"org.mule.providers.DefaultMessageAdapter\">\n"
+               + " <adapter class=\"org.mule.impl.transport.DefaultMessageAdapter\">\n"
                + " <message class=\"string\">test</message>\n"
                + "   <properties>\n"
                + "     <scopedMap class=\"tree-map\">\n"
-               + "       <comparator class=\"org.mule.umo.provider.PropertyScope$ScopeComarator\"/>\n"
+               + "       <comparator class=\"org.mule.api.transport.PropertyScope$ScopeComarator\"/>\n"
                + "       <entry>\n"
-               + "         <org.mule.umo.provider.PropertyScope>\n"
+               + "         <org.mule.api.transport.PropertyScope>\n"
                + "           <scope>invocation</scope>\n"
                + "           <order>0</order>\n"
-               + "         </org.mule.umo.provider.PropertyScope>\n"
+               + "         </org.mule.api.transport.PropertyScope>\n"
                + "         <map/>\n"
                + "       </entry>\n"
                + "       <entry>\n"
-               + "         <org.mule.umo.provider.PropertyScope>\n"
+               + "         <org.mule.api.transport.PropertyScope>\n"
                + "           <scope>inbound</scope>\n"
                + "           <order>1</order>\n"
-               + "         </org.mule.umo.provider.PropertyScope>\n"
+               + "         </org.mule.api.transport.PropertyScope>\n"
                + "         <map/>\n"
                + "       </entry>\n"
                + "       <entry>\n"
-               + "         <org.mule.umo.provider.PropertyScope>\n"
+               + "         <org.mule.api.transport.PropertyScope>\n"
                + "           <scope>outbound</scope>\n"
                + "           <order>2</order>\n"
-               + "         </org.mule.umo.provider.PropertyScope>\n"
+               + "         </org.mule.api.transport.PropertyScope>\n"
                + "         <map>\n"
                + "           <entry>\n"
                + "             <string>object</string>\n"
@@ -112,10 +112,10 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                + "         </map>\n"
                + "       </entry>\n"
                + "       <entry>\n"
-               + "         <org.mule.umo.provider.PropertyScope>\n"
+               + "         <org.mule.api.transport.PropertyScope>\n"
                + "           <scope>session</scope>\n"
                + "           <order>3</order>\n"
-               + "         </org.mule.umo.provider.PropertyScope>\n"
+               + "         </org.mule.api.transport.PropertyScope>\n"
                + "         <map/>\n"
                + "       </entry>\n"
                + "     </scopedMap>\n"
@@ -126,7 +126,7 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                + "       <string>string</string>\n"
                + "     </keySet>\n"
                + "     <applicationProperties class=\"edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap\"/>\n"
-               + "     <defaultScope reference=\"../scopedMap/entry[3]/org.mule.umo.provider.PropertyScope\"/>\n"
+               + "     <defaultScope reference=\"../scopedMap/entry[3]/org.mule.api.transport.PropertyScope\"/>\n"
                + "     <fallbackToRegistry>false</fallbackToRegistry>\n" + "   </properties>\n"
                + "   <attachments class=\"edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap\"/>\n"
                + "   <encoding>UTF-8</encoding>\n" + "   <id>3be5fe5a-87f8-11dc-a153-0b6db396665f</id>\n"

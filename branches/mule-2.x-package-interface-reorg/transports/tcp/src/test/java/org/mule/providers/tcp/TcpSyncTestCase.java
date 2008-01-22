@@ -10,13 +10,13 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import java.util.Arrays;
 

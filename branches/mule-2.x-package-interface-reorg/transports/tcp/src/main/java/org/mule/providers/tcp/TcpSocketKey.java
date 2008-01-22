@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

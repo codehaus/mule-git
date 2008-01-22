@@ -10,12 +10,13 @@
 
 package org.mule.transaction;
 
+import org.mule.api.TransactionException;
+import org.mule.api.UMOTransaction;
+import org.mule.api.context.UMOServerNotification;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
+import org.mule.impl.transaction.AbstractTransaction;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.TransactionException;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.manager.UMOServerNotification;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

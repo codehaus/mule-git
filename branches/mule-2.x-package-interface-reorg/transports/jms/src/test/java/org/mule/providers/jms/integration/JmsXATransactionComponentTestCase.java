@@ -9,8 +9,8 @@
  */
 package org.mule.providers.jms.integration;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.umo.UMOMessage;
 
 
 

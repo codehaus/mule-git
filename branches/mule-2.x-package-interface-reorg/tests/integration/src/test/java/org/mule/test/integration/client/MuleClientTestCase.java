@@ -12,9 +12,9 @@ package org.mule.test.integration.client;
 
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class MuleClientTestCase extends FunctionalTestCase
 {

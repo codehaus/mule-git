@@ -10,23 +10,23 @@
 
 package org.mule.extras.acegi.filters.http;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityProviderNotFoundException;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.UnauthorisedException;
+import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.api.security.UnsupportedAuthenticationSchemeException;
 import org.mule.extras.acegi.AcegiAuthenticationAdapter;
 import org.mule.extras.acegi.i18n.AcegiMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.SecurityProviderNotFoundException;
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOSecurityContext;
-import org.mule.umo.security.UnauthorisedException;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
-import org.mule.umo.security.UnsupportedAuthenticationSchemeException;
 
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
@@ -98,7 +98,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
      * will always populate the secure context in the session
      * 
      * @param event the current message recieved
-     * @throws org.mule.umo.security.SecurityException if authentication fails
+     * @throws org.mule.api.security.SecurityException if authentication fails
      */
     public void authenticateInbound(UMOEvent event)
         throws SecurityException, SecurityProviderNotFoundException, UnknownAuthenticationTypeException
@@ -190,7 +190,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
      * will always populate the secure context in the session
      * 
      * @param event the current event being dispatched
-     * @throws org.mule.umo.security.SecurityException if authentication fails
+     * @throws org.mule.api.security.SecurityException if authentication fails
      */
     public void authenticateOutbound(UMOEvent event)
         throws SecurityException, SecurityProviderNotFoundException

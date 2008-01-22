@@ -9,9 +9,9 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.impl.lifecycle.ContainerManagedLifecyclePhase;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
 
 /**
  * Since all objects are created and initialised in the registry, the Initialise lifecyclePhase is always

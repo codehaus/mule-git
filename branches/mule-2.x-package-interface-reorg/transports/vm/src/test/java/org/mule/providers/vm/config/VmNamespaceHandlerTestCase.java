@@ -9,11 +9,11 @@
  */
 package org.mule.providers.vm.config;
 
-import org.mule.config.QueueProfile;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.config.QueueProfile;
 import org.mule.providers.vm.VMConnector;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 
 /**

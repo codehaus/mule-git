@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Collection;
 import java.util.Collections;

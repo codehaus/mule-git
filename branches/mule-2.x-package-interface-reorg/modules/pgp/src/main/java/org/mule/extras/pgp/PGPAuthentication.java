@@ -10,7 +10,7 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.umo.security.UMOAuthentication;
+import org.mule.api.security.UMOAuthentication;
 
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class PGPAuthentication implements UMOAuthentication
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOAuthentication#setAuthenticated(boolean)
+     * @see org.mule.api.security.UMOAuthentication#setAuthenticated(boolean)
      */
     public void setAuthenticated(boolean b)
     {
@@ -43,7 +43,7 @@ public class PGPAuthentication implements UMOAuthentication
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOAuthentication#isAuthenticated()
+     * @see org.mule.api.security.UMOAuthentication#isAuthenticated()
      */
     public boolean isAuthenticated()
     {
@@ -53,7 +53,7 @@ public class PGPAuthentication implements UMOAuthentication
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOAuthentication#getCredentials()
+     * @see org.mule.api.security.UMOAuthentication#getCredentials()
      */
     public Object getCredentials()
     {
@@ -63,7 +63,7 @@ public class PGPAuthentication implements UMOAuthentication
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOAuthentication#getDetails()
+     * @see org.mule.api.security.UMOAuthentication#getDetails()
      */
     public Object getDetails()
     {
@@ -78,7 +78,7 @@ public class PGPAuthentication implements UMOAuthentication
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.security.UMOAuthentication#getPrincipal()
+     * @see org.mule.api.security.UMOAuthentication#getPrincipal()
      */
     public Object getPrincipal()
     {

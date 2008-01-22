@@ -39,7 +39,7 @@
 
     <model name="model">
         <mule-descriptor name="TestJdbc"
-                         implementation="org.mule.components.simple.BridgeComponent">
+                         implementation="org.mule.impl.component.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="vm://in">
                 </endpoint>
@@ -59,7 +59,7 @@
         </mule-descriptor>
 
         <mule-descriptor name="TestJms"
-                         implementation="org.mule.components.simple.BridgeComponent">
+                         implementation="org.mule.impl.component.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="vm://in1"/>
             </inbound-router>
@@ -75,7 +75,7 @@
 
 <!--
         <mule-descriptor name="TestJmsConsole"
-                         implementation="org.mule.components.simple.BridgeComponent">
+                         implementation="org.mule.impl.component.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="jms://queue.out"/>
             </inbound-router>

@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis.extensions;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEvent;
+import org.mule.api.config.MuleProperties;
 import org.mule.providers.soap.MuleSoapHeaders;
-import org.mule.umo.UMOEvent;
 
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;

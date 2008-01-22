@@ -10,9 +10,9 @@
 
 package org.mule.impl.security;
 
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.security.UMOSecurityManager;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.security.UMOSecurityManager;
 
 import java.util.Iterator;
 

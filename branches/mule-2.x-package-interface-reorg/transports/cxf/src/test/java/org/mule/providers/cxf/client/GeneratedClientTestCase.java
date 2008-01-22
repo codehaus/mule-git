@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf.client;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class GeneratedClientTestCase extends FunctionalTestCase
 {

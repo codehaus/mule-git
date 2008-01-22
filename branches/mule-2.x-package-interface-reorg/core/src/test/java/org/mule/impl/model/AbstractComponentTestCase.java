@@ -11,10 +11,10 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
 {

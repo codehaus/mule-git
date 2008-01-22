@@ -10,17 +10,17 @@
 
 package org.mule.providers.http.components;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOMessage;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.NullPayload;
-import org.mule.routing.filters.MessagePropertyFilter;
-import org.mule.routing.filters.RegExFilter;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.impl.routing.filters.MessagePropertyFilter;
+import org.mule.impl.routing.filters.RegExFilter;
+import org.mule.impl.transport.NullPayload;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.properties.MessageHeaderPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
 

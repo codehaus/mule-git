@@ -11,19 +11,19 @@
 package org.mule.impl.endpoint;
 
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOTransactionConfig;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.UMOEndpointSecurityFilter;
+import org.mule.api.transport.ConnectionStrategy;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.ImmutableMuleEndpoint;
-import org.mule.impl.MuleContextAware;
-import org.mule.providers.ConnectionStrategy;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOTransactionConfig;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.security.UMOEndpointSecurityFilter;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.List;
 import java.util.Map;
@@ -152,7 +152,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, 
      * 
      * @param filter the UMOSecurityFilter responsible for authenticating message
      *            flow via this endpoint.
-     * @see org.mule.umo.security.UMOEndpointSecurityFilter
+     * @see org.mule.api.security.UMOEndpointSecurityFilter
      */
     public void setSecurityFilter(UMOEndpointSecurityFilter filter)
     {

@@ -10,21 +10,21 @@
 
 package org.mule.providers.email.connectors;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
 import org.mule.providers.email.MailProperties;
 import org.mule.providers.email.SmtpConnector;
-import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
 

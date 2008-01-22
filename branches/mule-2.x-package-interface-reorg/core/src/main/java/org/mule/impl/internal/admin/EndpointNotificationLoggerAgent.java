@@ -10,18 +10,18 @@
 
 package org.mule.impl.internal.admin;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.impl.transport.NullPayload;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Map;
 

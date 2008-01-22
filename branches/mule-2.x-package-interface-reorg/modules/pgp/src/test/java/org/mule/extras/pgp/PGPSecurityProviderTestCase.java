@@ -10,8 +10,8 @@
 
 package org.mule.extras.pgp;
 
+import org.mule.api.security.UMOAuthentication;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.security.UMOAuthentication;
 
 import java.io.FileInputStream;
 import java.net.URL;

@@ -10,10 +10,10 @@
 
 package org.mule.extras.client;
 
-import org.mule.config.MuleProperties;
-import org.mule.transformers.AbstractTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractTransformer;
 
 import java.lang.reflect.Method;
 

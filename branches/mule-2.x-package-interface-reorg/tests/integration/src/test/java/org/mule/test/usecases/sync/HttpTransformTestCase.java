@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases.sync;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.transformer.compression.GZipUncompressTransformer;
+import org.mule.impl.transformer.simple.ByteArrayToSerializable;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transformers.compression.GZipUncompressTransformer;
-import org.mule.transformers.simple.ByteArrayToSerializable;
-import org.mule.umo.UMOMessage;
 
 import java.util.Arrays;
 

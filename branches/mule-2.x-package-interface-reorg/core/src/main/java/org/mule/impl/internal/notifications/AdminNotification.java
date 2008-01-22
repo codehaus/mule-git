@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.UMOMessage;
+import org.mule.api.context.UMOServerNotification;
 
 import java.util.HashMap;
 import java.util.Map;

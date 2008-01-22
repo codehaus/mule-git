@@ -10,15 +10,15 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.providers.NullPayload;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
+import org.mule.impl.transport.NullPayload;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;

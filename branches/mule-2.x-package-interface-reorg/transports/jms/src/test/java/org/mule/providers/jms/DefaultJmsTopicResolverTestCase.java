@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import com.mockobjects.dynamic.Mock;
 

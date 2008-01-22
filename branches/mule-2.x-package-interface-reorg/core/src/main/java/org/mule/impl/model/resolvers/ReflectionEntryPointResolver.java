@@ -9,20 +9,20 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.InvocationResult;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.InvocationResult;
+import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * <code>ReflectEntryPointResolver</code> is used to determine the entry point on a component
@@ -32,7 +32,7 @@ import java.util.Collection;
  * single component.
  * <p/>
  * For multiple parameters the payload of context.getMessage().getPayload() should be an Array of objects.
- * If the message payload is of type {@link org.mule.providers.NullPayload} the resolver will look for a no-argument
+ * If the message payload is of type {@link org.mule.impl.transport.NullPayload} the resolver will look for a no-argument
  * method to call that doesn't match the set of ignoredMethods on the resolver.
  * <p/>
  * Also a set of 'ignored' methods are available (and the use can add others) to tell the resolver to not
@@ -105,7 +105,7 @@ public class ReflectionEntryPointResolver extends AbstractEntryPointResolver
     /**
      * Will discover the entrypoint on the component using the payload type to figure out the method to call.
      * For multiple parameters the payload of context.getMessage().geTPayload() should be an Array of objects.
-     * If the message payload is of type {@link org.mule.providers.NullPayload} the resolver will look for a no-argument
+     * If the message payload is of type {@link org.mule.impl.transport.NullPayload} the resolver will look for a no-argument
      * method to call that doesn't match the set of ignoredMethods on the resover.
      *
      * @param component

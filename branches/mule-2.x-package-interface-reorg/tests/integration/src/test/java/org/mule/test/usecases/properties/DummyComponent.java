@@ -11,7 +11,7 @@
 package org.mule.test.usecases.properties;
 
 import org.mule.impl.RequestContext;
-import org.mule.routing.outbound.StaticRecipientList;
+import org.mule.impl.routing.outbound.StaticRecipientList;
 
 import java.util.ArrayList;
 import java.util.List;

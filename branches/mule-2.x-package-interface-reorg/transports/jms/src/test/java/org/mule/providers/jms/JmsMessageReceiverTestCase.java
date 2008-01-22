@@ -10,14 +10,14 @@
 
 package org.mule.providers.jms;
 
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import com.mockobjects.dynamic.AnyConstraintMatcher;
 import com.mockobjects.dynamic.Mock;

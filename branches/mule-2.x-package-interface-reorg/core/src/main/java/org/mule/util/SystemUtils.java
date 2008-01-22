@@ -10,7 +10,7 @@
 
 package org.mule.util;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -12,31 +12,31 @@ package org.mule.impl.registry;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.config.MuleConfiguration;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.MuleContextAware;
-import org.mule.registry.RegistrationException;
-import org.mule.registry.Registry;
-import org.mule.transformers.TransformerCollection;
-import org.mule.transformers.TransformerWeighting;
-import org.mule.transformers.simple.ObjectToByteArray;
-import org.mule.transformers.simple.ObjectToString;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointFactory;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.UMOLifecycleManager;
-import org.mule.umo.manager.UMOAgent;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.transformer.DiscoverableTransformer;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointFactory;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.UMOLifecycleManager;
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.RegistrationException;
+import org.mule.api.registry.Registry;
+import org.mule.api.transformer.DiscoverableTransformer;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.UMOConnector;
+import org.mule.impl.config.MuleConfiguration;
+import org.mule.impl.transformer.TransformerCollection;
+import org.mule.impl.transformer.TransformerWeighting;
+import org.mule.impl.transformer.simple.ObjectToByteArray;
+import org.mule.impl.transformer.simple.ObjectToString;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
 import org.mule.util.properties.PropertyExtractorManager;
@@ -540,7 +540,7 @@ public abstract class AbstractRegistry implements Registry
     /**
      * Initialises all registered agents
      *
-     * @throws org.mule.umo.lifecycle.InitialisationException
+     * @throws org.mule.api.lifecycle.InitialisationException
      */
     // TODO: Spring is now taking care of the initialisation lifecycle, need to check that we still get this
     // problem

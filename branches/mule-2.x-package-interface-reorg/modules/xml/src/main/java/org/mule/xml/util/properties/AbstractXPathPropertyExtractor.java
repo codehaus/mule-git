@@ -9,8 +9,8 @@
  */
 package org.mule.xml.util.properties;
 
-import org.mule.MuleRuntimeException;
-import org.mule.umo.UMOMessage;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.UMOMessage;
 import org.mule.util.properties.PropertyExtractor;
 import org.mule.xml.i18n.XmlMessages;
 

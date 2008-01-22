@@ -26,7 +26,7 @@ import org.quartz.JobExecutionException;
  * actual job object) or the payload of the event can be the Job (in which case when
  * the job is fired it will have a NullPayload)
  * 
- * @see org.mule.providers.NullPayload
+ * @see org.mule.impl.transport.NullPayload
  */
 public class DelegatingJob implements Job
 {

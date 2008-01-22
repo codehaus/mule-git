@@ -10,7 +10,7 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
 import org.dom4j.DocumentHelper;

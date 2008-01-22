@@ -10,10 +10,10 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import com.mockobjects.dynamic.Mock;
 

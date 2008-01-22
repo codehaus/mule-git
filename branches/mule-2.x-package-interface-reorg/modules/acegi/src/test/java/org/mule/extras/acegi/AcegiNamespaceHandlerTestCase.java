@@ -10,9 +10,9 @@
 
 package org.mule.extras.acegi;
 
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.security.UMOSecurityProvider;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.security.UMOSecurityProvider;
 
 import java.util.Iterator;
 

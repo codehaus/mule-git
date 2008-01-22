@@ -10,20 +10,20 @@
 
 package org.mule.util;
 
-import org.mule.MuleException;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleException;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.filter.ObjectFilter;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.routing.filters.EqualsFilter;
-import org.mule.routing.filters.ObjectFilter;
-import org.mule.routing.filters.WildcardFilter;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.impl.routing.filters.EqualsFilter;
+import org.mule.impl.routing.filters.WildcardFilter;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ public final class MuleObjectHelper
      * @param names - a list of transformers separated by "delim"
      * @param delim - the character used to delimit the transformers in the list
      * @return a list (possibly empty) of transformers or
-     * {@link org.mule.transformers.TransformerUtils#UNDEFINED} if the names list is null
+     * {@link org.mule.impl.transformer.TransformerUtils#UNDEFINED} if the names list is null
      * @throws MuleException
      */
     public static List getTransformers(String names, String delim) throws MuleException

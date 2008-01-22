@@ -10,12 +10,12 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.service.TransportServiceDescriptor;
-import org.mule.registry.ServiceDescriptorFactory;
+import org.mule.impl.transport.service.TransportServiceDescriptor;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class AxisEndpointTestCase extends AbstractMuleTestCase
 {
@@ -83,7 +83,7 @@ public class AxisEndpointTestCase extends AbstractMuleTestCase
         {
             //TODO TC: How do we assert this state in the new model?
             //assertEquals("axis", sd.getProtocol());
-            //assertEquals("org.mule.providers.soap.axis.AxisConnector", sd.getConnector());
+            //assertEquals("org.mule.impl.transport.soap.axis.AxisConnector", sd.getConnector());
         }
     }
 }

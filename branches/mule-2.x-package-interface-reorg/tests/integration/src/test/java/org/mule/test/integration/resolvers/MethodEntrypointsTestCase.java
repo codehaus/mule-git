@@ -10,11 +10,11 @@
 
 package org.mule.test.integration.resolvers;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.TooManySatisfiableMethodsException;
 import org.mule.impl.model.resolvers.EntryPointNotFoundException;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public class MethodEntrypointsTestCase extends FunctionalTestCase
 {

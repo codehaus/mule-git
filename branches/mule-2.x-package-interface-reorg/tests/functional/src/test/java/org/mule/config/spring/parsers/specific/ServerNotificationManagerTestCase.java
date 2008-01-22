@@ -10,12 +10,12 @@
 
 package org.mule.config.spring.parsers.specific;
 
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.manager.UMOServerNotificationListener;
 
 import java.util.Collection;
 

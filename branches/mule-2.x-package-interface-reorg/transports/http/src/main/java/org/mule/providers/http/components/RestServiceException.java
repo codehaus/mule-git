@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.components;
 
-import org.mule.config.i18n.Message;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOMessage;
+import org.mule.api.MessagingException;
+import org.mule.api.UMOMessage;
+import org.mule.imple.config.i18n.Message;
 
 public class RestServiceException extends MessagingException
 {

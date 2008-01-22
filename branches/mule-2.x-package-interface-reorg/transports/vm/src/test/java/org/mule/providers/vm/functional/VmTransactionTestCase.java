@@ -9,10 +9,10 @@
  */
 package org.mule.providers.vm.functional;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.umo.UMOMessage;
 
 public class VmTransactionTestCase extends FunctionalTestCase
 {

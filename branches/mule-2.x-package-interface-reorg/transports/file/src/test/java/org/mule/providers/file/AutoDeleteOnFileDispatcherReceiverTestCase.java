@@ -11,11 +11,11 @@
 package org.mule.providers.file;
 
 import org.mule.RegistryContext;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.UMOConnector;
 import org.mule.util.FileUtils;
 
 import java.io.File;

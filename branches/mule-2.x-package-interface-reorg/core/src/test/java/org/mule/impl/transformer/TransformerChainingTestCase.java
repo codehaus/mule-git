@@ -1,0 +1,70 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.impl.transformer;
+
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.MuleMessage;
+import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.tck.AbstractMuleTestCase;
+
+import java.util.Arrays;
+
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
+import java.util.Arrays;
+
+public class TransformerChainingTestCase extends AbstractMuleTestCase
+{
+
+    public UMOTransformer getTransformer() throws Exception
+    {
+        AbstractTransformer transformer = new AbstractTransformer()
+        {
+            protected Object doTransform(final Object src, final String encoding) throws TransformerException
+            {
+                return src;
+            }
+        };
+        transformer.setName("root");
+        transformer.setReturnClass(this.getClass());
+        transformer.registerSourceType(String.class);
+        transformer.initialise();
+
+        return transformer;
+    }
+
+    public void testIgnoreBadInputDoesNotBreakChain() throws Exception
+    {
+        // Grrrr....
+        AbstractTransformer transformer = (AbstractTransformer) this.getTransformer();
+        assertNotNull(transformer);
+        transformer.setIgnoreBadInput(true);
+        final AtomicBoolean nextCalled = new AtomicBoolean(false);
+        final Object marker = new Object();
+        UMOTransformer transformer2 = new AbstractTransformer()
+        {
+            protected Object doTransform(Object src, String encoding) throws TransformerException
+            {
+                nextCalled.set(true);
+                return marker;
+            }
+        };
+        MuleMessage message = new MuleMessage(this);
+        message.applyTransformers(Arrays.asList(new UMOTransformer[]{transformer, transformer2}));
+
+        Object result = message.getPayload();
+        assertNotNull(result);
+        assertSame(marker, result);
+        assertTrue("Next transformer not called.", nextCalled.get());
+    }
+
+}

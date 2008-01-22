@@ -10,9 +10,9 @@
 
 package org.mule.test.spring;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class InheritedPropertiesMule2458TestCase extends FunctionalTestCase
 {

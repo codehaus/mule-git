@@ -10,8 +10,8 @@
 
 package org.mule.tck.services;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.Callable;
 import org.mule.util.UUID;
 import org.mule.util.object.Identifiable;
 

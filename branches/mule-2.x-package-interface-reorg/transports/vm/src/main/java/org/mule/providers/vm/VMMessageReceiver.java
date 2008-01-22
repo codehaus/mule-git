@@ -10,15 +10,15 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.PollingReceiverWorker;
-import org.mule.providers.TransactedPollingMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.impl.transport.PollingReceiverWorker;
+import org.mule.impl.transport.TransactedPollingMessageReceiver;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 

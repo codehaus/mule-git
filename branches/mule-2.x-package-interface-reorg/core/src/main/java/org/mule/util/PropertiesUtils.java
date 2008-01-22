@@ -10,10 +10,8 @@
 
 package org.mule.util;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <code>PropertiesHelper</code> is a utility class for manipulating and filtering

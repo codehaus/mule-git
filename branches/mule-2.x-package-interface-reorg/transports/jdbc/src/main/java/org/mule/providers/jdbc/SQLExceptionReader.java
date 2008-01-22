@@ -10,7 +10,7 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.config.ExceptionReader;
+import org.mule.api.config.ExceptionReader;
 import org.mule.util.StringUtils;
 
 import java.sql.SQLException;

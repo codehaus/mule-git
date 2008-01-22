@@ -10,7 +10,7 @@
 
 package org.mule.extras.wssecurity.headers;
 
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOMessage;
 
 import java.util.Properties;
 

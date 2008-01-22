@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.transformers;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
 import org.mule.util.ClassUtils;
 
 import javax.jms.Message;

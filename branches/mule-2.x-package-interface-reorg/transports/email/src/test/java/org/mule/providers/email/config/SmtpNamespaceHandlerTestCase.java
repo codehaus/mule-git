@@ -9,9 +9,9 @@
  */
 package org.mule.providers.email.config;
 
+import org.mule.api.UMOException;
 import org.mule.providers.email.SmtpConnector;
 import org.mule.providers.email.SmtpsConnector;
-import org.mule.umo.UMOException;
 
 import java.util.Properties;
 

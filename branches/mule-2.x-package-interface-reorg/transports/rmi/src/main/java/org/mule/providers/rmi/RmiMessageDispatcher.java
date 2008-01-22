@@ -10,12 +10,12 @@
 
 package org.mule.providers.rmi;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.TransformerException;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.lang.reflect.Method;
 import java.rmi.RMISecurityManager;
@@ -78,7 +78,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnectorSession#dispatch(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.UMOEvent)
      */
     protected void doDispatch(UMOEvent event) throws Exception
     {
@@ -93,7 +93,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnectorSession#send(org.mule.umo.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.UMOEvent)
      */
     public UMOMessage doSend(UMOEvent event) throws Exception
     {

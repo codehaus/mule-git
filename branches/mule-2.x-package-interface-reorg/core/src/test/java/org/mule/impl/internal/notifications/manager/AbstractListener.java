@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.umo.manager.UMOServerNotificationListener;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.UMOServerNotificationListener;
 
 public abstract class AbstractListener implements UMOServerNotificationListener
 {

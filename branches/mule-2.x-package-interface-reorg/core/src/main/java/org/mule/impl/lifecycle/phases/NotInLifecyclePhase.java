@@ -9,8 +9,8 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.lifecycle.UMOLifecyclePhase;
 import org.mule.impl.lifecycle.LifecyclePhase;
-import org.mule.umo.lifecycle.UMOLifecyclePhase;
 
 /**
  * This lifecycle phase marks the 'pre-lifecycle' phase of an object. The default phase before

@@ -14,7 +14,7 @@ import org.mule.impl.endpoint.URIBuilder;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Translates a connector name property into the corresponding {@link org.mule.umo.provider.UMOConnector}
+ * Translates a connector name property into the corresponding {@link org.mule.api.transport.UMOConnector}
  * instance.
  */
 public class URIBuilderPropertyEditor extends PropertyEditorSupport

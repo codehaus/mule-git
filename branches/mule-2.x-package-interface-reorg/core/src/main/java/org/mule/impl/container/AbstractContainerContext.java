@@ -12,10 +12,10 @@ package org.mule.impl.container;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.impl.MuleContextAware;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.ContainerException;
-import org.mule.umo.manager.UMOContainerContext;
+import org.mule.api.context.ContainerException;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.context.UMOContainerContext;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.ChainedReader;
 import org.mule.util.SystemUtils;
 

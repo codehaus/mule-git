@@ -10,13 +10,13 @@
 
 package org.mule.providers.http;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.provider.UMOConnector;
 
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 

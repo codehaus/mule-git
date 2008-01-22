@@ -10,18 +10,18 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.config.MuleProperties;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.OutputHandler;
 import org.mule.impl.RequestContext;
-import org.mule.providers.NullPayload;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.impl.transport.NullPayload;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.StreamPayloadRequestEntity;
 import org.mule.providers.http.i18n.HttpMessages;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.OutputHandler;
-import org.mule.umo.transformer.TransformerException;
 import org.mule.util.StringUtils;
 
 import java.io.InputStream;

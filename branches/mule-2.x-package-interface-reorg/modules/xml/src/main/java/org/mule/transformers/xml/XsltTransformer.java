@@ -10,12 +10,12 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOEventContext;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.impl.RequestContext;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
@@ -403,7 +403,7 @@ public class XsltTransformer extends AbstractXmlTransformer
      * </p>
      * 
      * <pre>
-     *  &lt;transformer name=&quot;MyXsltTransformer&quot; className=&quot;org.mule.transformers.xml.XsltTransformer&quot;&amp;gt
+     *  &lt;transformer name=&quot;MyXsltTransformer&quot; className=&quot;org.mule.impl.transformer.xml.XsltTransformer&quot;&amp;gt
      *      &lt;properties&gt;
      *          &lt;property name=&quot;xslFile&quot; value=&quot;myXslFile.xsl&quot;/&amp;gt
      *          &lt;map name=&quot;transformParameters&quot;&amp;gt

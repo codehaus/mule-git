@@ -10,8 +10,8 @@
 
 package org.mule.impl.security;
 
-import org.mule.umo.security.UMOAuthentication;
-import org.mule.umo.security.UMOCredentials;
+import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.UMOCredentials;
 
 import java.util.Map;
 

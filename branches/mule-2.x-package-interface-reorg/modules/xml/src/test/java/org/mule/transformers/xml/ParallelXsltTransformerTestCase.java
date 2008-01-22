@@ -10,9 +10,9 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.IOUtils;
 
 import java.util.Collection;

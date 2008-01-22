@@ -11,23 +11,23 @@
 package org.mule.impl;
 
 import org.mule.RegistryContext;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractConnector;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.EndpointNotFoundException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.ReceiveException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOSessionHandler;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
-import org.mule.umo.security.UMOSecurityContext;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.EndpointNotFoundException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.ReceiveException;
+import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.UMOSessionHandler;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.UUID;
 
 import java.util.HashMap;
@@ -223,7 +223,7 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#dispatchEvent(org.mule.umo.UMOEvent)
+     * @see org.mule.api.UMOSession#dispatchEvent(org.mule.api.UMOEvent)
      */
     public void dispatchEvent(UMOEvent event) throws UMOException
     {
@@ -282,7 +282,7 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#sendEvent(org.mule.umo.UMOEvent)
+     * @see org.mule.api.UMOSession#sendEvent(org.mule.api.UMOEvent)
      */
     // TODO This method is practically the same as dispatchEvent(UMOEvent event),
     // so we could use some refactoring here.
@@ -367,7 +367,7 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#isValid()
+     * @see org.mule.api.UMOSession#isValid()
      */
     public boolean isValid()
     {
@@ -377,7 +377,7 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#setValid(boolean)
+     * @see org.mule.api.UMOSession#setValid(boolean)
      */
     public void setValid(boolean value)
     {
@@ -387,8 +387,8 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#receiveEvent(org.mule.umo.endpoint.UMOEndpoint,
-     *      long, org.mule.umo.UMOEvent)
+     * @see org.mule.api.UMOSession#receiveEvent(org.mule.api.endpoint.UMOEndpoint,
+     *      long, org.mule.api.UMOEvent)
      */
     public UMOMessage receiveEvent(String endpointName, long timeout) throws UMOException
     {
@@ -399,8 +399,8 @@ public final class MuleSession implements UMOSession
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.umo.UMOSession#receiveEvent(org.mule.umo.endpoint.UMOEndpoint,
-     *      long, org.mule.umo.UMOEvent)
+     * @see org.mule.api.UMOSession#receiveEvent(org.mule.api.endpoint.UMOEndpoint,
+     *      long, org.mule.api.UMOEvent)
      */
     public UMOMessage receiveEvent(UMOImmutableEndpoint endpoint, long timeout) throws UMOException
     {

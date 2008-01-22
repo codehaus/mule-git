@@ -23,8 +23,8 @@ import org.apache.commons.logging.LogFactory;
  * The socket is read until no more bytes are (momentarily) available
  * (previously the transfer buffer also had to be full on the previous read, which made
  * stronger requirements on the underlying network).  On slow networks
- * {@link org.mule.providers.tcp.protocols.EOFProtocol} and
- * {@link org.mule.providers.tcp.protocols.LengthProtocol} may be more reliable.
+ * {@link org.mule.impl.transport.tcp.protocols.EOFProtocol} and
+ * {@link org.mule.impl.transport.tcp.protocols.LengthProtocol} may be more reliable.
  *
  * <p>Writing simply writes the data to the socket.</p>
  */

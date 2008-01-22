@@ -10,8 +10,8 @@
 
 package org.mule.impl.security;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.object.ObjectFactory;
 

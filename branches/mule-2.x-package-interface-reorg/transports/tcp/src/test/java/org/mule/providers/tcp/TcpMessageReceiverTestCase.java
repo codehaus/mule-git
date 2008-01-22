@@ -10,11 +10,11 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.providers.AbstractConnector;
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
 
 import com.mockobjects.dynamic.Mock;
 

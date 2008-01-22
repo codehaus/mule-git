@@ -10,7 +10,7 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOEndpointURI;
 
 import org.jivesoftware.smack.SSLXMPPConnection;
 import org.jivesoftware.smack.XMPPConnection;

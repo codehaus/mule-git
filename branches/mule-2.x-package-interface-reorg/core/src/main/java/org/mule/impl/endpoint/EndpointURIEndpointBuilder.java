@@ -11,10 +11,10 @@
 package org.mule.impl.endpoint;
 
 import org.mule.api.MuleContext;
-import org.mule.impl.MuleContextAware;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 
 public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implements MuleContextAware
 {

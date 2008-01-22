@@ -10,29 +10,29 @@
 package org.mule.impl.lifecycle.phases;
 
 import org.mule.api.MuleContext;
+import org.mule.api.context.UMOAgent;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.UMOLifecyclePhase;
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.Registry;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
-import org.mule.registry.Registry;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.UMOLifecyclePhase;
-import org.mule.umo.manager.UMOAgent;
-import org.mule.umo.model.UMOModel;
-import org.mule.umo.provider.UMOConnector;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * The Dispose phase for the TransientRegistry LifecycleManager. Calling {@link org.mule.impl.registry.TransientRegistry#dispose()}
- * with initiate this phase via the {@link org.mule.umo.lifecycle.UMOLifecycleManager}.
+ * with initiate this phase via the {@link org.mule.api.lifecycle.UMOLifecycleManager}.
  * This phase controls the order in which objects should be disposed.
  *
  * @see org.mule.api.MuleContext
- * @see org.mule.umo.lifecycle.UMOLifecycleManager
+ * @see org.mule.api.lifecycle.UMOLifecycleManager
  * @see org.mule.impl.registry.TransientRegistry
- * @see org.mule.umo.lifecycle.Disposable
+ * @see org.mule.api.lifecycle.Disposable
  */
 public class TransientRegistryDisposePhase extends LifecyclePhase
 {

@@ -34,7 +34,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#store(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#store(java.lang.Object)
      */
     public Object store(String queue, Object obj) throws IOException
     {
@@ -50,7 +50,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#load(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#load(java.lang.Object)
      */
     public Object load(String queue, Object id) throws IOException
     {
@@ -60,7 +60,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#remove(java.lang.Object)
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#remove(java.lang.Object)
      */
     public void remove(String queue, Object id) throws IOException
     {
@@ -70,7 +70,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#restore()
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#restore()
      */
     public List restore() throws IOException
     {
@@ -80,7 +80,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#open()
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#open()
      */
     public void open() throws IOException
     {
@@ -90,7 +90,7 @@ public class MemoryPersistenceStrategy implements QueuePersistenceStrategy
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueuePersistenceStrategy#close()
+     * @see org.mule.impl.transaction.xa.queue.QueuePersistenceStrategy#close()
      */
     public void close() throws IOException
     {

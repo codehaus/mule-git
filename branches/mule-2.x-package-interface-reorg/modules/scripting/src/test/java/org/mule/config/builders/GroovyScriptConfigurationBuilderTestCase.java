@@ -10,9 +10,9 @@
 
 package org.mule.config.builders;
 
+import org.mule.api.UMOException;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.tck.AbstractScriptConfigBuilderTestCase;
-import org.mule.umo.UMOException;
 
 public class GroovyScriptConfigurationBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {

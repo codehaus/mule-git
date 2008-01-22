@@ -10,7 +10,7 @@
 
 package org.mule.util.properties;
 
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOMessage;
 
 import java.util.Map;
 

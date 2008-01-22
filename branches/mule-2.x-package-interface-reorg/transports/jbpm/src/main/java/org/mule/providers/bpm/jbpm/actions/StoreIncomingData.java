@@ -16,7 +16,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 /**
  * Stores the incoming message payload into the specified variable. 
- *   <action class="org.mule.providers.bpm.jbpm.actions.StoreIncomingData"> 
+ *   <action class="org.mule.impl.transport.bpm.jbpm.actions.StoreIncomingData"> 
  *      <variable>foo</variable>
  *   </action>
  */

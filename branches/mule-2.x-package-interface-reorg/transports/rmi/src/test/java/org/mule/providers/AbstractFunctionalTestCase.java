@@ -10,13 +10,13 @@
 
 package org.mule.providers;
 
-import org.mule.config.i18n.Message;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
+import org.mule.imple.config.i18n.Message;
 import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.DispatchException;
 
 import java.util.HashMap;
 

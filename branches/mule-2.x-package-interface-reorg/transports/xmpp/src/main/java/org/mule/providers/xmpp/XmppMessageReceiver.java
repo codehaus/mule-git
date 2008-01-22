@@ -10,17 +10,17 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.AbstractMessageReceiver;
-import org.mule.providers.ConnectException;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.impl.transport.ConnectException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;

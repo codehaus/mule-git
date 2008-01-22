@@ -10,11 +10,11 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.AbstractPollingMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.UMOMessageReceiver;
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.AbstractPollingMessageReceiver;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,8 +39,8 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnector#registerListener(org.mule.umo.UMOSession,
-     *      org.mule.umo.endpoint.UMOEndpoint)
+     * @see org.mule.api.transport.UMOConnector#registerListener(org.mule.api.UMOSession,
+     *      org.mule.api.endpoint.UMOEndpoint)
      */
     public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
     {
@@ -51,7 +51,7 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.AbstractConnector#doStop()
+     * @see org.mule.impl.transport.AbstractConnector#doStop()
      */
     public void doStop()
     {
@@ -67,7 +67,7 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.providers.AbstractConnector#doStart()
+     * @see org.mule.impl.transport.AbstractConnector#doStart()
      */
     public void doStart()
     {
@@ -77,7 +77,7 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.provider.UMOConnector#getProtocol()
+     * @see org.mule.api.transport.UMOConnector#getProtocol()
      */
 
     public String getProtocol()

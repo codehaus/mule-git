@@ -10,8 +10,8 @@
 
 package org.mule.providers.cxf;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 import org.apache.cxf.message.MessageImpl;
 

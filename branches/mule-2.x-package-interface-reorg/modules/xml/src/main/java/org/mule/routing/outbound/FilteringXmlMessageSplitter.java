@@ -10,9 +10,10 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.MuleMessage;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.impl.routing.outbound.AbstractMessageSplitter;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;

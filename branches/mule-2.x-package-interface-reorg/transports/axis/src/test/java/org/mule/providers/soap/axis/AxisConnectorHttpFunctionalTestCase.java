@@ -10,15 +10,15 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.ExceptionHelper;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.providers.soap.AbstractSoapUrlEndpointFunctionalTestCase;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public class AxisConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpointFunctionalTestCase
 {

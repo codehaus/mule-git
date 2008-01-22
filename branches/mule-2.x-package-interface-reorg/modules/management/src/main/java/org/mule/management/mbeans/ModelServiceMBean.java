@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
 
 /**
  * <code>ModelServiceMBean</code> JMX Service interface for the UMOModel.

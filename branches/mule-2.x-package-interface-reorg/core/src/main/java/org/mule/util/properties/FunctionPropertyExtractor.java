@@ -9,8 +9,8 @@
  */
 package org.mule.util.properties;
 
-import org.mule.MuleRuntimeException;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleRuntimeException;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.UUID;
 
 import java.net.InetAddress;

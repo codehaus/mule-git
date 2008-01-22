@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.api.transport.UMOMessageAdapter;
 
 public class DummyFilenameParser implements FilenameParser
 {

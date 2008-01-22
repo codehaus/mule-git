@@ -10,11 +10,11 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOSession;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMORouterCatchAllStrategy;
+import org.mule.api.UMOMessage;
+import org.mule.api.UMOSession;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.RoutingException;
+import org.mule.api.routing.UMORouterCatchAllStrategy;
 import org.mule.util.StringMessageUtils;
 
 public class TestCatchAllStrategy implements UMORouterCatchAllStrategy

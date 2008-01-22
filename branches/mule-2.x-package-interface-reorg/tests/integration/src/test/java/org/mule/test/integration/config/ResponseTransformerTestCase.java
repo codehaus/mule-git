@@ -10,10 +10,10 @@
 
 package org.mule.test.integration.config;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.transformer.TransformerUtils;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.util.Iterator;
 import java.util.List;

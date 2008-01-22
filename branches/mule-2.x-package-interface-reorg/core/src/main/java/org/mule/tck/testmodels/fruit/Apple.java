@@ -10,9 +10,9 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

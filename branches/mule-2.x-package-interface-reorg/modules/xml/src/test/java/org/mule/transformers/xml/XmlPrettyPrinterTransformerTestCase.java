@@ -10,8 +10,8 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.umo.transformer.UMOTransformer;
 
 import org.dom4j.io.OutputFormat;
 

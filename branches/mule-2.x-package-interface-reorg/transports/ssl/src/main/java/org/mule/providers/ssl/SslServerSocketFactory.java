@@ -10,8 +10,8 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.security.tls.TlsConfiguration;
 import org.mule.providers.tcp.TcpServerSocketFactory;
-import org.mule.umo.security.tls.TlsConfiguration;
 
 import java.io.IOException;
 import java.net.InetAddress;

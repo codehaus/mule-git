@@ -10,9 +10,9 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.util.Arrays;
 import java.util.HashSet;

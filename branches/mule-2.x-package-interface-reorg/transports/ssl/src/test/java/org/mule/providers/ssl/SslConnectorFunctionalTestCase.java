@@ -10,14 +10,14 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -36,7 +36,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
  * Note that this test doesn't test the socket from the connector itself (and so ran
  * with no problems when the connector was not using SSL).  Rather than alter this
  * test case (which I don't completely understand, and which may be useful in other
- * ways) I have added an additional test in {@link org.mule.providers.ssl.SslFunctionalTestCase}
+ * ways) I have added an additional test in {@link org.mule.impl.transport.ssl.SslFunctionalTestCase}
  */
 public class SslConnectorFunctionalTestCase extends FunctionalTestCase
 {

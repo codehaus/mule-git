@@ -10,7 +10,7 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.umo.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOEndpointURI;
 
 import java.io.IOException;
 

@@ -11,9 +11,10 @@
 package org.mule.impl.model;
 
 import org.mule.RegistryContext;
-import org.mule.registry.ServiceDescriptorFactory;
-import org.mule.registry.ServiceException;
-import org.mule.umo.model.UMOModel;
+import org.mule.api.model.ModelServiceDescriptor;
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.ServiceDescriptorFactory;
+import org.mule.api.registry.ServiceException;
 
 /**
  * Will locate the model service using the model type as the key and construct the model.

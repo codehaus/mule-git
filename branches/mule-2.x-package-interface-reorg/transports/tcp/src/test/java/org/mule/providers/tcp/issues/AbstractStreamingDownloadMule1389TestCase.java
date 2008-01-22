@@ -10,10 +10,10 @@
 
 package org.mule.providers.tcp.issues;
 
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.integration.AbstractStreamingCapacityTestCase;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 public abstract class AbstractStreamingDownloadMule1389TestCase extends FunctionalTestCase
 {

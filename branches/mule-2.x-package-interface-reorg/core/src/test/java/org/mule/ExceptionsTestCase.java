@@ -10,12 +10,13 @@
 
 package org.mule;
 
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.MuleException;
+import org.mule.api.UMOException;
+import org.mule.api.context.ManagerException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.routing.RoutingException;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.ManagerException;
-import org.mule.umo.routing.RoutingException;
 
 public class ExceptionsTestCase extends AbstractMuleTestCase
 {

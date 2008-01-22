@@ -10,9 +10,9 @@
 
 package org.mule.test.components;
 
+import org.mule.api.UMOComponent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.umo.UMOComponent;
 
 public class ServiceDescriptorTestCase extends FunctionalTestCase
 {

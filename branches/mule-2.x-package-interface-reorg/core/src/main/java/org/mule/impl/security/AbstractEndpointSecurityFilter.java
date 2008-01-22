@@ -11,24 +11,24 @@
 package org.mule.impl.security;
 
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.impl.MuleContextAware;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.security.CryptoFailureException;
-import org.mule.umo.security.EncryptionStrategyNotFoundException;
-import org.mule.umo.security.SecurityException;
-import org.mule.umo.security.SecurityProviderNotFoundException;
-import org.mule.umo.security.UMOCredentialsAccessor;
-import org.mule.umo.security.UMOEndpointSecurityFilter;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.security.UMOSecurityProvider;
-import org.mule.umo.security.UnknownAuthenticationTypeException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.CryptoFailureException;
+import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityProviderNotFoundException;
+import org.mule.api.security.UMOCredentialsAccessor;
+import org.mule.api.security.UMOEndpointSecurityFilter;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.TransformerTemplate;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
-import org.mule.transformers.TransformerTemplate;
 
 import java.util.Arrays;
 

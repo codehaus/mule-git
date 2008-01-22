@@ -10,15 +10,15 @@
 
 package org.mule.providers.jms;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.DispatchException;
 import org.mule.impl.model.AbstractComponent;
-import org.mule.providers.DefaultReplyToHandler;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.DefaultReplyToHandler;
 import org.mule.providers.jms.i18n.JmsMessages;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.transformer.UMOTransformer;
 import org.mule.util.StringMessageUtils;
 
 import java.util.Iterator;

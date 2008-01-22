@@ -10,11 +10,11 @@
 
 package org.mule.impl.container;
 
+import org.mule.api.context.ObjectNotFoundException;
+import org.mule.api.context.UMOContainerContext;
 import org.mule.impl.jndi.MuleInitialContextFactory;
 import org.mule.tck.model.AbstractContainerContextTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.umo.manager.ObjectNotFoundException;
-import org.mule.umo.manager.UMOContainerContext;
 
 import java.util.HashMap;
 import java.util.Map;

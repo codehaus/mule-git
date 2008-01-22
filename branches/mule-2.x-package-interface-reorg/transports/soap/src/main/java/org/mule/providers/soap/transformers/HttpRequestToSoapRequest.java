@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.transformers;
 
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringMessageUtils;

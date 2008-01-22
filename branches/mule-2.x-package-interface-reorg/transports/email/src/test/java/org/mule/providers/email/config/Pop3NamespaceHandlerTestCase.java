@@ -9,9 +9,9 @@
  */
 package org.mule.providers.email.config;
 
+import org.mule.api.UMOException;
 import org.mule.providers.email.Pop3Connector;
 import org.mule.providers.email.Pop3sConnector;
-import org.mule.umo.UMOException;
 
 /**
  * TODO

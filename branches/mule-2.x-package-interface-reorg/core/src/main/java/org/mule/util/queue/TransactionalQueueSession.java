@@ -33,7 +33,7 @@ class TransactionalQueueSession extends DefaultXASession implements QueueSession
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.QueueSession#getQueue(java.lang.String)
+     * @see org.mule.impl.transaction.xa.queue.QueueSession#getQueue(java.lang.String)
      */
     public Queue getQueue(String name)
     {

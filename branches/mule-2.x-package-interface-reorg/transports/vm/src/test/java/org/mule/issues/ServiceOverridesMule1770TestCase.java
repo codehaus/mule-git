@@ -10,13 +10,13 @@
 
 package org.mule.issues;
 
-import org.mule.config.MuleProperties;
-import org.mule.providers.AbstractConnector;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.impl.transformer.NoActionTransformer;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestMessageDispatcherFactory;
-import org.mule.transformers.NoActionTransformer;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.transformer.UMOTransformer;
 
 public class ServiceOverridesMule1770TestCase extends FunctionalTestCase
 {

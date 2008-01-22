@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import org.mule.transaction.constraints.ConstraintFilter;
-import org.mule.umo.UMOTransactionConfig;
-import org.mule.umo.UMOTransactionFactory;
+import org.mule.api.UMOTransactionConfig;
+import org.mule.api.UMOTransactionFactory;
+import org.mule.impl.transaction.constraints.ConstraintFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +50,7 @@ public class MuleTransactionConfig implements UMOTransactionConfig
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionConfig#getFactory()
+     * @see org.mule.api.UMOTransactionConfig#getFactory()
      */
     public UMOTransactionFactory getFactory()
     {
@@ -60,7 +60,7 @@ public class MuleTransactionConfig implements UMOTransactionConfig
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionConfig#setFactory(org.mule.umo.UMOTransactionFactory)
+     * @see org.mule.api.UMOTransactionConfig#setFactory(org.mule.api.UMOTransactionFactory)
      */
     public void setFactory(UMOTransactionFactory factory)
     {
@@ -74,7 +74,7 @@ public class MuleTransactionConfig implements UMOTransactionConfig
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionConfig#getAction()
+     * @see org.mule.api.UMOTransactionConfig#getAction()
      */
     public byte getAction()
     {
@@ -84,7 +84,7 @@ public class MuleTransactionConfig implements UMOTransactionConfig
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.umo.UMOTransactionConfig#setAction(byte)
+     * @see org.mule.api.UMOTransactionConfig#setAction(byte)
      */
     public void setAction(byte action)
     {

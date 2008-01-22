@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.protocols;
 
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.providers.tcp.TcpProtocol;
-import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 

@@ -10,8 +10,8 @@
 
 package org.mule.ra;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.manager.UMOWorkManager;
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOWorkManager;
 
 import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;

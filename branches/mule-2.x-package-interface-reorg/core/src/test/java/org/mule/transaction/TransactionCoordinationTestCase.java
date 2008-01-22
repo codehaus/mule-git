@@ -10,8 +10,10 @@
 
 package org.mule.transaction;
 
+import org.mule.api.UMOTransaction;
+import org.mule.impl.transaction.IllegalTransactionStateException;
+import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.UMOTransaction;
 
 import com.mockobjects.dynamic.Mock;
 

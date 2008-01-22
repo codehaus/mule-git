@@ -10,14 +10,14 @@
 
 package org.mule.management.agents;
 
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class WrapperManagerAgent extends AbstractAgent
         super("Wrapper Manager");
     }
 
-    /* @see org.mule.umo.lifecycle.Initialisable#initialise() */
+    /* @see org.mule.api.lifecycle.Initialisable#initialise() */
     public void initialise() throws InitialisationException
     {
 
@@ -138,18 +138,18 @@ public class WrapperManagerAgent extends AbstractAgent
         }
     }
 
-    /* @see org.mule.umo.lifecycle.Startable#start() */
+    /* @see org.mule.api.lifecycle.Startable#start() */
     public void start() throws UMOException {
         // no-op
     }
 
-    /* @see org.mule.umo.lifecycle.Stoppable#stop() */
+    /* @see org.mule.api.lifecycle.Stoppable#stop() */
     public void stop() throws UMOException
     {
         // no-op
     }
 
-    /* @see org.mule.umo.lifecycle.Disposable#dispose() */
+    /* @see org.mule.api.lifecycle.Disposable#dispose() */
     public void dispose()
     {
         try
@@ -163,13 +163,13 @@ public class WrapperManagerAgent extends AbstractAgent
         }
     }
 
-    /* @see org.mule.umo.manager.UMOAgent#registered() */
+    /* @see org.mule.api.context.UMOAgent#registered() */
     public void registered()
     {
         // nothing to do
     }
 
-    /* @see org.mule.umo.manager.UMOAgent#unregistered() */
+    /* @see org.mule.api.context.UMOAgent#unregistered() */
     public void unregistered()
     {
         // nothing to do
@@ -179,7 +179,7 @@ public class WrapperManagerAgent extends AbstractAgent
     // Getters and setters
     // /////////////////////////////////////////////////////////////////////////
 
-    /* @see org.mule.umo.manager.UMOAgent#getDescription() */
+    /* @see org.mule.api.context.UMOAgent#getDescription() */
     public String getDescription()
     {
         WrapperManagerMBean wm = (WrapperManagerMBean) wrapperManagerRef.get();

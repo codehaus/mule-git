@@ -10,28 +10,28 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.MuleManifest;
-import org.mule.config.MuleProperties;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.MessagingException;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.MuleMessage;
 import org.mule.impl.RequestContext;
+import org.mule.impl.config.MuleManifest;
 import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.providers.WriterMessageAdapter;
+import org.mule.impl.transport.WriterMessageAdapter;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.extensions.AxisMuleSession;
 import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
-import org.mule.umo.MessagingException;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
 
 import java.io.ByteArrayInputStream;

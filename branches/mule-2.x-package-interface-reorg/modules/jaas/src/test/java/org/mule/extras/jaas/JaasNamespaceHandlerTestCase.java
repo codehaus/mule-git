@@ -10,11 +10,11 @@
 
 package org.mule.extras.jaas;
 
+import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.security.UMOSecurityProvider;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOEncryptionStrategy;
-import org.mule.umo.security.UMOSecurityManager;
-import org.mule.umo.security.UMOSecurityProvider;
 
 public class JaasNamespaceHandlerTestCase extends FunctionalTestCase
 {

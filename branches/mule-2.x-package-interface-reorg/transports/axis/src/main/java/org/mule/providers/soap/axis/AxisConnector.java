@@ -10,30 +10,30 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.config.ExceptionHelper;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOException;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.providers.AbstractConnector;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.service.TransportFactory;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.servlet.ServletConnector;
-import org.mule.providers.service.TransportFactory;
 import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
 import org.mule.providers.soap.axis.extensions.MuleTransport;
 import org.mule.providers.soap.axis.extensions.WSDDFileProvider;
 import org.mule.providers.soap.axis.extensions.WSDDJavaMuleProvider;
 import org.mule.providers.soap.axis.i18n.AxisMessages;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.manager.UMOServerNotification;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
 import org.mule.util.object.SingletonObjectFactory;
@@ -469,7 +469,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     /**
      * Template method to perform any work when starting the connectoe
      *
-     * @throws org.mule.umo.UMOException if the method fails
+     * @throws org.mule.api.UMOException if the method fails
      */
     protected void doStart() throws UMOException
     {
@@ -479,7 +479,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     /**
      * Template method to perform any work when stopping the connectoe
      *
-     * @throws org.mule.umo.UMOException if the method fails
+     * @throws org.mule.api.UMOException if the method fails
      */
     protected void doStop() throws UMOException
     {

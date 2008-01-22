@@ -10,10 +10,10 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class MuleCopiedEndpointURITestCase extends AbstractMuleTestCase
 {

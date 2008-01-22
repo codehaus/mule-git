@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp;
 
+import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.umo.endpoint.UMOEndpointURI;
 
 public class TcpEndpointTestCase extends AbstractMuleTestCase
 {

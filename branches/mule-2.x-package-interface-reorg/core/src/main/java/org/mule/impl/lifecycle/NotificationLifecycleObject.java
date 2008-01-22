@@ -9,11 +9,11 @@
  */
 package org.mule.impl.lifecycle;
 
-import org.mule.MuleRuntimeException;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
+import org.mule.api.MuleRuntimeException;
+import org.mule.api.context.UMOServerNotification;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.umo.manager.UMOServerNotification;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Constructor;

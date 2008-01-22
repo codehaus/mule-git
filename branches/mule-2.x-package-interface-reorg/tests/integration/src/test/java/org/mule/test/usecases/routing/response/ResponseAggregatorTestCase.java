@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases.routing.response;
 
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.usecases.service.DummyResponseAggregator;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
 
 import java.util.Map;
 

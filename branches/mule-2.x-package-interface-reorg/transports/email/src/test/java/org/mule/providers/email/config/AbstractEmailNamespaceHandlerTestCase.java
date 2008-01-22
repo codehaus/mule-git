@@ -9,9 +9,9 @@
  */
 package org.mule.providers.email.config;
 
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public abstract class AbstractEmailNamespaceHandlerTestCase extends FunctionalTestCase
 {

@@ -10,13 +10,13 @@
 
 package org.mule.providers.ssl;
 
+import org.mule.api.UMOComponent;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.tcp.TcpMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
 
 import java.io.IOException;
 import java.net.Socket;

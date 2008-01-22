@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap;
 
-import org.mule.config.converters.QNameConverter;
+import org.mule.impl.config.converters.QNameConverter;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 

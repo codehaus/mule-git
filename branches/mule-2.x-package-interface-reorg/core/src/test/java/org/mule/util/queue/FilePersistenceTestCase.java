@@ -24,7 +24,7 @@ public class FilePersistenceTestCase extends AbstractTransactionQueueManagerTest
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#isPersistent()
+     * @see org.mule.impl.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#isPersistent()
      */
     protected boolean isPersistent()
     {

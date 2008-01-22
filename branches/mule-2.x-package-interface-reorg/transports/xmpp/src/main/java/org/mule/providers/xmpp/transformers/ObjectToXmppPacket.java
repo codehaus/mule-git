@@ -10,10 +10,10 @@
 
 package org.mule.providers.xmpp.transformers;
 
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.TransformerException;
+import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.providers.xmpp.XmppConnector;
-import org.mule.transformers.AbstractMessageAwareTransformer;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.TransformerException;
 
 import java.util.Iterator;
 

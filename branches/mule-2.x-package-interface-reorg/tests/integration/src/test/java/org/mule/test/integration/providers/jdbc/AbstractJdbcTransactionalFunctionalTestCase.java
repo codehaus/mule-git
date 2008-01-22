@@ -11,24 +11,24 @@
 package org.mule.test.integration.providers.jdbc;
 
 
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOEventContext;
+import org.mule.api.UMOTransaction;
+import org.mule.api.UMOTransactionConfig;
+import org.mule.api.UMOTransactionFactory;
+import org.mule.api.context.UMOServerNotification;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.routing.inbound.InboundRouterCollection;
-import org.mule.routing.outbound.OutboundPassThroughRouter;
-import org.mule.routing.outbound.OutboundRouterCollection;
+import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
+import org.mule.impl.routing.outbound.OutboundRouterCollection;
 import org.mule.tck.functional.EventCallback;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOTransaction;
-import org.mule.umo.UMOTransactionConfig;
-import org.mule.umo.UMOTransactionFactory;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.manager.UMOServerNotification;
 import org.mule.util.object.PrototypeObjectFactory;
 
 import java.util.HashMap;

@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap;
 
+import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.impl.endpoint.AbstractEndpointURIBuilder;
-import org.mule.umo.endpoint.MalformedEndpointException;
 
 import java.net.URI;
 import java.util.Properties;

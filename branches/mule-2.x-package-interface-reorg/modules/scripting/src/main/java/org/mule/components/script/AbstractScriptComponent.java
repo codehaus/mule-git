@@ -10,13 +10,13 @@
 
 package org.mule.components.script;
 
-import org.mule.config.ConfigurationException;
-import org.mule.impl.UMOComponentAware;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Callable;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.lifecycle.Lifecycle;
+import org.mule.api.UMOComponent;
+import org.mule.api.UMOComponentAware;
+import org.mule.api.UMOException;
+import org.mule.api.config.ConfigurationException;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Lifecycle;
 import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 import org.mule.util.monitor.FileListener;

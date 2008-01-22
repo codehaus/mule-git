@@ -10,11 +10,11 @@
 
 package org.mule.extras.client;
 
-import org.mule.MuleException;
+import org.mule.api.MuleException;
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.extras.client.i18n.ClientMessages;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.transformer.UMOTransformer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

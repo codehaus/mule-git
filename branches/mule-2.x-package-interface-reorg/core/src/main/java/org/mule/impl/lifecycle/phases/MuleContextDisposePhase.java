@@ -10,10 +10,10 @@
 package org.mule.impl.lifecycle.phases;
 
 import org.mule.api.MuleContext;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.impl.lifecycle.LifecyclePhase;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Disposable;
-import org.mule.umo.lifecycle.Initialisable;
 
 /**
  * Objects are disposed of via the Registry since the Registry manages the creation/initialisation of the objects

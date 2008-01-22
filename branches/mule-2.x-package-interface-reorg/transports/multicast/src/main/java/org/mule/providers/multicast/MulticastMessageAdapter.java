@@ -10,8 +10,8 @@
 
 package org.mule.providers.multicast;
 
+import org.mule.api.MessagingException;
 import org.mule.providers.udp.UdpMessageAdapter;
-import org.mule.umo.MessagingException;
 
 /**
  * <code>MulticastMessageAdapter</code> TODO

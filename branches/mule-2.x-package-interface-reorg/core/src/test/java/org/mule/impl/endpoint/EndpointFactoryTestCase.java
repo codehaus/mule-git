@@ -10,13 +10,13 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.registry.Registry;
+import org.mule.api.UMOException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointFactory;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.registry.Registry;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
-import org.mule.umo.UMOException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointFactory;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 public class EndpointFactoryTestCase extends AbstractMuleTestCase
 {

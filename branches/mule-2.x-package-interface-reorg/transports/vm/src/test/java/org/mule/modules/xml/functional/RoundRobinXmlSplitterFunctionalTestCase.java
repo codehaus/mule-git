@@ -10,7 +10,7 @@
 
 package org.mule.modules.xml.functional;
 
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
 
 import java.io.IOException;
 

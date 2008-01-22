@@ -10,12 +10,12 @@
 
 package org.mule.modules.xml.config;
 
-import org.mule.routing.filters.logic.NotFilter;
+import org.mule.api.UMOComponent;
+import org.mule.impl.routing.filters.logic.NotFilter;
+import org.mule.impl.routing.outbound.FilteringOutboundRouter;
 import org.mule.routing.filters.xml.IsXmlFilter;
 import org.mule.routing.filters.xml.JXPathFilter;
-import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOComponent;
 
 import java.util.List;
 import java.util.Map;

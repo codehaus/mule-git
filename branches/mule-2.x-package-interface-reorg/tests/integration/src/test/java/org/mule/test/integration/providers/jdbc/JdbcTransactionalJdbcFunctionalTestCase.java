@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.providers.jdbc;
 
+import org.mule.api.UMOTransactionFactory;
 import org.mule.providers.jdbc.JdbcTransactionFactory;
-import org.mule.umo.UMOTransactionFactory;
 
 public class JdbcTransactionalJdbcFunctionalTestCase extends AbstractJdbcTransactionalFunctionalTestCase
 {

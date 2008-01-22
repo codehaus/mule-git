@@ -10,8 +10,8 @@
 
 package org.mule.providers.email;
 
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.MessagingException;
+import org.mule.api.MessagingException;
+import org.mule.impl.transport.AbstractMessageAdapter;
 
 import java.util.Enumeration;
 import java.util.HashMap;

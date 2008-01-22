@@ -10,8 +10,8 @@
 
 package org.mule.extras.spring.i18n;
 
-import org.mule.config.i18n.Message;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.imple.config.i18n.Message;
+import org.mule.imple.config.i18n.MessageFactory;
 
 public class SpringMessages extends MessageFactory
 {

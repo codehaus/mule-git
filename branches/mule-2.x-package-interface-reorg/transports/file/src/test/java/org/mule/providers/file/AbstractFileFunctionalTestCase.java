@@ -10,8 +10,8 @@
 
 package org.mule.providers.file;
 
+import org.mule.api.UMOMessage;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 
 import java.io.File;
 import java.io.FileWriter;

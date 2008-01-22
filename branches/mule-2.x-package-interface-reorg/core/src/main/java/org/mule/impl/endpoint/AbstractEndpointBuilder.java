@@ -10,44 +10,44 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.MuleException;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.Message;
+import org.mule.api.MuleException;
+import org.mule.api.UMOFilter;
+import org.mule.api.UMOTransactionConfig;
+import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.UMOEndpointBuilder;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.registry.ServiceDescriptorFactory;
+import org.mule.api.registry.ServiceException;
+import org.mule.api.security.UMOEndpointSecurityFilter;
+import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transport.ConnectionStrategy;
+import org.mule.api.transport.UMOConnector;
 import org.mule.impl.MuleTransactionConfig;
-import org.mule.providers.AbstractConnector;
-import org.mule.providers.ConnectionStrategy;
-import org.mule.providers.SingleAttemptConnectionStrategy;
-import org.mule.providers.service.TransportFactory;
-import org.mule.providers.service.TransportFactoryException;
-import org.mule.providers.service.TransportServiceDescriptor;
-import org.mule.registry.ServiceDescriptorFactory;
-import org.mule.registry.ServiceException;
-import org.mule.transformers.TransformerUtils;
-import org.mule.umo.UMOFilter;
-import org.mule.umo.UMOTransactionConfig;
-import org.mule.umo.endpoint.EndpointException;
-import org.mule.umo.endpoint.UMOEndpointBuilder;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.security.UMOEndpointSecurityFilter;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.impl.transformer.TransformerUtils;
+import org.mule.impl.transport.AbstractConnector;
+import org.mule.impl.transport.SingleAttemptConnectionStrategy;
+import org.mule.impl.transport.service.TransportFactory;
+import org.mule.impl.transport.service.TransportFactoryException;
+import org.mule.impl.transport.service.TransportServiceDescriptor;
+import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.imple.config.i18n.Message;
 import org.mule.util.ClassUtils;
+import org.mule.util.MapCombiner;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 import org.mule.util.StringUtils;
-import org.mule.util.MapCombiner;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.LinkedList;
 
 /**
  * Abstract endpoint builder used for externalizing the complex creation logic of endpoints out of the

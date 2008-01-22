@@ -10,8 +10,8 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.registry.Registry;
-import org.mule.umo.UMOException;
+import org.mule.api.UMOException;
+import org.mule.api.registry.Registry;
 
 /**
  * <code>RegistryService</code> exposes service information and actions on 

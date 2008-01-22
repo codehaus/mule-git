@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.test;
 
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.providers.jms.JmsConnector;
-import org.mule.umo.lifecycle.InitialisationException;
 
 public class TestJmsConnector extends JmsConnector
 {

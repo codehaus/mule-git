@@ -10,10 +10,10 @@
 
 package org.mule.impl.model.seda.optimised;
 
-import org.mule.impl.model.MuleProxy;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Callable;
+import org.mule.api.model.MuleProxy;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Callable;
 
 /**
  * Same as <code>SedaComponent</code> except that it assumes that components implement the Callable 

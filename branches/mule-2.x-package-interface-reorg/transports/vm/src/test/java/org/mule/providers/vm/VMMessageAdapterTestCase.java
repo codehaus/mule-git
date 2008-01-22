@@ -10,13 +10,13 @@
 
 package org.mule.providers.vm;
 
+import org.mule.api.UMOException;
+import org.mule.api.UMOMessage;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
-import org.mule.umo.UMOException;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
-import org.mule.umo.provider.UMOMessageAdapter;
 
 /**
  * <code>VMMessageAdapterTestCase</code> TODO (document class)

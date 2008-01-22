@@ -10,8 +10,8 @@
 
 package org.mule.providers.xmpp;
 
+import org.mule.api.transport.UMOConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.umo.provider.UMOConnector;
 
 import org.jivesoftware.smack.packet.Message;
 

@@ -10,10 +10,10 @@
 
 package org.mule.providers.http.servlet;
 
+import org.mule.api.UMOMessage;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpResponse;
-import org.mule.umo.UMOMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

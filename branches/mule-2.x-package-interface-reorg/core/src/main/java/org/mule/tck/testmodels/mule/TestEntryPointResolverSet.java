@@ -10,9 +10,9 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.model.UMOEntryPointResolver;
-import org.mule.umo.model.UMOEntryPointResolverSet;
+import org.mule.api.UMOEventContext;
+import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.model.UMOEntryPointResolverSet;
 
 /**
  * <code>TestEntryPointResolver</code> is a test EntryPointResolver that doesn't provide

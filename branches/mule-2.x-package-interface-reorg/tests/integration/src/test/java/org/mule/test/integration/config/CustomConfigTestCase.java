@@ -9,12 +9,12 @@
  */
 package org.mule.test.integration.config;
 
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transformer.UMOTransformer;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.transformer.UMOTransformer;
 
 public class CustomConfigTestCase extends FunctionalTestCase
 {

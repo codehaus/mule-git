@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.umo.lifecycle.Initialisable;
-import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.imple.config.i18n.CoreMessages;
 
 /**
  * <code>AlreadyInitialisedException</code> is thrown when a component or connector

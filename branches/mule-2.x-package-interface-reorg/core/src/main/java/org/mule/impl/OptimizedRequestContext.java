@@ -10,8 +10,8 @@
 
 package org.mule.impl;
 
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -10,9 +10,9 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.Startable;
-import org.mule.umo.lifecycle.Stoppable;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.Startable;
+import org.mule.api.lifecycle.Stoppable;
 
 import javax.management.ObjectName;
 
@@ -53,7 +53,7 @@ public interface ComponentServiceMBean extends Stoppable, Startable, ComponentSt
      * state.
      * 
      * @throws UMOException if the component failed to pause.
-     * @see org.mule.config.MuleConfiguration
+     * @see org.mule.impl.config.MuleConfiguration
      */
     void pause() throws UMOException;
 

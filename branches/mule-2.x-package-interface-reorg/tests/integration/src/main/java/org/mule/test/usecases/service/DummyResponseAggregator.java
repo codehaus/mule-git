@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases.service;
 
-import org.mule.routing.inbound.EventGroup;
-import org.mule.routing.response.ResponseCorrelationAggregator;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.routing.RoutingException;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.routing.RoutingException;
+import org.mule.impl.routing.inbound.EventGroup;
+import org.mule.impl.routing.response.ResponseCorrelationAggregator;
 import org.mule.util.StringMessageUtils;
 
 public class DummyResponseAggregator extends ResponseCorrelationAggregator

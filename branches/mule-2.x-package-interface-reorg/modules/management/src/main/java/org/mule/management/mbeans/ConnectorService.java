@@ -10,9 +10,9 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.umo.UMOException;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.UMOException;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.UMOConnector;
 import org.mule.util.ObjectNameHelper;
 
 import java.beans.ExceptionListener;

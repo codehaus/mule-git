@@ -9,10 +9,10 @@
  */
 package org.mule.config.spring.parsers.specific;
 
+import org.mule.api.model.UMOModel;
+import org.mule.api.registry.ServiceException;
 import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
 import org.mule.impl.model.ModelFactory;
-import org.mule.registry.ServiceException;
-import org.mule.umo.model.UMOModel;
 import org.mule.util.ClassUtils;
 
 import org.springframework.beans.factory.BeanCreationException;

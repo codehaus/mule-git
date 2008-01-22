@@ -10,15 +10,15 @@
 
 package org.mule.providers.vm;
 
-import org.mule.config.i18n.CoreMessages;
-import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.api.UMOEvent;
+import org.mule.api.UMOMessage;
+import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.NoReceiverForEndpointException;
+import org.mule.impl.transport.AbstractMessageDispatcher;
+import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.vm.i18n.VMMessages;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOEndpointURI;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.provider.DispatchException;
-import org.mule.umo.provider.NoReceiverForEndpointException;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 

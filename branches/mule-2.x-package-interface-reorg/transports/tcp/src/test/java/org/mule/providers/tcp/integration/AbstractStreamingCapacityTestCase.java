@@ -10,13 +10,13 @@
 
 package org.mule.providers.tcp.integration;
 
+import org.mule.api.UMOEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
-import org.mule.providers.DefaultMessageAdapter;
+import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
-import org.mule.umo.UMOEventContext;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
