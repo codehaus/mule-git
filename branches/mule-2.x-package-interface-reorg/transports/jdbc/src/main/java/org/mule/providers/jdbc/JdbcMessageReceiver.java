@@ -10,11 +10,11 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.DefaultMuleMessage;

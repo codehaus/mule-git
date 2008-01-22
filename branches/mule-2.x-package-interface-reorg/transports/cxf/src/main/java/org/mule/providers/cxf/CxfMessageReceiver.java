@@ -10,8 +10,8 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.CreateException;

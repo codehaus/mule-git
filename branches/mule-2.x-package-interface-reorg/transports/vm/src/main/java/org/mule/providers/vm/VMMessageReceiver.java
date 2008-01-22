@@ -10,9 +10,9 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transport.Connector;

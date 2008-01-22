@@ -10,14 +10,14 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.lifecycle.StopException;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;

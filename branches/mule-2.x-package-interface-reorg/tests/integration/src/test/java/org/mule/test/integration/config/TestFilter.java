@@ -9,8 +9,8 @@
  */
 package org.mule.test.integration.config;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
+import org.mule.api.routing.filter.Filter;
 
 /**
  * TODO

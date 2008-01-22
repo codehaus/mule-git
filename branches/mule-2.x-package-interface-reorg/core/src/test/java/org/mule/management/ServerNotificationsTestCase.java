@@ -11,14 +11,14 @@
 package org.mule.management;
 
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.ComponentNotificationListener;
+import org.mule.api.notification.CustomNotificationListener;
+import org.mule.api.notification.ManagerNotificationListener;
+import org.mule.api.notification.ModelNotificationListener;
 import org.mule.impl.internal.notifications.ComponentNotification;
-import org.mule.impl.internal.notifications.ComponentNotificationListener;
 import org.mule.impl.internal.notifications.CustomNotification;
-import org.mule.impl.internal.notifications.CustomNotificationListener;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.ModelNotification;
-import org.mule.impl.internal.notifications.ModelNotificationListener;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 

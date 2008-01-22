@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
+import org.mule.api.routing.filter.Filter;
 
 import java.util.List;
 

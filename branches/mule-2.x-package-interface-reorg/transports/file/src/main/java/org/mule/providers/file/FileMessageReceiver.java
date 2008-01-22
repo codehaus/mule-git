@@ -11,8 +11,8 @@
 package org.mule.providers.file;
 
 import org.mule.api.MuleException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.routing.RoutingException;

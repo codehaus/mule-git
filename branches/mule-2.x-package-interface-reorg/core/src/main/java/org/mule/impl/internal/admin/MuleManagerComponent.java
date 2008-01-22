@@ -12,13 +12,13 @@ package org.mule.impl.internal.admin;
 
 import org.mule.MuleServer;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointBuilder;

@@ -10,7 +10,7 @@
 
 package org.mule.impl.transaction;
 
-import org.mule.api.TransactionException;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.config.i18n.CoreMessages;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;

@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.filters;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
+import org.mule.api.routing.filter.Filter;
 
 /**
  * <code>JmsSelectorFilter</code> is a wrapper for a JMS Selector. This filter

@@ -11,7 +11,7 @@
 package org.mule.api.lifecycle;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.model.EntryPointResolverSet;
 
 /** <code>LifecycleAdapterFactory</code> TODO (document class) */

@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.InitialisationCallback;
+import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 
 import org.apache.axis.handlers.soap.SOAPService;

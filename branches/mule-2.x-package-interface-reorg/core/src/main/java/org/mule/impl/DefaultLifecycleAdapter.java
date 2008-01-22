@@ -11,13 +11,13 @@
 package org.mule.impl;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
-import org.mule.api.ComponentAware;
-import org.mule.api.ComponentException;
 import org.mule.api.Event;
-import org.mule.api.Invocation;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentAware;
+import org.mule.api.component.ComponentException;
+import org.mule.api.component.Invocation;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;

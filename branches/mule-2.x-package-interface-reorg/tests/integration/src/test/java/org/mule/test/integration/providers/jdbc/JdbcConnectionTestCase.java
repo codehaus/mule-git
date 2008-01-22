@@ -11,7 +11,7 @@
 package org.mule.test.integration.providers.jdbc;
 
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.Connector;

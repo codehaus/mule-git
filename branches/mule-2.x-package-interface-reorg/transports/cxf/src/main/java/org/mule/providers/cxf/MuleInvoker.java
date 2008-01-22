@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.ComponentException;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.ComponentException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.DefaultMuleMessage;

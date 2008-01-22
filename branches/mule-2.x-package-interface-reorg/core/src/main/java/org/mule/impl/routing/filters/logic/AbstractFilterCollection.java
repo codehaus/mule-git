@@ -9,7 +9,7 @@
  */
 package org.mule.impl.routing.filters.logic;
 
-import org.mule.api.Filter;
+import org.mule.api.routing.filter.Filter;
 
 import java.util.ArrayList;
 import java.util.List;

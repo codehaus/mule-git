@@ -10,8 +10,8 @@
 
 package org.mule.tck.providers;
 
-import org.mule.api.Component;
 import org.mule.api.MuleException;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;

@@ -11,7 +11,7 @@
 package org.mule.impl.component.simple;
 
 import org.mule.api.EventContext;
-import org.mule.api.component.LogService;
+import org.mule.api.component.simple.LogService;
 import org.mule.api.lifecycle.Callable;
 import org.mule.util.StringMessageUtils;
 

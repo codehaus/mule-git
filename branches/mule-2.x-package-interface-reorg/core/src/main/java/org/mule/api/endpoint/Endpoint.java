@@ -10,9 +10,9 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.api.Filter;
-import org.mule.api.TransactionConfig;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
+import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
 

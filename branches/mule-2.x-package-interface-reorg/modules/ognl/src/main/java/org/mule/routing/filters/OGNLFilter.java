@@ -10,9 +10,9 @@
 
 package org.mule.routing.filters;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
+import org.mule.api.routing.filter.Filter;
 
 import ognl.Ognl;
 import ognl.OgnlException;

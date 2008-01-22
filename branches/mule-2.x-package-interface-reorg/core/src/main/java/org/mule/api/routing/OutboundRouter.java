@@ -13,8 +13,8 @@ package org.mule.api.routing;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
-import org.mule.api.TransactionConfig;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transaction.TransactionConfig;
 
 import java.util.List;
 

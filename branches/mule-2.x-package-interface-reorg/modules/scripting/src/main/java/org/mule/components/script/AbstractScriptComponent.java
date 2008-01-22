@@ -10,9 +10,9 @@
 
 package org.mule.components.script;
 
-import org.mule.api.Component;
-import org.mule.api.ComponentAware;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentAware;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;

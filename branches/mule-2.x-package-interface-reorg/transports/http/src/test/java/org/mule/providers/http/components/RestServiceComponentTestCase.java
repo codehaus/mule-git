@@ -10,7 +10,7 @@
 package org.mule.providers.http.components;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.http.components.RestServiceWrapper;

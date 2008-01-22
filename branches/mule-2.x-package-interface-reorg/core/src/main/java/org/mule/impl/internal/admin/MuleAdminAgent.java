@@ -12,7 +12,7 @@ package org.mule.impl.internal.admin;
 
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.InitialisationException;

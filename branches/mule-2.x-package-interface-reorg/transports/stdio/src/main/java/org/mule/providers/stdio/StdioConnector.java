@@ -10,7 +10,7 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.transport.AbstractConnector;

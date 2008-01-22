@@ -10,7 +10,7 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageReceiver;
 

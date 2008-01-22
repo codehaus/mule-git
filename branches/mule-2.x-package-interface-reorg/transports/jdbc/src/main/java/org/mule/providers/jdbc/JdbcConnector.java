@@ -10,12 +10,12 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.TransactionException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.config.i18n.MessageFactory;

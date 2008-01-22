@@ -16,7 +16,7 @@ import org.mule.impl.config.i18n.Message;
  * <code>ContainerException</code> is an Exception thrown by the component resolver
  * when it fials to find a component
  */
-public class ContainerException extends ManagerException
+public class ContainerException extends MuleContextException
 {
     /**
      * Serial version

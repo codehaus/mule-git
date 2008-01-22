@@ -11,14 +11,14 @@
 package org.mule.impl.endpoint;
 
 import org.mule.api.Event;
-import org.mule.api.Filter;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.TransactionConfig;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
+import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;

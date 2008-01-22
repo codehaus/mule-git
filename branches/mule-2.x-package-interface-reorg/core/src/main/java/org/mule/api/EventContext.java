@@ -10,8 +10,11 @@
 
 package org.mule.api;
 
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.api.transformer.TransformerException;
 
 import java.io.OutputStream;

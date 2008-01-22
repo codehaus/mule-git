@@ -11,7 +11,6 @@
 package org.mule.impl.routing.outbound;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
 import org.mule.api.endpoint.EndpointException;
@@ -20,6 +19,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutePathNotFoundException;
 import org.mule.api.routing.RoutingException;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.DynamicEndpointURIEndpoint;

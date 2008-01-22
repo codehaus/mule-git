@@ -10,7 +10,7 @@
 
 package org.mule.mule;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.impl.component.simple.PassThroughComponent;
 import org.mule.impl.model.seda.SedaComponent;

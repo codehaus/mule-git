@@ -11,7 +11,7 @@
 package org.mule.impl.transaction;
 
 import org.mule.MuleServer;
-import org.mule.api.TransactionException;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.config.i18n.MessageFactory;
 

@@ -11,20 +11,20 @@
 package org.mule.providers.jms;
 
 import org.mule.api.MessagingException;
-import org.mule.api.TransactionException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
+import org.mule.api.notification.ConnectionNotificationListener;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ConnectionNotification;
-import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.AbstractConnector;

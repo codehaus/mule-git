@@ -10,7 +10,7 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;

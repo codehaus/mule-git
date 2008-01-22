@@ -11,12 +11,12 @@
 package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.NamedObject;
+import org.mule.api.component.Component;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Lifecycle;

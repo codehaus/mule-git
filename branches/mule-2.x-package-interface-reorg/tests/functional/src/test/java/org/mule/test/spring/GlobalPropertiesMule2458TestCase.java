@@ -10,7 +10,7 @@
 
 package org.mule.test.spring;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 

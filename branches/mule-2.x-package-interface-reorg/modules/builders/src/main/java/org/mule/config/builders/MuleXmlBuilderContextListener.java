@@ -12,9 +12,9 @@ package org.mule.config.builders;
 
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleContextFactory;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.config.ConfigurationException;
+import org.mule.api.context.MuleContextFactory;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;

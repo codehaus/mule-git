@@ -11,7 +11,7 @@
 package org.mule.impl.component.simple;
 
 import org.mule.api.EventContext;
-import org.mule.api.component.EchoService;
+import org.mule.api.component.simple.EchoService;
 
 /**
  * <code>EchoComponent</code> will log the message and return the payload back as

@@ -10,8 +10,8 @@
 
 package org.mule.impl.routing.filters;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.routing.filter.ObjectFilter;
 
 /**

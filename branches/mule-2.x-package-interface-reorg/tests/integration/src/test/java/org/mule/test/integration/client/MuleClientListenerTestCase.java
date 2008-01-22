@@ -11,8 +11,8 @@
 package org.mule.test.integration.client;
 
 
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.transport.NoReceiverForEndpointException;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;

@@ -12,6 +12,7 @@ package org.mule.impl.internal.notifications;
 
 import org.mule.api.MuleContext;
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.BlockingServerEvent;
 
 /**
  * <code>ManagerNotification</code> is fired when an event such as the manager

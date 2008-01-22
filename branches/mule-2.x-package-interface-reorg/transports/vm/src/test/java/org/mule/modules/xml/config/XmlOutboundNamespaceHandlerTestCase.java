@@ -10,7 +10,7 @@
 
 package org.mule.modules.xml.config;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.impl.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.outbound.FilteringXmlMessageSplitter;
 import org.mule.routing.outbound.RoundRobinXmlSplitter;

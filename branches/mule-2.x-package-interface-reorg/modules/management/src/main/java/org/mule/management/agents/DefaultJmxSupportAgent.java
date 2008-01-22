@@ -11,7 +11,7 @@
 package org.mule.management.agents;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.context.Agent;
+import org.mule.api.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
 import org.mule.util.StringUtils;

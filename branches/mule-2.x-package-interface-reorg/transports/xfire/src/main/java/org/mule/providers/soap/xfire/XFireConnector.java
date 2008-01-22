@@ -11,19 +11,19 @@
 package org.mule.providers.soap.xfire;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.notification.ManagerNotificationListener;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;

@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.service;
 
-import org.mule.api.component.EchoService;
+import org.mule.api.component.simple.EchoService;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.util.StringUtils;

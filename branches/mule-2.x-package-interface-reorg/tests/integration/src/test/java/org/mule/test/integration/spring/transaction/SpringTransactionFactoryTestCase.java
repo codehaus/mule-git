@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.spring.transaction;
 
-import org.mule.api.Transaction;
+import org.mule.api.transaction.Transaction;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.AbstractMuleTestCase;
 

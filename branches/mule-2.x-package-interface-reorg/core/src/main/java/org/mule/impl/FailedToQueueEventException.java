@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import org.mule.api.Component;
-import org.mule.api.ComponentException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentException;
 import org.mule.impl.config.i18n.Message;
 
 /**

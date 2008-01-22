@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 
 /**

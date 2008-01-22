@@ -10,6 +10,7 @@
 
 package org.mule.api;
 
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.security.SecurityContext;
 
@@ -31,7 +32,7 @@ public interface Session extends Serializable
      * Returns the Component associated with the session in its current execution
      * 
      * @return the Component associated with the session in its current execution
-     * @see org.mule.api.Component
+     * @see org.mule.api.component.Component
      */
     Component getComponent();
 

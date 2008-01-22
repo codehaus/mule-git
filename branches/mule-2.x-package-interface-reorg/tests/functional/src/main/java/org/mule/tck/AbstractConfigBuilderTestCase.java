@@ -12,9 +12,8 @@ package org.mule.tck;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Filter;
+import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -24,6 +23,7 @@ import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.NestedRouter;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.OutboundRouterCollection;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.endpoint.MuleEndpoint;

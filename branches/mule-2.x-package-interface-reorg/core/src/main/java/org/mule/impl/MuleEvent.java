@@ -12,13 +12,13 @@ package org.mule.impl;
 
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
 import org.mule.api.ThreadSafeAccess;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.security.Credentials;

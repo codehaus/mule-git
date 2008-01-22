@@ -11,13 +11,12 @@ package org.mule.impl;
 
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.Agent;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.context.Agent;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.context.ServerNotificationListener;
-import org.mule.api.context.TransactionManagerFactory;
 import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.FatalException;
@@ -30,6 +29,7 @@ import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.store.Store;
+import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.config.MuleManifest;
 import org.mule.impl.config.i18n.CoreMessages;
@@ -473,7 +473,7 @@ public class DefaultMuleContext implements MuleContext
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.impl.internal.notifications.CustomNotificationListener} notificationManager.
+     * {@link org.mule.api.notification.CustomNotificationListener} notificationManager.
      *
      * @param notification the notification to fire. This must be of type
      *                     {@link org.mule.impl.internal.notifications.CustomNotification} otherwise an

@@ -12,8 +12,8 @@ package org.mule.providers.jdbc;
 
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;

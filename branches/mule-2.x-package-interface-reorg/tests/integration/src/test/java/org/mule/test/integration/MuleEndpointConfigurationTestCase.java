@@ -10,8 +10,8 @@
 
 package org.mule.test.integration;
 
-import org.mule.api.Component;
 import org.mule.api.Event;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.OutboundRouter;

@@ -10,6 +10,8 @@
 
 package org.mule.api;
 
+import org.mule.api.component.Invocation;
+
 /**
  * <code>Interceptor</code> is based on a similar concept of servlet filters and
  * works much the same way. This method is more commonally known as the interceptor

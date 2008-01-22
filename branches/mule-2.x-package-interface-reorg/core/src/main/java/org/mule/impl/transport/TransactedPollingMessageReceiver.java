@@ -11,7 +11,7 @@
 package org.mule.impl.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;

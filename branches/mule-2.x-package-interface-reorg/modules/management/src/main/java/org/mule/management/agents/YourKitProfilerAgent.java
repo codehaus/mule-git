@@ -12,9 +12,9 @@ package org.mule.management.agents;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.Agent;
 import org.mule.api.MuleContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.context.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;

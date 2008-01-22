@@ -10,8 +10,8 @@
 
 package org.mule.impl.routing.filters;
 
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
+import org.mule.api.routing.filter.Filter;
 
 /**
  * <code>PayloadTypeFilter</code> filters based on the type of the object received.

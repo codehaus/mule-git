@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.bank;
 
-import org.mule.api.Component;
-import org.mule.api.ComponentAware;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentAware;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.examples.loanbroker.LocaleMessage;

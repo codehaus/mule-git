@@ -10,11 +10,11 @@
 
 package org.mule.transaction;
 
-import org.mule.api.TransactionException;
-import org.mule.api.Transaction;
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.TransactionNotificationListener;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.internal.notifications.TransactionNotification;
-import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.transaction.AbstractTransaction;
 import org.mule.tck.AbstractMuleTestCase;
 

@@ -11,9 +11,9 @@
 package org.mule.providers.ftp;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;

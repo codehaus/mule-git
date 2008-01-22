@@ -10,7 +10,7 @@
 
 package org.mule.impl.transaction.lookup;
 
-import org.mule.api.context.TransactionManagerFactory;
+import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

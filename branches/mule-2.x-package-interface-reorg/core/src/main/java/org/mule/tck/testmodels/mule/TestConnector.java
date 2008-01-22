@@ -11,9 +11,9 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.MessagingException;
 import org.mule.api.ThreadSafeAccess;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.MessageAdapter;

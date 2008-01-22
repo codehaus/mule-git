@@ -10,18 +10,18 @@
 
 package org.mule.tck;
 
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.Session;
-import org.mule.api.Transaction;
-import org.mule.api.TransactionFactory;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.OutboundRouter;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageDispatcher;

@@ -10,8 +10,8 @@
 
 package org.mule.tck;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;

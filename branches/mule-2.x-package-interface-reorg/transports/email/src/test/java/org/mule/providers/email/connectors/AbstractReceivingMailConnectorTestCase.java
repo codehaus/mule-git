@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.Component;
 import org.mule.api.EventContext;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.InboundRouterCollection;

@@ -10,8 +10,8 @@
 
 package org.mule.impl.transaction;
 
-import org.mule.api.Transaction;
-import org.mule.api.TransactionException;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.config.i18n.CoreMessages;
 
 import org.apache.commons.logging.Log;

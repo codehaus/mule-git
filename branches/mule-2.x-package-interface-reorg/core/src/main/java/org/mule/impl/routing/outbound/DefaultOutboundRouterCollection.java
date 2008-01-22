@@ -10,10 +10,10 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.Component;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.OutboundRouterCollection;

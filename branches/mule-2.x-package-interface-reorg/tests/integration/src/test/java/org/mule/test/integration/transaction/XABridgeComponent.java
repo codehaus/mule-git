@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.transaction;
 
-import org.mule.api.Transaction;
+import org.mule.api.transaction.Transaction;
 import org.mule.impl.transaction.TransactionCoordination;
 
 import java.util.Map;

@@ -10,8 +10,8 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.Component;
 import org.mule.api.Interceptor;
+import org.mule.api.component.Component;
 
 /**
  * <code>LifecycleAdapter</code> is a wrapper around a pojo service that adds Lifecycle methods to the pojo. It also

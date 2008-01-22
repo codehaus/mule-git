@@ -11,17 +11,17 @@ package org.mule.management.agents;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.Model;
+import org.mule.api.notification.ManagerNotificationListener;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.management.i18n.ManagementMessages;
@@ -133,7 +133,7 @@ public class JmxAgent extends AbstractAgent
     /**
      * {@inheritDoc}
      *
-     * @see org.mule.api.context.Agent#getDescription()
+     * @see org.mule.api.Agent#getDescription()
      */
     public String getDescription()
     {
@@ -334,7 +334,7 @@ public class JmxAgent extends AbstractAgent
     /** {@inheritDoc}
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.Agent#registered()
+     * @see org.mule.api.Agent#registered()
      */
     public void registered()
     {
@@ -344,7 +344,7 @@ public class JmxAgent extends AbstractAgent
     /** {@inheritDoc}
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.Agent#unregistered()
+     * @see org.mule.api.Agent#unregistered()
      */
     public void unregistered()
     {

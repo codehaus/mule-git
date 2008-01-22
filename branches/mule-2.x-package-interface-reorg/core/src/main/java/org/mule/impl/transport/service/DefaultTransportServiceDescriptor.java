@@ -11,14 +11,14 @@
 package org.mule.impl.transport.service;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
-import org.mule.api.TransactionConfig;
-import org.mule.api.TransactionFactory;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.AbstractServiceDescriptor;
 import org.mule.api.registry.Registry;
+import org.mule.api.transaction.TransactionConfig;
+import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;

@@ -10,7 +10,7 @@
 
 package org.mule.test.spring;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.InboundRouterCollection;

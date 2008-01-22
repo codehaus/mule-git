@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.providers.jdbc;
 
-import org.mule.api.TransactionFactory;
+import org.mule.api.transaction.TransactionFactory;
 import org.mule.impl.transaction.XaTransactionFactory;
 import org.mule.providers.jdbc.xa.DataSourceWrapper;
 

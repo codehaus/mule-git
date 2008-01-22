@@ -11,14 +11,14 @@
 package org.mule.providers.vm;
 
 import org.mule.api.MessagingException;
-import org.mule.api.TransactionException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.DefaultMuleMessage;

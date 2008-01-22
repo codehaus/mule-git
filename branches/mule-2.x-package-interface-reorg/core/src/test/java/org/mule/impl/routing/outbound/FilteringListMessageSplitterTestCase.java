@@ -10,9 +10,9 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.routing.outbound.FilteringListMessageSplitter;

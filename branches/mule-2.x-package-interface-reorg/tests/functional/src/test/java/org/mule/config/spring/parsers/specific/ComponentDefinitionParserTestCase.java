@@ -11,10 +11,10 @@
 package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.MuleContext;
-import org.mule.api.MuleContextFactory;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
+import org.mule.api.context.MuleContextFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.config.spring.parsers.specific.CheckExclusiveClassAttributeObjectFactory.CheckExclusiveClassAttributeObjectFactoryException;
 import org.mule.impl.DefaultMuleContextFactory;

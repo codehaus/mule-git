@@ -9,7 +9,7 @@
  */
 package org.mule.config.spring;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.routing.Router;
 import org.mule.impl.routing.inbound.ForwardingConsumer;
 import org.mule.impl.routing.inbound.IdempotentSecureHashReceiver;

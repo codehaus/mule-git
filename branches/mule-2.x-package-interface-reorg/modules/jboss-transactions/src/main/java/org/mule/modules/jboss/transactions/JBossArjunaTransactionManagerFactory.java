@@ -11,7 +11,7 @@
 package org.mule.modules.jboss.transactions;
 
 import org.mule.RegistryContext;
-import org.mule.api.context.TransactionManagerFactory;
+import org.mule.api.transaction.TransactionManagerFactory;
 
 import com.arjuna.ats.arjuna.common.Environment;
 import com.arjuna.ats.arjuna.common.arjPropertyManager;

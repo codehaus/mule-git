@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.impl.DefaultLifecycleAdapter;
 

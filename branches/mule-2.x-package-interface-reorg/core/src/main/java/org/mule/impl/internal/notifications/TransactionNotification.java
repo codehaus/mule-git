@@ -10,8 +10,9 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.Transaction;
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.BlockingServerEvent;
+import org.mule.api.transaction.Transaction;
 
 public class TransactionNotification extends ServerNotification implements BlockingServerEvent
 {

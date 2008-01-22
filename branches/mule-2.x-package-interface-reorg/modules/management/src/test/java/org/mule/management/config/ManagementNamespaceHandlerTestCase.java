@@ -11,7 +11,7 @@
 package org.mule.management.config;
 
 import org.mule.RegistryContext;
-import org.mule.api.context.Agent;
+import org.mule.api.Agent;
 import org.mule.api.registry.Registry;
 import org.mule.config.spring.SpringRegistry;
 import org.mule.impl.internal.admin.EndpointNotificationLoggerAgent;

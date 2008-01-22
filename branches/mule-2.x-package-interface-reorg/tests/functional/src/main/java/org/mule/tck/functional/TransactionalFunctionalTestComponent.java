@@ -10,9 +10,9 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.TransactionException;
 import org.mule.api.EventContext;
-import org.mule.api.Transaction;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.config.i18n.MessageFactory;
 
 /**

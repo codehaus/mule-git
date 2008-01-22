@@ -11,8 +11,8 @@
 package org.mule.impl;
 
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.ExceptionNotificationListener;
 import org.mule.impl.internal.notifications.ExceptionNotification;
-import org.mule.impl.internal.notifications.ExceptionNotificationListener;
 import org.mule.tck.AbstractMuleTestCase;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;

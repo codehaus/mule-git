@@ -11,6 +11,7 @@
 package org.mule.impl.internal.notifications.manager;
 
 import org.mule.api.context.ServerNotification;
+import org.mule.api.notification.ServerNotificationHandler;
 
 /**
  * Optimized to make a quick decision on a particular class of messages.

@@ -10,10 +10,10 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transport.Connector;

@@ -10,7 +10,7 @@
 
 package org.mule.util.object;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.impl.config.PoolingProfile;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;

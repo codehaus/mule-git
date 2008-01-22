@@ -11,17 +11,17 @@
 package org.mule.impl.model;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
-import org.mule.api.ComponentAware;
-import org.mule.api.ComponentException;
 import org.mule.api.Event;
-import org.mule.api.InitialisationCallback;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentAware;
+import org.mule.api.component.ComponentException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.model.EntryPointResolver;

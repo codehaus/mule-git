@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;

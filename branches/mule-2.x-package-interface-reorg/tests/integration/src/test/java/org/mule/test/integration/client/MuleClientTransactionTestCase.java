@@ -11,12 +11,12 @@
 package org.mule.test.integration.client;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
-import org.mule.api.TransactionConfig;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionCallback;
+import org.mule.api.transaction.TransactionConfig;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;

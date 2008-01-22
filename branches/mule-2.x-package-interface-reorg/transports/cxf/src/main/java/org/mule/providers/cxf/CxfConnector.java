@@ -10,17 +10,17 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.notification.ManagerNotificationListener;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.transformer.TransformerUtils;

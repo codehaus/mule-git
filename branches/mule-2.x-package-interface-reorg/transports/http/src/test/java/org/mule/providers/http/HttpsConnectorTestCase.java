@@ -11,7 +11,7 @@
 package org.mule.providers.http;
 
 import org.mule.api.MuleContext;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.Connector;

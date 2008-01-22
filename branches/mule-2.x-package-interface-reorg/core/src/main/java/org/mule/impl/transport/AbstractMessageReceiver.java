@@ -11,11 +11,10 @@
 package org.mule.impl.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.EndpointURI;
@@ -23,6 +22,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.SecurityException;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.InternalMessageListener;

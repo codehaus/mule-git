@@ -10,8 +10,8 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.config.i18n.Message;

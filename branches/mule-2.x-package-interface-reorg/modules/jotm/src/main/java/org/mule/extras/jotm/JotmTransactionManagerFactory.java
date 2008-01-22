@@ -10,7 +10,7 @@
 
 package org.mule.extras.jotm;
 
-import org.mule.api.context.TransactionManagerFactory;
+import org.mule.api.transaction.TransactionManagerFactory;
 
 import javax.transaction.TransactionManager;
 
@@ -37,7 +37,7 @@ public class JotmTransactionManagerFactory implements TransactionManagerFactory
      * Retrieves the JOTM Current object that implements the TransactionManager
      * interface.
      * 
-     * @see org.mule.api.context.TransactionManagerFactory#create()
+     * @see org.mule.api.transaction.TransactionManagerFactory#create()
      */
     public synchronized TransactionManager create() throws Exception
     {

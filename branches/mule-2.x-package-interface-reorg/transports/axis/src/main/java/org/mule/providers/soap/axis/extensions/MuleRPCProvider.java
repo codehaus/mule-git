@@ -11,7 +11,7 @@
 package org.mule.providers.soap.axis.extensions;
 
 import org.mule.MuleServer;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.impl.RequestContext;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.AxisMessageReceiver;

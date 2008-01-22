@@ -10,7 +10,7 @@
 
 package org.mule.tck.model;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.context.ContainerContext;
 import org.mule.api.context.ObjectNotFoundException;

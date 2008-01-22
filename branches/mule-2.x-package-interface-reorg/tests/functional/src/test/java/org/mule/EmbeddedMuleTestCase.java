@@ -11,7 +11,7 @@
 package org.mule;
 
 import org.mule.api.MuleContext;
-import org.mule.api.MuleContextFactory;
+import org.mule.api.context.MuleContextFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
 

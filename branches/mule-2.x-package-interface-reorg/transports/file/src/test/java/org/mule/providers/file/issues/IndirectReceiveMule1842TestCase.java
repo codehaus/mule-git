@@ -10,8 +10,8 @@
 
 package org.mule.providers.file.issues;
 
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.file.AbstractFileFunctionalTestCase;

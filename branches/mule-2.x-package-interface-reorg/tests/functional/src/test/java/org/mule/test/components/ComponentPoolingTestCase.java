@@ -10,7 +10,7 @@
 
 package org.mule.test.components;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.mule.TestSedaComponent;

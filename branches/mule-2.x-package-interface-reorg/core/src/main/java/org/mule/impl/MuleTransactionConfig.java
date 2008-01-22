@@ -10,8 +10,8 @@
 
 package org.mule.impl;
 
-import org.mule.api.TransactionConfig;
-import org.mule.api.TransactionFactory;
+import org.mule.api.transaction.TransactionConfig;
+import org.mule.api.transaction.TransactionFactory;
 import org.mule.impl.transaction.constraints.ConstraintFilter;
 
 import org.apache.commons.logging.Log;

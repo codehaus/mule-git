@@ -11,9 +11,9 @@
 package org.mule.ra;
 
 import org.mule.RegistryContext;
-import org.mule.api.Component;
 import org.mule.api.MuleContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;

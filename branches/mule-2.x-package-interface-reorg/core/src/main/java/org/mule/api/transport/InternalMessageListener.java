@@ -12,7 +12,7 @@ package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
+import org.mule.api.transaction.Transaction;
 
 import java.io.OutputStream;
 

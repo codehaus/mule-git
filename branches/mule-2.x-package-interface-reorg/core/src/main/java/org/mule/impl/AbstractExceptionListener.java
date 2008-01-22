@@ -16,8 +16,6 @@ import org.mule.api.EventContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
-import org.mule.api.TransactionException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -27,6 +25,8 @@ import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.routing.RoutingException;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ExceptionNotification;
@@ -354,7 +354,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.impl.internal.notifications.ExceptionNotificationListener}
+     * {@link org.mule.api.notification.ExceptionNotificationListener}
      * eventManager.
      *
      * @param notification the notification to fire.

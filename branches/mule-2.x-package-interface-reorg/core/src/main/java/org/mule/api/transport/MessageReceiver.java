@@ -11,12 +11,12 @@
 package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Component;
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Lifecycle;
+import org.mule.api.transaction.Transaction;
 
 import java.io.OutputStream;
 

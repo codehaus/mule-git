@@ -9,7 +9,7 @@
  */
 package org.mule.providers.jms.xa;
 
-import org.mule.api.Transaction;
+import org.mule.api.transaction.Transaction;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transaction.IllegalTransactionStateException;
 import org.mule.impl.transaction.TransactionCoordination;

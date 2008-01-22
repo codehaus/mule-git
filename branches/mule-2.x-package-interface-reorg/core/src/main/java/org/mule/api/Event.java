@@ -10,6 +10,7 @@
 
 package org.mule.api;
 
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.TransformerException;

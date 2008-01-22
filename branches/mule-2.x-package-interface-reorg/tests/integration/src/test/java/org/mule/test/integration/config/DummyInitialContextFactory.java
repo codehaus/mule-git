@@ -11,7 +11,7 @@
 package org.mule.test.integration.config;
 
 import org.mule.MuleServer;
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.component.simple.EchoComponent;
 import org.mule.impl.jndi.SimpleContext;

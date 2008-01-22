@@ -11,9 +11,9 @@
 package org.mule.providers.jms.transformers;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.Transaction;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;

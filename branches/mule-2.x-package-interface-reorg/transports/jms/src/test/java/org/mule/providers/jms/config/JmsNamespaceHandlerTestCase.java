@@ -9,10 +9,10 @@
  */
 package org.mule.providers.jms.config;
 
-import org.mule.api.Filter;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.routing.filter.Filter;
 import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.jms.DefaultRedeliveryHandler;
 import org.mule.providers.jms.JmsConnector;

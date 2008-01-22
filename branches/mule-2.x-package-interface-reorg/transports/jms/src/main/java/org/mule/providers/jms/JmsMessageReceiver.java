@@ -10,13 +10,13 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.TransactionException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Transaction;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.Connector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.AbstractReceiverWorker;

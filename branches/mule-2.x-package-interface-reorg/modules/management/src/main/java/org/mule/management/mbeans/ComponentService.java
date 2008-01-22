@@ -11,8 +11,8 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
 import org.mule.impl.model.seda.SedaComponent;

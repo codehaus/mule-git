@@ -10,7 +10,7 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.api.Component;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.providers.udp.UdpConnector;

@@ -10,9 +10,9 @@
 
 package org.mule.test.components;
 
-import org.mule.api.ComponentException;
-import org.mule.api.Component;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.component.Component;
+import org.mule.api.component.ComponentException;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;

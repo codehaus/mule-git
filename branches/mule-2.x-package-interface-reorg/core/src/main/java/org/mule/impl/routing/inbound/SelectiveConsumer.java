@@ -11,11 +11,11 @@
 package org.mule.impl.routing.inbound;
 
 import org.mule.api.Event;
-import org.mule.api.Filter;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.InboundRouter;
 import org.mule.api.routing.RoutingException;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.config.i18n.CoreMessages;

@@ -11,11 +11,11 @@
 package org.mule.providers.http.components;
 
 import org.mule.api.EventContext;
-import org.mule.api.Filter;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.routing.filter.Filter;
 import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.routing.filters.MessagePropertyFilter;

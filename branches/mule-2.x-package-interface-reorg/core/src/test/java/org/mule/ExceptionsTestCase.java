@@ -12,7 +12,7 @@ package org.mule;
 
 import org.mule.api.MuleException;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.context.ManagerException;
+import org.mule.api.context.MuleContextException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.config.i18n.MessageFactory;
@@ -26,7 +26,7 @@ public class ExceptionsTestCase extends AbstractMuleTestCase
         String rootMsg = "Root Test Exception Message";
         String msg = "Test Exception Message";
 
-        Exception e = new ManagerException(MessageFactory.createStaticMessage(msg), new MuleException(
+        Exception e = new MuleContextException(MessageFactory.createStaticMessage(msg), new MuleException(
             MessageFactory.createStaticMessage(rootMsg)));
 
         assertEquals(rootMsg, e.getCause().getMessage());

@@ -12,10 +12,10 @@ package org.mule.impl.model.seda;
 
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.ComponentException;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.component.ComponentException;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.InitialisationException;

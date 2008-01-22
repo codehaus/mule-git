@@ -11,19 +11,19 @@
 package org.mule.test.integration.providers.jdbc;
 
 
-import org.mule.api.Component;
 import org.mule.api.EventContext;
-import org.mule.api.Transaction;
-import org.mule.api.TransactionConfig;
-import org.mule.api.TransactionFactory;
+import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.notification.TransactionNotificationListener;
+import org.mule.api.transaction.Transaction;
+import org.mule.api.transaction.TransactionConfig;
+import org.mule.api.transaction.TransactionFactory;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.TransactionNotification;
-import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.routing.outbound.OutboundPassThroughRouter;

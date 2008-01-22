@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;

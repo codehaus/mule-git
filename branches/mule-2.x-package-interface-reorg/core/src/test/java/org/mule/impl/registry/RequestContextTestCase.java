@@ -12,11 +12,11 @@ package org.mule.impl.registry;
 
 import org.mule.api.MuleContext;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.Component;
 import org.mule.api.Event;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.TransformerException;

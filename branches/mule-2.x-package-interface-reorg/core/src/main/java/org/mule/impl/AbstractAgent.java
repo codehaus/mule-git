@@ -9,8 +9,8 @@
  */
 package org.mule.impl;
 
+import org.mule.api.Agent;
 import org.mule.api.MuleContext;
-import org.mule.api.context.Agent;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.InitialisationException;
 
