@@ -11,7 +11,7 @@
 package org.mule.impl.internal.notifications;
 
 import org.mule.api.context.ServerNotification;
-import org.mule.api.notification.CustomNotificationListener;
+import org.mule.api.context.notification.CustomNotificationListener;
 
 /**
  * <code>CustomNotification</code> Custom notifications can be used by components

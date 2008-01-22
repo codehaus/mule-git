@@ -11,8 +11,8 @@
 package org.mule.impl.internal.notifications;
 
 import org.mule.api.context.ServerNotification;
+import org.mule.api.context.notification.BlockingServerEvent;
 import org.mule.api.model.Model;
-import org.mule.api.notification.BlockingServerEvent;
 
 /**
  * <code>ModelNotification</code> is fired when an event such as the model starting

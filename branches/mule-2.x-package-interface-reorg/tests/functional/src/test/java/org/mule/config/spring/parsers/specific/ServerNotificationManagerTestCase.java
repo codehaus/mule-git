@@ -12,7 +12,7 @@ package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.context.ServerNotification;
 import org.mule.api.context.ServerNotificationListener;
-import org.mule.api.notification.AdminNotificationListener;
+import org.mule.api.context.notification.AdminNotificationListener;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.tck.FunctionalTestCase;

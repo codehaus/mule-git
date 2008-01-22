@@ -10,7 +10,7 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.notification.CustomNotificationListener;
+import org.mule.api.context.notification.CustomNotificationListener;
 
 /**
  * By implementing this listener interface and registering the object with the

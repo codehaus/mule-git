@@ -8,16 +8,15 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
-
-import org.mule.api.context.ServerNotificationListener;
+package org.mule.api.context.notification;
 
 /**
- * <code>MessageNotificationListener</code> is an observer interface that objects
- * can use to receive notifications about messages being sent and received from a
- * Mule Server
+ * <code>BlockingServerEvent</code> is a marker interface that tells the server
+ * event manager to publish this event in the current thread, thus blocking the
+ * current thread of execution until all listeners have been processed
  */
-public interface MessageNotificationListener extends ServerNotificationListener
+
+public interface BlockingServerEvent
 {
     // no methods
 }

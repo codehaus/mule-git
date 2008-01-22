@@ -8,18 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
+package org.mule.api.context.notification;
 
 import org.mule.api.context.ServerNotificationListener;
 
 /**
- * <code>CustomNotificationListener</code> is an observer interface that can be
- * used to listen for Custom notifications using
- * <code>UMOManager.fireCustomEvent(..)</code>. Custom notifications can be used
- * by components and other objects such as routers, transformers, agents, etc to
- * communicate a change of state to each other.
+ * <code>ManagerNotificationListener</code> is an observer interface that objects
+ * can implement and then register themselves with the Mule manager to be notified
+ * when a Manager event occurs.
  */
-public interface CustomNotificationListener extends ServerNotificationListener
+public interface ManagerNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

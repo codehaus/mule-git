@@ -11,7 +11,7 @@
 package org.mule.impl;
 
 import org.mule.api.context.ServerNotification;
-import org.mule.api.notification.ExceptionNotificationListener;
+import org.mule.api.context.notification.ExceptionNotificationListener;
 import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.tck.AbstractMuleTestCase;
 

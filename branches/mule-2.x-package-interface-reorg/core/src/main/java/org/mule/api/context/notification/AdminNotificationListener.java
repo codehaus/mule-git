@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
+package org.mule.api.context.notification;
 
 import org.mule.api.context.ServerNotificationListener;
 
@@ -17,7 +17,7 @@ import org.mule.api.context.ServerNotificationListener;
  * objects can use to receive notifications about the state of the Mule instance and
  * its resources
  */
-public interface ManagementNotificationListener extends ServerNotificationListener
+public interface AdminNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

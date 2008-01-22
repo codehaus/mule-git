@@ -354,7 +354,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.notification.ExceptionNotificationListener}
+     * {@link org.mule.api.context.notification.ExceptionNotificationListener}
      * eventManager.
      *
      * @param notification the notification to fire.

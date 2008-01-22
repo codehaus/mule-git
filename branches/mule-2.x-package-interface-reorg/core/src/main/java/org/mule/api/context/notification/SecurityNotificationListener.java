@@ -8,16 +8,15 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
+package org.mule.api.context.notification;
 
 import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>ManagerNotificationListener</code> is an observer interface that objects
- * can implement and then register themselves with the Mule manager to be notified
- * when a Manager event occurs.
+ * can implement to receive notifications about secure access requests.
  */
-public interface ManagerNotificationListener extends ServerNotificationListener
+public interface SecurityNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

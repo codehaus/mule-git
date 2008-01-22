@@ -149,7 +149,7 @@ public abstract class AbstractTransaction implements Transaction
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.notification.TransactionNotificationListener}s.
+     * {@link org.mule.api.context.notification.TransactionNotificationListener}s.
      *
      */
     protected void fireNotification(TransactionNotification notification)

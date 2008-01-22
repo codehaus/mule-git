@@ -56,18 +56,18 @@ public class NotificationDefinitionParser extends ChildMapEntryDefinitionParser
         EVENT_MAP.put("TRANSACTION", org.mule.impl.internal.notifications.TransactionNotification.class.getName());
 
         INTERFACE_MAP = new HashMap();
-        INTERFACE_MAP.put("MANAGER", org.mule.api.notification.ManagerNotificationListener.class.getName());
-        INTERFACE_MAP.put("MODEL", org.mule.api.notification.ModelNotificationListener.class.getName());
-        INTERFACE_MAP.put("COMPONENT", org.mule.api.notification.ComponentNotificationListener.class.getName());
-        INTERFACE_MAP.put("SECURITY", org.mule.api.notification.SecurityNotificationListener.class.getName());
-        INTERFACE_MAP.put("MANAGEMENT", org.mule.api.notification.ManagementNotificationListener.class.getName());
-        INTERFACE_MAP.put("ADMIN", org.mule.api.notification.AdminNotificationListener.class.getName());
-        INTERFACE_MAP.put("CONNECTION", org.mule.api.notification.ConnectionNotificationListener.class.getName());
-        INTERFACE_MAP.put("REGISTRY", org.mule.api.notification.RegistryNotificationListener.class.getName());
-        INTERFACE_MAP.put("CUSTOM", org.mule.api.notification.CustomNotificationListener.class.getName());
-        INTERFACE_MAP.put("MESSAGE", org.mule.api.notification.MessageNotificationListener.class.getName());
-        INTERFACE_MAP.put("EXCEPTION", org.mule.api.notification.ExceptionNotificationListener.class.getName());
-        INTERFACE_MAP.put("TRANSACTION", org.mule.api.notification.TransactionNotificationListener.class.getName());
+        INTERFACE_MAP.put("MANAGER", org.mule.api.context.notification.ManagerNotificationListener.class.getName());
+        INTERFACE_MAP.put("MODEL", org.mule.api.context.notification.ModelNotificationListener.class.getName());
+        INTERFACE_MAP.put("COMPONENT", org.mule.api.context.notification.ComponentNotificationListener.class.getName());
+        INTERFACE_MAP.put("SECURITY", org.mule.api.context.notification.SecurityNotificationListener.class.getName());
+        INTERFACE_MAP.put("MANAGEMENT", org.mule.api.context.notification.ManagementNotificationListener.class.getName());
+        INTERFACE_MAP.put("ADMIN", org.mule.api.context.notification.AdminNotificationListener.class.getName());
+        INTERFACE_MAP.put("CONNECTION", org.mule.api.context.notification.ConnectionNotificationListener.class.getName());
+        INTERFACE_MAP.put("REGISTRY", org.mule.api.context.notification.RegistryNotificationListener.class.getName());
+        INTERFACE_MAP.put("CUSTOM", org.mule.api.context.notification.CustomNotificationListener.class.getName());
+        INTERFACE_MAP.put("MESSAGE", org.mule.api.context.notification.MessageNotificationListener.class.getName());
+        INTERFACE_MAP.put("EXCEPTION", org.mule.api.context.notification.ExceptionNotificationListener.class.getName());
+        INTERFACE_MAP.put("TRANSACTION", org.mule.api.context.notification.TransactionNotificationListener.class.getName());
     }
 
     public NotificationDefinitionParser()

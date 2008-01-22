@@ -11,10 +11,10 @@
 package org.mule.management;
 
 import org.mule.api.context.ServerNotification;
-import org.mule.api.notification.ComponentNotificationListener;
-import org.mule.api.notification.CustomNotificationListener;
-import org.mule.api.notification.ManagerNotificationListener;
-import org.mule.api.notification.ModelNotificationListener;
+import org.mule.api.context.notification.ComponentNotificationListener;
+import org.mule.api.context.notification.CustomNotificationListener;
+import org.mule.api.context.notification.ManagerNotificationListener;
+import org.mule.api.context.notification.ModelNotificationListener;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.impl.internal.notifications.CustomNotification;
 import org.mule.impl.internal.notifications.ManagerNotification;

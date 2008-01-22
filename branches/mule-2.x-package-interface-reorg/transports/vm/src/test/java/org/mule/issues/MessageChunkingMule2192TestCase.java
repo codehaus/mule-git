@@ -12,7 +12,7 @@ package org.mule.issues;
 
 
 import org.mule.api.context.ServerNotification;
-import org.mule.api.notification.MessageNotificationListener;
+import org.mule.api.context.notification.MessageNotificationListener;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.tck.FunctionalTestCase;

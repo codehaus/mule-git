@@ -473,7 +473,7 @@ public class DefaultMuleContext implements MuleContext
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.notification.CustomNotificationListener} notificationManager.
+     * {@link org.mule.api.context.notification.CustomNotificationListener} notificationManager.
      *
      * @param notification the notification to fire. This must be of type
      *                     {@link org.mule.impl.internal.notifications.CustomNotification} otherwise an

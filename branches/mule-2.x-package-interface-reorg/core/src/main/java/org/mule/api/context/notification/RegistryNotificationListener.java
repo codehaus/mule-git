@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
+package org.mule.api.context.notification;
 
 import org.mule.api.context.ServerNotificationListener;
 

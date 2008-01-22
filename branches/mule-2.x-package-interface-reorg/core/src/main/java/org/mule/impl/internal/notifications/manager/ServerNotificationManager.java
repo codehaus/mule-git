@@ -14,10 +14,10 @@ import org.mule.RegistryContext;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.context.ServerNotificationListener;
 import org.mule.api.context.WorkManager;
+import org.mule.api.context.notification.BlockingServerEvent;
+import org.mule.api.context.notification.ServerNotificationHandler;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.notification.BlockingServerEvent;
-import org.mule.api.notification.ServerNotificationHandler;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.util.ClassUtils;
 

@@ -8,16 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.notification;
+package org.mule.api.context.notification;
 
 import org.mule.api.context.ServerNotificationListener;
 
 /**
- * <code>ComponentNotificationListener</code> is an observer interface that objects
- * can implement and then register themselves with the Mule manager to be notified
- * when a Component event occurs.
+ * <code>ManagementNotificationListener</code> is an observer interface that
+ * objects can use to receive notifications about the state of the Mule instance and
+ * its resources
  */
-public interface ComponentNotificationListener extends ServerNotificationListener
+public interface ManagementNotificationListener extends ServerNotificationListener
 {
     // no methods
 }
