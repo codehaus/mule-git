@@ -10,10 +10,10 @@
 
 package org.mule.tck.testmodels.mule;
 
+import org.mule.DefaultLifecycleAdapter;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.model.EntryPointResolverSet;
-import org.mule.impl.DefaultLifecycleAdapter;
 
 /** <code>TestDefaultLifecycleAdapter</code> TODO document */
 public class TestDefaultLifecycleAdapter extends DefaultLifecycleAdapter

@@ -10,12 +10,12 @@
 
 package org.mule.test.usecases.http;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.transport.NullPayload;
-import org.mule.providers.http.HttpConnector;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.NullPayload;
+import org.mule.transport.http.HttpConnector;
 
 public class HttpResponseTestCase extends FunctionalTestCase
 {

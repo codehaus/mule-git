@@ -33,7 +33,7 @@ import org.mule.config.spring.parsers.specific.endpoint.support.AddressedEndpoin
 import org.mule.config.spring.parsers.specific.endpoint.support.ChildAddressDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.ChildEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
 
 /**
  * Registers a Bean Definition Parser for handling <code><parsers-test:...></code> elements.

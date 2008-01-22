@@ -10,8 +10,8 @@
 
 package org.mule.test.integration;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.io.File;

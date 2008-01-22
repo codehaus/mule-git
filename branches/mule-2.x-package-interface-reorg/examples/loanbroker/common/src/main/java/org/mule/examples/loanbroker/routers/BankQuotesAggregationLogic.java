@@ -10,12 +10,12 @@
 
 package org.mule.examples.loanbroker.routers;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.routing.inbound.EventGroup;
+import org.mule.routing.inbound.EventGroup;
 
 import java.util.Iterator;
 

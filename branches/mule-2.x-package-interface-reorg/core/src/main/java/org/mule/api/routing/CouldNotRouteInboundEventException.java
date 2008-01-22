@@ -12,7 +12,7 @@ package org.mule.api.routing;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>CouldNotRouteInboundEventException</code> thrown if the current component

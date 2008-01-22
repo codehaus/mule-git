@@ -34,7 +34,7 @@
     </service>
     
     <service name="cxfClient">
-      <singleton-object class="org.mule.providers.cxf.jaxws.ClientMessageGenerator"/>
+      <singleton-object class="org.mule.transport.cxf.jaxws.ClientMessageGenerator"/>
       <inbound>
         <inbound-endpoint ref="quartz.in"/>
       </inbound>

@@ -13,10 +13,10 @@ package org.mule.test.integration.message;
 import org.mule.api.EventContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.email.transformers.PlainTextDataSource;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.transport.email.transformers.PlainTextDataSource;
 
 import javax.activation.DataHandler;
 

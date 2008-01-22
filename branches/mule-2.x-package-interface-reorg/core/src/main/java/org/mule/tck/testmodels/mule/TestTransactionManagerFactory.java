@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.impl.transaction.lookup.GenericTransactionManagerLookupFactory;
+import org.mule.transaction.lookup.GenericTransactionManagerLookupFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

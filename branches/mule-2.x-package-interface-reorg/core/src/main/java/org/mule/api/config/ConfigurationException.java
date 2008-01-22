@@ -11,7 +11,7 @@
 package org.mule.api.config;
 
 import org.mule.api.MuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 public class ConfigurationException extends MuleException
 {

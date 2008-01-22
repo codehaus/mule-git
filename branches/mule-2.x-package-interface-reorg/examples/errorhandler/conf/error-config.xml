@@ -120,7 +120,7 @@
             </component>
 
             <outbound>
-                <custom-catch-all-strategy class="org.mule.impl.routing.LoggingCatchAllStrategy"/>
+                <custom-catch-all-strategy class="org.mule.routing.LoggingCatchAllStrategy"/>
                 
                 <filtering-router transformer-refs="ErrorMessageToException">
                     <file:outbound-endpoint path="test-data/exceptions"

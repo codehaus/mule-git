@@ -12,6 +12,8 @@ package org.mule.impl.security;
 
 import org.mule.api.EncryptionStrategy;
 import org.mule.api.security.SecurityManager;
+import org.mule.security.PasswordBasedEncryptionStrategy;
+import org.mule.security.SecretKeyEncryptionStrategy;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Iterator;

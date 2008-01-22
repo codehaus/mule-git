@@ -11,8 +11,8 @@
 package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>ConnectorException</code> Is thrown in the context of a Connector,

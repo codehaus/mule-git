@@ -21,7 +21,7 @@
         </spring:property>
     </spring:bean>
 
-    <spring:bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+    <spring:bean id="daoAuthenticationProvider" class="org.acegisecurity.transport.dao.DaoAuthenticationProvider">
         <spring:property name="userDetailsService" ref="inMemoryDaoImpl"/>
     </spring:bean>
 
@@ -43,7 +43,7 @@
                     <encryption-security-filter strategy-ref="PBE"/>
                 </inbound-endpoint>
             </inbound>
-            <component class="org.mule.impl.component.simple.EchoComponent"/>
+            <component class="org.mule.component.simple.EchoComponent"/>
         </service>
     </model>
 

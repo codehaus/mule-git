@@ -12,8 +12,8 @@ package org.mule.api.security;
 
 import org.mule.api.EncryptionStrategy;
 import org.mule.api.MuleException;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>CryptoFailureException</code> is a generic exception thrown by an

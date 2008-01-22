@@ -13,7 +13,7 @@ package org.mule.transformers.xml;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.util.IOUtils;
 
 import org.dom4j.DocumentHelper;

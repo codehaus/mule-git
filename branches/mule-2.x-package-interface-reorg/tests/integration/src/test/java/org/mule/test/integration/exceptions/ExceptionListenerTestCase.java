@@ -12,7 +12,7 @@ package org.mule.test.integration.exceptions;
 
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.message.ExceptionMessage;
+import org.mule.message.ExceptionMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class ExceptionListenerTestCase extends FunctionalTestCase

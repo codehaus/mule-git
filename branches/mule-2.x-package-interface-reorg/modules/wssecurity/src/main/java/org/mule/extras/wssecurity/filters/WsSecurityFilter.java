@@ -10,6 +10,7 @@
 
 package org.mule.extras.wssecurity.filters;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
 import org.mule.api.Event;
 import org.mule.api.lifecycle.InitialisationException;
@@ -20,14 +21,13 @@ import org.mule.api.security.SecurityProviderNotFoundException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.api.security.UnsupportedAuthenticationSchemeException;
 import org.mule.api.transport.Connector;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.extras.wssecurity.handlers.MuleWSSInHandler;
 import org.mule.extras.wssecurity.headers.WsSecurityHeadersSetter;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.config.i18n.MessageFactory;
-import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.providers.soap.axis.AxisConnector;
-import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
-import org.mule.providers.soap.xfire.XFireConnector;
+import org.mule.security.AbstractEndpointSecurityFilter;
+import org.mule.transport.soap.axis.AxisConnector;
+import org.mule.transport.soap.axis.extensions.MuleConfigProvider;
+import org.mule.transport.soap.xfire.XFireConnector;
 
 import java.util.ArrayList;
 import java.util.Collection;

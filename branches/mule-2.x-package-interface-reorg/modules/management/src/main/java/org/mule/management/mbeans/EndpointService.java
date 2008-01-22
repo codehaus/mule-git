@@ -13,7 +13,7 @@ package org.mule.management.mbeans;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageReceiver;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.ObjectNameHelper;
 
 import org.apache.commons.logging.Log;

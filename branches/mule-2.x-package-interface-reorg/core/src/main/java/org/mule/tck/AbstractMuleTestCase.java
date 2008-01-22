@@ -10,6 +10,8 @@
 
 package org.mule.tck;
 
+import org.mule.DefaultMuleContextBuilder;
+import org.mule.DefaultMuleContextFactory;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.Event;
@@ -22,10 +24,8 @@ import org.mule.api.context.MuleContextFactory;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.DefaultMuleContextBuilder;
-import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.impl.config.builders.DefaultsConfigurationBuilder;
-import org.mule.impl.config.builders.SimpleConfigurationBuilder;
+import org.mule.config.builders.DefaultsConfigurationBuilder;
+import org.mule.config.builders.SimpleConfigurationBuilder;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.util.FileUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;

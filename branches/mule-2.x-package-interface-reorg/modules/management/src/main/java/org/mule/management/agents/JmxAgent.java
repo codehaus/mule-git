@@ -9,6 +9,7 @@
  */
 package org.mule.management.agents;
 
+import org.mule.AbstractAgent;
 import org.mule.RegistryContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.AbstractMuleException;
@@ -19,11 +20,9 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.Model;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageReceiver;
-import org.mule.impl.AbstractAgent;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.transport.AbstractConnector;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.internal.notifications.ManagerNotification;
+import org.mule.internal.notifications.NotificationException;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
@@ -42,6 +41,7 @@ import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
 import org.mule.management.support.SimplePasswordJmxAuthenticator;
+import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.object.ObjectFactory;

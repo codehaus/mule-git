@@ -14,7 +14,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
-import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.AbstractMessageAwareTransformer;
 
 /**
  * Converts parameters on the message into a CustomerQuoteRequest object

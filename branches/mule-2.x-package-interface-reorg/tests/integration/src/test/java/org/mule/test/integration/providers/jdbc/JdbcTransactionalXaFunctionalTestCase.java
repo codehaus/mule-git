@@ -11,8 +11,8 @@
 package org.mule.test.integration.providers.jdbc;
 
 import org.mule.api.transaction.TransactionFactory;
-import org.mule.impl.transaction.XaTransactionFactory;
-import org.mule.providers.jdbc.xa.DataSourceWrapper;
+import org.mule.transaction.XaTransactionFactory;
+import org.mule.transport.jdbc.xa.DataSourceWrapper;
 
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;

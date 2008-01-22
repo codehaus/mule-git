@@ -10,13 +10,13 @@
 
 package org.mule.mule.model;
 
+import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.model.EntryPointResolverSet;
-import org.mule.impl.RequestContext;
-import org.mule.impl.model.resolvers.ArrayEntryPointResolver;
-import org.mule.impl.model.resolvers.EntryPointNotFoundException;
-import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
+import org.mule.model.resolvers.ArrayEntryPointResolver;
+import org.mule.model.resolvers.EntryPointNotFoundException;
+import org.mule.model.resolvers.LegacyEntryPointResolverSet;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;

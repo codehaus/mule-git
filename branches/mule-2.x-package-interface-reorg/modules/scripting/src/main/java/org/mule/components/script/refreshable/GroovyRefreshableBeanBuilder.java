@@ -13,7 +13,7 @@ package org.mule.components.script.refreshable;
 import org.mule.api.MuleException;
 import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 
 import groovy.lang.GroovyObject;

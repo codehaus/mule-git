@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>FatalException</code> can be thrown during initialisation or during

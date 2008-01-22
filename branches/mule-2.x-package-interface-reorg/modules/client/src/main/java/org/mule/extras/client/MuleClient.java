@@ -10,7 +10,11 @@
 
 package org.mule.extras.client;
 
+import org.mule.DefaultMuleContextFactory;
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
 import org.mule.MuleServer;
+import org.mule.MuleSession;
 import org.mule.RegistryContext;
 import org.mule.api.FutureMessageResult;
 import org.mule.api.MessagingException;
@@ -32,20 +36,16 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.ReceiveException;
+import org.mule.config.MuleConfiguration;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.extras.client.i18n.ClientMessages;
-import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.MuleSession;
-import org.mule.impl.config.MuleConfiguration;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.security.MuleCredentials;
-import org.mule.impl.transformer.TransformerUtils;
-import org.mule.impl.transport.AbstractConnector;
-import org.mule.impl.transport.NullPayload;
+import org.mule.security.MuleCredentials;
+import org.mule.transformer.TransformerUtils;
+import org.mule.transport.AbstractConnector;
+import org.mule.transport.NullPayload;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.StringUtils;
 
@@ -87,7 +87,7 @@ import org.apache.commons.logging.LogFactory;
  * Note that there must be a configured MuleManager for this client to work. It will
  * use the one available using <code>muleContext</code>
  * 
- * @see org.mule.impl.endpoint.MuleEndpointURI
+ * @see org.mule.endpoint.MuleEndpointURI
  */
 public class MuleClient implements Disposable
 {

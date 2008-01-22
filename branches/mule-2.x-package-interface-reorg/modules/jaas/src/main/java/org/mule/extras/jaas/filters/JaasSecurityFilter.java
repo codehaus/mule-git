@@ -22,11 +22,11 @@ import org.mule.api.security.Credentials;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.jaas.JaasAuthentication;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.impl.security.MuleCredentials;
-import org.mule.impl.security.MuleHeaderCredentialsAccessor;
+import org.mule.security.AbstractEndpointSecurityFilter;
+import org.mule.security.MuleCredentials;
+import org.mule.security.MuleHeaderCredentialsAccessor;
 
 public class JaasSecurityFilter extends AbstractEndpointSecurityFilter
 {

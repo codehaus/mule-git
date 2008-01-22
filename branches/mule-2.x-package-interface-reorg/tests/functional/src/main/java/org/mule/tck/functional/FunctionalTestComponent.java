@@ -11,14 +11,14 @@
 package org.mule.tck.functional;
 
 import org.mule.MuleServer;
+import org.mule.RequestContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.impl.RequestContext;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.exceptions.FunctionalTestException;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringMessageUtils;

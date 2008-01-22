@@ -11,7 +11,7 @@
 package org.mule.test.integration.transaction;
 
 import org.mule.api.transaction.Transaction;
-import org.mule.impl.transaction.TransactionCoordination;
+import org.mule.transaction.TransactionCoordination;
 
 import java.util.Map;
 

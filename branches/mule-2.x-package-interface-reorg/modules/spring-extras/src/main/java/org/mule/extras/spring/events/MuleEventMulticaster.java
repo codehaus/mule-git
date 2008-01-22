@@ -10,7 +10,11 @@
 
 package org.mule.extras.spring.events;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
+import org.mule.MuleSession;
 import org.mule.RegistryContext;
+import org.mule.RequestContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
@@ -31,16 +35,12 @@ import org.mule.api.routing.filter.ObjectFilter;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.extras.spring.i18n.SpringMessages;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.MuleSession;
-import org.mule.impl.RequestContext;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.model.seda.SedaModel;
-import org.mule.impl.routing.filters.WildcardFilter;
-import org.mule.impl.transport.AbstractConnector;
+import org.mule.model.seda.SedaComponent;
+import org.mule.model.seda.SedaModel;
+import org.mule.routing.filters.WildcardFilter;
+import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.object.PrototypeObjectFactory;
 

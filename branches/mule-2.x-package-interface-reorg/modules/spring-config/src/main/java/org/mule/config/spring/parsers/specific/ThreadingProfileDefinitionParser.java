@@ -10,9 +10,9 @@
 package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.config.ThreadingProfile;
+import org.mule.config.ChainedThreadingProfile;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.processors.ConstructorReference;
-import org.mule.impl.config.ChainedThreadingProfile;
 
 /**
  * This parser is responsible for processing the <code><threading-profile><code> configuration elements.

@@ -11,7 +11,7 @@ package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.impl.transport.SimpleRetryConnectionStrategy;
+import org.mule.transport.SimpleRetryConnectionStrategy;
 
 /**
  * Handles the parsing of <code><mule:connection-strategy>, <mule:dispatcher-connection-strategy>,

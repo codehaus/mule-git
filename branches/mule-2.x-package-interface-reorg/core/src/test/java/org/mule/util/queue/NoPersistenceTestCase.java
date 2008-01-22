@@ -15,7 +15,7 @@ public class NoPersistenceTestCase extends AbstractTransactionQueueManagerTestCa
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#createQueueManager()
+     * @see org.mule.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#createQueueManager()
      */
     protected TransactionalQueueManager createQueueManager() throws Exception
     {
@@ -27,7 +27,7 @@ public class NoPersistenceTestCase extends AbstractTransactionQueueManagerTestCa
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#isPersistent()
+     * @see org.mule.transaction.xa.queue.AbstractTransactionQueueManagerTestCase#isPersistent()
      */
     protected boolean isPersistent()
     {

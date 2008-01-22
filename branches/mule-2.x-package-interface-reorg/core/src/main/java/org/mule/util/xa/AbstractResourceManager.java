@@ -10,7 +10,7 @@
 
 package org.mule.util.xa;
 
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.util.ArrayList;
 import java.util.Collection;

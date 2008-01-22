@@ -11,6 +11,8 @@
 package org.mule.test.integration.providers.jdbc;
 
 
+import org.mule.DefaultExceptionStrategy;
+import org.mule.MuleTransactionConfig;
 import org.mule.api.EventContext;
 import org.mule.api.component.Component;
 import org.mule.api.context.ServerNotification;
@@ -20,14 +22,12 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transaction.TransactionFactory;
-import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.MuleTransactionConfig;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.internal.notifications.TransactionNotification;
-import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
-import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
-import org.mule.impl.routing.outbound.DefaultOutboundRouterCollection;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.internal.notifications.TransactionNotification;
+import org.mule.model.seda.SedaComponent;
+import org.mule.routing.inbound.DefaultInboundRouterCollection;
+import org.mule.routing.outbound.DefaultOutboundRouterCollection;
+import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.functional.EventCallback;
 import org.mule.util.object.PrototypeObjectFactory;
 

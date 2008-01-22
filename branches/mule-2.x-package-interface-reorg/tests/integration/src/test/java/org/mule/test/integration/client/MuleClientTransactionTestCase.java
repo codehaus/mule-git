@@ -10,6 +10,7 @@
 
 package org.mule.test.integration.client;
 
+import org.mule.MuleTransactionConfig;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -17,13 +18,12 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transaction.TransactionConfig;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleTransactionConfig;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.transaction.TransactionCoordination;
-import org.mule.impl.transaction.TransactionTemplate;
-import org.mule.providers.jms.JmsTransactionFactory;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transaction.TransactionCoordination;
+import org.mule.transaction.TransactionTemplate;
+import org.mule.transport.jms.JmsTransactionFactory;
 
 import java.util.HashMap;
 import java.util.Map;

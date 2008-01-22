@@ -10,7 +10,7 @@
 
 package org.mule.management.agents;
 
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 import org.mule.management.ManagementException;
 
 import javax.management.ObjectName;

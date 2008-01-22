@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
 import org.mule.tck.FunctionalTestCase;
 

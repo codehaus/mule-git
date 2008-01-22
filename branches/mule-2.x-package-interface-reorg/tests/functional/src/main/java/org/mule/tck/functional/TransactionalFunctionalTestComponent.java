@@ -13,7 +13,7 @@ package org.mule.tck.functional;
 import org.mule.api.EventContext;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.MessageFactory;
 
 /**
  * This component is useful for unit tests involving transactionality because it

@@ -10,10 +10,10 @@
 
 package org.mule.api;
 
-import org.mule.impl.config.ExceptionHelper;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 

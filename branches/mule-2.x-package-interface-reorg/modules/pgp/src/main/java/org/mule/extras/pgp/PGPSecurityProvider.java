@@ -18,8 +18,8 @@ import org.mule.api.security.SecurityContextFactory;
 import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.pgp.i18n.PGPMessages;
-import org.mule.impl.config.i18n.CoreMessages;
 
 import cryptix.message.Message;
 import cryptix.message.MessageException;

@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
  * objects that get marshalled to XML do not need to implement any interfaces including
  * Serializable and you don't even need to specify a default constructor.
  *
- * @see org.mule.impl.transformer.xml.ObjectToXml
+ * @see org.mule.transformer.xml.ObjectToXml
  */
 
 public class XmlToObject extends AbstractXStreamTransformer

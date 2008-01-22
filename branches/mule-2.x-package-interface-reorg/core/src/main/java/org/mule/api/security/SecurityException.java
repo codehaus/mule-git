@@ -12,7 +12,7 @@ package org.mule.api.security;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>SecurityException</code> is a generic security exception

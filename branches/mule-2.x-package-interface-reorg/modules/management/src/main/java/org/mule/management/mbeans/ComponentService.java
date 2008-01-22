@@ -13,9 +13,9 @@ package org.mule.management.mbeans;
 import org.mule.MuleServer;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
-import org.mule.impl.management.stats.ComponentStatistics;
-import org.mule.impl.model.AbstractComponent;
-import org.mule.impl.model.seda.SedaComponent;
+import org.mule.management.stats.ComponentStatistics;
+import org.mule.model.AbstractComponent;
+import org.mule.model.seda.SedaComponent;
 
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
@@ -75,7 +75,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * state.
      * 
      * @throws org.mule.api.AbstractMuleException if the component failed to pause.
-     * @see org.mule.impl.config.MuleConfiguration
+     * @see org.mule.config.MuleConfiguration
      */
     public void pause() throws AbstractMuleException
     {

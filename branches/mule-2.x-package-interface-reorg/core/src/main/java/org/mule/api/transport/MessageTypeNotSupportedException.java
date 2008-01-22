@@ -11,7 +11,7 @@
 package org.mule.api.transport;
 
 import org.mule.api.MessagingException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 /**
  * <code>MessageTypeNotSupportedException</code> is thrown when a message payload

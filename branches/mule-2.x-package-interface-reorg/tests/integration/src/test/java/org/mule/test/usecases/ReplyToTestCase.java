@@ -10,11 +10,11 @@
 
 package org.mule.test.usecases;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.transport.NullPayload;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.NullPayload;
 
 /**
  * see MULE-2721

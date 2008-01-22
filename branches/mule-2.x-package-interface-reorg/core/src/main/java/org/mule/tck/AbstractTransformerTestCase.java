@@ -10,11 +10,11 @@
 
 package org.mule.tck;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.RequestContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.RequestContext;
 import org.mule.tck.testmodels.fruit.InvalidSatsuma;
 
 import java.util.Arrays;

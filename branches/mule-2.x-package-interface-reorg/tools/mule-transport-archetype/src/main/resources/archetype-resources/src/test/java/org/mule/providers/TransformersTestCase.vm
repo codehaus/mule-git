@@ -8,10 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower}.transformers;
+package org.mule.transport.${TransportNameLower}.transformers;
 
 import org.mule.tck.AbstractTransformerTestCase;
-import org.mule.umo.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 
 
 public class ${TransportName}TransformersTestCase extends AbstractTransformerTestCase

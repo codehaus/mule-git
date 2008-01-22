@@ -74,9 +74,9 @@ public interface OutboundRouter extends Router
      * @return a result message if any from the invocation. If the synchronous flag
      *         is false a null result will always be returned.
      * @throws MessagingException if any errors occur during the sending of messages
-     * @see org.mule.impl.routing.outbound.FilteringOutboundRouter
-     * @see org.mule.impl.routing.outbound.ExceptionBasedRouter
-     * @see org.mule.impl.routing.outbound.MulticastingRouter
+     * @see org.mule.routing.outbound.FilteringOutboundRouter
+     * @see org.mule.routing.outbound.ExceptionBasedRouter
+     * @see org.mule.routing.outbound.MulticastingRouter
      */
     MuleMessage route(MuleMessage message, Session session, boolean synchronous) throws MessagingException;
 
@@ -90,7 +90,7 @@ public interface OutboundRouter extends Router
      * @param message the current message to evaluate
      * @return true if the event should be processed by this router
      * @throws MessagingException if the event cannot be evaluated
-     * @see org.mule.impl.routing.inbound.SelectiveConsumer
+     * @see org.mule.routing.inbound.SelectiveConsumer
      */
     boolean isMatch(MuleMessage message) throws MessagingException;
 

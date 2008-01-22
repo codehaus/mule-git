@@ -10,11 +10,11 @@
 
 package org.mule.tck.providers;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.RequestContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
 
 public abstract class AbstractMessageAdapterTestCase extends AbstractMuleTestCase

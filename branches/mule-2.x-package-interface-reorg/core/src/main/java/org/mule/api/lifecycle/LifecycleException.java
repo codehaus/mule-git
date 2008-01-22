@@ -11,8 +11,8 @@
 package org.mule.api.lifecycle;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 import org.mule.util.ObjectUtils;
 
 /** <code>LifecycleException</code> TODO */

@@ -10,7 +10,7 @@
 package org.mule.config.spring.parsers.specific;
 
 import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
-import org.mule.impl.internal.admin.MuleAdminAgent;
+import org.mule.internal.admin.MuleAdminAgent;
 
 import org.w3c.dom.Element;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;

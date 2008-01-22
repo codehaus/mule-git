@@ -10,8 +10,8 @@
 
 package org.mule.extras.pgp.i18n;
 
-import org.mule.impl.config.i18n.Message;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 
 public class PGPMessages extends MessageFactory
 {

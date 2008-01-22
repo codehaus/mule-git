@@ -9,7 +9,7 @@
  */
 package org.mule.config.spring.editors;
 
-import org.mule.impl.endpoint.URIBuilder;
+import org.mule.endpoint.URIBuilder;
 
 import java.beans.PropertyEditorSupport;
 

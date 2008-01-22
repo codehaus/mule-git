@@ -15,8 +15,8 @@ import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.impl.component.simple.EchoComponent;
-import org.mule.impl.model.ModelFactory;
+import org.mule.component.simple.EchoComponent;
+import org.mule.model.ModelFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.object.SingletonObjectFactory;
 

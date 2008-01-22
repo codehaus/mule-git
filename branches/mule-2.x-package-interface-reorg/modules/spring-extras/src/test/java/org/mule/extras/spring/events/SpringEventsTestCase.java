@@ -15,9 +15,9 @@ import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
+import org.mule.transformer.AbstractMessageAwareTransformer;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.concurrent.Latch;
 

@@ -14,7 +14,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.components.script.jsr223.Scriptable;
-import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.AbstractMessageAwareTransformer;
 
 import javax.script.Bindings;
 import javax.script.CompiledScript;

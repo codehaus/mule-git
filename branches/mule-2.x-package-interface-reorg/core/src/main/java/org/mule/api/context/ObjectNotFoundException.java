@@ -10,7 +10,7 @@
 
 package org.mule.api.context;
 
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 /**
  * <code>ObjectNotFoundException</code> is thrown when a reference to a component

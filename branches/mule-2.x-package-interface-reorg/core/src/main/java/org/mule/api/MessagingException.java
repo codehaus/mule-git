@@ -10,12 +10,12 @@
 
 package org.mule.api;
 
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.RequestContext;
-import org.mule.impl.config.MuleManifest;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
-import org.mule.impl.transport.NullPayload;
+import org.mule.DefaultMuleMessage;
+import org.mule.RequestContext;
+import org.mule.config.MuleManifest;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
+import org.mule.transport.NullPayload;
 
 import java.util.Map;
 

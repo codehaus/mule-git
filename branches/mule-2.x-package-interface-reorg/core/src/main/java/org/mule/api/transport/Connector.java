@@ -206,7 +206,7 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * will be called only when Streaming is being used on an outbound endpoint.
      * If Streaming is not supported by this transport an {@link UnsupportedOperationException}
      * is thrown.   Note that the stream MUST release resources on close.  For help doing so, see
-     * {@link org.mule.impl.model.streaming.CallbackOutputStream}.
+     * {@link org.mule.model.streaming.CallbackOutputStream}.
      *
      * @param endpoint the endpoint that releates to this Dispatcher
      * @param message the current message being processed

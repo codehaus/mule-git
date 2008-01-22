@@ -14,11 +14,9 @@ import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.impl.MuleShutdownHook;
-import org.mule.impl.config.ExceptionHelper;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
@@ -445,7 +443,7 @@ public class MuleServer implements Runnable
     /**
      * This class is installed only for MuleServer running as commandline app. A
      * clean Mule shutdown can be achieved by disposing the
-     * {@link org.mule.impl.DefaultMuleContext}.
+     * {@link org.mule.DefaultMuleContext}.
      */
     private class ShutdownThread extends Thread
     {

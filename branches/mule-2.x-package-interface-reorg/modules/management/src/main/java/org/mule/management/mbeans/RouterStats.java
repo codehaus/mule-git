@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.impl.management.stats.RouterStatistics;
+import org.mule.management.stats.RouterStatistics;
 
 import java.util.Map;
 

@@ -11,8 +11,8 @@
 package org.mule.test.integration.spring.transaction;
 
 import org.mule.api.transaction.Transaction;
-import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.transaction.TransactionCoordination;
 
 public class SpringTransactionFactoryTestCase extends AbstractMuleTestCase
 {

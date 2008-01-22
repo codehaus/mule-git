@@ -42,18 +42,18 @@ public class NotificationDefinitionParser extends ChildMapEntryDefinitionParser
     static
     {
         EVENT_MAP = new HashMap();
-        EVENT_MAP.put("MANAGER", org.mule.impl.internal.notifications.ManagerNotification.class.getName());
-        EVENT_MAP.put("MODEL", org.mule.impl.internal.notifications.ModelNotification.class.getName());
-        EVENT_MAP.put("COMPONENT", org.mule.impl.internal.notifications.ComponentNotification.class.getName());
-        EVENT_MAP.put("SECURITY", org.mule.impl.internal.notifications.SecurityNotification.class.getName());
-        EVENT_MAP.put("MANAGEMENT", org.mule.impl.internal.notifications.ManagementNotification.class.getName());
-        EVENT_MAP.put("ADMIN", org.mule.impl.internal.notifications.AdminNotification.class.getName());
-        EVENT_MAP.put("CONNECTION", org.mule.impl.internal.notifications.ConnectionNotification.class.getName());
-        EVENT_MAP.put("REGISTRY", org.mule.impl.internal.notifications.RegistryNotification.class.getName());
-        EVENT_MAP.put("CUSTOM", org.mule.impl.internal.notifications.CustomNotification.class.getName());
-        EVENT_MAP.put("MESSAGE", org.mule.impl.internal.notifications.MessageNotification.class.getName());
-        EVENT_MAP.put("EXCEPTION", org.mule.impl.internal.notifications.ExceptionNotification.class.getName());
-        EVENT_MAP.put("TRANSACTION", org.mule.impl.internal.notifications.TransactionNotification.class.getName());
+        EVENT_MAP.put("MANAGER", org.mule.internal.notifications.ManagerNotification.class.getName());
+        EVENT_MAP.put("MODEL", org.mule.internal.notifications.ModelNotification.class.getName());
+        EVENT_MAP.put("COMPONENT", org.mule.internal.notifications.ComponentNotification.class.getName());
+        EVENT_MAP.put("SECURITY", org.mule.internal.notifications.SecurityNotification.class.getName());
+        EVENT_MAP.put("MANAGEMENT", org.mule.internal.notifications.ManagementNotification.class.getName());
+        EVENT_MAP.put("ADMIN", org.mule.internal.notifications.AdminNotification.class.getName());
+        EVENT_MAP.put("CONNECTION", org.mule.internal.notifications.ConnectionNotification.class.getName());
+        EVENT_MAP.put("REGISTRY", org.mule.internal.notifications.RegistryNotification.class.getName());
+        EVENT_MAP.put("CUSTOM", org.mule.internal.notifications.CustomNotification.class.getName());
+        EVENT_MAP.put("MESSAGE", org.mule.internal.notifications.MessageNotification.class.getName());
+        EVENT_MAP.put("EXCEPTION", org.mule.internal.notifications.ExceptionNotification.class.getName());
+        EVENT_MAP.put("TRANSACTION", org.mule.internal.notifications.TransactionNotification.class.getName());
 
         INTERFACE_MAP = new HashMap();
         INTERFACE_MAP.put("MANAGER", org.mule.api.context.notification.ManagerNotificationListener.class.getName());

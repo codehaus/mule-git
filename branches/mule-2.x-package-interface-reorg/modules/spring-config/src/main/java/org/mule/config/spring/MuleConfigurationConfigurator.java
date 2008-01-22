@@ -2,7 +2,7 @@ package org.mule.config.spring;
 
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
-import org.mule.impl.config.MuleConfiguration;
+import org.mule.config.MuleConfiguration;
 
 import org.springframework.beans.factory.SmartFactoryBean;
 

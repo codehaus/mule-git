@@ -8,12 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
 import org.mule.config.i18n.Message;
 import org.mule.transaction.AbstractSingleResourceTransaction;
 import org.mule.transaction.IllegalTransactionStateException;
-import org.mule.umo.TransactionException;
+import org.mule.api.TransactionException;
 
 
 /**

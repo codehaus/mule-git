@@ -11,8 +11,8 @@
 package org.mule.api.transport;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>NoReceiverForEndpointException</code> is thrown when an enpoint is

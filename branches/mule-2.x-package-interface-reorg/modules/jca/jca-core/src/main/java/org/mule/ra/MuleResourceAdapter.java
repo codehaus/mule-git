@@ -10,6 +10,7 @@
 
 package org.mule.ra;
 
+import org.mule.DefaultMuleContextFactory;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
 import org.mule.api.AbstractMuleException;
@@ -19,11 +20,10 @@ import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.model.Model;
-import org.mule.impl.DefaultMuleContextFactory;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.endpoint.URIBuilder;
-import org.mule.impl.model.ModelFactory;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.endpoint.MuleEndpointURI;
+import org.mule.endpoint.URIBuilder;
+import org.mule.model.ModelFactory;
 import org.mule.util.ClassUtils;
 import org.mule.util.object.SingletonObjectFactory;
 

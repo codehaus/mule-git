@@ -10,11 +10,11 @@
 
 package org.mule.api.security;
 
+import org.mule.RequestContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.impl.RequestContext;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>UnauthorisedException</code> is thrown if authentication fails

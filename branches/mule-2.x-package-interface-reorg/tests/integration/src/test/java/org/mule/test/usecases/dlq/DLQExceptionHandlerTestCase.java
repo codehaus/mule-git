@@ -13,7 +13,7 @@ package org.mule.test.usecases.dlq;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.message.ExceptionMessage;
+import org.mule.message.ExceptionMessage;
 import org.mule.tck.FunctionalTestCase;
 
 

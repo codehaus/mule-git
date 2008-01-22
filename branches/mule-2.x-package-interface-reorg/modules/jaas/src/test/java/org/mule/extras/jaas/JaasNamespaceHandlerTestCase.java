@@ -13,7 +13,7 @@ package org.mule.extras.jaas;
 import org.mule.api.EncryptionStrategy;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.security.SecurityProvider;
-import org.mule.impl.security.PasswordBasedEncryptionStrategy;
+import org.mule.security.PasswordBasedEncryptionStrategy;
 import org.mule.tck.FunctionalTestCase;
 
 public class JaasNamespaceHandlerTestCase extends FunctionalTestCase

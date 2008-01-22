@@ -12,7 +12,7 @@ package org.mule.tck.functional;
 
 import org.mule.api.EventContext;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.internal.notifications.CustomNotification;
+import org.mule.internal.notifications.CustomNotification;
 
 /**
  * A <code>FunctionlTestNotification</code> is fired by the {@link org.mule.tck.functional.FunctionalTestComponent}

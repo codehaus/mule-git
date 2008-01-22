@@ -10,7 +10,7 @@
 
 package org.mule.util;
 
-import org.mule.impl.routing.filters.WildcardFilter;
+import org.mule.routing.filters.WildcardFilter;
 
 import java.io.BufferedReader;
 import java.io.CharArrayReader;

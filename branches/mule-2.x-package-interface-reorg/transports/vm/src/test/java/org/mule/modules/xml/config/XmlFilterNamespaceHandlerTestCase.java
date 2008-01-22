@@ -11,10 +11,10 @@
 package org.mule.modules.xml.config;
 
 import org.mule.api.component.Component;
-import org.mule.impl.routing.filters.logic.NotFilter;
-import org.mule.impl.routing.outbound.FilteringOutboundRouter;
+import org.mule.routing.filters.logic.NotFilter;
 import org.mule.routing.filters.xml.IsXmlFilter;
 import org.mule.routing.filters.xml.JXPathFilter;
+import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.List;

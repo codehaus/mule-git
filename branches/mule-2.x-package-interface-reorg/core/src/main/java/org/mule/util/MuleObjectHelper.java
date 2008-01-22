@@ -19,11 +19,11 @@ import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.filter.ObjectFilter;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.impl.routing.filters.EqualsFilter;
-import org.mule.impl.routing.filters.WildcardFilter;
-import org.mule.impl.transformer.TransformerUtils;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.routing.filters.EqualsFilter;
+import org.mule.routing.filters.WildcardFilter;
+import org.mule.transformer.TransformerUtils;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ public final class MuleObjectHelper
      * @param names - a list of transformers separated by "delim"
      * @param delim - the character used to delimit the transformers in the list
      * @return a list (possibly empty) of transformers or
-     * {@link org.mule.impl.transformer.TransformerUtils#UNDEFINED} if the names list is null
+     * {@link org.mule.transformer.TransformerUtils#UNDEFINED} if the names list is null
      * @throws MuleException
      */
     public static List getTransformers(String names, String delim) throws MuleException

@@ -8,18 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
-import org.mule.providers.ConnectException;
+import org.mule.transport.ConnectException;
 #if( $isPollingReceiver == "y")
-import org.mule.providers.AbstractPollingMessageReceiver;
+import org.mule.transport.AbstractPollingMessageReceiver;
 #else
-import org.mule.providers.AbstractMessageReceiver;
+import org.mule.transport.AbstractMessageReceiver;
 #end
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.provider.Connector;
 
 /**
  * <code>${TransportName}MessageReceiver</code> TODO document

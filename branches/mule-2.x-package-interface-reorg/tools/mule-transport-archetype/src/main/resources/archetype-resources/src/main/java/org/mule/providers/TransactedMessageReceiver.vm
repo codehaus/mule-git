@@ -8,17 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
 import org.mule.config.i18n.Message;
-import org.mule.impl.MuleMessage;
-import org.mule.providers.ConnectException;
-import org.mule.providers.TransactedPollingMessageReceiver;
-import org.mule.umo.UMOComponent;
-import org.mule.umo.endpoint.UMOEndpoint;
-import org.mule.umo.lifecycle.CreateException;
-import org.mule.umo.provider.UMOConnector;
-import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.DefaultMuleMessage;
+import org.mule.transport.ConnectException;
+import org.mule.transport.TransactedPollingMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.lifecycle.CreateException;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
 
 import java.util.List;
 

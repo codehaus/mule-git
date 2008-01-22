@@ -13,7 +13,7 @@ package org.mule.api.endpoint;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.registry.Registry;
-import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
 
 /**
  * Endpoint factory creates immutable instances of {@link ImmutableEndpoint}. These endpoints may be <br/>

@@ -10,8 +10,8 @@
 
 package org.mule.api;
 
-import org.mule.impl.config.i18n.Message;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 
 /**
  * <code>MuleException</code> Is the base exception type for the Mule application

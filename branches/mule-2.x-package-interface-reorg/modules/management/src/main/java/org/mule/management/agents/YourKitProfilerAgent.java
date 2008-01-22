@@ -16,7 +16,7 @@ import org.mule.api.Agent;
 import org.mule.api.MuleContext;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.YourKitProfilerService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;

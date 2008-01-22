@@ -10,12 +10,12 @@
 
 package org.mule.management.agents;
 
+import org.mule.AbstractAgent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.AbstractAgent;
-import org.mule.impl.config.MuleManifest;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.MuleManifest;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.management.mbeans.MBeanServerFactory;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;

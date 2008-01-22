@@ -11,7 +11,7 @@
 package org.mule.extras.spring.remoting;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.transformer.AbstractTransformer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;

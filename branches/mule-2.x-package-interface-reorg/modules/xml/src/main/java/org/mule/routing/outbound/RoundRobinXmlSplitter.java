@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
@@ -17,7 +18,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.DefaultMuleMessage;
 
 import java.util.HashMap;
 import java.util.Iterator;

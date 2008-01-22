@@ -10,11 +10,11 @@
 package org.mule.test.integration.transaction;
 
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.jdbc.JdbcUtils;
-import org.mule.providers.jms.JmsConnector;
-import org.mule.providers.jms.JmsConstants;
-import org.mule.providers.jms.activemq.ActiveMQJmsConnector;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.jdbc.JdbcUtils;
+import org.mule.transport.jms.JmsConnector;
+import org.mule.transport.jms.JmsConstants;
+import org.mule.transport.jms.activemq.ActiveMQJmsConnector;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

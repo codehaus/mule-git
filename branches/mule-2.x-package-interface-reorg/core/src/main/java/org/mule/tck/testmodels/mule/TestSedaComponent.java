@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.model.seda.SedaComponent;
+import org.mule.model.seda.SedaComponent;
 
 
 /**

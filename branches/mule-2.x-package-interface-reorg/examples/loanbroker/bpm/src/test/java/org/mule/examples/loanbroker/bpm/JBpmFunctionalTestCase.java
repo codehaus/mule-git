@@ -12,12 +12,12 @@ package org.mule.examples.loanbroker.bpm;
 
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.examples.loanbroker.tests.AbstractAsynchronousLoanBrokerTestCase;
-import org.mule.impl.config.i18n.MessageFactory;
-import org.mule.providers.bpm.BPMS;
-import org.mule.providers.bpm.ProcessConnector;
-import org.mule.providers.jdbc.util.MuleDerbyUtils;
+import org.mule.transport.bpm.BPMS;
+import org.mule.transport.bpm.ProcessConnector;
+import org.mule.transport.jdbc.util.MuleDerbyUtils;
 
 
 public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase

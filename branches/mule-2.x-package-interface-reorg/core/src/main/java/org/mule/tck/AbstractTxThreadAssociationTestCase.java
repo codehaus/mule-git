@@ -10,14 +10,14 @@
 
 package org.mule.tck;
 
+import org.mule.DefaultExceptionStrategy;
+import org.mule.MuleTransactionConfig;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transaction.TransactionManagerFactory;
-import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.MuleTransactionConfig;
-import org.mule.impl.transaction.TransactionTemplate;
-import org.mule.impl.transaction.XaTransaction;
-import org.mule.impl.transaction.XaTransactionFactory;
+import org.mule.transaction.TransactionTemplate;
+import org.mule.transaction.XaTransaction;
+import org.mule.transaction.XaTransactionFactory;
 
 import javax.transaction.Status;
 import javax.transaction.Transaction;

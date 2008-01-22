@@ -10,8 +10,8 @@
 
 package org.mule.test.config;
 
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.MissingResourceException;

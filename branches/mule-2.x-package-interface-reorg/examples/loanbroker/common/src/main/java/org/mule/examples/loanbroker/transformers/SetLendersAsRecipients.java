@@ -14,8 +14,8 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.bank.Bank;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
-import org.mule.impl.routing.outbound.StaticRecipientList;
-import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.routing.outbound.StaticRecipientList;
+import org.mule.transformer.AbstractMessageAwareTransformer;
 
 /**
  * Set the Recipient List property on the LoanBrokerQuoteRequest message based on the

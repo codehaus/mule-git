@@ -12,8 +12,8 @@ package org.mule.mule;
 
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
-import org.mule.impl.component.simple.PassThroughComponent;
-import org.mule.impl.model.seda.SedaComponent;
+import org.mule.component.simple.PassThroughComponent;
+import org.mule.model.seda.SedaComponent;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;

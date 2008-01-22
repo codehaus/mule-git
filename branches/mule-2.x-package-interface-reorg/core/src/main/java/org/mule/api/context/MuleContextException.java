@@ -11,7 +11,7 @@
 package org.mule.api.context;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>MuleContextException</code> is thrown when an exception occurs with Manager

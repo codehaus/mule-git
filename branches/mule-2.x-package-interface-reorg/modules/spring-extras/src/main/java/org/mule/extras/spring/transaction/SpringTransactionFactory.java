@@ -14,7 +14,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.api.transaction.TransactionFactory;
-import org.mule.impl.transaction.AbstractSingleResourceTransaction;
+import org.mule.transaction.AbstractSingleResourceTransaction;
 
 import org.springframework.jdbc.datasource.ConnectionHolder;
 import org.springframework.jms.connection.JmsResourceHolder;

@@ -14,13 +14,13 @@ import org.mule.RegistryContext;
 import org.mule.api.EventContext;
 import org.mule.api.model.Model;
 import org.mule.api.transport.Connector;
-import org.mule.impl.config.PoolingProfile;
-import org.mule.impl.model.seda.SedaModel;
-import org.mule.providers.jdbc.JdbcConnector;
-import org.mule.providers.jdbc.JdbcUtils;
-import org.mule.providers.jdbc.util.MuleDerbyUtils;
+import org.mule.config.PoolingProfile;
+import org.mule.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.transport.jdbc.JdbcConnector;
+import org.mule.transport.jdbc.JdbcUtils;
+import org.mule.transport.jdbc.util.MuleDerbyUtils;
 
 import java.sql.Connection;
 import java.util.HashMap;

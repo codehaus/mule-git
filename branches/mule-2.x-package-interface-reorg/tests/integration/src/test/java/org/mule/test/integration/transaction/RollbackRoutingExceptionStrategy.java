@@ -9,13 +9,13 @@
  */
 package org.mule.test.integration.transaction;
 
+import org.mule.DefaultExceptionStrategy;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.impl.DefaultExceptionStrategy;
 
 /**
  * Will rollback the transaction in case a {@link org.mule.api.routing.RoutingException}
- * is encountered. Typically used with {@link org.mule.impl.routing.outbound.TransactionJoiningRouter}
+ * is encountered. Typically used with {@link org.mule.routing.outbound.TransactionJoiningRouter}
  * and configured on a connector.
  */
 public class RollbackRoutingExceptionStrategy extends DefaultExceptionStrategy

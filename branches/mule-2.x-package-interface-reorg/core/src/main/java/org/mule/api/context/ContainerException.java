@@ -10,7 +10,7 @@
 
 package org.mule.api.context;
 
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>ContainerException</code> is an Exception thrown by the component resolver

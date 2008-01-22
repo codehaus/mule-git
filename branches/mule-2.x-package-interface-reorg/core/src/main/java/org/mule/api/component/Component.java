@@ -200,9 +200,9 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * Sets the initial state of this component
      *
      * @param state the initial state of this component
-     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_STARTED
-     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_STOPPED
-     * @see org.mule.impl.ImmutableMuleDescriptor#INITIAL_STATE_PAUSED
+     * @see org.mule.ImmutableMuleDescriptor#INITIAL_STATE_STARTED
+     * @see org.mule.ImmutableMuleDescriptor#INITIAL_STATE_STOPPED
+     * @see org.mule.ImmutableMuleDescriptor#INITIAL_STATE_PAUSED
      */
     void setInitialState(String state);
 

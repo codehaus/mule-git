@@ -12,7 +12,7 @@ package org.mule.util.object;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.config.PoolingProfile;
+import org.mule.config.PoolingProfile;
 import org.mule.util.UUID;
 
 import java.util.ArrayList;

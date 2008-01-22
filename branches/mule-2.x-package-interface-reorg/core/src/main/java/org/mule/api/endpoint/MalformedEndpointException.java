@@ -10,14 +10,14 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>MalformedEndpointException</code> is thrown by the MuleEndpointURI class
  * if it fails to parse a Url
  * 
- * @see org.mule.impl.endpoint.MuleEndpointURI
+ * @see org.mule.endpoint.MuleEndpointURI
  */
 
 public class MalformedEndpointException extends EndpointException

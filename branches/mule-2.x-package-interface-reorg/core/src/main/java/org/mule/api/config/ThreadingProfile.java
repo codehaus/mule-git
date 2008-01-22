@@ -11,7 +11,7 @@
 package org.mule.api.config;
 
 import org.mule.api.context.WorkManager;
-import org.mule.impl.config.ImmutableThreadingProfile;
+import org.mule.config.ImmutableThreadingProfile;
 
 import java.util.Map;
 
@@ -30,7 +30,7 @@ import org.apache.commons.collections.map.CaseInsensitiveMap;
  * <p>{@link ImmutableThreadingProfile} is a simple read-only implementation that
  * makes a local copy of any {@link org.mule.api.config.ThreadingProfile} passed to a consructor.</p>
  *
- * <p>{@link org.mule.impl.config.ChainedThreadingProfile} is a mutable implementation that can take
+ * <p>{@link org.mule.config.ChainedThreadingProfile} is a mutable implementation that can take
  * default values from an existing {@link org.mule.api.config.ThreadingProfile}.  The default values
  * can be either dynamic (read whenever the value is queried) or static (a local copy of the
  * default is made when the profile is first constructed).</p>

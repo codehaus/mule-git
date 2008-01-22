@@ -11,7 +11,7 @@
 package org.mule.test.integration.providers.jdbc;
 
 import org.mule.api.transaction.TransactionFactory;
-import org.mule.providers.jdbc.JdbcTransactionFactory;
+import org.mule.transport.jdbc.JdbcTransactionFactory;
 
 public class JdbcTransactionalJdbcFunctionalTestCase extends AbstractJdbcTransactionalFunctionalTestCase
 {

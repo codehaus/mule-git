@@ -14,10 +14,10 @@ import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.endpoint.Endpoint;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.impl.config.i18n.MessageFactory;
 
 import java.io.Serializable;
 import java.util.List;

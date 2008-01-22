@@ -11,8 +11,8 @@
 package org.mule.api.transformer;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.impl.config.i18n.Message;
-import org.mule.impl.transformer.TransformerUtils;
+import org.mule.config.i18n.Message;
+import org.mule.transformer.TransformerUtils;
 
 import java.util.List;
 

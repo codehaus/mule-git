@@ -11,8 +11,8 @@
 package org.mule.transformers.xml;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.config.i18n.MessageFactory;
-import org.mule.impl.transformer.AbstractMessageAwareTransformer;
+import org.mule.config.i18n.MessageFactory;
+import org.mule.transformer.AbstractMessageAwareTransformer;
 
 import com.thoughtworks.xstream.XStream;
 

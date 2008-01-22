@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.impl.config.MuleConfiguration;
+import org.mule.config.MuleConfiguration;
 
 /**
  * <code>MuleConfigurationService</code> exposes the MuleConfiguration settings as

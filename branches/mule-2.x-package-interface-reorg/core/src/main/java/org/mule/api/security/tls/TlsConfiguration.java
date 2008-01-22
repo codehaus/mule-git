@@ -18,7 +18,7 @@ import org.mule.api.security.TlsProtocolHandler;
 import org.mule.api.security.provider.AutoDiscoverySecurityProviderFactory;
 import org.mule.api.security.provider.SecurityProviderFactory;
 import org.mule.api.security.provider.SecurityProviderInfo;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
 

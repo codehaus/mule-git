@@ -12,8 +12,8 @@ package org.mule.api.component;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>ComponentException</code> should be thrown when some action on a component

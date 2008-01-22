@@ -21,12 +21,12 @@ import org.mule.api.security.SecurityContext;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.api.security.UnsupportedAuthenticationSchemeException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.acegi.AcegiAuthenticationAdapter;
 import org.mule.extras.acegi.i18n.AcegiMessages;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.providers.http.HttpConnector;
-import org.mule.providers.http.HttpConstants;
+import org.mule.security.AbstractEndpointSecurityFilter;
+import org.mule.transport.http.HttpConnector;
+import org.mule.transport.http.HttpConstants;
 
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;

@@ -17,7 +17,7 @@ import org.mule.api.endpoint.Endpoint;
 import org.mule.api.model.Model;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
-import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.endpoint.MuleEndpoint;
 import org.mule.util.MuleObjectHelper;
 import org.mule.util.ObjectNameHelper;
 

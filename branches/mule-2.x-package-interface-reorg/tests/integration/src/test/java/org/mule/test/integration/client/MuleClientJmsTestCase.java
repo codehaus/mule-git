@@ -13,8 +13,8 @@ package org.mule.test.integration.client;
 import org.mule.RegistryContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.providers.jms.JmsConstants;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.jms.JmsConstants;
 
 import java.util.HashMap;
 import java.util.Map;

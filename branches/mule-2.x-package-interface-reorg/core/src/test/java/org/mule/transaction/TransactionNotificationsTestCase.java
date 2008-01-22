@@ -14,8 +14,7 @@ import org.mule.api.context.ServerNotification;
 import org.mule.api.context.notification.TransactionNotificationListener;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
-import org.mule.impl.internal.notifications.TransactionNotification;
-import org.mule.impl.transaction.AbstractTransaction;
+import org.mule.internal.notifications.TransactionNotification;
 import org.mule.tck.AbstractMuleTestCase;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;

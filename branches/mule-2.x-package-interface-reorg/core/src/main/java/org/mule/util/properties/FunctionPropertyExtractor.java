@@ -10,7 +10,7 @@
 package org.mule.util.properties;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.UUID;
 
 import java.net.InetAddress;

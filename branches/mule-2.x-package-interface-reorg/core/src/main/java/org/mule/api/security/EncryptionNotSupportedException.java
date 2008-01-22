@@ -11,7 +11,7 @@
 package org.mule.api.security;
 
 import org.mule.api.MuleMessage;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>EncryptionNotSupportedException</code> is thrown if an algorithm is set in

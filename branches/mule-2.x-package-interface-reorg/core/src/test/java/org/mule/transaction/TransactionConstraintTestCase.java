@@ -10,8 +10,8 @@
 
 package org.mule.transaction;
 
-import org.mule.impl.transaction.constraints.ConstraintFilter;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.transaction.constraints.ConstraintFilter;
 
 public class TransactionConstraintTestCase extends AbstractMuleTestCase
 {

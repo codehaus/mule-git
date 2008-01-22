@@ -11,8 +11,8 @@
 package org.mule.modules.xml.config;
 
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transformer.AbstractTransformer;
 import org.mule.transformers.xml.AbstractXmlTransformer;
 import org.mule.transformers.xml.DomDocumentToXml;
 import org.mule.transformers.xml.JXPathExtractor;

@@ -13,7 +13,6 @@ package org.mule;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextFactory;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
-import org.mule.impl.DefaultMuleContextFactory;
 
 import junit.framework.TestCase;
 

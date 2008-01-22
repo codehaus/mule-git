@@ -20,7 +20,7 @@ import java.io.OutputStream;
  * defer the writing of the message payload until there is a stream available to
  * write it to.
  * 
- * @see org.mule.impl.transport.streaming.StreamMessageAdapter
+ * @see org.mule.transport.streaming.StreamMessageAdapter
  */
 public interface OutputHandler
 {

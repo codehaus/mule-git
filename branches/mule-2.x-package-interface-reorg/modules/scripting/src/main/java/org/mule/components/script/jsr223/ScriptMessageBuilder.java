@@ -14,8 +14,8 @@ import org.mule.api.EventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.component.builder.AbstractMessageBuilder;
-import org.mule.impl.component.builder.MessageBuilderException;
+import org.mule.component.builder.AbstractMessageBuilder;
+import org.mule.component.builder.MessageBuilderException;
 
 import javax.script.Bindings;
 import javax.script.Compilable;

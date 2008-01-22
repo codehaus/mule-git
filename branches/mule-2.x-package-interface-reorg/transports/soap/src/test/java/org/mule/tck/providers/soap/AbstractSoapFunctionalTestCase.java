@@ -14,11 +14,11 @@ import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.transport.NullPayload;
-import org.mule.providers.http.HttpConnector;
-import org.mule.providers.http.HttpConstants;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.Person;
+import org.mule.transport.NullPayload;
+import org.mule.transport.http.HttpConnector;
+import org.mule.transport.http.HttpConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

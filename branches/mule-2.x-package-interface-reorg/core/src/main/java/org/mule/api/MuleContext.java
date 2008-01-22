@@ -9,6 +9,7 @@
  */
 package org.mule.api;
 
+import org.mule.Directories;
 import org.mule.api.context.ServerNotification;
 import org.mule.api.context.ServerNotificationListener;
 import org.mule.api.context.WorkManager;
@@ -19,11 +20,10 @@ import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.store.Store;
-import org.mule.impl.Directories;
-import org.mule.impl.config.MuleConfiguration;
-import org.mule.impl.internal.notifications.NotificationException;
-import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
-import org.mule.impl.management.stats.AllStatistics;
+import org.mule.config.MuleConfiguration;
+import org.mule.internal.notifications.NotificationException;
+import org.mule.internal.notifications.manager.ServerNotificationManager;
+import org.mule.management.stats.AllStatistics;
 import org.mule.util.queue.QueueManager;
 
 import javax.transaction.TransactionManager;

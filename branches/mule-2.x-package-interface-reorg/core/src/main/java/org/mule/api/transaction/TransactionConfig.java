@@ -10,7 +10,7 @@
 
 package org.mule.api.transaction;
 
-import org.mule.impl.transaction.constraints.ConstraintFilter;
+import org.mule.transaction.constraints.ConstraintFilter;
 
 /**
  * <code>TransactionConfig</code> defines transaction configuration for a

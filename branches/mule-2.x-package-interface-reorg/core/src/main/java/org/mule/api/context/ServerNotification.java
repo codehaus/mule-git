@@ -11,7 +11,7 @@
 package org.mule.api.context;
 
 import org.mule.RegistryContext;
-import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.util.ClassUtils;
 
 import java.util.EventObject;

@@ -11,7 +11,7 @@
 package org.mule.api.component.builder;
 
 import org.mule.api.MuleMessage;
-import org.mule.impl.component.builder.MessageBuilderException;
+import org.mule.component.builder.MessageBuilderException;
 
 /**
  * A Strategy Class for Building one message from the invocation results of a chain

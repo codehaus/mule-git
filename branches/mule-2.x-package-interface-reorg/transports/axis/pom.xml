@@ -41,7 +41,7 @@
                         <configuration>
                             <instructions>
                                 <Export-Package>
-                                    org.mule.impl.transport.soap.axis.*
+                                    org.mule.transport.soap.axis.*
                                 </Export-Package>
                             </instructions>
                         </configuration>

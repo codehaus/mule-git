@@ -11,10 +11,10 @@ package org.mule.mule.model;
 
 import org.mule.api.EventContext;
 import org.mule.api.model.InvocationResult;
-import org.mule.impl.model.resolvers.MethodHeaderPropertyEntryPointResolver;
-import org.mule.impl.transport.NullPayload;
+import org.mule.model.resolvers.MethodHeaderPropertyEntryPointResolver;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.transport.NullPayload;
 
 public class MethodHeaderEntryPointResolverTestCase extends AbstractMuleTestCase
 {

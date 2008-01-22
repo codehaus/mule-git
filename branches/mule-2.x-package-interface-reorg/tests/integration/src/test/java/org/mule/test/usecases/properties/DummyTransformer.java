@@ -12,7 +12,7 @@ package org.mule.test.usecases.properties;
 
 import org.mule.api.EventContext;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.transformer.AbstractEventAwareTransformer;
+import org.mule.transformer.AbstractEventAwareTransformer;
 
 public class DummyTransformer extends AbstractEventAwareTransformer
 {

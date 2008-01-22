@@ -22,7 +22,7 @@ import org.mule.api.model.Model;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
-import org.mule.impl.config.MuleConfiguration;
+import org.mule.config.MuleConfiguration;
 
 import java.util.Collection;
 import java.util.List;

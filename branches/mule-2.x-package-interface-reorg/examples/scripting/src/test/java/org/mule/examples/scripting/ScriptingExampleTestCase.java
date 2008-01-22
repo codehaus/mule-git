@@ -10,9 +10,9 @@
 
 package org.mule.examples.scripting;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class ScriptingExampleTestCase extends FunctionalTestCase

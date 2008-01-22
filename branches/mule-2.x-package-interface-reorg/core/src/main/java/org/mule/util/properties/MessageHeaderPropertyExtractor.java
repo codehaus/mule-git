@@ -11,7 +11,7 @@
 package org.mule.util.properties;
 
 import org.mule.api.MuleMessage;
-import org.mule.impl.transport.NullPayload;
+import org.mule.transport.NullPayload;
 
 /**
  * Looks up the property on the message using the name given.

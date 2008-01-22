@@ -15,7 +15,7 @@ import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.security.MuleCredentials;
+import org.mule.security.MuleCredentials;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;

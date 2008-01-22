@@ -12,7 +12,7 @@ package org.mule.examples.loanbroker.transformers;
 
 import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
-import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.transformer.AbstractTransformer;
 
 /**
  * Extracts the customer information from the request into an array of arguments used

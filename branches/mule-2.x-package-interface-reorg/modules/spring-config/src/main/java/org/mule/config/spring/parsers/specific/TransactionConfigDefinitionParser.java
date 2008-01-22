@@ -9,8 +9,8 @@
  */
 package org.mule.config.spring.parsers.specific;
 
+import org.mule.MuleTransactionConfig;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.impl.MuleTransactionConfig;
 
 public class TransactionConfigDefinitionParser extends ChildDefinitionParser
 {

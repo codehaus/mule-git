@@ -11,8 +11,8 @@
 package org.mule.mule.model;
 
 import org.mule.api.model.InvocationResult;
-import org.mule.impl.model.resolvers.AbstractArgumentEntryPointResolver;
-import org.mule.impl.model.resolvers.ArrayEntryPointResolver;
+import org.mule.model.resolvers.AbstractArgumentEntryPointResolver;
+import org.mule.model.resolvers.ArrayEntryPointResolver;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Fruit;

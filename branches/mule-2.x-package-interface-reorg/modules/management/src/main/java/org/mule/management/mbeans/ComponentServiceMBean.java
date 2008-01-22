@@ -53,7 +53,7 @@ public interface ComponentServiceMBean extends Stoppable, Startable, ComponentSt
      * state.
      * 
      * @throws AbstractMuleException if the component failed to pause.
-     * @see org.mule.impl.config.MuleConfiguration
+     * @see org.mule.config.MuleConfiguration
      */
     void pause() throws AbstractMuleException;
 

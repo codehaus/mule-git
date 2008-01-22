@@ -14,7 +14,7 @@ import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.transport.AbstractMessageDispatcher;
+import org.mule.transport.AbstractMessageDispatcher;
 
 public class TestMessageDispatcher extends AbstractMessageDispatcher
 {

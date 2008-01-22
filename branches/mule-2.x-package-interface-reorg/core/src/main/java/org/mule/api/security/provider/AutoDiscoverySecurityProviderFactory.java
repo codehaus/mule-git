@@ -11,7 +11,7 @@
 package org.mule.api.security.provider;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.SystemUtils;
 

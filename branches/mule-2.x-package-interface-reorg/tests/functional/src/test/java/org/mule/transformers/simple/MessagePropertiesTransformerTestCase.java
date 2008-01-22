@@ -10,12 +10,12 @@
 
 package org.mule.transformers.simple;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
 import org.mule.api.EventContext;
 import org.mule.api.MuleMessage;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.transformer.simple.MessagePropertiesTransformer;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transformer.simple.MessagePropertiesTransformer;
 
 import java.util.Collections;
 import java.util.HashMap;

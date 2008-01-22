@@ -12,7 +12,7 @@ package org.mule.extras.wssecurity.callbackhandlers;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.io.IOException;
 import java.util.Properties;

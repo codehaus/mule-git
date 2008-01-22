@@ -10,7 +10,7 @@
 package org.mule.api.store;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * The base exception thrown where there is a problem reading or writing to a store

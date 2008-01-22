@@ -10,7 +10,7 @@
 
 package org.mule.ra;
 
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;

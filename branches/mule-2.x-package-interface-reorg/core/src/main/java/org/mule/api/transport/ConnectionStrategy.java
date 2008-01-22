@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.impl.transport.FatalConnectException;
+import org.mule.transport.FatalConnectException;
 
 /**
  * Allows developers to plug in customised reconnection behaviour

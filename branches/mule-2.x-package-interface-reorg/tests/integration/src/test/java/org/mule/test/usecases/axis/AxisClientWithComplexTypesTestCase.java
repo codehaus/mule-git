@@ -13,7 +13,7 @@ package org.mule.test.usecases.axis;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.providers.soap.axis.AxisConnector;
+import org.mule.transport.soap.axis.AxisConnector;
 
 import java.util.HashMap;
 import java.util.Map;

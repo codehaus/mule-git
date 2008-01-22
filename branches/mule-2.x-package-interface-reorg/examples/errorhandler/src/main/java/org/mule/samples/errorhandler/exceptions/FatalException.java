@@ -11,7 +11,7 @@
 package org.mule.samples.errorhandler.exceptions;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.MessageFactory;
 
 /**
  * <code>FatalException</code> TODO (document class)

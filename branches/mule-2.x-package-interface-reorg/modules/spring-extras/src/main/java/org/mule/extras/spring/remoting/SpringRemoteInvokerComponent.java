@@ -14,7 +14,7 @@ import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import org.springframework.beans.factory.InitializingBean;

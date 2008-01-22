@@ -11,7 +11,7 @@
 package org.mule.management;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>ManagementException</code> is a general exception thrown by management

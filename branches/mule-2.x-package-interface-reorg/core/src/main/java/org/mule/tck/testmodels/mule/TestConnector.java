@@ -19,10 +19,10 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.api.transport.MessageReceiver;
-import org.mule.impl.transport.AbstractConnector;
-import org.mule.impl.transport.AbstractMessageAdapter;
-import org.mule.impl.transport.AbstractMessageDispatcherFactory;
-import org.mule.impl.transport.AbstractMessageReceiver;
+import org.mule.transport.AbstractConnector;
+import org.mule.transport.AbstractMessageAdapter;
+import org.mule.transport.AbstractMessageDispatcherFactory;
+import org.mule.transport.AbstractMessageReceiver;
 
 /**
  * <code>TestConnector</code> use a mock connector

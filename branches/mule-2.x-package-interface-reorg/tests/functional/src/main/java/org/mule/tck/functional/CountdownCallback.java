@@ -11,7 +11,7 @@ package org.mule.tck.functional;
 
 import org.mule.api.EventContext;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.i18n.MessageFactory;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

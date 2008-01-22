@@ -14,8 +14,8 @@ import org.mule.api.MuleContext;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.model.Model;
-import org.mule.impl.config.MuleConfiguration;
-import org.mule.impl.model.ModelFactory;
+import org.mule.config.MuleConfiguration;
+import org.mule.model.ModelFactory;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 

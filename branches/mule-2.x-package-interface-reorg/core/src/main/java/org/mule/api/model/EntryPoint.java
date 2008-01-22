@@ -14,7 +14,7 @@ import org.mule.api.EventContext;
 
 /**
  * <code>EntryPoint</code> defines the current entry method on a component. If
- * the invoked method does not have a return value, a {@link org.mule.impl.VoidResult}
+ * the invoked method does not have a return value, a {@link org.mule.VoidResult}
  * is returned.
  */
 public interface EntryPoint

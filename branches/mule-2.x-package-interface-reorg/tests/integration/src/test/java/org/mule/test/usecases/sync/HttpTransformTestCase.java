@@ -12,9 +12,9 @@ package org.mule.test.usecases.sync;
 
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.transformer.compression.GZipUncompressTransformer;
-import org.mule.impl.transformer.simple.ByteArrayToSerializable;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transformer.compression.GZipUncompressTransformer;
+import org.mule.transformer.simple.ByteArrayToSerializable;
 
 import java.util.Arrays;
 

@@ -11,7 +11,7 @@
 package org.mule.samples.hello;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.transformer.AbstractTransformer;
 
 /**
  * The transformation removes break-lines and newlines from the string, which
@@ -29,7 +29,7 @@ public class StdinToNameString extends AbstractTransformer
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transformer.AbstractTransformer#doTransform(java.lang.Object)
+     * @see org.mule.transformer.AbstractTransformer#doTransform(java.lang.Object)
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {

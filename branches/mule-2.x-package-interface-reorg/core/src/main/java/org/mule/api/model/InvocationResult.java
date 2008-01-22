@@ -9,7 +9,7 @@
  */
 package org.mule.api.model;
 
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.lang.reflect.Method;
 

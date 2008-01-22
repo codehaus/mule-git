@@ -8,11 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower}.transformers;
+package org.mule.transport.${TransportNameLower}.transformers;
 
 import org.mule.transformers.AbstractEventAwareTransformer;
-import org.mule.umo.transformer.TransformerException;
-import org.mule.umo.UMOEventContext;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.MuleEventContext;
 
 /**
  * <code>${outboundTransformer}</code> TODO Document

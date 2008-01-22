@@ -10,6 +10,7 @@
 
 package org.mule.examples.loanbroker;
 
+import org.mule.DefaultMuleContextFactory;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationBuilder;
@@ -18,7 +19,6 @@ import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleContextFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;

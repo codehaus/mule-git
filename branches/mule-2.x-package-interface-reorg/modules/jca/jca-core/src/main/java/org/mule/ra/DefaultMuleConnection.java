@@ -10,6 +10,9 @@
 
 package org.mule.ra;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
+import org.mule.MuleSession;
 import org.mule.api.MuleContext;
 import org.mule.api.Event;
 import org.mule.api.AbstractMuleException;
@@ -19,14 +22,11 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.ReceiveException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.client.i18n.ClientMessages;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.MuleSession;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.security.MuleCredentials;
-import org.mule.impl.transport.AbstractConnector;
 import org.mule.ra.i18n.JcaMessages;
+import org.mule.security.MuleCredentials;
+import org.mule.transport.AbstractConnector;
 
 import java.util.Map;
 

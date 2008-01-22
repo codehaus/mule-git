@@ -10,7 +10,7 @@
 
 package org.mule.test.config;
 
-import org.mule.impl.DefaultMuleMessage;
+import org.mule.DefaultMuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;

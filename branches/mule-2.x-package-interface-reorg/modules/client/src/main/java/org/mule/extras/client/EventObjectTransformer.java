@@ -10,8 +10,8 @@
 
 package org.mule.extras.client;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.DefaultMuleMessage;
 
 import java.util.EventObject;
 

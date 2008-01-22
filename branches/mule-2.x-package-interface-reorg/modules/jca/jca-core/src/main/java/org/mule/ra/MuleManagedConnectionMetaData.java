@@ -10,7 +10,7 @@
 
 package org.mule.ra;
 
-import org.mule.impl.config.MuleManifest;
+import org.mule.config.MuleManifest;
 import org.mule.ra.i18n.JcaMessages;
 
 import javax.resource.ResourceException;

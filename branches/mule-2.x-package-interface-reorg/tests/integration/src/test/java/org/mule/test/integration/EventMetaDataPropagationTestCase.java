@@ -10,6 +10,9 @@
 
 package org.mule.test.integration;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
+import org.mule.MuleSession;
 import org.mule.api.Event;
 import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
@@ -21,12 +24,9 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.MuleSession;
-import org.mule.impl.transformer.AbstractEventAwareTransformer;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.transformer.AbstractEventAwareTransformer;
 
 import java.io.IOException;
 import java.io.InputStream;

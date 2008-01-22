@@ -13,7 +13,7 @@ package org.mule.api.transport;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <code>DispatchException</code> is thrown when an endpoint dispatcher fails to

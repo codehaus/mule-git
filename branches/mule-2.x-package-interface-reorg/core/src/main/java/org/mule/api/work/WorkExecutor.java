@@ -27,7 +27,7 @@
 
 package org.mule.api.work;
 
-import org.mule.impl.work.WorkerContext;
+import org.mule.work.WorkerContext;
 
 import javax.resource.spi.work.WorkException;
 

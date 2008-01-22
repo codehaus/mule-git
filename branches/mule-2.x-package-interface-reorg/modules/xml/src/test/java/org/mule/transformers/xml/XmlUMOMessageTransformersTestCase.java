@@ -10,11 +10,11 @@
 
 package org.mule.transformers.xml;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
+import org.mule.RequestContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.RequestContext;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
 
@@ -68,8 +68,8 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
 
     public Object getResultData()
     {
-        return "<org.mule.impl.DefaultMuleMessage>\n"
-               + " <adapter class=\"org.mule.impl.transport.DefaultMessageAdapter\">\n"
+        return "<org.mule.DefaultMuleMessage>\n"
+               + " <adapter class=\"org.mule.transport.DefaultMessageAdapter\">\n"
                + " <message class=\"string\">test</message>\n"
                + "   <properties>\n"
                + "     <scopedMap class=\"tree-map\">\n"
@@ -130,7 +130,7 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                + "     <fallbackToRegistry>false</fallbackToRegistry>\n" + "   </properties>\n"
                + "   <attachments class=\"edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap\"/>\n"
                + "   <encoding>UTF-8</encoding>\n" + "   <id>3be5fe5a-87f8-11dc-a153-0b6db396665f</id>\n"
-               + " </adapter>\n" + " </org.mule.impl.DefaultMuleMessage>\n";
+               + " </adapter>\n" + " </org.mule.DefaultMuleMessage>\n";
     }
 
     /**

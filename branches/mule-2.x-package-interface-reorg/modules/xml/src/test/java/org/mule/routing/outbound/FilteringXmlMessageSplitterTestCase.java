@@ -10,11 +10,11 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.Session;
 import org.mule.api.endpoint.Endpoint;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 import org.mule.util.IOUtils;

@@ -12,7 +12,7 @@ package org.mule.api.routing;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.impl.management.stats.RouterStatistics;
+import org.mule.management.stats.RouterStatistics;
 
 /**
  * <code>Router</code> is a base interface for all routers.

@@ -17,7 +17,7 @@ import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouterCollection;
-import org.mule.impl.model.seda.SedaModel;
+import org.mule.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.lang.reflect.Method;

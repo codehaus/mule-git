@@ -21,7 +21,7 @@ public class TestConnectorWithContainerDependents extends TestConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transport.AbstractConnector#doInitialise()
+     * @see org.mule.transport.AbstractConnector#doInitialise()
      */
     protected void doInitialise() throws InitialisationException
     {

@@ -10,7 +10,7 @@
 package org.mule.config.spring.editors;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.endpoint.MuleEndpointURI;
 
 import java.beans.PropertyEditorSupport;
 

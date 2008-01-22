@@ -10,20 +10,20 @@
 
 package org.mule.mule;
 
+import org.mule.DefaultMuleMessage;
+import org.mule.MuleEvent;
+import org.mule.RequestContext;
+import org.mule.ResponseOutputStream;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleEvent;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.impl.RequestContext;
-import org.mule.impl.ResponseOutputStream;
-import org.mule.impl.endpoint.MuleEndpointURI;
-import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Orange;
+import org.mule.transformer.AbstractTransformer;
 import org.mule.util.CollectionUtils;
 
 import java.util.Properties;
@@ -176,7 +176,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         /*
          * (non-Javadoc)
          * 
-         * @see org.mule.impl.transformer.AbstractTransformer#doTransform(java.lang.Object)
+         * @see org.mule.transformer.AbstractTransformer#doTransform(java.lang.Object)
          */
         public Object doTransform(Object src, String encoding) throws TransformerException
         {

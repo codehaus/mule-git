@@ -11,7 +11,7 @@
 package org.mule.api.transaction;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 /**
  * <p>

@@ -11,7 +11,7 @@
 package org.mule.test.spring;
 
 import org.mule.api.component.Component;
-import org.mule.impl.config.PoolingProfile;
+import org.mule.config.PoolingProfile;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.object.ObjectFactory;
 import org.mule.util.object.PooledObjectFactory;

@@ -11,7 +11,7 @@
 package org.mule.util.xa;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.Message;
+import org.mule.config.i18n.Message;
 
 public class ResourceManagerException extends AbstractMuleException
 {

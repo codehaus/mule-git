@@ -8,11 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
-import org.mule.providers.AbstractMessageAdapter;
-import org.mule.umo.MessagingException;
-import org.mule.umo.provider.MessageTypeNotSupportedException;
+import org.mule.transport.AbstractMessageAdapter;
+import org.mule.api.MessagingException;
+import org.mule.api.transport.MessageTypeNotSupportedException;
 
 /**
  * <code>${TransportName}MessageAdapter</code> TODO document

@@ -15,7 +15,7 @@ import org.mule.api.Event;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.impl.management.stats.ComponentStatistics;
+import org.mule.management.stats.ComponentStatistics;
 import org.mule.util.queue.QueueSession;
 
 import javax.resource.spi.work.Work;

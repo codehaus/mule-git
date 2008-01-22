@@ -13,8 +13,8 @@ package org.mule.test.usecases.service;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.routing.inbound.EventGroup;
-import org.mule.impl.routing.response.ResponseCorrelationAggregator;
+import org.mule.routing.inbound.EventGroup;
+import org.mule.routing.response.ResponseCorrelationAggregator;
 import org.mule.util.StringMessageUtils;
 
 public class DummyResponseAggregator extends ResponseCorrelationAggregator

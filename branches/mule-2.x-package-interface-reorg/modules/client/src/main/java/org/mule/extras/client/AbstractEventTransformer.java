@@ -13,7 +13,7 @@ package org.mule.extras.client;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.transformer.AbstractTransformer;
+import org.mule.transformer.AbstractTransformer;
 
 import java.lang.reflect.Method;
 

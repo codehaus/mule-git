@@ -12,7 +12,7 @@ package org.mule.examples.loanbroker.esn;
 
 import org.mule.api.component.Component;
 import org.mule.examples.loanbroker.tests.AbstractLoanBrokerTestCase;
-import org.mule.impl.model.seda.SedaModel;
+import org.mule.model.seda.SedaModel;
 
 
 public class VMLoanBrokerSynchronousFunctionalTestCase extends AbstractLoanBrokerTestCase

@@ -17,10 +17,10 @@ import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageRequesterFactory;
-import org.mule.impl.config.i18n.MessageFactory;
-import org.mule.impl.transport.AbstractConnector;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.transport.AbstractConnector;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;

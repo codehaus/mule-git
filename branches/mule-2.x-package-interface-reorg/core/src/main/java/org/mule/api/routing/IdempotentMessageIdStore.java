@@ -10,8 +10,8 @@
 
 package org.mule.api.routing;
 
-import org.mule.impl.routing.inbound.IdempotentInMemoryMessageIdStore;
-import org.mule.impl.routing.inbound.IdempotentReceiver;
+import org.mule.routing.inbound.IdempotentInMemoryMessageIdStore;
+import org.mule.routing.inbound.IdempotentReceiver;
 
 /**
  * <code>IdempotentMessageIdStore</code> is the main interface used by

@@ -11,8 +11,8 @@
 package org.mule.test.config;
 
 import org.mule.api.MuleException;
-import org.mule.impl.config.ExceptionHelper;
-import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.config.ExceptionHelper;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.List;

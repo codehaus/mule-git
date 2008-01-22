@@ -9,8 +9,9 @@
  */
 package org.mule.impl.internal.admin;
 
-import org.mule.impl.transformer.wire.TransformerPairWireFormat;
+import org.mule.internal.admin.MuleAdminAgent;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transformer.wire.TransformerPairWireFormat;
 
 public class MuleAdminAgentConfigTestCase extends FunctionalTestCase
 {

@@ -10,6 +10,7 @@
 
 package org.mule.tck;
 
+import org.mule.AbstractExceptionListener;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.context.ObjectNotFoundException;
@@ -24,12 +25,10 @@ import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.ResponseRouter;
 import org.mule.api.routing.ResponseRouterCollection;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.AbstractExceptionListener;
-import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
-import org.mule.impl.routing.ForwardingCatchAllStrategy;
-import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
-import org.mule.impl.transformer.TransformerUtils;
+import org.mule.model.resolvers.LegacyEntryPointResolverSet;
+import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.filters.xml.JXPathFilter;
+import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.testmodels.fruit.FruitCleaner;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
@@ -37,6 +36,7 @@ import org.mule.tck.testmodels.mule.TestEntryPointResolverSet;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
 import org.mule.tck.testmodels.mule.TestResponseAggregator;
+import org.mule.transformer.TransformerUtils;
 
 import java.util.List;
 

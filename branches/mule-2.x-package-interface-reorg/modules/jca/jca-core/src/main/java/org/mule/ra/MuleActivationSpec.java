@@ -12,7 +12,7 @@ package org.mule.ra;
 
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointURI;
-import org.mule.impl.endpoint.MuleEndpointURI;
+import org.mule.endpoint.MuleEndpointURI;
 import org.mule.util.StringUtils;
 
 import java.io.Serializable;

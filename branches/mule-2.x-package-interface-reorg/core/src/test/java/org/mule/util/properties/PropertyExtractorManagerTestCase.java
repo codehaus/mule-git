@@ -9,8 +9,8 @@
  */
 package org.mule.util.properties;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.sql.Timestamp;

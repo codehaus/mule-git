@@ -10,11 +10,11 @@
 
 package org.mule.test.integration.providers.axis;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
-import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.soap.axis.AxisConnector;
 
 
 public abstract class AbstractAxisOverJMSWithTransactionsTestCase extends FunctionalTestCase

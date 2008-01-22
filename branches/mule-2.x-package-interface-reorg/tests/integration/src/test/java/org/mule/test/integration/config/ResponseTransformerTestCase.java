@@ -12,8 +12,8 @@ package org.mule.test.integration.config;
 
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.transformer.TransformerUtils;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transformer.TransformerUtils;
 
 import java.util.Iterator;
 import java.util.List;

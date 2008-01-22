@@ -12,8 +12,8 @@ package org.mule.tck.testmodels.mule;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.routing.inbound.EventGroup;
-import org.mule.impl.routing.response.ResponseCorrelationAggregator;
+import org.mule.routing.inbound.EventGroup;
+import org.mule.routing.response.ResponseCorrelationAggregator;
 
 /**
  * <code>TestResponseAggregator</code> is a mock response Agrregator object used

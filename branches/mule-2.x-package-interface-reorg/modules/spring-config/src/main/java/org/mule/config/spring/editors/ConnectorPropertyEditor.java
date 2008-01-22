@@ -11,7 +11,7 @@ package org.mule.config.spring.editors;
 
 import org.mule.RegistryContext;
 import org.mule.api.transport.Connector;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 import java.beans.PropertyEditorSupport;
 

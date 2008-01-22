@@ -11,9 +11,9 @@
 package org.mule.transaction;
 
 import org.mule.api.Event;
-import org.mule.impl.transaction.constraints.BatchConstraint;
-import org.mule.impl.transaction.constraints.ConstraintFilter;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.transaction.constraints.BatchConstraint;
+import org.mule.transaction.constraints.ConstraintFilter;
 
 import com.mockobjects.dynamic.Mock;
 

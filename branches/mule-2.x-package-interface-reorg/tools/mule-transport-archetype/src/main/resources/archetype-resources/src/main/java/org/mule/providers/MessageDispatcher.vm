@@ -8,12 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.providers.${TransportNameLower};
+package org.mule.transport.${TransportNameLower};
 
-import org.mule.providers.AbstractMessageDispatcher;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

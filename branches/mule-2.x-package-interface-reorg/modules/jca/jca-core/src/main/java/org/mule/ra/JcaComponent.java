@@ -10,6 +10,8 @@
 
 package org.mule.ra;
 
+import org.mule.OptimizedRequestContext;
+import org.mule.RequestContext;
 import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleException;
@@ -19,10 +21,8 @@ import org.mule.api.component.ComponentException;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.OptimizedRequestContext;
-import org.mule.impl.RequestContext;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.model.AbstractComponent;
+import org.mule.config.i18n.CoreMessages;
+import org.mule.model.AbstractComponent;
 import org.mule.ra.i18n.JcaMessages;
 
 import javax.resource.spi.UnavailableException;

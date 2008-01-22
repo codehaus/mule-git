@@ -12,7 +12,7 @@ package org.mule.tck.testmodels.mule;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageDispatcher;
-import org.mule.impl.transport.AbstractMessageDispatcherFactory;
+import org.mule.transport.AbstractMessageDispatcherFactory;
 
 /**
  * A Test message dispatcher factory that is used for testing configuration loading since "test://"

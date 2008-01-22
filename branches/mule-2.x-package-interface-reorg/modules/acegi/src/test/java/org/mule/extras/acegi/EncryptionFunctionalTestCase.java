@@ -15,12 +15,12 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.security.CredentialsNotSetException;
 import org.mule.api.security.UnauthorisedException;
+import org.mule.config.ExceptionHelper;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.config.ExceptionHelper;
-import org.mule.impl.security.MuleCredentials;
-import org.mule.providers.http.HttpConnector;
-import org.mule.providers.http.HttpConstants;
+import org.mule.security.MuleCredentials;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.http.HttpConnector;
+import org.mule.transport.http.HttpConstants;
 
 import java.util.HashMap;
 import java.util.Map;

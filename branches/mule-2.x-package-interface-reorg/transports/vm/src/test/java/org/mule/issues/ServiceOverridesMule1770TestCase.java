@@ -12,11 +12,11 @@ package org.mule.issues;
 
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.transformer.NoActionTransformer;
-import org.mule.impl.transformer.TransformerUtils;
-import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestMessageDispatcherFactory;
+import org.mule.transformer.NoActionTransformer;
+import org.mule.transformer.TransformerUtils;
+import org.mule.transport.AbstractConnector;
 
 public class ServiceOverridesMule1770TestCase extends FunctionalTestCase
 {

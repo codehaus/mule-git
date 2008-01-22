@@ -11,7 +11,7 @@
 package org.mule.api.security;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.config.i18n.CoreMessages;
 
 /**
  * <code>UnknownAuthenticationTypeException</code> is thrown if a security context

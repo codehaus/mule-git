@@ -10,10 +10,10 @@
 
 package org.mule.api.component;
 
+import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.Event;
 import org.mule.api.MuleMessage;
-import org.mule.impl.RequestContext;
 
 /**
  * <code>Invocation</code> represents a link in an interceptor chain. Interceptors

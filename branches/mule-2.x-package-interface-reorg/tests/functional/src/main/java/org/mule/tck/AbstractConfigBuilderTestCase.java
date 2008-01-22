@@ -10,6 +10,7 @@
 
 package org.mule.tck;
 
+import org.mule.DefaultExceptionStrategy;
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
 import org.mule.api.AbstractMuleException;
@@ -25,22 +26,21 @@ import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
-import org.mule.impl.DefaultExceptionStrategy;
-import org.mule.impl.endpoint.MuleEndpoint;
-import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.routing.filters.PayloadTypeFilter;
-import org.mule.impl.routing.filters.RegExFilter;
-import org.mule.impl.routing.filters.logic.AndFilter;
-import org.mule.impl.routing.inbound.IdempotentReceiver;
-import org.mule.impl.routing.inbound.SelectiveConsumer;
-import org.mule.impl.routing.outbound.FilteringOutboundRouter;
-import org.mule.impl.transformer.TransformerUtils;
-import org.mule.impl.transport.AbstractConnector;
+import org.mule.endpoint.MuleEndpoint;
+import org.mule.model.seda.SedaComponent;
+import org.mule.routing.filters.PayloadTypeFilter;
+import org.mule.routing.filters.RegExFilter;
+import org.mule.routing.filters.logic.AndFilter;
 import org.mule.routing.filters.xml.JXPathFilter;
+import org.mule.routing.inbound.IdempotentReceiver;
+import org.mule.routing.inbound.SelectiveConsumer;
+import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.mule.tck.testmodels.mule.TestCatchAllStrategy;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
+import org.mule.transformer.TransformerUtils;
+import org.mule.transport.AbstractConnector;
 
 public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfigBuilderTestCase
 {

@@ -11,7 +11,7 @@ package org.mule.api.lifecycle;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.impl.lifecycle.LifecycleObject;
+import org.mule.lifecycle.LifecycleObject;
 
 import java.util.Set;
 

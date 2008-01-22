@@ -35,7 +35,7 @@
 
     <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
 
-    <bean id="echoComponent" class="org.mule.impl.component.simple.EchoComponent"/>
+    <bean id="echoComponent" class="org.mule.component.simple.EchoComponent"/>
 
     <bean id="echoComponentSecurity" class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"/>

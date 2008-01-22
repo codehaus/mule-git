@@ -18,12 +18,12 @@ import org.mule.api.security.MuleAuthentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.extras.pgp.PGPAuthentication;
 import org.mule.extras.pgp.PGPCryptInfo;
 import org.mule.extras.pgp.PGPKeyRing;
 import org.mule.extras.pgp.i18n.PGPMessages;
-import org.mule.impl.config.i18n.CoreMessages;
-import org.mule.impl.security.AbstractEndpointSecurityFilter;
+import org.mule.security.AbstractEndpointSecurityFilter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.api.Event)
+     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.api.Event)
      */
     protected void authenticateInbound(Event event)
         throws SecurityException, UnauthorisedException, UnknownAuthenticationTypeException
@@ -159,7 +159,7 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.api.Event)
+     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.api.Event)
      */
     protected void authenticateOutbound(Event event) throws SecurityException, UnauthorisedException
     {

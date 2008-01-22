@@ -11,9 +11,9 @@
 package org.mule.util.object;
 
 import org.mule.api.component.Component;
-import org.mule.impl.config.PoolingProfile;
-import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.model.seda.SedaModel;
+import org.mule.config.PoolingProfile;
+import org.mule.model.seda.SedaComponent;
+import org.mule.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.fruit.Orange;

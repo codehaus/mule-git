@@ -10,9 +10,9 @@
 
 package org.mule.issues;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.EventContext;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
