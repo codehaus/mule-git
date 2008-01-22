@@ -129,8 +129,7 @@ public class StreamingEntryPoint implements UMOEntryPoint
             }
             catch (IOException e)
             {
-                // ignore
-                // TODO MULE-863: Why?
+                // ignore, should never happen
             }
         }
     }

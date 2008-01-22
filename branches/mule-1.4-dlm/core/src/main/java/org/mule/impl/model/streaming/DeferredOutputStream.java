@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * This outputStream allows a stream to be choosen after this has been created.  It is used by
  * Mule when using streaming to pass to the Streaming component. The actual output stream is
  * choosen at the point where the first byte is written. At this point an outbound router can be
- * choosen and vales set on the event context can affect which stream is choosen.
+ * chosen and values set on the event context can affect which stream is choosen.
  */
 public class DeferredOutputStream extends OutputStream
 {
@@ -64,6 +64,25 @@ public class DeferredOutputStream extends OutputStream
         out.write(b);
     }
 
+    // @Override
+    public void write(byte b[]) throws IOException
+    {
+        if (out == null)
+        {
+            out = getOutputStream();
+        }
+        out.write(b);
+    }
+
+    // @Override
+    public void write(byte b[], int off, int len) throws IOException 
+    {
+         if (out == null) 
+         {
+             out = getOutputStream();
+         }
+         out.write(b, off, len);
+     }
 
     public void flush() throws IOException
     {

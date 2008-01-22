@@ -98,7 +98,7 @@ public class QuickConfigurationBuilder implements ConfigurationBuilder
             }
             catch (UMOException e)
             {
-                // TODO MULE-863: fix API or handle
+                throw new RuntimeException("Exception trying to remove admin agent", e);
             }
         }
     }

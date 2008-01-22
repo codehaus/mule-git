@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -300,7 +301,8 @@ public abstract class AbstractComponent implements UMOComponent
         }
         catch (UMOException e)
         {
-            // TODO MULE-863: If this is an error, do something!
+            // Failed to stop the component. But since we're being disposed now anyway, we can
+            // only log this failure and continue cleaning up
             logger.error("Failed to stop component: " + descriptor.getName(), e);
         }
         doDispose();

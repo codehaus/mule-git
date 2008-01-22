@@ -124,10 +124,10 @@ public class MuleManifest
                                     ("META-INF/MANIFEST.MF"));
                             while (e.hasMoreElements())
                             {
-                                URL url = (URL) e.nextElement();
-                                if (url.toExternalForm().indexOf("mule-core") > -1)
+                                URL manifestUrl = (URL) e.nextElement();
+                                if (manifestUrl.toExternalForm().indexOf("mule-core") > -1)
                                 {
-                                    return url;
+                                    return manifestUrl;
                                 }
                             }
                         }

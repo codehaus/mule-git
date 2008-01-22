@@ -38,6 +38,7 @@ import java.util.Map;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -247,7 +248,8 @@ public abstract class AbstractModel implements UMOModel
             }
             catch (Exception e1)
             {
-                // TODO MULE-863: So what do we do about this?
+                // The component could not be disposed. Since we're in progress of shutting
+                // down anyway, just log the error and continue
                 logger.warn("Failed to dispose component: " + e1.getMessage());
             }
         }

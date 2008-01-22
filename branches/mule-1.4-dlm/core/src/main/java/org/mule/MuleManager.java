@@ -402,7 +402,6 @@ public class MuleManager implements UMOManager
         }
         catch (UMOException e)
         {
-            // TODO MULE-863: What should we really do?
             logger.error("Failed to stop manager: " + e.getMessage(), e);
         }
         disposed.set(true);

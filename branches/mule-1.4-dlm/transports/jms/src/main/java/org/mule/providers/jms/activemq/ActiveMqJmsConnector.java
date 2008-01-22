@@ -33,6 +33,23 @@ public class ActiveMqJmsConnector extends JmsConnector
         // TODO MULE-1409 better support for ActiveMQ 4.x temp destinations
     }
 
+    protected void applyVendorSpecificConnectionFactoryProperties()
+    {
+        super.applyVendorSpecificConnectionFactoryProperties();
+
+        try
+        {
+            Method getRedeliveryPolicyMethod = getConnectionFactory().getClass().getMethod("getRedeliveryPolicy", new Class[]{});
+            Object redeliveryPolicy = getRedeliveryPolicyMethod.invoke(getConnectionFactory(), new Object[]{});
+            Method setMaximumRedeliveriesMethod = redeliveryPolicy.getClass().getMethod("setMaximumRedeliveries", new Class[]{Integer.TYPE});
+            setMaximumRedeliveriesMethod.invoke(redeliveryPolicy, new Object[]{new Integer(getMaxRedelivery())});
+        }
+        catch (Exception e)
+        {
+            logger.error("Can not set MaxRedelivery parameter to RedeliveryPolicy " + e);
+        }
+    }
+
     /**
      * Will additionally try to cleanup the ActiveMq connection, otherwise there's a deadlock on shutdown.
      */

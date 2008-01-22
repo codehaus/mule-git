@@ -20,9 +20,13 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.StringUtils;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Jdbc Message dispatcher is responsible for executing SQL queries against a
@@ -34,11 +38,31 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     private JdbcConnector connector;
     private static final String STORED_PROCEDURE_PREFIX = "{ ";
     private static final String STORED_PROCEDURE_SUFFIX = " }";
+    private static final String IN = "in";
+    private static final String OUT = "out";
+    private static final String INOUT = "inout";
+
+    private Map typesMap = new HashMap();
 
     public JdbcMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JdbcConnector)endpoint.getConnector();
+        registerType("int", Types.INTEGER);
+        registerType("float", Types.FLOAT);
+        registerType("double", Types.DOUBLE);
+        registerType("string", Types.VARCHAR);
+    }
+
+    protected int getType(String key)
+    {
+        Integer type = (Integer) typesMap.get(key);
+        return type != null ? type.intValue() : 0;
+    }
+
+    protected void registerType(String type, int jdbcType)
+    {
+        typesMap.put(type, new Integer(jdbcType));
     }
 
     /*
@@ -50,30 +74,84 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     {
         // template method
     }
-    
-    protected void executeWriteStatement(UMOEvent event, String writeStmt) throws Exception
+
+    protected boolean isProcWithOutParams(Object[][] types)
+    {
+        for (int i = 0; i < types.length; i++)
+        {
+            String type = (String) types[i][2];
+            if (INOUT.equalsIgnoreCase(type) || OUT.equalsIgnoreCase(type))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected UMOMessage executeWriteStatement(UMOEvent event, String writeStmt) throws Exception
     {
         List paramNames = new ArrayList();
         writeStmt = connector.parseStatement(writeStmt, paramNames);
+
+        Object[][] types = connector.getParamsTypes(paramNames);
 
         Object[] paramValues = connector.getParams(endpoint, paramNames, new MuleMessage(
             event.getTransformedMessage()), this.endpoint.getEndpointURI().getAddress());
 
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
         Connection con = null;
+        UMOMessage message = event.getMessage();
         try
         {
             con = this.connector.getConnection();
-            
+            boolean isCall = false;
             if ("call".equalsIgnoreCase(writeStmt.substring(0, 4)))
             {
                 writeStmt = STORED_PROCEDURE_PREFIX + writeStmt + STORED_PROCEDURE_SUFFIX;
+                isCall = true;
             }
-            
-            int nbRows = connector.createQueryRunner().update(con, writeStmt, paramValues);
-            if (nbRows != 1)
+
+            if (isCall && isProcWithOutParams(types))
             {
-                logger.warn("Row count for write should be 1 and not " + nbRows);
+                CallableStatement statement = connector.getConnection().prepareCall(writeStmt);
+                for (int i = 0; i < types.length; i++)
+                {
+                    String dataType = (String) types[i][1];
+                    String type = (String) types[i][2];
+                    if (type == null || IN.equalsIgnoreCase(type))
+                    {
+                        statement.setObject(i + 1, paramValues[i]);
+                    }
+                    else
+                    {
+                        statement.registerOutParameter(i + 1, getType(dataType));
+                        if (INOUT.equalsIgnoreCase(type))
+                        {
+                            statement.setObject(i + 1, paramValues[i]);
+                        }
+                    }
+                }
+                statement.execute();
+                Map result = new HashMap();
+                for (int i = 0; i < types.length; i++)
+                {
+                    Object name = types[i][0];
+                    String type = (String) types[i][2];
+                    if (INOUT.equalsIgnoreCase(type) || OUT.equalsIgnoreCase(type))
+                    {
+                        result.put(name, statement.getObject(i + 1));
+                    }
+                }
+                UMOMessageAdapter msgAdapter = this.connector.getMessageAdapter(result);
+                message = new MuleMessage(msgAdapter);
+            }
+            else
+            {
+                int nbRows = connector.createQueryRunner().update(con, writeStmt, paramValues);
+                if (nbRows != 1)
+                {
+                    logger.warn("Row count for write should be 1 and not " + nbRows);
+                }
             }
             if (tx == null)
             {
@@ -90,6 +168,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
             }
             throw e;
         }
+        return message;
     }
     
     protected String getStatement(UMOImmutableEndpoint endpoint)
@@ -158,8 +237,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
         
         if (isWriteStatement(statement))
         {
-            executeWriteStatement(event, statement);
-            return event.getMessage();
+            return executeWriteStatement(event, statement);
         }
         
         return doReceive(event.getTimeout(),event);
