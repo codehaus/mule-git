@@ -39,7 +39,7 @@ public class XaTransaction extends AbstractTransaction
     /**
      * Map of enlisted resources
      */
-    private Map resources = null;
+    private Map resources = new HashMap();
 
     /**
      * Default constructor
@@ -73,55 +73,51 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-    protected void doCommit() throws TransactionException
+    protected synchronized void doCommit() throws TransactionException
     {
         try
         {
-            synchronized (this)
-            {
-                /*
-                JTA spec quotes (parts highlighted by AP), the same applies to both TransactionManager and UserTransaction:
+            /*
+            JTA spec quotes (parts highlighted by AP), the same applies to both TransactionManager and UserTransaction:
 
-                3.2.2 Completing a Transaction
-                The TransactionManager.commit method completes the transaction currently
-                associated with the calling thread.
+            3.2.2 Completing a Transaction
+            The TransactionManager.commit method completes the transaction currently
+            associated with the calling thread.
 
-                ****
-                After the commit method returns, the calling thread is not associated with a transaction.
-                ****
+            ****
+            After the commit method returns, the calling thread is not associated with a transaction.
+            ****
 
-                If the commit method is called when the thread is
-                not associated with any transaction context, the TM throws an exception. In some
-                implementations, the commit operation is restricted to the transaction originator only.
-                If the calling thread is not allowed to commit the transaction, the TM throws an
-                exception.
-                The TransactionManager.rollback method rolls back the transaction associated
-                with the current thread.
-                ****
-                After the rollback method completes, the thread is associated with no transaction.
-                ****
+            If the commit method is called when the thread is
+            not associated with any transaction context, the TM throws an exception. In some
+            implementations, the commit operation is restricted to the transaction originator only.
+            If the calling thread is not allowed to commit the transaction, the TM throws an
+            exception.
+            The TransactionManager.rollback method rolls back the transaction associated
+            with the current thread.
+            ****
+            After the rollback method completes, the thread is associated with no transaction.
+            ****
 
-                And the following block about Transaction (note there's no thread-tx disassociation clause)
+            And the following block about Transaction (note there's no thread-tx disassociation clause)
 
-                3.3.3 Transaction Completion
-                The Transaction.commit and Transaction.rollback methods allow the target
-                object to be comitted or rolled back. The calling thread is not required to have the same
-                transaction associated with the thread.
-                If the calling thread is not allowed to commit the transaction, the transaction manager
-                throws an exception.
+            3.3.3 Transaction Completion
+            The Transaction.commit and Transaction.rollback methods allow the target
+            object to be comitted or rolled back. The calling thread is not required to have the same
+            transaction associated with the thread.
+            If the calling thread is not allowed to commit the transaction, the transaction manager
+            throws an exception.
 
 
-                So what it meant was that one can't use Transaction.commit()/rollback(), as it doesn't
-                properly disassociate the thread of execution from the current transaction. There's no
-                JTA API-way to do that after the call, so the thread's transaction is subject to manual
-                recovery process. Instead TransactionManager or UserTransaction must be used.
-                 */
-                TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
-                delistResources();
-                txManager.commit();
-                closeResources();
-
-            }
+            So what it meant was that one can't use Transaction.commit()/rollback(), as it doesn't
+            properly disassociate the thread of execution from the current transaction. There's no
+            JTA API-way to do that after the call, so the thread's transaction is subject to manual
+            recovery process. Instead TransactionManager or UserTransaction must be used.
+             */
+            TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
+            delistResources();
+            txManager.commit();
+            closeResources();
         }
         catch (RollbackException e)
         {
@@ -152,50 +148,47 @@ public class XaTransaction extends AbstractTransaction
     {
         try
         {
-            synchronized (this)
-            {
-                /*
-                JTA spec quotes (parts highlighted by AP), the same applies to both TransactionManager and UserTransaction:
+            /*
+            JTA spec quotes (parts highlighted by AP), the same applies to both TransactionManager and UserTransaction:
 
-                3.2.2 Completing a Transaction
-                The TransactionManager.commit method completes the transaction currently
-                associated with the calling thread.
+            3.2.2 Completing a Transaction
+            The TransactionManager.commit method completes the transaction currently
+            associated with the calling thread.
 
-                ****
-                After the commit method returns, the calling thread is not associated with a transaction.
-                ****
+            ****
+            After the commit method returns, the calling thread is not associated with a transaction.
+            ****
 
-                If the commit method is called when the thread is
-                not associated with any transaction context, the TM throws an exception. In some
-                implementations, the commit operation is restricted to the transaction originator only.
-                If the calling thread is not allowed to commit the transaction, the TM throws an
-                exception.
-                The TransactionManager.rollback method rolls back the transaction associated
-                with the current thread.
-                ****
-                After the rollback method completes, the thread is associated with no transaction.
-                ****
+            If the commit method is called when the thread is
+            not associated with any transaction context, the TM throws an exception. In some
+            implementations, the commit operation is restricted to the transaction originator only.
+            If the calling thread is not allowed to commit the transaction, the TM throws an
+            exception.
+            The TransactionManager.rollback method rolls back the transaction associated
+            with the current thread.
+            ****
+            After the rollback method completes, the thread is associated with no transaction.
+            ****
 
-                And the following block about Transaction (note there's no thread-tx disassociation clause)
+            And the following block about Transaction (note there's no thread-tx disassociation clause)
 
-                3.3.3 Transaction Completion
-                The Transaction.commit and Transaction.rollback methods allow the target
-                object to be comitted or rolled back. The calling thread is not required to have the same
-                transaction associated with the thread.
-                If the calling thread is not allowed to commit the transaction, the transaction manager
-                throws an exception.
+            3.3.3 Transaction Completion
+            The Transaction.commit and Transaction.rollback methods allow the target
+            object to be comitted or rolled back. The calling thread is not required to have the same
+            transaction associated with the thread.
+            If the calling thread is not allowed to commit the transaction, the transaction manager
+            throws an exception.
 
 
-                So what it meant was that one can't use Transaction.commit()/rollback(), as it doesn't
-                properly disassociate the thread of execution from the current transaction. There's no
-                JTA API-way to do that after the call, so the thread's transaction is subject to manual
-                recovery process. Instead TransactionManager or UserTransaction must be used.
-                 */
-                TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
-                delistResources();
-                txManager.rollback();
-                closeResources();
-            }
+            So what it meant was that one can't use Transaction.commit()/rollback(), as it doesn't
+            properly disassociate the thread of execution from the current transaction. There's no
+            JTA API-way to do that after the call, so the thread's transaction is subject to manual
+            recovery process. Instead TransactionManager or UserTransaction must be used.
+             */
+            TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
+            delistResources();
+            txManager.rollback();
+            closeResources();
         }
         catch (SystemException e)
         {
@@ -218,23 +211,20 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-    public int getStatus() throws TransactionStatusException
+    public synchronized int getStatus() throws TransactionStatusException
     {
-        synchronized (this)
+        if (transaction == null)
         {
-            if (transaction == null)
-            {
-                return STATUS_NO_TRANSACTION;
-            }
+            return STATUS_NO_TRANSACTION;
+        }
 
-            try
-            {
-                return transaction.getStatus();
-            }
-            catch (SystemException e)
-            {
-                throw new TransactionStatusException(e);
-            }
+        try
+        {
+            return transaction.getStatus();
+        }
+        catch (SystemException e)
+        {
+            throw new TransactionStatusException(e);
         }
     }
 
@@ -260,39 +250,25 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-    public Object getResource(Object key)
+    public synchronized Object getResource(Object key)
     {
-        synchronized (this)
-        {
-            return resources == null ? null : resources.get(key);
-        }
+        return resources.get(key);
     }
 
-    public boolean hasResource(Object key)
+    public synchronized boolean hasResource(Object key)
     {
-        synchronized (this)
-        {
-            return resources != null && resources.containsKey(key);
-        }
+        return resources.containsKey(key);
     }
 
-    public void bindResource(Object key, Object resource) throws TransactionException
+    public synchronized void bindResource(Object key, Object resource) throws TransactionException
     {
-        synchronized (this)
+        if (resources.containsKey(key))
         {
-            if (resources == null)
-            {
-                resources = new HashMap();
-            }
-
-            if (resources.containsKey(key))
-            {
-                throw new IllegalTransactionStateException(
-                        CoreMessages.transactionResourceAlreadyListedForKey(key));
-            }
-
-            resources.put(key, resource);
+            throw new IllegalTransactionStateException(
+                    CoreMessages.transactionResourceAlreadyListedForKey(key));
         }
+
+        resources.put(key, resource);
     }
 
     // moved here from connection wrapper
@@ -318,7 +294,7 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-    public boolean delistResource(XAResource resource, int TMFLAG) throws TransactionException
+    public boolean delistResource(XAResource resource, int tmflag) throws TransactionException
     {
         TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
         try
@@ -328,7 +304,7 @@ public class XaTransaction extends AbstractTransaction
             {
                 throw new TransactionException(CoreMessages.noJtaTransactionAvailable(Thread.currentThread()));
             }
-            return jtaTransaction.delistResource(resource, TMFLAG);
+            return jtaTransaction.delistResource(resource, tmflag);
         }
         catch (SystemException e)
         {
