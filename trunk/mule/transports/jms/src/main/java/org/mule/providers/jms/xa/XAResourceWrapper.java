@@ -28,20 +28,17 @@ public class XAResourceWrapper implements XAResource
         this.sessionInvocationHandler = sessionInvocationHandler;
     }
 
-    public int getTransactionTimeout()
-            throws XAException
+    public int getTransactionTimeout() throws XAException
     {
         return xaResource.getTransactionTimeout();
     }
 
-    public boolean setTransactionTimeout(int i)
-            throws XAException
+    public boolean setTransactionTimeout(int i) throws XAException
     {
         return xaResource.setTransactionTimeout(i);
     }
 
-    public boolean isSameRM(XAResource xaResource)
-            throws XAException
+    public boolean isSameRM(XAResource xaResource) throws XAException
     {
         if (xaResource instanceof XAResourceWrapper)
         {
@@ -50,45 +47,38 @@ public class XAResourceWrapper implements XAResource
         return this.xaResource.isSameRM(xaResource);
     }
 
-    public Xid[] recover(int i)
-            throws XAException
+    public Xid[] recover(int i) throws XAException
     {
         return xaResource.recover(i);
     }
 
-    public int prepare(Xid xid)
-            throws XAException
+    public int prepare(Xid xid) throws XAException
     {
         return xaResource.prepare(xid);
     }
 
-    public void forget(Xid xid)
-            throws XAException
+    public void forget(Xid xid) throws XAException
     {
         xaResource.forget(xid);
     }
 
-    public void rollback(Xid xid)
-            throws XAException
+    public void rollback(Xid xid) throws XAException
     {
         xaResource.rollback(xid);
     }
 
-    public void end(Xid xid, int i)
-            throws XAException
+    public void end(Xid xid, int i) throws XAException
     {
         xaResource.end(xid, i);
         sessionInvocationHandler.setEnlisted(false);
     }
 
-    public void start(Xid xid, int i)
-            throws XAException
+    public void start(Xid xid, int i) throws XAException
     {
         xaResource.start(xid, i);
     }
 
-    public void commit(Xid xid, boolean b)
-            throws XAException
+    public void commit(Xid xid, boolean b) throws XAException
     {
         xaResource.commit(xid, b);
     }
