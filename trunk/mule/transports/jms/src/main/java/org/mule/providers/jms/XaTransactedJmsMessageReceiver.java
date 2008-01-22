@@ -15,9 +15,8 @@ import org.mule.providers.ConnectException;
 import org.mule.providers.SingleAttemptConnectionStrategy;
 import org.mule.providers.TransactedPollingMessageReceiver;
 import org.mule.providers.jms.filters.JmsSelectorFilter;
-import org.mule.transaction.TransactionCallback;
 import org.mule.transaction.TransactionCoordination;
-import org.mule.transaction.TransactionTemplate;
+import org.mule.transaction.XaTransaction;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOTransaction;
 import org.mule.umo.endpoint.UMOEndpoint;
@@ -27,8 +26,9 @@ import org.mule.umo.provider.UMOMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
-import java.util.Iterator;
 import java.util.List;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -37,12 +37,13 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
     public static final long DEFAULT_JMS_POLL_FREQUENCY = 100;
     public static final TimeUnit DEFAULT_JMS_POLL_TIMEUNIT = TimeUnit.MILLISECONDS;
-    
+
     protected final JmsConnector connector;
     protected boolean reuseConsumer;
     protected boolean reuseSession;
@@ -76,7 +77,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     }
 
     public XaTransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint endpoint)
-        throws InitialisationException
+            throws InitialisationException
     {
         super(umoConnector, component, endpoint);
         // TODO AP: find appropriate value for polling frequency with the scheduler;
@@ -97,9 +98,9 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
         // User may override reuse strategy if necessary
         this.reuseConsumer = MapUtils.getBooleanValue(endpoint.getProperties(), "reuseConsumer",
-            this.reuseConsumer);
+                                                      this.reuseConsumer);
         this.reuseSession = MapUtils.getBooleanValue(endpoint.getProperties(), "reuseSession",
-            this.reuseSession);
+                                                     this.reuseSession);
 
         // Do extra validation, XA Topic & reuse are incompatible. See MULE-2622
         boolean topic = connector.getTopicResolver().isTopic(getEndpoint());
@@ -180,30 +181,8 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             {
                 createConsumer();
             }
-            
-            // Do polling          
-            TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(), connector
-                    .getExceptionListener(),this.reuseSession);
-
-            // Receive messages and process them in a single transaction
-            // Do not enable threading here, but several workers
-            // may have been started
-            TransactionCallback cb = new TransactionCallback()
-            {
-                public Object doInTransaction() throws Exception
-                {
-                    List messages = getMessages();
-                    if (messages != null && messages.size() > 0)
-                    {
-                        for (Iterator it = messages.iterator(); it.hasNext();)
-                        {
-                            processMessage(it.next());
-                        }
-                    }
-                    return null;
-                }
-            };
-            tt.execute(cb);
+            // Do polling
+            super.poll();
         }
         catch (Exception e)
         {
@@ -267,7 +246,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         if (logger.isDebugEnabled())
         {
             logger.debug("Message received it is of type: " +
-                    ClassUtils.getSimpleName(message.getClass()));
+                         ClassUtils.getSimpleName(message.getClass()));
             if (message.getJMSDestination() != null)
             {
                 logger.debug("Message received on " + message.getJMSDestination() + " ("
@@ -336,7 +315,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
     /**
      * Create a consumer for the jms destination
-     * 
+     *
      * @throws Exception
      */
     protected void createConsumer() throws Exception
@@ -349,26 +328,29 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             if (ctx.session == null)
             {
                 ctx.session = this.connector.getSession(endpoint);
+                //set reuse flag
+                ((XaTransaction.MuleXaObject) ctx.session).setReuseObject(reuseSession);
+
             }
 
             // Create destination
             final boolean topic = connector.getTopicResolver().isTopic(endpoint);
             Destination dest = jmsSupport.createDestination(ctx.session, endpoint.getEndpointURI()
-                .getAddress(), topic);
+                    .getAddress(), topic);
 
             // Extract jms selector
             String selector = null;
             if (endpoint.getFilter() != null && endpoint.getFilter() instanceof JmsSelectorFilter)
             {
-                selector = ((JmsSelectorFilter)endpoint.getFilter()).getExpression();
+                selector = ((JmsSelectorFilter) endpoint.getFilter()).getExpression();
             }
             else if (endpoint.getProperties() != null)
             {
                 // still allow the selector to be set as a property on the endpoint
                 // to be backward compatible
-                selector = (String)endpoint.getProperties().get(JmsConstants.JMS_SELECTOR_PROPERTY);
+                selector = (String) endpoint.getProperties().get(JmsConstants.JMS_SELECTOR_PROPERTY);
             }
-            String tempDurable = (String)endpoint.getProperties().get("durable");
+            String tempDurable = (String) endpoint.getProperties().get("durable");
             boolean durable = connector.isDurable();
             if (tempDurable != null)
             {
@@ -376,7 +358,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             }
 
             // Get the durable subscriber name if there is one
-            String durableName = (String)endpoint.getProperties().get("durableName");
+            String durableName = (String) endpoint.getProperties().get("durableName");
             if (durableName == null && durable && topic)
             {
                 durableName = "mule." + connector.getName() + "." + endpoint.getEndpointURI().getAddress();
@@ -386,7 +368,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
             // Create consumer
             ctx.consumer = jmsSupport.createConsumer(ctx.session, dest, selector, connector.isNoLocal(),
-                durableName, topic);
+                                                     durableName, topic);
         }
         catch (JMSException e)
         {

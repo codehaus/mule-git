@@ -53,16 +53,6 @@ public final class TransactionCoordination
             {
                 throw new IllegalTransactionStateException(CoreMessages.transactionCannotUnbind());
             }
-            
-            // check if reuseSession = true 
-            if (oldTx instanceof XaTransaction)
-            {
-                XaTransaction xa = (XaTransaction) oldTx;
-                if (!xa.isReuseSession())
-                {
-                    xa.closeResources();
-                }
-            }
         }
         finally
         {

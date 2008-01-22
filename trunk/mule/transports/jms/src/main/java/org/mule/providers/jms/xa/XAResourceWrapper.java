@@ -43,8 +43,9 @@ public class XAResourceWrapper implements XAResource
     public boolean isSameRM(XAResource xaResource)
             throws XAException
     {
-        if (xaResource instanceof XAResourceWrapper){
-            xaResource=((XAResourceWrapper)xaResource).xaResource;
+        if (xaResource instanceof XAResourceWrapper)
+        {
+            xaResource = ((XAResourceWrapper) xaResource).xaResource;
         }
         return this.xaResource.isSameRM(xaResource);
     }
