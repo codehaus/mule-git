@@ -18,16 +18,22 @@ public class DerbyStoredProc
 {
     public static void plus(int a, int[] b, double[] c, String[] str)
     {
+/*
+// You can use any SQL statements in this method. Example:
         try
         {
             Connection conn = DriverManager.getConnection("jdbc:default:connection");
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM TEST");
             ResultSet rset = statement.executeQuery();
+            //....
+            rset.close();
+            statement.close();
         }
         catch (SQLException ex)
         {
 
         }
+*/
         c[0] = a + b[0] + 0.3;
         b[0] = 10;
         str[0] = "test";

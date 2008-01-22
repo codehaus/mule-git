@@ -73,6 +73,22 @@
             </outbound-router>
         </mule-descriptor>
 
+        <mule-descriptor name="bridgeB2" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="vm://proc2.test"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jdbc://callTest">
+                        <properties>
+                            <property name="a" value="3"/>
+                            <property name="b" value="5"/>
+                        </properties>
+                    </endpoint>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
         <mule-descriptor name="bridgeC" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
                 <endpoint address="vm://insert.test"/>

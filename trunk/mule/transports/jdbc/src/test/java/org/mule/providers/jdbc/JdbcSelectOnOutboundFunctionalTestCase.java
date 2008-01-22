@@ -105,8 +105,13 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
 
     public void testStoredProc() throws Exception 
     {
+        internalStoredProcTest("vm://proc.test");
+    }
+
+    private void internalStoredProcTest(String endpoint) throws Exception
+    {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://proc.test", new MuleMessage(NullPayload.getInstance()));
+        UMOMessage reply = client.send(endpoint, new MuleMessage(NullPayload.getInstance()));
         assertNotNull(reply.getPayload());
         assertTrue(reply.getPayload() instanceof Map);
         Map resultMap = (Map) reply.getPayload();
@@ -114,6 +119,11 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         assertEquals(resultMap.get("b"), new Integer(10));
         assertEquals(resultMap.get("c"), new Double(8.3));
         assertEquals(resultMap.get("s"), "test");
+    }
+
+    public void testEndpointProperties() throws Exception
+    {
+        internalStoredProcTest("vm://proc2.test");
     }
 
     public void testInsert() throws Exception
